@@ -247,6 +247,8 @@ function QuranBrowser() {
     setRadioSearchMethod(event.target.value);
   };
 
+  const refListVerses = useRef(null);
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -290,7 +292,10 @@ function QuranBrowser() {
           </div>
         </div>
 
-        <div className="col mt-3 pb-1 border h-100 overflow-auto">
+        <div
+          className="col mt-3 pb-1 border h-100 overflow-auto"
+          ref={refListVerses}
+        >
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
               versesArray={searchResult}
@@ -305,6 +310,7 @@ function QuranBrowser() {
               setMyNotes={setMyNotes}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
+              refListVerses={refListVerses}
             />
           ) : (
             <ListVerses
@@ -314,6 +320,7 @@ function QuranBrowser() {
               setMyNotes={setMyNotes}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
+              refListVerses={refListVerses}
             />
           )}
         </div>
@@ -485,7 +492,12 @@ const ListSearchResults = ({
   setMyNotes,
   editableNotes,
   setEditableNotes,
+  refListVerses,
 }) => {
+  useEffect(() => {
+    refListVerses.current.scrollTop = 0;
+  }, [refListVerses, versesArray]);
+
   const handleNoteChange = (event) => {
     const { name, value } = event.target;
     let verse = JSON.parse(name);
@@ -558,7 +570,12 @@ const ListVerses = ({
   setMyNotes,
   editableNotes,
   setEditableNotes,
+  refListVerses,
 }) => {
+  useEffect(() => {
+    refListVerses.current.scrollTop = 0;
+  }, [refListVerses, versesArray]);
+
   //
   const handleNoteChange = (event) => {
     const { name, value } = event.target;
@@ -567,9 +584,15 @@ const ListVerses = ({
     setMyNotes({ ...myNotes });
   };
 
+  const ListTitle = (props) => {
+    return <>{props.children}</>;
+  };
+
   return (
     <>
-      <h3 className="mb-2 text-primary">سورة {chapterName}</h3>
+      <ListTitle>
+        <h3 className="mb-2 text-primary">سورة {chapterName}</h3>
+      </ListTitle>
       {versesArray.map((verse) => (
         <div key={verse.suraid + "-" + verse.verseid}>
           <VerseTextComponent>
