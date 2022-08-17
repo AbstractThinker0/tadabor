@@ -27,14 +27,14 @@ function About() {
           transliteration
         </li>
         <li>
-          Credits Tanzil project for their Quran translation ( Check the bottom
-          /public/res/quran-simple-plain.txt )
+          Credits Tanzil project for the Quran text compilation ( Check the
+          bottom of /public/res/quran-simple-plain.txt )
         </li>
 
         <li>
           Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil
           Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots
-          compilation ( Check the bottom /public/res/quran-root.txt ){" "}
+          compilation ( Check the bottom of /public/res/quran-root.txt ){" "}
         </li>
       </ul>
     </div>
