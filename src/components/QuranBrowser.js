@@ -334,6 +334,10 @@ const SelectionListChapters = ({
   chaptersArray,
   handleSelectionListChapters,
 }) => {
+  const handleSelectFocus = (e) => {
+    e.target.selectedIndex = -1;
+    e.target.blur();
+  };
   return (
     <div className="container mt-2 mb-2 p-0">
       <div className="row">
@@ -341,6 +345,7 @@ const SelectionListChapters = ({
           <select
             className="form-select"
             size="7"
+            onFocus={handleSelectFocus}
             onChange={handleSelectionListChapters}
             aria-label="size 7 select example"
           >
