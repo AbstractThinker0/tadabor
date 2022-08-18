@@ -21,6 +21,8 @@ function QuranBrowser() {
   const [searchAllQuran, setSearchAllQuran] = useState(true);
   const [searchingAllQuran, setSearchingAllQuran] = useState(true);
 
+  const [searchDiacritics, setSearchDiacritics] = useState(false);
+
   const [searchError, setSearchError] = useState(false);
   const [selectedRootError, setSelectedRootError] = useState(false);
 
@@ -130,6 +132,13 @@ function QuranBrowser() {
     }
 
     let matchVerses = [];
+    let normal_search = "";
+
+    if (!searchDiacritics) {
+      normal_search = normalize_text(searchString).trim();
+    } else {
+      normal_search = searchString.trim();
+    }
 
     if (searchAllQuran) {
       setSearchingAllQuran(true);
@@ -140,11 +149,14 @@ function QuranBrowser() {
     }
 
     function multipleChapterMatches() {
-      let normal_search = normalize_text(searchString).trim();
-
       allQuranText.current.forEach((sura) => {
         sura.verses.forEach((verse) => {
-          let normal_text = normalize_text(verse.versetext);
+          let normal_text = "";
+          if (!searchDiacritics) {
+            normal_text = normalize_text(verse.versetext);
+          } else {
+            normal_text = verse.versetext;
+          }
           if (normal_text.search(normal_search) !== -1) {
             matchVerses.push(verse);
           }
@@ -153,10 +165,13 @@ function QuranBrowser() {
     }
 
     function oneChapterMatches() {
-      let normal_search = normalize_text(searchString).trim();
-
       chapterVerses.forEach((verse) => {
-        let normal_text = normalize_text(verse.versetext);
+        let normal_text = "";
+        if (!searchDiacritics) {
+          normal_text = normalize_text(verse.versetext);
+        } else {
+          normal_text = verse.versetext;
+        }
         if (normal_text.search(normal_search) !== -1) {
           matchVerses.push(verse);
         }
@@ -176,6 +191,10 @@ function QuranBrowser() {
 
   const handleChangeSearchAllQuran = () => {
     setSearchAllQuran(!searchAllQuran);
+  };
+
+  const handleChangeSearchDiacritics = () => {
+    setSearchDiacritics(!searchDiacritics);
   };
 
   const handleSearchByRoot = () => {
@@ -266,9 +285,16 @@ function QuranBrowser() {
               handleSearchMethod={handleSearchMethod}
             />
 
-            <CheckboxScope
-              searchAllQuran={searchAllQuran}
-              handleChangeSearchAllQuran={handleChangeSearchAllQuran}
+            <CheckboxComponent
+              checkboxState={searchDiacritics}
+              handleChangeCheckboxState={handleChangeSearchDiacritics}
+              labelText="بالتشكيل"
+            />
+
+            <CheckboxComponent
+              checkboxState={searchAllQuran}
+              handleChangeCheckboxState={handleChangeSearchAllQuran}
+              labelText="بحث في كل السور"
             />
 
             <FormWordSearch
@@ -431,19 +457,23 @@ const FormWordSearch = ({
   );
 };
 
-const CheckboxScope = ({ searchAllQuran, handleChangeSearchAllQuran }) => {
+const CheckboxComponent = ({
+  checkboxState,
+  handleChangeCheckboxState,
+  labelText,
+}) => {
   return (
     <div className="form-check form-check-reverse mt-2">
       <input
         className="form-check-input"
         type="checkbox"
-        checked={searchAllQuran}
-        onChange={handleChangeSearchAllQuran}
+        checked={checkboxState}
+        onChange={handleChangeCheckboxState}
         value=""
         id="flexCheckDefault"
       />
       <label className="form-check-label" htmlFor="flexCheckDefault">
-        بحث في كل السور
+        {labelText}
       </label>
     </div>
   );
@@ -455,7 +485,7 @@ const SelectionListRoots = ({
   radioSearchMethod,
   searchString,
 }) => {
-  let isDisabled = radioSearchMethod === "option2" ? true : false;
+  let isDisabled = radioSearchMethod === "option1" ? false : true;
   return (
     <div className="container mt-2 p-0">
       <div className="row">
