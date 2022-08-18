@@ -28,4 +28,14 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 ## Local use
 
-Simply download the source code from the master branch and do `npm start`, usually the domain to access the app will be http://localhost:3000/
+Prerequisites:
+
+- Node.js
+- npm
+
+Once you have satisfied the prerequisites, you can install and start the application. Clone the app, and from its directory run:
+
+1. `npm install`
+2. `npm start`
+
+usually the domain to access the app will be http://localhost:3000/
