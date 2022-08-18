@@ -6,6 +6,7 @@ import { ArrowDownCircleFill } from "react-bootstrap-icons";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 function QuranBrowser() {
   const [loadingState, setLoadingState] = useState(true);
@@ -738,20 +739,6 @@ const NoteForm = ({
         تعديل
       </button>
     </>
-  );
-};
-
-const LoadingSpinner = () => {
-  return (
-    <div className="d-flex flex-column vh-100 align-items-center justify-content-center">
-      <div
-        className="spinner-border"
-        role="status"
-        style={{ width: "60px", height: "60px" }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
-    </div>
   );
 };
 
