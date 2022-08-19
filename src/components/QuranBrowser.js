@@ -22,6 +22,8 @@ function QuranBrowser() {
   const [searchAllQuran, setSearchAllQuran] = useState(true);
   const [searchingAllQuran, setSearchingAllQuran] = useState(true);
 
+  const [searchMultipleChapters, setSearchMultipleChapters] = useState(false);
+
   const [searchDiacritics, setSearchDiacritics] = useState(false);
 
   const [searchError, setSearchError] = useState(false);
@@ -121,6 +123,7 @@ function QuranBrowser() {
 
     setSearchError(false);
     setSelectedRootError(false);
+    setSearchMultipleChapters(false);
     setSearchingString(searchString);
     setRadioSearchingMethod(radioSearchMethod);
     setSearchResult([]);
@@ -148,15 +151,30 @@ function QuranBrowser() {
       normal_search = searchString.trim();
     }
 
+    let selectedChapters = [];
+
     if (searchAllQuran) {
       setSearchingAllQuran(true);
-      multipleChapterMatches();
+      allChaptersMatches();
     } else {
       setSearchingAllQuran(false);
-      oneChapterMatches();
+
+      if (refListChapters.current.selectedOptions.length > 1) {
+        setSearchMultipleChapters(true);
+        selectedChapters = Array.from(
+          refListChapters.current.selectedOptions,
+          (option) => JSON.parse(option.value)
+        );
+      }
+
+      if (selectedChapters.length > 1) {
+        multipleChaptersMatches();
+      } else {
+        oneChapterMatches();
+      }
     }
 
-    function multipleChapterMatches() {
+    function allChaptersMatches() {
       allQuranText.current.forEach((sura) => {
         sura.verses.forEach((verse) => {
           let normal_text = "";
@@ -186,23 +204,27 @@ function QuranBrowser() {
       });
     }
 
+    function multipleChaptersMatches() {
+      selectedChapters.forEach((chapter) => {
+        allQuranText.current[chapter.id - 1].verses.forEach((verse) => {
+          let normal_text = "";
+          if (!searchDiacritics) {
+            normal_text = normalize_text(verse.versetext);
+          } else {
+            normal_text = verse.versetext;
+          }
+          if (normal_text.search(normal_search) !== -1) {
+            matchVerses.push(verse);
+          }
+        });
+      });
+    }
+
     if (matchVerses.length === 0) {
       setSearchError(true);
     } else {
       setSearchResult(matchVerses);
     }
-  };
-
-  const searchStringHandle = (event) => {
-    setSearchString(event.target.value);
-  };
-
-  const handleChangeSearchAllQuran = () => {
-    setSearchAllQuran(!searchAllQuran);
-  };
-
-  const handleChangeSearchDiacritics = () => {
-    setSearchDiacritics(!searchDiacritics);
   };
 
   const handleSearchByRoot = () => {
@@ -237,15 +259,39 @@ function QuranBrowser() {
     } else {
       setSearchingAllQuran(false);
 
-      occurencesArray.forEach((item) => {
-        let info = item.split(":");
+      let selectedChapters = [];
 
-        let currentVerse = absoluteQuran.current[info[0]];
+      if (refListChapters.current.selectedOptions.length > 1) {
+        setSearchMultipleChapters(true);
+        selectedChapters = Array.from(
+          refListChapters.current.selectedOptions,
+          (option) => JSON.parse(option.value)
+        );
+      }
 
-        if (selectChapter.id === parseInt(currentVerse.suraid)) {
-          matchVerses.push(currentVerse);
-        }
-      });
+      if (selectedChapters.length > 1) {
+        selectedChapters.forEach((chapter) => {
+          occurencesArray.forEach((item) => {
+            let info = item.split(":");
+
+            let currentVerse = absoluteQuran.current[info[0]];
+
+            if (chapter.id === parseInt(currentVerse.suraid)) {
+              matchVerses.push(currentVerse);
+            }
+          });
+        });
+      } else {
+        occurencesArray.forEach((item) => {
+          let info = item.split(":");
+
+          let currentVerse = absoluteQuran.current[info[0]];
+
+          if (selectChapter.id === parseInt(currentVerse.suraid)) {
+            matchVerses.push(currentVerse);
+          }
+        });
+      }
     }
 
     if (matchVerses.length === 0) {
@@ -261,20 +307,37 @@ function QuranBrowser() {
   };
 
   const handleSelectionListChapters = (event) => {
+    if (!event.target.value) return;
+
     let chapter = JSON.parse(event.target.value); //object
 
-    setSelectChapter(chapter);
-    setChapterVerses(allQuranText.current[chapter.id - 1].verses);
-    setSearchError(false);
-    setSelectedRootError(false);
-    setSearchResult([]);
+    if (event.target.selectedOptions.length === 1) {
+      setChapterVerses(allQuranText.current[chapter.id - 1].verses);
+      setSelectChapter(chapter);
+      setSearchResult([]);
+      setSearchError(false);
+      setSelectedRootError(false);
+    }
   };
 
   const handleSearchMethod = (event) => {
     setRadioSearchMethod(event.target.value);
   };
 
+  const searchStringHandle = (event) => {
+    setSearchString(event.target.value);
+  };
+
+  const handleChangeSearchAllQuran = () => {
+    setSearchAllQuran(!searchAllQuran);
+  };
+
+  const handleChangeSearchDiacritics = () => {
+    setSearchDiacritics(!searchDiacritics);
+  };
+
   const refListVerses = useRef(null);
+  const refListChapters = useRef(null);
 
   if (loadingState) return <LoadingSpinner />;
 
@@ -286,6 +349,7 @@ function QuranBrowser() {
             <SelectionListChapters
               chaptersArray={chapterNames.current}
               handleSelectionListChapters={handleSelectionListChapters}
+              innerRef={refListChapters}
             />
 
             <RadioSearchMethod
@@ -344,7 +408,9 @@ function QuranBrowser() {
               setMyNotes={setMyNotes}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
+              searchMultipleChapters={searchMultipleChapters}
               refListVerses={refListVerses}
+              refListChapters={refListChapters}
             />
           ) : (
             <ListVerses
@@ -367,11 +433,15 @@ function QuranBrowser() {
 const SelectionListChapters = ({
   chaptersArray,
   handleSelectionListChapters,
+  innerRef,
 }) => {
   const handleSelectFocus = (e) => {
-    e.target.selectedIndex = -1;
-    e.target.blur();
+    // If we have only one selected chapter make sure the verses list gets refreshed after doing a search
+    if (e.target.selectedOptions.length === 1) {
+      e.target.selectedIndex = -1;
+    }
   };
+
   return (
     <div className="container mt-2 mb-2 p-0">
       <div className="row">
@@ -382,6 +452,8 @@ const SelectionListChapters = ({
             onFocus={handleSelectFocus}
             onChange={handleSelectionListChapters}
             aria-label="size 7 select example"
+            ref={innerRef}
+            multiple
           >
             {chaptersArray.map((chapter, index) => (
               <option key={chapter.id} value={JSON.stringify(chapter)}>
@@ -535,8 +607,20 @@ const ListSearchResults = ({
   setMyNotes,
   editableNotes,
   setEditableNotes,
+  searchMultipleChapters,
   refListVerses,
+  refListChapters,
 }) => {
+  let selectedChapters = [];
+  if (searchMultipleChapters) {
+    if (refListChapters.current.selectedOptions.length > 1) {
+      selectedChapters = Array.from(
+        refListChapters.current.selectedOptions,
+        (option) => JSON.parse(option.value).name
+      );
+    }
+  }
+
   useEffect(() => {
     refListVerses.current.scrollTop = 0;
   }, [refListVerses, versesArray]);
@@ -553,7 +637,11 @@ const ListSearchResults = ({
     return (
       <h3 className="mb-2 text-info">
         نتائج البحث عن {searchType} "{searchToken}"
-        {scopeAllQuran === true ? " في كل السور" : " في سورة " + chapterName}
+        {scopeAllQuran === true
+          ? " في كل السور"
+          : searchMultipleChapters
+          ? " في سور " + selectedChapters.join(" و")
+          : " في سورة " + chapterName}
       </h3>
     );
   };
@@ -566,6 +654,8 @@ const ListSearchResults = ({
           <VerseTextComponent>
             {verse.versetext} (
             {scopeAllQuran && chapterNames[verse.suraid - 1].name + ":"}
+            {searchMultipleChapters &&
+              chapterNames[verse.suraid - 1].name + ":"}
             {verse.verseid})
             <button
               className="btn"
