@@ -33,9 +33,9 @@ function QuranBrowser() {
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
 
-  let allQuranText = useRef([]);
+  let allQuranText = useRef(null);
   let absoluteQuran = useRef([]);
-  let chapterNames = useRef([]);
+  let chapterNames = useRef(null);
   let quranRoots = useRef([]);
 
   useEffect(() => {
@@ -44,52 +44,59 @@ function QuranBrowser() {
     fetchData();
 
     async function fetchData() {
-      let res = await axios.get("/res/chapters.json");
+      let res;
 
-      if (res.error || clientLeft) return;
+      if (chapterNames.current === null) {
+        res = await axios.get("/res/chapters.json");
 
-      chapterNames.current = res.data;
+        if (res.error || clientLeft) return;
+
+        chapterNames.current = res.data;
+      }
 
       setSelectChapter(chapterNames.current[0]);
 
-      res = await axios.get("/res/quran.json");
+      if (allQuranText.current === null) {
+        res = await axios.get("/res/quran.json");
 
-      if (res.error || clientLeft) return;
+        if (res.error || clientLeft) return;
 
-      allQuranText.current = res.data;
-      absoluteQuran.current = [];
+        allQuranText.current = res.data;
+      }
 
-      allQuranText.current.forEach((sura) => {
-        sura.verses.forEach((verse) => {
-          absoluteQuran.current.push(verse);
+      setChapterVerses(allQuranText.current[0].verses);
+
+      if (absoluteQuran.current.length === 0) {
+        allQuranText.current.forEach((sura) => {
+          sura.verses.forEach((verse) => {
+            absoluteQuran.current.push(verse);
+          });
         });
-      });
+      }
 
-      setChapterVerses(res.data[0].verses);
+      if (quranRoots.current.length === 0) {
+        res = await axios.get("/res/quran-root.txt");
 
-      res = await axios.get("/res/quran-root.txt");
+        if (res.error || clientLeft) return;
 
-      if (res.error || clientLeft) return;
+        let arrayOfLines = res.data.split("\n");
 
-      let arrayOfLines = res.data.split("\n");
+        arrayOfLines.forEach((line) => {
+          if (line[0] === "#" || line[0] === "\r") {
+            return;
+          }
 
-      quranRoots.current = [];
+          let lineArgs = line.split(/[\r\n\t]+/g);
 
-      arrayOfLines.forEach((line) => {
-        if (line[0] === "#" || line[0] === "\r") {
-          return;
-        }
+          let occurences = lineArgs[2].split(";");
 
-        let lineArgs = line.split(/[\r\n\t]+/g);
-
-        let occurences = lineArgs[2].split(";");
-
-        quranRoots.current.push({
-          name: lineArgs[0],
-          count: lineArgs[1],
-          occurences: occurences,
+          quranRoots.current.push({
+            name: lineArgs[0],
+            count: lineArgs[1],
+            occurences: occurences,
+          });
         });
-      });
+      }
 
       let userNotes = await db.notes.toArray();
       let extractNotes = {};
