@@ -244,11 +244,6 @@ function QuranBrowser({
     }
   };
 
-  const handleSelectRoot = (event) => {
-    let obj = JSON.parse(event.target.value); //object
-    setSearchString(obj.name);
-  };
-
   const handleSelectionListChapters = (event) => {
     if (!event.target.value) return;
 
@@ -303,10 +298,10 @@ function QuranBrowser({
             />
 
             <SelectionListRoots
-              handleSelectRoot={handleSelectRoot}
               quranRoots={quranRoots}
               radioSearchMethod={radioSearchMethod}
               searchString={searchString}
+              setSearchString={setSearchString}
             />
 
             {searchResult.length > 0 && (
@@ -488,12 +483,18 @@ const CheckboxComponent = ({ checkboxState, setCheckBoxState, labelText }) => {
 };
 
 const SelectionListRoots = ({
-  handleSelectRoot,
   quranRoots,
   radioSearchMethod,
   searchString,
+  setSearchString,
 }) => {
   let isDisabled = radioSearchMethod === "option1" ? false : true;
+
+  const handleSelectRoot = (event) => {
+    let obj = JSON.parse(event.target.value); //object
+    setSearchString(obj.name);
+  };
+
   return (
     <div className="container mt-2 p-0 ps-5">
       <select
