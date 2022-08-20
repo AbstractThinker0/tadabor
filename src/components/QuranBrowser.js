@@ -702,6 +702,8 @@ const NoteForm = ({
   editableNotes,
   setEditableNotes,
 }) => {
+  const [rows, setRows] = useState(4);
+
   let verse_key = verse.suraid + "-" + verse.verseid;
 
   if (!value) {
@@ -709,6 +711,14 @@ const NoteForm = ({
   }
 
   let isNoteEditable = editableNotes[verse_key];
+
+  useEffect(() => {
+    const rowlen = value.split("\n");
+
+    if (rowlen.length > 4 && !isNoteEditable) {
+      setRows(rowlen.length);
+    }
+  }, [value, isNoteEditable]);
 
   const handleNoteSubmit = (event) => {
     event.preventDefault();
@@ -746,6 +756,7 @@ const NoteForm = ({
           name={JSON.stringify(verse)}
           value={value}
           onChange={handleNoteChange}
+          rows={rows}
           required
         />
       </div>
