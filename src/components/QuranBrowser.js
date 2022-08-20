@@ -317,10 +317,6 @@ function QuranBrowser() {
     }
   };
 
-  const searchStringHandle = (event) => {
-    setSearchString(event.target.value);
-  };
-
   const handleChangeSearchAllQuran = () => {
     setSearchAllQuran(!searchAllQuran);
   };
@@ -365,7 +361,7 @@ function QuranBrowser() {
             <FormWordSearch
               handleSearchSubmit={handleSearchSubmit}
               searchString={searchString}
-              searchStringHandle={searchStringHandle}
+              setSearchString={setSearchString}
             />
 
             <SelectionListRoots
@@ -498,8 +494,12 @@ const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
 const FormWordSearch = ({
   handleSearchSubmit,
   searchString,
-  searchStringHandle,
+  setSearchString,
 }) => {
+  const searchStringHandle = (event) => {
+    setSearchString(event.target.value);
+  };
+
   return (
     <form
       className="container p-0 mt-2"
