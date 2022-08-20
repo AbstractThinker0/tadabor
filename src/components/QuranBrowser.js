@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { normalize_text, onlySpaces } from "../util/util";
 import { db } from "../util/db";
@@ -8,11 +7,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "./LoadingSpinner";
 
-function QuranBrowser() {
+function QuranBrowser({
+  allQuranText,
+  absoluteQuran,
+  chapterNames,
+  quranRoots,
+}) {
   const [loadingState, setLoadingState] = useState(true);
 
-  const [selectChapter, setSelectChapter] = useState();
-  const [chapterVerses, setChapterVerses] = useState();
+  const [selectChapter, setSelectChapter] = useState(chapterNames[0]);
+  const [chapterVerses, setChapterVerses] = useState(allQuranText[0].verses);
 
   const [searchString, setSearchString] = useState("");
   const [searchingString, setSearchingString] = useState("");
@@ -35,76 +39,19 @@ function QuranBrowser() {
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
 
-  let allQuranText = useRef(null);
-  let absoluteQuran = useRef([]);
-  let chapterNames = useRef(null);
-  let quranRoots = useRef([]);
-
   useEffect(() => {
     let clientLeft = false;
 
     fetchData();
 
     async function fetchData() {
-      let res;
-
-      if (chapterNames.current === null) {
-        res = await axios.get("/res/chapters.json");
-
-        if (res.error || clientLeft) return;
-
-        chapterNames.current = res.data;
-      }
-
-      setSelectChapter(chapterNames.current[0]);
-
-      if (allQuranText.current === null) {
-        res = await axios.get("/res/quran.json");
-
-        if (res.error || clientLeft) return;
-
-        allQuranText.current = res.data;
-      }
-
-      setChapterVerses(allQuranText.current[0].verses);
-
-      if (absoluteQuran.current.length === 0) {
-        allQuranText.current.forEach((sura) => {
-          sura.verses.forEach((verse) => {
-            absoluteQuran.current.push(verse);
-          });
-        });
-      }
-
-      if (quranRoots.current.length === 0) {
-        res = await axios.get("/res/quran-root.txt");
-
-        if (res.error || clientLeft) return;
-
-        let arrayOfLines = res.data.split("\n");
-
-        arrayOfLines.forEach((line) => {
-          if (line[0] === "#" || line[0] === "\r") {
-            return;
-          }
-
-          let lineArgs = line.split(/[\r\n\t]+/g);
-
-          let occurences = lineArgs[2].split(";");
-
-          quranRoots.current.push({
-            name: lineArgs[0],
-            count: lineArgs[1],
-            occurences: occurences,
-          });
-        });
-      }
-
       let userNotes = await db.notes.toArray();
       let extractNotes = {};
       userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
       });
+
+      if (clientLeft) return;
 
       setMyNotes(extractNotes);
 
@@ -172,7 +119,7 @@ function QuranBrowser() {
     }
 
     function allChaptersMatches() {
-      allQuranText.current.forEach((sura) => {
+      allQuranText.forEach((sura) => {
         sura.verses.forEach((verse) => {
           let normal_text = "";
           if (!searchDiacritics) {
@@ -203,7 +150,7 @@ function QuranBrowser() {
 
     function multipleChaptersMatches() {
       selectedChapters.forEach((chapter) => {
-        allQuranText.current[chapter.id - 1].verses.forEach((verse) => {
+        allQuranText[chapter.id - 1].verses.forEach((verse) => {
           let normal_text = "";
           if (!searchDiacritics) {
             normal_text = normalize_text(verse.versetext);
@@ -230,9 +177,7 @@ function QuranBrowser() {
       return;
     }
 
-    let rootTarget = quranRoots.current.find(
-      (root) => root.name === searchString
-    );
+    let rootTarget = quranRoots.find((root) => root.name === searchString);
 
     if (rootTarget === undefined) {
       setSelectedRootError(true);
@@ -249,7 +194,7 @@ function QuranBrowser() {
       occurencesArray.forEach((item) => {
         let info = item.split(":");
 
-        let currentVerse = absoluteQuran.current[info[0]];
+        let currentVerse = absoluteQuran[info[0]];
 
         matchVerses.push(currentVerse);
       });
@@ -271,7 +216,7 @@ function QuranBrowser() {
           occurencesArray.forEach((item) => {
             let info = item.split(":");
 
-            let currentVerse = absoluteQuran.current[info[0]];
+            let currentVerse = absoluteQuran[info[0]];
 
             if (chapter.id === parseInt(currentVerse.suraid)) {
               matchVerses.push(currentVerse);
@@ -282,7 +227,7 @@ function QuranBrowser() {
         occurencesArray.forEach((item) => {
           let info = item.split(":");
 
-          let currentVerse = absoluteQuran.current[info[0]];
+          let currentVerse = absoluteQuran[info[0]];
 
           if (selectChapter.id === parseInt(currentVerse.suraid)) {
             matchVerses.push(currentVerse);
@@ -309,7 +254,7 @@ function QuranBrowser() {
     let chapter = JSON.parse(event.target.value); //object
 
     if (event.target.selectedOptions.length === 1) {
-      setChapterVerses(allQuranText.current[chapter.id - 1].verses);
+      setChapterVerses(allQuranText[chapter.id - 1].verses);
       setSelectChapter(chapter);
       setSearchResult([]);
       setSearchError(false);
@@ -328,7 +273,7 @@ function QuranBrowser() {
         <div className="col-auto pt-3 pb-1">
           <div className="me-5">
             <SelectionListChapters
-              chaptersArray={chapterNames.current}
+              chaptersArray={chapterNames}
               handleSelectionListChapters={handleSelectionListChapters}
               innerRef={refListChapters}
             />
@@ -383,7 +328,7 @@ function QuranBrowser() {
               scopeAllQuran={searchingAllQuran}
               searchError={searchError}
               selectedRootError={selectedRootError}
-              chapterNames={chapterNames.current}
+              chapterNames={chapterNames}
               radioSearchMethod={radioSearchingMethod}
               myNotes={myNotes}
               setMyNotes={setMyNotes}
@@ -557,7 +502,7 @@ const SelectionListRoots = ({
         aria-label="size 6 select example"
         disabled={isDisabled}
       >
-        {quranRoots.current
+        {quranRoots
           .filter((root) => root.name.startsWith(searchString) || isDisabled)
           .map((root, index) => (
             <option key={index} value={JSON.stringify(root)}>
