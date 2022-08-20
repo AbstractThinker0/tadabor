@@ -4,22 +4,28 @@ function Layout({ children }) {
   return (
     <div className="container vh-100 mw-100">
       <Navbar />
-      <div
-        className="alert alert-warning alert-dismissible fade show d-flex justify-content-center mt-2"
-        role="alert"
-      >
-        هذه نسخة تجريبيّة من الموقع، الرجاء إبقاء نسخة إحتياط لكل ما تكتبه هنا.
-        <button
-          type="button"
-          className="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
+      <AlertMessage />
       {children}
     </div>
   );
 }
+
+const AlertMessage = () => {
+  return (
+    <div
+      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center mt-2"
+      role="alert"
+    >
+      هذه نسخة تجريبيّة من الموقع، الرجاء إبقاء نسخة إحتياط لكل ما تكتبه هنا.
+      <button
+        type="button"
+        className="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+  );
+};
 
 const Navbar = () => {
   return (
