@@ -46,12 +46,13 @@ function QuranBrowser({
 
     async function fetchData() {
       let userNotes = await db.notes.toArray();
+
+      if (clientLeft) return;
+
       let extractNotes = {};
       userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
       });
-
-      if (clientLeft) return;
 
       setMyNotes(extractNotes);
 
