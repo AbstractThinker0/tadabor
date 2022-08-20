@@ -317,14 +317,6 @@ function QuranBrowser() {
     }
   };
 
-  const handleChangeSearchAllQuran = () => {
-    setSearchAllQuran(!searchAllQuran);
-  };
-
-  const handleChangeSearchDiacritics = () => {
-    setSearchDiacritics(!searchDiacritics);
-  };
-
   const refListVerses = useRef(null);
   const refListChapters = useRef(null);
 
@@ -348,13 +340,13 @@ function QuranBrowser() {
 
             <CheckboxComponent
               checkboxState={searchDiacritics}
-              handleChangeCheckboxState={handleChangeSearchDiacritics}
+              setCheckBoxState={setSearchDiacritics}
               labelText="بالتشكيل"
             />
 
             <CheckboxComponent
               checkboxState={searchAllQuran}
-              handleChangeCheckboxState={handleChangeSearchAllQuran}
+              setCheckBoxState={setSearchAllQuran}
               labelText="بحث في كل السور"
             />
 
@@ -528,11 +520,10 @@ const FormWordSearch = ({
   );
 };
 
-const CheckboxComponent = ({
-  checkboxState,
-  handleChangeCheckboxState,
-  labelText,
-}) => {
+const CheckboxComponent = ({ checkboxState, setCheckBoxState, labelText }) => {
+  const handleChangeCheckboxState = () => {
+    setCheckBoxState(!checkboxState);
+  };
   return (
     <div className="form-check form-check-reverse mt-2">
       <input
