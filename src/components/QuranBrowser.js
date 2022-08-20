@@ -443,27 +443,22 @@ const SelectionListChapters = ({
   };
 
   return (
-    <div className="container mt-2 mb-2 p-0">
-      <div className="row">
-        <div className="col">
-          <select
-            className="form-select"
-            size="7"
-            onFocus={handleSelectFocus}
-            onChange={handleSelectionListChapters}
-            aria-label="size 7 select example"
-            ref={innerRef}
-            multiple
-          >
-            {chaptersArray.map((chapter, index) => (
-              <option key={chapter.id} value={JSON.stringify(chapter)}>
-                {index + 1}. {chapter.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col"></div>
-      </div>
+    <div className="container mt-2 mb-2 pe-0 ps-5">
+      <select
+        className="form-select"
+        size="7"
+        onFocus={handleSelectFocus}
+        onChange={handleSelectionListChapters}
+        aria-label="size 7 select example"
+        ref={innerRef}
+        multiple
+      >
+        {chaptersArray.map((chapter, index) => (
+          <option key={chapter.id} value={JSON.stringify(chapter)}>
+            {index + 1}. {chapter.name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
