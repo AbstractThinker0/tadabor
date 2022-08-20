@@ -13,12 +13,11 @@ function About() {
       </p>
       <h5>How to use</h5>
       <p>
-        How to use Simply go to tadabor.surge.sh and check Quran Browser on the
-        home page, you can click the down arrow next to any verse to open a form
-        where you can enter your text, once you are done writing you can press
-        the save button, all the data will be saved on your browser app, so
-        using a different browser may or clearing your cache will erase the data
-        you have saved.
+        Simply go to tadabor.surge.sh and check Quran Browser on the home page,
+        you can click the button next to any verse to open a form where you can
+        enter your text, once you are done writing you can press the save
+        button, all the data will be saved on your browser app and clearing your
+        cache might erase the data you have saved.
       </p>
       <h5>Credits</h5>
       <ul>
