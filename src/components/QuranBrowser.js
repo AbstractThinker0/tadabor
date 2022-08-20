@@ -317,10 +317,6 @@ function QuranBrowser() {
     }
   };
 
-  const handleSearchMethod = (event) => {
-    setRadioSearchMethod(event.target.value);
-  };
-
   const searchStringHandle = (event) => {
     setSearchString(event.target.value);
   };
@@ -351,7 +347,7 @@ function QuranBrowser() {
 
             <RadioSearchMethod
               radioSearchMethod={radioSearchMethod}
-              handleSearchMethod={handleSearchMethod}
+              setRadioSearchMethod={setRadioSearchMethod}
             />
 
             <CheckboxComponent
@@ -460,7 +456,10 @@ const SelectionListChapters = ({
   );
 };
 
-const RadioSearchMethod = ({ radioSearchMethod, handleSearchMethod }) => {
+const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
+  const handleSearchMethod = (event) => {
+    setRadioSearchMethod(event.target.value);
+  };
   return (
     <div>
       طريقة البحث:
