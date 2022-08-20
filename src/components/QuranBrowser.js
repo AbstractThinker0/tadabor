@@ -562,29 +562,22 @@ const SelectionListRoots = ({
 }) => {
   let isDisabled = radioSearchMethod === "option1" ? false : true;
   return (
-    <div className="container mt-2 p-0">
-      <div className="row">
-        <div className="col">
-          <select
-            className="form-select"
-            size="6"
-            onChange={handleSelectRoot}
-            aria-label="size 6 select example"
-            disabled={isDisabled}
-          >
-            {quranRoots.current
-              .filter(
-                (root) => root.name.startsWith(searchString) || isDisabled
-              )
-              .map((root, index) => (
-                <option key={index} value={JSON.stringify(root)}>
-                  {root.name}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="col"></div>
-      </div>
+    <div className="container mt-2 p-0 ps-5">
+      <select
+        className="form-select"
+        size="6"
+        onChange={handleSelectRoot}
+        aria-label="size 6 select example"
+        disabled={isDisabled}
+      >
+        {quranRoots.current
+          .filter((root) => root.name.startsWith(searchString) || isDisabled)
+          .map((root, index) => (
+            <option key={index} value={JSON.stringify(root)}>
+              {root.name}
+            </option>
+          ))}
+      </select>
     </div>
   );
 };
