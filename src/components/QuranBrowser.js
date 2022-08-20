@@ -119,8 +119,6 @@ function QuranBrowser() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
 
-    setLoadingState(true);
-
     setSearchError(false);
     setSelectedRootError(false);
     setSearchMultipleChapters(false);
@@ -133,7 +131,6 @@ function QuranBrowser() {
     } else if (radioSearchMethod === "option1") {
       handleSearchByRoot();
     }
-    setLoadingState(false);
   };
 
   const handleSearchByWord = () => {
