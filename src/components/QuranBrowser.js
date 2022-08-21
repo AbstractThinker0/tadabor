@@ -273,12 +273,16 @@ function QuranBrowser({
     let chapter = JSON.parse(event.target.value); //object
 
     if (event.target.selectedOptions.length === 1) {
-      setChapterVerses(allQuranText[chapter.id - 1].verses);
-      setSelectChapter(chapter);
-      setSearchResult([]);
-      setSearchError(false);
-      setSelectedRootError(false);
+      gotoChapter(chapter);
     }
+  };
+
+  const gotoChapter = (chapter) => {
+    setChapterVerses(allQuranText[chapter.id - 1].verses);
+    setSelectChapter(chapter);
+    setSearchResult([]);
+    setSearchError(false);
+    setSelectedRootError(false);
   };
 
   const refListVerses = useRef(null);
@@ -362,6 +366,7 @@ function QuranBrowser({
               searchMultipleChapters={searchMultipleChapters}
               refListVerses={refListVerses}
               refListChapters={refListChapters}
+              gotoChapter={gotoChapter}
             />
           ) : (
             <ListVerses
@@ -561,6 +566,7 @@ const ListSearchResults = ({
   searchMultipleChapters,
   refListVerses,
   refListChapters,
+  gotoChapter,
 }) => {
   let selectedChapters = [];
   if (searchMultipleChapters) {
@@ -603,25 +609,14 @@ const ListSearchResults = ({
       {versesArray.map((verse) => (
         <div key={verse.suraid + ":" + verse.verseid}>
           <VerseTextComponent>
-            {verse.versetext} (
-            {scopeAllQuran && chapterNames[verse.suraid - 1].name + ":"}
-            {searchMultipleChapters &&
-              chapterNames[verse.suraid - 1].name + ":"}
-            {verse.verseid})
-            <button
-              className="btn"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={
-                "#collapseExample" + verse.suraid + "-" + verse.verseid
-              }
-              aria-expanded="false"
-              aria-controls={
-                "collapseExample" + verse.suraid + "-" + verse.verseid
-              }
-            >
-              <ArrowDownCircleFill />
-            </button>
+            <VerseContentComponent
+              verse={verse}
+              scopeAllQuran={scopeAllQuran}
+              searchMultipleChapters={searchMultipleChapters}
+              verseChapter={chapterNames[verse.suraid - 1].name}
+              gotoChapter={gotoChapter}
+              chapterNames={chapterNames}
+            />
           </VerseTextComponent>
           <div
             className="collapse card border-primary"
@@ -643,6 +638,49 @@ const ListSearchResults = ({
       {selectedRootError && (
         <p className="mt-3 text-danger">هذا الجذر غير موجود أو غير مدرج.</p>
       )}
+    </>
+  );
+};
+
+const VerseContentComponent = ({
+  verse,
+  scopeAllQuran,
+  searchMultipleChapters,
+  verseChapter,
+  gotoChapter,
+  chapterNames,
+}) => {
+  let verse_key = verse.suraid + "-" + verse.verseid;
+  let isLinkable = scopeAllQuran || searchMultipleChapters;
+
+  const handleVerseClick = (e, verse_key) => {
+    gotoChapter(chapterNames[verse.suraid - 1]);
+  };
+
+  return (
+    <>
+      {verse.versetext} (
+      {isLinkable ? (
+        <button
+          className="p-0 border-0 bg-transparent"
+          onClick={(e) => handleVerseClick(e, verse_key)}
+        >
+          {verseChapter + ":" + verse.verseid}
+        </button>
+      ) : (
+        verse.verseid
+      )}
+      )
+      <button
+        className="btn"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target={"#collapseExample" + verse_key}
+        aria-expanded="false"
+        aria-controls={"collapseExample" + verse_key}
+      >
+        <ArrowDownCircleFill />
+      </button>{" "}
     </>
   );
 };
