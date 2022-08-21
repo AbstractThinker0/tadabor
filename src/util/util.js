@@ -14,3 +14,10 @@ export function normalize_text(text) {
 export function onlySpaces(str) {
   return str.trim().length === 0;
 }
+
+// Take into consideration Arabic boundaries
+export function findWord(word, str) {
+  return RegExp("(^|[^\u0621-\u064A])" + word + "($|[^\u0621-\u064A])").test(
+    str
+  );
+}

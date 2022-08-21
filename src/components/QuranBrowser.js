@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { normalize_text, onlySpaces } from "../util/util";
+import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { db } from "../util/db";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
 import { ToastContainer, toast } from "react-toastify";
@@ -29,6 +29,8 @@ function QuranBrowser({
   const [searchMultipleChapters, setSearchMultipleChapters] = useState(false);
 
   const [searchDiacritics, setSearchDiacritics] = useState(false);
+
+  const [searchIdentical, setSearchIdentical] = useState(false);
 
   const [searchError, setSearchError] = useState(false);
   const [selectedRootError, setSelectedRootError] = useState(false);
@@ -128,8 +130,15 @@ function QuranBrowser({
           } else {
             normal_text = verse.versetext;
           }
-          if (normal_text.search(normal_search) !== -1) {
-            matchVerses.push(verse);
+
+          if (searchIdentical) {
+            if (findWord(normal_search, normal_text)) {
+              matchVerses.push(verse);
+            }
+          } else {
+            if (normal_text.search(normal_search) !== -1) {
+              matchVerses.push(verse);
+            }
           }
         });
       });
@@ -143,8 +152,15 @@ function QuranBrowser({
         } else {
           normal_text = verse.versetext;
         }
-        if (normal_text.search(normal_search) !== -1) {
-          matchVerses.push(verse);
+
+        if (searchIdentical) {
+          if (findWord(normal_search, normal_text)) {
+            matchVerses.push(verse);
+          }
+        } else {
+          if (normal_text.search(normal_search) !== -1) {
+            matchVerses.push(verse);
+          }
         }
       });
     }
@@ -158,8 +174,15 @@ function QuranBrowser({
           } else {
             normal_text = verse.versetext;
           }
-          if (normal_text.search(normal_search) !== -1) {
-            matchVerses.push(verse);
+
+          if (searchIdentical) {
+            if (findWord(normal_search, normal_text)) {
+              matchVerses.push(verse);
+            }
+          } else {
+            if (normal_text.search(normal_search) !== -1) {
+              matchVerses.push(verse);
+            }
           }
         });
       });
@@ -283,6 +306,12 @@ function QuranBrowser({
               checkboxState={searchDiacritics}
               setCheckBoxState={setSearchDiacritics}
               labelText="بالتشكيل"
+            />
+
+            <CheckboxComponent
+              checkboxState={searchIdentical}
+              setCheckBoxState={setSearchIdentical}
+              labelText="مطابق"
             />
 
             <CheckboxComponent
