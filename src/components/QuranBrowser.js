@@ -248,6 +248,8 @@ function QuranBrowser({
   const handleSelectionListChapters = (event) => {
     if (!event.target.value) return;
 
+    scrollKey.current = null;
+
     let chapter = JSON.parse(event.target.value); //object
 
     if (event.target.selectedOptions.length === 1) {
@@ -263,6 +265,9 @@ function QuranBrowser({
 
   const refListVerses = useRef(null);
   const refListChapters = useRef(null);
+
+  const scrollKey = useRef();
+  const versesRef = useRef({});
 
   if (loadingState) return <LoadingSpinner />;
 
@@ -347,6 +352,7 @@ function QuranBrowser({
               refListVerses={refListVerses}
               refListChapters={refListChapters}
               gotoChapter={gotoChapter}
+              scrollKey={scrollKey}
             />
           ) : (
             <ListVerses
@@ -357,6 +363,8 @@ function QuranBrowser({
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
               refListVerses={refListVerses}
+              versesRef={versesRef}
+              scrollKey={scrollKey}
             />
           )}
         </div>
@@ -553,6 +561,7 @@ const ListSearchResults = ({
   refListVerses,
   refListChapters,
   gotoChapter,
+  scrollKey,
 }) => {
   let selectedChapters = [];
   if (searchMultipleChapters) {
@@ -602,6 +611,7 @@ const ListSearchResults = ({
               verseChapter={chapterNames[verse.suraid - 1].name}
               gotoChapter={gotoChapter}
               chapterNames={chapterNames}
+              scrollKey={scrollKey}
             />
           </VerseTextComponent>
           <div
@@ -635,11 +645,13 @@ const VerseContentComponent = ({
   verseChapter,
   gotoChapter,
   chapterNames,
+  scrollKey,
 }) => {
   let verse_key = verse.suraid + "-" + verse.verseid;
   let isLinkable = scopeAllQuran || searchMultipleChapters;
 
   const handleVerseClick = (e, verse_key) => {
+    scrollKey.current = verse_key;
     gotoChapter(chapterNames[verse.suraid - 1]);
   };
 
@@ -679,10 +691,16 @@ const ListVerses = ({
   editableNotes,
   setEditableNotes,
   refListVerses,
+  versesRef,
+  scrollKey,
 }) => {
   useEffect(() => {
-    refListVerses.current.scrollTop = 0;
-  }, [refListVerses, versesArray]);
+    if (scrollKey.current) {
+      versesRef.current[scrollKey.current].scrollIntoView();
+    } else {
+      refListVerses.current.scrollTop = 0;
+    }
+  }, [refListVerses, versesArray, scrollKey, versesRef]);
 
   //
   const handleNoteChange = (event) => {
@@ -702,7 +720,12 @@ const ListVerses = ({
         <h3 className="mb-2 text-primary">سورة {chapterName}</h3>
       </ListTitle>
       {versesArray.map((verse) => (
-        <div key={verse.suraid + "-" + verse.verseid}>
+        <div
+          key={verse.suraid + "-" + verse.verseid}
+          ref={(el) =>
+            (versesRef.current[verse.suraid + "-" + verse.verseid] = el)
+          }
+        >
           <VerseTextComponent>
             {verse.versetext} ({verse.verseid}){" "}
             <button
