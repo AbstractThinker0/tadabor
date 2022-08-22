@@ -290,6 +290,8 @@ function QuranBrowser({
 
   if (loadingState) return <LoadingSpinner />;
 
+  let isRootSearch = radioSearchMethod === "option1" ? true : false;
+
   return (
     <>
       <div className="row h-75">
@@ -310,12 +312,14 @@ function QuranBrowser({
               checkboxState={searchDiacritics}
               setCheckBoxState={setSearchDiacritics}
               labelText="بالتشكيل"
+              isDisabled={isRootSearch}
             />
 
             <CheckboxComponent
               checkboxState={searchIdentical}
               setCheckBoxState={setSearchIdentical}
               labelText="مطابق"
+              isDisabled={isRootSearch}
             />
 
             <CheckboxComponent
@@ -495,7 +499,12 @@ const FormWordSearch = ({
   );
 };
 
-const CheckboxComponent = ({ checkboxState, setCheckBoxState, labelText }) => {
+const CheckboxComponent = ({
+  checkboxState,
+  setCheckBoxState,
+  labelText,
+  isDisabled = false,
+}) => {
   const handleChangeCheckboxState = () => {
     setCheckBoxState(!checkboxState);
   };
@@ -508,6 +517,7 @@ const CheckboxComponent = ({ checkboxState, setCheckBoxState, labelText }) => {
         onChange={handleChangeCheckboxState}
         value=""
         id="flexCheckDefault"
+        disabled={isDisabled}
       />
       <label className="form-check-label" htmlFor="flexCheckDefault">
         {labelText}
