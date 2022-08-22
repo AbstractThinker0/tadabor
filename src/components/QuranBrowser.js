@@ -66,15 +66,19 @@ function QuranBrowser({
     };
   }, []);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-
+  const clearPreviousSearch = () => {
     setSearchError(false);
     setSelectedRootError(false);
     setSearchMultipleChapters(false);
+    setSearchResult([]);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    clearPreviousSearch();
     setSearchingString(searchString);
     setRadioSearchingMethod(radioSearchMethod);
-    setSearchResult([]);
 
     if (radioSearchMethod === "option2") {
       handleSearchByWord();
@@ -97,6 +101,25 @@ function QuranBrowser({
     } else {
       normal_search = searchString.trim();
     }
+
+    const checkVerseMatch = (verse) => {
+      let normal_text = "";
+      if (!searchDiacritics) {
+        normal_text = normalize_text(verse.versetext);
+      } else {
+        normal_text = verse.versetext;
+      }
+
+      if (searchIdentical) {
+        if (findWord(normal_search, normal_text)) {
+          matchVerses.push(verse);
+        }
+      } else {
+        if (normal_text.search(normal_search) !== -1) {
+          matchVerses.push(verse);
+        }
+      }
+    };
 
     let selectedChapters = [];
 
@@ -124,66 +147,21 @@ function QuranBrowser({
     function allChaptersMatches() {
       allQuranText.forEach((sura) => {
         sura.verses.forEach((verse) => {
-          let normal_text = "";
-          if (!searchDiacritics) {
-            normal_text = normalize_text(verse.versetext);
-          } else {
-            normal_text = verse.versetext;
-          }
-
-          if (searchIdentical) {
-            if (findWord(normal_search, normal_text)) {
-              matchVerses.push(verse);
-            }
-          } else {
-            if (normal_text.search(normal_search) !== -1) {
-              matchVerses.push(verse);
-            }
-          }
+          checkVerseMatch(verse);
         });
       });
     }
 
     function oneChapterMatches() {
       chapterVerses.forEach((verse) => {
-        let normal_text = "";
-        if (!searchDiacritics) {
-          normal_text = normalize_text(verse.versetext);
-        } else {
-          normal_text = verse.versetext;
-        }
-
-        if (searchIdentical) {
-          if (findWord(normal_search, normal_text)) {
-            matchVerses.push(verse);
-          }
-        } else {
-          if (normal_text.search(normal_search) !== -1) {
-            matchVerses.push(verse);
-          }
-        }
+        checkVerseMatch(verse);
       });
     }
 
     function multipleChaptersMatches() {
       selectedChapters.forEach((chapter) => {
         allQuranText[chapter.id - 1].verses.forEach((verse) => {
-          let normal_text = "";
-          if (!searchDiacritics) {
-            normal_text = normalize_text(verse.versetext);
-          } else {
-            normal_text = verse.versetext;
-          }
-
-          if (searchIdentical) {
-            if (findWord(normal_search, normal_text)) {
-              matchVerses.push(verse);
-            }
-          } else {
-            if (normal_text.search(normal_search) !== -1) {
-              matchVerses.push(verse);
-            }
-          }
+          checkVerseMatch(verse);
         });
       });
     }
@@ -278,11 +256,9 @@ function QuranBrowser({
   };
 
   const gotoChapter = (chapter) => {
+    clearPreviousSearch();
     setChapterVerses(allQuranText[chapter.id - 1].verses);
     setSelectChapter(chapter);
-    setSearchResult([]);
-    setSearchError(false);
-    setSelectedRootError(false);
   };
 
   const refListVerses = useRef(null);
