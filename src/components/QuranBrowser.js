@@ -346,7 +346,7 @@ function QuranBrowser({
         </div>
 
         <div
-          className="col mt-3 pb-1 border h-100 overflow-auto"
+          className="col mt-3 pb-1 border rounded h-100 overflow-auto"
           ref={refListVerses}
         >
           {searchResult.length || searchError || selectedRootError ? (
