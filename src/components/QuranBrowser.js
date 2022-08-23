@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "./LoadingSpinner";
 
+import * as bootstrap from "bootstrap";
+
 function QuranBrowser({
   allQuranText,
   absoluteQuran,
@@ -40,6 +42,8 @@ function QuranBrowser({
 
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
+
+  const [rootDerivations, setRootDerivations] = useState([]);
 
   useEffect(() => {
     let clientLeft = false;
@@ -189,6 +193,7 @@ function QuranBrowser({
     let occurencesArray = rootTarget.occurences;
 
     let matchVerses = [];
+    let derivations = [];
 
     if (searchAllQuran) {
       setSearchingAllQuran(true);
@@ -198,6 +203,20 @@ function QuranBrowser({
 
         let currentVerse = absoluteQuran[info[0]];
 
+        let verseWords = currentVerse.versetext.split(" ");
+
+        let wordIndexes = info[1].split(",");
+
+        wordIndexes.forEach((word) => {
+          derivations.push({
+            name: verseWords[word - 1],
+            key: currentVerse.suraid + "-" + currentVerse.verseid,
+            text:
+              chapterNames[currentVerse.suraid - 1].name +
+              ":" +
+              currentVerse.verseid,
+          });
+        });
         matchVerses.push(currentVerse);
       });
     } else {
@@ -242,6 +261,7 @@ function QuranBrowser({
       setSelectedRootError(true);
     } else {
       setSearchResult(matchVerses);
+      setRootDerivations(derivations);
     }
   };
 
@@ -353,6 +373,7 @@ function QuranBrowser({
               refListChapters={refListChapters}
               gotoChapter={gotoChapter}
               scrollKey={scrollKey}
+              rootDerivations={rootDerivations}
             />
           ) : (
             <ListVerses
@@ -562,7 +583,10 @@ const ListSearchResults = ({
   refListChapters,
   gotoChapter,
   scrollKey,
+  rootDerivations,
 }) => {
+  const refVersesResult = useRef({});
+
   let selectedChapters = [];
   if (searchMultipleChapters) {
     if (refListChapters.current.selectedOptions.length > 1) {
@@ -576,6 +600,14 @@ const ListSearchResults = ({
   useEffect(() => {
     refListVerses.current.scrollTop = 0;
   }, [refListVerses, versesArray]);
+
+  useEffect(() => {
+    //init tooltip
+
+    Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
+      (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
+    );
+  }, []);
 
   const handleNoteChange = (event) => {
     const { name, value } = event.target;
@@ -598,11 +630,35 @@ const ListSearchResults = ({
     );
   };
 
+  const handleRootClick = (e, verse_key) => {
+    refVersesResult.current[verse_key].scrollIntoView();
+  };
+
   return (
     <>
       <SearchTitle />
+      <hr />
+      <p>
+        {rootDerivations.map((root, index) => (
+          <span
+            role="button"
+            key={index}
+            onClick={(e) => handleRootClick(e, root.key)}
+            data-bs-toggle="tooltip"
+            data-bs-title={root.text}
+          >
+            {index ? " -" : " "} {root.name}
+          </span>
+        ))}
+      </p>
+      <hr />
       {versesArray.map((verse) => (
-        <div key={verse.suraid + ":" + verse.verseid}>
+        <div
+          key={verse.suraid + ":" + verse.verseid}
+          ref={(el) =>
+            (refVersesResult.current[verse.suraid + "-" + verse.verseid] = el)
+          }
+        >
           <VerseTextComponent>
             <VerseContentComponent
               verse={verse}
