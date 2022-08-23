@@ -428,19 +428,12 @@ const SelectionListChapters = ({
   handleSelectionListChapters,
   innerRef,
 }) => {
-  const handleSelectFocus = (e) => {
-    // If we have only one selected chapter make sure the verses list gets refreshed after doing a search
-    if (e.target.selectedOptions.length === 1) {
-      e.target.selectedIndex = -1;
-    }
-  };
-
   return (
     <div className="container mt-2 mb-2 pe-0 ps-5">
       <select
         className="form-select"
         size="7"
-        onFocus={handleSelectFocus}
+        onFocus={handleSelectionListChapters}
         onChange={handleSelectionListChapters}
         aria-label="size 7 select example"
         ref={innerRef}
