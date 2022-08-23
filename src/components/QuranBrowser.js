@@ -324,59 +324,57 @@ function QuranBrowser({
   return (
     <>
       <div className="row h-75">
-        <div className="col-auto pt-3 pb-1">
-          <div className="me-5">
-            <SelectionListChapters
-              chaptersArray={chapterNames}
-              handleSelectionListChapters={handleSelectionListChapters}
-              innerRef={refListChapters}
-            />
+        <SearchPanel>
+          <SelectionListChapters
+            chaptersArray={chapterNames}
+            handleSelectionListChapters={handleSelectionListChapters}
+            innerRef={refListChapters}
+          />
 
-            <RadioSearchMethod
-              radioSearchMethod={radioSearchMethod}
-              setRadioSearchMethod={setRadioSearchMethod}
-            />
+          <RadioSearchMethod
+            radioSearchMethod={radioSearchMethod}
+            setRadioSearchMethod={setRadioSearchMethod}
+          />
 
-            <CheckboxComponent
-              checkboxState={searchDiacritics}
-              setCheckBoxState={setSearchDiacritics}
-              labelText="بالتشكيل"
-              isDisabled={isRootSearch}
-            />
+          <CheckboxComponent
+            checkboxState={searchDiacritics}
+            setCheckBoxState={setSearchDiacritics}
+            labelText="بالتشكيل"
+            isDisabled={isRootSearch}
+          />
 
-            <CheckboxComponent
-              checkboxState={searchIdentical}
-              setCheckBoxState={setSearchIdentical}
-              labelText="مطابق"
-              isDisabled={isRootSearch}
-            />
+          <CheckboxComponent
+            checkboxState={searchIdentical}
+            setCheckBoxState={setSearchIdentical}
+            labelText="مطابق"
+            isDisabled={isRootSearch}
+          />
 
-            <CheckboxComponent
-              checkboxState={searchAllQuran}
-              setCheckBoxState={setSearchAllQuran}
-              labelText="بحث في كل السور"
-            />
+          <CheckboxComponent
+            checkboxState={searchAllQuran}
+            setCheckBoxState={setSearchAllQuran}
+            labelText="بحث في كل السور"
+          />
 
-            <FormWordSearch
-              handleSearchSubmit={handleSearchSubmit}
-              searchString={searchString}
-              setSearchString={setSearchString}
-            />
+          <FormWordSearch
+            handleSearchSubmit={handleSearchSubmit}
+            searchString={searchString}
+            setSearchString={setSearchString}
+          />
 
-            <SelectionListRoots
-              quranRoots={quranRoots}
-              radioSearchMethod={radioSearchMethod}
-              searchString={searchString}
-              setSearchString={setSearchString}
-            />
+          <SelectionListRoots
+            quranRoots={quranRoots}
+            radioSearchMethod={radioSearchMethod}
+            searchString={searchString}
+            setSearchString={setSearchString}
+          />
 
-            {searchResult.length > 0 && (
-              <p className="mt-3 text-success">
-                عدد الآيات: {searchResult.length}{" "}
-              </p>
-            )}
-          </div>
-        </div>
+          {searchResult.length > 0 && (
+            <p className="mt-3 text-success">
+              عدد الآيات: {searchResult.length}{" "}
+            </p>
+          )}
+        </SearchPanel>
 
         <div
           className="col mt-3 pb-1 border rounded h-100 overflow-auto"
@@ -422,6 +420,14 @@ function QuranBrowser({
     </>
   );
 }
+
+const SearchPanel = (props) => {
+  return (
+    <div className="col-auto pt-3 pb-1">
+      <div className="me-5">{props.children}</div>
+    </div>
+  );
+};
 
 const SelectionListChapters = ({
   chaptersArray,
