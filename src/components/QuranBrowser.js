@@ -239,7 +239,21 @@ function QuranBrowser({
 
             let currentVerse = absoluteQuran[info[0]];
 
+            let verseWords = currentVerse.versetext.split(" ");
+
+            let wordIndexes = info[1].split(",");
+
             if (chapter.id === parseInt(currentVerse.suraid)) {
+              wordIndexes.forEach((word) => {
+                derivations.push({
+                  name: verseWords[word - 1],
+                  key: currentVerse.suraid + "-" + currentVerse.verseid,
+                  text:
+                    chapterNames[currentVerse.suraid - 1].name +
+                    ":" +
+                    currentVerse.verseid,
+                });
+              });
               matchVerses.push(currentVerse);
             }
           });
@@ -250,7 +264,21 @@ function QuranBrowser({
 
           let currentVerse = absoluteQuran[info[0]];
 
+          let verseWords = currentVerse.versetext.split(" ");
+
+          let wordIndexes = info[1].split(",");
+
           if (selectChapter.id === parseInt(currentVerse.suraid)) {
+            wordIndexes.forEach((word) => {
+              derivations.push({
+                name: verseWords[word - 1],
+                key: currentVerse.suraid + "-" + currentVerse.verseid,
+                text:
+                  chapterNames[currentVerse.suraid - 1].name +
+                  ":" +
+                  currentVerse.verseid,
+              });
+            });
             matchVerses.push(currentVerse);
           }
         });
