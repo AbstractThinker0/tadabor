@@ -624,7 +624,6 @@ const ListSearchResults = ({
 
   useEffect(() => {
     //init tooltip
-
     Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
       (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
     );
@@ -655,24 +654,30 @@ const ListSearchResults = ({
     refVersesResult.current[verse_key].scrollIntoView();
   };
 
+  const isRootSearch = radioSearchMethod === "option1" ? true : false;
+
   return (
     <>
       <SearchTitle />
-      <hr />
-      <p>
-        {rootDerivations.map((root, index) => (
-          <span
-            role="button"
-            key={index}
-            onClick={(e) => handleRootClick(e, root.key)}
-            data-bs-toggle="tooltip"
-            data-bs-title={root.text}
-          >
-            {index ? " -" : " "} {root.name}
-          </span>
-        ))}
-      </p>
-      <hr />
+      {isRootSearch && (
+        <>
+          <hr />
+          <p>
+            {rootDerivations.map((root, index) => (
+              <span
+                role="button"
+                key={index}
+                onClick={(e) => handleRootClick(e, root.key)}
+                data-bs-toggle="tooltip"
+                data-bs-title={root.text}
+              >
+                {index ? " -" : " "} {root.name}
+              </span>
+            ))}
+          </p>
+          <hr />
+        </>
+      )}
       {versesArray.map((verse) => (
         <div
           key={verse.suraid + ":" + verse.verseid}
