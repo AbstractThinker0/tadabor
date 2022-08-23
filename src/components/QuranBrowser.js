@@ -376,10 +376,7 @@ function QuranBrowser({
           )}
         </SearchPanel>
 
-        <div
-          className="col mt-3 pb-1 border rounded h-100 overflow-auto"
-          ref={refListVerses}
-        >
+        <DisplayPanel innerRef={refListVerses}>
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
               versesArray={searchResult}
@@ -414,7 +411,7 @@ function QuranBrowser({
               scrollKey={scrollKey}
             />
           )}
-        </div>
+        </DisplayPanel>
       </div>
       <ToastContainer rtl />
     </>
@@ -425,6 +422,17 @@ const SearchPanel = (props) => {
   return (
     <div className="col-auto pt-3 pb-1">
       <div className="me-5">{props.children}</div>
+    </div>
+  );
+};
+
+const DisplayPanel = (props) => {
+  return (
+    <div
+      className="col mt-3 pb-1 border rounded h-100 overflow-auto"
+      ref={props.innerRef}
+    >
+      {props.children}
     </div>
   );
 };
