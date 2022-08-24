@@ -129,12 +129,7 @@ function QuranBrowser({
 
     let selectedChapters = [];
 
-    if (searchAllQuran) {
-      setSearchingAllQuran(true);
-      allChaptersMatches();
-    } else {
-      setSearchingAllQuran(false);
-
+    const fillSelectedChaptersArray = () => {
       if (refListChapters.current.selectedOptions.length > 1) {
         setSearchMultipleChapters(true);
         selectedChapters = Array.from(
@@ -142,6 +137,15 @@ function QuranBrowser({
           (option) => JSON.parse(option.value)
         );
       }
+    };
+
+    if (searchAllQuran) {
+      setSearchingAllQuran(true);
+      allChaptersMatches();
+    } else {
+      setSearchingAllQuran(false);
+
+      fillSelectedChaptersArray();
 
       if (selectedChapters.length > 1) {
         multipleChaptersMatches();
@@ -197,6 +201,31 @@ function QuranBrowser({
     let matchVerses = [];
     let derivations = [];
 
+    const fillSelectedChaptersArray = () => {
+      let selectedChapters = [];
+      if (refListChapters.current.selectedOptions.length > 1) {
+        setSearchMultipleChapters(true);
+        selectedChapters = Array.from(
+          refListChapters.current.selectedOptions,
+          (option) => JSON.parse(option.value)
+        );
+      }
+      return selectedChapters;
+    };
+
+    const fillDerivationsArray = (wordIndexes, verseWords, currentVerse) => {
+      wordIndexes.forEach((word) => {
+        derivations.push({
+          name: verseWords[word - 1],
+          key: currentVerse.suraid + "-" + currentVerse.verseid,
+          text:
+            chapterNames[currentVerse.suraid - 1].name +
+            ":" +
+            currentVerse.verseid,
+        });
+      });
+    };
+
     if (searchAllQuran) {
       setSearchingAllQuran(true);
 
@@ -209,30 +238,13 @@ function QuranBrowser({
 
         let wordIndexes = info[1].split(",");
 
-        wordIndexes.forEach((word) => {
-          derivations.push({
-            name: verseWords[word - 1],
-            key: currentVerse.suraid + "-" + currentVerse.verseid,
-            text:
-              chapterNames[currentVerse.suraid - 1].name +
-              ":" +
-              currentVerse.verseid,
-          });
-        });
+        fillDerivationsArray(wordIndexes, verseWords, currentVerse);
         matchVerses.push(currentVerse);
       });
     } else {
       setSearchingAllQuran(false);
 
-      let selectedChapters = [];
-
-      if (refListChapters.current.selectedOptions.length > 1) {
-        setSearchMultipleChapters(true);
-        selectedChapters = Array.from(
-          refListChapters.current.selectedOptions,
-          (option) => JSON.parse(option.value)
-        );
-      }
+      let selectedChapters = fillSelectedChaptersArray();
 
       if (selectedChapters.length > 1) {
         selectedChapters.forEach((chapter) => {
@@ -246,16 +258,7 @@ function QuranBrowser({
             let wordIndexes = info[1].split(",");
 
             if (chapter.id === parseInt(currentVerse.suraid)) {
-              wordIndexes.forEach((word) => {
-                derivations.push({
-                  name: verseWords[word - 1],
-                  key: currentVerse.suraid + "-" + currentVerse.verseid,
-                  text:
-                    chapterNames[currentVerse.suraid - 1].name +
-                    ":" +
-                    currentVerse.verseid,
-                });
-              });
+              fillDerivationsArray(wordIndexes, verseWords, currentVerse);
               matchVerses.push(currentVerse);
             }
           });
@@ -271,16 +274,7 @@ function QuranBrowser({
           let wordIndexes = info[1].split(",");
 
           if (selectChapter.id === parseInt(currentVerse.suraid)) {
-            wordIndexes.forEach((word) => {
-              derivations.push({
-                name: verseWords[word - 1],
-                key: currentVerse.suraid + "-" + currentVerse.verseid,
-                text:
-                  chapterNames[currentVerse.suraid - 1].name +
-                  ":" +
-                  currentVerse.verseid,
-              });
-            });
+            fillDerivationsArray(wordIndexes, verseWords, currentVerse);
             matchVerses.push(currentVerse);
           }
         });
