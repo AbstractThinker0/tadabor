@@ -18,7 +18,7 @@ function QuranBrowser({
 }) {
   const [loadingState, setLoadingState] = useState(true);
 
-  const [selectChapter, setSelectChapter] = useState(chapterNames[0]);
+  const [selectChapter, setSelectChapter] = useState(1);
   const [chapterVerses, setChapterVerses] = useState(allQuranText[0].verses);
 
   const [searchString, setSearchString] = useState("");
@@ -134,7 +134,7 @@ function QuranBrowser({
         setSearchMultipleChapters(true);
         selectedChapters = Array.from(
           refListChapters.current.selectedOptions,
-          (option) => JSON.parse(option.value)
+          (option) => option.value
         );
       }
     };
@@ -170,7 +170,7 @@ function QuranBrowser({
 
     function multipleChaptersMatches() {
       selectedChapters.forEach((chapter) => {
-        allQuranText[chapter.id - 1].verses.forEach((verse) => {
+        allQuranText[chapter - 1].verses.forEach((verse) => {
           checkVerseMatch(verse);
         });
       });
@@ -207,7 +207,7 @@ function QuranBrowser({
         setSearchMultipleChapters(true);
         selectedChapters = Array.from(
           refListChapters.current.selectedOptions,
-          (option) => JSON.parse(option.value)
+          (option) => option.value
         );
       }
       return selectedChapters;
@@ -257,7 +257,7 @@ function QuranBrowser({
 
             let wordIndexes = info[1].split(",");
 
-            if (chapter.id === parseInt(currentVerse.suraid)) {
+            if (chapter === parseInt(currentVerse.suraid)) {
               fillDerivationsArray(wordIndexes, verseWords, currentVerse);
               matchVerses.push(currentVerse);
             }
@@ -273,7 +273,7 @@ function QuranBrowser({
 
           let wordIndexes = info[1].split(",");
 
-          if (selectChapter.id === parseInt(currentVerse.suraid)) {
+          if (selectChapter === parseInt(currentVerse.suraid)) {
             fillDerivationsArray(wordIndexes, verseWords, currentVerse);
             matchVerses.push(currentVerse);
           }
@@ -294,7 +294,7 @@ function QuranBrowser({
 
     scrollKey.current = null;
 
-    let chapter = JSON.parse(event.target.value); //object
+    let chapter = event.target.value;
 
     if (event.target.selectedOptions.length === 1) {
       gotoChapter(chapter);
@@ -303,8 +303,15 @@ function QuranBrowser({
 
   const gotoChapter = (chapter) => {
     clearPreviousSearch();
-    setChapterVerses(allQuranText[chapter.id - 1].verses);
+    setChapterVerses(allQuranText[chapter - 1].verses);
     setSelectChapter(chapter);
+  };
+
+  const handleNoteChange = (event) => {
+    const { name, value } = event.target;
+    let verse = JSON.parse(name);
+    myNotes[verse.suraid + "-" + verse.verseid] = value;
+    setMyNotes({ ...myNotes });
   };
 
   const refListVerses = useRef(null);
@@ -376,7 +383,7 @@ function QuranBrowser({
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
               versesArray={searchResult}
-              chapterName={selectChapter.name}
+              chapterName={chapterNames[selectChapter - 1].name}
               searchToken={searchingString.trim()}
               scopeAllQuran={searchingAllQuran}
               searchError={searchError}
@@ -393,11 +400,12 @@ function QuranBrowser({
               gotoChapter={gotoChapter}
               scrollKey={scrollKey}
               rootDerivations={rootDerivations}
+              handleNoteChange={handleNoteChange}
             />
           ) : (
             <ListVerses
               versesArray={chapterVerses}
-              chapterName={selectChapter.name}
+              chapterName={chapterNames[selectChapter - 1].name}
               myNotes={myNotes}
               setMyNotes={setMyNotes}
               editableNotes={editableNotes}
@@ -405,6 +413,7 @@ function QuranBrowser({
               refListVerses={refListVerses}
               versesRef={versesRef}
               scrollKey={scrollKey}
+              handleNoteChange={handleNoteChange}
             />
           )}
         </DisplayPanel>
@@ -447,10 +456,11 @@ const SelectionListChapters = ({
         onChange={handleSelectionListChapters}
         aria-label="size 7 select example"
         ref={innerRef}
+        defaultValue={["1"]}
         multiple
       >
         {chaptersArray.map((chapter, index) => (
-          <option key={chapter.id} value={JSON.stringify(chapter)}>
+          <option key={chapter.id} value={chapter.id}>
             {index + 1}. {chapter.name}
           </option>
         ))}
@@ -615,6 +625,7 @@ const ListSearchResults = ({
   gotoChapter,
   scrollKey,
   rootDerivations,
+  handleNoteChange,
 }) => {
   const refVersesResult = useRef({});
 
@@ -623,7 +634,7 @@ const ListSearchResults = ({
     if (refListChapters.current.selectedOptions.length > 1) {
       selectedChapters = Array.from(
         refListChapters.current.selectedOptions,
-        (option) => JSON.parse(option.value).name
+        (option) => chapterNames[option.value - 1].name
       );
     }
   }
@@ -638,13 +649,6 @@ const ListSearchResults = ({
       (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
     );
   }, []);
-
-  const handleNoteChange = (event) => {
-    const { name, value } = event.target;
-    let verse = JSON.parse(name);
-    myNotes[verse.suraid + "-" + verse.verseid] = value;
-    setMyNotes({ ...myNotes });
-  };
 
   const SearchTitle = () => {
     let searchType = radioSearchMethod === "option1" ? "جذر" : "كلمة";
@@ -744,7 +748,7 @@ const VerseContentComponent = ({
 
   const handleVerseClick = (e, verse_key) => {
     scrollKey.current = verse_key;
-    gotoChapter(chapterNames[verse.suraid - 1]);
+    gotoChapter(chapterNames[verse.suraid - 1].id);
   };
 
   return (
@@ -785,6 +789,7 @@ const ListVerses = ({
   refListVerses,
   versesRef,
   scrollKey,
+  handleNoteChange,
 }) => {
   useEffect(() => {
     if (scrollKey.current) {
@@ -793,14 +798,6 @@ const ListVerses = ({
       refListVerses.current.scrollTop = 0;
     }
   }, [refListVerses, versesArray, scrollKey, versesRef]);
-
-  //
-  const handleNoteChange = (event) => {
-    const { name, value } = event.target;
-    let verse = JSON.parse(name);
-    myNotes[verse.suraid + "-" + verse.verseid] = value;
-    setMyNotes({ ...myNotes });
-  };
 
   const ListTitle = (props) => {
     return <>{props.children}</>;
