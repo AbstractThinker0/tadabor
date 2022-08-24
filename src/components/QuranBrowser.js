@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { db } from "../util/db";
+
+import LoadingSpinner from "./LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
 import { ToastContainer, toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
-import LoadingSpinner from "./LoadingSpinner";
 
 import * as bootstrap from "bootstrap";
 
