@@ -391,7 +391,6 @@ function QuranBrowser({
               chapterNames={chapterNames}
               radioSearchMethod={radioSearchingMethod}
               myNotes={myNotes}
-              setMyNotes={setMyNotes}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
               searchMultipleChapters={searchMultipleChapters}
@@ -407,7 +406,6 @@ function QuranBrowser({
               versesArray={chapterVerses}
               chapterName={chapterNames[selectChapter - 1].name}
               myNotes={myNotes}
-              setMyNotes={setMyNotes}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
               refListVerses={refListVerses}
@@ -616,7 +614,6 @@ const ListSearchResults = ({
   chapterNames,
   radioSearchMethod,
   myNotes,
-  setMyNotes,
   editableNotes,
   setEditableNotes,
   searchMultipleChapters,
@@ -783,7 +780,6 @@ const ListVerses = ({
   versesArray,
   chapterName,
   myNotes,
-  setMyNotes,
   editableNotes,
   setEditableNotes,
   refListVerses,
