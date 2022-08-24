@@ -75,6 +75,7 @@ function QuranBrowser({
     setSelectedRootError(false);
     setSearchMultipleChapters(false);
     setSearchResult([]);
+    setRootDerivations([]);
   };
 
   const handleSearchSubmit = (e) => {
