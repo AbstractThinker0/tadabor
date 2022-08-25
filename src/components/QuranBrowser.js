@@ -217,7 +217,7 @@ function QuranBrowser({
       wordIndexes.forEach((word) => {
         derivations.push({
           name: verseWords[word - 1],
-          key: currentVerse.suraid + "-" + currentVerse.verseid,
+          key: currentVerse.key,
           text:
             chapterNames[currentVerse.suraid - 1].name +
             ":" +
@@ -309,7 +309,7 @@ function QuranBrowser({
   const handleNoteChange = (event) => {
     const { name, value } = event.target;
     let verse = JSON.parse(name);
-    myNotes[verse.suraid + "-" + verse.verseid] = value;
+    myNotes[verse.key] = value;
     setMyNotes({ ...myNotes });
   };
 
@@ -646,7 +646,7 @@ const ListSearchResults = ({
     Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
       (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
     );
-  }, []);
+  }, [versesArray]);
 
   const SearchTitle = () => {
     let searchType = radioSearchMethod === "option1" ? "جذر" : "كلمة";
@@ -692,10 +692,8 @@ const ListSearchResults = ({
       )}
       {versesArray.map((verse) => (
         <div
-          key={verse.suraid + ":" + verse.verseid}
-          ref={(el) =>
-            (refVersesResult.current[verse.suraid + "-" + verse.verseid] = el)
-          }
+          key={verse.key}
+          ref={(el) => (refVersesResult.current[verse.key] = el)}
         >
           <VerseTextComponent>
             <VerseContentComponent
@@ -710,12 +708,12 @@ const ListSearchResults = ({
           </VerseTextComponent>
           <div
             className="collapse card border-primary"
-            id={"collapseExample" + verse.suraid + "-" + verse.verseid}
+            id={"collapseExample" + verse.key}
           >
             <div className="card-body">
               <NoteForm
                 verse={verse}
-                value={myNotes[verse.suraid + "-" + verse.verseid] || ""}
+                value={myNotes[verse.key] || ""}
                 handleNoteChange={handleNoteChange}
                 editableNotes={editableNotes}
                 setEditableNotes={setEditableNotes}
@@ -741,7 +739,7 @@ const VerseContentComponent = ({
   chapterNames,
   scrollKey,
 }) => {
-  let verse_key = verse.suraid + "-" + verse.verseid;
+  let verse_key = verse.key;
   let isLinkable = scopeAllQuran || searchMultipleChapters;
 
   const handleVerseClick = (e, verse_key) => {
@@ -806,37 +804,28 @@ const ListVerses = ({
         <h3 className="mb-2 text-primary">سورة {chapterName}</h3>
       </ListTitle>
       {versesArray.map((verse) => (
-        <div
-          key={verse.suraid + "-" + verse.verseid}
-          ref={(el) =>
-            (versesRef.current[verse.suraid + "-" + verse.verseid] = el)
-          }
-        >
+        <div key={verse.key} ref={(el) => (versesRef.current[verse.key] = el)}>
           <VerseTextComponent>
             {verse.versetext} ({verse.verseid}){" "}
             <button
               className="btn"
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target={
-                "#collapseExample" + verse.suraid + "-" + verse.verseid
-              }
+              data-bs-target={"#collapseExample" + verse.key}
               aria-expanded="false"
-              aria-controls={
-                "collapseExample" + verse.suraid + "-" + verse.verseid
-              }
+              aria-controls={"collapseExample" + verse.key}
             >
               <ArrowDownCircleFill />
             </button>
           </VerseTextComponent>
           <div
             className="collapse card border-primary"
-            id={"collapseExample" + verse.suraid + "-" + verse.verseid}
+            id={"collapseExample" + verse.key}
           >
             <div className="card-body">
               <NoteForm
                 verse={verse}
-                value={myNotes[verse.suraid + "-" + verse.verseid] || ""}
+                value={myNotes[verse.key] || ""}
                 handleNoteChange={handleNoteChange}
                 editableNotes={editableNotes}
                 setEditableNotes={setEditableNotes}
@@ -866,7 +855,7 @@ const NoteForm = ({
 }) => {
   const [rows, setRows] = useState(4);
 
-  let verse_key = verse.suraid + "-" + verse.verseid;
+  let verse_key = verse.key;
 
   if (!value) {
     editableNotes[verse_key] = true;
