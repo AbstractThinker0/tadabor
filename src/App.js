@@ -42,7 +42,7 @@ const DataLoader = () => {
       }
 
       if (allQuranText.current === null) {
-        res = await axios.get("/res/quran.json");
+        res = await axios.get("/res/quran_v2.json");
 
         if (res.error || clientLeft) return;
 
