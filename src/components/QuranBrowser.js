@@ -19,7 +19,6 @@ function QuranBrowser({
   const [loadingState, setLoadingState] = useState(true);
 
   const [selectChapter, setSelectChapter] = useState(1);
-  const [chapterVerses, setChapterVerses] = useState(allQuranText[0].verses);
 
   const [searchString, setSearchString] = useState("");
   const [searchingString, setSearchingString] = useState("");
@@ -163,7 +162,8 @@ function QuranBrowser({
     }
 
     function oneChapterMatches() {
-      chapterVerses.forEach((verse) => {
+      let currentChapter = allQuranText[selectChapter - 1].verses;
+      currentChapter.forEach((verse) => {
         checkVerseMatch(verse);
       });
     }
@@ -303,7 +303,6 @@ function QuranBrowser({
 
   const gotoChapter = (chapter) => {
     clearPreviousSearch();
-    setChapterVerses(allQuranText[chapter - 1].verses);
     setSelectChapter(chapter);
   };
 
@@ -403,11 +402,11 @@ function QuranBrowser({
             />
           ) : (
             <ListVerses
-              versesArray={chapterVerses}
               chapterName={chapterNames[selectChapter - 1].name}
+              versesArray={allQuranText[selectChapter - 1].verses}
               myNotes={myNotes}
-              editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
+              editableNotes={editableNotes}
               refListVerses={refListVerses}
               versesRef={versesRef}
               scrollKey={scrollKey}
@@ -795,7 +794,7 @@ const ListVerses = ({
     } else {
       refListVerses.current.scrollTop = 0;
     }
-  }, [refListVerses, versesArray, scrollKey, versesRef]);
+  }, [refListVerses, scrollKey, versesRef]);
 
   const ListTitle = (props) => {
     return <>{props.children}</>;
