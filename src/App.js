@@ -57,6 +57,7 @@ const DataLoader = () => {
         });
       }
 
+      let index = 0;
       if (quranRoots.current.length === 0) {
         res = await axios.get("/res/quran-root.txt");
 
@@ -74,10 +75,13 @@ const DataLoader = () => {
           let occurences = lineArgs[2].split(";");
 
           quranRoots.current.push({
+            id: index,
             name: lineArgs[0],
             count: lineArgs[1],
             occurences: occurences,
           });
+
+          index++;
         });
       }
 

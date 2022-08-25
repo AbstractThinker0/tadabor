@@ -257,7 +257,7 @@ function QuranBrowser({
 
             let wordIndexes = info[1].split(",");
 
-            if (chapter === parseInt(currentVerse.suraid)) {
+            if (+chapter === +currentVerse.suraid) {
               fillDerivationsArray(wordIndexes, verseWords, currentVerse);
               matchVerses.push(currentVerse);
             }
@@ -273,7 +273,7 @@ function QuranBrowser({
 
           let wordIndexes = info[1].split(",");
 
-          if (selectChapter === parseInt(currentVerse.suraid)) {
+          if (+selectChapter === +currentVerse.suraid) {
             fillDerivationsArray(wordIndexes, verseWords, currentVerse);
             matchVerses.push(currentVerse);
           }
@@ -579,8 +579,10 @@ const SelectionListRoots = ({
   let isDisabled = radioSearchMethod === "option1" ? false : true;
 
   const handleSelectRoot = (event) => {
-    let obj = JSON.parse(event.target.value); //object
-    setSearchString(obj.name);
+    let rootId = event.target.value;
+    let selectedRoot = quranRoots[rootId];
+
+    setSearchString(selectedRoot.name);
   };
 
   return (
@@ -595,7 +597,7 @@ const SelectionListRoots = ({
         {quranRoots
           .filter((root) => root.name.startsWith(searchString) || isDisabled)
           .map((root, index) => (
-            <option key={index} value={JSON.stringify(root)}>
+            <option key={index} value={root.id}>
               {root.name}
             </option>
           ))}
