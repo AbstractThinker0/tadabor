@@ -722,6 +722,17 @@ const ListSearchResults = ({
           </div>
         </div>
       ))}
+      <SearchErrorsComponent
+        searchError={searchError}
+        selectedRootError={selectedRootError}
+      />
+    </>
+  );
+};
+
+const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
+  return (
+    <>
       {searchError && <p className="mt-3 text-danger">لا وجود لهذه الكلمة.</p>}
       {selectedRootError && (
         <p className="mt-3 text-danger">هذا الجذر غير موجود أو غير مدرج.</p>
@@ -795,14 +806,12 @@ const ListVerses = ({
   }, [refListVerses, scrollKey, versesRef]);
 
   const ListTitle = (props) => {
-    return <>{props.children}</>;
+    return <h3 className="mb-2 text-primary text-center">{props.children}</h3>;
   };
 
   return (
     <>
-      <ListTitle>
-        <h3 className="mb-2 text-primary">سورة {chapterName}</h3>
-      </ListTitle>
+      <ListTitle>سورة {chapterName}</ListTitle>
       {versesArray.map((verse) => (
         <div key={verse.key} ref={(el) => (versesRef.current[verse.key] = el)}>
           <VerseTextComponent>
