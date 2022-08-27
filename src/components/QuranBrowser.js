@@ -327,7 +327,7 @@ function QuranBrowser({
 
   return (
     <>
-      <div className="row h-75">
+      <div className="row h-100">
         <SearchPanel>
           <SelectionListChapters
             chaptersArray={chapterNames}
@@ -438,7 +438,8 @@ const SearchPanel = (props) => {
 const DisplayPanel = (props) => {
   return (
     <div
-      className="col mt-3 pb-1 border rounded h-100 overflow-auto"
+      className="col mt-3 pb-1 border rounded overflow-auto"
+      style={{ height: "85%" }}
       ref={props.innerRef}
     >
       {props.children}

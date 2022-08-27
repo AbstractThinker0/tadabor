@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 function Layout({ children }) {
   return (
     <div className="container vh-100 mw-100">
-      <Navbar />
-      <AlertMessage />
-      {children}
+      <div className="h-100">
+        <Navbar />
+        <AlertMessage />
+        {children}
+      </div>
     </div>
   );
 }
