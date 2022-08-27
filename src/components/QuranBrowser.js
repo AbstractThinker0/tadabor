@@ -372,12 +372,7 @@ function QuranBrowser({
             searchString={searchString}
             setSearchString={setSearchString}
           />
-
-          {searchResult.length > 0 && (
-            <p className="mt-3 text-success">
-              عدد الآيات: {searchResult.length}{" "}
-            </p>
-          )}
+          <SearchSuccessComponent searchResult={searchResult} />
         </SearchPanel>
 
         <DisplayPanel innerRef={refListVerses}>
@@ -421,6 +416,16 @@ function QuranBrowser({
     </>
   );
 }
+
+const SearchSuccessComponent = ({ searchResult }) => {
+  return (
+    <>
+      {searchResult.length > 0 && (
+        <p className="mt-3 text-success">عدد الآيات: {searchResult.length} </p>
+      )}
+    </>
+  );
+};
 
 const SearchPanel = (props) => {
   return (
