@@ -37,8 +37,10 @@ function QuranBrowser({
   const [searchError, setSearchError] = useState(false);
   const [selectedRootError, setSelectedRootError] = useState(false);
 
-  const [radioSearchMethod, setRadioSearchMethod] = useState("option2");
-  const [radioSearchingMethod, setRadioSearchingMethod] = useState("option2");
+  const [radioSearchMethod, setRadioSearchMethod] =
+    useState("optionWordSearch");
+  const [radioSearchingMethod, setRadioSearchingMethod] =
+    useState("optionWordSearch");
 
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
@@ -85,9 +87,9 @@ function QuranBrowser({
     setSearchingString(searchString);
     setRadioSearchingMethod(radioSearchMethod);
 
-    if (radioSearchMethod === "option2") {
+    if (radioSearchMethod === "optionWordSearch") {
       handleSearchByWord();
-    } else if (radioSearchMethod === "option1") {
+    } else if (radioSearchMethod === "optionRootSearch") {
       handleSearchByRoot();
     }
   };
@@ -321,7 +323,7 @@ function QuranBrowser({
 
   if (loadingState) return <LoadingSpinner />;
 
-  let isRootSearch = radioSearchMethod === "option1" ? true : false;
+  let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
   return (
     <>
@@ -366,7 +368,7 @@ function QuranBrowser({
 
           <SelectionListRoots
             quranRoots={quranRoots}
-            radioSearchMethod={radioSearchMethod}
+            isDisabled={!isRootSearch}
             searchString={searchString}
             setSearchString={setSearchString}
           />
@@ -479,8 +481,8 @@ const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
           type="radio"
           name="inlineRadioOptions"
           id="inlineRadio1"
-          value="option1"
-          checked={radioSearchMethod === "option1"}
+          value="optionRootSearch"
+          checked={radioSearchMethod === "optionRootSearch"}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio1">
@@ -493,8 +495,8 @@ const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
           type="radio"
           name="inlineRadioOptions"
           id="inlineRadio2"
-          value="option2"
-          checked={radioSearchMethod === "option2"}
+          value="optionWordSearch"
+          checked={radioSearchMethod === "optionWordSearch"}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio2">
@@ -571,12 +573,10 @@ const CheckboxComponent = ({
 
 const SelectionListRoots = ({
   quranRoots,
-  radioSearchMethod,
+  isDisabled,
   searchString,
   setSearchString,
 }) => {
-  let isDisabled = radioSearchMethod === "option1" ? false : true;
-
   const handleSelectRoot = (event) => {
     let rootId = event.target.value;
     let selectedRoot = quranRoots[rootId];
@@ -649,7 +649,7 @@ const ListSearchResults = ({
   }, [versesArray]);
 
   const SearchTitle = () => {
-    let searchType = radioSearchMethod === "option1" ? "جذر" : "كلمة";
+    let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info">
         نتائج البحث عن {searchType} "{searchToken}"
@@ -666,7 +666,7 @@ const ListSearchResults = ({
     refVersesResult.current[verse_key].scrollIntoView();
   };
 
-  const isRootSearch = radioSearchMethod === "option1" ? true : false;
+  const isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
   return (
     <>
