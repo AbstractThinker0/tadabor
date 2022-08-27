@@ -881,10 +881,12 @@ const NoteForm = ({
   useEffect(() => {
     const rowlen = value.split("\n");
 
-    if (rowlen.length > 4 && !isNoteEditable) {
-      setRows(rowlen.length);
+    if (rowlen.length >= 4) {
+      setRows(rowlen.length + 1);
+    } else {
+      setRows(4);
     }
-  }, [value, isNoteEditable]);
+  }, [value]);
 
   const handleNoteSubmit = (event) => {
     event.preventDefault();
