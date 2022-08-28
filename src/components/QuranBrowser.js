@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as bootstrap from "bootstrap";
+import { useTranslation } from "react-i18next";
 
 function QuranBrowser({
   allQuranText,
@@ -321,6 +322,8 @@ function QuranBrowser({
   const scrollKey = useRef();
   const versesRef = useRef({});
 
+  const { t } = useTranslation();
+
   if (loadingState) return <LoadingSpinner />;
 
   let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
@@ -343,21 +346,21 @@ function QuranBrowser({
           <CheckboxComponent
             checkboxState={searchDiacritics}
             setCheckBoxState={setSearchDiacritics}
-            labelText="بالتشكيل"
+            labelText={t("search_diacritics")}
             isDisabled={isRootSearch}
           />
 
           <CheckboxComponent
             checkboxState={searchIdentical}
             setCheckBoxState={setSearchIdentical}
-            labelText="مطابق"
+            labelText={t("search_identical")}
             isDisabled={isRootSearch}
           />
 
           <CheckboxComponent
             checkboxState={searchAllQuran}
             setCheckBoxState={setSearchAllQuran}
-            labelText="بحث في كل السور"
+            labelText={t("search_all_quran")}
           />
 
           <FormWordSearch
@@ -418,24 +421,27 @@ function QuranBrowser({
 }
 
 const SearchSuccessComponent = ({ searchResult }) => {
+  const { t } = useTranslation();
   return (
     <>
       {searchResult.length > 0 && (
-        <p className="mt-3 text-success">عدد الآيات: {searchResult.length} </p>
+        <p className="mt-3 text-success">
+          {t("search_count") + " " + searchResult.length}{" "}
+        </p>
       )}
     </>
   );
 };
 
 const SearchPanel = (props) => {
-  return (
-    <div className="col-auto pt-3 pb-1">
-      <div className="me-5">{props.children}</div>
-    </div>
-  );
+  return <div className="col-auto pt-3 pb-1">{props.children}</div>;
 };
 
 const DisplayPanel = (props) => {
+  useEffect(() => {
+    props.innerRef.current.dir = "rtl";
+  });
+
   return (
     <div
       className="col mt-3 pb-1 border rounded overflow-auto"
@@ -453,7 +459,7 @@ const SelectionListChapters = ({
   innerRef,
 }) => {
   return (
-    <div className="container mt-2 mb-2 pe-0 ps-5">
+    <div className="container mt-2 mb-2 p-0">
       <select
         className="form-select"
         size="7"
@@ -475,13 +481,18 @@ const SelectionListChapters = ({
 };
 
 const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
+  const { t, i18n } = useTranslation();
   const handleSearchMethod = (event) => {
     setRadioSearchMethod(event.target.value);
   };
   return (
     <div>
-      طريقة البحث:
-      <div className="form-check form-check-inline form-check-reverse">
+      {t("search_method")}
+      <div
+        className={`form-check form-check-inline ${
+          i18n.resolvedLanguage === "ar" && "form-check-reverse"
+        }`}
+      >
         <input
           className="form-check-input"
           type="radio"
@@ -492,10 +503,14 @@ const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio1">
-          جذر
+          {t("search_root")}
         </label>
       </div>
-      <div className="form-check form-check-inline form-check-reverse">
+      <div
+        className={`form-check form-check-inline ${
+          i18n.resolvedLanguage === "ar" && "form-check-reverse"
+        }`}
+      >
         <input
           className="form-check-input"
           type="radio"
@@ -506,7 +521,7 @@ const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio2">
-          كلمة
+          {t("search_word")}
         </label>
       </div>
     </div>
@@ -518,6 +533,13 @@ const FormWordSearch = ({
   searchString,
   setSearchString,
 }) => {
+  const { t } = useTranslation();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.dir = "rtl";
+  });
+
   const searchStringHandle = (event) => {
     setSearchString(event.target.value);
   };
@@ -538,11 +560,12 @@ const FormWordSearch = ({
             aria-label="Search"
             onChange={searchStringHandle}
             required
+            ref={inputRef}
           />
         </div>
         <div className="col">
           <button className="btn btn-outline-success" type="submit">
-            إبحث
+            {t("search_button")}
           </button>
         </div>
       </div>
@@ -556,11 +579,17 @@ const CheckboxComponent = ({
   labelText,
   isDisabled = false,
 }) => {
+  const { i18n } = useTranslation();
+
   const handleChangeCheckboxState = () => {
     setCheckBoxState(!checkboxState);
   };
   return (
-    <div className="form-check form-check-reverse mt-2">
+    <div
+      className={`form-check mt-2  ${
+        i18n.resolvedLanguage === "ar" && "form-check-reverse"
+      }`}
+    >
       <input
         className="form-check-input"
         type="checkbox"
@@ -591,7 +620,7 @@ const SelectionListRoots = ({
   };
 
   return (
-    <div className="container mt-2 p-0 ps-5">
+    <div className="container mt-2 p-0">
       <select
         className="form-select"
         size="6"
