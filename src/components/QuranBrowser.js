@@ -438,12 +438,9 @@ const SearchPanel = (props) => {
 };
 
 const DisplayPanel = (props) => {
-  useEffect(() => {
-    props.innerRef.current.dir = "rtl";
-  });
-
   return (
     <div
+      dir="rtl"
       className="col mt-3 pb-1 border rounded overflow-auto"
       style={{ height: "85%" }}
       ref={props.innerRef}
@@ -534,11 +531,6 @@ const FormWordSearch = ({
   setSearchString,
 }) => {
   const { t } = useTranslation();
-  const inputRef = useRef();
-
-  useEffect(() => {
-    inputRef.current.dir = "rtl";
-  });
 
   const searchStringHandle = (event) => {
     setSearchString(event.target.value);
@@ -560,7 +552,7 @@ const FormWordSearch = ({
             aria-label="Search"
             onChange={searchStringHandle}
             required
-            ref={inputRef}
+            dir="rtl"
           />
         </div>
         <div className="col">
