@@ -10,14 +10,14 @@ import QuranBrowser from "./components/QuranBrowser";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<DataLoader />} />
+      <Route path="/" element={<QuranBrowserLoaded />} />
       <Route path="/about" element={<About />} />
-      <Route path="*" element={<DataLoader />} />
+      <Route path="*" element={<QuranBrowserLoaded />} />
     </Routes>
   );
 }
 
-const DataLoader = () => {
+const withDataLoaded = (Component) => () => {
   const [loadingState, setLoadingState] = useState(true);
 
   let allQuranText = useRef(null);
@@ -96,7 +96,7 @@ const DataLoader = () => {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <QuranBrowser
+    <Component
       allQuranText={allQuranText.current}
       absoluteQuran={absoluteQuran.current}
       chapterNames={chapterNames.current}
@@ -104,5 +104,7 @@ const DataLoader = () => {
     />
   );
 };
+
+const QuranBrowserLoaded = withDataLoaded(QuranBrowser);
 
 export default App;
