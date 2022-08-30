@@ -330,7 +330,7 @@ function QuranBrowser({
 
   return (
     <>
-      <div className="row h-100">
+      <div className="row" style={{ height: "85%" }}>
         <SearchPanel>
           <SelectionListChapters
             chaptersArray={chapterNames}
@@ -441,8 +441,7 @@ const DisplayPanel = (props) => {
   return (
     <div
       dir="rtl"
-      className="col mt-3 pb-1 border rounded overflow-auto"
-      style={{ height: "85%" }}
+      className="col mt-3 pb-1 border rounded h-100 overflow-auto"
       ref={props.innerRef}
     >
       {props.children}
@@ -808,7 +807,7 @@ const VerseContentComponent = ({
         aria-controls={"collapseExample" + verse_key}
       >
         <ArrowDownCircleFill />
-      </button>{" "}
+      </button>
     </>
   );
 };
