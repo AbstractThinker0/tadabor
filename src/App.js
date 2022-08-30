@@ -4,13 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import About from "./components/About";
+import Coloring from "./components/Coloring";
 import LoadingSpinner from "./components/LoadingSpinner";
 import QuranBrowser from "./components/QuranBrowser";
+import RootsBrowser from "./components/RootsBrowser";
+import YourNotes from "./components/YourNotes";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<QuranBrowserLoaded />} />
+      <Route path="/roots" element={<RootsBrowserLoaded />} />
+      <Route path="/notes" element={<YourNotes />} />
+      <Route path="/coloring" element={<Coloring />} />
       <Route path="/about" element={<About />} />
       <Route path="*" element={<QuranBrowserLoaded />} />
     </Routes>
@@ -106,5 +112,6 @@ const withDataLoaded = (Component) => () => {
 };
 
 const QuranBrowserLoaded = withDataLoaded(QuranBrowser);
+const RootsBrowserLoaded = withDataLoaded(RootsBrowser);
 
 export default App;

@@ -18,7 +18,7 @@ const AlertMessage = () => {
 
   return (
     <div
-      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center mt-2"
+      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center mt-2 m-0"
       role="alert"
     >
       {t("alert_message")}
@@ -63,6 +63,21 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link" aria-current="page" to="/">
                 {t("nav_home")}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/roots">
+                {t("nav_roots")}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/notes">
+                {t("nav_notes")}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/coloring">
+                {t("nav_coloring")}
               </Link>
             </li>
             <li className="nav-item">
