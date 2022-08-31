@@ -49,13 +49,6 @@ function RootsBrowser({
     e.preventDefault();
   };
 
-  const handleNoteChange = (event) => {
-    const { name, value } = event.target;
-    let root = JSON.parse(name);
-    myNotes[root.id] = value;
-    setMyNotes({ ...myNotes });
-  };
-
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -90,7 +83,8 @@ function RootsBrowser({
                   <NoteForm
                     root={root}
                     value={myNotes[root.id] || ""}
-                    handleNoteChange={handleNoteChange}
+                    myNotes={myNotes}
+                    setMyNotes={setMyNotes}
                     editableNotes={editableNotes}
                     setEditableNotes={setEditableNotes}
                   />
@@ -147,7 +141,8 @@ const FormWordSearch = ({
 const NoteForm = ({
   root,
   value,
-  handleNoteChange,
+  myNotes,
+  setMyNotes,
   editableNotes,
   setEditableNotes,
 }) => {
@@ -171,8 +166,15 @@ const NoteForm = ({
     }
   }, [value]);
 
+  const handleNoteChange = (event) => {
+    const { name, value } = event.target;
+    myNotes[name] = value;
+    setMyNotes({ ...myNotes });
+  };
+
   const handleNoteSubmit = (event) => {
     event.preventDefault();
+
     db.root_notes
       .put({
         id: root_id,
@@ -201,10 +203,10 @@ const NoteForm = ({
     <form onSubmit={handleNoteSubmit}>
       <div className="form-group">
         <textarea
-          className="form-control  mb-2"
+          className="form-control mb-2"
           id="textInput"
           placeholder="أدخل كتاباتك"
-          name={JSON.stringify(root)}
+          name={root.id}
           value={value}
           onChange={handleNoteChange}
           rows={rows}
