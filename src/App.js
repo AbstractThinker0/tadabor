@@ -1,6 +1,4 @@
-import axios from "axios";
-
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import About from "./components/About";
@@ -9,12 +7,13 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import QuranBrowser from "./components/QuranBrowser";
 import RootsBrowser from "./components/RootsBrowser";
 import YourNotes from "./components/YourNotes";
+import useAxios from "./util/useAxios";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<QuranBrowserLoaded />} />
-      <Route path="/roots" element={<RootsBrowserLoaded />} />
+      <Route path="/roots" element={<RootsBrowser />} />
       <Route path="/notes" element={<YourNotes />} />
       <Route path="/coloring" element={<Coloring />} />
       <Route path="/about" element={<About />} />
@@ -24,94 +23,64 @@ function App() {
 }
 
 const withDataLoaded = (Component) => () => {
-  const [loadingState, setLoadingState] = useState(true);
+  const { isLoading: chaptersIsLoading, data: dataChapters } =
+    useAxios("/res/chapters.json");
 
-  let allQuranText = useRef(null);
+  const { isLoading: quranIsLoading, data: dataQuran } =
+    useAxios("/res/quran_v2.json");
+
+  const { isLoading: rootsIsLoading, data: dataRoots } = useAxios(
+    "/res/quran-root.txt"
+  );
+
   let absoluteQuran = useRef([]);
-  let chapterNames = useRef(null);
   let quranRoots = useRef([]);
 
-  useEffect(() => {
-    let clientLeft = false;
+  if (chaptersIsLoading || quranIsLoading || rootsIsLoading)
+    return <LoadingSpinner />;
 
-    fetchData();
+  if (absoluteQuran.current.length === 0) {
+    dataQuran.forEach((sura) => {
+      sura.verses.forEach((verse) => {
+        absoluteQuran.current.push(verse);
+      });
+    });
+  }
 
-    async function fetchData() {
-      let res;
+  if (quranRoots.current.length === 0) {
+    let index = 0;
+    let arrayOfLines = dataRoots.split("\n");
 
-      if (chapterNames.current === null) {
-        res = await axios.get("/res/chapters.json");
-
-        if (res.error || clientLeft) return;
-
-        chapterNames.current = res.data;
+    arrayOfLines.forEach((line) => {
+      if (line[0] === "#" || line[0] === "\r") {
+        return;
       }
 
-      if (allQuranText.current === null) {
-        res = await axios.get("/res/quran_v2.json");
+      let lineArgs = line.split(/[\r\n\t]+/g);
 
-        if (res.error || clientLeft) return;
+      let occurences = lineArgs[2].split(";");
 
-        allQuranText.current = res.data;
-      }
+      quranRoots.current.push({
+        id: index,
+        name: lineArgs[0],
+        count: lineArgs[1],
+        occurences: occurences,
+      });
 
-      if (absoluteQuran.current.length === 0) {
-        allQuranText.current.forEach((sura) => {
-          sura.verses.forEach((verse) => {
-            absoluteQuran.current.push(verse);
-          });
-        });
-      }
-
-      let index = 0;
-      if (quranRoots.current.length === 0) {
-        res = await axios.get("/res/quran-root.txt");
-
-        if (res.error || clientLeft) return;
-
-        let arrayOfLines = res.data.split("\n");
-
-        arrayOfLines.forEach((line) => {
-          if (line[0] === "#" || line[0] === "\r") {
-            return;
-          }
-
-          let lineArgs = line.split(/[\r\n\t]+/g);
-
-          let occurences = lineArgs[2].split(";");
-
-          quranRoots.current.push({
-            id: index,
-            name: lineArgs[0],
-            count: lineArgs[1],
-            occurences: occurences,
-          });
-
-          index++;
-        });
-      }
-
-      setLoadingState(false);
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
-
-  if (loadingState) return <LoadingSpinner />;
+      index++;
+    });
+  }
 
   return (
     <Component
-      allQuranText={allQuranText.current}
+      allQuranText={dataQuran}
       absoluteQuran={absoluteQuran.current}
-      chapterNames={chapterNames.current}
+      chapterNames={dataChapters}
       quranRoots={quranRoots.current}
     />
   );
 };
 
 const QuranBrowserLoaded = withDataLoaded(QuranBrowser);
-const RootsBrowserLoaded = withDataLoaded(RootsBrowser);
 
 export default App;
