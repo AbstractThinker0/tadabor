@@ -934,50 +934,52 @@ const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
   );
 };
 
-const VerseContentComponent = ({
-  verse,
-  scopeAllQuran,
-  searchMultipleChapters,
-  verseChapter,
-  gotoChapter,
-  chapterNames,
-  scrollKey,
-}) => {
-  let verse_key = verse.key;
-  let isLinkable = scopeAllQuran || searchMultipleChapters;
+const VerseContentComponent = memo(
+  ({
+    verse,
+    scopeAllQuran,
+    searchMultipleChapters,
+    verseChapter,
+    gotoChapter,
+    chapterNames,
+    scrollKey,
+  }) => {
+    let verse_key = verse.key;
+    let isLinkable = scopeAllQuran || searchMultipleChapters;
 
-  const handleVerseClick = (e, verse_key) => {
-    scrollKey.current = verse_key;
-    gotoChapter(chapterNames[verse.suraid - 1].id);
-  };
+    const handleVerseClick = (e, verse_key) => {
+      scrollKey.current = verse_key;
+      gotoChapter(chapterNames[verse.suraid - 1].id);
+    };
 
-  return (
-    <p className="pt-1 fs-4">
-      {verse.versetext} (
-      {isLinkable ? (
+    return (
+      <p className="pt-1 fs-4">
+        {verse.versetext} (
+        {isLinkable ? (
+          <button
+            className="p-0 border-0 bg-transparent"
+            onClick={(e) => handleVerseClick(e, verse_key)}
+          >
+            {verseChapter + ":" + verse.verseid}
+          </button>
+        ) : (
+          verse.verseid
+        )}
+        )
         <button
-          className="p-0 border-0 bg-transparent"
-          onClick={(e) => handleVerseClick(e, verse_key)}
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={"#collapseExample" + verse_key}
+          aria-expanded="false"
+          aria-controls={"collapseExample" + verse_key}
         >
-          {verseChapter + ":" + verse.verseid}
+          <ArrowDownCircleFill />
         </button>
-      ) : (
-        verse.verseid
-      )}
-      )
-      <button
-        className="btn"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target={"#collapseExample" + verse_key}
-        aria-expanded="false"
-        aria-controls={"collapseExample" + verse_key}
-      >
-        <ArrowDownCircleFill />
-      </button>
-    </p>
-  );
-};
+      </p>
+    );
+  }
+);
 
 const ListVerses = ({
   versesArray,
