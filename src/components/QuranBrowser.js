@@ -19,34 +19,7 @@ function QuranBrowser({
 }) {
   const [loadingState, setLoadingState] = useState(true);
 
-  const [selectChapter, setSelectChapter] = useState(1);
-
-  const [searchString, setSearchString] = useState("");
-  const [searchingString, setSearchingString] = useState("");
-
-  const [searchResult, setSearchResult] = useState([]);
-
-  const [searchAllQuran, setSearchAllQuran] = useState(true);
-  const [searchingAllQuran, setSearchingAllQuran] = useState(true);
-
-  const [searchMultipleChapters, setSearchMultipleChapters] = useState(false);
-
-  const [searchDiacritics, setSearchDiacritics] = useState(false);
-
-  const [searchIdentical, setSearchIdentical] = useState(false);
-
-  const [searchError, setSearchError] = useState(false);
-  const [selectedRootError, setSelectedRootError] = useState(false);
-
-  const [radioSearchMethod, setRadioSearchMethod] =
-    useState("optionWordSearch");
-  const [radioSearchingMethod, setRadioSearchingMethod] =
-    useState("optionWordSearch");
-
   const [myNotes, setMyNotes] = useState({});
-  const [editableNotes, setEditableNotes] = useState({});
-
-  const [rootDerivations, setRootDerivations] = useState([]);
 
   useEffect(() => {
     let clientLeft = false;
@@ -72,6 +45,56 @@ function QuranBrowser({
       clientLeft = true;
     };
   }, []);
+
+  if (loadingState) return <LoadingSpinner />;
+
+  return (
+    <QuranBrowserLoaded
+      allQuranText={allQuranText}
+      absoluteQuran={absoluteQuran}
+      chapterNames={chapterNames}
+      quranRoots={quranRoots}
+      myNotes={myNotes}
+      setMyNotes={setMyNotes}
+    />
+  );
+}
+
+function QuranBrowserLoaded({
+  allQuranText,
+  absoluteQuran,
+  chapterNames,
+  quranRoots,
+  myNotes,
+  setMyNotes,
+}) {
+  const [selectChapter, setSelectChapter] = useState(1);
+
+  const [searchString, setSearchString] = useState("");
+  const [searchingString, setSearchingString] = useState("");
+
+  const [searchResult, setSearchResult] = useState([]);
+
+  const [searchAllQuran, setSearchAllQuran] = useState(true);
+  const [searchingAllQuran, setSearchingAllQuran] = useState(true);
+
+  const [searchMultipleChapters, setSearchMultipleChapters] = useState(false);
+
+  const [searchDiacritics, setSearchDiacritics] = useState(false);
+
+  const [searchIdentical, setSearchIdentical] = useState(false);
+
+  const [searchError, setSearchError] = useState(false);
+  const [selectedRootError, setSelectedRootError] = useState(false);
+
+  const [radioSearchMethod, setRadioSearchMethod] =
+    useState("optionWordSearch");
+  const [radioSearchingMethod, setRadioSearchingMethod] =
+    useState("optionWordSearch");
+
+  const [editableNotes, setEditableNotes] = useState({});
+
+  const [rootDerivations, setRootDerivations] = useState([]);
 
   const clearPreviousSearch = () => {
     setSearchError(false);
@@ -341,7 +364,7 @@ function QuranBrowser({
     }
   }
 
-  const memoHandleNoteChange = useCallback(handleNoteChange, []);
+  const memoHandleNoteChange = useCallback(handleNoteChange, [setMyNotes]);
 
   function handleNoteChange(event) {
     const { name, value } = event.target;
@@ -356,10 +379,6 @@ function QuranBrowser({
 
   const scrollKey = useRef();
 
-  if (loadingState) return <LoadingSpinner />;
-
-  let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
-
   return (
     <>
       <div className="row" style={{ height: "85%" }}>
@@ -371,7 +390,6 @@ function QuranBrowser({
           setRadioSearchMethod={setRadioSearchMethod}
           searchDiacritics={searchDiacritics}
           setSearchDiacritics={setSearchDiacritics}
-          isRootSearch={isRootSearch}
           searchIdentical={searchIdentical}
           setSearchIdentical={setSearchIdentical}
           searchAllQuran={searchAllQuran}
@@ -431,7 +449,6 @@ const SearchPanel = memo(
     setRadioSearchMethod,
     searchDiacritics,
     setSearchDiacritics,
-    isRootSearch,
     searchIdentical,
     setSearchIdentical,
     searchAllQuran,
@@ -443,6 +460,9 @@ const SearchPanel = memo(
     quranRoots,
   }) => {
     const { t } = useTranslation();
+
+    let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
+
     return (
       <div className="col-auto pt-3 pb-1">
         <SelectionListChapters
