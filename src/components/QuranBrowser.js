@@ -860,17 +860,15 @@ const SearchVerseComponent = memo(
   }) => {
     return (
       <div ref={(el) => (refVersesResult.current[verse.key] = el)}>
-        <VerseTextComponent>
-          <VerseContentComponent
-            verse={verse}
-            scopeAllQuran={scopeAllQuran}
-            searchMultipleChapters={searchMultipleChapters}
-            verseChapter={chapterNames[verse.suraid - 1].name}
-            gotoChapter={gotoChapter}
-            chapterNames={chapterNames}
-            scrollKey={scrollKey}
-          />
-        </VerseTextComponent>
+        <VerseContentComponent
+          verse={verse}
+          scopeAllQuran={scopeAllQuran}
+          searchMultipleChapters={searchMultipleChapters}
+          verseChapter={chapterNames[verse.suraid - 1].name}
+          gotoChapter={gotoChapter}
+          chapterNames={chapterNames}
+          scrollKey={scrollKey}
+        />
         <div
           className="collapse card border-primary"
           id={"collapseExample" + verse.key}
@@ -941,7 +939,7 @@ const VerseContentComponent = ({
   };
 
   return (
-    <>
+    <p className="pt-1 fs-4">
       {verse.versetext} (
       {isLinkable ? (
         <button
@@ -964,7 +962,7 @@ const VerseContentComponent = ({
       >
         <ArrowDownCircleFill />
       </button>
-    </>
+    </p>
   );
 };
 
@@ -1020,19 +1018,7 @@ const VerseComponent = memo(
   }) => {
     return (
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
-        <VerseTextComponent>
-          {verse.versetext} ({verse.verseid}){" "}
-          <button
-            className="btn"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target={"#collapseExample" + verse.key}
-            aria-expanded="false"
-            aria-controls={"collapseExample" + verse.key}
-          >
-            <ArrowDownCircleFill />
-          </button>
-        </VerseTextComponent>
+        <VerseTextComponent verse={verse} />
         <div
           className="collapse card border-primary"
           id={"collapseExample" + verse.key}
@@ -1052,9 +1038,23 @@ const VerseComponent = memo(
   }
 );
 
-const VerseTextComponent = (props) => {
-  return <p className="pt-1 fs-4">{props.children}</p>;
-};
+const VerseTextComponent = memo(({ verse }) => {
+  return (
+    <p className="pt-1 fs-4">
+      {verse.versetext} ({verse.verseid}){" "}
+      <button
+        className="btn"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target={"#collapseExample" + verse.key}
+        aria-expanded="false"
+        aria-controls={"collapseExample" + verse.key}
+      >
+        <ArrowDownCircleFill />
+      </button>
+    </p>
+  );
+});
 
 const NoteTextComponent = (props) => {
   return <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>;
