@@ -1,5 +1,55 @@
+import { useEffect, useState } from "react";
+import LoadingSpinner from "./LoadingSpinner";
+
+import { db } from "../util/db";
+
 function YourNotes() {
-  return <p className="text-center pt-2">Coming soon.</p>;
+  const [loadingState, setLoadingState] = useState(true);
+  const [myNotes, setMyNotes] = useState({});
+
+  useEffect(() => {
+    let clientLeft = false;
+
+    fetchData();
+
+    async function fetchData() {
+      let userNotes = await db.notes.toArray();
+
+      if (clientLeft) return;
+
+      let extractNotes = {};
+      userNotes.forEach((note) => {
+        extractNotes[note.id] = note.text;
+      });
+
+      setMyNotes(extractNotes);
+
+      setLoadingState(false);
+    }
+
+    return () => {
+      clientLeft = true;
+    };
+  }, []);
+
+  if (loadingState) return <LoadingSpinner />;
+
+  return <YourNotesLoaded myNotes={myNotes} setMyNotes={setMyNotes} />;
 }
+
+const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
+  return (
+    <div className="pt-2 pb-2">
+      {Object.keys(myNotes).map((key) => (
+        <div key={key} className="card mb-3">
+          <div class="card-header">{key}</div>
+          <div className="card-body">
+            <p style={{ whiteSpace: "pre-wrap" }}>{myNotes[key]}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default YourNotes;
