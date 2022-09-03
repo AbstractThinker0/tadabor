@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { db } from "../util/db";
@@ -304,17 +304,23 @@ function QuranBrowser({
     }
   };
 
-  const gotoChapter = (chapter) => {
+  const memoGotoChapter = useCallback(gotoChapter, []);
+
+  function gotoChapter(chapter) {
     clearPreviousSearch();
     setSelectChapter(chapter);
-  };
+  }
 
-  const handleNoteChange = (event) => {
+  const memoHandleNoteChange = useCallback(handleNoteChange, []);
+
+  function handleNoteChange(event) {
     const { name, value } = event.target;
     let verse = JSON.parse(name);
-    myNotes[verse.key] = value;
-    setMyNotes({ ...myNotes });
-  };
+
+    setMyNotes((state) => {
+      return { ...state, [verse.key]: value };
+    });
+  }
 
   const refListVerses = useRef(null);
   const refListChapters = useRef(null);
@@ -395,10 +401,10 @@ function QuranBrowser({
               searchMultipleChapters={searchMultipleChapters}
               refListVerses={refListVerses}
               refListChapters={refListChapters}
-              gotoChapter={gotoChapter}
+              gotoChapter={memoGotoChapter}
               scrollKey={scrollKey}
               rootDerivations={rootDerivations}
-              handleNoteChange={handleNoteChange}
+              handleNoteChange={memoHandleNoteChange}
             />
           ) : (
             <ListVerses
@@ -410,7 +416,7 @@ function QuranBrowser({
               refListVerses={refListVerses}
               versesRef={versesRef}
               scrollKey={scrollKey}
-              handleNoteChange={handleNoteChange}
+              handleNoteChange={memoHandleNoteChange}
             />
           )}
         </DisplayPanel>
@@ -688,9 +694,11 @@ const ListSearchResults = ({
     );
   };
 
-  const handleRootClick = (e, verse_key) => {
+  const memoHandleRootClick = useCallback(handleRootClick, []);
+
+  function handleRootClick(e, verse_key) {
     refVersesResult.current[verse_key].scrollIntoView();
-  };
+  }
 
   const isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
@@ -698,55 +706,26 @@ const ListSearchResults = ({
     <>
       <SearchTitle />
       {isRootSearch && (
-        <>
-          <hr />
-          <p>
-            {rootDerivations.map((root, index) => (
-              <span
-                role="button"
-                key={index}
-                onClick={(e) => handleRootClick(e, root.key)}
-                data-bs-toggle="tooltip"
-                data-bs-title={root.text}
-              >
-                {index ? " -" : " "} {root.name}
-              </span>
-            ))}
-          </p>
-          <hr />
-        </>
+        <DerivationsComponent
+          handleRootClick={memoHandleRootClick}
+          rootDerivations={rootDerivations}
+        />
       )}
       {versesArray.map((verse) => (
-        <div
+        <SearchVerseComponent
           key={verse.key}
-          ref={(el) => (refVersesResult.current[verse.key] = el)}
-        >
-          <VerseTextComponent>
-            <VerseContentComponent
-              verse={verse}
-              scopeAllQuran={scopeAllQuran}
-              searchMultipleChapters={searchMultipleChapters}
-              verseChapter={chapterNames[verse.suraid - 1].name}
-              gotoChapter={gotoChapter}
-              chapterNames={chapterNames}
-              scrollKey={scrollKey}
-            />
-          </VerseTextComponent>
-          <div
-            className="collapse card border-primary"
-            id={"collapseExample" + verse.key}
-          >
-            <div className="card-body">
-              <NoteForm
-                verse={verse}
-                value={myNotes[verse.key] || ""}
-                handleNoteChange={handleNoteChange}
-                editableNotes={editableNotes}
-                setEditableNotes={setEditableNotes}
-              />
-            </div>
-          </div>
-        </div>
+          refVersesResult={refVersesResult}
+          verse={verse}
+          scopeAllQuran={scopeAllQuran}
+          searchMultipleChapters={searchMultipleChapters}
+          chapterNames={chapterNames}
+          gotoChapter={gotoChapter}
+          scrollKey={scrollKey}
+          value={myNotes[verse.key] || ""}
+          handleNoteChange={handleNoteChange}
+          editableNotes={editableNotes}
+          setEditableNotes={setEditableNotes}
+        />
       ))}
       <SearchErrorsComponent
         searchError={searchError}
@@ -755,6 +734,74 @@ const ListSearchResults = ({
     </>
   );
 };
+
+const SearchVerseComponent = memo(
+  ({
+    refVersesResult,
+    verse,
+    scopeAllQuran,
+    searchMultipleChapters,
+    chapterNames,
+    gotoChapter,
+    scrollKey,
+    value,
+    handleNoteChange,
+    editableNotes,
+    setEditableNotes,
+  }) => {
+    return (
+      <div ref={(el) => (refVersesResult.current[verse.key] = el)}>
+        <VerseTextComponent>
+          <VerseContentComponent
+            verse={verse}
+            scopeAllQuran={scopeAllQuran}
+            searchMultipleChapters={searchMultipleChapters}
+            verseChapter={chapterNames[verse.suraid - 1].name}
+            gotoChapter={gotoChapter}
+            chapterNames={chapterNames}
+            scrollKey={scrollKey}
+          />
+        </VerseTextComponent>
+        <div
+          className="collapse card border-primary"
+          id={"collapseExample" + verse.key}
+        >
+          <div className="card-body">
+            <NoteForm
+              verse={verse}
+              value={value}
+              handleNoteChange={handleNoteChange}
+              editableNotes={editableNotes}
+              setEditableNotes={setEditableNotes}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+
+const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
+  return (
+    <>
+      <hr />
+      <p>
+        {rootDerivations.map((root, index) => (
+          <span
+            role="button"
+            key={index}
+            onClick={(e) => handleRootClick(e, root.key)}
+            data-bs-toggle="tooltip"
+            data-bs-title={root.text}
+          >
+            {index ? " -" : " "} {root.name}
+          </span>
+        ))}
+      </p>
+      <hr />
+    </>
+  );
+});
 
 const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
   return (
@@ -829,7 +876,7 @@ const ListVerses = ({
     } else {
       refListVerses.current.scrollTop = 0;
     }
-  }, [refListVerses, scrollKey, versesRef]);
+  }, [refListVerses, scrollKey, versesRef, versesArray]);
 
   const ListTitle = (props) => {
     return <h3 className="mb-2 text-primary text-center">{props.children}</h3>;
@@ -839,39 +886,62 @@ const ListVerses = ({
     <>
       <ListTitle>سورة {chapterName}</ListTitle>
       {versesArray.map((verse) => (
-        <div key={verse.key} ref={(el) => (versesRef.current[verse.key] = el)}>
-          <VerseTextComponent>
-            {verse.versetext} ({verse.verseid}){" "}
-            <button
-              className="btn"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={"#collapseExample" + verse.key}
-              aria-expanded="false"
-              aria-controls={"collapseExample" + verse.key}
-            >
-              <ArrowDownCircleFill />
-            </button>
-          </VerseTextComponent>
-          <div
-            className="collapse card border-primary"
-            id={"collapseExample" + verse.key}
-          >
-            <div className="card-body">
-              <NoteForm
-                verse={verse}
-                value={myNotes[verse.key] || ""}
-                handleNoteChange={handleNoteChange}
-                editableNotes={editableNotes}
-                setEditableNotes={setEditableNotes}
-              />
-            </div>
-          </div>
-        </div>
+        <VerseComponent
+          key={verse.key}
+          versesRef={versesRef}
+          verse={verse}
+          value={myNotes[verse.key] || ""}
+          handleNoteChange={handleNoteChange}
+          editableNotes={editableNotes}
+          setEditableNotes={setEditableNotes}
+        />
       ))}
     </>
   );
 };
+
+const VerseComponent = memo(
+  ({
+    versesRef,
+    verse,
+    value,
+    handleNoteChange,
+    editableNotes,
+    setEditableNotes,
+  }) => {
+    return (
+      <div ref={(el) => (versesRef.current[verse.key] = el)}>
+        <VerseTextComponent>
+          {verse.versetext} ({verse.verseid}){" "}
+          <button
+            className="btn"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target={"#collapseExample" + verse.key}
+            aria-expanded="false"
+            aria-controls={"collapseExample" + verse.key}
+          >
+            <ArrowDownCircleFill />
+          </button>
+        </VerseTextComponent>
+        <div
+          className="collapse card border-primary"
+          id={"collapseExample" + verse.key}
+        >
+          <div className="card-body">
+            <NoteForm
+              verse={verse}
+              value={value}
+              handleNoteChange={handleNoteChange}
+              editableNotes={editableNotes}
+              setEditableNotes={setEditableNotes}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
 
 const VerseTextComponent = (props) => {
   return <p className="pt-1 fs-4">{props.children}</p>;
