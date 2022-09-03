@@ -81,7 +81,7 @@ function QuranBrowser({
     setRootDerivations([]);
   };
 
-  const handleSearchSubmit = (e) => {
+  function handleSearchSubmit(e) {
     e.preventDefault();
 
     clearPreviousSearch();
@@ -89,13 +89,13 @@ function QuranBrowser({
     setRadioSearchingMethod(radioSearchMethod);
 
     if (radioSearchMethod === "optionWordSearch") {
-      handleSearchByWord();
+      memoHandleSearchByWord();
     } else if (radioSearchMethod === "optionRootSearch") {
-      handleSearchByRoot();
+      memoHandleSearchByRoot();
     }
-  };
+  }
 
-  const handleSearchByWord = () => {
+  function handleSearchByWord() {
     if (onlySpaces(searchString)) {
       setSearchError(true);
       return;
@@ -184,9 +184,18 @@ function QuranBrowser({
     } else {
       setSearchResult(matchVerses);
     }
-  };
+  }
 
-  const handleSearchByRoot = () => {
+  const memoHandleSearchByWord = useCallback(handleSearchByWord, [
+    allQuranText,
+    searchAllQuran,
+    searchDiacritics,
+    searchIdentical,
+    searchString,
+    selectChapter,
+  ]);
+
+  function handleSearchByRoot() {
     if (onlySpaces(searchString)) {
       setSelectedRootError(true);
       return;
@@ -290,9 +299,37 @@ function QuranBrowser({
       setSearchResult(matchVerses);
       setRootDerivations(derivations);
     }
-  };
+  }
 
-  const handleSelectionListChapters = (event) => {
+  const memoHandleSearchByRoot = useCallback(handleSearchByRoot, [
+    absoluteQuran,
+    chapterNames,
+    quranRoots,
+    searchAllQuran,
+    searchString,
+    selectChapter,
+  ]);
+
+  const memoHandleSearchSubmit = useCallback(handleSearchSubmit, [
+    memoHandleSearchByRoot,
+    memoHandleSearchByWord,
+    radioSearchMethod,
+    searchString,
+  ]);
+
+  const memoGotoChapter = useCallback(gotoChapter, []);
+
+  function gotoChapter(chapter) {
+    clearPreviousSearch();
+    setSelectChapter(chapter);
+  }
+
+  const memoHandleSelectionListChapters = useCallback(
+    handleSelectionListChapters,
+    [memoGotoChapter]
+  );
+
+  function handleSelectionListChapters(event) {
     if (!event.target.value) return;
 
     scrollKey.current = null;
@@ -300,15 +337,8 @@ function QuranBrowser({
     let chapter = event.target.value;
 
     if (event.target.selectedOptions.length === 1) {
-      gotoChapter(chapter);
+      memoGotoChapter(chapter);
     }
-  };
-
-  const memoGotoChapter = useCallback(gotoChapter, []);
-
-  function gotoChapter(chapter) {
-    clearPreviousSearch();
-    setSelectChapter(chapter);
   }
 
   const memoHandleNoteChange = useCallback(handleNoteChange, []);
@@ -328,8 +358,6 @@ function QuranBrowser({
   const scrollKey = useRef();
   const versesRef = useRef({});
 
-  const { t } = useTranslation();
-
   if (loadingState) return <LoadingSpinner />;
 
   let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
@@ -337,89 +365,49 @@ function QuranBrowser({
   return (
     <>
       <div className="row" style={{ height: "85%" }}>
-        <SearchPanel>
-          <SelectionListChapters
-            chaptersArray={chapterNames}
-            handleSelectionListChapters={handleSelectionListChapters}
-            innerRef={refListChapters}
-          />
+        <SearchPanel
+          chapterNames={chapterNames}
+          memoHandleSelectionListChapters={memoHandleSelectionListChapters}
+          refListChapters={refListChapters}
+          radioSearchMethod={radioSearchMethod}
+          setRadioSearchMethod={setRadioSearchMethod}
+          searchDiacritics={searchDiacritics}
+          setSearchDiacritics={setSearchDiacritics}
+          isRootSearch={isRootSearch}
+          searchIdentical={searchIdentical}
+          setSearchIdentical={setSearchIdentical}
+          searchAllQuran={searchAllQuran}
+          setSearchAllQuran={setSearchAllQuran}
+          memoHandleSearchSubmit={memoHandleSearchSubmit}
+          searchString={searchString}
+          setSearchString={setSearchString}
+          searchResult={searchResult}
+          quranRoots={quranRoots}
+        />
 
-          <RadioSearchMethod
-            radioSearchMethod={radioSearchMethod}
-            setRadioSearchMethod={setRadioSearchMethod}
-          />
-
-          <CheckboxComponent
-            checkboxState={searchDiacritics}
-            setCheckBoxState={setSearchDiacritics}
-            labelText={t("search_diacritics")}
-            isDisabled={isRootSearch}
-          />
-
-          <CheckboxComponent
-            checkboxState={searchIdentical}
-            setCheckBoxState={setSearchIdentical}
-            labelText={t("search_identical")}
-            isDisabled={isRootSearch}
-          />
-
-          <CheckboxComponent
-            checkboxState={searchAllQuran}
-            setCheckBoxState={setSearchAllQuran}
-            labelText={t("search_all_quran")}
-          />
-
-          <FormWordSearch
-            handleSearchSubmit={handleSearchSubmit}
-            searchString={searchString}
-            setSearchString={setSearchString}
-          />
-
-          <SelectionListRoots
-            quranRoots={quranRoots}
-            isDisabled={!isRootSearch}
-            searchString={searchString}
-            setSearchString={setSearchString}
-          />
-          <SearchSuccessComponent searchResult={searchResult} />
-        </SearchPanel>
-
-        <DisplayPanel innerRef={refListVerses}>
-          {searchResult.length || searchError || selectedRootError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              chapterName={chapterNames[selectChapter - 1].name}
-              searchToken={searchingString.trim()}
-              scopeAllQuran={searchingAllQuran}
-              searchError={searchError}
-              selectedRootError={selectedRootError}
-              chapterNames={chapterNames}
-              radioSearchMethod={radioSearchingMethod}
-              myNotes={myNotes}
-              editableNotes={editableNotes}
-              setEditableNotes={setEditableNotes}
-              searchMultipleChapters={searchMultipleChapters}
-              refListVerses={refListVerses}
-              refListChapters={refListChapters}
-              gotoChapter={memoGotoChapter}
-              scrollKey={scrollKey}
-              rootDerivations={rootDerivations}
-              handleNoteChange={memoHandleNoteChange}
-            />
-          ) : (
-            <ListVerses
-              chapterName={chapterNames[selectChapter - 1].name}
-              versesArray={allQuranText[selectChapter - 1].verses}
-              myNotes={myNotes}
-              setEditableNotes={setEditableNotes}
-              editableNotes={editableNotes}
-              refListVerses={refListVerses}
-              versesRef={versesRef}
-              scrollKey={scrollKey}
-              handleNoteChange={memoHandleNoteChange}
-            />
-          )}
-        </DisplayPanel>
+        <DisplayPanel
+          innerRef={refListVerses}
+          searchResult={searchResult}
+          searchError={searchError}
+          selectedRootError={selectedRootError}
+          chapterNames={chapterNames}
+          searchingString={searchingString}
+          searchingAllQuran={searchingAllQuran}
+          selectChapter={selectChapter}
+          radioSearchingMethod={radioSearchingMethod}
+          myNotes={myNotes}
+          editableNotes={editableNotes}
+          setEditableNotes={setEditableNotes}
+          searchMultipleChapters={searchMultipleChapters}
+          refListVerses={refListVerses}
+          refListChapters={refListChapters}
+          memoGotoChapter={memoGotoChapter}
+          scrollKey={scrollKey}
+          rootDerivations={rootDerivations}
+          memoHandleNoteChange={memoHandleNoteChange}
+          allQuranText={allQuranText}
+          versesRef={versesRef}
+        />
       </div>
       <ToastContainer rtl />
     </>
@@ -439,21 +427,140 @@ const SearchSuccessComponent = ({ searchResult }) => {
   );
 };
 
-const SearchPanel = (props) => {
-  return <div className="col-auto pt-3 pb-1">{props.children}</div>;
-};
+const SearchPanel = memo(
+  ({
+    chapterNames,
+    memoHandleSelectionListChapters,
+    refListChapters,
+    radioSearchMethod,
+    setRadioSearchMethod,
+    searchDiacritics,
+    setSearchDiacritics,
+    isRootSearch,
+    searchIdentical,
+    setSearchIdentical,
+    searchAllQuran,
+    setSearchAllQuran,
+    memoHandleSearchSubmit,
+    searchString,
+    setSearchString,
+    searchResult,
+    quranRoots,
+  }) => {
+    const { t } = useTranslation();
+    return (
+      <div className="col-auto pt-3 pb-1">
+        <SelectionListChapters
+          chaptersArray={chapterNames}
+          handleSelectionListChapters={memoHandleSelectionListChapters}
+          innerRef={refListChapters}
+        />
+        <RadioSearchMethod
+          radioSearchMethod={radioSearchMethod}
+          setRadioSearchMethod={setRadioSearchMethod}
+        />
+        <CheckboxComponent
+          checkboxState={searchDiacritics}
+          setCheckBoxState={setSearchDiacritics}
+          labelText={t("search_diacritics")}
+          isDisabled={isRootSearch}
+        />
+        <CheckboxComponent
+          checkboxState={searchIdentical}
+          setCheckBoxState={setSearchIdentical}
+          labelText={t("search_identical")}
+          isDisabled={isRootSearch}
+        />
+        <CheckboxComponent
+          checkboxState={searchAllQuran}
+          setCheckBoxState={setSearchAllQuran}
+          labelText={t("search_all_quran")}
+        />
+        <FormWordSearch
+          handleSearchSubmit={memoHandleSearchSubmit}
+          searchString={searchString}
+          setSearchString={setSearchString}
+        />
+        <SelectionListRoots
+          quranRoots={quranRoots}
+          isDisabled={!isRootSearch}
+          searchString={searchString}
+          setSearchString={setSearchString}
+        />
+        <SearchSuccessComponent searchResult={searchResult} />
+      </div>
+    );
+  }
+);
 
-const DisplayPanel = (props) => {
-  return (
-    <div
-      dir="rtl"
-      className="col mt-3 pb-1 border rounded h-100 overflow-auto"
-      ref={props.innerRef}
-    >
-      {props.children}
-    </div>
-  );
-};
+const DisplayPanel = memo(
+  ({
+    searchResult,
+    searchError,
+    selectedRootError,
+    chapterNames,
+    searchingString,
+    searchingAllQuran,
+    innerRef,
+    selectChapter,
+    radioSearchingMethod,
+    myNotes,
+    editableNotes,
+    setEditableNotes,
+    searchMultipleChapters,
+    refListVerses,
+    refListChapters,
+    memoGotoChapter,
+    scrollKey,
+    rootDerivations,
+    memoHandleNoteChange,
+    allQuranText,
+    versesRef,
+  }) => {
+    return (
+      <div
+        dir="rtl"
+        className="col mt-3 pb-1 border rounded h-100 overflow-auto"
+        ref={innerRef}
+      >
+        {searchResult.length || searchError || selectedRootError ? (
+          <ListSearchResults
+            versesArray={searchResult}
+            chapterName={chapterNames[selectChapter - 1].name}
+            searchToken={searchingString.trim()}
+            scopeAllQuran={searchingAllQuran}
+            searchError={searchError}
+            selectedRootError={selectedRootError}
+            chapterNames={chapterNames}
+            radioSearchMethod={radioSearchingMethod}
+            myNotes={myNotes}
+            editableNotes={editableNotes}
+            setEditableNotes={setEditableNotes}
+            searchMultipleChapters={searchMultipleChapters}
+            refListVerses={refListVerses}
+            refListChapters={refListChapters}
+            gotoChapter={memoGotoChapter}
+            scrollKey={scrollKey}
+            rootDerivations={rootDerivations}
+            handleNoteChange={memoHandleNoteChange}
+          />
+        ) : (
+          <ListVerses
+            chapterName={chapterNames[selectChapter - 1].name}
+            versesArray={allQuranText[selectChapter - 1].verses}
+            myNotes={myNotes}
+            setEditableNotes={setEditableNotes}
+            editableNotes={editableNotes}
+            refListVerses={refListVerses}
+            versesRef={versesRef}
+            scrollKey={scrollKey}
+            handleNoteChange={memoHandleNoteChange}
+          />
+        )}
+      </div>
+    );
+  }
+);
 
 const SelectionListChapters = ({
   chaptersArray,
