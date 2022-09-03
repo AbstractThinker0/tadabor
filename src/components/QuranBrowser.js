@@ -889,20 +889,13 @@ const SearchVerseComponent = memo(
           chapterNames={chapterNames}
           scrollKey={scrollKey}
         />
-        <div
-          className="collapse card border-primary"
-          id={"collapseExample" + verse.key}
-        >
-          <div className="card-body">
-            <NoteForm
-              verse={verse}
-              value={value}
-              handleNoteChange={handleNoteChange}
-              editableNotes={editableNotes}
-              setEditableNotes={setEditableNotes}
-            />
-          </div>
-        </div>
+        <NoteForm
+          verse={verse}
+          value={value}
+          handleNoteChange={handleNoteChange}
+          editableNotes={editableNotes}
+          setEditableNotes={setEditableNotes}
+        />
       </div>
     );
   }
@@ -1039,20 +1032,13 @@ const VerseComponent = memo(
     return (
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
         <VerseTextComponent verse={verse} />
-        <div
-          className="collapse card border-primary"
-          id={"collapseExample" + verse.key}
-        >
-          <div className="card-body">
-            <NoteForm
-              verse={verse}
-              value={value}
-              handleNoteChange={handleNoteChange}
-              editableNotes={editableNotes}
-              setEditableNotes={setEditableNotes}
-            />
-          </div>
-        </div>
+        <NoteForm
+          verse={verse}
+          value={value}
+          handleNoteChange={handleNoteChange}
+          editableNotes={editableNotes}
+          setEditableNotes={setEditableNotes}
+        />
       </div>
     );
   }
@@ -1133,29 +1119,45 @@ const NoteForm = ({
     setEditableNotes({ ...editableNotes });
   };
 
-  return isNoteEditable ? (
-    <form onSubmit={handleNoteSubmit}>
-      <div className="form-group">
-        <textarea
-          className="form-control  mb-2"
-          id="textInput"
-          placeholder="أدخل كتاباتك"
-          name={JSON.stringify(verse)}
-          value={value}
-          onChange={handleNoteChange}
-          rows={rows}
-          required
-        />
+  return (
+    <div
+      className="collapse card border-primary"
+      id={"collapseExample" + verse.key}
+    >
+      <div className="card-body">
+        {isNoteEditable ? (
+          <form onSubmit={handleNoteSubmit}>
+            <div className="form-group">
+              <textarea
+                className="form-control  mb-2"
+                id="textInput"
+                placeholder="أدخل كتاباتك"
+                name={JSON.stringify(verse)}
+                value={value}
+                onChange={handleNoteChange}
+                rows={rows}
+                required
+              />
+            </div>
+            <input
+              type="submit"
+              value="حفظ"
+              className="btn btn-success btn-sm"
+            />
+          </form>
+        ) : (
+          <>
+            <NoteTextComponent>{value}</NoteTextComponent>
+            <button
+              onClick={handleEditClick}
+              className="btn btn-primary btn-sm"
+            >
+              تعديل
+            </button>
+          </>
+        )}
       </div>
-      <input type="submit" value="حفظ" className="btn btn-success btn-sm" />
-    </form>
-  ) : (
-    <>
-      <NoteTextComponent>{value}</NoteTextComponent>
-      <button onClick={handleEditClick} className="btn btn-primary btn-sm">
-        تعديل
-      </button>
-    </>
+    </div>
   );
 };
 
