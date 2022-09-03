@@ -352,11 +352,9 @@ function QuranBrowser({
     });
   }
 
-  const refListVerses = useRef(null);
   const refListChapters = useRef(null);
 
   const scrollKey = useRef();
-  const versesRef = useRef({});
 
   if (loadingState) return <LoadingSpinner />;
 
@@ -386,7 +384,6 @@ function QuranBrowser({
         />
 
         <DisplayPanel
-          innerRef={refListVerses}
           searchResult={searchResult}
           searchError={searchError}
           selectedRootError={selectedRootError}
@@ -399,14 +396,12 @@ function QuranBrowser({
           editableNotes={editableNotes}
           setEditableNotes={setEditableNotes}
           searchMultipleChapters={searchMultipleChapters}
-          refListVerses={refListVerses}
           refListChapters={refListChapters}
           memoGotoChapter={memoGotoChapter}
           scrollKey={scrollKey}
           rootDerivations={rootDerivations}
           memoHandleNoteChange={memoHandleNoteChange}
           allQuranText={allQuranText}
-          versesRef={versesRef}
         />
       </div>
       <ToastContainer rtl />
@@ -501,27 +496,27 @@ const DisplayPanel = memo(
     chapterNames,
     searchingString,
     searchingAllQuran,
-    innerRef,
     selectChapter,
     radioSearchingMethod,
     myNotes,
     editableNotes,
     setEditableNotes,
     searchMultipleChapters,
-    refListVerses,
     refListChapters,
     memoGotoChapter,
     scrollKey,
     rootDerivations,
     memoHandleNoteChange,
     allQuranText,
-    versesRef,
   }) => {
+    const refListVerses = useRef(null);
+    const versesRef = useRef({});
+
     return (
       <div
         dir="rtl"
         className="col mt-3 pb-1 border rounded h-100 overflow-auto"
-        ref={innerRef}
+        ref={refListVerses}
       >
         {searchResult.length || searchError || selectedRootError ? (
           <ListSearchResults
