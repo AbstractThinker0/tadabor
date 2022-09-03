@@ -557,32 +557,30 @@ const DisplayPanel = memo(
   }
 );
 
-const SelectionListChapters = ({
-  chaptersArray,
-  handleSelectionListChapters,
-  innerRef,
-}) => {
-  return (
-    <div className="container mt-2 mb-2 p-0">
-      <select
-        className="form-select"
-        size="7"
-        onFocus={handleSelectionListChapters}
-        onChange={handleSelectionListChapters}
-        aria-label="size 7 select example"
-        ref={innerRef}
-        defaultValue={["1"]}
-        multiple
-      >
-        {chaptersArray.map((chapter, index) => (
-          <option key={chapter.id} value={chapter.id}>
-            {index + 1}. {chapter.name}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+const SelectionListChapters = memo(
+  ({ chaptersArray, handleSelectionListChapters, innerRef }) => {
+    return (
+      <div className="container mt-2 mb-2 p-0">
+        <select
+          className="form-select"
+          size="7"
+          onFocus={handleSelectionListChapters}
+          onChange={handleSelectionListChapters}
+          aria-label="size 7 select example"
+          ref={innerRef}
+          defaultValue={["1"]}
+          multiple
+        >
+          {chaptersArray.map((chapter, index) => (
+            <option key={chapter.id} value={chapter.id}>
+              {index + 1}. {chapter.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+);
 
 const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
   const { t, i18n } = useTranslation();
@@ -705,39 +703,48 @@ const CheckboxComponent = ({
   );
 };
 
-const SelectionListRoots = ({
-  quranRoots,
-  isDisabled,
-  searchString,
-  setSearchString,
-}) => {
-  const handleSelectRoot = (event) => {
-    let rootId = event.target.value;
-    let selectedRoot = quranRoots[rootId];
+const SelectionListRoots = memo(
+  ({ quranRoots, isDisabled, searchString, setSearchString }) => {
+    const handleSelectRoot = (event) => {
+      let rootId = event.target.value;
+      let selectedRoot = quranRoots[rootId];
 
-    setSearchString(selectedRoot.name);
-  };
+      setSearchString(selectedRoot.name);
+    };
 
-  return (
-    <div className="container mt-2 p-0">
-      <select
-        className="form-select"
-        size="6"
-        onChange={handleSelectRoot}
-        aria-label="size 6 select example"
-        disabled={isDisabled}
-      >
-        {quranRoots
-          .filter((root) => root.name.startsWith(searchString) || isDisabled)
-          .map((root, index) => (
-            <option key={index} value={root.id}>
-              {root.name}
-            </option>
-          ))}
-      </select>
-    </div>
-  );
-};
+    return (
+      <div className="container mt-2 p-0">
+        <select
+          className="form-select"
+          size="6"
+          onChange={handleSelectRoot}
+          aria-label="size 6 select example"
+          disabled={isDisabled}
+        >
+          {quranRoots
+            .filter((root) => root.name.startsWith(searchString) || isDisabled)
+            .map((root, index) => (
+              <option key={index} value={root.id}>
+                {root.name}
+              </option>
+            ))}
+        </select>
+      </div>
+    );
+  },
+  areEqual
+);
+
+function areEqual(prevProps, nextProps) {
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+  if (nextProps.isDisabled === true) {
+    return true;
+  }
+}
 
 const ListSearchResults = ({
   versesArray,
