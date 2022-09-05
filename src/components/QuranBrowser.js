@@ -508,6 +508,8 @@ const SearchPanel = memo(
   }
 );
 
+SearchPanel.displayName = "SearchPanel";
+
 const DisplayPanel = memo(
   ({
     searchResult,
@@ -577,6 +579,8 @@ const DisplayPanel = memo(
   }
 );
 
+DisplayPanel.displayName = "DisplayPanel";
+
 const SelectionListChapters = memo(
   ({ chaptersArray, handleSelectionListChapters, innerRef }) => {
     return (
@@ -601,6 +605,8 @@ const SelectionListChapters = memo(
     );
   }
 );
+
+SelectionListChapters.displayName = "SelectionListChapters";
 
 const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
   const { t, i18n } = useTranslation();
@@ -755,6 +761,8 @@ const SelectionListRoots = memo(
   areEqual
 );
 
+SelectionListRoots.displayName = "SelectionListRoots";
+
 function areEqual(prevProps, nextProps) {
   /*
   return true if passing nextProps to render would return
@@ -766,50 +774,15 @@ function areEqual(prevProps, nextProps) {
   }
 }
 
-const ListSearchResults = ({
-  versesArray,
-  chapterName,
-  searchToken,
-  scopeAllQuran,
-  searchError,
-  selectedRootError,
-  chapterNames,
-  radioSearchMethod,
-  myNotes,
-  editableNotes,
-  setEditableNotes,
-  searchMultipleChapters,
-  refListVerses,
-  refListChapters,
-  gotoChapter,
-  scrollKey,
-  rootDerivations,
-  handleNoteChange,
-}) => {
-  const refVersesResult = useRef({});
-
-  let selectedChapters = [];
-  if (searchMultipleChapters) {
-    if (refListChapters.current.selectedOptions.length > 1) {
-      selectedChapters = Array.from(
-        refListChapters.current.selectedOptions,
-        (option) => chapterNames[option.value - 1].name
-      );
-    }
-  }
-
-  useEffect(() => {
-    refListVerses.current.scrollTop = 0;
-  }, [refListVerses, versesArray]);
-
-  useEffect(() => {
-    //init tooltip
-    Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
-      (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
-    );
-  }, [versesArray]);
-
-  const SearchTitle = () => {
+const SearchTitle = memo(
+  ({
+    radioSearchMethod,
+    searchToken,
+    scopeAllQuran,
+    searchMultipleChapters,
+    selectedChapters,
+    chapterName,
+  }) => {
     let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info">
@@ -821,48 +794,106 @@ const ListSearchResults = ({
           : " في سورة " + chapterName}
       </h3>
     );
-  };
-
-  const memoHandleRootClick = useCallback(handleRootClick, []);
-
-  function handleRootClick(e, verse_key) {
-    refVersesResult.current[verse_key].scrollIntoView();
   }
+);
 
-  const isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
+const ListSearchResults = memo(
+  ({
+    versesArray,
+    chapterName,
+    searchToken,
+    scopeAllQuran,
+    searchError,
+    selectedRootError,
+    chapterNames,
+    radioSearchMethod,
+    myNotes,
+    editableNotes,
+    setEditableNotes,
+    searchMultipleChapters,
+    refListVerses,
+    refListChapters,
+    gotoChapter,
+    scrollKey,
+    rootDerivations,
+    handleNoteChange,
+  }) => {
+    const refVersesResult = useRef({});
 
-  return (
-    <>
-      <SearchTitle />
-      {isRootSearch && (
-        <DerivationsComponent
-          handleRootClick={memoHandleRootClick}
-          rootDerivations={rootDerivations}
-        />
-      )}
-      {versesArray.map((verse) => (
-        <SearchVerseComponent
-          key={verse.key}
-          refVersesResult={refVersesResult}
-          verse={verse}
+    let selectedChapters = [];
+    if (searchMultipleChapters) {
+      if (refListChapters.current.selectedOptions.length > 1) {
+        selectedChapters = Array.from(
+          refListChapters.current.selectedOptions,
+          (option) => chapterNames[option.value - 1].name
+        );
+      }
+    }
+
+    useEffect(() => {
+      refListVerses.current.scrollTop = 0;
+    }, [refListVerses, versesArray]);
+
+    useEffect(() => {
+      //init tooltip
+      Array.from(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
+    }, [versesArray]);
+
+    SearchTitle.displayName = "SearchTitle";
+
+    const memoHandleRootClick = useCallback(handleRootClick, []);
+
+    function handleRootClick(e, verse_key) {
+      refVersesResult.current[verse_key].scrollIntoView();
+    }
+
+    const isRootSearch =
+      radioSearchMethod === "optionRootSearch" ? true : false;
+
+    return (
+      <>
+        <SearchTitle
+          radioSearchMethod={radioSearchMethod}
+          searchToken={searchToken}
           scopeAllQuran={scopeAllQuran}
           searchMultipleChapters={searchMultipleChapters}
-          chapterNames={chapterNames}
-          gotoChapter={gotoChapter}
-          scrollKey={scrollKey}
-          value={myNotes[verse.key] || ""}
-          handleNoteChange={handleNoteChange}
-          editableNotes={editableNotes}
-          setEditableNotes={setEditableNotes}
+          selectedChapters={selectedChapters}
+          chapterName={chapterName}
         />
-      ))}
-      <SearchErrorsComponent
-        searchError={searchError}
-        selectedRootError={selectedRootError}
-      />
-    </>
-  );
-};
+        {isRootSearch && (
+          <DerivationsComponent
+            handleRootClick={memoHandleRootClick}
+            rootDerivations={rootDerivations}
+          />
+        )}
+        {versesArray.map((verse) => (
+          <SearchVerseComponent
+            key={verse.key}
+            refVersesResult={refVersesResult}
+            verse={verse}
+            scopeAllQuran={scopeAllQuran}
+            searchMultipleChapters={searchMultipleChapters}
+            chapterNames={chapterNames}
+            gotoChapter={gotoChapter}
+            scrollKey={scrollKey}
+            value={myNotes[verse.key] || ""}
+            handleNoteChange={handleNoteChange}
+            editableNotes={editableNotes}
+            setEditableNotes={setEditableNotes}
+          />
+        ))}
+        <SearchErrorsComponent
+          searchError={searchError}
+          selectedRootError={selectedRootError}
+        />
+      </>
+    );
+  }
+);
+
+ListSearchResults.displayName = "ListSearchResults";
 
 const SearchVerseComponent = memo(
   ({
@@ -901,6 +932,8 @@ const SearchVerseComponent = memo(
   }
 );
 
+SearchVerseComponent.displayName = "SearchVerseComponent";
+
 const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
   return (
     <>
@@ -922,6 +955,8 @@ const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
     </>
   );
 });
+
+DerivationsComponent.displayName = "DerivationsComponent";
 
 const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
   return (
@@ -981,46 +1016,54 @@ const VerseContentComponent = memo(
   }
 );
 
-const ListVerses = ({
-  versesArray,
-  chapterName,
-  myNotes,
-  editableNotes,
-  setEditableNotes,
-  refListVerses,
-  versesRef,
-  scrollKey,
-  handleNoteChange,
-}) => {
-  useEffect(() => {
-    if (scrollKey.current) {
-      versesRef.current[scrollKey.current].scrollIntoView();
-    } else {
-      refListVerses.current.scrollTop = 0;
-    }
-  }, [refListVerses, scrollKey, versesRef, versesArray]);
+VerseContentComponent.displayName = "VerseContentComponent";
 
-  const ListTitle = (props) => {
-    return <h3 className="mb-2 text-primary text-center">{props.children}</h3>;
-  };
+const ListVerses = memo(
+  ({
+    versesArray,
+    chapterName,
+    myNotes,
+    editableNotes,
+    setEditableNotes,
+    refListVerses,
+    versesRef,
+    scrollKey,
+    handleNoteChange,
+  }) => {
+    useEffect(() => {
+      if (scrollKey.current) {
+        versesRef.current[scrollKey.current].scrollIntoView();
+      } else {
+        refListVerses.current.scrollTop = 0;
+      }
+    }, [refListVerses, scrollKey, versesRef, versesArray]);
 
-  return (
-    <>
-      <ListTitle>سورة {chapterName}</ListTitle>
-      {versesArray.map((verse) => (
-        <VerseComponent
-          key={verse.key}
-          versesRef={versesRef}
-          verse={verse}
-          value={myNotes[verse.key] || ""}
-          handleNoteChange={handleNoteChange}
-          editableNotes={editableNotes}
-          setEditableNotes={setEditableNotes}
-        />
-      ))}
-    </>
-  );
-};
+    const ListTitle = (props) => {
+      return (
+        <h3 className="mb-2 text-primary text-center">{props.children}</h3>
+      );
+    };
+
+    return (
+      <>
+        <ListTitle>سورة {chapterName}</ListTitle>
+        {versesArray.map((verse) => (
+          <VerseComponent
+            key={verse.key}
+            versesRef={versesRef}
+            verse={verse}
+            value={myNotes[verse.key] || ""}
+            handleNoteChange={handleNoteChange}
+            editableNotes={editableNotes}
+            setEditableNotes={setEditableNotes}
+          />
+        ))}
+      </>
+    );
+  }
+);
+
+ListVerses.displayName = "ListVerses";
 
 const VerseComponent = memo(
   ({
@@ -1046,6 +1089,8 @@ const VerseComponent = memo(
   }
 );
 
+VerseComponent.displayName = "VerseComponent";
+
 const VerseTextComponent = memo(({ verse }) => {
   return (
     <p className="pt-1 fs-4">
@@ -1063,6 +1108,8 @@ const VerseTextComponent = memo(({ verse }) => {
     </p>
   );
 });
+
+VerseTextComponent.displayName = "VerseTextComponent";
 
 const NoteTextComponent = (props) => {
   return <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>;
