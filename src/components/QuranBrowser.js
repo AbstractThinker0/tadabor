@@ -731,8 +731,12 @@ const CheckboxComponent = ({
 
 const SelectionListRoots = memo(
   ({ quranRoots, isDisabled, searchString, setSearchString }) => {
+    const [stateSelect, setStateSelect] = useState();
+
     const handleSelectRoot = (event) => {
       let rootId = event.target.value;
+      setStateSelect(rootId);
+
       let selectedRoot = quranRoots[rootId];
 
       setSearchString(selectedRoot.name);
@@ -746,6 +750,7 @@ const SelectionListRoots = memo(
           onChange={handleSelectRoot}
           aria-label="size 6 select example"
           disabled={isDisabled}
+          value={stateSelect}
         >
           {quranRoots
             .filter((root) => root.name.startsWith(searchString) || isDisabled)
