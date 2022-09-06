@@ -1,7 +1,7 @@
 function About() {
   return (
     <>
-      <div className="text-center" dir="ltr">
+      <div className="text-center pt-2" dir="ltr">
         <p>
           Check out the project{" "}
           <a href="https://github.com/EnlightenCode/tadabor">Github repo</a>
