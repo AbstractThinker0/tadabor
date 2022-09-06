@@ -897,7 +897,7 @@ const SearchVerseComponent = memo(
           scrollKey={scrollKey}
         />
         <NoteForm
-          verse={verse}
+          verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
           editableNotes={editableNotes}
@@ -1054,7 +1054,7 @@ const VerseComponent = memo(
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
         <VerseTextComponent verse={verse} />
         <NoteForm
-          verse={verse}
+          verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
           editableNotes={editableNotes}
@@ -1092,15 +1092,13 @@ const NoteTextComponent = (props) => {
 };
 
 const NoteForm = ({
-  verse,
+  verse_key,
   value,
   handleNoteChange,
   editableNotes,
   setEditableNotes,
 }) => {
   const [rows, setRows] = useState(4);
-
-  let verse_key = verse.key;
 
   if (!value) {
     editableNotes[verse_key] = true;
@@ -1147,7 +1145,7 @@ const NoteForm = ({
   return (
     <div
       className="collapse card border-primary"
-      id={"collapseExample" + verse.key}
+      id={"collapseExample" + verse_key}
     >
       <div className="card-body">
         {isNoteEditable ? (
@@ -1157,7 +1155,7 @@ const NoteForm = ({
                 className="form-control  mb-2"
                 id="textInput"
                 placeholder="أدخل كتاباتك"
-                name={verse.key}
+                name={verse_key}
                 value={value}
                 onChange={handleNoteChange}
                 rows={rows}
