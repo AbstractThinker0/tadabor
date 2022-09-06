@@ -504,7 +504,7 @@ const DisplayPanel = memo(
     return (
       <div
         dir="rtl"
-        className="col mt-3 pb-1 border rounded h-100 overflow-auto"
+        className="col mt-3 pb-1 border border-5 rounded h-100 overflow-auto"
         ref={refListVerses}
       >
         {searchResult.length || searchError || selectedRootError ? (
@@ -743,7 +743,10 @@ function areEqual(prevProps, nextProps) {
   the same result as passing prevProps to render,
   otherwise return false
   */
-  if (nextProps.isDisabled === true) {
+  if (
+    nextProps.isDisabled === true &&
+    prevProps.isDisabled === nextProps.isDisabled
+  ) {
     return true;
   }
 }
