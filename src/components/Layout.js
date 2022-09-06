@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { QuranProvider } from "../context/QuranContext";
 
 function Layout({ children }) {
   return (
@@ -9,7 +10,7 @@ function Layout({ children }) {
       <div className="h-100">
         <Navbar />
         <AlertMessage />
-        {children}
+        <QuranProvider>{children}</QuranProvider>
       </div>
       <ToastContainer rtl />
     </div>

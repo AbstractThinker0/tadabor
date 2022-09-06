@@ -1,0 +1,101 @@
+import axios from "axios";
+import { createContext, useState, useEffect, useContext, useRef } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
+
+const QuranContext = createContext();
+
+export const QuranProvider = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const chapterNames = useRef([]);
+  const allQuranText = useRef([]);
+  const quranRoots = useRef([]);
+  const absoluteQuran = useRef([]);
+
+  useEffect(() => {
+    let clientLeft = false;
+
+    fetchData();
+
+    async function fetchData() {
+      let response = await axios.get("/res/chapters.json");
+
+      if (clientLeft) return;
+
+      if (!chapterNames.current.length) {
+        chapterNames.current = response.data;
+      }
+
+      response = await axios.get("/res/quran_v2.json");
+
+      if (clientLeft) return;
+
+      if (!allQuranText.current.length) {
+        allQuranText.current = response.data;
+      }
+
+      if (!absoluteQuran.current.length) {
+        allQuranText.current.forEach((sura) => {
+          sura.verses.forEach((verse) => {
+            absoluteQuran.current.push(verse);
+          });
+        });
+      }
+
+      response = await axios.get("/res/quran-root.txt");
+
+      if (clientLeft) return;
+
+      if (!quranRoots.current.length) {
+        let index = 0;
+        let arrayOfLines = response.data.split("\n");
+
+        arrayOfLines.forEach((line) => {
+          if (line[0] === "#" || line[0] === "\r") {
+            return;
+          }
+
+          let lineArgs = line.split(/[\r\n\t]+/g);
+
+          let occurences = lineArgs[2].split(";");
+
+          quranRoots.current.push({
+            id: index,
+            name: lineArgs[0],
+            count: lineArgs[1],
+            occurences: occurences,
+          });
+
+          index++;
+        });
+      }
+
+      setIsLoading(false);
+    }
+
+    return () => {
+      clientLeft = true;
+    };
+  }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  return (
+    <QuranContext.Provider
+      value={{
+        allQuranText: allQuranText.current,
+        chapterNames: chapterNames.current,
+        quranRoots: quranRoots.current,
+        absoluteQuran: absoluteQuran.current,
+      }}
+    >
+      {children}
+    </QuranContext.Provider>
+  );
+};
+
+const useQuran = () => useContext(QuranContext);
+
+export default useQuran;

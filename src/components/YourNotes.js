@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 import { db } from "../util/db";
-import axios from "axios";
 
 import { toast } from "react-toastify";
+import useQuran from "../context/QuranContext";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
   const [myNotes, setMyNotes] = useState({});
 
-  const chapterNames = useRef([]);
-  const allQuranText = useRef([]);
+  const { chapterNames, allQuranText } = useQuran();
 
   useEffect(() => {
     let clientLeft = false;
@@ -30,22 +29,6 @@ function YourNotes() {
 
       setMyNotes(extractNotes);
 
-      let response = await axios.get("/res/chapters.json");
-
-      if (clientLeft) return;
-
-      if (!chapterNames.current.length) {
-        chapterNames.current = response.data;
-      }
-
-      response = await axios.get("/res/quran_v2.json");
-
-      if (clientLeft) return;
-
-      if (!allQuranText.current.length) {
-        allQuranText.current = response.data;
-      }
-
       setLoadingState(false);
     }
 
@@ -60,8 +43,8 @@ function YourNotes() {
     <YourNotesLoaded
       myNotes={myNotes}
       setMyNotes={setMyNotes}
-      chapterNames={chapterNames.current}
-      allQuranText={allQuranText.current}
+      chapterNames={chapterNames}
+      allQuranText={allQuranText}
     />
   );
 }

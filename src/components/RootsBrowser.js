@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { db } from "../util/db";
@@ -6,46 +6,16 @@ import { db } from "../util/db";
 import { toast } from "react-toastify";
 
 import LoadingSpinner from "./LoadingSpinner";
-import useAxios from "../util/useAxios";
+import useQuran from "../context/QuranContext";
 
 function RootsBrowser() {
-  const { isLoading: rootsIsLoading, data: dataRoots } = useAxios(
-    "/res/quran-root.txt"
-  );
-
-  let quranRoots = useRef([]);
+  const { quranRoots } = useQuran();
 
   const [searchString, setSearchString] = useState("");
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
   };
-
-  if (rootsIsLoading) return <LoadingSpinner />;
-
-  if (quranRoots.current.length === 0) {
-    let index = 0;
-    let arrayOfLines = dataRoots.split("\n");
-
-    arrayOfLines.forEach((line) => {
-      if (line[0] === "#" || line[0] === "\r") {
-        return;
-      }
-
-      let lineArgs = line.split(/[\r\n\t]+/g);
-
-      let occurences = lineArgs[2].split(";");
-
-      quranRoots.current.push({
-        id: index,
-        name: lineArgs[0],
-        count: lineArgs[1],
-        occurences: occurences,
-      });
-
-      index++;
-    });
-  }
 
   return (
     <div className="pb-3 pt-2">
@@ -185,7 +155,7 @@ const RootsListComponent = ({ quranRoots, searchString }) => {
 
   return (
     <div>
-      {quranRoots.current
+      {quranRoots
         .filter((root) => root.name.startsWith(searchString) || !searchString)
         .map((root) => (
           <RootComponent

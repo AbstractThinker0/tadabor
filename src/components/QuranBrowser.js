@@ -9,13 +9,9 @@ import { toast } from "react-toastify";
 
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
+import useQuran from "../context/QuranContext";
 
-function QuranBrowser({
-  allQuranText,
-  absoluteQuran,
-  chapterNames,
-  quranRoots,
-}) {
+function QuranBrowser() {
   const [loadingState, setLoadingState] = useState(true);
 
   const [myNotes, setMyNotes] = useState({});
@@ -47,26 +43,11 @@ function QuranBrowser({
 
   if (loadingState) return <LoadingSpinner />;
 
-  return (
-    <QuranBrowserLoaded
-      allQuranText={allQuranText}
-      absoluteQuran={absoluteQuran}
-      chapterNames={chapterNames}
-      quranRoots={quranRoots}
-      myNotes={myNotes}
-      setMyNotes={setMyNotes}
-    />
-  );
+  return <QuranBrowserLoaded myNotes={myNotes} setMyNotes={setMyNotes} />;
 }
 
-function QuranBrowserLoaded({
-  allQuranText,
-  absoluteQuran,
-  chapterNames,
-  quranRoots,
-  myNotes,
-  setMyNotes,
-}) {
+function QuranBrowserLoaded({ myNotes, setMyNotes }) {
+  const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
   const [selectChapter, setSelectChapter] = useState(1);
 
   const [searchString, setSearchString] = useState("");
@@ -381,7 +362,6 @@ function QuranBrowserLoaded({
     <>
       <div className="row" style={{ height: "85%" }}>
         <SearchPanel
-          chapterNames={chapterNames}
           memoHandleSelectionListChapters={memoHandleSelectionListChapters}
           refListChapters={refListChapters}
           radioSearchMethod={radioSearchMethod}
@@ -396,14 +376,12 @@ function QuranBrowserLoaded({
           searchString={searchString}
           setSearchString={setSearchString}
           searchResult={searchResult}
-          quranRoots={quranRoots}
         />
 
         <DisplayPanel
           searchResult={searchResult}
           searchError={searchError}
           selectedRootError={selectedRootError}
-          chapterNames={chapterNames}
           searchingString={searchingString}
           searchingAllQuran={searchingAllQuran}
           selectChapter={selectChapter}
@@ -417,7 +395,6 @@ function QuranBrowserLoaded({
           scrollKey={scrollKey}
           rootDerivations={rootDerivations}
           memoHandleNoteChange={memoHandleNoteChange}
-          allQuranText={allQuranText}
         />
       </div>
     </>
@@ -439,7 +416,6 @@ const SearchSuccessComponent = ({ searchResult }) => {
 
 const SearchPanel = memo(
   ({
-    chapterNames,
     memoHandleSelectionListChapters,
     refListChapters,
     radioSearchMethod,
@@ -454,7 +430,6 @@ const SearchPanel = memo(
     searchString,
     setSearchString,
     searchResult,
-    quranRoots,
   }) => {
     const { t } = useTranslation();
 
@@ -463,7 +438,6 @@ const SearchPanel = memo(
     return (
       <div className="col-auto pt-3 pb-1">
         <SelectionListChapters
-          chaptersArray={chapterNames}
           handleSelectionListChapters={memoHandleSelectionListChapters}
           innerRef={refListChapters}
         />
@@ -494,7 +468,6 @@ const SearchPanel = memo(
           setSearchString={setSearchString}
         />
         <SelectionListRoots
-          quranRoots={quranRoots}
           isDisabled={!isRootSearch}
           searchString={searchString}
           setSearchString={setSearchString}
@@ -512,7 +485,6 @@ const DisplayPanel = memo(
     searchResult,
     searchError,
     selectedRootError,
-    chapterNames,
     searchingString,
     searchingAllQuran,
     selectChapter,
@@ -526,8 +498,8 @@ const DisplayPanel = memo(
     scrollKey,
     rootDerivations,
     memoHandleNoteChange,
-    allQuranText,
   }) => {
+    const { chapterNames, allQuranText } = useQuran();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
 
@@ -579,7 +551,8 @@ const DisplayPanel = memo(
 DisplayPanel.displayName = "DisplayPanel";
 
 const SelectionListChapters = memo(
-  ({ chaptersArray, handleSelectionListChapters, innerRef }) => {
+  ({ handleSelectionListChapters, innerRef }) => {
+    const { chapterNames } = useQuran();
     return (
       <div className="container mt-2 mb-2 p-0">
         <select
@@ -592,7 +565,7 @@ const SelectionListChapters = memo(
           defaultValue={["1"]}
           multiple
         >
-          {chaptersArray.map((chapter, index) => (
+          {chapterNames.map((chapter, index) => (
             <option key={chapter.id} value={chapter.id}>
               {index + 1}. {chapter.name}
             </option>
@@ -727,7 +700,8 @@ const CheckboxComponent = ({
 };
 
 const SelectionListRoots = memo(
-  ({ quranRoots, isDisabled, searchString, setSearchString }) => {
+  ({ isDisabled, searchString, setSearchString }) => {
+    const { quranRoots } = useQuran();
     const [stateSelect, setStateSelect] = useState();
 
     const handleSelectRoot = (event) => {
@@ -984,7 +958,7 @@ const VerseContentComponent = memo(
     let verse_key = verse.key;
     let isLinkable = scopeAllQuran || searchMultipleChapters;
 
-    const handleVerseClick = (e, verse_key) => {
+    const handleVerseClick = (verse_key) => {
       scrollKey.current = verse_key;
       gotoChapter(chapterNames[verse.suraid - 1].id);
     };
@@ -995,7 +969,7 @@ const VerseContentComponent = memo(
         {isLinkable ? (
           <button
             className="p-0 border-0 bg-transparent"
-            onClick={(e) => handleVerseClick(e, verse_key)}
+            onClick={(e) => handleVerseClick(verse_key)}
           >
             {verseChapter + ":" + verse.verseid}
           </button>
