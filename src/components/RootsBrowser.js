@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { db } from "../util/db";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 import LoadingSpinner from "./LoadingSpinner";
 import useAxios from "../util/useAxios";
 
@@ -56,7 +56,6 @@ function RootsBrowser() {
       />
 
       <RootsListComponent quranRoots={quranRoots} searchString={searchString} />
-      <ToastContainer rtl />
     </div>
   );
 }

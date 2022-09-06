@@ -5,8 +5,7 @@ import { db } from "../util/db";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
@@ -368,10 +367,9 @@ function QuranBrowserLoaded({
 
   function handleNoteChange(event) {
     const { name, value } = event.target;
-    let verse = JSON.parse(name);
 
     setMyNotes((state) => {
-      return { ...state, [verse.key]: value };
+      return { ...state, [name]: value };
     });
   }
 
@@ -422,7 +420,6 @@ function QuranBrowserLoaded({
           allQuranText={allQuranText}
         />
       </div>
-      <ToastContainer rtl />
     </>
   );
 }
@@ -1186,7 +1183,7 @@ const NoteForm = ({
                 className="form-control  mb-2"
                 id="textInput"
                 placeholder="أدخل كتاباتك"
-                name={JSON.stringify(verse)}
+                name={verse.key}
                 value={value}
                 onChange={handleNoteChange}
                 rows={rows}

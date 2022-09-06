@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Layout({ children }) {
   return (
@@ -9,6 +11,7 @@ function Layout({ children }) {
         <AlertMessage />
         {children}
       </div>
+      <ToastContainer rtl />
     </div>
   );
 }
