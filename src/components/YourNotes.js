@@ -10,8 +10,6 @@ function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
   const [myNotes, setMyNotes] = useState({});
 
-  const { chapterNames, allQuranText } = useQuran();
-
   useEffect(() => {
     let clientLeft = false;
 
@@ -39,22 +37,11 @@ function YourNotes() {
 
   if (loadingState) return <LoadingSpinner />;
 
-  return (
-    <YourNotesLoaded
-      myNotes={myNotes}
-      setMyNotes={setMyNotes}
-      chapterNames={chapterNames}
-      allQuranText={allQuranText}
-    />
-  );
+  return <YourNotesLoaded myNotes={myNotes} setMyNotes={setMyNotes} />;
 }
 
-const YourNotesLoaded = ({
-  myNotes,
-  setMyNotes,
-  chapterNames,
-  allQuranText,
-}) => {
+const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
+  const { chapterNames, allQuranText } = useQuran();
   const [editableNotes, setEditableNotes] = useState({});
 
   const convertKey = (key) => {
