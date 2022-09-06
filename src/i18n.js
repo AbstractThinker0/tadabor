@@ -10,7 +10,8 @@ i18n
     resources: {
       en: {
         translation: {
-          alert_message: "This is a beta version",
+          alert_message:
+            "This is a beta version of the website, please make sure to have a backup of everything you save here.",
           nav_brand: "Tadabor",
           nav_home: "Home",
           nav_about: "About",

@@ -5,6 +5,7 @@ import { db } from "../util/db";
 
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
+import { useTranslation } from "react-i18next";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);

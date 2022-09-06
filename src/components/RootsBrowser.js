@@ -115,7 +115,7 @@ const RootsListComponent = ({ searchString }) => {
     });
   }
 
-  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
+  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
 
   function handleNoteSubmit(event, value) {
     event.preventDefault();
