@@ -9,8 +9,6 @@ import LoadingSpinner from "./LoadingSpinner";
 import useQuran from "../context/QuranContext";
 
 function RootsBrowser() {
-  const { quranRoots } = useQuran();
-
   const [searchString, setSearchString] = useState("");
 
   const handleSearchSubmit = (e) => {
@@ -25,7 +23,7 @@ function RootsBrowser() {
         setSearchString={setSearchString}
       />
 
-      <RootsListComponent quranRoots={quranRoots} searchString={searchString} />
+      <RootsListComponent searchString={searchString} />
     </div>
   );
 }
@@ -70,7 +68,8 @@ const FormWordSearch = ({
   );
 };
 
-const RootsListComponent = ({ quranRoots, searchString }) => {
+const RootsListComponent = ({ searchString }) => {
+  const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
   const [myNotes, setMyNotes] = useState({});
