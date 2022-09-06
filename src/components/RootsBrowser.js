@@ -69,6 +69,7 @@ const FormWordSearch = ({
 };
 
 const RootsListComponent = ({ searchString }) => {
+  const { t } = useTranslation();
   const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
@@ -130,14 +131,14 @@ const RootsListComponent = ({ searchString }) => {
       })
       .then(function (result) {
         //
-        toast.success("تم الحفظ بنجاح.");
+        toast.success(t("save_success"));
         setEditableNotes((state) => {
           return { ...state, [root_id]: false };
         });
       })
       .catch(function (error) {
         //
-        toast.success("فشلت عملية الحفظ.");
+        toast.success(t("save_failed"));
       });
   }
 
@@ -253,6 +254,7 @@ const FromComponent = ({
   handleNoteSubmit,
   handleNoteChange,
 }) => {
+  const { t } = useTranslation();
   const [rows, setRows] = useState(4);
 
   useEffect(() => {
@@ -283,12 +285,17 @@ const FromComponent = ({
           required
         />
       </div>
-      <input type="submit" value="حفظ" className="btn btn-success btn-sm" />
+      <input
+        type="submit"
+        value={t("text_save")}
+        className="btn btn-success btn-sm"
+      />
     </form>
   );
 };
 
 const NoteTextComponent = ({ value, root_id, handleEditClick }) => {
+  const { t } = useTranslation();
   return (
     <div>
       <p style={{ whiteSpace: "pre-wrap" }}>{value}</p>
@@ -297,7 +304,7 @@ const NoteTextComponent = ({ value, root_id, handleEditClick }) => {
         onClick={handleEditClick}
         className="btn btn-primary btn-sm"
       >
-        تعديل
+        {t("text_edit")}
       </button>
     </div>
   );

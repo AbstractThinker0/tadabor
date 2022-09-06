@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
 
 function Layout({ children }) {
+  const { i18n } = useTranslation();
+  const isRtl = i18n.dir() === "rtl";
   return (
     <div className="container vh-100 mw-100">
       <div className="h-100">
@@ -12,7 +14,7 @@ function Layout({ children }) {
         <AlertMessage />
         <QuranProvider>{children}</QuranProvider>
       </div>
-      <ToastContainer rtl />
+      <ToastContainer rtl={isRtl} />
     </div>
   );
 }

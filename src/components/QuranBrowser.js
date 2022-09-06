@@ -359,45 +359,43 @@ function QuranBrowserLoaded({ myNotes, setMyNotes }) {
   const scrollKey = useRef();
 
   return (
-    <>
-      <div className="row" style={{ height: "85%" }}>
-        <SearchPanel
-          memoHandleSelectionListChapters={memoHandleSelectionListChapters}
-          refListChapters={refListChapters}
-          radioSearchMethod={radioSearchMethod}
-          setRadioSearchMethod={setRadioSearchMethod}
-          searchDiacritics={searchDiacritics}
-          setSearchDiacritics={setSearchDiacritics}
-          searchIdentical={searchIdentical}
-          setSearchIdentical={setSearchIdentical}
-          searchAllQuran={searchAllQuran}
-          setSearchAllQuran={setSearchAllQuran}
-          memoHandleSearchSubmit={memoHandleSearchSubmit}
-          searchString={searchString}
-          setSearchString={setSearchString}
-          searchResult={searchResult}
-        />
+    <div className="row" style={{ height: "85%" }}>
+      <SearchPanel
+        memoHandleSelectionListChapters={memoHandleSelectionListChapters}
+        refListChapters={refListChapters}
+        radioSearchMethod={radioSearchMethod}
+        setRadioSearchMethod={setRadioSearchMethod}
+        searchDiacritics={searchDiacritics}
+        setSearchDiacritics={setSearchDiacritics}
+        searchIdentical={searchIdentical}
+        setSearchIdentical={setSearchIdentical}
+        searchAllQuran={searchAllQuran}
+        setSearchAllQuran={setSearchAllQuran}
+        memoHandleSearchSubmit={memoHandleSearchSubmit}
+        searchString={searchString}
+        setSearchString={setSearchString}
+        searchResult={searchResult}
+      />
 
-        <DisplayPanel
-          searchResult={searchResult}
-          searchError={searchError}
-          selectedRootError={selectedRootError}
-          searchingString={searchingString}
-          searchingAllQuran={searchingAllQuran}
-          selectChapter={selectChapter}
-          radioSearchingMethod={radioSearchingMethod}
-          myNotes={myNotes}
-          editableNotes={editableNotes}
-          setEditableNotes={setEditableNotes}
-          searchMultipleChapters={searchMultipleChapters}
-          refListChapters={refListChapters}
-          memoGotoChapter={memoGotoChapter}
-          scrollKey={scrollKey}
-          rootDerivations={rootDerivations}
-          memoHandleNoteChange={memoHandleNoteChange}
-        />
-      </div>
-    </>
+      <DisplayPanel
+        searchResult={searchResult}
+        searchError={searchError}
+        selectedRootError={selectedRootError}
+        searchingString={searchingString}
+        searchingAllQuran={searchingAllQuran}
+        selectChapter={selectChapter}
+        radioSearchingMethod={radioSearchingMethod}
+        myNotes={myNotes}
+        editableNotes={editableNotes}
+        setEditableNotes={setEditableNotes}
+        searchMultipleChapters={searchMultipleChapters}
+        refListChapters={refListChapters}
+        memoGotoChapter={memoGotoChapter}
+        scrollKey={scrollKey}
+        rootDerivations={rootDerivations}
+        memoHandleNoteChange={memoHandleNoteChange}
+      />
+    </div>
   );
 }
 
@@ -935,11 +933,12 @@ const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
 DerivationsComponent.displayName = "DerivationsComponent";
 
 const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
+  const { t } = useTranslation();
   return (
     <>
-      {searchError && <p className="mt-3 text-danger">لا وجود لهذه الكلمة.</p>}
+      {searchError && <p className="mt-3 text-danger">{t("search_fail")}</p>}
       {selectedRootError && (
-        <p className="mt-3 text-danger">هذا الجذر غير موجود أو غير مدرج.</p>
+        <p className="mt-3 text-danger">{t("search_root_error")}</p>
       )}
     </>
   );
@@ -1098,6 +1097,8 @@ const NoteForm = ({
   editableNotes,
   setEditableNotes,
 }) => {
+  const { t } = useTranslation();
+
   const [rows, setRows] = useState(4);
 
   if (!value) {
@@ -1127,13 +1128,13 @@ const NoteForm = ({
       })
       .then(function (result) {
         //
-        toast.success("تم الحفظ بنجاح.");
+        toast.success(t("save_success"));
         editableNotes[verse_key] = false;
         setEditableNotes({ ...editableNotes });
       })
       .catch(function (error) {
         //
-        toast.success("فشلت عملية الحفظ.");
+        toast.success(t("save_failed"));
       });
   };
 
@@ -1164,7 +1165,7 @@ const NoteForm = ({
             </div>
             <input
               type="submit"
-              value="حفظ"
+              value={t("text_save")}
               className="btn btn-success btn-sm"
             />
           </form>
@@ -1175,7 +1176,7 @@ const NoteForm = ({
               onClick={handleEditClick}
               className="btn btn-primary btn-sm"
             >
-              تعديل
+              {t("text_edit")}
             </button>
           </>
         )}

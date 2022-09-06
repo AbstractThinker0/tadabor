@@ -41,6 +41,7 @@ function YourNotes() {
 }
 
 const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
+  const { t } = useTranslation();
   const { chapterNames, allQuranText } = useQuran();
   const [editableNotes, setEditableNotes] = useState({});
 
@@ -72,14 +73,14 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
       })
       .then(function (result) {
         //
-        toast.success("تم الحفظ بنجاح.");
+        toast.success(t("save_success"));
         setEditableNotes((state) => {
           return { ...state, [note_key]: false };
         });
       })
       .catch(function (error) {
         //
-        toast.success("فشلت عملية الحفظ.");
+        toast.success(t("save_failed"));
       });
   }
 
@@ -119,6 +120,7 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
 };
 
 const NoteTextComponent = ({ note_text, note_key, handleEditOnClick }) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="card-body">
@@ -129,7 +131,7 @@ const NoteTextComponent = ({ note_text, note_key, handleEditOnClick }) => {
           onClick={(e) => handleEditOnClick(note_key)}
           className="btn btn-success"
         >
-          Edit
+          {t("text_edit")}
         </button>
       </div>
     </>
@@ -142,6 +144,7 @@ const NoteFormCompoent = ({
   handleNoteSave,
   handleNoteChange,
 }) => {
+  const { t } = useTranslation();
   const [rows, setRows] = useState(4);
 
   useEffect(() => {
@@ -173,7 +176,7 @@ const NoteFormCompoent = ({
           onClick={(e) => handleNoteSave(note_key)}
           className="btn btn-success"
         >
-          Save
+          {t("text_save")}
         </button>
       </div>
     </>
