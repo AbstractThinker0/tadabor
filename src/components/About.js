@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+const APP_VERSION = "0.0.2";
+
 function About() {
   const { i18n } = useTranslation();
 
@@ -67,7 +69,7 @@ const AboutEnglish = () => {
         </div>
       </div>
 
-      <p className="text-center text-muted">App Version 0.0.1</p>
+      <p className="text-center text-muted">App Version {APP_VERSION}</p>
     </>
   );
 };
@@ -126,7 +128,7 @@ const AboutArabic = () => {
         </div>
       </div>
 
-      <p className="text-center text-muted">نسخة التطبيق 0.0.1</p>
+      <p className="text-center text-muted">نسخة التطبيق {APP_VERSION}</p>
     </>
   );
 };
