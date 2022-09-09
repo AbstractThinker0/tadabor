@@ -116,11 +116,8 @@ const RootsListComponent = ({ searchString }) => {
     });
   }
 
-  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
-
   function handleNoteSubmit(event, value) {
     event.preventDefault();
-
     let root_id = event.target.name;
 
     db.root_notes
@@ -142,6 +139,9 @@ const RootsListComponent = ({ searchString }) => {
         toast.success(t("save_failed"));
       });
   }
+
+  // eslint-disable-next-line
+  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
