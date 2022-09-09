@@ -11,6 +11,13 @@ export function normalize_text(text) {
   return text;
 }
 
+export function normalizeAlif(token) {
+  token = token.replace(/(ٱ)/g, "ا");
+  token = token.replace(/(آ)/g, "ا");
+  token = token.replace(/(إ)/g, "ا");
+  return token;
+}
+
 export function onlySpaces(str) {
   return str.trim().length === 0;
 }

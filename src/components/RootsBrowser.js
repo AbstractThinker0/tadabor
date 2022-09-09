@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 import LoadingSpinner from "./LoadingSpinner";
 import useQuran from "../context/QuranContext";
+import { normalizeAlif } from "../util/util";
 
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
@@ -156,7 +157,12 @@ const RootsListComponent = ({ searchString }) => {
   return (
     <div>
       {quranRoots
-        .filter((root) => root.name.startsWith(searchString) || !searchString)
+        .filter(
+          (root) =>
+            normalizeAlif(root.name).startsWith(searchString) ||
+            root.name.startsWith(searchString) ||
+            !searchString
+        )
         .map((root) => (
           <RootComponent
             key={root.id}
