@@ -504,43 +504,45 @@ const DisplayPanel = memo(
     return (
       <div
         dir="rtl"
-        className="col mt-3 pb-1 border border-5 rounded h-100 overflow-auto"
+        className="col mt-3 pb-1 p-0 h-100 overflow-auto"
         ref={refListVerses}
       >
-        {searchResult.length || searchError || selectedRootError ? (
-          <ListSearchResults
-            versesArray={searchResult}
-            chapterName={chapterNames[selectChapter - 1].name}
-            searchToken={searchingString.trim()}
-            scopeAllQuran={searchingAllQuran}
-            searchError={searchError}
-            selectedRootError={selectedRootError}
-            chapterNames={chapterNames}
-            radioSearchMethod={radioSearchingMethod}
-            myNotes={myNotes}
-            editableNotes={editableNotes}
-            setEditableNotes={setEditableNotes}
-            searchMultipleChapters={searchMultipleChapters}
-            refListVerses={refListVerses}
-            refListChapters={refListChapters}
-            gotoChapter={memoGotoChapter}
-            scrollKey={scrollKey}
-            rootDerivations={rootDerivations}
-            handleNoteChange={memoHandleNoteChange}
-          />
-        ) : (
-          <ListVerses
-            chapterName={chapterNames[selectChapter - 1].name}
-            versesArray={allQuranText[selectChapter - 1].verses}
-            myNotes={myNotes}
-            setEditableNotes={setEditableNotes}
-            editableNotes={editableNotes}
-            refListVerses={refListVerses}
-            versesRef={versesRef}
-            scrollKey={scrollKey}
-            handleNoteChange={memoHandleNoteChange}
-          />
-        )}
+        <div className="card ">
+          {searchResult.length || searchError || selectedRootError ? (
+            <ListSearchResults
+              versesArray={searchResult}
+              chapterName={chapterNames[selectChapter - 1].name}
+              searchToken={searchingString.trim()}
+              scopeAllQuran={searchingAllQuran}
+              searchError={searchError}
+              selectedRootError={selectedRootError}
+              chapterNames={chapterNames}
+              radioSearchMethod={radioSearchingMethod}
+              myNotes={myNotes}
+              editableNotes={editableNotes}
+              setEditableNotes={setEditableNotes}
+              searchMultipleChapters={searchMultipleChapters}
+              refListVerses={refListVerses}
+              refListChapters={refListChapters}
+              gotoChapter={memoGotoChapter}
+              scrollKey={scrollKey}
+              rootDerivations={rootDerivations}
+              handleNoteChange={memoHandleNoteChange}
+            />
+          ) : (
+            <ListVerses
+              chapterName={chapterNames[selectChapter - 1].name}
+              versesArray={allQuranText[selectChapter - 1].verses}
+              myNotes={myNotes}
+              setEditableNotes={setEditableNotes}
+              editableNotes={editableNotes}
+              refListVerses={refListVerses}
+              versesRef={versesRef}
+              scrollKey={scrollKey}
+              handleNoteChange={memoHandleNoteChange}
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -1018,24 +1020,28 @@ const ListVerses = memo(
 
     const ListTitle = (props) => {
       return (
-        <h3 className="mb-2 text-primary text-center">{props.children}</h3>
+        <div className="card-header">
+          <h3 className="text-primary text-center">{props.children}</h3>
+        </div>
       );
     };
 
     return (
       <>
         <ListTitle>سورة {chapterName}</ListTitle>
-        {versesArray.map((verse) => (
-          <VerseComponent
-            key={verse.key}
-            versesRef={versesRef}
-            verse={verse}
-            value={myNotes[verse.key] || ""}
-            handleNoteChange={handleNoteChange}
-            editableNotes={editableNotes}
-            setEditableNotes={setEditableNotes}
-          />
-        ))}
+        <div className="card-body">
+          {versesArray.map((verse) => (
+            <VerseComponent
+              key={verse.key}
+              versesRef={versesRef}
+              verse={verse}
+              value={myNotes[verse.key] || ""}
+              handleNoteChange={handleNoteChange}
+              editableNotes={editableNotes}
+              setEditableNotes={setEditableNotes}
+            />
+          ))}
+        </div>
       </>
     );
   }
@@ -1090,7 +1096,11 @@ const VerseTextComponent = memo(({ verse }) => {
 VerseTextComponent.displayName = "VerseTextComponent";
 
 const NoteTextComponent = (props) => {
-  return <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>;
+  return (
+    <div className="p-2 border border-1 border-success rounded">
+      <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>
+    </div>
+  );
 };
 
 const NoteForm = ({
@@ -1177,7 +1187,7 @@ const NoteForm = ({
             <NoteTextComponent>{value}</NoteTextComponent>
             <button
               onClick={handleEditClick}
-              className="btn btn-primary btn-sm"
+              className="mt-2 btn btn-primary btn-sm"
             >
               {t("text_edit")}
             </button>
