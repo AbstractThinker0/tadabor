@@ -92,31 +92,28 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <div
-            className={`d-flex ${i18n.resolvedLanguage === "ar" && "me-auto"}`}
-          >
-            <button
-              key={"en"}
-              style={{
-                fontWeight: i18n.resolvedLanguage === "en" ? "bold" : "normal",
-              }}
-              onClick={() => i18n.changeLanguage("en")}
-            >
-              English
-            </button>
-            <button
-              key={"ar"}
-              style={{
-                fontWeight: i18n.resolvedLanguage === "ar" ? "bold" : "normal",
-              }}
-              onClick={() => i18n.changeLanguage("ar")}
-            >
-              Arabic
-            </button>
-          </div>
+          <LanguageButton />
         </div>
       </div>
     </nav>
+  );
+};
+
+const LanguageButton = () => {
+  const { i18n } = useTranslation();
+  let resolvedLang = i18n.resolvedLanguage;
+
+  const onLangClick = () => {
+    resolvedLang === "en"
+      ? i18n.changeLanguage("ar")
+      : i18n.changeLanguage("en");
+  };
+  return (
+    <div className={`d-flex ${resolvedLang === "ar" && "me-auto"}`}>
+      <button className="btn btn-light" onClick={onLangClick}>
+        {resolvedLang === "en" ? "العربية" : "English"}
+      </button>
+    </div>
   );
 };
 
