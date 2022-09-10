@@ -9,6 +9,9 @@ import LoadingSpinner from "./LoadingSpinner";
 import useQuran from "../context/QuranContext";
 import { normalizeAlif } from "../util/util";
 
+import { IconTextDirectionLtr } from "@tabler/icons";
+import { IconTextDirectionRtl } from "@tabler/icons";
+
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
 
@@ -262,6 +265,7 @@ const FromComponent = ({
 }) => {
   const { t } = useTranslation();
   const [rows, setRows] = useState(4);
+  const [areaDirection, setAreaDirection] = useState({});
 
   useEffect(() => {
     const rowlen = value.split("\n");
@@ -273,6 +277,18 @@ const FromComponent = ({
     }
   }, [value]);
 
+  function setDirectionRtl() {
+    setAreaDirection((state) => {
+      return { ...state, [root_id]: "rtl" };
+    });
+  }
+
+  function setDirectionLtr() {
+    setAreaDirection((state) => {
+      return { ...state, [root_id]: "ltr" };
+    });
+  }
+
   return (
     <form
       key={root_id}
@@ -280,6 +296,14 @@ const FromComponent = ({
       onSubmit={(event) => handleNoteSubmit(event, value)}
     >
       <div className="form-group">
+        <TextareaToolbar>
+          <ToolbarOption handleClick={setDirectionLtr}>
+            <IconTextDirectionLtr />
+          </ToolbarOption>
+          <ToolbarOption handleClick={setDirectionRtl}>
+            <IconTextDirectionRtl />
+          </ToolbarOption>
+        </TextareaToolbar>
         <textarea
           className="form-control mb-2"
           id="textInput"
@@ -288,6 +312,7 @@ const FromComponent = ({
           value={value}
           onChange={handleNoteChange}
           rows={rows}
+          dir={areaDirection[root_id] || ""}
           required
         />
       </div>
@@ -299,6 +324,18 @@ const FromComponent = ({
     </form>
   );
 };
+
+function TextareaToolbar(props) {
+  return <div dir="ltr">{props.children}</div>;
+}
+
+function ToolbarOption(props) {
+  return (
+    <button type="button" className="btn btn-sm" onClick={props.handleClick}>
+      {props.children}
+    </button>
+  );
+}
 
 const NoteTextComponent = ({ value, root_id, handleEditClick }) => {
   const { t } = useTranslation();
