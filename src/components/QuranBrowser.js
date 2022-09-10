@@ -12,41 +12,6 @@ import { useTranslation } from "react-i18next";
 import useQuran from "../context/QuranContext";
 
 function QuranBrowser() {
-  const [loadingState, setLoadingState] = useState(true);
-
-  const [myNotes, setMyNotes] = useState({});
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      let userNotes = await db.notes.toArray();
-
-      if (clientLeft) return;
-
-      let extractNotes = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-      });
-
-      setMyNotes(extractNotes);
-
-      setLoadingState(false);
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
-
-  if (loadingState) return <LoadingSpinner />;
-
-  return <QuranBrowserLoaded myNotes={myNotes} setMyNotes={setMyNotes} />;
-}
-
-function QuranBrowserLoaded({ myNotes, setMyNotes }) {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
   const [selectChapter, setSelectChapter] = useState(1);
 
@@ -342,16 +307,6 @@ function QuranBrowserLoaded({ myNotes, setMyNotes }) {
     }
   }
 
-  const memoHandleNoteChange = useCallback(handleNoteChange, [setMyNotes]);
-
-  function handleNoteChange(event) {
-    const { name, value } = event.target;
-
-    setMyNotes((state) => {
-      return { ...state, [name]: value };
-    });
-  }
-
   const refListChapters = useRef(null);
 
   const scrollKey = useRef();
@@ -383,13 +338,11 @@ function QuranBrowserLoaded({ myNotes, setMyNotes }) {
         searchingAllQuran={searchingAllQuran}
         selectChapter={selectChapter}
         radioSearchingMethod={radioSearchingMethod}
-        myNotes={myNotes}
         searchMultipleChapters={searchMultipleChapters}
         refListChapters={refListChapters}
         memoGotoChapter={memoGotoChapter}
         scrollKey={scrollKey}
         rootDerivations={rootDerivations}
-        memoHandleNoteChange={memoHandleNoteChange}
       />
     </div>
   );
@@ -483,18 +436,56 @@ const DisplayPanel = memo(
     searchingAllQuran,
     selectChapter,
     radioSearchingMethod,
-    myNotes,
     searchMultipleChapters,
     refListChapters,
     memoGotoChapter,
     scrollKey,
     rootDerivations,
-    memoHandleNoteChange,
   }) => {
     const [editableNotes, setEditableNotes] = useState({});
     const { chapterNames, allQuranText } = useQuran();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
+
+    const [loadingState, setLoadingState] = useState(true);
+    const [myNotes, setMyNotes] = useState({});
+
+    useEffect(() => {
+      let clientLeft = false;
+
+      fetchData();
+
+      async function fetchData() {
+        let userNotes = await db.notes.toArray();
+
+        if (clientLeft) return;
+
+        let extractNotes = {};
+        userNotes.forEach((note) => {
+          extractNotes[note.id] = note.text;
+        });
+
+        setMyNotes(extractNotes);
+
+        setLoadingState(false);
+      }
+
+      return () => {
+        clientLeft = true;
+      };
+    }, []);
+
+    const memoHandleNoteChange = useCallback(handleNoteChange, []);
+
+    function handleNoteChange(event) {
+      const { name, value } = event.target;
+
+      setMyNotes((state) => {
+        return { ...state, [name]: value };
+      });
+    }
+
+    if (loadingState) return <LoadingSpinner />;
 
     return (
       <div
