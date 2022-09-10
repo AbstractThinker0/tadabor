@@ -72,8 +72,6 @@ function QuranBrowserLoaded({ myNotes, setMyNotes }) {
   const [radioSearchingMethod, setRadioSearchingMethod] =
     useState("optionWordSearch");
 
-  const [editableNotes, setEditableNotes] = useState({});
-
   const [rootDerivations, setRootDerivations] = useState([]);
 
   const clearPreviousSearch = () => {
@@ -386,8 +384,6 @@ function QuranBrowserLoaded({ myNotes, setMyNotes }) {
         selectChapter={selectChapter}
         radioSearchingMethod={radioSearchingMethod}
         myNotes={myNotes}
-        editableNotes={editableNotes}
-        setEditableNotes={setEditableNotes}
         searchMultipleChapters={searchMultipleChapters}
         refListChapters={refListChapters}
         memoGotoChapter={memoGotoChapter}
@@ -488,8 +484,6 @@ const DisplayPanel = memo(
     selectChapter,
     radioSearchingMethod,
     myNotes,
-    editableNotes,
-    setEditableNotes,
     searchMultipleChapters,
     refListChapters,
     memoGotoChapter,
@@ -497,6 +491,7 @@ const DisplayPanel = memo(
     rootDerivations,
     memoHandleNoteChange,
   }) => {
+    const [editableNotes, setEditableNotes] = useState({});
     const { chapterNames, allQuranText } = useQuran();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
@@ -998,6 +993,16 @@ const VerseContentComponent = memo(
 
 VerseContentComponent.displayName = "VerseContentComponent";
 
+const ListTitle = memo(({ chapterName }) => {
+  return (
+    <div className="card-header">
+      <h3 className="text-primary text-center">سورة {chapterName}</h3>
+    </div>
+  );
+});
+
+ListTitle.displayName = "ListTitle";
+
 const ListVerses = memo(
   ({
     versesArray,
@@ -1018,17 +1023,9 @@ const ListVerses = memo(
       }
     }, [refListVerses, scrollKey, versesRef, versesArray]);
 
-    const ListTitle = (props) => {
-      return (
-        <div className="card-header">
-          <h3 className="text-primary text-center">{props.children}</h3>
-        </div>
-      );
-    };
-
     return (
       <>
-        <ListTitle>سورة {chapterName}</ListTitle>
+        <ListTitle chapterName={chapterName} />
         <div className="card-body">
           {versesArray.map((verse) => (
             <VerseComponent
