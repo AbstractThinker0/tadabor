@@ -79,6 +79,7 @@ const RootsListComponent = ({ searchString }) => {
 
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
+  const [areaDirection, setAreaDirection] = useState({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -155,6 +156,14 @@ const RootsListComponent = ({ searchString }) => {
     });
   }
 
+  function handleSetDirection(root_id, dir) {
+    setAreaDirection((state) => {
+      return { ...state, [root_id]: dir };
+    });
+  }
+
+  const memoHandleSetDirection = useCallback(handleSetDirection, []);
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -172,10 +181,12 @@ const RootsListComponent = ({ searchString }) => {
             root_name={root.name}
             root_id={root.id}
             value={myNotes[root.id] || ""}
+            noteDirection={areaDirection[root.id] || ""}
             isEditable={editableNotes[root.id]}
             handleEditClick={memoHandleEditClick}
             handleNoteSubmit={memoHandleNoteSubmit}
             handleNoteChange={memoHandleNoteChange}
+            handleSetDirection={memoHandleSetDirection}
           />
         ))}
     </div>
@@ -191,6 +202,8 @@ const RootComponent = memo(
     handleNoteSubmit,
     handleEditClick,
     isEditable,
+    noteDirection,
+    handleSetDirection,
   }) => {
     return (
       <div className="text-center border">
@@ -199,6 +212,8 @@ const RootComponent = memo(
           root_id={root_id}
           value={value}
           isEditable={isEditable}
+          noteDirection={noteDirection}
+          handleSetDirection={handleSetDirection}
           handleNoteChange={handleNoteChange}
           handleNoteSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
@@ -231,6 +246,8 @@ const RootCollapse = ({
   handleNoteChange,
   handleNoteSubmit,
   handleEditClick,
+  noteDirection,
+  handleSetDirection,
 }) => {
   return (
     <div
@@ -248,8 +265,10 @@ const RootCollapse = ({
           <FromComponent
             root_id={root_id}
             value={value}
+            noteDirection={noteDirection}
             handleNoteChange={handleNoteChange}
             handleNoteSubmit={handleNoteSubmit}
+            handleSetDirection={handleSetDirection}
           />
         )}
       </div>
@@ -260,12 +279,13 @@ const RootCollapse = ({
 const FromComponent = ({
   root_id,
   value,
+  noteDirection,
   handleNoteSubmit,
   handleNoteChange,
+  handleSetDirection,
 }) => {
   const { t } = useTranslation();
   const [rows, setRows] = useState(4);
-  const [areaDirection, setAreaDirection] = useState({});
 
   useEffect(() => {
     const rowlen = value.split("\n");
@@ -277,18 +297,6 @@ const FromComponent = ({
     }
   }, [value]);
 
-  function setDirectionRtl() {
-    setAreaDirection((state) => {
-      return { ...state, [root_id]: "rtl" };
-    });
-  }
-
-  function setDirectionLtr() {
-    setAreaDirection((state) => {
-      return { ...state, [root_id]: "ltr" };
-    });
-  }
-
   return (
     <form
       key={root_id}
@@ -297,10 +305,10 @@ const FromComponent = ({
     >
       <div className="form-group">
         <TextareaToolbar>
-          <ToolbarOption handleClick={setDirectionLtr}>
+          <ToolbarOption handleClick={() => handleSetDirection(root_id, "ltr")}>
             <IconTextDirectionLtr />
           </ToolbarOption>
-          <ToolbarOption handleClick={setDirectionRtl}>
+          <ToolbarOption handleClick={() => handleSetDirection(root_id, "rtl")}>
             <IconTextDirectionRtl />
           </ToolbarOption>
         </TextareaToolbar>
@@ -312,7 +320,7 @@ const FromComponent = ({
           value={value}
           onChange={handleNoteChange}
           rows={rows}
-          dir={areaDirection[root_id] || ""}
+          dir={noteDirection}
           required
         />
       </div>
