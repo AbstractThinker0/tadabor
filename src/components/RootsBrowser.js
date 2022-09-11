@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { db } from "../util/db";
@@ -82,6 +82,9 @@ const RootsListComponent = memo(({ searchString }) => {
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
   const [areaDirection, setAreaDirection] = useState({});
+  const [itemsCount, setItemsCount] = useState(20);
+
+  const formsRefs = useRef({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -181,8 +184,6 @@ const RootsListComponent = memo(({ searchString }) => {
     setItemsCount((state) => state + 20);
   };
 
-  const [itemsCount, setItemsCount] = useState(20);
-
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -205,6 +206,7 @@ const RootsListComponent = memo(({ searchString }) => {
             handleNoteSubmit={memoHandleNoteSubmit}
             handleNoteChange={memoHandleNoteChange}
             handleSetDirection={memoHandleSetDirection}
+            formsRefs={formsRefs}
           />
         ))}
       </InfiniteScroll>
@@ -223,10 +225,15 @@ const RootComponent = memo(
     isEditable,
     noteDirection,
     handleSetDirection,
+    formsRefs,
   }) => {
     return (
       <div className="text-center border">
-        <RootButton root_name={root_name} root_id={root_id} />
+        <RootButton
+          root_name={root_name}
+          root_id={root_id}
+          formsRefs={formsRefs}
+        />
         <RootCollapse
           root_id={root_id}
           value={value}
@@ -236,13 +243,19 @@ const RootComponent = memo(
           handleNoteChange={handleNoteChange}
           handleNoteSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
+          formsRefs={formsRefs}
         />
       </div>
     );
   }
 );
 
-const RootButton = memo(({ root_name, root_id }) => {
+const RootButton = memo(({ root_name, root_id, formsRefs }) => {
+  const onClickRoot = (event) => {
+    if (event.target.getAttribute("aria-expanded") === "true") {
+      formsRefs.current[root_id].scrollIntoView({ block: "center" });
+    }
+  };
   return (
     <button
       type="button"
@@ -252,6 +265,7 @@ const RootButton = memo(({ root_name, root_id }) => {
       aria-controls={"collapseExample" + root_id}
       className="btn"
       value={root_id}
+      onClick={onClickRoot}
     >
       {root_name}
     </button>
@@ -267,11 +281,13 @@ const RootCollapse = ({
   handleEditClick,
   noteDirection,
   handleSetDirection,
+  formsRefs,
 }) => {
   return (
     <div
       className="collapse card border-primary"
       id={"collapseExample" + root_id}
+      ref={(el) => (formsRefs.current[root_id] = el)}
     >
       <div className="card-body">
         {isEditable === false ? (
