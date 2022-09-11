@@ -4,6 +4,7 @@ import About from "./components/About";
 import Coloring from "./components/Coloring";
 import QuranBrowser from "./components/QuranBrowser";
 import RootsBrowser from "./components/RootsBrowser";
+import Translation from "./components/Translation";
 import YourNotes from "./components/YourNotes";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Route path="/roots" element={<RootsBrowser />} />
       <Route path="/notes" element={<YourNotes />} />
       <Route path="/coloring" element={<Coloring />} />
+      <Route path="/translation" element={<Translation />} />
       <Route path="/about" element={<About />} />
       <Route path="*" element={<QuranBrowser />} />
     </Routes>

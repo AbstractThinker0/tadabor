@@ -87,6 +87,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/translation">
+                {t("nav_translation")}
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/about">
                 {t("nav_about")}
               </Link>
