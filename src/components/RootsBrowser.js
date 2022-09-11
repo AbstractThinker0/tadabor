@@ -242,7 +242,7 @@ const RootComponent = memo(
   }
 );
 
-const RootButton = ({ root_name, root_id }) => {
+const RootButton = memo(({ root_name, root_id }) => {
   return (
     <button
       type="button"
@@ -256,7 +256,7 @@ const RootButton = ({ root_name, root_id }) => {
       {root_name}
     </button>
   );
-};
+});
 
 const RootCollapse = ({
   root_id,
@@ -352,9 +352,9 @@ const FromComponent = ({
   );
 };
 
-function TextareaToolbar(props) {
+const TextareaToolbar = memo((props) => {
   return <div dir="ltr">{props.children}</div>;
-}
+});
 
 function ToolbarOption(props) {
   return (
