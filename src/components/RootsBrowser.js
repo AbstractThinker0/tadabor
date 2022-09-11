@@ -82,7 +82,7 @@ const RootsListComponent = memo(({ searchString }) => {
   const [myNotes, setMyNotes] = useState({});
   const [editableNotes, setEditableNotes] = useState({});
   const [areaDirection, setAreaDirection] = useState({});
-  const [itemsCount, setItemsCount] = useState(20);
+  const [itemsCount, setItemsCount] = useState(100);
 
   const formsRefs = useRef({});
 
