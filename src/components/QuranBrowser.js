@@ -488,46 +488,48 @@ const DisplayPanel = memo(
     if (loadingState) return <LoadingSpinner />;
 
     return (
-      <div
-        dir="rtl"
-        className="col mt-3 pb-1 p-0 h-100 overflow-auto"
-        ref={refListVerses}
-      >
-        <div className="card ">
-          {searchResult.length || searchError || selectedRootError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              chapterName={chapterNames[selectChapter - 1].name}
-              searchToken={searchingString.trim()}
-              scopeAllQuran={searchingAllQuran}
-              searchError={searchError}
-              selectedRootError={selectedRootError}
-              chapterNames={chapterNames}
-              radioSearchMethod={radioSearchingMethod}
-              myNotes={myNotes}
-              editableNotes={editableNotes}
-              setEditableNotes={setEditableNotes}
-              searchMultipleChapters={searchMultipleChapters}
-              refListVerses={refListVerses}
-              refListChapters={refListChapters}
-              gotoChapter={memoGotoChapter}
-              scrollKey={scrollKey}
-              rootDerivations={rootDerivations}
-              handleNoteChange={memoHandleNoteChange}
-            />
-          ) : (
-            <ListVerses
-              chapterName={chapterNames[selectChapter - 1].name}
-              versesArray={allQuranText[selectChapter - 1].verses}
-              myNotes={myNotes}
-              setEditableNotes={setEditableNotes}
-              editableNotes={editableNotes}
-              refListVerses={refListVerses}
-              versesRef={versesRef}
-              scrollKey={scrollKey}
-              handleNoteChange={memoHandleNoteChange}
-            />
-          )}
+      <div dir="rtl" className="col h-100 mt-3 p-0">
+        <div
+          className="h-100 pb-1"
+          style={{ overflowY: "scroll" }}
+          ref={refListVerses}
+        >
+          <div className="card">
+            {searchResult.length || searchError || selectedRootError ? (
+              <ListSearchResults
+                versesArray={searchResult}
+                chapterName={chapterNames[selectChapter - 1].name}
+                searchToken={searchingString.trim()}
+                scopeAllQuran={searchingAllQuran}
+                searchError={searchError}
+                selectedRootError={selectedRootError}
+                chapterNames={chapterNames}
+                radioSearchMethod={radioSearchingMethod}
+                myNotes={myNotes}
+                editableNotes={editableNotes}
+                setEditableNotes={setEditableNotes}
+                searchMultipleChapters={searchMultipleChapters}
+                refListVerses={refListVerses}
+                refListChapters={refListChapters}
+                gotoChapter={memoGotoChapter}
+                scrollKey={scrollKey}
+                rootDerivations={rootDerivations}
+                handleNoteChange={memoHandleNoteChange}
+              />
+            ) : (
+              <ListVerses
+                chapterName={chapterNames[selectChapter - 1].name}
+                versesArray={allQuranText[selectChapter - 1].verses}
+                myNotes={myNotes}
+                setEditableNotes={setEditableNotes}
+                editableNotes={editableNotes}
+                refListVerses={refListVerses}
+                versesRef={versesRef}
+                scrollKey={scrollKey}
+                handleNoteChange={memoHandleNoteChange}
+              />
+            )}
+          </div>
         </div>
       </div>
     );
