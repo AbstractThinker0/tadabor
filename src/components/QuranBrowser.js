@@ -5,11 +5,13 @@ import { db } from "../util/db";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
-import { toast } from "react-toastify";
 
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
 import useQuran from "../context/QuranContext";
+import SelectionListChapters from "./SelectionListChapters";
+import SelectionListRoots from "./SelectionListRoots";
+import TextForm from "./TextForm";
 
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
@@ -538,34 +540,6 @@ const DisplayPanel = memo(
 
 DisplayPanel.displayName = "DisplayPanel";
 
-const SelectionListChapters = memo(
-  ({ handleSelectionListChapters, innerRef }) => {
-    const { chapterNames } = useQuran();
-    return (
-      <div className="container mt-2 mb-2 p-0">
-        <select
-          className="form-select"
-          size="7"
-          onFocus={handleSelectionListChapters}
-          onChange={handleSelectionListChapters}
-          aria-label="size 7 select example"
-          ref={innerRef}
-          defaultValue={["1"]}
-          multiple
-        >
-          {chapterNames.map((chapter, index) => (
-            <option key={chapter.id} value={chapter.id}>
-              {index + 1}. {chapter.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-);
-
-SelectionListChapters.displayName = "SelectionListChapters";
-
 const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
   const { t, i18n } = useTranslation();
   const handleSearchMethod = (event) => {
@@ -686,60 +660,6 @@ const CheckboxComponent = ({
     </div>
   );
 };
-
-const SelectionListRoots = memo(
-  ({ isDisabled, searchString, setSearchString }) => {
-    const { quranRoots } = useQuran();
-    const [stateSelect, setStateSelect] = useState();
-
-    const handleSelectRoot = (event) => {
-      let rootId = event.target.value;
-      setStateSelect(rootId);
-
-      let selectedRoot = quranRoots[rootId];
-
-      setSearchString(selectedRoot.name);
-    };
-
-    return (
-      <div className="container mt-2 p-0">
-        <select
-          className="form-select"
-          size="6"
-          onChange={handleSelectRoot}
-          aria-label="size 6 select example"
-          disabled={isDisabled}
-          value={stateSelect}
-        >
-          {quranRoots
-            .filter((root) => root.name.startsWith(searchString) || isDisabled)
-            .map((root, index) => (
-              <option key={index} value={root.id}>
-                {root.name}
-              </option>
-            ))}
-        </select>
-      </div>
-    );
-  },
-  areEqual
-);
-
-SelectionListRoots.displayName = "SelectionListRoots";
-
-function areEqual(prevProps, nextProps) {
-  /*
-  return true if passing nextProps to render would return
-  the same result as passing prevProps to render,
-  otherwise return false
-  */
-  if (
-    nextProps.isDisabled === true &&
-    prevProps.isDisabled === nextProps.isDisabled
-  ) {
-    return true;
-  }
-}
 
 const SearchTitle = memo(
   ({
@@ -887,7 +807,7 @@ const SearchVerseComponent = memo(
           chapterNames={chapterNames}
           scrollKey={scrollKey}
         />
-        <NoteForm
+        <TextForm
           verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
@@ -1051,7 +971,7 @@ const VerseComponent = memo(
     return (
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
         <VerseTextComponent verse={verse} />
-        <NoteForm
+        <TextForm
           verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
@@ -1084,108 +1004,5 @@ const VerseTextComponent = memo(({ verse }) => {
 });
 
 VerseTextComponent.displayName = "VerseTextComponent";
-
-const NoteTextComponent = (props) => {
-  return (
-    <div className="p-2 border border-1 border-success rounded">
-      <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>
-    </div>
-  );
-};
-
-const NoteForm = ({
-  verse_key,
-  value,
-  handleNoteChange,
-  editableNotes,
-  setEditableNotes,
-}) => {
-  const { t } = useTranslation();
-
-  const [rows, setRows] = useState(4);
-
-  if (!value) {
-    editableNotes[verse_key] = true;
-  }
-
-  let isNoteEditable = editableNotes[verse_key];
-
-  useEffect(() => {
-    const rowlen = value.split("\n");
-
-    if (rowlen.length >= 4) {
-      setRows(rowlen.length + 1);
-    } else {
-      setRows(4);
-    }
-  }, [value]);
-
-  const handleNoteSubmit = (event) => {
-    event.preventDefault();
-    db.notes
-      .put({
-        id: verse_key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function (result) {
-        //
-        toast.success(t("save_success"));
-        editableNotes[verse_key] = false;
-        setEditableNotes({ ...editableNotes });
-      })
-      .catch(function (error) {
-        //
-        toast.success(t("save_failed"));
-      });
-  };
-
-  const handleEditClick = () => {
-    editableNotes[verse_key] = true;
-    setEditableNotes({ ...editableNotes });
-  };
-
-  return (
-    <div
-      className="collapse card border-primary"
-      id={"collapseExample" + verse_key}
-    >
-      <div className="card-body">
-        {isNoteEditable ? (
-          <form onSubmit={handleNoteSubmit}>
-            <div className="form-group">
-              <textarea
-                className="form-control  mb-2"
-                id="textInput"
-                placeholder="أدخل كتاباتك"
-                name={verse_key}
-                value={value}
-                onChange={handleNoteChange}
-                rows={rows}
-                required
-              />
-            </div>
-            <input
-              type="submit"
-              value={t("text_save")}
-              className="btn btn-success btn-sm"
-            />
-          </form>
-        ) : (
-          <>
-            <NoteTextComponent>{value}</NoteTextComponent>
-            <button
-              onClick={handleEditClick}
-              className="mt-2 btn btn-primary btn-sm"
-            >
-              {t("text_edit")}
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
 
 export default QuranBrowser;
