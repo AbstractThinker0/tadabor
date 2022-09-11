@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { db } from "../util/db";
@@ -11,6 +11,8 @@ import { normalizeAlif } from "../util/util";
 
 import { IconTextDirectionLtr } from "@tabler/icons";
 import { IconTextDirectionRtl } from "@tabler/icons";
+
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
@@ -72,7 +74,7 @@ const FormWordSearch = ({
   );
 };
 
-const RootsListComponent = ({ searchString }) => {
+const RootsListComponent = memo(({ searchString }) => {
   const { t } = useTranslation();
   const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
@@ -164,18 +166,34 @@ const RootsListComponent = ({ searchString }) => {
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);
 
+  let filteredArray = useMemo(
+    () =>
+      quranRoots.filter(
+        (root) =>
+          normalizeAlif(root.name).startsWith(searchString) ||
+          root.name.startsWith(searchString) ||
+          !searchString
+      ),
+    [quranRoots, searchString]
+  );
+
+  const fetchMoreData = () => {
+    setItemsCount((state) => state + 20);
+  };
+
+  const [itemsCount, setItemsCount] = useState(20);
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
     <div>
-      {quranRoots
-        .filter(
-          (root) =>
-            normalizeAlif(root.name).startsWith(searchString) ||
-            root.name.startsWith(searchString) ||
-            !searchString
-        )
-        .map((root) => (
+      <InfiniteScroll
+        dataLength={itemsCount}
+        next={fetchMoreData}
+        hasMore={itemsCount <= filteredArray.length}
+        loader={<h4>Loading...</h4>}
+      >
+        {filteredArray.slice(0, itemsCount).map((root) => (
           <RootComponent
             key={root.id}
             root_name={root.name}
@@ -189,9 +207,10 @@ const RootsListComponent = ({ searchString }) => {
             handleSetDirection={memoHandleSetDirection}
           />
         ))}
+      </InfiniteScroll>
     </div>
   );
-};
+});
 
 const RootComponent = memo(
   ({
