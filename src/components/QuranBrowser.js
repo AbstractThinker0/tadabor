@@ -770,28 +770,30 @@ const ListSearchResults = memo(
             rootDerivations={rootDerivations}
           />
         )}
-        {versesArray.map((verse) => (
-          <SearchVerseComponent
-            key={verse.key}
-            refVersesResult={refVersesResult}
-            verse={verse}
-            scopeAllQuran={scopeAllQuran}
-            searchMultipleChapters={searchMultipleChapters}
-            chapterNames={chapterNames}
-            gotoChapter={gotoChapter}
-            scrollKey={scrollKey}
-            value={myNotes[verse.key] || ""}
-            handleNoteChange={handleNoteChange}
-            editableNotes={editableNotes}
-            setEditableNotes={setEditableNotes}
-            handleSetDirection={handleSetDirection}
-            noteDirection={areaDirection[verse.key] || ""}
+        <div className="card-body">
+          {versesArray.map((verse) => (
+            <SearchVerseComponent
+              key={verse.key}
+              refVersesResult={refVersesResult}
+              verse={verse}
+              scopeAllQuran={scopeAllQuran}
+              searchMultipleChapters={searchMultipleChapters}
+              chapterNames={chapterNames}
+              gotoChapter={gotoChapter}
+              scrollKey={scrollKey}
+              value={myNotes[verse.key] || ""}
+              handleNoteChange={handleNoteChange}
+              editableNotes={editableNotes}
+              setEditableNotes={setEditableNotes}
+              handleSetDirection={handleSetDirection}
+              noteDirection={areaDirection[verse.key] || ""}
+            />
+          ))}
+          <SearchErrorsComponent
+            searchError={searchError}
+            selectedRootError={selectedRootError}
           />
-        ))}
-        <SearchErrorsComponent
-          searchError={searchError}
-          selectedRootError={selectedRootError}
-        />
+        </div>
       </>
     );
   }
