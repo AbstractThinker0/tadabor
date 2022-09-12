@@ -17,14 +17,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-  };
-
   return (
     <div className="p-3">
       <FormWordSearch
-        handleSearchSubmit={handleSearchSubmit}
         searchString={searchString}
         setSearchString={setSearchString}
       />
@@ -34,11 +29,7 @@ function RootsBrowser() {
   );
 }
 
-const FormWordSearch = ({
-  handleSearchSubmit,
-  searchString,
-  setSearchString,
-}) => {
+const FormWordSearch = ({ searchString, setSearchString }) => {
   const searchStringHandle = (event) => {
     setSearchString(event.target.value);
   };
