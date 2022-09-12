@@ -29,6 +29,23 @@ const TextForm = ({
   let isNoteEditable = editableNotes[verse_key];
 
   useEffect(() => {
+    function onShownCollapse(event) {
+      event.target.scrollIntoView({ block: "center" });
+    }
+    formsRefs.current[verse_key].addEventListener(
+      "shown.bs.collapse",
+      onShownCollapse
+    );
+
+    return () => {
+      formsRefs.current[verse_key]?.removeEventListener(
+        "shown.bs.collapse",
+        onShownCollapse
+      );
+    };
+  }, []);
+
+  useEffect(() => {
     const rowlen = value.split("\n");
 
     if (rowlen.length >= 4) {
