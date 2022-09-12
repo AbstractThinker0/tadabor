@@ -445,6 +445,7 @@ const DisplayPanel = memo(
     rootDerivations,
   }) => {
     const [editableNotes, setEditableNotes] = useState({});
+    const [areaDirection, setAreaDirection] = useState({});
     const { chapterNames, allQuranText } = useQuran();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
@@ -487,6 +488,14 @@ const DisplayPanel = memo(
       });
     }
 
+    function handleSetDirection(verse_key, dir) {
+      setAreaDirection((state) => {
+        return { ...state, [verse_key]: dir };
+      });
+    }
+
+    const memoHandleSetDirection = useCallback(handleSetDirection, []);
+
     if (loadingState) return <LoadingSpinner />;
 
     return (
@@ -517,6 +526,8 @@ const DisplayPanel = memo(
                 scrollKey={scrollKey}
                 rootDerivations={rootDerivations}
                 handleNoteChange={memoHandleNoteChange}
+                handleSetDirection={memoHandleSetDirection}
+                areaDirection={areaDirection}
               />
             ) : (
               <ListVerses
@@ -529,6 +540,8 @@ const DisplayPanel = memo(
                 versesRef={versesRef}
                 scrollKey={scrollKey}
                 handleNoteChange={memoHandleNoteChange}
+                handleSetDirection={memoHandleSetDirection}
+                areaDirection={areaDirection}
               />
             )}
           </div>
@@ -704,6 +717,8 @@ const ListSearchResults = memo(
     scrollKey,
     rootDerivations,
     handleNoteChange,
+    handleSetDirection,
+    areaDirection,
   }) => {
     const refVersesResult = useRef({});
 
@@ -769,6 +784,8 @@ const ListSearchResults = memo(
             handleNoteChange={handleNoteChange}
             editableNotes={editableNotes}
             setEditableNotes={setEditableNotes}
+            handleSetDirection={handleSetDirection}
+            noteDirection={areaDirection[verse.key] || ""}
           />
         ))}
         <SearchErrorsComponent
@@ -795,6 +812,8 @@ const SearchVerseComponent = memo(
     handleNoteChange,
     editableNotes,
     setEditableNotes,
+    handleSetDirection,
+    noteDirection,
   }) => {
     return (
       <div ref={(el) => (refVersesResult.current[verse.key] = el)}>
@@ -813,6 +832,8 @@ const SearchVerseComponent = memo(
           handleNoteChange={handleNoteChange}
           editableNotes={editableNotes}
           setEditableNotes={setEditableNotes}
+          handleSetDirection={handleSetDirection}
+          noteDirection={noteDirection}
         />
       </div>
     );
@@ -927,6 +948,8 @@ const ListVerses = memo(
     versesRef,
     scrollKey,
     handleNoteChange,
+    handleSetDirection,
+    areaDirection,
   }) => {
     useEffect(() => {
       if (scrollKey.current) {
@@ -949,6 +972,8 @@ const ListVerses = memo(
               handleNoteChange={handleNoteChange}
               editableNotes={editableNotes}
               setEditableNotes={setEditableNotes}
+              handleSetDirection={handleSetDirection}
+              noteDirection={areaDirection[verse.key] || ""}
             />
           ))}
         </div>
@@ -967,6 +992,8 @@ const VerseComponent = memo(
     handleNoteChange,
     editableNotes,
     setEditableNotes,
+    handleSetDirection,
+    noteDirection,
   }) => {
     return (
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
@@ -977,6 +1004,8 @@ const VerseComponent = memo(
           handleNoteChange={handleNoteChange}
           editableNotes={editableNotes}
           setEditableNotes={setEditableNotes}
+          handleSetDirection={handleSetDirection}
+          noteDirection={noteDirection}
         />
       </div>
     );

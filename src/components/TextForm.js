@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { db } from "../util/db";
 
+import { IconTextDirectionLtr } from "@tabler/icons";
+import { IconTextDirectionRtl } from "@tabler/icons";
+
 const TextForm = ({
   verse_key,
   value,
+  noteDirection,
+  handleSetDirection,
   handleNoteChange,
   editableNotes,
   setEditableNotes,
@@ -70,6 +75,8 @@ const TextForm = ({
           <FormComponent
             verse_key={verse_key}
             value={value}
+            noteDirection={noteDirection}
+            handleSetDirection={handleSetDirection}
             handleNoteSubmit={handleNoteSubmit}
             handleNoteChange={handleNoteChange}
           />
@@ -95,9 +102,27 @@ const TextComponent = ({ value, handleEditClick }) => {
   );
 };
 
+const TextareaToolbar = memo((props) => {
+  return (
+    <div dir="ltr" className="text-center">
+      {props.children}
+    </div>
+  );
+});
+
+function ToolbarOption(props) {
+  return (
+    <button type="button" className="btn btn-sm" onClick={props.handleClick}>
+      {props.children}
+    </button>
+  );
+}
+
 const FormComponent = ({
   verse_key,
   value,
+  noteDirection,
+  handleSetDirection,
   handleNoteSubmit,
   handleNoteChange,
 }) => {
@@ -117,6 +142,18 @@ const FormComponent = ({
   return (
     <form onSubmit={handleNoteSubmit}>
       <div className="form-group">
+        <TextareaToolbar>
+          <ToolbarOption
+            handleClick={() => handleSetDirection(verse_key, "ltr")}
+          >
+            <IconTextDirectionLtr />
+          </ToolbarOption>
+          <ToolbarOption
+            handleClick={() => handleSetDirection(verse_key, "rtl")}
+          >
+            <IconTextDirectionRtl />
+          </ToolbarOption>
+        </TextareaToolbar>
         <textarea
           className="form-control  mb-2"
           id="textInput"
@@ -125,6 +162,7 @@ const FormComponent = ({
           value={value}
           onChange={handleNoteChange}
           rows={rows}
+          dir={noteDirection}
           required
         />
       </div>
