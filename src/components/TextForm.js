@@ -3,14 +3,6 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { db } from "../util/db";
 
-const TextComponent = (props) => {
-  return (
-    <div className="p-2 border border-1 border-success rounded">
-      <p style={{ whiteSpace: "pre-wrap" }}>{props.children}</p>
-    </div>
-  );
-};
-
 const TextForm = ({
   verse_key,
   value,
@@ -62,8 +54,9 @@ const TextForm = ({
   };
 
   const handleEditClick = () => {
-    editableNotes[verse_key] = true;
-    setEditableNotes({ ...editableNotes });
+    setEditableNotes((state) => {
+      return { ...state, [verse_key]: true };
+    });
   };
 
   return (
@@ -81,18 +74,24 @@ const TextForm = ({
             handleNoteChange={handleNoteChange}
           />
         ) : (
-          <>
-            <TextComponent>{value}</TextComponent>
-            <button
-              onClick={handleEditClick}
-              className="mt-2 btn btn-primary btn-sm"
-            >
-              {t("text_edit")}
-            </button>
-          </>
+          <TextComponent value={value} handleEditClick={handleEditClick} />
         )}
       </div>
     </div>
+  );
+};
+
+const TextComponent = ({ value, handleEditClick }) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="p-2 border border-1 border-success rounded">
+        <p style={{ whiteSpace: "pre-wrap" }}>{value}</p>
+      </div>
+      <button onClick={handleEditClick} className="mt-2 btn btn-primary btn-sm">
+        {t("text_edit")}
+      </button>
+    </>
   );
 };
 
