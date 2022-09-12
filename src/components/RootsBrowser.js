@@ -84,8 +84,6 @@ const RootsListComponent = memo(({ searchString }) => {
   const [areaDirection, setAreaDirection] = useState({});
   const [itemsCount, setItemsCount] = useState(100);
 
-  const formsRefs = useRef({});
-
   useEffect(() => {
     let clientLeft = false;
 
@@ -206,7 +204,6 @@ const RootsListComponent = memo(({ searchString }) => {
             handleNoteSubmit={memoHandleNoteSubmit}
             handleNoteChange={memoHandleNoteChange}
             handleSetDirection={memoHandleSetDirection}
-            formsRefs={formsRefs}
           />
         ))}
       </InfiniteScroll>
@@ -225,15 +222,10 @@ const RootComponent = memo(
     isEditable,
     noteDirection,
     handleSetDirection,
-    formsRefs,
   }) => {
     return (
       <div className="text-center border">
-        <RootButton
-          root_name={root_name}
-          root_id={root_id}
-          formsRefs={formsRefs}
-        />
+        <RootButton root_name={root_name} root_id={root_id} />
         <RootCollapse
           root_id={root_id}
           value={value}
@@ -243,19 +235,13 @@ const RootComponent = memo(
           handleNoteChange={handleNoteChange}
           handleNoteSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
-          formsRefs={formsRefs}
         />
       </div>
     );
   }
 );
 
-const RootButton = memo(({ root_name, root_id, formsRefs }) => {
-  const onClickRoot = (event) => {
-    if (event.target.getAttribute("aria-expanded") === "true") {
-      formsRefs.current[root_id].scrollIntoView({ block: "center" });
-    }
-  };
+const RootButton = memo(({ root_name, root_id }) => {
   return (
     <button
       type="button"
@@ -265,7 +251,6 @@ const RootButton = memo(({ root_name, root_id, formsRefs }) => {
       aria-controls={"collapseExample" + root_id}
       className="btn"
       value={root_id}
-      onClick={onClickRoot}
     >
       {root_name}
     </button>
@@ -281,13 +266,26 @@ const RootCollapse = ({
   handleEditClick,
   noteDirection,
   handleSetDirection,
-  formsRefs,
 }) => {
+  const formRef = useRef();
+
+  useEffect(() => {
+    let formElement = formRef.current;
+    function onShownCollapse(event) {
+      event.target.scrollIntoView({ block: "center" });
+    }
+    formElement.addEventListener("shown.bs.collapse", onShownCollapse);
+
+    return () => {
+      formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
+    };
+  }, []);
+
   return (
     <div
       className="collapse card border-primary"
       id={"collapseExample" + root_id}
-      ref={(el) => (formsRefs.current[root_id] = el)}
+      ref={formRef}
     >
       <div className="card-body">
         {isEditable === false ? (
