@@ -1,7 +1,13 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+if (localStorage.getItem("i18nextLng") === null) {
+  localStorage.setItem("i18nextLng", "ar");
+}
 
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     // the translations
@@ -63,8 +69,9 @@ i18n
         },
       },
     },
-    lng: "ar", // if you're using a language detector, do not define the lng option
-    fallbackLng: "en",
+    //lng: "ar", // if you're using a language detector, do not define the lng option
+    fallbackLng: "ar",
+    supportedLngs: ["ar", "en"],
 
     interpolation: {
       escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
