@@ -15,12 +15,12 @@ function About() {
 const AboutEnglish = () => {
   return (
     <>
-      <div className=" pt-4" dir="ltr">
+      <div className="pt-4 card" dir="ltr">
         <p className="text-center">
           Check out the project{" "}
           <a href="https://github.com/EnlightenCode/tadabor">Github repo</a>
         </p>
-        <div className="p-5">
+        <div className="card-body">
           <h5>Intro</h5>
           <p>
             This project is a web App that allows you to browse through the
@@ -77,12 +77,12 @@ const AboutEnglish = () => {
 const AboutArabic = () => {
   return (
     <>
-      <div className="pt-4" dir="rtl">
+      <div className="pt-4 card" dir="rtl">
         <p className="text-center">
           إطلع على موقع البرنامج في{" "}
           <a href="https://github.com/EnlightenCode/tadabor">Github</a>
         </p>
-        <div className="p-5">
+        <div className="card-body">
           <h5>تقديم</h5>
           <p>
             هذا التطبيق هو موقع يخول المستخدم من تصفح القرآن وكتابة تدبرات أو

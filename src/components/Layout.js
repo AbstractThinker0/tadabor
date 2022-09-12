@@ -8,7 +8,7 @@ function Layout({ children }) {
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
   return (
-    <div className="container vh-100 mw-100">
+    <div className="container vh-100 mw-100 p-0">
       <div className="h-100">
         <Navbar />
         <AlertMessage />

@@ -314,7 +314,7 @@ function QuranBrowser() {
   const scrollKey = useRef();
 
   return (
-    <div className="row" style={{ height: "85%" }}>
+    <div className="row w-100" style={{ height: "85%" }}>
       <SearchPanel
         memoHandleSelectionListChapters={memoHandleSelectionListChapters}
         refListChapters={refListChapters}
@@ -385,7 +385,7 @@ const SearchPanel = memo(
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     return (
-      <div className="col-auto pt-3 pb-1">
+      <div className="col-auto px-4 pt-2">
         <SelectionListChapters
           handleSelectionListChapters={memoHandleSelectionListChapters}
           innerRef={refListChapters}
