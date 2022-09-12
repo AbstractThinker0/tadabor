@@ -22,7 +22,7 @@ function RootsBrowser() {
   };
 
   return (
-    <div className="pb-3 pt-2">
+    <div className="p-3">
       <FormWordSearch
         handleSearchSubmit={handleSearchSubmit}
         searchString={searchString}
