@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { db } from "../util/db";
@@ -22,6 +22,8 @@ const TextForm = ({
 
   const [rows, setRows] = useState(4);
 
+  const formRef = useRef();
+
   if (!value) {
     editableNotes[verse_key] = true;
   }
@@ -29,19 +31,14 @@ const TextForm = ({
   let isNoteEditable = editableNotes[verse_key];
 
   useEffect(() => {
+    let formElement = formRef.current;
     function onShownCollapse(event) {
       event.target.scrollIntoView({ block: "center" });
     }
-    formsRefs.current[verse_key].addEventListener(
-      "shown.bs.collapse",
-      onShownCollapse
-    );
+    formElement.addEventListener("shown.bs.collapse", onShownCollapse);
 
     return () => {
-      formsRefs.current[verse_key]?.removeEventListener(
-        "shown.bs.collapse",
-        onShownCollapse
-      );
+      formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
     };
   }, []);
 
@@ -85,6 +82,7 @@ const TextForm = ({
     <div
       className="collapse card border-primary"
       id={"collapseExample" + verse_key}
+      ref={formRef}
     >
       <div className="card-body">
         {isNoteEditable ? (
