@@ -39,38 +39,25 @@ const FormWordSearch = ({
   searchString,
   setSearchString,
 }) => {
-  const { t } = useTranslation();
-
   const searchStringHandle = (event) => {
     setSearchString(event.target.value);
   };
 
   return (
-    <form
-      className="container p-0 m-0 pb-3"
-      role="search"
-      onSubmit={handleSearchSubmit}
-    >
-      <div className="row">
-        <div className="col-sm-2">
-          <input
-            className="form-control"
-            type="search"
-            placeholder=""
-            value={searchString}
-            aria-label="Search"
-            onChange={searchStringHandle}
-            required
-            dir="rtl"
-          />
-        </div>
-        <div className="col">
-          <button className="btn btn-outline-success" type="submit">
-            {t("search_button")}
-          </button>
-        </div>
+    <div className="d-flex justify-content-center p-3">
+      <div className="col-sm-2">
+        <input
+          className="form-control"
+          type="search"
+          placeholder=""
+          value={searchString}
+          aria-label="Search"
+          onChange={searchStringHandle}
+          required
+          dir="rtl"
+        />
       </div>
-    </form>
+    </div>
   );
 };
 
