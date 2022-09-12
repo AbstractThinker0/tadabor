@@ -20,8 +20,6 @@ const TextForm = ({
 }) => {
   const { t } = useTranslation();
 
-  const [rows, setRows] = useState(4);
-
   const formRef = useRef();
 
   if (!value) {
@@ -41,16 +39,6 @@ const TextForm = ({
       formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
     };
   }, []);
-
-  useEffect(() => {
-    const rowlen = value.split("\n");
-
-    if (rowlen.length >= 4) {
-      setRows(rowlen.length + 1);
-    } else {
-      setRows(4);
-    }
-  }, [value]);
 
   const handleNoteSubmit = (event) => {
     event.preventDefault();
@@ -86,25 +74,12 @@ const TextForm = ({
     >
       <div className="card-body">
         {isNoteEditable ? (
-          <form onSubmit={handleNoteSubmit}>
-            <div className="form-group">
-              <textarea
-                className="form-control  mb-2"
-                id="textInput"
-                placeholder="أدخل كتاباتك"
-                name={verse_key}
-                value={value}
-                onChange={handleNoteChange}
-                rows={rows}
-                required
-              />
-            </div>
-            <input
-              type="submit"
-              value={t("text_save")}
-              className="btn btn-success btn-sm"
-            />
-          </form>
+          <FormComponent
+            verse_key={verse_key}
+            value={value}
+            handleNoteSubmit={handleNoteSubmit}
+            handleNoteChange={handleNoteChange}
+          />
         ) : (
           <>
             <TextComponent>{value}</TextComponent>
@@ -118,6 +93,48 @@ const TextForm = ({
         )}
       </div>
     </div>
+  );
+};
+
+const FormComponent = ({
+  verse_key,
+  value,
+  handleNoteSubmit,
+  handleNoteChange,
+}) => {
+  const [rows, setRows] = useState(4);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const rowlen = value.split("\n");
+
+    if (rowlen.length >= 4) {
+      setRows(rowlen.length + 1);
+    } else {
+      setRows(4);
+    }
+  }, [value]);
+
+  return (
+    <form onSubmit={handleNoteSubmit}>
+      <div className="form-group">
+        <textarea
+          className="form-control  mb-2"
+          id="textInput"
+          placeholder="أدخل كتاباتك"
+          name={verse_key}
+          value={value}
+          onChange={handleNoteChange}
+          rows={rows}
+          required
+        />
+      </div>
+      <input
+        type="submit"
+        value={t("text_save")}
+        className="btn btn-success btn-sm"
+      />
+    </form>
   );
 };
 
