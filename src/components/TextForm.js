@@ -22,7 +22,7 @@ const TextForm = ({
   useEffect(() => {
     let formElement = formRef.current;
     function onShownCollapse(event) {
-      event.target.scrollIntoView({ block: "center" });
+      scrollIntoViewIfNeeded(event.target);
     }
     formElement.addEventListener("shown.bs.collapse", onShownCollapse);
 
@@ -113,6 +113,16 @@ function ToolbarOption(props) {
   );
 }
 
+function scrollIntoViewIfNeeded(target) {
+  if (target.getBoundingClientRect().bottom > window.innerHeight) {
+    target.scrollIntoView(false);
+  }
+
+  if (target.getBoundingClientRect().top < 0) {
+    target.scrollIntoView();
+  }
+}
+
 const FormComponent = ({
   verse_key,
   value,
@@ -122,7 +132,12 @@ const FormComponent = ({
   handleNoteChange,
 }) => {
   const [rows, setRows] = useState(4);
+  const formRef = useRef();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    scrollIntoViewIfNeeded(formRef.current);
+  }, []);
 
   useEffect(() => {
     const rowlen = value.split("\n");
@@ -135,7 +150,7 @@ const FormComponent = ({
   }, [value]);
 
   return (
-    <form onSubmit={handleNoteSubmit}>
+    <form ref={formRef} onSubmit={handleNoteSubmit}>
       <div className="form-group">
         <TextareaToolbar>
           <ToolbarOption
