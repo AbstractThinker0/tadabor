@@ -12,18 +12,12 @@ const TextForm = ({
   noteDirection,
   handleSetDirection,
   handleNoteChange,
-  editableNotes,
+  isEditable,
   setEditableNotes,
 }) => {
   const { t } = useTranslation();
 
   const formRef = useRef();
-
-  if (!value) {
-    editableNotes[verse_key] = true;
-  }
-
-  let isNoteEditable = editableNotes[verse_key];
 
   useEffect(() => {
     let formElement = formRef.current;
@@ -72,7 +66,9 @@ const TextForm = ({
       ref={formRef}
     >
       <div className="card-body">
-        {isNoteEditable ? (
+        {isEditable === false ? (
+          <TextComponent value={value} handleEditClick={handleEditClick} />
+        ) : (
           <FormComponent
             verse_key={verse_key}
             value={value}
@@ -81,8 +77,6 @@ const TextForm = ({
             handleNoteSubmit={handleNoteSubmit}
             handleNoteChange={handleNoteChange}
           />
-        ) : (
-          <TextComponent value={value} handleEditClick={handleEditClick} />
         )}
       </div>
     </div>

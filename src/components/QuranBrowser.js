@@ -444,14 +444,14 @@ const DisplayPanel = memo(
     scrollKey,
     rootDerivations,
   }) => {
-    const [editableNotes, setEditableNotes] = useState({});
-    const [areaDirection, setAreaDirection] = useState({});
     const { chapterNames, allQuranText } = useQuran();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
 
     const [loadingState, setLoadingState] = useState(true);
     const [myNotes, setMyNotes] = useState({});
+    const [editableNotes, setEditableNotes] = useState({});
+    const [areaDirection, setAreaDirection] = useState({});
 
     useEffect(() => {
       let clientLeft = false;
@@ -463,12 +463,15 @@ const DisplayPanel = memo(
 
         if (clientLeft) return;
 
+        let markedNotes = {};
         let extractNotes = {};
         userNotes.forEach((note) => {
           extractNotes[note.id] = note.text;
+          markedNotes[note.id] = false;
         });
 
         setMyNotes(extractNotes);
+        setEditableNotes(markedNotes);
 
         setLoadingState(false);
       }
@@ -783,7 +786,7 @@ const ListSearchResults = memo(
               scrollKey={scrollKey}
               value={myNotes[verse.key] || ""}
               handleNoteChange={handleNoteChange}
-              editableNotes={editableNotes}
+              isEditable={editableNotes[verse.key]}
               setEditableNotes={setEditableNotes}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
@@ -812,7 +815,7 @@ const SearchVerseComponent = memo(
     scrollKey,
     value,
     handleNoteChange,
-    editableNotes,
+    isEditable,
     setEditableNotes,
     handleSetDirection,
     noteDirection,
@@ -832,7 +835,7 @@ const SearchVerseComponent = memo(
           verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
-          editableNotes={editableNotes}
+          isEditable={isEditable}
           setEditableNotes={setEditableNotes}
           handleSetDirection={handleSetDirection}
           noteDirection={noteDirection}
@@ -972,7 +975,7 @@ const ListVerses = memo(
               verse={verse}
               value={myNotes[verse.key] || ""}
               handleNoteChange={handleNoteChange}
-              editableNotes={editableNotes}
+              isEditable={editableNotes[verse.key]}
               setEditableNotes={setEditableNotes}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
@@ -992,7 +995,7 @@ const VerseComponent = memo(
     verse,
     value,
     handleNoteChange,
-    editableNotes,
+    isEditable,
     setEditableNotes,
     handleSetDirection,
     noteDirection,
@@ -1004,7 +1007,7 @@ const VerseComponent = memo(
           verse_key={verse.key}
           value={value}
           handleNoteChange={handleNoteChange}
-          editableNotes={editableNotes}
+          isEditable={isEditable}
           setEditableNotes={setEditableNotes}
           handleSetDirection={handleSetDirection}
           noteDirection={noteDirection}
