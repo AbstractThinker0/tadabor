@@ -472,8 +472,19 @@ const DisplayPanel = memo(
           markedNotes[note.id] = false;
         });
 
+        let userNotesDir = await db.notes_dir.toArray();
+
+        if (clientLeft) return;
+
+        let extractNotesDir = {};
+
+        userNotesDir.forEach((note) => {
+          extractNotesDir[note.id] = note.dir;
+        });
+
         setMyNotes(extractNotes);
         setEditableNotes(markedNotes);
+        setAreaDirection(extractNotesDir);
 
         setLoadingState(false);
       }
@@ -497,6 +508,8 @@ const DisplayPanel = memo(
       setAreaDirection((state) => {
         return { ...state, [verse_key]: dir };
       });
+
+      db.notes_dir.put({ id: verse_key, dir: dir });
     }
 
     const memoHandleSetDirection = useCallback(handleSetDirection, []);

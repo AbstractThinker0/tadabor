@@ -10,6 +10,10 @@ import { YourNoteForm, YourNoteText } from "./TextForm";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
+  const { t } = useTranslation();
+  const { chapterNames, allQuranText } = useQuran();
+  const [editableNotes, setEditableNotes] = useState({});
+  const [areaDirection, setAreaDirection] = useState({});
   const [myNotes, setMyNotes] = useState({});
 
   useEffect(() => {
@@ -27,7 +31,18 @@ function YourNotes() {
         extractNotes[note.id] = note.text;
       });
 
+      let userNotesDir = await db.notes_dir.toArray();
+
+      if (clientLeft) return;
+
+      let extractNotesDir = {};
+
+      userNotesDir.forEach((note) => {
+        extractNotesDir[note.id] = note.dir;
+      });
+
       setMyNotes(extractNotes);
+      setAreaDirection(extractNotesDir);
 
       setLoadingState(false);
     }
@@ -36,17 +51,6 @@ function YourNotes() {
       clientLeft = true;
     };
   }, []);
-
-  if (loadingState) return <LoadingSpinner />;
-
-  return <YourNotesLoaded myNotes={myNotes} setMyNotes={setMyNotes} />;
-}
-
-const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
-  const { t } = useTranslation();
-  const { chapterNames, allQuranText } = useQuran();
-  const [editableNotes, setEditableNotes] = useState({});
-  const [areaDirection, setAreaDirection] = useState({});
 
   const convertKey = (key) => {
     let info = key.split("-");
@@ -102,9 +106,12 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
     setAreaDirection((state) => {
       return { ...state, [verse_key]: dir };
     });
+    db.notes_dir.put({ id: verse_key, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);
+
+  if (loadingState) return <LoadingSpinner />;
 
   return (
     <div className="p-2">
@@ -134,6 +141,6 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
       ))}
     </div>
   );
-};
+}
 
 export default YourNotes;
