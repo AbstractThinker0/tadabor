@@ -1,7 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { db } from "../util/db";
 
 import { IconTextDirectionLtr } from "@tabler/icons";
 import { IconTextDirectionRtl } from "@tabler/icons";
@@ -14,9 +12,8 @@ const TextForm = ({
   handleNoteChange,
   isEditable,
   setEditableNotes,
+  handleNoteSubmit,
 }) => {
-  const { t } = useTranslation();
-
   const formRef = useRef();
 
   useEffect(() => {
@@ -30,28 +27,6 @@ const TextForm = ({
       formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
     };
   }, []);
-
-  const handleNoteSubmit = (event) => {
-    event.preventDefault();
-    db.notes
-      .put({
-        id: verse_key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function (result) {
-        //
-        toast.success(t("save_success"));
-        setEditableNotes((state) => {
-          return { ...state, [verse_key]: false };
-        });
-      })
-      .catch(function (error) {
-        //
-        toast.success(t("save_failed"));
-      });
-  };
 
   const handleEditClick = () => {
     setEditableNotes((state) => {
@@ -119,7 +94,7 @@ function scrollIntoViewIfNeeded(target) {
   }
 
   if (target.getBoundingClientRect().top < 0) {
-    target.scrollIntoView();
+    target.scrollIntoView({ block: "center" });
   }
 }
 
@@ -150,7 +125,11 @@ const FormComponent = ({
   }, [value]);
 
   return (
-    <form ref={formRef} onSubmit={handleNoteSubmit}>
+    <form
+      ref={formRef}
+      name={verse_key}
+      onSubmit={(event) => handleNoteSubmit(event, value)}
+    >
       <div className="form-group">
         <TextareaToolbar>
           <ToolbarOption

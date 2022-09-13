@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
+import { toast } from "react-toastify";
 import { db } from "../util/db";
 
 import LoadingSpinner from "./LoadingSpinner";
@@ -445,6 +446,7 @@ const DisplayPanel = memo(
     rootDerivations,
   }) => {
     const { chapterNames, allQuranText } = useQuran();
+    const { t } = useTranslation();
     const refListVerses = useRef(null);
     const versesRef = useRef({});
 
@@ -499,6 +501,33 @@ const DisplayPanel = memo(
 
     const memoHandleSetDirection = useCallback(handleSetDirection, []);
 
+    function handleNoteSubmit(event, value) {
+      event.preventDefault();
+      let verse_key = event.target.name;
+
+      db.notes
+        .put({
+          id: verse_key,
+          text: value,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+        .then(function (result) {
+          //
+          toast.success(t("save_success"));
+          setEditableNotes((state) => {
+            return { ...state, [verse_key]: false };
+          });
+        })
+        .catch(function (error) {
+          //
+          toast.success(t("save_failed"));
+        });
+    }
+
+    // eslint-disable-next-line
+    const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
+
     if (loadingState) return <LoadingSpinner />;
 
     return (
@@ -531,6 +560,7 @@ const DisplayPanel = memo(
                 handleNoteChange={memoHandleNoteChange}
                 handleSetDirection={memoHandleSetDirection}
                 areaDirection={areaDirection}
+                handleNoteSubmit={memoHandleNoteSubmit}
               />
             ) : (
               <ListVerses
@@ -545,6 +575,7 @@ const DisplayPanel = memo(
                 handleNoteChange={memoHandleNoteChange}
                 handleSetDirection={memoHandleSetDirection}
                 areaDirection={areaDirection}
+                handleNoteSubmit={memoHandleNoteSubmit}
               />
             )}
           </div>
@@ -722,6 +753,7 @@ const ListSearchResults = memo(
     handleNoteChange,
     handleSetDirection,
     areaDirection,
+    handleNoteSubmit,
   }) => {
     const refVersesResult = useRef({});
 
@@ -790,6 +822,7 @@ const ListSearchResults = memo(
               setEditableNotes={setEditableNotes}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
+              handleNoteSubmit={handleNoteSubmit}
             />
           ))}
           <SearchErrorsComponent
@@ -819,6 +852,7 @@ const SearchVerseComponent = memo(
     setEditableNotes,
     handleSetDirection,
     noteDirection,
+    handleNoteSubmit,
   }) => {
     return (
       <div ref={(el) => (refVersesResult.current[verse.key] = el)}>
@@ -839,6 +873,7 @@ const SearchVerseComponent = memo(
           setEditableNotes={setEditableNotes}
           handleSetDirection={handleSetDirection}
           noteDirection={noteDirection}
+          handleNoteSubmit={handleNoteSubmit}
         />
       </div>
     );
@@ -955,6 +990,7 @@ const ListVerses = memo(
     handleNoteChange,
     handleSetDirection,
     areaDirection,
+    handleNoteSubmit,
   }) => {
     useEffect(() => {
       if (scrollKey.current) {
@@ -979,6 +1015,7 @@ const ListVerses = memo(
               setEditableNotes={setEditableNotes}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
+              handleNoteSubmit={handleNoteSubmit}
             />
           ))}
         </div>
@@ -999,6 +1036,7 @@ const VerseComponent = memo(
     setEditableNotes,
     handleSetDirection,
     noteDirection,
+    handleNoteSubmit,
   }) => {
     return (
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
@@ -1011,6 +1049,7 @@ const VerseComponent = memo(
           setEditableNotes={setEditableNotes}
           handleSetDirection={handleSetDirection}
           noteDirection={noteDirection}
+          handleNoteSubmit={handleNoteSubmit}
         />
       </div>
     );
