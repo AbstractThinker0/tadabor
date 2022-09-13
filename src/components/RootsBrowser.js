@@ -1,4 +1,12 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { db } from "../util/db";
@@ -13,6 +21,38 @@ import { IconTextDirectionLtr } from "@tabler/icons";
 import { IconTextDirectionRtl } from "@tabler/icons";
 
 import InfiniteScroll from "react-infinite-scroll-component";
+
+const arabicAlpha = [
+  "ا",
+  "ب",
+  "ت",
+  "ث",
+  "ج",
+  "ح",
+  "خ",
+  "د",
+  "ذ",
+  "ر",
+  "ز",
+  "س",
+  "ش",
+  "ص",
+  "ض",
+  "ط",
+  "ظ",
+  "ع",
+  "غ",
+  "ف",
+  "ق",
+  "ك",
+  "ل",
+  "م",
+  "ن",
+  "ه",
+  "و",
+  "ى",
+  "ي",
+];
 
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
@@ -34,19 +74,46 @@ const FormWordSearch = ({ searchString, setSearchString }) => {
     setSearchString(event.target.value);
   };
 
+  const onLetterClick = (letter) => {
+    setSearchString(letter);
+  };
+
   return (
-    <div className="d-flex justify-content-center p-3">
-      <div className="col-sm-2">
-        <input
-          className="form-control"
-          type="search"
-          placeholder=""
-          value={searchString}
-          aria-label="Search"
-          onChange={searchStringHandle}
-          required
-          dir="rtl"
-        />
+    <div className="container p-3">
+      <div className="row justify-content-center">
+        <div className="col-sm-2">
+          <input
+            className="form-control"
+            type="search"
+            placeholder=""
+            value={searchString}
+            aria-label="Search"
+            onChange={searchStringHandle}
+            required
+            dir="rtl"
+          />
+        </div>
+      </div>
+      <div className="row pt-1" dir="rtl">
+        <div className="container text-center">
+          {arabicAlpha.map((letter, index) => (
+            <Fragment key={index}>
+              <span
+                role="button"
+                className="text-primary"
+                onClick={() => onLetterClick(letter)}
+              >
+                {" "}
+                {letter}{" "}
+              </span>
+              {index < arabicAlpha.length - 1 && (
+                <span
+                  style={{ borderLeft: "1px solid grey", margin: "0 7.5px" }}
+                ></span>
+              )}
+            </Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
