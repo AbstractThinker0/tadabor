@@ -528,6 +528,15 @@ const DisplayPanel = memo(
     // eslint-disable-next-line
     const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
 
+    function handleEditClick(event) {
+      let inputKey = event.target.name;
+      setEditableNotes((state) => {
+        return { ...state, [inputKey]: true };
+      });
+    }
+
+    const memoHandleEditClick = useCallback(handleEditClick, []);
+
     if (loadingState) return <LoadingSpinner />;
 
     return (
@@ -550,7 +559,7 @@ const DisplayPanel = memo(
                 radioSearchMethod={radioSearchingMethod}
                 myNotes={myNotes}
                 editableNotes={editableNotes}
-                setEditableNotes={setEditableNotes}
+                handleEditClick={memoHandleEditClick}
                 searchMultipleChapters={searchMultipleChapters}
                 refListVerses={refListVerses}
                 refListChapters={refListChapters}
@@ -567,7 +576,7 @@ const DisplayPanel = memo(
                 chapterName={chapterNames[selectChapter - 1].name}
                 versesArray={allQuranText[selectChapter - 1].verses}
                 myNotes={myNotes}
-                setEditableNotes={setEditableNotes}
+                handleEditClick={memoHandleEditClick}
                 editableNotes={editableNotes}
                 refListVerses={refListVerses}
                 versesRef={versesRef}
@@ -743,7 +752,7 @@ const ListSearchResults = memo(
     radioSearchMethod,
     myNotes,
     editableNotes,
-    setEditableNotes,
+    handleEditClick,
     searchMultipleChapters,
     refListVerses,
     refListChapters,
@@ -819,7 +828,7 @@ const ListSearchResults = memo(
               value={myNotes[verse.key] || ""}
               handleNoteChange={handleNoteChange}
               isEditable={editableNotes[verse.key]}
-              setEditableNotes={setEditableNotes}
+              handleEditClick={handleEditClick}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
               handleNoteSubmit={handleNoteSubmit}
@@ -849,7 +858,7 @@ const SearchVerseComponent = memo(
     value,
     handleNoteChange,
     isEditable,
-    setEditableNotes,
+    handleEditClick,
     handleSetDirection,
     noteDirection,
     handleNoteSubmit,
@@ -866,14 +875,14 @@ const SearchVerseComponent = memo(
           scrollKey={scrollKey}
         />
         <TextForm
-          verse_key={verse.key}
-          value={value}
-          handleNoteChange={handleNoteChange}
+          inputKey={verse.key}
+          inputValue={value}
+          handleInputChange={handleNoteChange}
           isEditable={isEditable}
-          setEditableNotes={setEditableNotes}
+          handleEditClick={handleEditClick}
           handleSetDirection={handleSetDirection}
-          noteDirection={noteDirection}
-          handleNoteSubmit={handleNoteSubmit}
+          inputDirection={noteDirection}
+          handleInputSubmit={handleNoteSubmit}
         />
       </div>
     );
@@ -983,7 +992,7 @@ const ListVerses = memo(
     chapterName,
     myNotes,
     editableNotes,
-    setEditableNotes,
+    handleEditClick,
     refListVerses,
     versesRef,
     scrollKey,
@@ -1012,7 +1021,7 @@ const ListVerses = memo(
               value={myNotes[verse.key] || ""}
               handleNoteChange={handleNoteChange}
               isEditable={editableNotes[verse.key]}
-              setEditableNotes={setEditableNotes}
+              handleEditClick={handleEditClick}
               handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
               handleNoteSubmit={handleNoteSubmit}
@@ -1033,7 +1042,7 @@ const VerseComponent = memo(
     value,
     handleNoteChange,
     isEditable,
-    setEditableNotes,
+    handleEditClick,
     handleSetDirection,
     noteDirection,
     handleNoteSubmit,
@@ -1042,14 +1051,14 @@ const VerseComponent = memo(
       <div ref={(el) => (versesRef.current[verse.key] = el)}>
         <VerseTextComponent verse={verse} />
         <TextForm
-          verse_key={verse.key}
-          value={value}
-          handleNoteChange={handleNoteChange}
+          inputKey={verse.key}
+          inputValue={value}
+          handleInputChange={handleNoteChange}
           isEditable={isEditable}
-          setEditableNotes={setEditableNotes}
+          handleEditClick={handleEditClick}
           handleSetDirection={handleSetDirection}
-          noteDirection={noteDirection}
-          handleNoteSubmit={handleNoteSubmit}
+          inputDirection={noteDirection}
+          handleInputSubmit={handleNoteSubmit}
         />
       </div>
     );

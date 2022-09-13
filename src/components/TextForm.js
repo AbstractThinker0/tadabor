@@ -5,52 +5,51 @@ import { IconTextDirectionLtr } from "@tabler/icons";
 import { IconTextDirectionRtl } from "@tabler/icons";
 
 const TextForm = ({
-  verse_key,
-  value,
-  noteDirection,
+  inputKey,
+  inputValue,
+  inputDirection,
   handleSetDirection,
-  handleNoteChange,
+  handleInputChange,
   isEditable,
-  setEditableNotes,
-  handleNoteSubmit,
+  handleEditClick,
+  handleInputSubmit,
 }) => {
-  const formRef = useRef();
+  const collapseRef = useRef();
 
   useEffect(() => {
-    let formElement = formRef.current;
+    let collapseElement = collapseRef.current;
     function onShownCollapse(event) {
       scrollIntoViewIfNeeded(event.target);
     }
-    formElement.addEventListener("shown.bs.collapse", onShownCollapse);
+    collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
 
     return () => {
-      formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
+      collapseElement.removeEventListener("shown.bs.collapse", onShownCollapse);
     };
   }, []);
-
-  const handleEditClick = () => {
-    setEditableNotes((state) => {
-      return { ...state, [verse_key]: true };
-    });
-  };
 
   return (
     <div
       className="collapse card border-primary"
-      id={"collapseExample" + verse_key}
-      ref={formRef}
+      id={"collapseExample" + inputKey}
+      ref={collapseRef}
     >
       <div className="card-body">
         {isEditable === false ? (
-          <TextComponent value={value} handleEditClick={handleEditClick} />
+          <TextComponent
+            inputValue={inputValue}
+            handleEditClick={handleEditClick}
+            inputKey={inputKey}
+            inputDirection={inputDirection}
+          />
         ) : (
           <FormComponent
-            verse_key={verse_key}
-            value={value}
-            noteDirection={noteDirection}
+            inputKey={inputKey}
+            inputValue={inputValue}
+            inputDirection={inputDirection}
             handleSetDirection={handleSetDirection}
-            handleNoteSubmit={handleNoteSubmit}
-            handleNoteChange={handleNoteChange}
+            handleInputSubmit={handleInputSubmit}
+            handleInputChange={handleInputChange}
           />
         )}
       </div>
@@ -58,16 +57,30 @@ const TextForm = ({
   );
 };
 
-const TextComponent = ({ value, handleEditClick }) => {
+const TextComponent = ({
+  inputValue,
+  inputKey,
+  inputDirection,
+  handleEditClick,
+}) => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="p-2 border border-1 border-success rounded">
-        <p style={{ whiteSpace: "pre-wrap" }}>{value}</p>
+      <div
+        className="p-2 border border-1 border-success rounded"
+        dir={inputDirection}
+      >
+        <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
       </div>
-      <button onClick={handleEditClick} className="mt-2 btn btn-primary btn-sm">
-        {t("text_edit")}
-      </button>
+      <div className="text-center">
+        <button
+          name={inputKey}
+          onClick={handleEditClick}
+          className="mt-2 btn btn-primary btn-sm"
+        >
+          {t("text_edit")}
+        </button>
+      </div>
     </>
   );
 };
@@ -99,12 +112,12 @@ function scrollIntoViewIfNeeded(target) {
 }
 
 const FormComponent = ({
-  verse_key,
-  value,
-  noteDirection,
+  inputKey,
+  inputValue,
+  inputDirection,
   handleSetDirection,
-  handleNoteSubmit,
-  handleNoteChange,
+  handleInputSubmit,
+  handleInputChange,
 }) => {
   const [rows, setRows] = useState(4);
   const formRef = useRef();
@@ -115,30 +128,30 @@ const FormComponent = ({
   }, []);
 
   useEffect(() => {
-    const rowlen = value.split("\n");
+    const rowlen = inputValue.split("\n");
 
     if (rowlen.length >= 4) {
       setRows(rowlen.length + 1);
     } else {
       setRows(4);
     }
-  }, [value]);
+  }, [inputValue]);
 
   return (
     <form
       ref={formRef}
-      name={verse_key}
-      onSubmit={(event) => handleNoteSubmit(event, value)}
+      name={inputKey}
+      onSubmit={(event) => handleInputSubmit(event, inputValue)}
     >
       <div className="form-group">
         <TextareaToolbar>
           <ToolbarOption
-            handleClick={() => handleSetDirection(verse_key, "ltr")}
+            handleClick={() => handleSetDirection(inputKey, "ltr")}
           >
             <IconTextDirectionLtr />
           </ToolbarOption>
           <ToolbarOption
-            handleClick={() => handleSetDirection(verse_key, "rtl")}
+            handleClick={() => handleSetDirection(inputKey, "rtl")}
           >
             <IconTextDirectionRtl />
           </ToolbarOption>
@@ -147,19 +160,21 @@ const FormComponent = ({
           className="form-control  mb-2"
           id="textInput"
           placeholder="أدخل كتاباتك"
-          name={verse_key}
-          value={value}
-          onChange={handleNoteChange}
+          name={inputKey}
+          value={inputValue}
+          onChange={handleInputChange}
           rows={rows}
-          dir={noteDirection}
+          dir={inputDirection}
           required
         />
       </div>
-      <input
-        type="submit"
-        value={t("text_save")}
-        className="btn btn-success btn-sm"
-      />
+      <div className="text-center">
+        <input
+          type="submit"
+          value={t("text_save")}
+          className="btn btn-success btn-sm"
+        />
+      </div>
     </form>
   );
 };
