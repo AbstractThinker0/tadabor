@@ -109,7 +109,8 @@ const FormComponent = ({
   handleInputSubmit,
   handleInputChange,
 }) => {
-  const [rows, setRows] = useState(4);
+  const minRows = 4;
+  const [rows, setRows] = useState(minRows);
   const formRef = useRef();
   const { t } = useTranslation();
 
@@ -120,10 +121,10 @@ const FormComponent = ({
   useEffect(() => {
     const rowlen = inputValue.split("\n");
 
-    if (rowlen.length >= 4) {
+    if (rowlen.length >= minRows) {
       setRows(rowlen.length + 1);
     } else {
-      setRows(4);
+      setRows(minRows);
     }
   }, [inputValue]);
 
@@ -169,4 +170,98 @@ const FormComponent = ({
   );
 };
 
-export default TextForm;
+const YourNoteForm = ({
+  inputKey,
+  inputValue,
+  inputDirection,
+  handleSetDirection,
+  handleInputSubmit,
+  handleInputChange,
+}) => {
+  const minRows = 4;
+  const [rows, setRows] = useState(minRows);
+  const formRef = useRef();
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    formRef.current.scrollIntoView({ block: "nearest" });
+  }, []);
+
+  useEffect(() => {
+    const rowlen = inputValue.split("\n");
+
+    if (rowlen.length >= minRows) {
+      setRows(rowlen.length + 1);
+    } else {
+      setRows(minRows);
+    }
+  }, [inputValue]);
+
+  return (
+    <form
+      ref={formRef}
+      name={inputKey}
+      onSubmit={(event) => handleInputSubmit(event, inputValue)}
+    >
+      <div className="card-body form-group">
+        <TextareaToolbar>
+          <ToolbarOption
+            handleClick={() => handleSetDirection(inputKey, "ltr")}
+          >
+            <IconTextDirectionLtr />
+          </ToolbarOption>
+          <ToolbarOption
+            handleClick={() => handleSetDirection(inputKey, "rtl")}
+          >
+            <IconTextDirectionRtl />
+          </ToolbarOption>
+        </TextareaToolbar>
+        <textarea
+          className="form-control  mb-2"
+          id="textInput"
+          placeholder="أدخل كتاباتك"
+          name={inputKey}
+          value={inputValue}
+          onChange={handleInputChange}
+          rows={rows}
+          dir={inputDirection}
+          required
+        />
+      </div>
+      <div className="card-footer text-center">
+        <input
+          type="submit"
+          value={t("text_save")}
+          className="btn btn-success btn-sm"
+        />
+      </div>
+    </form>
+  );
+};
+
+const YourNoteText = ({
+  inputValue,
+  inputKey,
+  inputDirection,
+  handleEditClick,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="card-body" dir={inputDirection}>
+        <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
+      </div>
+      <div className="card-footer text-center">
+        <button
+          name={inputKey}
+          onClick={handleEditClick}
+          className="mt-2 btn btn-primary btn-sm"
+        >
+          {t("text_edit")}
+        </button>
+      </div>
+    </>
+  );
+};
+
+export { TextForm, YourNoteForm, YourNoteText };

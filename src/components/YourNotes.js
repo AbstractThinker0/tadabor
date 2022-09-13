@@ -6,6 +6,7 @@ import { db } from "../util/db";
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
+import { YourNoteForm, YourNoteText } from "./TextForm";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
@@ -45,6 +46,7 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
   const { t } = useTranslation();
   const { chapterNames, allQuranText } = useQuran();
   const [editableNotes, setEditableNotes] = useState({});
+  const [areaDirection, setAreaDirection] = useState({});
 
   const convertKey = (key) => {
     let info = key.split("-");
@@ -56,19 +58,22 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
     return allQuranText[info[0] - 1].verses[info[1] - 1].versetext;
   };
 
-  function handleEditOnClick(key) {
+  function handleEditOnClick(event) {
+    let inputKey = event.target.name;
     setEditableNotes((state) => {
-      return { ...state, [key]: true };
+      return { ...state, [inputKey]: true };
     });
   }
 
   const memoHandleEditOnClick = useCallback(handleEditOnClick, []);
 
-  function handleNoteSave(note_key) {
+  function handleNoteSave(event, value) {
+    event.preventDefault();
+    let note_key = event.target.name;
     db.notes
       .put({
         id: note_key,
-        text: myNotes[note_key],
+        text: value,
         date_created: Date.now(),
         date_modified: Date.now(),
       })
@@ -93,94 +98,41 @@ const YourNotesLoaded = ({ myNotes, setMyNotes }) => {
     });
   }
 
+  function handleSetDirection(verse_key, dir) {
+    setAreaDirection((state) => {
+      return { ...state, [verse_key]: dir };
+    });
+  }
+
+  const memoHandleSetDirection = useCallback(handleSetDirection, []);
+
   return (
-    <div className="pt-2 pb-2">
+    <div className="p-2">
       {Object.keys(myNotes).map((key) => (
         <div key={key} className="card mb-3">
           <div className="card-header">
             {convertKey(key)} <br /> {getVerse(key)}{" "}
           </div>
           {editableNotes[key] ? (
-            <NoteFormCompoent
-              note_text={myNotes[key]}
-              note_key={key}
-              handleNoteSave={handleNoteSave}
-              handleNoteChange={handleNoteChange}
+            <YourNoteForm
+              inputValue={myNotes[key]}
+              inputKey={key}
+              inputDirection={areaDirection[key] || ""}
+              handleInputChange={handleNoteChange}
+              handleInputSubmit={handleNoteSave}
+              handleSetDirection={memoHandleSetDirection}
             />
           ) : (
-            <NoteTextComponent
-              note_text={myNotes[key]}
-              note_key={key}
-              handleEditOnClick={memoHandleEditOnClick}
+            <YourNoteText
+              inputKey={key}
+              inputValue={myNotes[key]}
+              inputDirection={areaDirection[key] || ""}
+              handleEditClick={memoHandleEditOnClick}
             />
           )}
         </div>
       ))}
     </div>
-  );
-};
-
-const NoteTextComponent = ({ note_text, note_key, handleEditOnClick }) => {
-  const { t } = useTranslation();
-  return (
-    <>
-      <div className="card-body">
-        <p style={{ whiteSpace: "pre-wrap" }}>{note_text}</p>
-      </div>
-      <div className="card-footer text-center">
-        <button
-          onClick={(e) => handleEditOnClick(note_key)}
-          className="btn btn-success"
-        >
-          {t("text_edit")}
-        </button>
-      </div>
-    </>
-  );
-};
-
-const NoteFormCompoent = ({
-  note_text,
-  note_key,
-  handleNoteSave,
-  handleNoteChange,
-}) => {
-  const { t } = useTranslation();
-  const [rows, setRows] = useState(4);
-
-  useEffect(() => {
-    const rowlen = note_text.split("\n");
-
-    if (rowlen.length >= 4) {
-      setRows(rowlen.length + 1);
-    } else {
-      setRows(4);
-    }
-  }, [note_text]);
-
-  return (
-    <>
-      <div className="card-body">
-        <textarea
-          className="form-control mb-2"
-          id="textInput"
-          placeholder="أدخل كتاباتك"
-          name={note_key}
-          value={note_text}
-          onChange={handleNoteChange}
-          rows={rows}
-          required
-        />
-      </div>
-      <div className="card-footer text-center">
-        <button
-          onClick={(e) => handleNoteSave(note_key)}
-          className="btn btn-success"
-        >
-          {t("text_save")}
-        </button>
-      </div>
-    </>
   );
 };
 

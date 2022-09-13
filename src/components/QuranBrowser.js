@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import useQuran from "../context/QuranContext";
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
-import TextForm from "./TextForm";
+import { TextForm } from "./TextForm";
 
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
