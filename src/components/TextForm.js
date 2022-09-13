@@ -19,7 +19,7 @@ const TextForm = ({
   useEffect(() => {
     let collapseElement = collapseRef.current;
     function onShownCollapse(event) {
-      scrollIntoViewIfNeeded(event.target);
+      event.target.scrollIntoView({ block: "nearest" });
     }
     collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
 
@@ -101,16 +101,6 @@ function ToolbarOption(props) {
   );
 }
 
-function scrollIntoViewIfNeeded(target) {
-  if (target.getBoundingClientRect().bottom > window.innerHeight) {
-    target.scrollIntoView(false);
-  }
-
-  if (target.getBoundingClientRect().top < 0) {
-    target.scrollIntoView({ block: "center" });
-  }
-}
-
 const FormComponent = ({
   inputKey,
   inputValue,
@@ -124,7 +114,7 @@ const FormComponent = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    scrollIntoViewIfNeeded(formRef.current);
+    formRef.current.scrollIntoView({ block: "nearest" });
   }, []);
 
   useEffect(() => {
