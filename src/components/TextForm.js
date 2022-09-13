@@ -49,8 +49,9 @@ const TextForm = ({
       .then(function (result) {
         //
         toast.success(t("save_success"));
-        editableNotes[verse_key] = false;
-        setEditableNotes({ ...editableNotes });
+        setEditableNotes((state) => {
+          return { ...state, [verse_key]: false };
+        });
       })
       .catch(function (error) {
         //
