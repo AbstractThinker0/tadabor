@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-const APP_VERSION = "0.0.4";
+const APP_VERSION = "0.0.5";
 
 function About() {
   const { i18n } = useTranslation();
