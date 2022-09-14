@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,10 +16,8 @@ import LoadingSpinner from "./LoadingSpinner";
 import useQuran from "../context/QuranContext";
 import { normalizeAlif } from "../util/util";
 
-import { IconTextDirectionLtr } from "@tabler/icons";
-import { IconTextDirectionRtl } from "@tabler/icons";
-
 import InfiniteScroll from "react-infinite-scroll-component";
+import { TextForm } from "./TextForm";
 
 const arabicAlpha = [
   "ا",
@@ -269,16 +266,16 @@ const RootComponent = memo(
     handleSetDirection,
   }) => {
     return (
-      <div className="text-center border">
+      <div className="border">
         <RootButton root_name={root_name} root_id={root_id} />
-        <RootCollapse
-          root_id={root_id}
-          value={value}
+        <TextForm
+          inputKey={root_id}
+          inputValue={value}
           isEditable={isEditable}
-          noteDirection={noteDirection}
+          inputDirection={noteDirection}
           handleSetDirection={handleSetDirection}
-          handleNoteChange={handleNoteChange}
-          handleNoteSubmit={handleNoteSubmit}
+          handleInputChange={handleNoteChange}
+          handleInputSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
         />
       </div>
@@ -288,155 +285,20 @@ const RootComponent = memo(
 
 const RootButton = memo(({ root_name, root_id }) => {
   return (
-    <button
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target={"#collapseExample" + root_id}
-      aria-expanded="false"
-      aria-controls={"collapseExample" + root_id}
-      className="btn"
-      value={root_id}
-    >
-      {root_name}
-    </button>
-  );
-});
-
-const RootCollapse = ({
-  root_id,
-  value,
-  isEditable,
-  handleNoteChange,
-  handleNoteSubmit,
-  handleEditClick,
-  noteDirection,
-  handleSetDirection,
-}) => {
-  const formRef = useRef();
-
-  useEffect(() => {
-    let formElement = formRef.current;
-    function onShownCollapse(event) {
-      event.target.scrollIntoView({ block: "center" });
-    }
-    formElement.addEventListener("shown.bs.collapse", onShownCollapse);
-
-    return () => {
-      formElement.removeEventListener("shown.bs.collapse", onShownCollapse);
-    };
-  }, []);
-
-  return (
-    <div
-      className="collapse card border-primary"
-      id={"collapseExample" + root_id}
-      ref={formRef}
-    >
-      <div className="card-body">
-        {isEditable === false ? (
-          <NoteTextComponent
-            handleEditClick={handleEditClick}
-            value={value}
-            root_id={root_id}
-          />
-        ) : (
-          <FromComponent
-            root_id={root_id}
-            value={value}
-            noteDirection={noteDirection}
-            handleNoteChange={handleNoteChange}
-            handleNoteSubmit={handleNoteSubmit}
-            handleSetDirection={handleSetDirection}
-          />
-        )}
-      </div>
-    </div>
-  );
-};
-
-const FromComponent = ({
-  root_id,
-  value,
-  noteDirection,
-  handleNoteSubmit,
-  handleNoteChange,
-  handleSetDirection,
-}) => {
-  const { t } = useTranslation();
-  const [rows, setRows] = useState(4);
-
-  useEffect(() => {
-    const rowlen = value.split("\n");
-
-    if (rowlen.length >= 4) {
-      setRows(rowlen.length + 1);
-    } else {
-      setRows(4);
-    }
-  }, [value]);
-
-  return (
-    <form
-      key={root_id}
-      name={root_id}
-      onSubmit={(event) => handleNoteSubmit(event, value)}
-    >
-      <div className="form-group">
-        <TextareaToolbar>
-          <ToolbarOption handleClick={() => handleSetDirection(root_id, "ltr")}>
-            <IconTextDirectionLtr />
-          </ToolbarOption>
-          <ToolbarOption handleClick={() => handleSetDirection(root_id, "rtl")}>
-            <IconTextDirectionRtl />
-          </ToolbarOption>
-        </TextareaToolbar>
-        <textarea
-          className="form-control mb-2"
-          id="textInput"
-          placeholder="أدخل كتاباتك"
-          name={root_id}
-          value={value}
-          onChange={handleNoteChange}
-          rows={rows}
-          dir={noteDirection}
-          required
-        />
-      </div>
-      <input
-        type="submit"
-        value={t("text_save")}
-        className="btn btn-success btn-sm"
-      />
-    </form>
-  );
-};
-
-const TextareaToolbar = memo((props) => {
-  return <div dir="ltr">{props.children}</div>;
-});
-
-function ToolbarOption(props) {
-  return (
-    <button type="button" className="btn btn-sm" onClick={props.handleClick}>
-      {props.children}
-    </button>
-  );
-}
-
-const NoteTextComponent = ({ value, root_id, handleEditClick }) => {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <p style={{ whiteSpace: "pre-wrap" }}>{value}</p>
+    <div className="text-center">
       <button
-        name={root_id}
-        onClick={handleEditClick}
-        className="btn btn-primary btn-sm"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target={"#collapseExample" + root_id}
+        aria-expanded="false"
+        aria-controls={"collapseExample" + root_id}
+        className="btn"
+        value={root_id}
       >
-        {t("text_edit")}
+        {root_name}
       </button>
     </div>
   );
-};
+});
 
 export default RootsBrowser;
