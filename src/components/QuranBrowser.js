@@ -323,7 +323,7 @@ function QuranBrowser() {
   return (
     <div
       className="row w-100 m-auto justify-content-center"
-      style={{ height: "85%" }}
+      style={{ height: "87%" }}
     >
       <SearchPanel
         memoHandleSelectionListChapters={memoHandleSelectionListChapters}
