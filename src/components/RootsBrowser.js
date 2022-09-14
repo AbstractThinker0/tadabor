@@ -144,8 +144,19 @@ const RootsListComponent = memo(({ searchString }) => {
         markedNotes[note.id] = false;
       });
 
+      let userNotesDir = await db.root_notes_dir.toArray();
+
+      if (clientLeft) return;
+
+      let extractNotesDir = {};
+
+      userNotesDir.forEach((note) => {
+        extractNotesDir[note.id] = note.dir;
+      });
+
       setMyNotes(extractNotes);
       setEditableNotes(markedNotes);
+      setAreaDirection(extractNotesDir);
 
       setLoadingState(false);
     }
@@ -205,6 +216,7 @@ const RootsListComponent = memo(({ searchString }) => {
     setAreaDirection((state) => {
       return { ...state, [root_id]: dir };
     });
+    db.root_notes_dir.put({ id: root_id, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);
