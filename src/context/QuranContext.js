@@ -18,7 +18,11 @@ export const QuranProvider = ({ children }) => {
     fetchData();
 
     async function fetchData() {
-      let response = await axios.get("/res/chapters.json");
+      let response = await axios.get("/res/chapters.json", {
+        headers: {
+          "Cache-Control": `max-age=31536000, immutable`,
+        },
+      });
 
       if (clientLeft) return;
 
@@ -26,7 +30,11 @@ export const QuranProvider = ({ children }) => {
         chapterNames.current = response.data;
       }
 
-      response = await axios.get("/res/quran_v2.json");
+      response = await axios.get("/res/quran_v2.json", {
+        headers: {
+          "Cache-Control": `max-age=31536000, immutable`,
+        },
+      });
 
       if (clientLeft) return;
 
@@ -42,7 +50,11 @@ export const QuranProvider = ({ children }) => {
         });
       }
 
-      response = await axios.get("/res/quran-root.txt");
+      response = await axios.get("/res/quran-root.txt", {
+        headers: {
+          "Cache-Control": `max-age=31536000, immutable`,
+        },
+      });
 
       if (clientLeft) return;
 
