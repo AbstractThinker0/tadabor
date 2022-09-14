@@ -17,6 +17,7 @@ import { TextForm } from "./TextForm";
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
   const [selectChapter, setSelectChapter] = useState(1);
+  const [selectedChapters, setSelectedChapters] = useState(["1"]);
 
   const [searchString, setSearchString] = useState("");
   const [searchingString, setSearchingString] = useState("");
@@ -291,6 +292,7 @@ function QuranBrowser() {
   function gotoChapter(chapter) {
     clearPreviousSearch();
     setSelectChapter(chapter);
+    setSelectedChapters([chapter]);
   }
 
   const memoHandleSelectionListChapters = useCallback(
@@ -307,6 +309,10 @@ function QuranBrowser() {
 
     if (event.target.selectedOptions.length === 1) {
       memoGotoChapter(chapter);
+    } else {
+      setSelectedChapters(
+        Array.from(event.target.selectedOptions, (option) => option.value)
+      );
     }
   }
 
@@ -334,6 +340,7 @@ function QuranBrowser() {
         searchString={searchString}
         setSearchString={setSearchString}
         searchResult={searchResult}
+        selectedChapters={selectedChapters}
       />
 
       <DisplayPanel
@@ -383,6 +390,7 @@ const SearchPanel = memo(
     searchString,
     setSearchString,
     searchResult,
+    selectedChapters,
   }) => {
     const { t } = useTranslation();
 
@@ -393,6 +401,7 @@ const SearchPanel = memo(
         <SelectionListChapters
           handleSelectionListChapters={memoHandleSelectionListChapters}
           innerRef={refListChapters}
+          selectedChapters={selectedChapters}
         />
         <RadioSearchMethod
           radioSearchMethod={radioSearchMethod}

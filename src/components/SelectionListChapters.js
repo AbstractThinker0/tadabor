@@ -2,7 +2,7 @@ import { memo } from "react";
 import useQuran from "../context/QuranContext";
 
 const SelectionListChapters = memo(
-  ({ handleSelectionListChapters, innerRef }) => {
+  ({ handleSelectionListChapters, innerRef, selectedChapters }) => {
     const { chapterNames } = useQuran();
     return (
       <div className="container mt-2 mb-2 p-0">
@@ -13,7 +13,7 @@ const SelectionListChapters = memo(
           onChange={handleSelectionListChapters}
           aria-label="size 7 select example"
           ref={innerRef}
-          defaultValue={["1"]}
+          value={selectedChapters}
           multiple
         >
           {chapterNames.map((chapter, index) => (
