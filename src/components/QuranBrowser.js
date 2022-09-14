@@ -562,7 +562,14 @@ const DisplayPanel = memo(
 
     const memoHandleEditClick = useCallback(handleEditClick, []);
 
-    if (loadingState) return <LoadingSpinner />;
+    if (loadingState)
+      return (
+        <div dir="rtl" className="col h-100 mt-3 p-0">
+          <div className="h-100 pb-1" style={{ overflowY: "scroll" }}>
+            <LoadingSpinner />
+          </div>
+        </div>
+      );
 
     return (
       <div dir="rtl" className="col h-100 mt-3 p-0">
