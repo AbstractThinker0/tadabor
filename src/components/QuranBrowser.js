@@ -315,7 +315,10 @@ function QuranBrowser() {
   const scrollKey = useRef();
 
   return (
-    <div className="row w-100" style={{ height: "85%" }}>
+    <div
+      className="row w-100 m-auto justify-content-center"
+      style={{ height: "85%" }}
+    >
       <SearchPanel
         memoHandleSelectionListChapters={memoHandleSelectionListChapters}
         refListChapters={refListChapters}
