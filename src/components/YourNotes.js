@@ -117,7 +117,7 @@ function YourNotes() {
     <div className="p-2">
       {Object.keys(myNotes).map((key) => (
         <div key={key} className="card mb-3">
-          <div className="card-header">
+          <div className="card-header" dir="rtl">
             {convertKey(key)} <br /> {getVerse(key)}{" "}
           </div>
           {editableNotes[key] ? (
