@@ -24,7 +24,7 @@ const AlertMessage = () => {
 
   return (
     <div
-      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center mx-3 mt-2 mb-0"
+      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center m-0"
       role="alert"
     >
       {t("alert_message")}

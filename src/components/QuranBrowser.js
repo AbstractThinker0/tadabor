@@ -323,7 +323,7 @@ function QuranBrowser() {
   return (
     <div
       className="row w-100 m-auto justify-content-center"
-      style={{ height: "87%" }}
+      style={{ height: "90%" }}
     >
       <SearchPanel
         memoHandleSelectionListChapters={memoHandleSelectionListChapters}
@@ -397,7 +397,7 @@ const SearchPanel = memo(
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     return (
-      <div className="col-auto px-4 pt-2">
+      <div className="col-auto">
         <SelectionListChapters
           handleSelectionListChapters={memoHandleSelectionListChapters}
           innerRef={refListChapters}
@@ -564,21 +564,21 @@ const DisplayPanel = memo(
 
     if (loadingState)
       return (
-        <div dir="rtl" className="col h-100 mt-3 p-0">
-          <div className="h-100 pb-1" style={{ overflowY: "scroll" }}>
+        <div className="col h-75">
+          <div className="h-100">
             <LoadingSpinner />
           </div>
         </div>
       );
 
     return (
-      <div dir="rtl" className="col h-100 mt-3 p-0">
+      <div className="col p-0 h-100">
         <div
-          className="h-100 pb-1"
+          className="h-100"
           style={{ overflowY: "scroll" }}
           ref={refListVerses}
         >
-          <div className="card">
+          <div className="card" dir="rtl">
             {searchResult.length || searchError || selectedRootError ? (
               <ListSearchResults
                 versesArray={searchResult}
