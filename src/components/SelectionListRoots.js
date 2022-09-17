@@ -1,10 +1,19 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 
 const SelectionListRoots = memo(
   ({ isDisabled, searchString, setSearchString }) => {
     const { quranRoots } = useQuran();
     const [stateSelect, setStateSelect] = useState();
+    const [itemsCount, setItemsCount] = useState(100);
+    const listRef = useRef();
+
+    function handleScroll(event) {
+      const { scrollTop, scrollHeight, clientHeight } = event.target;
+      if (scrollHeight - scrollTop <= clientHeight + 1) {
+        fetchMoreData();
+      }
+    }
 
     const handleSelectRoot = (event) => {
       let rootId = event.target.value;
@@ -15,6 +24,18 @@ const SelectionListRoots = memo(
       setSearchString(selectedRoot.name);
     };
 
+    const fetchMoreData = () => {
+      setItemsCount((state) => state + 20);
+    };
+
+    let filteredArray = useMemo(
+      () =>
+        quranRoots.filter(
+          (root) => root.name.startsWith(searchString) || isDisabled
+        ),
+      [quranRoots, searchString, isDisabled]
+    );
+
     return (
       <div className="container mt-2 p-0">
         <select
@@ -24,14 +45,14 @@ const SelectionListRoots = memo(
           aria-label="size 6 select example"
           disabled={isDisabled}
           value={stateSelect}
+          ref={listRef}
+          onScroll={handleScroll}
         >
-          {quranRoots
-            .filter((root) => root.name.startsWith(searchString) || isDisabled)
-            .map((root, index) => (
-              <option key={index} value={root.id}>
-                {root.name}
-              </option>
-            ))}
+          {filteredArray.slice(0, itemsCount).map((root, index) => (
+            <option key={index} value={root.id}>
+              {root.name}
+            </option>
+          ))}
         </select>
       </div>
     );
