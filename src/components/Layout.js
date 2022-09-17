@@ -82,13 +82,13 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/coloring">
-                {t("nav_coloring")}
+              <Link className="nav-link" to="/translation">
+                {t("nav_translation")}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/translation">
-                {t("nav_translation")}
+              <Link className="nav-link" to="/coloring">
+                {t("nav_coloring")}
               </Link>
             </li>
             <li className="nav-item">
