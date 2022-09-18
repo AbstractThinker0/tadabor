@@ -22,3 +22,7 @@ db.version(2).stores({
 db.version(1).stores({
   notes: "id, text, date_created, date_modified", // Primary key and indexed props
 });
+
+export function saveData(store, data) {
+  return db[store].put(data);
+}

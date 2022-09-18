@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
-import { db } from "../util/db";
+import { db, saveData } from "../util/db";
 
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
@@ -74,22 +74,21 @@ function YourNotes() {
   function handleNoteSave(event, value) {
     event.preventDefault();
     let note_key = event.target.name;
-    db.notes
-      .put({
-        id: note_key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
+
+    setEditableNotes((state) => {
+      return { ...state, [note_key]: false };
+    });
+
+    saveData("notes", {
+      id: note_key,
+      text: value,
+      date_created: Date.now(),
+      date_modified: Date.now(),
+    })
       .then(function (result) {
-        //
         toast.success(t("save_success"));
-        setEditableNotes((state) => {
-          return { ...state, [note_key]: false };
-        });
       })
       .catch(function (error) {
-        //
         toast.success(t("save_failed"));
       });
   }
