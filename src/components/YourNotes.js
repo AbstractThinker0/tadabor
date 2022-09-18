@@ -105,7 +105,7 @@ function YourNotes() {
     setAreaDirection((state) => {
       return { ...state, [verse_key]: dir };
     });
-    db.notes_dir.put({ id: verse_key, dir: dir });
+    saveData("notes_dir", { id: verse_key, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);

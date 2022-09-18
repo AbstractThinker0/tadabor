@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback, memo } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { toast } from "react-toastify";
-import { db } from "../util/db";
+import { db, saveData } from "../util/db";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
@@ -521,7 +521,7 @@ const DisplayPanel = memo(
         return { ...state, [verse_key]: dir };
       });
 
-      db.notes_dir.put({ id: verse_key, dir: dir });
+      saveData("notes_dir", { id: verse_key, dir: dir });
     }
 
     const memoHandleSetDirection = useCallback(handleSetDirection, []);
@@ -530,22 +530,20 @@ const DisplayPanel = memo(
       event.preventDefault();
       let verse_key = event.target.name;
 
-      db.notes
-        .put({
-          id: verse_key,
-          text: value,
-          date_created: Date.now(),
-          date_modified: Date.now(),
-        })
+      setEditableNotes((state) => {
+        return { ...state, [verse_key]: false };
+      });
+
+      saveData("notes", {
+        id: verse_key,
+        text: value,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
         .then(function (result) {
-          //
           toast.success(t("save_success"));
-          setEditableNotes((state) => {
-            return { ...state, [verse_key]: false };
-          });
         })
         .catch(function (error) {
-          //
           toast.success(t("save_failed"));
         });
     }

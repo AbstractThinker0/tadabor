@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import useQuran from "../context/QuranContext";
 
-import { db } from "../util/db";
+import { db, saveData } from "../util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "./LoadingSpinner";
@@ -67,22 +67,21 @@ const Translation = () => {
 
   function handleInputSubmit(event, inputValue) {
     let note_key = event.target.name;
-    db.translations
-      .put({
-        id: note_key,
-        text: inputValue,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
+
+    setEditableTranslations((state) => {
+      return { ...state, [note_key]: false };
+    });
+
+    saveData("translations", {
+      id: note_key,
+      text: inputValue,
+      date_created: Date.now(),
+      date_modified: Date.now(),
+    })
       .then(function (result) {
-        //
         toast.success(t("save_success"));
-        setEditableTranslations((state) => {
-          return { ...state, [note_key]: false };
-        });
       })
       .catch(function (error) {
-        //
         toast.success(t("save_failed"));
       });
   }

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { db } from "../util/db";
+import { db, saveData } from "../util/db";
 
 import { toast } from "react-toastify";
 
@@ -180,22 +180,20 @@ const RootsListComponent = memo(({ searchString }) => {
     event.preventDefault();
     let root_id = event.target.name;
 
-    db.root_notes
-      .put({
-        id: root_id,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
+    setEditableNotes((state) => {
+      return { ...state, [root_id]: false };
+    });
+
+    saveData("root_notes", {
+      id: root_id,
+      text: value,
+      date_created: Date.now(),
+      date_modified: Date.now(),
+    })
       .then(function (result) {
-        //
         toast.success(t("save_success"));
-        setEditableNotes((state) => {
-          return { ...state, [root_id]: false };
-        });
       })
       .catch(function (error) {
-        //
         toast.success(t("save_failed"));
       });
   }
@@ -216,7 +214,7 @@ const RootsListComponent = memo(({ searchString }) => {
     setAreaDirection((state) => {
       return { ...state, [root_id]: dir };
     });
-    db.root_notes_dir.put({ id: root_id, dir: dir });
+    saveData("root_notes_dir", { id: root_id, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);
