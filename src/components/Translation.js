@@ -92,7 +92,7 @@ const Translation = () => {
     <div className="row m-auto p-0" style={{ height: "90%" }}>
       <div className="col-sm-3 border-start justify-content-center">
         <div className="container mt-2 w-75">
-          <h4 className="text-info">قائمة السور:</h4>
+          <h4 className="text-info">{t("roots_list")}</h4>
           <select
             className="form-select"
             size="7"

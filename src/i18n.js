@@ -39,6 +39,7 @@ i18n
           text_save: "Save",
           save_success: "Successfuly saved the changes.",
           save_failed: "Failed to save the changes",
+          roots_list: "Surahs list:",
         },
       },
       ar: {
@@ -66,6 +67,7 @@ i18n
           text_save: "حفظ",
           save_success: "تم الحفظ بنجاح.",
           save_failed: "فشلت عملية الحفظ.",
+          roots_list: "قائمة السور:",
         },
       },
     },
