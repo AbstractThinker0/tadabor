@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import useQuran from "../context/QuranContext";
 
 const SelectionListRoots = memo(
