@@ -26,3 +26,7 @@ db.version(1).stores({
 export function saveData(store, data) {
   return db[store].put(data);
 }
+
+export function loadData(store) {
+  return db[store].toArray();
+}

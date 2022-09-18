@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
-import { db, saveData } from "../util/db";
+import { saveData, loadData } from "../util/db";
 
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
@@ -22,7 +22,7 @@ function YourNotes() {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await db.notes.toArray();
+      let userNotes = await loadData("notes");
 
       if (clientLeft) return;
 
@@ -31,7 +31,7 @@ function YourNotes() {
         extractNotes[note.id] = note.text;
       });
 
-      let userNotesDir = await db.notes_dir.toArray();
+      let userNotesDir = await loadData("notes_dir");
 
       if (clientLeft) return;
 

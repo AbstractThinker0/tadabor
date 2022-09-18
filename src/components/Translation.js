@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import useQuran from "../context/QuranContext";
 
-import { db, saveData } from "../util/db";
+import { loadData, saveData } from "../util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "./LoadingSpinner";
@@ -23,7 +23,7 @@ const Translation = () => {
     fetchData();
 
     async function fetchData() {
-      let userTranslations = await db.translations.toArray();
+      let userTranslations = await loadData("translations");
 
       if (clientLeft) return;
 

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback, memo } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { toast } from "react-toastify";
-import { db, saveData } from "../util/db";
+import { loadData, saveData } from "../util/db";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
@@ -473,7 +473,7 @@ const DisplayPanel = memo(
       fetchData();
 
       async function fetchData() {
-        let userNotes = await db.notes.toArray();
+        let userNotes = await loadData("notes");
 
         if (clientLeft) return;
 
@@ -484,7 +484,7 @@ const DisplayPanel = memo(
           markedNotes[note.id] = false;
         });
 
-        let userNotesDir = await db.notes_dir.toArray();
+        let userNotesDir = await loadData("notes_dir");
 
         if (clientLeft) return;
 

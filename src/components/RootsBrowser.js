@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { db, saveData } from "../util/db";
+import { loadData, saveData } from "../util/db";
 
 import { toast } from "react-toastify";
 
@@ -131,7 +131,7 @@ const RootsListComponent = memo(({ searchString }) => {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await db.root_notes.toArray();
+      let userNotes = await loadData("root_notes");
 
       if (clientLeft) return;
 
@@ -143,7 +143,7 @@ const RootsListComponent = memo(({ searchString }) => {
         markedNotes[note.id] = false;
       });
 
-      let userNotesDir = await db.root_notes_dir.toArray();
+      let userNotesDir = await loadData("root_notes_dir");
 
       if (clientLeft) return;
 
