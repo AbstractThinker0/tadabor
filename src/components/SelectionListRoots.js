@@ -6,10 +6,10 @@ const SelectionListRoots = memo(
     const { quranRoots } = useQuran();
     const [stateSelect, setStateSelect] = useState();
     const [itemsCount, setItemsCount] = useState(100);
-    const listRef = useRef();
 
     function handleScroll(event) {
       const { scrollTop, scrollHeight, clientHeight } = event.target;
+      // Reached the bottom, ( the +1 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
       if (scrollHeight - scrollTop <= clientHeight + 1) {
         fetchMoreData();
       }
@@ -42,10 +42,9 @@ const SelectionListRoots = memo(
           className="form-select"
           size="6"
           onChange={handleSelectRoot}
-          aria-label="size 6 select example"
+          aria-label="size 6 select"
           disabled={isDisabled}
           value={stateSelect}
-          ref={listRef}
           onScroll={handleScroll}
         >
           {filteredArray.slice(0, itemsCount).map((root, index) => (
