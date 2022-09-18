@@ -16,7 +16,6 @@ import LoadingSpinner from "./LoadingSpinner";
 import useQuran from "../context/QuranContext";
 import { normalizeAlif } from "../util/util";
 
-import InfiniteScroll from "react-infinite-scroll-component";
 import { TextForm } from "./TextForm";
 
 const arabicAlpha = [
@@ -55,7 +54,7 @@ function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
 
   return (
-    <div className="p-3">
+    <div className="p-3" style={{ height: "90%" }}>
       <FormWordSearch
         searchString={searchString}
         setSearchString={setSearchString}
@@ -234,31 +233,32 @@ const RootsListComponent = memo(({ searchString }) => {
     setItemsCount((state) => state + 20);
   };
 
+  function handleScroll(event) {
+    const { scrollTop, scrollHeight, clientHeight } = event.target;
+    // Reached the bottom, ( the +1 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+    if (scrollHeight - scrollTop <= clientHeight + 1) {
+      fetchMoreData();
+    }
+  }
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div>
-      <InfiniteScroll
-        dataLength={itemsCount}
-        next={fetchMoreData}
-        hasMore={itemsCount <= filteredArray.length}
-        loader={<h4>Loading...</h4>}
-      >
-        {filteredArray.slice(0, itemsCount).map((root) => (
-          <RootComponent
-            key={root.id}
-            root_name={root.name}
-            root_id={root.id}
-            value={myNotes[root.id] || ""}
-            noteDirection={areaDirection[root.id] || ""}
-            isEditable={editableNotes[root.id]}
-            handleEditClick={memoHandleEditClick}
-            handleNoteSubmit={memoHandleNoteSubmit}
-            handleNoteChange={memoHandleNoteChange}
-            handleSetDirection={memoHandleSetDirection}
-          />
-        ))}
-      </InfiniteScroll>
+    <div onScroll={handleScroll} style={{ overflowY: "scroll", height: "85%" }}>
+      {filteredArray.slice(0, itemsCount).map((root) => (
+        <RootComponent
+          key={root.id}
+          root_name={root.name}
+          root_id={root.id}
+          value={myNotes[root.id] || ""}
+          noteDirection={areaDirection[root.id] || ""}
+          isEditable={editableNotes[root.id]}
+          handleEditClick={memoHandleEditClick}
+          handleNoteSubmit={memoHandleNoteSubmit}
+          handleNoteChange={memoHandleNoteChange}
+          handleSetDirection={memoHandleSetDirection}
+        />
+      ))}
     </div>
   );
 });
