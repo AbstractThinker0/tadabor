@@ -9,11 +9,9 @@ function Layout({ children }) {
   const isRtl = i18n.dir() === "rtl";
   return (
     <div className="container vh-100 mw-100 p-0">
-      <div className="h-100">
-        <Navbar />
-        <AlertMessage />
-        <QuranProvider>{children}</QuranProvider>
-      </div>
+      <Navbar />
+      <AlertMessage />
+      <QuranProvider>{children}</QuranProvider>
       <ToastContainer rtl={isRtl} />
     </div>
   );
