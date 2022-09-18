@@ -572,7 +572,7 @@ const DisplayPanel = memo(
     return (
       <div className="col p-0 h-100">
         <div
-          className="h-100"
+          className="h-100 p-1"
           style={{ overflowY: "scroll" }}
           ref={refListVerses}
         >
@@ -585,7 +585,6 @@ const DisplayPanel = memo(
                 scopeAllQuran={searchingAllQuran}
                 searchError={searchError}
                 selectedRootError={selectedRootError}
-                chapterNames={chapterNames}
                 radioSearchMethod={radioSearchingMethod}
                 myNotes={myNotes}
                 editableNotes={editableNotes}
@@ -778,7 +777,6 @@ const ListSearchResults = memo(
     scopeAllQuran,
     searchError,
     selectedRootError,
-    chapterNames,
     radioSearchMethod,
     myNotes,
     editableNotes,
@@ -794,6 +792,7 @@ const ListSearchResults = memo(
     areaDirection,
     handleNoteSubmit,
   }) => {
+    const { chapterNames } = useQuran();
     const refVersesResult = useRef({});
 
     let selectedChapters = [];
