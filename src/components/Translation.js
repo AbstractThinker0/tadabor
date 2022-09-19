@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import useQuran from "../context/QuranContext";
 
 import { loadData, saveData } from "../util/db";
@@ -7,15 +7,55 @@ import { useTranslation } from "react-i18next";
 import LoadingSpinner from "./LoadingSpinner";
 
 const Translation = () => {
+  const [selectChapter, setSelectChapter] = useState(1);
+
+  const onSelectChange = (event) => {
+    setSelectChapter(event.target.value);
+  };
+
+  return (
+    <div className="row m-auto p-0" style={{ height: "90%" }}>
+      <SelectionListChapters
+        onSelectChange={onSelectChange}
+        selectChapter={selectChapter}
+      />
+      <DisplayPanel selectChapter={selectChapter} />
+    </div>
+  );
+};
+
+const SelectionListChapters = ({ onSelectChange, selectChapter }) => {
+  const { t } = useTranslation();
+  const { chapterNames } = useQuran();
+
+  return (
+    <div className="col-sm-3 border-start justify-content-center">
+      <div className="container mt-2 w-75">
+        <h4 className="text-info">{t("roots_list")}</h4>
+        <select
+          className="form-select"
+          size="7"
+          aria-label="size 7 select"
+          onChange={onSelectChange}
+          value={selectChapter}
+        >
+          {chapterNames.map((chapter, index) => (
+            <option key={chapter.id} value={chapter.id}>
+              {index + 1}. {chapter.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+const DisplayPanel = ({ selectChapter }) => {
   const { allQuranText, chapterNames } = useQuran();
   const { t } = useTranslation();
   const [loadingState, setLoadingState] = useState(true);
   const [versesTranslation, setVersesTranslation] = useState({});
   const [editableTranslations, setEditableTranslations] = useState({});
-  const [selectChapter, setSelectChapter] = useState(1);
-  const [displayVerses, setDisplayVerses] = useState(
-    allQuranText[selectChapter - 1].verses
-  );
 
   useEffect(() => {
     let clientLeft = false;
@@ -45,10 +85,7 @@ const Translation = () => {
     };
   }, []);
 
-  const onSelectChange = (event) => {
-    setSelectChapter(event.target.value);
-    setDisplayVerses(allQuranText[event.target.value - 1].verses);
-  };
+  const displayVerses = allQuranText[selectChapter - 1].verses;
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -58,12 +95,16 @@ const Translation = () => {
     });
   };
 
+  const memoHandleInputChange = useCallback(handleInputChange, []);
+
   const handleEditClick = (event) => {
     let inputKey = event.target.name;
     setEditableTranslations((state) => {
       return { ...state, [inputKey]: true };
     });
   };
+
+  const memoHandleEditClick = useCallback(handleEditClick, []);
 
   function handleInputSubmit(event, inputValue) {
     let note_key = event.target.name;
@@ -86,70 +127,79 @@ const Translation = () => {
       });
   }
 
+  const memoHandleInputSubmit = useCallback(handleInputSubmit, [t]);
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div className="row m-auto p-0" style={{ height: "90%" }}>
-      <div className="col-sm-3 border-start justify-content-center">
-        <div className="container mt-2 w-75">
-          <h4 className="text-info">{t("roots_list")}</h4>
-          <select
-            className="form-select"
-            size="7"
-            aria-label="size 7 select"
-            onChange={onSelectChange}
-            value={selectChapter}
-          >
-            {chapterNames.map((chapter, index) => (
-              <option key={chapter.id} value={chapter.id}>
-                {index + 1}. {chapter.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="col h-100 p-0">
-        <div
-          className="container justify-content-center py-2 h-100"
-          style={{ overflowY: "scroll" }}
-        >
-          <div className="card">
-            <div className="card-header">
-              <h2 className="pb-2 text-primary text-center">
-                {chapterNames[selectChapter - 1].name}
-              </h2>
-            </div>
-            <div className="card-body p-1">
-              {displayVerses.map((verse) => {
-                return (
-                  <Fragment key={verse.key}>
-                    <p className="fs-4 mb-0" dir="rtl">
-                      {verse.versetext} ({verse.verseid})
-                    </p>
-                    {editableTranslations[verse.key] === false ? (
-                      <Versetext
-                        inputKey={verse.key}
-                        inputValue={versesTranslation[verse.key]}
-                        handleEditClick={handleEditClick}
-                      />
-                    ) : (
-                      <Versearea
-                        inputKey={verse.key}
-                        inputValue={versesTranslation[verse.key]}
-                        handleInputChange={handleInputChange}
-                        handleInputSubmit={handleInputSubmit}
-                      />
-                    )}
-                  </Fragment>
-                );
-              })}
-            </div>
+    <div className="col h-100 p-0">
+      <div
+        className="container justify-content-center py-2 h-100"
+        style={{ overflowY: "scroll" }}
+      >
+        <div className="card">
+          <div className="card-header">
+            <h2 className="pb-2 text-primary text-center">
+              {chapterNames[selectChapter - 1].name}
+            </h2>
+          </div>
+          <div className="card-body p-1">
+            {displayVerses.map((verse) => {
+              return (
+                <VerseComponent
+                  key={verse.key}
+                  isEditable={editableTranslations[verse.key]}
+                  verse_key={verse.key}
+                  verse_text={verse.versetext}
+                  verse_id={verse.verseid}
+                  verse_trans={versesTranslation[verse.key]}
+                  handleEditClick={memoHandleEditClick}
+                  handleInputChange={memoHandleInputChange}
+                  handleInputSubmit={memoHandleInputSubmit}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+const VerseComponent = memo(
+  ({
+    isEditable,
+    verse_key,
+    verse_text,
+    verse_id,
+    verse_trans,
+    handleEditClick,
+    handleInputChange,
+    handleInputSubmit,
+  }) => {
+    return (
+      <>
+        <p className="fs-4 mb-0" dir="rtl">
+          {verse_text} ({verse_id})
+        </p>
+        {isEditable === false ? (
+          <Versetext
+            inputKey={verse_key}
+            inputValue={verse_trans}
+            handleEditClick={handleEditClick}
+          />
+        ) : (
+          <Versearea
+            inputKey={verse_key}
+            inputValue={verse_trans}
+            handleInputChange={handleInputChange}
+            handleInputSubmit={handleInputSubmit}
+          />
+        )}
+      </>
+    );
+  }
+);
 
 const Versetext = ({ inputValue, inputKey, handleEditClick }) => {
   const { t } = useTranslation();
