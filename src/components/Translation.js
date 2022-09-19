@@ -238,6 +238,7 @@ const Versearea = ({
         name={inputKey}
         value={inputValue}
         onChange={handleInputChange}
+        required
       />
       <div className="text-center">
         <button
