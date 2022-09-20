@@ -489,53 +489,51 @@ const DisplayPanel = memo(
       );
 
     return (
-      <div className="col p-0 h-100">
-        <div
-          className="h-100 p-1"
-          style={{ overflowY: "scroll" }}
-          ref={refListVerses}
-        >
-          <div className="card" dir="rtl">
-            {searchResult.length || searchError || selectedRootError ? (
-              <ListSearchResults
-                versesArray={searchResult}
-                chapterName={chapterNames[selectChapter - 1].name}
-                searchToken={searchingString.trim()}
-                scopeAllQuran={searchingAllQuran}
-                searchError={searchError}
-                selectedRootError={selectedRootError}
-                radioSearchMethod={radioSearchingMethod}
-                myNotes={myNotes}
-                editableNotes={editableNotes}
-                handleEditClick={memoHandleEditClick}
-                searchMultipleChapters={searchMultipleChapters}
-                refListVerses={refListVerses}
-                refListChapters={refListChapters}
-                gotoChapter={memoGotoChapter}
-                scrollKey={scrollKey}
-                rootDerivations={rootDerivations}
-                handleNoteChange={memoHandleNoteChange}
-                handleSetDirection={memoHandleSetDirection}
-                areaDirection={areaDirection}
-                handleNoteSubmit={memoHandleNoteSubmit}
-              />
-            ) : (
-              <ListVerses
-                chapterName={chapterNames[selectChapter - 1].name}
-                versesArray={allQuranText[selectChapter - 1].verses}
-                myNotes={myNotes}
-                handleEditClick={memoHandleEditClick}
-                editableNotes={editableNotes}
-                refListVerses={refListVerses}
-                versesRef={versesRef}
-                scrollKey={scrollKey}
-                handleNoteChange={memoHandleNoteChange}
-                handleSetDirection={memoHandleSetDirection}
-                areaDirection={areaDirection}
-                handleNoteSubmit={memoHandleNoteSubmit}
-              />
-            )}
-          </div>
+      <div
+        className="col p-1 h-100"
+        style={{ overflowY: "scroll" }}
+        ref={refListVerses}
+      >
+        <div className="card" dir="rtl">
+          {searchResult.length || searchError || selectedRootError ? (
+            <ListSearchResults
+              versesArray={searchResult}
+              chapterName={chapterNames[selectChapter - 1].name}
+              searchToken={searchingString.trim()}
+              scopeAllQuran={searchingAllQuran}
+              searchError={searchError}
+              selectedRootError={selectedRootError}
+              radioSearchMethod={radioSearchingMethod}
+              myNotes={myNotes}
+              editableNotes={editableNotes}
+              handleEditClick={memoHandleEditClick}
+              searchMultipleChapters={searchMultipleChapters}
+              refListVerses={refListVerses}
+              refListChapters={refListChapters}
+              gotoChapter={memoGotoChapter}
+              scrollKey={scrollKey}
+              rootDerivations={rootDerivations}
+              handleNoteChange={memoHandleNoteChange}
+              handleSetDirection={memoHandleSetDirection}
+              areaDirection={areaDirection}
+              handleNoteSubmit={memoHandleNoteSubmit}
+            />
+          ) : (
+            <ListVerses
+              chapterName={chapterNames[selectChapter - 1].name}
+              versesArray={allQuranText[selectChapter - 1].verses}
+              myNotes={myNotes}
+              handleEditClick={memoHandleEditClick}
+              editableNotes={editableNotes}
+              refListVerses={refListVerses}
+              versesRef={versesRef}
+              scrollKey={scrollKey}
+              handleNoteChange={memoHandleNoteChange}
+              handleSetDirection={memoHandleSetDirection}
+              areaDirection={areaDirection}
+              handleNoteSubmit={memoHandleNoteSubmit}
+            />
+          )}
         </div>
       </div>
     );

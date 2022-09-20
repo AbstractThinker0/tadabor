@@ -27,7 +27,7 @@ const SearchPanel = memo(
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     return (
-      <div className="col-auto">
+      <div className="col-sm-3">
         <SelectionListChapters
           handleSelectionListChapters={memoHandleSelectionListChapters}
           innerRef={refListChapters}
