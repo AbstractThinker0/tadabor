@@ -113,7 +113,7 @@ function YourNotes() {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div className="p-2">
+    <div className="p-2" style={{ height: "90%", overflowY: "scroll" }}>
       {Object.keys(myNotes).map((key) => (
         <div key={key} className="card mb-3">
           <div className="card-header" dir="rtl">
