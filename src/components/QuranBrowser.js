@@ -103,25 +103,11 @@ function QuranBrowser() {
       }
     };
 
-    let selectedChapters = [];
-
-    const fillSelectedChaptersArray = () => {
-      if (refListChapters.current.selectedOptions.length > 1) {
-        setSearchMultipleChapters(true);
-        selectedChapters = Array.from(
-          refListChapters.current.selectedOptions,
-          (option) => option.value
-        );
-      }
-    };
-
     if (searchAllQuran) {
       setSearchingAllQuran(true);
       allChaptersMatches();
     } else {
       setSearchingAllQuran(false);
-
-      fillSelectedChaptersArray();
 
       if (selectedChapters.length > 1) {
         multipleChaptersMatches();
@@ -146,6 +132,7 @@ function QuranBrowser() {
     }
 
     function multipleChaptersMatches() {
+      setSearchMultipleChapters(true);
       selectedChapters.forEach((chapter) => {
         allQuranText[chapter - 1].verses.forEach((verse) => {
           checkVerseMatch(verse);
@@ -167,6 +154,7 @@ function QuranBrowser() {
     searchIdentical,
     searchString,
     selectChapter,
+    selectedChapters,
   ]);
 
   function handleSearchByRoot() {
@@ -186,18 +174,6 @@ function QuranBrowser() {
 
     let matchVerses = [];
     let derivations = [];
-
-    const fillSelectedChaptersArray = () => {
-      let selectedChapters = [];
-      if (refListChapters.current.selectedOptions.length > 1) {
-        setSearchMultipleChapters(true);
-        selectedChapters = Array.from(
-          refListChapters.current.selectedOptions,
-          (option) => option.value
-        );
-      }
-      return selectedChapters;
-    };
 
     const fillDerivationsArray = (wordIndexes, verseWords, currentVerse) => {
       wordIndexes.forEach((word) => {
@@ -230,9 +206,8 @@ function QuranBrowser() {
     } else {
       setSearchingAllQuran(false);
 
-      let selectedChapters = fillSelectedChaptersArray();
-
       if (selectedChapters.length > 1) {
+        setSearchMultipleChapters(true);
         selectedChapters.forEach((chapter) => {
           occurencesArray.forEach((item) => {
             let info = item.split(":");
@@ -282,6 +257,7 @@ function QuranBrowser() {
     searchAllQuran,
     searchString,
     selectChapter,
+    selectedChapters,
   ]);
 
   const memoHandleSearchSubmit = useCallback(handleSearchSubmit, [
