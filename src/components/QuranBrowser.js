@@ -55,20 +55,6 @@ function QuranBrowser() {
     setRootDerivations([]);
   };
 
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-
-    clearPreviousSearch();
-    setSearchingString(searchString);
-    setRadioSearchingMethod(radioSearchMethod);
-
-    if (radioSearchMethod === "optionWordSearch") {
-      memoHandleSearchByWord();
-    } else if (radioSearchMethod === "optionRootSearch") {
-      memoHandleSearchByRoot();
-    }
-  }
-
   function handleSearchByWord() {
     if (onlySpaces(searchString)) {
       setSearchError(true);
@@ -227,9 +213,22 @@ function QuranBrowser() {
     quranRoots,
     searchAllQuran,
     searchString,
-    selectChapter,
     selectedChapters,
   ]);
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+
+    clearPreviousSearch();
+    setSearchingString(searchString);
+    setRadioSearchingMethod(radioSearchMethod);
+
+    if (radioSearchMethod === "optionWordSearch") {
+      memoHandleSearchByWord();
+    } else if (radioSearchMethod === "optionRootSearch") {
+      memoHandleSearchByRoot();
+    }
+  }
 
   const memoHandleSearchSubmit = useCallback(handleSearchSubmit, [
     memoHandleSearchByRoot,
@@ -512,6 +511,8 @@ const SearchTitle = memo(
   }
 );
 
+SearchTitle.displayName = "SearchTitle";
+
 const ListSearchResults = memo(
   ({
     versesArray,
@@ -559,8 +560,6 @@ const ListSearchResults = memo(
       ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
     }, [versesArray]);
 
-    SearchTitle.displayName = "SearchTitle";
-
     const memoHandleRootClick = useCallback(handleRootClick, []);
 
     function handleRootClick(e, verse_key) {
@@ -588,23 +587,26 @@ const ListSearchResults = memo(
         )}
         <div className="card-body">
           {versesArray.map((verse) => (
-            <SearchVerseComponent
+            <div
               key={verse.key}
-              refVersesResult={refVersesResult}
-              verse={verse}
-              scopeAllQuran={scopeAllQuran}
-              searchMultipleChapters={searchMultipleChapters}
-              chapterNames={chapterNames}
-              gotoChapter={gotoChapter}
-              scrollKey={scrollKey}
-              value={myNotes[verse.key] || ""}
-              handleNoteChange={handleNoteChange}
-              isEditable={editableNotes[verse.key]}
-              handleEditClick={handleEditClick}
-              handleSetDirection={handleSetDirection}
-              noteDirection={areaDirection[verse.key] || ""}
-              handleNoteSubmit={handleNoteSubmit}
-            />
+              ref={(el) => (refVersesResult.current[verse.key] = el)}
+            >
+              <SearchVerseComponent
+                verse={verse}
+                scopeAllQuran={scopeAllQuran}
+                searchMultipleChapters={searchMultipleChapters}
+                chapterNames={chapterNames}
+                gotoChapter={gotoChapter}
+                scrollKey={scrollKey}
+                value={myNotes[verse.key] || ""}
+                handleNoteChange={handleNoteChange}
+                isEditable={editableNotes[verse.key]}
+                handleEditClick={handleEditClick}
+                handleSetDirection={handleSetDirection}
+                noteDirection={areaDirection[verse.key] || ""}
+                handleNoteSubmit={handleNoteSubmit}
+              />
+            </div>
           ))}
           <SearchErrorsComponent
             searchError={searchError}
@@ -620,7 +622,6 @@ ListSearchResults.displayName = "ListSearchResults";
 
 const SearchVerseComponent = memo(
   ({
-    refVersesResult,
     verse,
     scopeAllQuran,
     searchMultipleChapters,
@@ -636,7 +637,7 @@ const SearchVerseComponent = memo(
     handleNoteSubmit,
   }) => {
     return (
-      <div ref={(el) => (refVersesResult.current[verse.key] = el)}>
+      <>
         <VerseContentComponent
           verse={verse}
           scopeAllQuran={scopeAllQuran}
@@ -656,7 +657,7 @@ const SearchVerseComponent = memo(
           inputDirection={noteDirection}
           handleInputSubmit={handleNoteSubmit}
         />
-      </div>
+      </>
     );
   }
 );
