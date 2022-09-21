@@ -55,84 +55,7 @@ function QuranBrowser() {
     setRootDerivations([]);
   };
 
-  function handleSearchByWord() {
-    if (onlySpaces(searchString)) {
-      setSearchError(true);
-      return;
-    }
-
-    let matchVerses = [];
-    let normal_search = "";
-
-    if (!searchDiacritics) {
-      normal_search = normalize_text(searchString).trim();
-    } else {
-      normal_search = searchString.trim();
-    }
-
-    const checkVerseMatch = (verse) => {
-      let normal_text = "";
-      if (!searchDiacritics) {
-        normal_text = normalize_text(verse.versetext);
-      } else {
-        normal_text = verse.versetext;
-      }
-
-      if (searchIdentical) {
-        if (findWord(normal_search, normal_text)) {
-          matchVerses.push(verse);
-        }
-      } else {
-        if (normal_text.search(normal_search) !== -1) {
-          matchVerses.push(verse);
-        }
-      }
-    };
-
-    if (searchAllQuran) {
-      setSearchingAllQuran(true);
-      allChaptersMatches();
-    } else {
-      setSearchingAllQuran(false);
-
-      if (selectedChapters.length > 1) {
-        multipleChaptersMatches();
-      } else {
-        oneChapterMatches();
-      }
-    }
-
-    function allChaptersMatches() {
-      allQuranText.forEach((sura) => {
-        sura.verses.forEach((verse) => {
-          checkVerseMatch(verse);
-        });
-      });
-    }
-
-    function oneChapterMatches() {
-      let currentChapter = allQuranText[selectChapter - 1].verses;
-      currentChapter.forEach((verse) => {
-        checkVerseMatch(verse);
-      });
-    }
-
-    function multipleChaptersMatches() {
-      setSearchMultipleChapters(true);
-      selectedChapters.forEach((chapter) => {
-        allQuranText[chapter - 1].verses.forEach((verse) => {
-          checkVerseMatch(verse);
-        });
-      });
-    }
-
-    if (matchVerses.length === 0) {
-      setSearchError(true);
-    } else {
-      setSearchResult(matchVerses);
-    }
-  }
-
+  /*
   const memoHandleSearchByWord = useCallback(handleSearchByWord, [
     allQuranText,
     searchAllQuran,
@@ -143,70 +66,6 @@ function QuranBrowser() {
     selectedChapters,
   ]);
 
-  function handleSearchByRoot() {
-    if (onlySpaces(searchString)) {
-      setSelectedRootError(true);
-      return;
-    }
-
-    let rootTarget = quranRoots.find((root) => root.name === searchString);
-
-    if (rootTarget === undefined) {
-      setSelectedRootError(true);
-      return;
-    }
-
-    let occurencesArray = rootTarget.occurences;
-
-    let matchVerses = [];
-    let derivations = [];
-
-    const fillDerivationsArray = (wordIndexes, verseWords, currentVerse) => {
-      wordIndexes.forEach((word) => {
-        derivations.push({
-          name: verseWords[word - 1],
-          key: currentVerse.key,
-          text:
-            chapterNames[currentVerse.suraid - 1].name +
-            ":" +
-            currentVerse.verseid,
-        });
-      });
-    };
-
-    if (searchAllQuran) {
-      setSearchingAllQuran(true);
-    } else {
-      setSearchingAllQuran(false);
-
-      if (selectedChapters.length > 1) {
-        setSearchMultipleChapters(true);
-      }
-    }
-
-    // occurences array have the verserank:index1,index2...etc format
-    occurencesArray.forEach((item) => {
-      let info = item.split(":");
-      let currentVerse = absoluteQuran[info[0]];
-
-      if (selectedChapters.includes(currentVerse.suraid) || searchAllQuran) {
-        let verseWords = currentVerse.versetext.split(" ");
-
-        let wordIndexes = info[1].split(",");
-
-        fillDerivationsArray(wordIndexes, verseWords, currentVerse);
-        matchVerses.push(currentVerse);
-      }
-    });
-
-    if (matchVerses.length === 0) {
-      setSelectedRootError(true);
-    } else {
-      setSearchResult(matchVerses);
-      setRootDerivations(derivations);
-    }
-  }
-
   const memoHandleSearchByRoot = useCallback(handleSearchByRoot, [
     absoluteQuran,
     chapterNames,
@@ -215,6 +74,7 @@ function QuranBrowser() {
     searchString,
     selectedChapters,
   ]);
+  */
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -223,16 +83,165 @@ function QuranBrowser() {
     setSearchingString(searchString);
     setRadioSearchingMethod(radioSearchMethod);
 
+    function handleSearchByWord() {
+      if (onlySpaces(searchString)) {
+        setSearchError(true);
+        return;
+      }
+
+      let matchVerses = [];
+      let normal_search = "";
+
+      if (!searchDiacritics) {
+        normal_search = normalize_text(searchString).trim();
+      } else {
+        normal_search = searchString.trim();
+      }
+
+      const checkVerseMatch = (verse) => {
+        let normal_text = "";
+        if (!searchDiacritics) {
+          normal_text = normalize_text(verse.versetext);
+        } else {
+          normal_text = verse.versetext;
+        }
+
+        if (searchIdentical) {
+          if (findWord(normal_search, normal_text)) {
+            matchVerses.push(verse);
+          }
+        } else {
+          if (normal_text.search(normal_search) !== -1) {
+            matchVerses.push(verse);
+          }
+        }
+      };
+
+      if (searchAllQuran) {
+        setSearchingAllQuran(true);
+        allChaptersMatches();
+      } else {
+        setSearchingAllQuran(false);
+
+        if (selectedChapters.length > 1) {
+          multipleChaptersMatches();
+        } else {
+          oneChapterMatches();
+        }
+      }
+
+      function allChaptersMatches() {
+        allQuranText.forEach((sura) => {
+          sura.verses.forEach((verse) => {
+            checkVerseMatch(verse);
+          });
+        });
+      }
+
+      function oneChapterMatches() {
+        let currentChapter = allQuranText[selectChapter - 1].verses;
+        currentChapter.forEach((verse) => {
+          checkVerseMatch(verse);
+        });
+      }
+
+      function multipleChaptersMatches() {
+        setSearchMultipleChapters(true);
+        selectedChapters.forEach((chapter) => {
+          allQuranText[chapter - 1].verses.forEach((verse) => {
+            checkVerseMatch(verse);
+          });
+        });
+      }
+
+      if (matchVerses.length === 0) {
+        setSearchError(true);
+      } else {
+        setSearchResult(matchVerses);
+      }
+    }
+
+    function handleSearchByRoot() {
+      if (onlySpaces(searchString)) {
+        setSelectedRootError(true);
+        return;
+      }
+
+      let rootTarget = quranRoots.find((root) => root.name === searchString);
+
+      if (rootTarget === undefined) {
+        setSelectedRootError(true);
+        return;
+      }
+
+      let occurencesArray = rootTarget.occurences;
+
+      let matchVerses = [];
+      let derivations = [];
+
+      const fillDerivationsArray = (wordIndexes, verseWords, currentVerse) => {
+        wordIndexes.forEach((word) => {
+          derivations.push({
+            name: verseWords[word - 1],
+            key: currentVerse.key,
+            text:
+              chapterNames[currentVerse.suraid - 1].name +
+              ":" +
+              currentVerse.verseid,
+          });
+        });
+      };
+
+      if (searchAllQuran) {
+        setSearchingAllQuran(true);
+      } else {
+        setSearchingAllQuran(false);
+
+        if (selectedChapters.length > 1) {
+          setSearchMultipleChapters(true);
+        }
+      }
+
+      // occurences array have the verserank:index1,index2...etc format
+      occurencesArray.forEach((item) => {
+        let info = item.split(":");
+        let currentVerse = absoluteQuran[info[0]];
+
+        if (selectedChapters.includes(currentVerse.suraid) || searchAllQuran) {
+          let verseWords = currentVerse.versetext.split(" ");
+
+          let wordIndexes = info[1].split(",");
+
+          fillDerivationsArray(wordIndexes, verseWords, currentVerse);
+          matchVerses.push(currentVerse);
+        }
+      });
+
+      if (matchVerses.length === 0) {
+        setSelectedRootError(true);
+      } else {
+        setSearchResult(matchVerses);
+        setRootDerivations(derivations);
+      }
+    }
+
     if (radioSearchMethod === "optionWordSearch") {
-      memoHandleSearchByWord();
+      handleSearchByWord();
     } else if (radioSearchMethod === "optionRootSearch") {
-      memoHandleSearchByRoot();
+      handleSearchByRoot();
     }
   }
 
   const memoHandleSearchSubmit = useCallback(handleSearchSubmit, [
-    memoHandleSearchByRoot,
-    memoHandleSearchByWord,
+    absoluteQuran,
+    allQuranText,
+    chapterNames,
+    quranRoots,
+    searchAllQuran,
+    searchDiacritics,
+    searchIdentical,
+    selectChapter,
+    selectedChapters,
     radioSearchMethod,
     searchString,
   ]);
