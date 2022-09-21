@@ -55,27 +55,6 @@ function QuranBrowser() {
     setRootDerivations([]);
   };
 
-  /*
-  const memoHandleSearchByWord = useCallback(handleSearchByWord, [
-    allQuranText,
-    searchAllQuran,
-    searchDiacritics,
-    searchIdentical,
-    searchString,
-    selectChapter,
-    selectedChapters,
-  ]);
-
-  const memoHandleSearchByRoot = useCallback(handleSearchByRoot, [
-    absoluteQuran,
-    chapterNames,
-    quranRoots,
-    searchAllQuran,
-    searchString,
-    selectedChapters,
-  ]);
-  */
-
   function handleSearchSubmit(e) {
     e.preventDefault();
 
