@@ -27,23 +27,40 @@ const Translation = () => {
 const SelectionListChapters = ({ onSelectChange, selectChapter }) => {
   const { t } = useTranslation();
   const { chapterNames } = useQuran();
+  const [chapterSearch, setChapterSearch] = useState("");
+
+  const onChangeInput = (event) => {
+    setChapterSearch(event.target.value);
+  };
 
   return (
     <div className="col-sm-3 border-start justify-content-center">
       <div className="container mt-2 w-75">
         <h4 className="text-info">{t("roots_list")}</h4>
+        <input
+          className="form-control"
+          type="search"
+          value={chapterSearch}
+          onChange={onChangeInput}
+          placeholder=""
+          aria-label="Search"
+          dir="rtl"
+        />
         <select
           className="form-select"
           size="7"
           aria-label="size 7 select"
           onChange={onSelectChange}
+          onFocus={onSelectChange}
           value={selectChapter}
         >
-          {chapterNames.map((chapter, index) => (
-            <option key={chapter.id} value={chapter.id}>
-              {index + 1}. {chapter.name}
-            </option>
-          ))}
+          {chapterNames
+            .filter((chapter) => chapter.name.startsWith(chapterSearch))
+            .map((chapter) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.id}. {chapter.name}
+              </option>
+            ))}
         </select>
       </div>
     </div>

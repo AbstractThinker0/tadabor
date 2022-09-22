@@ -33,7 +33,7 @@ const SelectionListChapters = memo(
         >
           {chapterNames
             .filter((chapter) => chapter.name.startsWith(chapterSearch))
-            .map((chapter, index) => (
+            .map((chapter) => (
               <option key={chapter.id} value={chapter.id}>
                 {chapter.id}. {chapter.name}
               </option>
