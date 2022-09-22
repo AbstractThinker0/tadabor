@@ -1,11 +1,26 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import useQuran from "../context/QuranContext";
 
 const SelectionListChapters = memo(
   ({ handleSelectionListChapters, innerRef, selectedChapters }) => {
     const { chapterNames } = useQuran();
+    const [chapterSearch, setChapterSearch] = useState("");
+
+    const onChangeInput = (event) => {
+      setChapterSearch(event.target.value);
+    };
+
     return (
       <div className="container mt-2 mb-2 p-0">
+        <input
+          className="form-control"
+          type="search"
+          value={chapterSearch}
+          onChange={onChangeInput}
+          placeholder=""
+          aria-label="Search"
+          dir="rtl"
+        />
         <select
           className="form-select"
           size="7"
@@ -16,11 +31,13 @@ const SelectionListChapters = memo(
           value={selectedChapters}
           multiple
         >
-          {chapterNames.map((chapter, index) => (
-            <option key={chapter.id} value={chapter.id}>
-              {index + 1}. {chapter.name}
-            </option>
-          ))}
+          {chapterNames
+            .filter((chapter) => chapter.name.startsWith(chapterSearch))
+            .map((chapter, index) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.id}. {chapter.name}
+              </option>
+            ))}
         </select>
       </div>
     );

@@ -278,6 +278,8 @@ function QuranBrowser() {
       />
 
       <DisplayPanel
+        refListChapters={refListChapters}
+        scrollKey={scrollKey}
         searchResult={searchResult}
         searchError={searchError}
         selectedRootError={selectedRootError}
@@ -286,10 +288,8 @@ function QuranBrowser() {
         selectChapter={selectChapter}
         radioSearchingMethod={radioSearchingMethod}
         searchMultipleChapters={searchMultipleChapters}
-        refListChapters={refListChapters}
-        memoGotoChapter={memoGotoChapter}
-        scrollKey={scrollKey}
         rootDerivations={rootDerivations}
+        memoGotoChapter={memoGotoChapter}
       />
     </div>
   );
@@ -297,6 +297,8 @@ function QuranBrowser() {
 
 const DisplayPanel = memo(
   ({
+    refListChapters,
+    scrollKey,
     searchResult,
     searchError,
     selectedRootError,
@@ -305,10 +307,8 @@ const DisplayPanel = memo(
     selectChapter,
     radioSearchingMethod,
     searchMultipleChapters,
-    refListChapters,
-    memoGotoChapter,
-    scrollKey,
     rootDerivations,
+    memoGotoChapter,
   }) => {
     const { chapterNames, allQuranText } = useQuran();
     const { t } = useTranslation();
