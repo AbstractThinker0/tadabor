@@ -487,7 +487,7 @@ const SearchTitle = memo(
   }) => {
     let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
     return (
-      <h3 className="mb-2 text-info">
+      <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"
         {scopeAllQuran === true
           ? " في كل السور"
@@ -578,6 +578,7 @@ const ListSearchResults = memo(
             <div
               key={verse.key}
               ref={(el) => (refVersesResult.current[verse.key] = el)}
+              className="border-bottom pt-1"
             >
               <SearchVerseComponent
                 verse={verse}
@@ -656,7 +657,7 @@ const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
   return (
     <>
       <hr />
-      <p>
+      <span className="p-2">
         {rootDerivations.map((root, index) => (
           <span
             role="button"
@@ -668,7 +669,7 @@ const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
             {index ? " -" : " "} {root.name}
           </span>
         ))}
-      </p>
+      </span>
       <hr />
     </>
   );
@@ -707,7 +708,7 @@ const VerseContentComponent = memo(
     };
 
     return (
-      <p className="pt-1 fs-4">
+      <span className="fs-4">
         {verse.versetext} (
         {isLinkable ? (
           <button
@@ -730,7 +731,7 @@ const VerseContentComponent = memo(
         >
           <ArrowDownCircleFill />
         </button>
-      </p>
+      </span>
     );
   }
 );
@@ -809,7 +810,10 @@ const VerseComponent = memo(
     handleNoteSubmit,
   }) => {
     return (
-      <div ref={(el) => (versesRef.current[verse.key] = el)}>
+      <div
+        ref={(el) => (versesRef.current[verse.key] = el)}
+        className="border-bottom pt-1"
+      >
         <VerseTextComponent verse={verse} />
         <TextForm
           inputKey={verse.key}
@@ -830,7 +834,7 @@ VerseComponent.displayName = "VerseComponent";
 
 const VerseTextComponent = memo(({ verse }) => {
   return (
-    <p className="pt-1 fs-4">
+    <span className="fs-4">
       {verse.versetext} ({verse.verseid}){" "}
       <button
         className="btn"
@@ -842,7 +846,7 @@ const VerseTextComponent = memo(({ verse }) => {
       >
         <ArrowDownCircleFill />
       </button>
-    </p>
+    </span>
   );
 });
 
