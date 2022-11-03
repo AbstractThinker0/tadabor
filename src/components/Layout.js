@@ -3,17 +3,18 @@ import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
+import "../main.scss"
 
 function Layout({ children }) {
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
   return (
-    <div className="container vh-100 mw-100 p-0">
+    <main>
       <Navbar />
       <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
       <ToastContainer rtl={isRtl} />
-    </div>
+    </main>
   );
 }
 

@@ -1,0 +1,41 @@
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.browser {
+    display: flex;
+    overflow: auto;
+    max-height: 100%;
+
+    &-search {
+        padding: 16px;
+    }
+
+    &-display {
+        flex: 1;
+        overflow-y: scroll;
+        min-height: 100%;
+        padding: 0.25rem;
+    }
+}
+
+.translation {
+    display: flex;
+    overflow: auto;
+    max-height: 100%;
+
+    &-display {
+        flex: 1;
+        overflow-y: scroll;
+        min-height: 100%;
+        padding: 0.25rem;
+    }
+}
+
+@media (max-width: 800px) {
+    .browser, .translation {
+        flex-direction: column;
+     }
+}

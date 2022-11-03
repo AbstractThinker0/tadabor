@@ -256,8 +256,7 @@ function QuranBrowser() {
 
   return (
     <div
-      className="row w-100 m-auto justify-content-center"
-      style={{ height: "90%" }}
+      className="browser"
     >
       <SearchPanel
         refListChapters={refListChapters}
@@ -424,8 +423,7 @@ const DisplayPanel = memo(
 
     return (
       <div
-        className="col p-1 h-100"
-        style={{ overflowY: "scroll" }}
+        className="browser-display"
         ref={refListVerses}
       >
         <div className="card" dir="rtl">
