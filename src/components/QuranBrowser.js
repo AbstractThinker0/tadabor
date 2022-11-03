@@ -576,7 +576,7 @@ const ListSearchResults = memo(
             <div
               key={verse.key}
               ref={(el) => (refVersesResult.current[verse.key] = el)}
-              className="border-bottom pt-1"
+              className="border-bottom pt-1 pb-1"
             >
               <SearchVerseComponent
                 verse={verse}
@@ -810,7 +810,7 @@ const VerseComponent = memo(
     return (
       <div
         ref={(el) => (versesRef.current[verse.key] = el)}
-        className="border-bottom pt-1"
+        className="border-bottom pt-1 pb-1"
       >
         <VerseTextComponent verse={verse} />
         <TextForm
