@@ -119,10 +119,10 @@ const FormComponent = ({
   }, []);
 
   useEffect(() => {
-    const rowlen = inputValue.split("\n");
+    const rowlen = inputValue.split("\n").length;
 
-    if (rowlen.length >= minRows) {
-      setRows(rowlen.length + 1);
+    if (rowlen >= minRows) {
+      setRows(rowlen + 2);
     } else {
       setRows(minRows);
     }
@@ -148,7 +148,8 @@ const FormComponent = ({
           </ToolbarOption>
         </TextareaToolbar>
         <textarea
-          className="form-control  mb-2"
+          className="form-control mb-2"
+          style={{overflowY: "hidden"}}
           id="textInput"
           placeholder="أدخل كتاباتك"
           name={inputKey}
@@ -188,10 +189,10 @@ const YourNoteForm = ({
   }, []);
 
   useEffect(() => {
-    const rowlen = inputValue.split("\n");
+    const rowlen = inputValue.split("\n").length;
 
-    if (rowlen.length >= minRows) {
-      setRows(rowlen.length + 1);
+    if (rowlen >= minRows) {
+      setRows(rowlen + 2);
     } else {
       setRows(minRows);
     }
@@ -218,6 +219,7 @@ const YourNoteForm = ({
         </TextareaToolbar>
         <textarea
           className="form-control  mb-2"
+          style={{overflowY: "hidden"}}
           id="textInput"
           placeholder="أدخل كتاباتك"
           name={inputKey}
