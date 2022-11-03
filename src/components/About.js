@@ -15,7 +15,7 @@ function About() {
 const AboutEnglish = () => {
   return (
     <>
-      <div className="pt-4 card" dir="ltr">
+      <div className="pt-4 card about-card" dir="ltr">
         <p className="text-center">
           Check out the project{" "}
           <a href="https://github.com/EnlightenCode/tadabor">Github repo</a>
@@ -76,7 +76,7 @@ const AboutEnglish = () => {
 const AboutArabic = () => {
   return (
     <>
-      <div className="pt-4 card" dir="rtl">
+      <div className="pt-4 card about-card" dir="rtl">
         <p className="text-center">
           إطلع على موقع البرنامج في{" "}
           <a href="https://github.com/EnlightenCode/tadabor">Github</a>

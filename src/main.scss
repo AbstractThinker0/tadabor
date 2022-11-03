@@ -39,6 +39,11 @@ main {
     }
 }
 
+.about-card {
+    display: flex;
+    flex: 1;
+}
+
 @media (max-width: 800px) {
     .browser, .translation {
         flex-direction: column;
