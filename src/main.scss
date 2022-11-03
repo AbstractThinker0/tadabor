@@ -8,6 +8,7 @@ main {
     display: flex;
     overflow: auto;
     max-height: 100%;
+    height: 100%;
 
     &-search {
         padding: 16px;
@@ -18,6 +19,10 @@ main {
         overflow-y: scroll;
         min-height: 100%;
         padding: 0.25rem;
+
+        &-card {
+            height: 100%;
+        }
     }
 }
 

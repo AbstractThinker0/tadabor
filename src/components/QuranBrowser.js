@@ -426,7 +426,7 @@ const DisplayPanel = memo(
         className="browser-display"
         ref={refListVerses}
       >
-        <div className="card" dir="rtl">
+        <div className="card browser-display-card" dir="rtl">
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
               versesArray={searchResult}
