@@ -56,14 +56,13 @@ const AboutEnglish = () => {
             </li>
             <li>
               Credits Tanzil project for the Quran text compilation ( Check the
-              bottom of /public/res/quran-simple-plain.txt )
+              bottom of <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">quran-simple-plain.txt </a>  )
             </li>
 
             <li>
               Computer Research Center of Islamic Sciences (noorsoft.org) and
               Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the
-              Quran roots compilation ( Check the bottom of
-              /public/res/quran-root.txt ){" "}
+              Quran roots compilation ( Check the bottom of <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">quran-root.txt</a> )
             </li>
           </ul>
         </div>
@@ -110,19 +109,17 @@ const AboutArabic = () => {
                 rel="noreferrer"
               >
                 quran-json
-              </a>{" "}
+              </a>
               لتجميع أسماء سور مع ترجمتها
             </li>
             <li>
-              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر
-              /public/res/quran-simple-plain.txt )
+              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">quran-simple-plain.txt</a> )
             </li>
 
             <li>
               الشكر إلى Computer Research Center of Islamic Sciences
               (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
-              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر
-              /public/res/quran-root.txt ){" "}
+              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">quran-root.txt</a> )
             </li>
           </ul>
         </div>
