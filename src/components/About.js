@@ -109,8 +109,7 @@ const AboutArabic = () => {
                 rel="noreferrer"
               >
                 quran-json
-              </a>
-              لتجميع أسماء سور مع ترجمتها
+              </a> لتجميع أسماء سور مع ترجمتها
             </li>
             <li>
               الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">quran-simple-plain.txt</a> )
