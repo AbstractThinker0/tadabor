@@ -14,7 +14,7 @@ const Translation = () => {
   };
 
   return (
-    <div className="row m-auto p-0" style={{ height: "90%" }}>
+    <div className="translation">
       <SelectionListChapters
         onSelectChange={onSelectChange}
         selectChapter={selectChapter}
@@ -149,11 +149,7 @@ const DisplayPanel = ({ selectChapter }) => {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div className="col h-100 p-0">
-      <div
-        className="container justify-content-center py-2 h-100"
-        style={{ overflowY: "scroll" }}
-      >
+    <div className="translation-display">
         <div className="card">
           <div className="card-header">
             <h2 className="pb-2 text-primary text-center">
@@ -179,7 +175,7 @@ const DisplayPanel = ({ selectChapter }) => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 
