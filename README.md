@@ -12,7 +12,7 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 ## Known bugs
 
-- None so far.
+- When loading the website for the first time it might take time to load and sometimes you might need to do multiple refreshes, It seems that fetching data from the server is failing for some reason, Probably because the data is being sent in big chunks, Will have to further investigate this.
 
 ## TODO List
 
