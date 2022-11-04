@@ -716,7 +716,12 @@ const VerseContentComponent = memo(
             {verseChapter + ":" + verse.verseid}
           </button>
         ) : (
-          verse.verseid
+          <button
+            className="p-0 border-0 bg-transparent"
+            onClick={(e) => handleVerseClick(verse_key)}
+          >
+            {verse.verseid}
+          </button>
         )}
         )
         <button
