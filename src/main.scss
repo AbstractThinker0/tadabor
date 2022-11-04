@@ -44,6 +44,11 @@ main {
   }
 }
 
+.yournotes {
+  overflow-y: scroll;
+  flex: 1;
+}
+
 .about-card {
   display: flex;
   flex: 1;
