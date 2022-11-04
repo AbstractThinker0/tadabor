@@ -227,7 +227,7 @@ function QuranBrowser() {
 
   function gotoChapter(chapter) {
     clearPreviousSearch();
-    setSelectChapter(chapter);
+    setSelectChapter(chapter.toString());
     setSelectedChapters([chapter]);
   }
 
