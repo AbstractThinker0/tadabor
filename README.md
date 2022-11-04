@@ -12,7 +12,7 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 ## Known bugs
 
-- ~~When loading the website for the first time it might take time to load and sometimes you might need to do multiple refreshes.~~ (Fixed in https://github.com/EnlightenCode/tadabor/commit/c0ba1c32c53fbf83fd4b60827df7744e5ad2a43a ?)
+- ~~When loading the website for the first time it might take time to load and sometimes you might need to do multiple refreshes.~~ (Fixed in [fc87012](https://github.com/EnlightenCode/tadabor/commit/c0ba1c32c53fbf83fd4b60827df7744e5ad2a43a) ?)
 
 ## TODO List
 
