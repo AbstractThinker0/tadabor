@@ -149,7 +149,6 @@ const FormComponent = ({
         </TextareaToolbar>
         <textarea
           className="form-control mb-2"
-          style={{overflowY: "hidden"}}
           id="textInput"
           placeholder="أدخل كتاباتك"
           name={inputKey}
@@ -219,7 +218,6 @@ const YourNoteForm = ({
         </TextareaToolbar>
         <textarea
           className="form-control  mb-2"
-          style={{overflowY: "hidden"}}
           id="textInput"
           placeholder="أدخل كتاباتك"
           name={inputKey}
