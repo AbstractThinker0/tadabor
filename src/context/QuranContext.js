@@ -18,68 +18,76 @@ export const QuranProvider = ({ children }) => {
     fetchData();
 
     async function fetchData() {
-      let response = await axios.get("/res/chapters.json", {
-        headers: {
-          "Cache-Control": `max-age=31536000, immutable`,
-        },
-      });
-
-      if (clientLeft) return;
-
-      if (!chapterNames.current.length) {
-        chapterNames.current = response.data;
-      }
-
-      response = await axios.get("/res/quran_v2.json", {
-        headers: {
-          "Cache-Control": `max-age=31536000, immutable`,
-        },
-      });
-
-      if (clientLeft) return;
-
-      if (!allQuranText.current.length) {
-        allQuranText.current = response.data;
-      }
-
-      if (!absoluteQuran.current.length) {
-        allQuranText.current.forEach((sura) => {
-          sura.verses.forEach((verse) => {
-            absoluteQuran.current.push(verse);
-          });
+      try {
+        let response = await axios.get("/res/chapters.json", {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": `max-age=31536000, immutable`,
+          },
         });
-      }
 
-      response = await axios.get("/res/quran-root.txt", {
-        headers: {
-          "Cache-Control": `max-age=31536000, immutable`,
-        },
-      });
+        if (clientLeft) return;
 
-      if (clientLeft) return;
+        if (!chapterNames.current.length) {
+          chapterNames.current = response.data;
+        }
 
-      if (!quranRoots.current.length) {
-        let index = 0;
-        let arrayOfLines = response.data.split("\n");
-
-        arrayOfLines.forEach((line) => {
-          if (line[0] === "#" || line[0] === "\r") {
-            return;
-          }
-
-          let lineArgs = line.split(/[\r\n\t]+/g);
-
-          let occurences = lineArgs[2].split(";");
-
-          quranRoots.current.push({
-            id: index,
-            name: lineArgs[0],
-            count: lineArgs[1],
-            occurences: occurences,
-          });
-
-          index++;
+        response = await axios.get("/res/quran_v2.json", {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": `max-age=31536000, immutable`,
+          },
         });
+
+        if (clientLeft) return;
+
+        if (!allQuranText.current.length) {
+          allQuranText.current = response.data;
+        }
+
+        if (!absoluteQuran.current.length) {
+          allQuranText.current.forEach((sura) => {
+            sura.verses.forEach((verse) => {
+              absoluteQuran.current.push(verse);
+            });
+          });
+        }
+
+        response = await axios.get("/res/quran-root.txt", {
+          headers: {
+            "Content-Type": "text/plain",
+            "Cache-Control": `max-age=31536000, immutable`,
+          },
+        });
+
+        if (clientLeft) return;
+
+        if (!quranRoots.current.length) {
+          let index = 0;
+          let arrayOfLines = response.data.split("\n");
+
+          arrayOfLines.forEach((line) => {
+            if (line[0] === "#" || line[0] === "\r") {
+              return;
+            }
+
+            let lineArgs = line.split(/[\r\n\t]+/g);
+
+            let occurences = lineArgs[2].split(";");
+
+            quranRoots.current.push({
+              id: index,
+              name: lineArgs[0],
+              count: lineArgs[1],
+              occurences: occurences,
+            });
+
+            index++;
+          });
+        }
+      } catch (error) {
+        fetchData();
+        return;
       }
 
       setIsLoading(false);
