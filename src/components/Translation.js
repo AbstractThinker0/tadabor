@@ -150,32 +150,31 @@ const DisplayPanel = ({ selectChapter }) => {
 
   return (
     <div className="translation-display">
-        <div className="card">
-          <div className="card-header">
-            <h2 className="pb-2 text-primary text-center">
-              {chapterNames[selectChapter - 1].name}
-            </h2>
-          </div>
-          <div className="card-body p-1">
-            {displayVerses.map((verse) => {
-              return (
-                <VerseComponent
-                  key={verse.key}
-                  isEditable={editableTranslations[verse.key]}
-                  verse_key={verse.key}
-                  verse_text={verse.versetext}
-                  verse_id={verse.verseid}
-                  verse_trans={versesTranslation[verse.key]}
-                  handleEditClick={memoHandleEditClick}
-                  handleInputChange={memoHandleInputChange}
-                  handleInputSubmit={memoHandleInputSubmit}
-                />
-              );
-            })}
-          </div>
+      <div className="card translation-display-card">
+        <div className="card-header">
+          <h2 className="pb-2 text-primary text-center">
+            {chapterNames[selectChapter - 1].name}
+          </h2>
+        </div>
+        <div className="card-body p-1">
+          {displayVerses.map((verse) => {
+            return (
+              <VerseComponent
+                key={verse.key}
+                isEditable={editableTranslations[verse.key]}
+                verse_key={verse.key}
+                verse_text={verse.versetext}
+                verse_id={verse.verseid}
+                verse_trans={versesTranslation[verse.key]}
+                handleEditClick={memoHandleEditClick}
+                handleInputChange={memoHandleInputChange}
+                handleInputSubmit={memoHandleInputSubmit}
+              />
+            );
+          })}
         </div>
       </div>
-    
+    </div>
   );
 };
 

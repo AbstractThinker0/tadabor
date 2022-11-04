@@ -1,51 +1,57 @@
 main {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .browser {
-    display: flex;
-    overflow: hidden;
-    max-height: 100%;
-    height: 100%;
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
 
-    &-search {
-        padding: 16px;
+  &-search {
+    padding: 16px;
+  }
+
+  &-display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+    padding: 0.25rem;
+
+    &-card {
+      height: 100%;
     }
-
-    &-display {
-        flex: 1;
-        overflow-y: scroll;
-        min-height: 100%;
-        padding: 0.25rem;
-
-        &-card {
-            height: 100%;
-        }
-    }
+  }
 }
 
 .translation {
-    display: flex;
-    overflow: auto;
-    max-height: 100%;
+  display: flex;
+  overflow: auto;
+  max-height: 100%;
+  height: 100%;
 
-    &-display {
-        flex: 1;
-        overflow-y: scroll;
-        min-height: 100%;
-        padding: 0.25rem;
+  &-display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+    padding: 0.25rem;
+
+    &-card {
+      height: 100%;
     }
+  }
 }
 
 .about-card {
-    display: flex;
-    flex: 1;
+  display: flex;
+  flex: 1;
 }
 
 @media (max-width: 800px) {
-    .browser, .translation {
-        flex-direction: column;
-     }
+  .browser,
+  .translation {
+    flex-direction: column;
+  }
 }
