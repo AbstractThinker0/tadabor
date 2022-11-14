@@ -23,10 +23,10 @@ db.version(1).stores({
   notes: "id, text, date_created, date_modified", // Primary key and indexed props
 });
 
-export function saveData(store, data) {
-  return db[store].put(data);
+export function saveData(store: any, data: any) {
+  return (db as any)[store].put(data);
 }
 
-export function loadData(store) {
-  return db[store].toArray();
+export function loadData(store: any) {
+  return (db as any)[store].toArray();
 }

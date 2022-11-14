@@ -1,4 +1,4 @@
-export function normalize_text(text) {
+export function normalize_text(text: string) {
   //normalize Arabic
   text = text.replace(/(ٱ)/g, "ا");
 
@@ -11,19 +11,19 @@ export function normalize_text(text) {
   return text;
 }
 
-export function normalizeAlif(token) {
+export function normalizeAlif(token: string) {
   token = token.replace(/(ٱ)/g, "ا");
   token = token.replace(/(آ)/g, "ا");
   token = token.replace(/(إ)/g, "ا");
   return token;
 }
 
-export function onlySpaces(str) {
+export function onlySpaces(str: string) {
   return str.trim().length === 0;
 }
 
 // Take into consideration Arabic boundaries
-export function findWord(word, str) {
+export function findWord(word: string, str: string) {
   return RegExp("(^|[^\u0621-\u064A])" + word + "($|[^\u0621-\u064A])").test(
     str
   );

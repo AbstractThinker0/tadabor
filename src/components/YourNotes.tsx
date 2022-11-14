@@ -11,10 +11,10 @@ import { YourNoteForm, YourNoteText } from "./TextForm";
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
   const { t } = useTranslation();
-  const { chapterNames, allQuranText } = useQuran();
-  const [editableNotes, setEditableNotes] = useState({});
-  const [areaDirection, setAreaDirection] = useState({});
-  const [myNotes, setMyNotes] = useState({});
+  const { chapterNames, allQuranText }: any = useQuran();
+  const [editableNotes, setEditableNotes] = useState<any>({});
+  const [areaDirection, setAreaDirection] = useState<any>({});
+  const [myNotes, setMyNotes] = useState<any>({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -27,8 +27,8 @@ function YourNotes() {
       if (clientLeft) return;
 
       let extractNotes = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
+      userNotes.forEach((note: any) => {
+        (extractNotes as any)[note.id] = note.text;
       });
 
       let userNotesDir = await loadData("notes_dir");
@@ -37,8 +37,8 @@ function YourNotes() {
 
       let extractNotesDir = {};
 
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
+      userNotesDir.forEach((note: { id: string | number; dir: string }) => {
+        (extractNotesDir as any)[note.id] = note.dir;
       });
 
       setMyNotes(extractNotes);
@@ -52,30 +52,33 @@ function YourNotes() {
     };
   }, []);
 
-  const convertKey = (key) => {
+  const convertKey = (key: string) => {
     let info = key.split("-");
-    return chapterNames[info[0] - 1].name + ":" + info[1];
+    return chapterNames[+info[0] - 1].name + ":" + info[1];
   };
 
-  const getVerse = (key) => {
+  const getVerse = (key: string) => {
     let info = key.split("-");
-    return allQuranText[info[0] - 1].verses[info[1] - 1].versetext;
+    return allQuranText[+info[0] - 1].verses[+info[1] - 1].versetext;
   };
 
-  function handleEditOnClick(event) {
-    let inputKey = event.target.name;
-    setEditableNotes((state) => {
+  function handleEditOnClick(event: React.MouseEvent<HTMLButtonElement>) {
+    let inputKey = event.currentTarget.name;
+    setEditableNotes((state: any) => {
       return { ...state, [inputKey]: true };
     });
   }
 
   const memoHandleEditOnClick = useCallback(handleEditOnClick, []);
 
-  function handleNoteSave(event, value) {
+  function handleNoteSave(
+    event: React.FormEvent<HTMLFormElement>,
+    value: string
+  ) {
     event.preventDefault();
-    let note_key = event.target.name;
+    let note_key = event.currentTarget.name;
 
-    setEditableNotes((state) => {
+    setEditableNotes((state: any) => {
       return { ...state, [note_key]: false };
     });
 
@@ -85,24 +88,24 @@ function YourNotes() {
       date_created: Date.now(),
       date_modified: Date.now(),
     })
-      .then(function (result) {
+      .then(function () {
         toast.success(t("save_success"));
       })
-      .catch(function (error) {
+      .catch(function () {
         toast.success(t("save_failed"));
       });
   }
 
-  function handleNoteChange(event) {
+  function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = event.target;
 
-    setMyNotes((state) => {
+    setMyNotes((state: any) => {
       return { ...state, [name]: value };
     });
   }
 
-  function handleSetDirection(verse_key, dir) {
-    setAreaDirection((state) => {
+  function handleSetDirection(verse_key: string, dir: string) {
+    setAreaDirection((state: any) => {
       return { ...state, [verse_key]: dir };
     });
     saveData("notes_dir", { id: verse_key, dir: dir });

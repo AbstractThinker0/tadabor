@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import useQuran from "../context/QuranContext";
 
 import { loadData, saveData } from "../util/db";
@@ -9,8 +9,8 @@ import LoadingSpinner from "./LoadingSpinner";
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
 
-  const onSelectChange = (event) => {
-    setSelectChapter(event.target.value);
+  const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectChapter(+event.target.value);
   };
 
   return (
@@ -24,12 +24,20 @@ const Translation = () => {
   );
 };
 
-const SelectionListChapters = ({ onSelectChange, selectChapter }) => {
+interface SelectionListChaptersProps {
+  onSelectChange: React.ChangeEventHandler<HTMLSelectElement>;
+  selectChapter: number;
+}
+
+const SelectionListChapters = ({
+  onSelectChange,
+  selectChapter,
+}: SelectionListChaptersProps) => {
   const { t } = useTranslation();
-  const { chapterNames } = useQuran();
+  const { chapterNames }: any = useQuran();
   const [chapterSearch, setChapterSearch] = useState("");
 
-  const onChangeInput = (event) => {
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChapterSearch(event.target.value);
   };
 
@@ -48,15 +56,15 @@ const SelectionListChapters = ({ onSelectChange, selectChapter }) => {
         />
         <select
           className="form-select"
-          size="7"
+          size={7}
           aria-label="size 7 select"
           onChange={onSelectChange}
           onFocus={onSelectChange}
           value={selectChapter}
         >
           {chapterNames
-            .filter((chapter) => chapter.name.startsWith(chapterSearch))
-            .map((chapter) => (
+            .filter((chapter: any) => chapter.name.startsWith(chapterSearch))
+            .map((chapter: any) => (
               <option key={chapter.id} value={chapter.id}>
                 {chapter.id}. {chapter.name}
               </option>
@@ -67,12 +75,16 @@ const SelectionListChapters = ({ onSelectChange, selectChapter }) => {
   );
 };
 
-const DisplayPanel = ({ selectChapter }) => {
-  const { allQuranText, chapterNames } = useQuran();
+interface DisplayPanelProps {
+  selectChapter: number;
+}
+
+const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
+  const { allQuranText, chapterNames }: any = useQuran();
   const { t } = useTranslation();
   const [loadingState, setLoadingState] = useState(true);
-  const [versesTranslation, setVersesTranslation] = useState({});
-  const [editableTranslations, setEditableTranslations] = useState({});
+  const [versesTranslation, setVersesTranslation] = useState<any>({});
+  const [editableTranslations, setEditableTranslations] = useState<any>({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -84,9 +96,9 @@ const DisplayPanel = ({ selectChapter }) => {
 
       if (clientLeft) return;
 
-      let extractTranslations = {};
-      let markedTranslations = {};
-      userTranslations.forEach((trans) => {
+      let extractTranslations = {} as any;
+      let markedTranslations = {} as any;
+      userTranslations.forEach((trans: any) => {
         extractTranslations[trans.id] = trans.text;
         markedTranslations[trans.id] = false;
       });
@@ -104,29 +116,32 @@ const DisplayPanel = ({ selectChapter }) => {
 
   const displayVerses = allQuranText[selectChapter - 1].verses;
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
 
-    setVersesTranslation((state) => {
+    setVersesTranslation((state: any) => {
       return { ...state, [name]: value };
     });
   };
 
   const memoHandleInputChange = useCallback(handleInputChange, []);
 
-  const handleEditClick = (event) => {
-    let inputKey = event.target.name;
-    setEditableTranslations((state) => {
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    let inputKey = event.currentTarget.name;
+    setEditableTranslations((state: any) => {
       return { ...state, [inputKey]: true };
     });
   };
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
-  function handleInputSubmit(event, inputValue) {
-    let note_key = event.target.name;
+  function handleInputSubmit(
+    event: React.MouseEvent<HTMLButtonElement>,
+    inputValue: string
+  ) {
+    let note_key = event.currentTarget.name;
 
-    setEditableTranslations((state) => {
+    setEditableTranslations((state: any) => {
       return { ...state, [note_key]: false };
     });
 
@@ -136,10 +151,10 @@ const DisplayPanel = ({ selectChapter }) => {
       date_created: Date.now(),
       date_modified: Date.now(),
     })
-      .then(function (result) {
+      .then(function () {
         toast.success(t("save_success"));
       })
-      .catch(function (error) {
+      .catch(function () {
         toast.success(t("save_failed"));
       });
   }
@@ -157,7 +172,7 @@ const DisplayPanel = ({ selectChapter }) => {
           </h2>
         </div>
         <div className="card-body p-1">
-          {displayVerses.map((verse) => {
+          {displayVerses.map((verse: any) => {
             return (
               <VerseComponent
                 key={verse.key}
@@ -188,7 +203,7 @@ const VerseComponent = memo(
     handleEditClick,
     handleInputChange,
     handleInputSubmit,
-  }) => {
+  }: any) => {
     return (
       <>
         <p className="fs-4 mb-0" dir="rtl">
@@ -213,7 +228,7 @@ const VerseComponent = memo(
   }
 );
 
-const Versetext = ({ inputValue, inputKey, handleEditClick }) => {
+const Versetext = ({ inputValue, inputKey, handleEditClick }: any) => {
   const { t } = useTranslation();
 
   return (
@@ -239,7 +254,7 @@ const Versearea = ({
   inputKey,
   handleInputChange,
   handleInputSubmit,
-}) => {
+}: any) => {
   const { t } = useTranslation();
 
   return (

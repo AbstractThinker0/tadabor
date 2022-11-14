@@ -3,9 +3,14 @@ import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
-import "../main.scss"
+import "../main.scss";
+import { ReactNode } from "react";
 
-function Layout({ children }) {
+interface Props {
+  children?: ReactNode;
+}
+
+function Layout({ children }: Props) {
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
   return (

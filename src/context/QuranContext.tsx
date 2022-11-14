@@ -1,16 +1,27 @@
 import axios from "axios";
-import { createContext, useState, useEffect, useContext, useRef } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  ReactNode,
+} from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-const QuranContext = createContext();
+interface Props {
+  children?: ReactNode;
+}
 
-export const QuranProvider = ({ children }) => {
+const QuranContext = createContext({});
+
+export const QuranProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const chapterNames = useRef([]);
   const allQuranText = useRef([]);
-  const quranRoots = useRef([]);
-  const absoluteQuran = useRef([]);
+  const quranRoots = useRef<any>([]);
+  const absoluteQuran = useRef<any>([]);
 
   useEffect(() => {
     let clientLeft = false;
@@ -46,8 +57,8 @@ export const QuranProvider = ({ children }) => {
         }
 
         if (!absoluteQuran.current.length) {
-          allQuranText.current.forEach((sura) => {
-            sura.verses.forEach((verse) => {
+          allQuranText.current.forEach((sura: any) => {
+            sura.verses.forEach((verse: any) => {
               absoluteQuran.current.push(verse);
             });
           });
@@ -66,7 +77,7 @@ export const QuranProvider = ({ children }) => {
           let index = 0;
           let arrayOfLines = response.data.split("\n");
 
-          arrayOfLines.forEach((line) => {
+          arrayOfLines.forEach((line: string) => {
             if (line[0] === "#" || line[0] === "\r") {
               return;
             }

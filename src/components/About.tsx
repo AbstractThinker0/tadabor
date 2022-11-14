@@ -1,16 +1,7 @@
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 const APP_VERSION = "0.0.7";
-
-function About() {
-  const { i18n } = useTranslation();
-
-  if (i18n.resolvedLanguage === "en") {
-    return <AboutEnglish />;
-  }
-
-  return <AboutArabic />;
-}
 
 const AboutEnglish = () => {
   return (
@@ -56,13 +47,21 @@ const AboutEnglish = () => {
             </li>
             <li>
               Credits Tanzil project for the Quran text compilation ( Check the
-              bottom of <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">quran-simple-plain.txt </a>  )
+              bottom of{" "}
+              <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">
+                quran-simple-plain.txt{" "}
+              </a>{" "}
+              )
             </li>
 
             <li>
               Computer Research Center of Islamic Sciences (noorsoft.org) and
               Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the
-              Quran roots compilation ( Check the bottom of <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">quran-root.txt</a> )
+              Quran roots compilation ( Check the bottom of{" "}
+              <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">
+                quran-root.txt
+              </a>{" "}
+              )
             </li>
           </ul>
         </div>
@@ -109,16 +108,25 @@ const AboutArabic = () => {
                 rel="noreferrer"
               >
                 quran-json
-              </a> لتجميع أسماء سور مع ترجمتها
+              </a>{" "}
+              لتجميع أسماء سور مع ترجمتها
             </li>
             <li>
-              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">quran-simple-plain.txt</a> )
+              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر{" "}
+              <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">
+                quran-simple-plain.txt
+              </a>{" "}
+              )
             </li>
 
             <li>
               الشكر إلى Computer Research Center of Islamic Sciences
               (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
-              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">quran-root.txt</a> )
+              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر{" "}
+              <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">
+                quran-root.txt
+              </a>{" "}
+              )
             </li>
           </ul>
         </div>
@@ -128,5 +136,15 @@ const AboutArabic = () => {
     </>
   );
 };
+
+function About() {
+  const { i18n } = useTranslation();
+
+  if (i18n.resolvedLanguage === "en") {
+    return <AboutEnglish />;
+  }
+
+  return <AboutArabic />;
+}
 
 export default About;
