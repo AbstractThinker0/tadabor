@@ -18,7 +18,7 @@ function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
 
   const refListChapters = useRef(null);
-  const scrollKey = useRef();
+  const scrollKey = useRef(null);
 
   const [selectChapter, setSelectChapter] = useState(1);
   const [selectedChapters, setSelectedChapters] = useState(["1"]);
@@ -26,7 +26,7 @@ function QuranBrowser() {
   const [searchString, setSearchString] = useState("");
   const [searchingString, setSearchingString] = useState("");
 
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<any[]>([]);
 
   const [searchAllQuran, setSearchAllQuran] = useState(true);
   const [searchingAllQuran, setSearchingAllQuran] = useState(true);
@@ -45,7 +45,7 @@ function QuranBrowser() {
   const [radioSearchingMethod, setRadioSearchingMethod] =
     useState("optionWordSearch");
 
-  const [rootDerivations, setRootDerivations] = useState([]);
+  const [rootDerivations, setRootDerivations] = useState<any[]>([]);
 
   const clearPreviousSearch = () => {
     setSearchError(false);
@@ -55,7 +55,7 @@ function QuranBrowser() {
     setRootDerivations([]);
   };
 
-  function handleSearchSubmit(e) {
+  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     clearPreviousSearch();
@@ -68,7 +68,7 @@ function QuranBrowser() {
         return;
       }
 
-      let matchVerses = [];
+      let matchVerses: any[] = [];
       let normal_search = "";
 
       if (!searchDiacritics) {
@@ -77,7 +77,7 @@ function QuranBrowser() {
         normal_search = searchString.trim();
       }
 
-      const checkVerseMatch = (verse) => {
+      const checkVerseMatch = (verse: any) => {
         let normal_text = "";
         if (!searchDiacritics) {
           normal_text = normalize_text(verse.versetext);
@@ -110,8 +110,8 @@ function QuranBrowser() {
       }
 
       function allChaptersMatches() {
-        allQuranText.forEach((sura) => {
-          sura.verses.forEach((verse) => {
+        allQuranText.forEach((sura: any) => {
+          sura.verses.forEach((verse: any) => {
             checkVerseMatch(verse);
           });
         });
@@ -119,7 +119,7 @@ function QuranBrowser() {
 
       function oneChapterMatches() {
         let currentChapter = allQuranText[selectChapter - 1].verses;
-        currentChapter.forEach((verse) => {
+        currentChapter.forEach((verse: any) => {
           checkVerseMatch(verse);
         });
       }
@@ -127,7 +127,7 @@ function QuranBrowser() {
       function multipleChaptersMatches() {
         setSearchMultipleChapters(true);
         selectedChapters.forEach((chapter) => {
-          allQuranText[chapter - 1].verses.forEach((verse) => {
+          allQuranText[Number(chapter) - 1].verses.forEach((verse: any) => {
             checkVerseMatch(verse);
           });
         });
@@ -146,7 +146,9 @@ function QuranBrowser() {
         return;
       }
 
-      let rootTarget = quranRoots.find((root) => root.name === searchString);
+      let rootTarget = quranRoots.find(
+        (root: any) => root.name === searchString
+      );
 
       if (rootTarget === undefined) {
         setSelectedRootError(true);
@@ -155,11 +157,15 @@ function QuranBrowser() {
 
       let occurencesArray = rootTarget.occurences;
 
-      let matchVerses = [];
-      let derivations = [];
+      let matchVerses: any[] = [];
+      let derivations: any[] = [];
 
-      const fillDerivationsArray = (wordIndexes, verseWords, currentVerse) => {
-        wordIndexes.forEach((word) => {
+      const fillDerivationsArray = (
+        wordIndexes: any,
+        verseWords: any,
+        currentVerse: any
+      ) => {
+        wordIndexes.forEach((word: any) => {
           derivations.push({
             name: verseWords[word - 1],
             key: currentVerse.key,
@@ -182,7 +188,7 @@ function QuranBrowser() {
       }
 
       // occurences array have the verserank:index1,index2...etc format
-      occurencesArray.forEach((item) => {
+      occurencesArray.forEach((item: string) => {
         let info = item.split(":");
         let currentVerse = absoluteQuran[info[0]];
 
@@ -225,15 +231,17 @@ function QuranBrowser() {
     searchString,
   ]);
 
-  function gotoChapter(chapter) {
+  function gotoChapter(chapter: string) {
     clearPreviousSearch();
-    setSelectChapter(chapter.toString());
+    setSelectChapter(Number(chapter));
     setSelectedChapters([chapter]);
   }
 
   const memoGotoChapter = useCallback(gotoChapter, []);
 
-  function handleSelectionListChapters(event) {
+  function handleSelectionListChapters(
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) {
     if (!event.target.value) return;
 
     scrollKey.current = null;
@@ -255,9 +263,7 @@ function QuranBrowser() {
   );
 
   return (
-    <div
-      className="browser"
-    >
+    <div className="browser">
       <SearchPanel
         refListChapters={refListChapters}
         selectedChapters={selectedChapters}
@@ -308,7 +314,7 @@ const DisplayPanel = memo(
     searchMultipleChapters,
     rootDerivations,
     memoGotoChapter,
-  }) => {
+  }: any) => {
     const { chapterNames, allQuranText } = useQuran();
     const { t } = useTranslation();
     const refListVerses = useRef(null);
@@ -329,9 +335,9 @@ const DisplayPanel = memo(
 
         if (clientLeft) return;
 
-        let markedNotes = {};
-        let extractNotes = {};
-        userNotes.forEach((note) => {
+        let markedNotes = {} as any;
+        let extractNotes = {} as any;
+        userNotes.forEach((note: any) => {
           extractNotes[note.id] = note.text;
           markedNotes[note.id] = false;
         });
@@ -340,9 +346,9 @@ const DisplayPanel = memo(
 
         if (clientLeft) return;
 
-        let extractNotesDir = {};
+        let extractNotesDir = {} as any;
 
-        userNotesDir.forEach((note) => {
+        userNotesDir.forEach((note: any) => {
           extractNotesDir[note.id] = note.dir;
         });
 
@@ -360,7 +366,7 @@ const DisplayPanel = memo(
 
     const memoHandleNoteChange = useCallback(handleNoteChange, []);
 
-    function handleNoteChange(event) {
+    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
       const { name, value } = event.target;
 
       setMyNotes((state) => {
@@ -368,7 +374,7 @@ const DisplayPanel = memo(
       });
     }
 
-    function handleSetDirection(verse_key, dir) {
+    function handleSetDirection(verse_key: string, dir: string) {
       setAreaDirection((state) => {
         return { ...state, [verse_key]: dir };
       });
@@ -378,9 +384,12 @@ const DisplayPanel = memo(
 
     const memoHandleSetDirection = useCallback(handleSetDirection, []);
 
-    function handleNoteSubmit(event, value) {
+    function handleNoteSubmit(
+      event: React.FormEvent<HTMLFormElement>,
+      value: string
+    ) {
       event.preventDefault();
-      let verse_key = event.target.name;
+      let verse_key = event.currentTarget.name;
 
       setEditableNotes((state) => {
         return { ...state, [verse_key]: false };
@@ -392,10 +401,10 @@ const DisplayPanel = memo(
         date_created: Date.now(),
         date_modified: Date.now(),
       })
-        .then(function (result) {
+        .then(function () {
           toast.success(t("save_success"));
         })
-        .catch(function (error) {
+        .catch(function () {
           toast.success(t("save_failed"));
         });
     }
@@ -403,8 +412,8 @@ const DisplayPanel = memo(
     // eslint-disable-next-line
     const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
 
-    function handleEditClick(event) {
-      let inputKey = event.target.name;
+    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
+      let inputKey = event.currentTarget.name;
       setEditableNotes((state) => {
         return { ...state, [inputKey]: true };
       });
@@ -422,10 +431,7 @@ const DisplayPanel = memo(
       );
 
     return (
-      <div
-        className="browser-display"
-        ref={refListVerses}
-      >
+      <div className="browser-display" ref={refListVerses}>
         <div className="card browser-display-card" dir="rtl">
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
@@ -482,7 +488,7 @@ const SearchTitle = memo(
     searchMultipleChapters,
     selectedChapters,
     chapterName,
-  }) => {
+  }: any) => {
     let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
@@ -521,16 +527,16 @@ const ListSearchResults = memo(
     handleSetDirection,
     areaDirection,
     handleNoteSubmit,
-  }) => {
+  }: any) => {
     const { chapterNames } = useQuran();
-    const refVersesResult = useRef({});
+    const refVersesResult = useRef<any>({});
 
     let selectedChapters = [];
     if (searchMultipleChapters) {
       if (refListChapters.current.selectedOptions.length > 1) {
         selectedChapters = Array.from(
           refListChapters.current.selectedOptions,
-          (option) => chapterNames[option.value - 1].name
+          (option: any) => chapterNames[option.value - 1].name
         );
       }
     }
@@ -548,7 +554,7 @@ const ListSearchResults = memo(
 
     const memoHandleRootClick = useCallback(handleRootClick, []);
 
-    function handleRootClick(e, verse_key) {
+    function handleRootClick(verse_key: string) {
       refVersesResult.current[verse_key].scrollIntoView();
     }
 
@@ -572,7 +578,7 @@ const ListSearchResults = memo(
           />
         )}
         <div className="card-body">
-          {versesArray.map((verse) => (
+          {versesArray.map((verse: any) => (
             <div
               key={verse.key}
               ref={(el) => (refVersesResult.current[verse.key] = el)}
@@ -622,7 +628,7 @@ const SearchVerseComponent = memo(
     handleSetDirection,
     noteDirection,
     handleNoteSubmit,
-  }) => {
+  }: any) => {
     return (
       <>
         <VerseContentComponent
@@ -651,31 +657,33 @@ const SearchVerseComponent = memo(
 
 SearchVerseComponent.displayName = "SearchVerseComponent";
 
-const DerivationsComponent = memo(({ rootDerivations, handleRootClick }) => {
-  return (
-    <>
-      <hr />
-      <span className="p-2">
-        {rootDerivations.map((root, index) => (
-          <span
-            role="button"
-            key={index}
-            onClick={(e) => handleRootClick(e, root.key)}
-            data-bs-toggle="tooltip"
-            data-bs-title={root.text}
-          >
-            {index ? " -" : " "} {root.name}
-          </span>
-        ))}
-      </span>
-      <hr />
-    </>
-  );
-});
+const DerivationsComponent = memo(
+  ({ rootDerivations, handleRootClick }: any) => {
+    return (
+      <>
+        <hr />
+        <span className="p-2">
+          {rootDerivations.map((root: any, index: number) => (
+            <span
+              role="button"
+              key={index}
+              onClick={(e) => handleRootClick(root.key)}
+              data-bs-toggle="tooltip"
+              data-bs-title={root.text}
+            >
+              {index ? " -" : " "} {root.name}
+            </span>
+          ))}
+        </span>
+        <hr />
+      </>
+    );
+  }
+);
 
 DerivationsComponent.displayName = "DerivationsComponent";
 
-const SearchErrorsComponent = ({ searchError, selectedRootError }) => {
+const SearchErrorsComponent = ({ searchError, selectedRootError }: any) => {
   const { t } = useTranslation();
   return (
     <>
@@ -696,11 +704,11 @@ const VerseContentComponent = memo(
     gotoChapter,
     chapterNames,
     scrollKey,
-  }) => {
+  }: any) => {
     let verse_key = verse.key;
     let isLinkable = scopeAllQuran || searchMultipleChapters;
 
-    const handleVerseClick = (verse_key) => {
+    const handleVerseClick = (verse_key: string) => {
       scrollKey.current = verse_key;
       gotoChapter(chapterNames[verse.suraid - 1].id);
     };
@@ -741,7 +749,7 @@ const VerseContentComponent = memo(
 
 VerseContentComponent.displayName = "VerseContentComponent";
 
-const ListTitle = memo(({ chapterName }) => {
+const ListTitle = memo(({ chapterName }: any) => {
   return (
     <div className="card-header">
       <h3 className="text-primary text-center">سورة {chapterName}</h3>
@@ -765,7 +773,7 @@ const ListVerses = memo(
     handleSetDirection,
     areaDirection,
     handleNoteSubmit,
-  }) => {
+  }: any) => {
     useEffect(() => {
       if (scrollKey.current) {
         versesRef.current[scrollKey.current].scrollIntoView();
@@ -778,7 +786,7 @@ const ListVerses = memo(
       <>
         <ListTitle chapterName={chapterName} />
         <div className="card-body">
-          {versesArray.map((verse) => (
+          {versesArray.map((verse: any) => (
             <VerseComponent
               key={verse.key}
               versesRef={versesRef}
@@ -811,7 +819,7 @@ const VerseComponent = memo(
     handleSetDirection,
     noteDirection,
     handleNoteSubmit,
-  }) => {
+  }: any) => {
     return (
       <div
         ref={(el) => (versesRef.current[verse.key] = el)}
@@ -835,7 +843,7 @@ const VerseComponent = memo(
 
 VerseComponent.displayName = "VerseComponent";
 
-const VerseTextComponent = memo(({ verse }) => {
+const VerseTextComponent = memo(({ verse }: any) => {
   return (
     <span className="fs-4">
       {verse.versetext} ({verse.verseid}){" "}

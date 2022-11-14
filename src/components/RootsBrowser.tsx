@@ -65,12 +65,12 @@ function RootsBrowser() {
   );
 }
 
-const FormWordSearch = ({ searchString, setSearchString }) => {
-  const searchStringHandle = (event) => {
+const FormWordSearch = ({ searchString, setSearchString }: any) => {
+  const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
   };
 
-  const onLetterClick = (letter) => {
+  const onLetterClick = (letter: string) => {
     setSearchString(letter);
   };
 
@@ -115,14 +115,14 @@ const FormWordSearch = ({ searchString, setSearchString }) => {
   );
 };
 
-const RootsListComponent = memo(({ searchString }) => {
+const RootsListComponent = memo(({ searchString }: any) => {
   const { t } = useTranslation();
   const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
-  const [myNotes, setMyNotes] = useState({});
-  const [editableNotes, setEditableNotes] = useState({});
-  const [areaDirection, setAreaDirection] = useState({});
+  const [myNotes, setMyNotes] = useState<any>({});
+  const [editableNotes, setEditableNotes] = useState<any>({});
+  const [areaDirection, setAreaDirection] = useState<any>({});
   const [itemsCount, setItemsCount] = useState(100);
 
   useEffect(() => {
@@ -135,10 +135,10 @@ const RootsListComponent = memo(({ searchString }) => {
 
       if (clientLeft) return;
 
-      let markedNotes = {};
+      let markedNotes = {} as any;
 
-      let extractNotes = {};
-      userNotes.forEach((note) => {
+      let extractNotes = {} as any;
+      userNotes.forEach((note: any) => {
         extractNotes[note.id] = note.text;
         markedNotes[note.id] = false;
       });
@@ -147,9 +147,9 @@ const RootsListComponent = memo(({ searchString }) => {
 
       if (clientLeft) return;
 
-      let extractNotesDir = {};
+      let extractNotesDir = {} as any;
 
-      userNotesDir.forEach((note) => {
+      userNotesDir.forEach((note: any) => {
         extractNotesDir[note.id] = note.dir;
       });
 
@@ -167,19 +167,22 @@ const RootsListComponent = memo(({ searchString }) => {
 
   const memoHandleNoteChange = useCallback(handleNoteChange, []);
 
-  function handleNoteChange(event) {
+  function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = event.target;
 
-    setMyNotes((state) => {
+    setMyNotes((state: any) => {
       return { ...state, [name]: value };
     });
   }
 
-  function handleNoteSubmit(event, value) {
+  function handleNoteSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+    value: string
+  ) {
     event.preventDefault();
-    let root_id = event.target.name;
+    let root_id = event.currentTarget.name;
 
-    setEditableNotes((state) => {
+    setEditableNotes((state: any) => {
       return { ...state, [root_id]: false };
     });
 
@@ -189,10 +192,10 @@ const RootsListComponent = memo(({ searchString }) => {
       date_created: Date.now(),
       date_modified: Date.now(),
     })
-      .then(function (result) {
+      .then(function () {
         toast.success(t("save_success"));
       })
-      .catch(function (error) {
+      .catch(function () {
         toast.success(t("save_failed"));
       });
   }
@@ -202,15 +205,15 @@ const RootsListComponent = memo(({ searchString }) => {
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
-  function handleEditClick(event) {
-    let root_id = event.target.name;
-    setEditableNotes((state) => {
+  function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
+    let root_id = event.currentTarget.name;
+    setEditableNotes((state: any) => {
       return { ...state, [root_id]: true };
     });
   }
 
-  function handleSetDirection(root_id, dir) {
-    setAreaDirection((state) => {
+  function handleSetDirection(root_id: string, dir: string) {
+    setAreaDirection((state: any) => {
       return { ...state, [root_id]: dir };
     });
     saveData("root_notes_dir", { id: root_id, dir: dir });
@@ -221,7 +224,7 @@ const RootsListComponent = memo(({ searchString }) => {
   let filteredArray = useMemo(
     () =>
       quranRoots.filter(
-        (root) =>
+        (root: any) =>
           normalizeAlif(root.name).startsWith(searchString) ||
           root.name.startsWith(searchString) ||
           !searchString
@@ -233,8 +236,8 @@ const RootsListComponent = memo(({ searchString }) => {
     setItemsCount((state) => state + 20);
   };
 
-  function handleScroll(event) {
-    const { scrollTop, scrollHeight, clientHeight } = event.target;
+  function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +1 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 1) {
       fetchMoreData();
@@ -245,7 +248,7 @@ const RootsListComponent = memo(({ searchString }) => {
 
   return (
     <div onScroll={handleScroll} style={{ overflowY: "scroll", height: "85%" }}>
-      {filteredArray.slice(0, itemsCount).map((root) => (
+      {filteredArray.slice(0, itemsCount).map((root: any) => (
         <RootComponent
           key={root.id}
           root_name={root.name}
@@ -274,7 +277,7 @@ const RootComponent = memo(
     isEditable,
     noteDirection,
     handleSetDirection,
-  }) => {
+  }: any) => {
     return (
       <div className="border">
         <RootButton root_name={root_name} root_id={root_id} />
@@ -293,7 +296,7 @@ const RootComponent = memo(
   }
 );
 
-const RootButton = memo(({ root_name, root_id }) => {
+const RootButton = memo(({ root_name, root_id }: any) => {
   return (
     <div className="text-center">
       <button

@@ -127,6 +127,6 @@ export const QuranProvider = ({ children }: Props) => {
   );
 };
 
-const useQuran = () => useContext(QuranContext);
+const useQuran = () => useContext(QuranContext) as any;
 
 export default useQuran;

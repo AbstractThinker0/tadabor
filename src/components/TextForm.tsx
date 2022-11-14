@@ -4,6 +4,17 @@ import { useTranslation } from "react-i18next";
 import { IconTextDirectionLtr } from "@tabler/icons";
 import { IconTextDirectionRtl } from "@tabler/icons";
 
+interface TextFormProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleSetDirection: React.MouseEventHandler<HTMLButtonElement>;
+  handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  isEditable: boolean;
+  handleEditClick: React.MouseEventHandler<HTMLButtonElement>;
+  handleInputSubmit: React.FormEventHandler<HTMLFormElement>;
+}
+
 const TextForm = ({
   inputKey,
   inputValue,
@@ -13,18 +24,26 @@ const TextForm = ({
   isEditable,
   handleEditClick,
   handleInputSubmit,
-}) => {
-  const collapseRef = useRef();
+}: TextFormProps) => {
+  const collapseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let collapseElement = collapseRef.current;
-    function onShownCollapse(event) {
+    function onShownCollapse(event: any) {
       event.target.scrollIntoView({ block: "nearest" });
     }
-    collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+
+    if (collapseElement !== null) {
+      collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+    }
 
     return () => {
-      collapseElement.removeEventListener("shown.bs.collapse", onShownCollapse);
+      if (collapseElement !== null) {
+        collapseElement.removeEventListener(
+          "shown.bs.collapse",
+          onShownCollapse
+        );
+      }
     };
   }, []);
 
@@ -62,7 +81,7 @@ const TextComponent = ({
   inputKey,
   inputDirection,
   handleEditClick,
-}) => {
+}: any) => {
   const { t } = useTranslation();
   return (
     <>
@@ -85,7 +104,7 @@ const TextComponent = ({
   );
 };
 
-const TextareaToolbar = memo((props) => {
+const TextareaToolbar = memo((props: any) => {
   return (
     <div dir="ltr" className="text-center">
       {props.children}
@@ -93,7 +112,7 @@ const TextareaToolbar = memo((props) => {
   );
 });
 
-function ToolbarOption(props) {
+function ToolbarOption(props: any) {
   return (
     <button type="button" className="btn btn-sm" onClick={props.handleClick}>
       {props.children}
@@ -108,14 +127,15 @@ const FormComponent = ({
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-}) => {
+}: any) => {
   const minRows = 4;
   const [rows, setRows] = useState(minRows);
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    formRef.current.scrollIntoView({ block: "nearest" });
+    if (formRef.current !== null)
+      formRef.current.scrollIntoView({ block: "nearest" });
   }, []);
 
   useEffect(() => {
@@ -177,14 +197,15 @@ const YourNoteForm = ({
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-}) => {
+}: any) => {
   const minRows = 4;
   const [rows, setRows] = useState(minRows);
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    formRef.current.scrollIntoView({ block: "nearest" });
+    if (formRef.current !== null)
+      formRef.current.scrollIntoView({ block: "nearest" });
   }, []);
 
   useEffect(() => {
@@ -244,7 +265,7 @@ const YourNoteText = ({
   inputKey,
   inputDirection,
   handleEditClick,
-}) => {
+}: any) => {
   const { t } = useTranslation();
   return (
     <>

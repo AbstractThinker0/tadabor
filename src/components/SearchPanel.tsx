@@ -21,7 +21,7 @@ const SearchPanel = memo(
     setSearchString,
     searchResult,
     selectedChapters,
-  }) => {
+  }: any) => {
     const { t } = useTranslation();
 
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
@@ -72,9 +72,12 @@ const SearchPanel = memo(
 
 SearchPanel.displayName = "SearchPanel";
 
-const RadioSearchMethod = ({ radioSearchMethod, setRadioSearchMethod }) => {
+const RadioSearchMethod = ({
+  radioSearchMethod,
+  setRadioSearchMethod,
+}: any) => {
   const { t, i18n } = useTranslation();
-  const handleSearchMethod = (event) => {
+  const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRadioSearchMethod(event.target.value);
   };
   return (
@@ -124,10 +127,10 @@ const FormWordSearch = ({
   handleSearchSubmit,
   searchString,
   setSearchString,
-}) => {
+}: any) => {
   const { t } = useTranslation();
 
-  const searchStringHandle = (event) => {
+  const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
   };
 
@@ -165,7 +168,7 @@ const CheckboxComponent = ({
   setCheckBoxState,
   labelText,
   isDisabled = false,
-}) => {
+}: any) => {
   const { i18n } = useTranslation();
 
   const handleChangeCheckboxState = () => {
@@ -193,7 +196,7 @@ const CheckboxComponent = ({
   );
 };
 
-const SearchSuccessComponent = ({ searchResult }) => {
+const SearchSuccessComponent = ({ searchResult }: { searchResult: string }) => {
   const { t } = useTranslation();
   return (
     <>
