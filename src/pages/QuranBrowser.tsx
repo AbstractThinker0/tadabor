@@ -4,15 +4,15 @@ import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { toast } from "react-toastify";
 import { loadData, saveData } from "../util/db";
 
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
 
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
 import useQuran from "../context/QuranContext";
 
-import { TextForm } from "./TextForm";
-import SearchPanel from "./SearchPanel";
+import { TextForm } from "../components/TextForm";
+import SearchPanel from "../components/SearchPanel";
 
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();

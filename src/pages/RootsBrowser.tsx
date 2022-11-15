@@ -12,11 +12,11 @@ import { loadData, saveData } from "../util/db";
 
 import { toast } from "react-toastify";
 
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import useQuran from "../context/QuranContext";
 import { normalizeAlif } from "../util/util";
 
-import { TextForm } from "./TextForm";
+import { TextForm } from "../components/TextForm";
 
 const arabicAlpha = [
   "ا",

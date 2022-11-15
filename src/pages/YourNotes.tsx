@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 import { saveData, loadData } from "../util/db";
 
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
-import { YourNoteForm, YourNoteText } from "./TextForm";
+import { YourNoteForm, YourNoteText } from "../components/TextForm";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);

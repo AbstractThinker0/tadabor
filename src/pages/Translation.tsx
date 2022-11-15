@@ -4,7 +4,7 @@ import useQuran from "../context/QuranContext";
 import { loadData, saveData } from "../util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
