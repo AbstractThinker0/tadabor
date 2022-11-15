@@ -4,17 +4,21 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
 import "../main.scss";
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 
 interface Props {
   children?: ReactNode;
 }
 
 function Layout({ children }: Props) {
+  const mainRef = useRef<HTMLElement>(null);
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
+
+  if (mainRef.current) mainRef.current.dir = i18n.dir();
+
   return (
-    <main>
+    <main ref={mainRef}>
       <Navbar />
       <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
@@ -47,8 +51,6 @@ const AlertMessage = () => {
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-
-  document.body.dir = i18n.dir();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
