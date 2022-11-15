@@ -18,7 +18,10 @@ function Layout({ children }: Props) {
       <Navbar />
       <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
-      <ToastContainer rtl={isRtl} />
+      <ToastContainer
+        position={`${isRtl ? "top-left" : "top-right"}`}
+        rtl={isRtl}
+      />
     </main>
   );
 }
