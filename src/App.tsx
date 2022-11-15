@@ -1,12 +1,12 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import About from "./components/About";
-import Coloring from "./components/Coloring";
-import QuranBrowser from "./components/QuranBrowser";
-import RootsBrowser from "./components/RootsBrowser";
-import Translation from "./components/Translation";
-import YourNotes from "./components/YourNotes";
+import About from "./pages/About";
+import Coloring from "./pages/Coloring";
+import QuranBrowser from "./pages/QuranBrowser";
+import RootsBrowser from "./pages/RootsBrowser";
+import Translation from "./pages/Translation";
+import YourNotes from "./pages/YourNotes";
 
 function App() {
   return (
