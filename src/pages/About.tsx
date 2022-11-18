@@ -26,6 +26,17 @@ const AboutEnglish = () => {
             press the save button, all the data will be saved on your browser
             app and clearing your cache might erase the data you have saved.
           </p>
+
+          <h5>Future project</h5>
+          <p>
+            Once this project is complete (all features implemented), it will be
+            used as the basis for another project that aims to be a platform for
+            collaborative translation and reflection on the Qur'an, the goal
+            being to achieve an accurate understanding of the true message of
+            the Qur'an By undoing all the semantic changes that have occurred
+            over the centuries, no deadline has been set yet, and it all depends
+            on God's will first and foremost.
+          </p>
           <h5>Credits</h5>
           <br />
           <ul>
