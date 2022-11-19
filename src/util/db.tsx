@@ -1,32 +1,48 @@
 // db.js
 import Dexie from "dexie";
 
-export const db = new Dexie("tadaborDatabase");
-db.version(4).stores({
-  notes: "id, text, date_created, date_modified",
-  notes_dir: "id, dir",
-  root_notes: "id, text, date_created, date_modified",
-  root_notes_dir: "id, dir",
-  translations: "id, text, date_created, date_modified",
-});
-db.version(3).stores({
-  notes: "id, text, date_created, date_modified",
-  notes_dir: "id, dir",
-  root_notes: "id, text, date_created, date_modified",
-  root_notes_dir: "id, dir",
-});
-db.version(2).stores({
-  notes: "id, text, date_created, date_modified",
-  root_notes: "id, text, date_created, date_modified",
-});
-db.version(1).stores({
-  notes: "id, text, date_created, date_modified", // Primary key and indexed props
-});
+class tadaborDatabase extends Dexie {
+  notes!: Dexie.Table<INote, string>;
+  notes_dir!: Dexie.Table<INoteDir, string>;
+  root_notes!: Dexie.Table<INote, string>;
+  root_notes_dir!: Dexie.Table<INoteDir, string>;
+  translations!: Dexie.Table<INote, string>;
 
-export function saveData(store: any, data: any) {
-  return (db as any)[store].put(data);
+  constructor() {
+    super("tadaborDatabase");
+
+    //
+    // Define tables and indexes
+    // (Here's where the implicit table props are dynamically created)
+    //
+    this.version(4).stores({
+      notes: "id, text, date_created, date_modified",
+      notes_dir: "id, dir",
+      root_notes: "id, text, date_created, date_modified",
+      root_notes_dir: "id, dir",
+      translations: "id, text, date_created, date_modified",
+    });
+  }
 }
 
-export function loadData(store: any) {
-  return (db as any)[store].toArray();
+interface INote {
+  id: string;
+  text: string;
+  date_created: number;
+  date_modified: number;
+}
+
+interface INoteDir {
+  id: string;
+  dir: string;
+}
+
+export const db = new tadaborDatabase();
+
+export function saveData(store: string, data: INote | INoteDir) {
+  return db.table(store).put(data);
+}
+
+export function loadData(store: string) {
+  return db.table(store).toArray();
 }
