@@ -31,8 +31,8 @@ interface derivationProps {
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
 
-  const refListChapters = useRef(null);
-  const scrollKey = useRef(null);
+  const refListChapters = useRef<HTMLSelectElement>(null);
+  const scrollKey = useRef<string | null>(null);
 
   const [selectChapter, setSelectChapter] = useState(1);
   const [selectedChapters, setSelectedChapters] = useState(["1"]);
@@ -315,6 +315,21 @@ function QuranBrowser() {
   );
 }
 
+interface DisplayPanelProps {
+  refListChapters: React.RefObject<HTMLSelectElement>;
+  scrollKey: React.MutableRefObject<string | null>;
+  searchResult: verseProps[];
+  searchError: boolean;
+  selectedRootError: boolean;
+  searchingString: string;
+  searchingAllQuran: boolean;
+  selectChapter: number;
+  radioSearchingMethod: string;
+  searchMultipleChapters: boolean;
+  rootDerivations: derivationProps[];
+  memoGotoChapter: (chapter: string) => void;
+}
+
 const DisplayPanel = memo(
   ({
     refListChapters,
@@ -329,11 +344,16 @@ const DisplayPanel = memo(
     searchMultipleChapters,
     rootDerivations,
     memoGotoChapter,
-  }: any) => {
+  }: DisplayPanelProps) => {
     const { chapterNames, allQuranText } = useQuran();
     const { t } = useTranslation();
-    const refListVerses = useRef(null);
-    const versesRef = useRef({});
+    const refListVerses = useRef<HTMLDivElement>(null);
+
+    interface versesRefProp {
+      [key: string]: HTMLDivElement;
+    }
+
+    const versesRef = useRef<versesRefProp>({});
 
     const [loadingState, setLoadingState] = useState(true);
     const [myNotes, setMyNotes] = useState({});
