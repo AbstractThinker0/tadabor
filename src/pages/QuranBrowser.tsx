@@ -173,6 +173,7 @@ function QuranBrowser() {
               chapterNames[currentVerse.suraid - 1].name +
               ":" +
               currentVerse.verseid,
+            wordIndex: word,
           });
         });
       };
@@ -186,6 +187,8 @@ function QuranBrowser() {
           setSearchMultipleChapters(true);
         }
       }
+
+      // ابى	13	40:9;288:17,74;1242:13;1266:7;1832:3;2117:10;2127:20;2216:9;2403:6;2463:9;2904:5;3604:8
 
       // occurences array have the verserank:index1,index2...etc format
       occurencesArray.forEach((item: string) => {
@@ -598,6 +601,8 @@ const ListSearchResults = memo(
                 handleSetDirection={handleSetDirection}
                 noteDirection={areaDirection[verse.key] || ""}
                 handleNoteSubmit={handleNoteSubmit}
+                isRootSearch={isRootSearch}
+                rootDerivations={rootDerivations}
               />
             </div>
           ))}
@@ -628,7 +633,13 @@ const SearchVerseComponent = memo(
     handleSetDirection,
     noteDirection,
     handleNoteSubmit,
+    isRootSearch,
+    rootDerivations,
   }: any) => {
+    rootDerivations = (rootDerivations as []).filter(
+      (value: any) => value.key === verse.key
+    );
+
     return (
       <>
         <VerseContentComponent
@@ -639,6 +650,8 @@ const SearchVerseComponent = memo(
           gotoChapter={gotoChapter}
           chapterNames={chapterNames}
           scrollKey={scrollKey}
+          isRootSearch={isRootSearch}
+          rootDerivations={rootDerivations}
         />
         <TextForm
           inputKey={verse.key}
@@ -704,6 +717,8 @@ const VerseContentComponent = memo(
     gotoChapter,
     chapterNames,
     scrollKey,
+    isRootSearch,
+    rootDerivations,
   }: any) => {
     let verse_key = verse.key;
     let isLinkable = scopeAllQuran || searchMultipleChapters;
@@ -715,7 +730,12 @@ const VerseContentComponent = memo(
 
     return (
       <span className="fs-4">
-        {verse.versetext} (
+        <Highlighted
+          text={verse.versetext}
+          rootDerivations={rootDerivations}
+          isRootSearch={isRootSearch}
+        />
+        (
         {isLinkable ? (
           <button
             className="p-0 border-0 bg-transparent"
@@ -748,6 +768,37 @@ const VerseContentComponent = memo(
 );
 
 VerseContentComponent.displayName = "VerseContentComponent";
+
+const Highlighted = ({ text = "", rootDerivations, isRootSearch }: any) => {
+  if (!isRootSearch) {
+    return <span>{text}</span>;
+  }
+
+  const parts = text.split(" ");
+
+  function matchIndex(index: number) {
+    for (const root of rootDerivations) {
+      if (Number(root.wordIndex) === index + 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  return (
+    <span>
+      {parts.filter(String).map((part: string, i: number) => {
+        return matchIndex(i) ? (
+          <>
+            <mark key={i}>{part}</mark>{" "}
+          </>
+        ) : (
+          <span>{part} </span>
+        );
+      })}
+    </span>
+  );
+};
 
 const ListTitle = memo(({ chapterName }: any) => {
   return (
