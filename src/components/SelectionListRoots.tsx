@@ -19,7 +19,7 @@ const SelectionListRoots = memo(
       let rootId = event.currentTarget.value;
       setStateSelect(rootId);
 
-      let selectedRoot = quranRoots[rootId];
+      let selectedRoot = quranRoots[Number(rootId)];
 
       setSearchString(selectedRoot.name);
     };

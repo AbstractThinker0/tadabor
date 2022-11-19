@@ -16,10 +16,17 @@ import { ArrowDownCircleFill } from "react-bootstrap-icons";
 
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
-import useQuran from "../context/QuranContext";
+import useQuran, { verseProps } from "../context/QuranContext";
 
 import { TextForm } from "../components/TextForm";
 import SearchPanel from "../components/SearchPanel";
+
+interface derivationProps {
+  name: string;
+  key: string;
+  text: string;
+  wordIndex: string;
+}
 
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
@@ -33,7 +40,7 @@ function QuranBrowser() {
   const [searchString, setSearchString] = useState("");
   const [searchingString, setSearchingString] = useState("");
 
-  const [searchResult, setSearchResult] = useState<any[]>([]);
+  const [searchResult, setSearchResult] = useState<verseProps[]>([]);
 
   const [searchAllQuran, setSearchAllQuran] = useState(true);
   const [searchingAllQuran, setSearchingAllQuran] = useState(true);
@@ -52,7 +59,7 @@ function QuranBrowser() {
   const [radioSearchingMethod, setRadioSearchingMethod] =
     useState("optionWordSearch");
 
-  const [rootDerivations, setRootDerivations] = useState<any[]>([]);
+  const [rootDerivations, setRootDerivations] = useState<derivationProps[]>([]);
 
   const clearPreviousSearch = () => {
     setSearchError(false);
@@ -75,7 +82,7 @@ function QuranBrowser() {
         return;
       }
 
-      let matchVerses: any[] = [];
+      let matchVerses: verseProps[] = [];
       let normal_search = "";
 
       if (!searchDiacritics) {
@@ -84,7 +91,7 @@ function QuranBrowser() {
         normal_search = searchString.trim();
       }
 
-      const checkVerseMatch = (verse: any) => {
+      const checkVerseMatch = (verse: verseProps) => {
         let normal_text = "";
         if (!searchDiacritics) {
           normal_text = normalize_text(verse.versetext);
@@ -117,8 +124,8 @@ function QuranBrowser() {
       }
 
       function allChaptersMatches() {
-        allQuranText.forEach((sura: any) => {
-          sura.verses.forEach((verse: any) => {
+        allQuranText.forEach((sura) => {
+          sura.verses.forEach((verse) => {
             checkVerseMatch(verse);
           });
         });
@@ -126,7 +133,7 @@ function QuranBrowser() {
 
       function oneChapterMatches() {
         let currentChapter = allQuranText[selectChapter - 1].verses;
-        currentChapter.forEach((verse: any) => {
+        currentChapter.forEach((verse) => {
           checkVerseMatch(verse);
         });
       }
@@ -134,7 +141,7 @@ function QuranBrowser() {
       function multipleChaptersMatches() {
         setSearchMultipleChapters(true);
         selectedChapters.forEach((chapter) => {
-          allQuranText[Number(chapter) - 1].verses.forEach((verse: any) => {
+          allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
             checkVerseMatch(verse);
           });
         });
@@ -153,9 +160,7 @@ function QuranBrowser() {
         return;
       }
 
-      let rootTarget = quranRoots.find(
-        (root: any) => root.name === searchString
-      );
+      let rootTarget = quranRoots.find((root) => root.name === searchString);
 
       if (rootTarget === undefined) {
         setSelectedRootError(true);
@@ -164,20 +169,20 @@ function QuranBrowser() {
 
       let occurencesArray = rootTarget.occurences;
 
-      let matchVerses: any[] = [];
-      let derivations: any[] = [];
+      let matchVerses: verseProps[] = [];
+      let derivations: derivationProps[] = [];
 
       const fillDerivationsArray = (
-        wordIndexes: any,
-        verseWords: any,
-        currentVerse: any
+        wordIndexes: string[],
+        verseWords: string[],
+        currentVerse: verseProps
       ) => {
-        wordIndexes.forEach((word: any) => {
+        wordIndexes.forEach((word) => {
           derivations.push({
-            name: verseWords[word - 1],
+            name: verseWords[Number(word) - 1],
             key: currentVerse.key,
             text:
-              chapterNames[currentVerse.suraid - 1].name +
+              chapterNames[Number(currentVerse.suraid) - 1].name +
               ":" +
               currentVerse.verseid,
             wordIndex: word,
@@ -198,9 +203,9 @@ function QuranBrowser() {
       // ابى	13	40:9;288:17,74;1242:13;1266:7;1832:3;2117:10;2127:20;2216:9;2403:6;2463:9;2904:5;3604:8
 
       // occurences array have the verserank:index1,index2...etc format
-      occurencesArray.forEach((item: string) => {
+      occurencesArray.forEach((item) => {
         let info = item.split(":");
-        let currentVerse = absoluteQuran[info[0]];
+        let currentVerse = absoluteQuran[Number(info[0])];
 
         if (selectedChapters.includes(currentVerse.suraid) || searchAllQuran) {
           let verseWords = currentVerse.versetext.split(" ");
@@ -541,7 +546,7 @@ const ListSearchResults = memo(
     const { chapterNames } = useQuran();
     const refVersesResult = useRef<any>({});
 
-    let selectedChapters = [];
+    let selectedChapters: string[] = [];
     if (searchMultipleChapters) {
       if (refListChapters.current.selectedOptions.length > 1) {
         selectedChapters = Array.from(
@@ -588,7 +593,7 @@ const ListSearchResults = memo(
           />
         )}
         <div className="card-body">
-          {versesArray.map((verse: any) => (
+          {versesArray.map((verse: verseProps) => (
             <div
               key={verse.key}
               ref={(el) => (refVersesResult.current[verse.key] = el)}
@@ -683,7 +688,7 @@ const DerivationsComponent = memo(
       <>
         <hr />
         <span className="p-2">
-          {rootDerivations.map((root: any, index: number) => (
+          {rootDerivations.map((root: derivationProps, index: number) => (
             <span
               role="button"
               key={index}
@@ -845,7 +850,7 @@ const ListVerses = memo(
       <>
         <ListTitle chapterName={chapterName} />
         <div className="card-body">
-          {versesArray.map((verse: any) => (
+          {versesArray.map((verse: verseProps) => (
             <VerseComponent
               key={verse.key}
               versesRef={versesRef}

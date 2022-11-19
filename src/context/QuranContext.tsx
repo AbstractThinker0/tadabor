@@ -13,15 +13,52 @@ interface Props {
   children?: ReactNode;
 }
 
-const QuranContext = createContext({});
+interface chapterProps {
+  id: number;
+  name: string;
+  transliteration: string;
+}
+
+export type verseProps = {
+  key: string;
+  suraid: string;
+  verseid: string;
+  versetext: string;
+};
+
+interface quranProps {
+  id: number;
+  verses: verseProps[];
+}
+
+interface rootProps {
+  id: number;
+  name: string;
+  count: string;
+  occurences: string[];
+}
+
+type QuranContent = {
+  chapterNames: chapterProps[];
+  allQuranText: quranProps[];
+  quranRoots: rootProps[];
+  absoluteQuran: verseProps[];
+};
+
+const QuranContext = createContext<QuranContent>({
+  chapterNames: [],
+  allQuranText: [],
+  quranRoots: [],
+  absoluteQuran: [],
+});
 
 export const QuranProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const chapterNames = useRef([]);
-  const allQuranText = useRef([]);
-  const quranRoots = useRef<any>([]);
-  const absoluteQuran = useRef<any>([]);
+  const chapterNames = useRef<chapterProps[]>([]);
+  const allQuranText = useRef<quranProps[]>([]);
+  const quranRoots = useRef<rootProps[]>([]);
+  const absoluteQuran = useRef<verseProps[]>([]);
 
   useEffect(() => {
     let clientLeft = false;
@@ -57,8 +94,8 @@ export const QuranProvider = ({ children }: Props) => {
         }
 
         if (!absoluteQuran.current.length) {
-          allQuranText.current.forEach((sura: any) => {
-            sura.verses.forEach((verse: any) => {
+          allQuranText.current.forEach((sura) => {
+            sura.verses.forEach((verse) => {
               absoluteQuran.current.push(verse);
             });
           });
@@ -127,6 +164,6 @@ export const QuranProvider = ({ children }: Props) => {
   );
 };
 
-const useQuran = () => useContext(QuranContext) as any;
+const useQuran = () => useContext(QuranContext);
 
 export default useQuran;
