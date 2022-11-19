@@ -11,7 +11,7 @@ import { YourNoteForm, YourNoteText } from "../components/TextForm";
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
   const { t } = useTranslation();
-  const { chapterNames, allQuranText }: any = useQuran();
+  const { chapterNames, allQuranText } = useQuran();
   const [editableNotes, setEditableNotes] = useState<any>({});
   const [areaDirection, setAreaDirection] = useState<any>({});
   const [myNotes, setMyNotes] = useState<any>({});

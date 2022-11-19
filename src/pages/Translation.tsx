@@ -34,7 +34,7 @@ const SelectionListChapters = ({
   selectChapter,
 }: SelectionListChaptersProps) => {
   const { t } = useTranslation();
-  const { chapterNames }: any = useQuran();
+  const { chapterNames } = useQuran();
   const [chapterSearch, setChapterSearch] = useState("");
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +63,8 @@ const SelectionListChapters = ({
           value={selectChapter}
         >
           {chapterNames
-            .filter((chapter: any) => chapter.name.startsWith(chapterSearch))
-            .map((chapter: any) => (
+            .filter((chapter) => chapter.name.startsWith(chapterSearch))
+            .map((chapter) => (
               <option key={chapter.id} value={chapter.id}>
                 {chapter.id}. {chapter.name}
               </option>
@@ -80,7 +80,7 @@ interface DisplayPanelProps {
 }
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
-  const { allQuranText, chapterNames }: any = useQuran();
+  const { allQuranText, chapterNames } = useQuran();
   const { t } = useTranslation();
   const [loadingState, setLoadingState] = useState(true);
   const [versesTranslation, setVersesTranslation] = useState<any>({});
@@ -172,7 +172,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           </h2>
         </div>
         <div className="card-body p-1">
-          {displayVerses.map((verse: any) => {
+          {displayVerses.map((verse) => {
             return (
               <VerseComponent
                 key={verse.key}

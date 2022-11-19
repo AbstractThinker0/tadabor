@@ -224,7 +224,7 @@ const RootsListComponent = memo(({ searchString }: any) => {
   let filteredArray = useMemo(
     () =>
       quranRoots.filter(
-        (root: any) =>
+        (root) =>
           normalizeAlif(root.name).startsWith(searchString) ||
           root.name.startsWith(searchString) ||
           !searchString
@@ -248,7 +248,7 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
   return (
     <div onScroll={handleScroll} style={{ overflowY: "scroll", height: "85%" }}>
-      {filteredArray.slice(0, itemsCount).map((root: any) => (
+      {filteredArray.slice(0, itemsCount).map((root) => (
         <RootComponent
           key={root.id}
           root_name={root.name}

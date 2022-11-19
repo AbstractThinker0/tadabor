@@ -31,7 +31,7 @@ const SelectionListRoots = memo(
     let filteredArray = useMemo(
       () =>
         quranRoots.filter(
-          (root: any) => root.name.startsWith(searchString) || isDisabled
+          (root) => root.name.startsWith(searchString) || isDisabled
         ),
       [quranRoots, searchString, isDisabled]
     );
@@ -47,13 +47,11 @@ const SelectionListRoots = memo(
           value={stateSelect}
           onScroll={handleScroll}
         >
-          {filteredArray
-            .slice(0, itemsCount)
-            .map((root: any, index: number) => (
-              <option key={index} value={root.id}>
-                {root.name}
-              </option>
-            ))}
+          {filteredArray.slice(0, itemsCount).map((root, index: number) => (
+            <option key={index} value={root.id}>
+              {root.name}
+            </option>
+          ))}
         </select>
       </div>
     );
