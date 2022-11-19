@@ -1,4 +1,11 @@
-import { useEffect, useState, useRef, useCallback, memo } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  memo,
+  Fragment,
+} from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { toast } from "react-toastify";
@@ -725,7 +732,8 @@ const VerseContentComponent = memo(
 
     const handleVerseClick = (verse_key: string) => {
       scrollKey.current = verse_key;
-      gotoChapter(chapterNames[verse.suraid - 1].id);
+
+      gotoChapter(chapterNames[verse.suraid - 1].id.toString());
     };
 
     return (
@@ -789,11 +797,11 @@ const Highlighted = ({ text = "", rootDerivations, isRootSearch }: any) => {
     <span>
       {parts.filter(String).map((part: string, i: number) => {
         return matchIndex(i) ? (
-          <>
-            <mark key={i}>{part}</mark>{" "}
-          </>
+          <Fragment key={i}>
+            <mark>{part}</mark>{" "}
+          </Fragment>
         ) : (
-          <span>{part} </span>
+          <span key={i}>{part} </span>
         );
       })}
     </span>
