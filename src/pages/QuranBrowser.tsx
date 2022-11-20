@@ -62,21 +62,15 @@ function QuranBrowser() {
       }
 
       let matchVerses: verseProps[] = [];
-      let normal_search = "";
 
-      if (!searchDiacritics) {
-        normal_search = normalize_text(searchString).trim();
-      } else {
-        normal_search = searchString.trim();
-      }
+      let normal_search = (
+        searchDiacritics ? searchString : normalize_text(searchString)
+      ).trim();
 
       const checkVerseMatch = (verse: verseProps) => {
-        let normal_text = "";
-        if (!searchDiacritics) {
-          normal_text = normalize_text(verse.versetext);
-        } else {
-          normal_text = verse.versetext;
-        }
+        let normal_text = searchDiacritics
+          ? verse.versetext
+          : normalize_text(verse.versetext);
 
         if (searchIdentical) {
           if (findWord(normal_search, normal_text)) {
