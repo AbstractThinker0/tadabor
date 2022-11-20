@@ -73,8 +73,8 @@ const DisplayPanel = memo(
 
     const [loadingState, setLoadingState] = useState(true);
     const [myNotes, setMyNotes] = useState<notesType>({});
-    const [editableNotes, setEditableNotes] = useState({});
-    const [areaDirection, setAreaDirection] = useState({});
+    const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
+    const [areaDirection, setAreaDirection] = useState<notesType>({});
 
     useEffect(() => {
       let clientLeft = false;
