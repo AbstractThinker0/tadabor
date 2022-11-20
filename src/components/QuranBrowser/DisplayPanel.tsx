@@ -160,8 +160,7 @@ const DisplayPanel = memo(
         });
     }
 
-    // eslint-disable-next-line
-    const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
+    const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
 
     function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
       let inputKey = event.currentTarget.name;
