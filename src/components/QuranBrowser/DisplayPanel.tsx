@@ -18,14 +18,10 @@ import { TextForm } from "../TextForm";
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
 
-import useQuran, { verseProps } from "../../context/QuranContext";
-
-interface derivationProps {
-  name: string;
-  key: string;
-  text: string;
-  wordIndex: string;
-}
+import useQuran, {
+  verseProps,
+  derivationProps,
+} from "../../context/QuranContext";
 
 interface DisplayPanelProps {
   refListChapters: React.RefObject<HTMLSelectElement>;

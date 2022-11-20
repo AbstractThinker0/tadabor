@@ -2,17 +2,10 @@ import { useState, useRef, useCallback } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 
-import useQuran, { verseProps } from "../context/QuranContext";
+import useQuran, { verseProps, derivationProps } from "../context/QuranContext";
 
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
-
-interface derivationProps {
-  name: string;
-  key: string;
-  text: string;
-  wordIndex: string;
-}
 
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
