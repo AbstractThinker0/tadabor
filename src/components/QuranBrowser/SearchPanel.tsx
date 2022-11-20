@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import SelectionListChapters from "./SelectionListChapters";
-import SelectionListRoots from "./SelectionListRoots";
+import SelectionListChapters from "../SelectionListChapters";
+import SelectionListRoots from "../SelectionListRoots";
 
 const SearchPanel = memo(
   ({

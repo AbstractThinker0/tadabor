@@ -1,6 +1,18 @@
 // db.js
 import Dexie from "dexie";
 
+export interface INote {
+  id: string;
+  text: string;
+  date_created: number;
+  date_modified: number;
+}
+
+export interface INoteDir {
+  id: string;
+  dir: string;
+}
+
 class tadaborDatabase extends Dexie {
   notes!: Dexie.Table<INote, string>;
   notes_dir!: Dexie.Table<INoteDir, string>;
@@ -23,18 +35,6 @@ class tadaborDatabase extends Dexie {
       translations: "id, text, date_created, date_modified",
     });
   }
-}
-
-interface INote {
-  id: string;
-  text: string;
-  date_created: number;
-  date_modified: number;
-}
-
-interface INoteDir {
-  id: string;
-  dir: string;
 }
 
 export const db = new tadaborDatabase();

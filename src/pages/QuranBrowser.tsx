@@ -9,7 +9,7 @@ import {
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 import { toast } from "react-toastify";
-import { loadData, saveData } from "../util/db";
+import { INote, INoteDir, loadData, saveData } from "../util/db";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 import { ArrowDownCircleFill } from "react-bootstrap-icons";
@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import useQuran, { verseProps } from "../context/QuranContext";
 
 import { TextForm } from "../components/TextForm";
-import SearchPanel from "../components/SearchPanel";
+import SearchPanel from "../components/QuranBrowser/SearchPanel";
 
 interface derivationProps {
   name: string;
@@ -355,8 +355,16 @@ const DisplayPanel = memo(
 
     const versesRef = useRef<versesRefProp>({});
 
+    interface notesType {
+      [key: string]: string;
+    }
+
+    interface markedNotesType {
+      [key: string]: boolean;
+    }
+
     const [loadingState, setLoadingState] = useState(true);
-    const [myNotes, setMyNotes] = useState({});
+    const [myNotes, setMyNotes] = useState<notesType>({});
     const [editableNotes, setEditableNotes] = useState({});
     const [areaDirection, setAreaDirection] = useState({});
 
@@ -366,24 +374,24 @@ const DisplayPanel = memo(
       fetchData();
 
       async function fetchData() {
-        let userNotes = await loadData("notes");
+        let userNotes: INote[] = await loadData("notes");
 
         if (clientLeft) return;
 
-        let markedNotes = {} as any;
-        let extractNotes = {} as any;
-        userNotes.forEach((note: any) => {
+        let markedNotes: markedNotesType = {};
+        let extractNotes: notesType = {};
+        userNotes.forEach((note) => {
           extractNotes[note.id] = note.text;
           markedNotes[note.id] = false;
         });
 
-        let userNotesDir = await loadData("notes_dir");
+        let userNotesDir: INoteDir[] = await loadData("notes_dir");
 
         if (clientLeft) return;
 
-        let extractNotesDir = {} as any;
+        let extractNotesDir: notesType = {};
 
-        userNotesDir.forEach((note: any) => {
+        userNotesDir.forEach((note) => {
           extractNotesDir[note.id] = note.dir;
         });
 
@@ -564,7 +572,12 @@ const ListSearchResults = memo(
     handleNoteSubmit,
   }: any) => {
     const { chapterNames } = useQuran();
-    const refVersesResult = useRef<any>({});
+
+    interface refVersesResultType {
+      [key: string]: HTMLDivElement;
+    }
+
+    const refVersesResult = useRef<refVersesResultType>({});
 
     let selectedChapters: string[] = [];
     if (searchMultipleChapters) {
@@ -616,7 +629,9 @@ const ListSearchResults = memo(
           {versesArray.map((verse: verseProps) => (
             <div
               key={verse.key}
-              ref={(el) => (refVersesResult.current[verse.key] = el)}
+              ref={(el) => {
+                if (el !== null) refVersesResult.current[verse.key] = el;
+              }}
               className="border-bottom pt-1 pb-1"
             >
               <SearchVerseComponent
