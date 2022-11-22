@@ -31,7 +31,7 @@ const AboutEnglish = () => {
           <p>
             Once this project is complete (all features implemented), it will be
             used as the basis for another project that aims to be a platform for
-            collaborative translation and reflection on the Qur'an, the goal
+            collaborative translation and reflection upon the Qur'an, the goal
             being to achieve an accurate understanding of the true message of
             the Qur'an By undoing all the semantic changes that have occurred
             over the centuries, no deadline has been set yet, and it all depends
@@ -104,6 +104,14 @@ const AboutArabic = () => {
             الكتابة، وحين تنتهي من الكتابة يمكنك الضغط على زر الحفظ، كل البيانات
             يتم تسجيلها في متصفحك وحذف سجل المتصفح قد يحذف أي بيانات قمت
             بتسجيلها هنا.
+          </p>
+          <h5>المشروع المقبل</h5>
+          <p>
+            بمجرد اكتمال هذا المشروع الحالي، سيتم إستخدامه كأساس لمشروع آخر يهدف
+            إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
+            للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
+            التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
+            يعتمد على مشيئة الله أولا وأخيرأ.
           </p>
           <h5>الشكر</h5>
           <br />
