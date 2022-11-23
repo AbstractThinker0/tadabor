@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useReducer,
-  Reducer,
-} from "react";
+import React, { useRef, useCallback, useReducer, Reducer } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 
@@ -26,6 +20,9 @@ export enum ACTIONS {
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
   SET_SEARCH_ERROR = "dispatchSetSearchError",
   SET_SELECTED_ROOT_ERROR = "dispatchSetSelectedRootError",
+  SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
+  SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
+  SET_ROOT_DERIVATIONS = "dispatchSetRootDerivations",
 }
 
 interface reducerAction {
@@ -46,6 +43,9 @@ interface stateProps {
   searchIdentical: boolean;
   searchError: boolean;
   selectedRootError: boolean;
+  radioSearchMethod: string;
+  radioSearchingMethod: string;
+  rootDerivations: derivationProps[];
 }
 
 function reducer(state: stateProps, action: reducerAction): stateProps {
@@ -87,16 +87,27 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case ACTIONS.SET_SELECTED_ROOT_ERROR: {
       return { ...state, selectedRootError: action.payload };
     }
+    case ACTIONS.SET_RADIO_SEARCH: {
+      return { ...state, radioSearchMethod: action.payload };
+    }
+    case ACTIONS.SET_RADIO_SEARCHING: {
+      return { ...state, radioSearchingMethod: action.payload };
+    }
+    case ACTIONS.SET_ROOT_DERIVATIONS: {
+      return { ...state, rootDerivations: action.payload };
+    }
   }
   throw Error("Unknown action: " + action.type);
 }
 
 type QuranBrowserContent = {
   dispatch: React.Dispatch<reducerAction>;
+  dispatchAction(type: ACTIONS, payload: any): void;
 };
 
 const QuranBrowserContext = React.createContext<QuranBrowserContent>({
   dispatch: () => {},
+  dispatchAction: () => {},
 });
 
 function QuranBrowser() {
@@ -118,6 +129,9 @@ function QuranBrowser() {
     searchIdentical: false,
     searchError: false,
     selectedRootError: false,
+    radioSearchMethod: "optionWordSearch",
+    radioSearchingMethod: "optionWordSearch",
+    rootDerivations: [],
   };
 
   const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
@@ -125,30 +139,25 @@ function QuranBrowser() {
     initialState
   );
 
-  const [radioSearchMethod, setRadioSearchMethod] =
-    useState("optionWordSearch");
-  const [radioSearchingMethod, setRadioSearchingMethod] =
-    useState("optionWordSearch");
+  const dispatchAction = (type: ACTIONS, payload: any) =>
+    dispatch({ type, payload });
 
-  const [rootDerivations, setRootDerivations] = useState<derivationProps[]>([]);
-
-  const clearPreviousSearch = () => {
-    dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: false });
-    dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: false });
-    dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: false });
-    dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: [] });
-    setRootDerivations([]);
-  };
+  const clearPreviousSearch = useCallback(() => {
+    dispatchAction(ACTIONS.SET_SEARCH_ERROR, false);
+    dispatchAction(ACTIONS.SET_SELECTED_ROOT_ERROR, false);
+    dispatchAction(ACTIONS.SET_SEARCH_MULTIPLE, false);
+    dispatchAction(ACTIONS.SET_SEARCH_RESULT, []);
+    dispatchAction(ACTIONS.SET_ROOT_DERIVATIONS, []);
+  }, []);
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     clearPreviousSearch();
-    dispatch({
-      type: ACTIONS.SET_SEARCHING_STRING,
-      payload: state.searchString,
-    });
-    setRadioSearchingMethod(radioSearchMethod);
+
+    dispatchAction(ACTIONS.SET_SEARCHING_STRING, state.searchString);
+
+    dispatchAction(ACTIONS.SET_RADIO_SEARCHING, state.radioSearchMethod);
 
     function handleSearchByWord() {
       if (onlySpaces(state.searchString)) {
@@ -296,13 +305,13 @@ function QuranBrowser() {
         dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
       } else {
         dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: matchVerses });
-        setRootDerivations(derivations);
+        dispatchAction(ACTIONS.SET_ROOT_DERIVATIONS, derivations);
       }
     }
 
-    if (radioSearchMethod === "optionWordSearch") {
+    if (state.radioSearchMethod === "optionWordSearch") {
       handleSearchByWord();
-    } else if (radioSearchMethod === "optionRootSearch") {
+    } else if (state.radioSearchMethod === "optionRootSearch") {
       handleSearchByRoot();
     }
   }
@@ -317,8 +326,9 @@ function QuranBrowser() {
     state.searchIdentical,
     state.selectChapter,
     state.selectedChapters,
-    radioSearchMethod,
+    state.radioSearchMethod,
     state.searchString,
+    clearPreviousSearch,
   ]);
 
   function gotoChapter(chapter: string) {
@@ -328,7 +338,7 @@ function QuranBrowser() {
     dispatch({ type: ACTIONS.SET_CHAPTERS, payload: [chapter] });
   }
 
-  const memoGotoChapter = useCallback(gotoChapter, []);
+  const memoGotoChapter = useCallback(gotoChapter, [clearPreviousSearch]);
 
   function handleSelectionListChapters(
     event: React.ChangeEvent<HTMLSelectElement>
@@ -358,7 +368,9 @@ function QuranBrowser() {
   );
 
   return (
-    <QuranBrowserContext.Provider value={{ dispatch: dispatch }}>
+    <QuranBrowserContext.Provider
+      value={{ dispatch: dispatch, dispatchAction: dispatchAction }}
+    >
       <div className="browser">
         <SearchPanel
           refListChapters={refListChapters}
@@ -367,9 +379,8 @@ function QuranBrowser() {
           searchString={state.searchString}
           searchDiacritics={state.searchDiacritics}
           searchIdentical={state.searchIdentical}
-          radioSearchMethod={radioSearchMethod}
+          radioSearchMethod={state.radioSearchMethod}
           searchAllQuran={state.searchAllQuran}
-          setRadioSearchMethod={setRadioSearchMethod}
           memoHandleSearchSubmit={memoHandleSearchSubmit}
           memoHandleSelectionListChapters={memoHandleSelectionListChapters}
         />
@@ -383,9 +394,9 @@ function QuranBrowser() {
           searchingString={state.searchingString}
           searchingAllQuran={state.searchingAllQuran}
           selectChapter={state.selectChapter}
-          radioSearchingMethod={radioSearchingMethod}
+          radioSearchingMethod={state.radioSearchingMethod}
           searchMultipleChapters={state.searchMultipleChapters}
-          rootDerivations={rootDerivations}
+          rootDerivations={state.rootDerivations}
           memoGotoChapter={memoGotoChapter}
         />
       </div>

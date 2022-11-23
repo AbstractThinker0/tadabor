@@ -10,7 +10,6 @@ const SearchPanel = memo(
     memoHandleSelectionListChapters,
     refListChapters,
     radioSearchMethod,
-    setRadioSearchMethod,
     searchDiacritics,
     searchIdentical,
     searchAllQuran,
@@ -20,7 +19,7 @@ const SearchPanel = memo(
     selectedChapters,
   }: any) => {
     const { t } = useTranslation();
-    const { dispatch } = useQuranBrowser();
+    const { dispatch, dispatchAction } = useQuranBrowser();
 
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
@@ -34,6 +33,10 @@ const SearchPanel = memo(
 
     function setSearchIdentical(status: boolean) {
       dispatch({ type: ACTIONS.SET_SEARCH_IDENTICAL, payload: status });
+    }
+
+    function setRadioSearchMethod(method: string) {
+      dispatchAction(ACTIONS.SET_RADIO_SEARCH, method);
     }
 
     return (
