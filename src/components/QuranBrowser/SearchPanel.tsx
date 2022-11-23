@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
+import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "../SelectionListChapters";
 import SelectionListRoots from "../SelectionListRoots";
@@ -11,20 +12,29 @@ const SearchPanel = memo(
     radioSearchMethod,
     setRadioSearchMethod,
     searchDiacritics,
-    setSearchDiacritics,
     searchIdentical,
-    setSearchIdentical,
     searchAllQuran,
-    setSearchAllQuran,
     memoHandleSearchSubmit,
     searchString,
-    setSearchString,
     searchResult,
     selectedChapters,
   }: any) => {
     const { t } = useTranslation();
+    const { dispatch } = useQuranBrowser();
 
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
+
+    function setSearchAllQuran(status: boolean) {
+      dispatch({ type: ACTIONS.SET_SEARCH_ALLQURAN, payload: status });
+    }
+
+    function setSearchDiacritics(status: boolean) {
+      dispatch({ type: ACTIONS.SET_SEARCH_DIACRITICS, payload: status });
+    }
+
+    function setSearchIdentical(status: boolean) {
+      dispatch({ type: ACTIONS.SET_SEARCH_IDENTICAL, payload: status });
+    }
 
     return (
       <div className="browser-search">
@@ -57,12 +67,10 @@ const SearchPanel = memo(
         <FormWordSearch
           handleSearchSubmit={memoHandleSearchSubmit}
           searchString={searchString}
-          setSearchString={setSearchString}
         />
         <SelectionListRoots
           isDisabled={!isRootSearch}
           searchString={searchString}
-          setSearchString={setSearchString}
         />
         <SearchSuccessComponent searchResult={searchResult} />
       </div>
@@ -123,15 +131,12 @@ const RadioSearchMethod = ({
   );
 };
 
-const FormWordSearch = ({
-  handleSearchSubmit,
-  searchString,
-  setSearchString,
-}: any) => {
+const FormWordSearch = ({ handleSearchSubmit, searchString }: any) => {
+  const { dispatch } = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(event.target.value);
+    dispatch({ type: ACTIONS.SET_SEARCH_STRING, payload: event.target.value });
   };
 
   return (
@@ -163,12 +168,19 @@ const FormWordSearch = ({
   );
 };
 
+interface CheckBoxProps {
+  checkboxState: boolean;
+  setCheckBoxState: (status: boolean) => void;
+  labelText: string;
+  isDisabled?: boolean;
+}
+
 const CheckboxComponent = ({
   checkboxState,
   setCheckBoxState,
   labelText,
   isDisabled = false,
-}: any) => {
+}: CheckBoxProps) => {
   const { i18n } = useTranslation();
 
   const handleChangeCheckboxState = () => {

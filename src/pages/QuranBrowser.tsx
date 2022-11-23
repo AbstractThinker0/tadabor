@@ -1,4 +1,10 @@
-import { useState, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useReducer,
+  Reducer,
+} from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 
@@ -7,31 +13,117 @@ import useQuran, { verseProps, derivationProps } from "../context/QuranContext";
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
 
+export enum ACTIONS {
+  SET_CHAPTER = "dispatchSetChapter",
+  SET_CHAPTERS = "dispatchSetChapters",
+  SET_SEARCH_STRING = "dispatchSetSearchString",
+  SET_SEARCHING_STRING = "dispatchSetSearchingString",
+  SET_SEARCH_RESULT = "dispatchSetSearchResult",
+  SET_SEARCH_ALLQURAN = "dispatchSetSearchAllQuran",
+  SET_SEARCHING_ALLQURAN = "dispatchSetSearchingAllQuran",
+  SET_SEARCH_MULTIPLE = "dispatchSetSearchMultipleChapters",
+  SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
+  SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
+  SET_SEARCH_ERROR = "dispatchSetSearchError",
+  SET_SELECTED_ROOT_ERROR = "dispatchSetSelectedRootError",
+}
+
+interface reducerAction {
+  type: ACTIONS | string;
+  payload: any;
+}
+
+interface stateProps {
+  selectChapter: number;
+  selectedChapters: string[];
+  searchString: string;
+  searchingString: string;
+  searchResult: verseProps[];
+  searchAllQuran: boolean;
+  searchingAllQuran: boolean;
+  searchMultipleChapters: boolean;
+  searchDiacritics: boolean;
+  searchIdentical: boolean;
+  searchError: boolean;
+  selectedRootError: boolean;
+}
+
+function reducer(state: stateProps, action: reducerAction): stateProps {
+  // ...
+  switch (action.type) {
+    case ACTIONS.SET_CHAPTER: {
+      return { ...state, selectChapter: action.payload };
+    }
+    case ACTIONS.SET_CHAPTERS: {
+      return { ...state, selectedChapters: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_STRING: {
+      return { ...state, searchString: action.payload };
+    }
+    case ACTIONS.SET_SEARCHING_STRING: {
+      return { ...state, searchingString: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_RESULT: {
+      return { ...state, searchResult: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_ALLQURAN: {
+      return { ...state, searchAllQuran: action.payload };
+    }
+    case ACTIONS.SET_SEARCHING_ALLQURAN: {
+      return { ...state, searchingAllQuran: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_MULTIPLE: {
+      return { ...state, searchMultipleChapters: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_DIACRITICS: {
+      return { ...state, searchDiacritics: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_IDENTICAL: {
+      return { ...state, searchIdentical: action.payload };
+    }
+    case ACTIONS.SET_SEARCH_ERROR: {
+      return { ...state, searchError: action.payload };
+    }
+    case ACTIONS.SET_SELECTED_ROOT_ERROR: {
+      return { ...state, selectedRootError: action.payload };
+    }
+  }
+  throw Error("Unknown action: " + action.type);
+}
+
+type QuranBrowserContent = {
+  dispatch: React.Dispatch<reducerAction>;
+};
+
+const QuranBrowserContext = React.createContext<QuranBrowserContent>({
+  dispatch: () => {},
+});
+
 function QuranBrowser() {
   const { allQuranText, absoluteQuran, chapterNames, quranRoots } = useQuran();
 
   const refListChapters = useRef<HTMLSelectElement>(null);
   const scrollKey = useRef<string | null>(null);
 
-  const [selectChapter, setSelectChapter] = useState(1);
-  const [selectedChapters, setSelectedChapters] = useState(["1"]);
+  const initialState: stateProps = {
+    selectChapter: 1,
+    selectedChapters: ["1"],
+    searchString: "",
+    searchingString: "",
+    searchResult: [],
+    searchAllQuran: true,
+    searchingAllQuran: true,
+    searchMultipleChapters: false,
+    searchDiacritics: false,
+    searchIdentical: false,
+    searchError: false,
+    selectedRootError: false,
+  };
 
-  const [searchString, setSearchString] = useState("");
-  const [searchingString, setSearchingString] = useState("");
-
-  const [searchResult, setSearchResult] = useState<verseProps[]>([]);
-
-  const [searchAllQuran, setSearchAllQuran] = useState(true);
-  const [searchingAllQuran, setSearchingAllQuran] = useState(true);
-
-  const [searchMultipleChapters, setSearchMultipleChapters] = useState(false);
-
-  const [searchDiacritics, setSearchDiacritics] = useState(false);
-
-  const [searchIdentical, setSearchIdentical] = useState(false);
-
-  const [searchError, setSearchError] = useState(false);
-  const [selectedRootError, setSelectedRootError] = useState(false);
+  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
+    reducer,
+    initialState
+  );
 
   const [radioSearchMethod, setRadioSearchMethod] =
     useState("optionWordSearch");
@@ -41,10 +133,10 @@ function QuranBrowser() {
   const [rootDerivations, setRootDerivations] = useState<derivationProps[]>([]);
 
   const clearPreviousSearch = () => {
-    setSearchError(false);
-    setSelectedRootError(false);
-    setSearchMultipleChapters(false);
-    setSearchResult([]);
+    dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: false });
+    dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: false });
+    dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: false });
+    dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: [] });
     setRootDerivations([]);
   };
 
@@ -52,27 +144,32 @@ function QuranBrowser() {
     e.preventDefault();
 
     clearPreviousSearch();
-    setSearchingString(searchString);
+    dispatch({
+      type: ACTIONS.SET_SEARCHING_STRING,
+      payload: state.searchString,
+    });
     setRadioSearchingMethod(radioSearchMethod);
 
     function handleSearchByWord() {
-      if (onlySpaces(searchString)) {
-        setSearchError(true);
+      if (onlySpaces(state.searchString)) {
+        dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: true });
         return;
       }
 
       let matchVerses: verseProps[] = [];
 
       let normal_search = (
-        searchDiacritics ? searchString : normalize_text(searchString)
+        state.searchDiacritics
+          ? state.searchString
+          : normalize_text(state.searchString)
       ).trim();
 
       const checkVerseMatch = (verse: verseProps) => {
-        let normal_text = searchDiacritics
+        let normal_text = state.searchDiacritics
           ? verse.versetext
           : normalize_text(verse.versetext);
 
-        if (searchIdentical) {
+        if (state.searchIdentical) {
           if (findWord(normal_search, normal_text)) {
             matchVerses.push(verse);
           }
@@ -83,13 +180,13 @@ function QuranBrowser() {
         }
       };
 
-      if (searchAllQuran) {
-        setSearchingAllQuran(true);
+      if (state.searchAllQuran) {
+        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: true });
         allChaptersMatches();
       } else {
-        setSearchingAllQuran(false);
+        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: false });
 
-        if (selectedChapters.length > 1) {
+        if (state.selectedChapters.length > 1) {
           multipleChaptersMatches();
         } else {
           oneChapterMatches();
@@ -105,15 +202,15 @@ function QuranBrowser() {
       }
 
       function oneChapterMatches() {
-        let currentChapter = allQuranText[selectChapter - 1].verses;
+        let currentChapter = allQuranText[state.selectChapter - 1].verses;
         currentChapter.forEach((verse) => {
           checkVerseMatch(verse);
         });
       }
 
       function multipleChaptersMatches() {
-        setSearchMultipleChapters(true);
-        selectedChapters.forEach((chapter) => {
+        dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: true });
+        state.selectedChapters.forEach((chapter) => {
           allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
             checkVerseMatch(verse);
           });
@@ -121,22 +218,24 @@ function QuranBrowser() {
       }
 
       if (matchVerses.length === 0) {
-        setSearchError(true);
+        dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: true });
       } else {
-        setSearchResult(matchVerses);
+        dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: matchVerses });
       }
     }
 
     function handleSearchByRoot() {
-      if (onlySpaces(searchString)) {
-        setSelectedRootError(true);
+      if (onlySpaces(state.searchString)) {
+        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
         return;
       }
 
-      let rootTarget = quranRoots.find((root) => root.name === searchString);
+      let rootTarget = quranRoots.find(
+        (root) => root.name === state.searchString
+      );
 
       if (rootTarget === undefined) {
-        setSelectedRootError(true);
+        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
         return;
       }
 
@@ -163,13 +262,13 @@ function QuranBrowser() {
         });
       };
 
-      if (searchAllQuran) {
-        setSearchingAllQuran(true);
+      if (state.searchAllQuran) {
+        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: true });
       } else {
-        setSearchingAllQuran(false);
+        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: false });
 
-        if (selectedChapters.length > 1) {
-          setSearchMultipleChapters(true);
+        if (state.selectedChapters.length > 1) {
+          dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: true });
         }
       }
 
@@ -180,7 +279,10 @@ function QuranBrowser() {
         let info = item.split(":");
         let currentVerse = absoluteQuran[Number(info[0])];
 
-        if (selectedChapters.includes(currentVerse.suraid) || searchAllQuran) {
+        if (
+          state.selectedChapters.includes(currentVerse.suraid) ||
+          state.searchAllQuran
+        ) {
           let verseWords = currentVerse.versetext.split(" ");
 
           let wordIndexes = info[1].split(",");
@@ -191,9 +293,9 @@ function QuranBrowser() {
       });
 
       if (matchVerses.length === 0) {
-        setSelectedRootError(true);
+        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
       } else {
-        setSearchResult(matchVerses);
+        dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: matchVerses });
         setRootDerivations(derivations);
       }
     }
@@ -210,19 +312,20 @@ function QuranBrowser() {
     allQuranText,
     chapterNames,
     quranRoots,
-    searchAllQuran,
-    searchDiacritics,
-    searchIdentical,
-    selectChapter,
-    selectedChapters,
+    state.searchAllQuran,
+    state.searchDiacritics,
+    state.searchIdentical,
+    state.selectChapter,
+    state.selectedChapters,
     radioSearchMethod,
-    searchString,
+    state.searchString,
   ]);
 
   function gotoChapter(chapter: string) {
     clearPreviousSearch();
-    setSelectChapter(Number(chapter));
-    setSelectedChapters([chapter]);
+
+    dispatch({ type: ACTIONS.SET_CHAPTER, payload: Number(chapter) });
+    dispatch({ type: ACTIONS.SET_CHAPTERS, payload: [chapter] });
   }
 
   const memoGotoChapter = useCallback(gotoChapter, []);
@@ -239,9 +342,13 @@ function QuranBrowser() {
     if (event.target.selectedOptions.length === 1) {
       memoGotoChapter(chapter);
     } else {
-      setSelectedChapters(
-        Array.from(event.target.selectedOptions, (option) => option.value)
-      );
+      dispatch({
+        type: ACTIONS.SET_CHAPTERS,
+        payload: Array.from(
+          event.target.selectedOptions,
+          (option) => option.value
+        ),
+      });
     }
   }
 
@@ -251,41 +358,41 @@ function QuranBrowser() {
   );
 
   return (
-    <div className="browser">
-      <SearchPanel
-        refListChapters={refListChapters}
-        selectedChapters={selectedChapters}
-        searchResult={searchResult}
-        searchString={searchString}
-        searchDiacritics={searchDiacritics}
-        searchIdentical={searchIdentical}
-        radioSearchMethod={radioSearchMethod}
-        searchAllQuran={searchAllQuran}
-        setSearchAllQuran={setSearchAllQuran}
-        setSearchIdentical={setSearchIdentical}
-        setSearchString={setSearchString}
-        setRadioSearchMethod={setRadioSearchMethod}
-        setSearchDiacritics={setSearchDiacritics}
-        memoHandleSearchSubmit={memoHandleSearchSubmit}
-        memoHandleSelectionListChapters={memoHandleSelectionListChapters}
-      />
+    <QuranBrowserContext.Provider value={{ dispatch: dispatch }}>
+      <div className="browser">
+        <SearchPanel
+          refListChapters={refListChapters}
+          selectedChapters={state.selectedChapters}
+          searchResult={state.searchResult}
+          searchString={state.searchString}
+          searchDiacritics={state.searchDiacritics}
+          searchIdentical={state.searchIdentical}
+          radioSearchMethod={radioSearchMethod}
+          searchAllQuran={state.searchAllQuran}
+          setRadioSearchMethod={setRadioSearchMethod}
+          memoHandleSearchSubmit={memoHandleSearchSubmit}
+          memoHandleSelectionListChapters={memoHandleSelectionListChapters}
+        />
 
-      <DisplayPanel
-        refListChapters={refListChapters}
-        scrollKey={scrollKey}
-        searchResult={searchResult}
-        searchError={searchError}
-        selectedRootError={selectedRootError}
-        searchingString={searchingString}
-        searchingAllQuran={searchingAllQuran}
-        selectChapter={selectChapter}
-        radioSearchingMethod={radioSearchingMethod}
-        searchMultipleChapters={searchMultipleChapters}
-        rootDerivations={rootDerivations}
-        memoGotoChapter={memoGotoChapter}
-      />
-    </div>
+        <DisplayPanel
+          refListChapters={refListChapters}
+          scrollKey={scrollKey}
+          searchResult={state.searchResult}
+          searchError={state.searchError}
+          selectedRootError={state.selectedRootError}
+          searchingString={state.searchingString}
+          searchingAllQuran={state.searchingAllQuran}
+          selectChapter={state.selectChapter}
+          radioSearchingMethod={radioSearchingMethod}
+          searchMultipleChapters={state.searchMultipleChapters}
+          rootDerivations={rootDerivations}
+          memoGotoChapter={memoGotoChapter}
+        />
+      </div>
+    </QuranBrowserContext.Provider>
   );
 }
+
+export const useQuranBrowser = () => React.useContext(QuranBrowserContext);
 
 export default QuranBrowser;
