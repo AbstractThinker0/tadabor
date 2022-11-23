@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "../SelectionListChapters";
-import SelectionListRoots from "../SelectionListRoots";
+import SelectionListRoots from "./SelectionListRoots";
 
 const SearchPanel = memo(
   ({

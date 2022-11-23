@@ -1,6 +1,6 @@
 import { memo, useMemo, useState } from "react";
-import useQuran from "../context/QuranContext";
-import { ACTIONS, useQuranBrowser } from "../pages/QuranBrowser";
+import useQuran from "../../context/QuranContext";
+import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: any) => {
