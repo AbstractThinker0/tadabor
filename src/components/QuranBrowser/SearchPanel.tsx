@@ -19,20 +19,20 @@ const SearchPanel = memo(
     selectedChapters,
   }: any) => {
     const { t } = useTranslation();
-    const { dispatch, dispatchAction } = useQuranBrowser();
+    const { dispatchAction } = useQuranBrowser();
 
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     function setSearchAllQuran(status: boolean) {
-      dispatch({ type: ACTIONS.SET_SEARCH_ALLQURAN, payload: status });
+      dispatchAction(ACTIONS.SET_SEARCH_ALLQURAN, status);
     }
 
     function setSearchDiacritics(status: boolean) {
-      dispatch({ type: ACTIONS.SET_SEARCH_DIACRITICS, payload: status });
+      dispatchAction(ACTIONS.SET_SEARCH_DIACRITICS, status);
     }
 
     function setSearchIdentical(status: boolean) {
-      dispatch({ type: ACTIONS.SET_SEARCH_IDENTICAL, payload: status });
+      dispatchAction(ACTIONS.SET_SEARCH_IDENTICAL, status);
     }
 
     function setRadioSearchMethod(method: string) {
@@ -135,11 +135,11 @@ const RadioSearchMethod = ({
 };
 
 const FormWordSearch = ({ handleSearchSubmit, searchString }: any) => {
-  const { dispatch } = useQuranBrowser();
+  const { dispatchAction } = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: ACTIONS.SET_SEARCH_STRING, payload: event.target.value });
+    dispatchAction(ACTIONS.SET_SEARCH_STRING, event.target.value);
   };
 
   return (

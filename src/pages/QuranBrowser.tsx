@@ -161,7 +161,7 @@ function QuranBrowser() {
 
     function handleSearchByWord() {
       if (onlySpaces(state.searchString)) {
-        dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: true });
+        dispatchAction(ACTIONS.SET_SEARCH_ERROR, true);
         return;
       }
 
@@ -190,10 +190,10 @@ function QuranBrowser() {
       };
 
       if (state.searchAllQuran) {
-        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: true });
+        dispatchAction(ACTIONS.SET_SEARCHING_ALLQURAN, true);
         allChaptersMatches();
       } else {
-        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: false });
+        dispatchAction(ACTIONS.SET_SEARCHING_ALLQURAN, false);
 
         if (state.selectedChapters.length > 1) {
           multipleChaptersMatches();
@@ -218,7 +218,7 @@ function QuranBrowser() {
       }
 
       function multipleChaptersMatches() {
-        dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: true });
+        dispatchAction(ACTIONS.SET_SEARCH_MULTIPLE, true);
         state.selectedChapters.forEach((chapter) => {
           allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
             checkVerseMatch(verse);
@@ -227,15 +227,15 @@ function QuranBrowser() {
       }
 
       if (matchVerses.length === 0) {
-        dispatch({ type: ACTIONS.SET_SEARCH_ERROR, payload: true });
+        dispatchAction(ACTIONS.SET_SEARCH_ERROR, true);
       } else {
-        dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: matchVerses });
+        dispatchAction(ACTIONS.SET_SEARCH_RESULT, matchVerses);
       }
     }
 
     function handleSearchByRoot() {
       if (onlySpaces(state.searchString)) {
-        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
+        dispatchAction(ACTIONS.SET_SELECTED_ROOT_ERROR, true);
         return;
       }
 
@@ -244,7 +244,7 @@ function QuranBrowser() {
       );
 
       if (rootTarget === undefined) {
-        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
+        dispatchAction(ACTIONS.SET_SELECTED_ROOT_ERROR, true);
         return;
       }
 
@@ -272,12 +272,12 @@ function QuranBrowser() {
       };
 
       if (state.searchAllQuran) {
-        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: true });
+        dispatchAction(ACTIONS.SET_SEARCHING_ALLQURAN, true);
       } else {
-        dispatch({ type: ACTIONS.SET_SEARCHING_ALLQURAN, payload: false });
+        dispatchAction(ACTIONS.SET_SEARCHING_ALLQURAN, false);
 
         if (state.selectedChapters.length > 1) {
-          dispatch({ type: ACTIONS.SET_SEARCH_MULTIPLE, payload: true });
+          dispatchAction(ACTIONS.SET_SEARCH_MULTIPLE, true);
         }
       }
 
@@ -302,9 +302,9 @@ function QuranBrowser() {
       });
 
       if (matchVerses.length === 0) {
-        dispatch({ type: ACTIONS.SET_SELECTED_ROOT_ERROR, payload: true });
+        dispatchAction(ACTIONS.SET_SELECTED_ROOT_ERROR, true);
       } else {
-        dispatch({ type: ACTIONS.SET_SEARCH_RESULT, payload: matchVerses });
+        dispatchAction(ACTIONS.SET_SEARCH_RESULT, matchVerses);
         dispatchAction(ACTIONS.SET_ROOT_DERIVATIONS, derivations);
       }
     }
@@ -334,8 +334,8 @@ function QuranBrowser() {
   function gotoChapter(chapter: string) {
     clearPreviousSearch();
 
-    dispatch({ type: ACTIONS.SET_CHAPTER, payload: Number(chapter) });
-    dispatch({ type: ACTIONS.SET_CHAPTERS, payload: [chapter] });
+    dispatchAction(ACTIONS.SET_CHAPTER, Number(chapter));
+    dispatchAction(ACTIONS.SET_CHAPTERS, [chapter]);
   }
 
   const memoGotoChapter = useCallback(gotoChapter, [clearPreviousSearch]);
@@ -352,13 +352,10 @@ function QuranBrowser() {
     if (event.target.selectedOptions.length === 1) {
       memoGotoChapter(chapter);
     } else {
-      dispatch({
-        type: ACTIONS.SET_CHAPTERS,
-        payload: Array.from(
-          event.target.selectedOptions,
-          (option) => option.value
-        ),
-      });
+      dispatchAction(
+        ACTIONS.SET_CHAPTERS,
+        Array.from(event.target.selectedOptions, (option) => option.value)
+      );
     }
   }
 
