@@ -125,10 +125,15 @@ const SearchPanel = memo(
 
 SearchPanel.displayName = "SearchPanel";
 
+interface RadioSearchMethodProps {
+  radioSearchMethod: string;
+  setRadioSearchMethod: (method: string) => void;
+}
+
 const RadioSearchMethod = ({
   radioSearchMethod,
   setRadioSearchMethod,
-}: any) => {
+}: RadioSearchMethodProps) => {
   const { t, i18n } = useTranslation();
   const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRadioSearchMethod(event.target.value);

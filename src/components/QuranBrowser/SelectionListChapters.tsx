@@ -1,8 +1,16 @@
 import { memo, useState } from "react";
 import useQuran from "../../context/QuranContext";
 
+interface SelectionListChaptersProps {
+  handleSelectionListChapters: React.ChangeEventHandler<HTMLSelectElement>;
+  selectedChapters: string[];
+}
+
 const SelectionListChapters = memo(
-  ({ handleSelectionListChapters, selectedChapters }: any) => {
+  ({
+    handleSelectionListChapters,
+    selectedChapters,
+  }: SelectionListChaptersProps) => {
     const { chapterNames } = useQuran();
     const [chapterSearch, setChapterSearch] = useState("");
 
