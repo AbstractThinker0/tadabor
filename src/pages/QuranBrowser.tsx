@@ -183,15 +183,20 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         }
 
         function multipleChaptersMatches() {
-          newState = { ...newState, searchMultipleChapters: true };
           let searchChapters: string[] = [];
+
           state.selectedChapters.forEach((chapter) => {
             searchChapters.push(chapterNames[Number(chapter) - 1].name);
             allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
               checkVerseMatch(verse);
             });
           });
-          newState = { ...newState, searchingChapters: searchChapters };
+
+          newState = {
+            ...newState,
+            searchMultipleChapters: true,
+            searchingChapters: searchChapters,
+          };
         }
 
         if (matchVerses.length === 0) {
@@ -249,17 +254,21 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           newState = { ...newState, searchingAllQuran: false };
 
           if (state.selectedChapters.length > 1) {
-            newState = { ...newState, searchMultipleChapters: true };
             let searchChapters: string[] = [];
+
             state.selectedChapters.forEach((chapter) => {
               searchChapters.push(chapterNames[Number(chapter) - 1].name);
             });
-            newState = { ...newState, searchingChapters: searchChapters };
+
+            newState = {
+              ...newState,
+              searchMultipleChapters: true,
+              searchingChapters: searchChapters,
+            };
           }
         }
 
         // ابى	13	40:9;288:17,74;1242:13;1266:7;1832:3;2117:10;2127:20;2216:9;2403:6;2463:9;2904:5;3604:8
-
         // occurences array have the verserank:index1,index2...etc format
         occurencesArray.forEach((item) => {
           let info = item.split(":");
