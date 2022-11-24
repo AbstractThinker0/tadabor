@@ -13,7 +13,7 @@ interface Props {
   children?: ReactNode;
 }
 
-interface chapterProps {
+export interface chapterProps {
   id: number;
   name: string;
   transliteration: string;
@@ -26,12 +26,12 @@ export type verseProps = {
   versetext: string;
 };
 
-interface quranProps {
+export interface quranProps {
   id: number;
   verses: verseProps[];
 }
 
-interface rootProps {
+export interface rootProps {
   id: number;
   name: string;
   count: string;

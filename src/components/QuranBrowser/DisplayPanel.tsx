@@ -22,9 +22,10 @@ import useQuran, {
   verseProps,
   derivationProps,
 } from "../../context/QuranContext";
+import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 interface DisplayPanelProps {
-  refListChapters: React.RefObject<HTMLSelectElement>;
+  searchingChapters: string[];
   scrollKey: React.MutableRefObject<string | null>;
   searchResult: verseProps[];
   searchError: boolean;
@@ -35,12 +36,11 @@ interface DisplayPanelProps {
   radioSearchingMethod: string;
   searchMultipleChapters: boolean;
   rootDerivations: derivationProps[];
-  memoGotoChapter: (chapter: string) => void;
 }
 
 const DisplayPanel = memo(
   ({
-    refListChapters,
+    searchingChapters,
     scrollKey,
     searchResult,
     searchError,
@@ -51,9 +51,9 @@ const DisplayPanel = memo(
     radioSearchingMethod,
     searchMultipleChapters,
     rootDerivations,
-    memoGotoChapter,
   }: DisplayPanelProps) => {
     const { chapterNames, allQuranText } = useQuran();
+
     const { t } = useTranslation();
     const refListVerses = useRef<HTMLDivElement>(null);
 
@@ -197,8 +197,7 @@ const DisplayPanel = memo(
               handleEditClick={memoHandleEditClick}
               searchMultipleChapters={searchMultipleChapters}
               refListVerses={refListVerses}
-              refListChapters={refListChapters}
-              gotoChapter={memoGotoChapter}
+              searchingChapters={searchingChapters}
               scrollKey={scrollKey}
               rootDerivations={rootDerivations}
               handleNoteChange={memoHandleNoteChange}
@@ -236,7 +235,7 @@ const SearchTitle = memo(
     searchToken,
     scopeAllQuran,
     searchMultipleChapters,
-    selectedChapters,
+    searchChapters,
     chapterName,
   }: any) => {
     let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
@@ -246,7 +245,7 @@ const SearchTitle = memo(
         {scopeAllQuran === true
           ? " في كل السور"
           : searchMultipleChapters
-          ? " في سور " + selectedChapters.join(" و")
+          ? " في سور " + searchChapters.join(" و")
           : " في سورة " + chapterName}
       </h3>
     );
@@ -269,8 +268,7 @@ const ListSearchResults = memo(
     handleEditClick,
     searchMultipleChapters,
     refListVerses,
-    refListChapters,
-    gotoChapter,
+    searchingChapters,
     scrollKey,
     rootDerivations,
     handleNoteChange,
@@ -285,16 +283,6 @@ const ListSearchResults = memo(
     }
 
     const refVersesResult = useRef<refVersesResultType>({});
-
-    let selectedChapters: string[] = [];
-    if (searchMultipleChapters) {
-      if (refListChapters.current.selectedOptions.length > 1) {
-        selectedChapters = Array.from(
-          refListChapters.current.selectedOptions,
-          (option: any) => chapterNames[option.value - 1].name
-        );
-      }
-    }
 
     useEffect(() => {
       refListVerses.current.scrollTop = 0;
@@ -323,7 +311,7 @@ const ListSearchResults = memo(
           searchToken={searchToken}
           scopeAllQuran={scopeAllQuran}
           searchMultipleChapters={searchMultipleChapters}
-          selectedChapters={selectedChapters}
+          searchChapters={searchingChapters}
           chapterName={chapterName}
         />
         {isRootSearch && (
@@ -346,7 +334,6 @@ const ListSearchResults = memo(
                 scopeAllQuran={scopeAllQuran}
                 searchMultipleChapters={searchMultipleChapters}
                 chapterNames={chapterNames}
-                gotoChapter={gotoChapter}
                 scrollKey={scrollKey}
                 value={myNotes[verse.key] || ""}
                 handleNoteChange={handleNoteChange}
@@ -378,7 +365,6 @@ const SearchVerseComponent = memo(
     scopeAllQuran,
     searchMultipleChapters,
     chapterNames,
-    gotoChapter,
     scrollKey,
     value,
     handleNoteChange,
@@ -401,7 +387,6 @@ const SearchVerseComponent = memo(
           scopeAllQuran={scopeAllQuran}
           searchMultipleChapters={searchMultipleChapters}
           verseChapter={chapterNames[verse.suraid - 1].name}
-          gotoChapter={gotoChapter}
           chapterNames={chapterNames}
           scrollKey={scrollKey}
           isRootSearch={isRootSearch}
@@ -468,14 +453,19 @@ const VerseContentComponent = memo(
     scopeAllQuran,
     searchMultipleChapters,
     verseChapter,
-    gotoChapter,
     chapterNames,
     scrollKey,
     isRootSearch,
     rootDerivations,
   }: any) => {
+    const { dispatchAction } = useQuranBrowser();
+
     let verse_key = verse.key;
     let isLinkable = scopeAllQuran || searchMultipleChapters;
+
+    function gotoChapter(chapter: string) {
+      dispatchAction(ACTIONS.GOTO_CHAPTER, chapter);
+    }
 
     const handleVerseClick = (verse_key: string) => {
       scrollKey.current = verse_key;

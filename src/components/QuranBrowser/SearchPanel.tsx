@@ -1,23 +1,24 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
+import useQuran from "../../context/QuranContext";
 import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
-import SelectionListChapters from "../SelectionListChapters";
+import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
 
 const SearchPanel = memo(
   ({
-    memoHandleSelectionListChapters,
-    refListChapters,
     radioSearchMethod,
     searchDiacritics,
     searchIdentical,
     searchAllQuran,
-    memoHandleSearchSubmit,
     searchString,
     searchResult,
     selectedChapters,
+    OnSelectionListChapters,
   }: any) => {
+    const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
+      useQuran();
     const { t } = useTranslation();
     const { dispatchAction } = useQuranBrowser();
 
@@ -39,11 +40,25 @@ const SearchPanel = memo(
       dispatchAction(ACTIONS.SET_RADIO_SEARCH, method);
     }
 
+    function onSearchSubmit() {
+      dispatchAction(ACTIONS.SEARCH_SUBMIT, {
+        allQuranText,
+        absoluteQuran,
+        chapterNames,
+        quranRoots,
+      });
+    }
+
+    function handleSelectionListChapters(
+      event: React.ChangeEvent<HTMLSelectElement>
+    ) {
+      OnSelectionListChapters(event.target.selectedOptions, event.target.value);
+    }
+
     return (
       <div className="browser-search">
         <SelectionListChapters
-          handleSelectionListChapters={memoHandleSelectionListChapters}
-          innerRef={refListChapters}
+          handleSelectionListChapters={handleSelectionListChapters}
           selectedChapters={selectedChapters}
         />
         <RadioSearchMethod
@@ -68,7 +83,7 @@ const SearchPanel = memo(
           labelText={t("search_all_quran")}
         />
         <FormWordSearch
-          handleSearchSubmit={memoHandleSearchSubmit}
+          onSearchSubmit={onSearchSubmit}
           searchString={searchString}
         />
         <SelectionListRoots
@@ -134,13 +149,19 @@ const RadioSearchMethod = ({
   );
 };
 
-const FormWordSearch = ({ handleSearchSubmit, searchString }: any) => {
+const FormWordSearch = ({ onSearchSubmit, searchString }: any) => {
   const { dispatchAction } = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatchAction(ACTIONS.SET_SEARCH_STRING, event.target.value);
   };
+
+  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    onSearchSubmit();
+  }
 
   return (
     <form

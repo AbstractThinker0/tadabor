@@ -1,8 +1,8 @@
 import { memo, useState } from "react";
-import useQuran from "../context/QuranContext";
+import useQuran from "../../context/QuranContext";
 
 const SelectionListChapters = memo(
-  ({ handleSelectionListChapters, innerRef, selectedChapters }: any) => {
+  ({ handleSelectionListChapters, selectedChapters }: any) => {
     const { chapterNames } = useQuran();
     const [chapterSearch, setChapterSearch] = useState("");
 
@@ -27,7 +27,6 @@ const SelectionListChapters = memo(
           onFocus={handleSelectionListChapters}
           onChange={handleSelectionListChapters}
           aria-label="size 7 select example"
-          ref={innerRef}
           value={selectedChapters}
           multiple
         >
