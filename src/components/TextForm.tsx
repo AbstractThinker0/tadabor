@@ -49,28 +49,30 @@ const TextForm = ({
 
   return (
     <div
-      className="collapse card border-primary"
+      className="collapse"
       id={"collapseExample" + inputKey}
       ref={collapseRef}
     >
-      <div className="card-body">
-        {isEditable === false ? (
-          <TextComponent
-            inputValue={inputValue}
-            handleEditClick={handleEditClick}
-            inputKey={inputKey}
-            inputDirection={inputDirection}
-          />
-        ) : (
-          <FormComponent
-            inputKey={inputKey}
-            inputValue={inputValue}
-            inputDirection={inputDirection}
-            handleSetDirection={handleSetDirection}
-            handleInputSubmit={handleInputSubmit}
-            handleInputChange={handleInputChange}
-          />
-        )}
+      <div className="card border-primary">
+        <div className="card-body">
+          {isEditable === false ? (
+            <TextComponent
+              inputValue={inputValue}
+              handleEditClick={handleEditClick}
+              inputKey={inputKey}
+              inputDirection={inputDirection}
+            />
+          ) : (
+            <FormComponent
+              inputKey={inputKey}
+              inputValue={inputValue}
+              inputDirection={inputDirection}
+              handleSetDirection={handleSetDirection}
+              handleInputSubmit={handleInputSubmit}
+              handleInputChange={handleInputChange}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
