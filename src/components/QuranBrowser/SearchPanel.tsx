@@ -14,10 +14,6 @@ interface SearchPanelProps {
   searchString: string;
   searchResult: verseProps[];
   selectedChapters: string[];
-  OnSelectionListChapters: (
-    selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
-    chapter: string
-  ) => void;
 }
 
 const SearchPanel = memo(
@@ -29,7 +25,6 @@ const SearchPanel = memo(
     searchString,
     searchResult,
     selectedChapters,
-    OnSelectionListChapters,
   }: SearchPanelProps) => {
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
@@ -61,6 +56,24 @@ const SearchPanel = memo(
         chapterNames,
         quranRoots,
       });
+    }
+
+    function OnSelectionListChapters(
+      selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
+      chapter: string
+    ) {
+      dispatchAction(ACTIONS.SET_SCROLL_KEY, null);
+
+      if (!chapter) return;
+
+      if (selectedOptions.length === 1) {
+        dispatchAction(ACTIONS.GOTO_CHAPTER, chapter);
+      } else {
+        dispatchAction(
+          ACTIONS.SET_CHAPTERS,
+          Array.from(selectedOptions, (option) => option.value)
+        );
+      }
     }
 
     function handleSelectionListChapters(

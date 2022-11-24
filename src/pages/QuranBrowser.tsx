@@ -368,24 +368,6 @@ function QuranBrowser() {
   const dispatchAction = (type: ACTIONS, payload: any) =>
     dispatch({ type, payload });
 
-  function OnSelectionListChapters(
-    selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
-    chapter: string
-  ) {
-    dispatchAction(ACTIONS.SET_SCROLL_KEY, null);
-
-    if (!chapter) return;
-
-    if (selectedOptions.length === 1) {
-      dispatchAction(ACTIONS.GOTO_CHAPTER, chapter);
-    } else {
-      dispatchAction(
-        ACTIONS.SET_CHAPTERS,
-        Array.from(selectedOptions, (option) => option.value)
-      );
-    }
-  }
-
   return (
     <QuranBrowserContext.Provider value={{ dispatchAction: dispatchAction }}>
       <div className="browser">
@@ -397,7 +379,6 @@ function QuranBrowser() {
           searchIdentical={state.searchIdentical}
           radioSearchMethod={state.radioSearchMethod}
           searchAllQuran={state.searchAllQuran}
-          OnSelectionListChapters={OnSelectionListChapters}
         />
 
         <DisplayPanel
