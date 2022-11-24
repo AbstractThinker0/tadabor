@@ -1,4 +1,4 @@
-import React, { useRef, useReducer, Reducer } from "react";
+import React, { useReducer, Reducer } from "react";
 
 import { findWord, normalize_text, onlySpaces } from "../util/util";
 
@@ -30,6 +30,7 @@ export enum ACTIONS {
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
   SET_ROOT_DERIVATIONS = "dispatchSetRootDerivations",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
   SEARCH_SUBMIT = "dispatchSetSearchSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
 }
@@ -56,6 +57,7 @@ interface stateProps {
   radioSearchMethod: string;
   radioSearchingMethod: string;
   rootDerivations: derivationProps[];
+  scrollKey: null | string;
 }
 
 function reducer(state: stateProps, action: reducerAction): stateProps {
@@ -108,6 +110,9 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     }
     case ACTIONS.SET_ROOT_DERIVATIONS: {
       return { ...state, rootDerivations: action.payload };
+    }
+    case ACTIONS.SET_SCROLL_KEY: {
+      return { ...state, scrollKey: action.payload };
     }
     case ACTIONS.SEARCH_SUBMIT: {
       let newState: stateProps = {
@@ -335,8 +340,6 @@ const QuranBrowserContext = React.createContext<QuranBrowserContent>({
 });
 
 function QuranBrowser() {
-  const scrollKey = useRef<string | null>(null);
-
   const initialState: stateProps = {
     selectChapter: 1,
     selectedChapters: ["1"],
@@ -354,6 +357,7 @@ function QuranBrowser() {
     radioSearchMethod: "optionWordSearch",
     radioSearchingMethod: "optionWordSearch",
     rootDerivations: [],
+    scrollKey: null,
   };
 
   const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
@@ -368,7 +372,7 @@ function QuranBrowser() {
     selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
     chapter: string
   ) {
-    scrollKey.current = null;
+    dispatchAction(ACTIONS.SET_SCROLL_KEY, null);
 
     if (!chapter) return;
 
@@ -397,7 +401,7 @@ function QuranBrowser() {
         />
 
         <DisplayPanel
-          scrollKey={scrollKey}
+          scrollKey={state.scrollKey}
           searchingChapters={state.searchingChapters}
           searchResult={state.searchResult}
           searchError={state.searchError}

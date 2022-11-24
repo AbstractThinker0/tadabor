@@ -26,7 +26,7 @@ import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
-  scrollKey: React.MutableRefObject<string | null>;
+  scrollKey: string | null;
   searchResult: verseProps[];
   searchError: boolean;
   selectedRootError: boolean;
@@ -468,8 +468,7 @@ const VerseContentComponent = memo(
     }
 
     const handleVerseClick = (verse_key: string) => {
-      scrollKey.current = verse_key;
-
+      dispatchAction(ACTIONS.SET_SCROLL_KEY, verse_key);
       gotoChapter(chapterNames[verse.suraid - 1].id.toString());
     };
 
@@ -571,8 +570,8 @@ const ListVerses = memo(
     handleNoteSubmit,
   }: any) => {
     useEffect(() => {
-      if (scrollKey.current) {
-        versesRef.current[scrollKey.current].scrollIntoView();
+      if (scrollKey) {
+        versesRef.current[scrollKey].scrollIntoView();
       } else {
         refListVerses.current.scrollTop = 0;
       }

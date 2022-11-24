@@ -1,10 +1,24 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import useQuran from "../../context/QuranContext";
+import useQuran, { verseProps } from "../../context/QuranContext";
 import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
+
+interface SearchPanelProps {
+  radioSearchMethod: string;
+  searchDiacritics: boolean;
+  searchIdentical: boolean;
+  searchAllQuran: boolean;
+  searchString: string;
+  searchResult: verseProps[];
+  selectedChapters: string[];
+  OnSelectionListChapters: (
+    selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
+    chapter: string
+  ) => void;
+}
 
 const SearchPanel = memo(
   ({
@@ -16,7 +30,7 @@ const SearchPanel = memo(
     searchResult,
     selectedChapters,
     OnSelectionListChapters,
-  }: any) => {
+  }: SearchPanelProps) => {
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
     const { t } = useTranslation();
@@ -232,7 +246,7 @@ const CheckboxComponent = ({
   );
 };
 
-const SearchSuccessComponent = ({ searchResult }: { searchResult: string }) => {
+const SearchSuccessComponent = ({ searchResult }: any) => {
   const { t } = useTranslation();
   return (
     <>
