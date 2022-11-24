@@ -13,7 +13,7 @@ import {
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
 
-export enum ACTIONS {
+export enum QB_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
   SET_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
@@ -36,7 +36,7 @@ export enum ACTIONS {
 }
 
 interface reducerAction {
-  type: ACTIONS | string;
+  type: QB_ACTIONS | string;
   payload: any;
 }
 
@@ -63,58 +63,58 @@ interface stateProps {
 function reducer(state: stateProps, action: reducerAction): stateProps {
   // ...
   switch (action.type) {
-    case ACTIONS.SET_CHAPTER: {
+    case QB_ACTIONS.SET_CHAPTER: {
       return { ...state, selectChapter: action.payload };
     }
-    case ACTIONS.SET_CHAPTERS: {
+    case QB_ACTIONS.SET_CHAPTERS: {
       return { ...state, selectedChapters: action.payload };
     }
-    case ACTIONS.SET_SEARCH_STRING: {
+    case QB_ACTIONS.SET_SEARCH_STRING: {
       return { ...state, searchString: action.payload };
     }
-    case ACTIONS.SET_SEARCHING_STRING: {
+    case QB_ACTIONS.SET_SEARCHING_STRING: {
       return { ...state, searchingString: action.payload };
     }
-    case ACTIONS.SET_SEARCHING_CHAPTERS: {
+    case QB_ACTIONS.SET_SEARCHING_CHAPTERS: {
       return { ...state, searchingChapters: action.payload };
     }
-    case ACTIONS.SET_SEARCH_RESULT: {
+    case QB_ACTIONS.SET_SEARCH_RESULT: {
       return { ...state, searchResult: action.payload };
     }
-    case ACTIONS.SET_SEARCH_ALLQURAN: {
+    case QB_ACTIONS.SET_SEARCH_ALLQURAN: {
       return { ...state, searchAllQuran: action.payload };
     }
-    case ACTIONS.SET_SEARCHING_ALLQURAN: {
+    case QB_ACTIONS.SET_SEARCHING_ALLQURAN: {
       return { ...state, searchingAllQuran: action.payload };
     }
-    case ACTIONS.SET_SEARCH_MULTIPLE: {
+    case QB_ACTIONS.SET_SEARCH_MULTIPLE: {
       return { ...state, searchMultipleChapters: action.payload };
     }
-    case ACTIONS.SET_SEARCH_DIACRITICS: {
+    case QB_ACTIONS.SET_SEARCH_DIACRITICS: {
       return { ...state, searchDiacritics: action.payload };
     }
-    case ACTIONS.SET_SEARCH_IDENTICAL: {
+    case QB_ACTIONS.SET_SEARCH_IDENTICAL: {
       return { ...state, searchIdentical: action.payload };
     }
-    case ACTIONS.SET_SEARCH_ERROR: {
+    case QB_ACTIONS.SET_SEARCH_ERROR: {
       return { ...state, searchError: action.payload };
     }
-    case ACTIONS.SET_SELECTED_ROOT_ERROR: {
+    case QB_ACTIONS.SET_SELECTED_ROOT_ERROR: {
       return { ...state, selectedRootError: action.payload };
     }
-    case ACTIONS.SET_RADIO_SEARCH: {
+    case QB_ACTIONS.SET_RADIO_SEARCH: {
       return { ...state, radioSearchMethod: action.payload };
     }
-    case ACTIONS.SET_RADIO_SEARCHING: {
+    case QB_ACTIONS.SET_RADIO_SEARCHING: {
       return { ...state, radioSearchingMethod: action.payload };
     }
-    case ACTIONS.SET_ROOT_DERIVATIONS: {
+    case QB_ACTIONS.SET_ROOT_DERIVATIONS: {
       return { ...state, rootDerivations: action.payload };
     }
-    case ACTIONS.SET_SCROLL_KEY: {
+    case QB_ACTIONS.SET_SCROLL_KEY: {
       return { ...state, scrollKey: action.payload };
     }
-    case ACTIONS.SEARCH_SUBMIT: {
+    case QB_ACTIONS.SEARCH_SUBMIT: {
       let newState: stateProps = {
         ...state,
         searchError: false,
@@ -315,7 +315,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
       return { ...newState };
     }
-    case ACTIONS.GOTO_CHAPTER: {
+    case QB_ACTIONS.GOTO_CHAPTER: {
       return {
         ...state,
         searchError: false,
@@ -332,7 +332,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 }
 
 type QuranBrowserContent = {
-  dispatchAction(type: ACTIONS, payload: any): void;
+  dispatchAction(type: QB_ACTIONS, payload: any): void;
 };
 
 const QuranBrowserContext = React.createContext<QuranBrowserContent>({
@@ -365,7 +365,7 @@ function QuranBrowser() {
     initialState
   );
 
-  const dispatchAction = (type: ACTIONS, payload: any) =>
+  const dispatchAction = (type: QB_ACTIONS, payload: any) =>
     dispatch({ type, payload });
 
   return (

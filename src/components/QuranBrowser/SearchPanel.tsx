@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran, { verseProps } from "../../context/QuranContext";
-import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
+import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
@@ -34,23 +34,23 @@ const SearchPanel = memo(
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     function setSearchAllQuran(status: boolean) {
-      dispatchAction(ACTIONS.SET_SEARCH_ALLQURAN, status);
+      dispatchAction(QB_ACTIONS.SET_SEARCH_ALLQURAN, status);
     }
 
     function setSearchDiacritics(status: boolean) {
-      dispatchAction(ACTIONS.SET_SEARCH_DIACRITICS, status);
+      dispatchAction(QB_ACTIONS.SET_SEARCH_DIACRITICS, status);
     }
 
     function setSearchIdentical(status: boolean) {
-      dispatchAction(ACTIONS.SET_SEARCH_IDENTICAL, status);
+      dispatchAction(QB_ACTIONS.SET_SEARCH_IDENTICAL, status);
     }
 
     function setRadioSearchMethod(method: string) {
-      dispatchAction(ACTIONS.SET_RADIO_SEARCH, method);
+      dispatchAction(QB_ACTIONS.SET_RADIO_SEARCH, method);
     }
 
     function onSearchSubmit() {
-      dispatchAction(ACTIONS.SEARCH_SUBMIT, {
+      dispatchAction(QB_ACTIONS.SEARCH_SUBMIT, {
         allQuranText,
         absoluteQuran,
         chapterNames,
@@ -62,15 +62,15 @@ const SearchPanel = memo(
       selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
       chapter: string
     ) {
-      dispatchAction(ACTIONS.SET_SCROLL_KEY, null);
+      dispatchAction(QB_ACTIONS.SET_SCROLL_KEY, null);
 
       if (!chapter) return;
 
       if (selectedOptions.length === 1) {
-        dispatchAction(ACTIONS.GOTO_CHAPTER, chapter);
+        dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);
       } else {
         dispatchAction(
-          ACTIONS.SET_CHAPTERS,
+          QB_ACTIONS.SET_CHAPTERS,
           Array.from(selectedOptions, (option) => option.value)
         );
       }
@@ -186,7 +186,7 @@ const FormWordSearch = ({ onSearchSubmit, searchString }: any) => {
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(ACTIONS.SET_SEARCH_STRING, event.target.value);
+    dispatchAction(QB_ACTIONS.SET_SEARCH_STRING, event.target.value);
   };
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {

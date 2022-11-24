@@ -22,7 +22,7 @@ import useQuran, {
   verseProps,
   derivationProps,
 } from "../../context/QuranContext";
-import { ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
+import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
@@ -464,11 +464,11 @@ const VerseContentComponent = memo(
     let isLinkable = scopeAllQuran || searchMultipleChapters;
 
     function gotoChapter(chapter: string) {
-      dispatchAction(ACTIONS.GOTO_CHAPTER, chapter);
+      dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);
     }
 
     const handleVerseClick = (verse_key: string) => {
-      dispatchAction(ACTIONS.SET_SCROLL_KEY, verse_key);
+      dispatchAction(QB_ACTIONS.SET_SCROLL_KEY, verse_key);
       gotoChapter(chapterNames[verse.suraid - 1].id.toString());
     };
 
