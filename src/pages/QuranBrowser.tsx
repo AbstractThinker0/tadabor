@@ -36,7 +36,7 @@ export enum QB_ACTIONS {
 }
 
 interface reducerAction {
-  type: QB_ACTIONS | string;
+  type: QB_ACTIONS;
   payload: any;
 }
 
@@ -327,8 +327,10 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         selectedChapters: [action.payload],
       };
     }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
   }
-  throw Error("Unknown action: " + action.type);
 }
 
 type QuranBrowserContent = {

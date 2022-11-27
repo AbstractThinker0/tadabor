@@ -89,10 +89,10 @@ function YourNotes() {
       date_modified: Date.now(),
     })
       .then(function () {
-        toast.success(t("save_success"));
+        toast.success(t("save_success") as string);
       })
       .catch(function () {
-        toast.success(t("save_failed"));
+        toast.success(t("save_failed") as string);
       });
   }
 
