@@ -378,7 +378,7 @@ const ListSearchResults = memo(
                 verse={verse}
                 scopeAllQuran={scopeAllQuran}
                 searchMultipleChapters={searchMultipleChapters}
-                chapterNames={chapterNames}
+                verseChapter={chapterNames[Number(verse.suraid) - 1].name}
                 value={myNotes[verse.key] || ""}
                 isEditable={editableNotes[verse.key]}
                 noteDirection={areaDirection[verse.key] || ""}
@@ -407,7 +407,7 @@ const SearchVerseComponent = memo(
     verse,
     scopeAllQuran,
     searchMultipleChapters,
-    chapterNames,
+    verseChapter,
     value,
     isEditable,
     noteDirection,
@@ -425,8 +425,7 @@ const SearchVerseComponent = memo(
           verse={verse}
           scopeAllQuran={scopeAllQuran}
           searchMultipleChapters={searchMultipleChapters}
-          verseChapter={chapterNames[verse.suraid - 1].name}
-          chapterNames={chapterNames}
+          verseChapter={verseChapter}
           isRootSearch={isRootSearch}
           rootDerivations={rootDerivations}
         />
@@ -488,7 +487,6 @@ const VerseContentComponent = memo(
     scopeAllQuran,
     searchMultipleChapters,
     verseChapter,
-    chapterNames,
     isRootSearch,
     rootDerivations,
   }: any) => {
@@ -503,7 +501,7 @@ const VerseContentComponent = memo(
 
     const handleVerseClick = (verse_key: string) => {
       dispatchAction(QB_ACTIONS.SET_SCROLL_KEY, verse_key);
-      gotoChapter(chapterNames[verse.suraid - 1].id.toString());
+      gotoChapter(verse.suraid);
     };
 
     return (
