@@ -15,68 +15,70 @@ interface TextFormProps {
   onInputSubmit: (key: string, value: string) => void;
 }
 
-const TextForm = ({
-  inputKey,
-  inputValue,
-  inputDirection,
-  handleSetDirection,
-  handleInputChange,
-  isEditable,
-  handleEditClick,
-  onInputSubmit,
-}: TextFormProps) => {
-  const collapseRef = useRef<HTMLDivElement>(null);
+const TextForm = memo(
+  ({
+    inputKey,
+    inputValue,
+    inputDirection,
+    handleSetDirection,
+    handleInputChange,
+    isEditable,
+    handleEditClick,
+    onInputSubmit,
+  }: TextFormProps) => {
+    const collapseRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    let collapseElement = collapseRef.current;
-    function onShownCollapse(event: any) {
-      event.target.scrollIntoView({ block: "nearest" });
-    }
-
-    if (collapseElement !== null) {
-      collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
-    }
-
-    return () => {
-      if (collapseElement !== null) {
-        collapseElement.removeEventListener(
-          "shown.bs.collapse",
-          onShownCollapse
-        );
+    useEffect(() => {
+      let collapseElement = collapseRef.current;
+      function onShownCollapse(event: any) {
+        event.target.scrollIntoView({ block: "nearest" });
       }
-    };
-  }, []);
 
-  return (
-    <div
-      className="collapse"
-      id={"collapseExample" + inputKey}
-      ref={collapseRef}
-    >
-      <div className="card border-primary">
-        <div className="card-body">
-          {isEditable === false ? (
-            <TextComponent
-              inputValue={inputValue}
-              handleEditClick={handleEditClick}
-              inputKey={inputKey}
-              inputDirection={inputDirection}
-            />
-          ) : (
-            <FormComponent
-              inputKey={inputKey}
-              inputValue={inputValue}
-              inputDirection={inputDirection}
-              handleSetDirection={handleSetDirection}
-              onInputSubmit={onInputSubmit}
-              handleInputChange={handleInputChange}
-            />
-          )}
+      if (collapseElement !== null) {
+        collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+      }
+
+      return () => {
+        if (collapseElement !== null) {
+          collapseElement.removeEventListener(
+            "shown.bs.collapse",
+            onShownCollapse
+          );
+        }
+      };
+    }, []);
+
+    return (
+      <div
+        className="collapse"
+        id={"collapseExample" + inputKey}
+        ref={collapseRef}
+      >
+        <div className="card border-primary">
+          <div className="card-body">
+            {isEditable === false ? (
+              <TextComponent
+                inputValue={inputValue}
+                handleEditClick={handleEditClick}
+                inputKey={inputKey}
+                inputDirection={inputDirection}
+              />
+            ) : (
+              <FormComponent
+                inputKey={inputKey}
+                inputValue={inputValue}
+                inputDirection={inputDirection}
+                handleSetDirection={handleSetDirection}
+                onInputSubmit={onInputSubmit}
+                handleInputChange={handleInputChange}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 const TextComponent = ({
   inputValue,

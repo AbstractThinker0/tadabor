@@ -144,12 +144,14 @@ interface DisplayPanelProps {
 }
 
 type DisplayPanelContent = {
-  dispatchAction(type: DP_ACTIONS, payload: any): void;
+  dispatchAction: (type: DP_ACTIONS, payload: any) => void;
 };
 
 const DisplayPanelContext = createContext<DisplayPanelContent>({
   dispatchAction: () => {},
 });
+
+const useDisplayPanel = () => useContext(DisplayPanelContext);
 
 const DisplayPanel = memo(
   ({
@@ -180,8 +182,10 @@ const DisplayPanel = memo(
       initialState
     );
 
-    const dispatchAction = (type: DP_ACTIONS, payload: any) =>
-      dispatch({ type, payload });
+    const dispatchAction = useCallback(
+      (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
+      []
+    );
 
     useEffect(() => {
       let clientLeft = false;
@@ -220,7 +224,7 @@ const DisplayPanel = memo(
       return () => {
         clientLeft = true;
       };
-    }, []);
+    }, [dispatchAction]);
 
     if (state.loadingState)
       return (
@@ -232,7 +236,7 @@ const DisplayPanel = memo(
       );
 
     return (
-      <DisplayPanelContext.Provider value={{ dispatchAction: dispatchAction }}>
+      <DisplayPanelContext.Provider value={{ dispatchAction }}>
         <div className="browser-display" ref={refListVerses}>
           <div className="card browser-display-card" dir="rtl">
             {searchResult.length || searchError || selectedRootError ? (
@@ -317,6 +321,7 @@ const ListSearchResults = memo(
     areaDirection,
   }: any) => {
     const { chapterNames } = useQuran();
+    const { dispatchAction } = useDisplayPanel();
 
     const chapterName = chapterNames[selectChapter - 1].name;
 
@@ -382,6 +387,7 @@ const ListSearchResults = memo(
                 noteDirection={areaDirection[verse.key] || ""}
                 isRootSearch={isRootSearch}
                 rootDerivations={rootDerivations}
+                dispatchAction={dispatchAction}
               />
             </div>
           ))}
@@ -409,54 +415,11 @@ const SearchVerseComponent = memo(
     noteDirection,
     isRootSearch,
     rootDerivations,
+    dispatchAction,
   }: any) => {
-    const { dispatchAction } = useContext(DisplayPanelContext);
-    const { t } = useTranslation();
-
     rootDerivations = (rootDerivations as []).filter(
       (value: any) => value.key === verse.key
     );
-
-    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      const { name, value } = event.target;
-
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
-    }
-
-    function handleSetDirection(verse_key: string, dir: string) {
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
-        name: verse_key,
-        value: dir,
-      });
-
-      saveData("notes_dir", { id: verse_key, dir: dir });
-    }
-
-    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
-      let inputKey = event.currentTarget.name;
-
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
-        name: inputKey,
-        value: true,
-      });
-    }
-
-    function onInputSubmit(key: string, value: string) {
-      saveData("notes", {
-        id: key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-        .then(function () {
-          toast.success(t("save_success") as string);
-        })
-        .catch(function () {
-          toast.success(t("save_failed") as string);
-        });
-
-      dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
-    }
 
     return (
       <>
@@ -470,15 +433,12 @@ const SearchVerseComponent = memo(
           isRootSearch={isRootSearch}
           rootDerivations={rootDerivations}
         />
-        <TextForm
-          inputKey={verse.key}
-          inputValue={value}
-          handleInputChange={handleNoteChange}
-          isEditable={isEditable}
-          handleEditClick={handleEditClick}
-          handleSetDirection={handleSetDirection}
-          inputDirection={noteDirection}
-          onInputSubmit={onInputSubmit}
+        <InputTextForm
+          verseKey={verse.key}
+          verseNote={value}
+          noteEditable={isEditable}
+          noteDirection={noteDirection}
+          dispatchAction={dispatchAction}
         />
       </>
     );
@@ -643,6 +603,7 @@ const ListVerses = memo(
     areaDirection,
   }: any) => {
     const { chapterNames, allQuranText } = useQuran();
+    const { dispatchAction } = useDisplayPanel();
 
     const chapterName = chapterNames[selectChapter - 1].name;
     const versesArray = allQuranText[selectChapter - 1].verses;
@@ -667,6 +628,7 @@ const ListVerses = memo(
               value={myNotes[verse.key] || ""}
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
+              dispatchAction={dispatchAction}
             />
           ))}
         </div>
@@ -678,66 +640,26 @@ const ListVerses = memo(
 ListVerses.displayName = "ListVerses";
 
 const VerseComponent = memo(
-  ({ versesRef, verse, value, isEditable, noteDirection }: any) => {
-    const { dispatchAction } = useContext(DisplayPanelContext);
-    const { t } = useTranslation();
-
-    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      const { name, value } = event.target;
-
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
-    }
-
-    function onInputSubmit(key: string, value: string) {
-      saveData("notes", {
-        id: key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-        .then(function () {
-          toast.success(t("save_success") as string);
-        })
-        .catch(function () {
-          toast.success(t("save_failed") as string);
-        });
-
-      dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
-    }
-
-    function handleSetDirection(verse_key: string, dir: string) {
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
-        name: verse_key,
-        value: dir,
-      });
-
-      saveData("notes_dir", { id: verse_key, dir: dir });
-    }
-
-    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
-      let inputKey = event.currentTarget.name;
-
-      dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
-        name: inputKey,
-        value: true,
-      });
-    }
-
+  ({
+    versesRef,
+    verse,
+    value,
+    isEditable,
+    noteDirection,
+    dispatchAction,
+  }: any) => {
     return (
       <div
         ref={(el) => (versesRef.current[verse.key] = el)}
         className="border-bottom pt-1 pb-1"
       >
         <VerseTextComponent verse={verse} />
-        <TextForm
-          inputKey={verse.key}
-          inputValue={value}
-          handleInputChange={handleNoteChange}
-          isEditable={isEditable}
-          handleEditClick={handleEditClick}
-          handleSetDirection={handleSetDirection}
-          inputDirection={noteDirection}
-          onInputSubmit={onInputSubmit}
+        <InputTextForm
+          verseKey={verse.key}
+          verseNote={value}
+          noteEditable={isEditable}
+          noteDirection={noteDirection}
+          dispatchAction={dispatchAction}
         />
       </div>
     );
@@ -765,5 +687,85 @@ const VerseTextComponent = memo(({ verse }: any) => {
 });
 
 VerseTextComponent.displayName = "VerseTextComponent";
+
+const InputTextForm = memo(
+  ({
+    verseKey,
+    verseNote,
+    noteEditable,
+    noteDirection,
+    dispatchAction,
+  }: any) => {
+    const { t } = useTranslation();
+
+    const handleNoteChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = event.target;
+
+        dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
+      },
+      [dispatchAction]
+    );
+
+    const onInputSubmit = useCallback(
+      (key: string, value: string) => {
+        saveData("notes", {
+          id: key,
+          text: value,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+          .then(function () {
+            toast.success(t("save_success") as string);
+          })
+          .catch(function () {
+            toast.success(t("save_failed") as string);
+          });
+
+        dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
+      },
+      [dispatchAction, t]
+    );
+
+    const handleSetDirection = useCallback(
+      (verse_key: string, dir: string) => {
+        dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
+          name: verse_key,
+          value: dir,
+        });
+
+        saveData("notes_dir", { id: verse_key, dir: dir });
+      },
+      [dispatchAction]
+    );
+
+    const handleEditClick = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        let inputKey = event.currentTarget.name;
+
+        dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
+          name: inputKey,
+          value: true,
+        });
+      },
+      [dispatchAction]
+    );
+
+    return (
+      <TextForm
+        inputKey={verseKey}
+        inputValue={verseNote}
+        isEditable={noteEditable}
+        inputDirection={noteDirection}
+        handleInputChange={handleNoteChange}
+        handleEditClick={handleEditClick}
+        handleSetDirection={handleSetDirection}
+        onInputSubmit={onInputSubmit}
+      />
+    );
+  }
+);
+
+InputTextForm.displayName = "InputTextForm";
 
 export default DisplayPanel;
