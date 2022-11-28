@@ -168,7 +168,6 @@ const DisplayPanel = memo(
     rootDerivations,
   }: DisplayPanelProps) => {
     const refListVerses = useRef<HTMLDivElement>(null);
-    const versesRef = useRef<versesRefProp>({});
 
     const initialState: stateProps = {
       loadingState: true,
@@ -226,6 +225,10 @@ const DisplayPanel = memo(
       };
     }, [dispatchAction]);
 
+    useEffect(() => {
+      if (refListVerses.current) refListVerses.current.scrollTop = 0;
+    }, [selectChapter, searchResult]);
+
     if (state.loadingState)
       return (
         <div className="col h-75">
@@ -249,7 +252,6 @@ const DisplayPanel = memo(
                 selectedRootError={selectedRootError}
                 radioSearchMethod={radioSearchingMethod}
                 searchMultipleChapters={searchMultipleChapters}
-                refListVerses={refListVerses}
                 searchingChapters={searchingChapters}
                 rootDerivations={rootDerivations}
                 editableNotes={state.editableNotes}
@@ -259,8 +261,6 @@ const DisplayPanel = memo(
             ) : (
               <ListVerses
                 selectChapter={selectChapter}
-                refListVerses={refListVerses}
-                versesRef={versesRef}
                 scrollKey={scrollKey}
                 myNotes={state.myNotes}
                 editableNotes={state.editableNotes}
@@ -313,7 +313,6 @@ const ListSearchResults = memo(
     myNotes,
     editableNotes,
     searchMultipleChapters,
-    refListVerses,
     searchingChapters,
     rootDerivations,
     areaDirection,
@@ -328,10 +327,6 @@ const ListSearchResults = memo(
     }
 
     const refVersesResult = useRef<refVersesResultType>({});
-
-    useEffect(() => {
-      refListVerses.current.scrollTop = 0;
-    }, [refListVerses, versesArray]);
 
     const memoHandleRootClick = useCallback(handleRootClick, []);
 
@@ -591,13 +586,13 @@ const ListVerses = memo(
     selectChapter,
     myNotes,
     editableNotes,
-    refListVerses,
-    versesRef,
     scrollKey,
     areaDirection,
   }: any) => {
     const { chapterNames, allQuranText } = useQuran();
     const { dispatchAction } = useDisplayPanel();
+
+    const versesRef = useRef<versesRefProp>({});
 
     const chapterName = chapterNames[selectChapter - 1].name;
     const versesArray = allQuranText[selectChapter - 1].verses;
@@ -605,10 +600,8 @@ const ListVerses = memo(
     useEffect(() => {
       if (scrollKey) {
         versesRef.current[scrollKey].scrollIntoView();
-      } else {
-        refListVerses.current.scrollTop = 0;
       }
-    }, [refListVerses, scrollKey, versesRef]);
+    }, [scrollKey]);
 
     return (
       <>
