@@ -37,6 +37,7 @@ enum DP_ACTIONS {
   CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
   SUBMIT_NOTE = "dispatchSubmitNote",
   DATA_LOADED = "dispatchDataLoaded",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
 }
 
 interface reducerAction {
@@ -61,6 +62,7 @@ interface stateProps {
   myNotes: notesType;
   editableNotes: markedNotesType;
   areaDirection: notesType;
+  scrollKey: null | string;
 }
 
 function reducer(state: stateProps, action: reducerAction): stateProps {
@@ -123,6 +125,9 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         loadingState: false,
       };
     }
+    case DP_ACTIONS.SET_SCROLL_KEY: {
+      return { ...state, scrollKey: action.payload };
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }
@@ -131,7 +136,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
 interface DisplayPanelProps {
   searchingChapters: string[];
-  scrollKey: string | null;
   searchResult: verseProps[];
   searchError: boolean;
   selectedRootError: boolean;
@@ -144,11 +148,11 @@ interface DisplayPanelProps {
 }
 
 type DisplayPanelContent = {
-  dispatchAction: (type: DP_ACTIONS, payload: any) => void;
+  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
 };
 
 const DisplayPanelContext = createContext<DisplayPanelContent>({
-  dispatchAction: () => {},
+  dispatchDpAction: () => {},
 });
 
 const useDisplayPanel = () => useContext(DisplayPanelContext);
@@ -156,7 +160,6 @@ const useDisplayPanel = () => useContext(DisplayPanelContext);
 const DisplayPanel = memo(
   ({
     searchingChapters,
-    scrollKey,
     searchResult,
     searchError,
     selectedRootError,
@@ -174,6 +177,7 @@ const DisplayPanel = memo(
       myNotes: {},
       editableNotes: {},
       areaDirection: {},
+      scrollKey: null,
     };
 
     const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
@@ -181,7 +185,7 @@ const DisplayPanel = memo(
       initialState
     );
 
-    const dispatchAction = useCallback(
+    const dispatchDpAction = useCallback(
       (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
       []
     );
@@ -213,7 +217,7 @@ const DisplayPanel = memo(
           extractNotesDir[note.id] = note.dir;
         });
 
-        dispatchAction(DP_ACTIONS.DATA_LOADED, {
+        dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
           extractNotes,
           markedNotes,
           extractNotesDir,
@@ -223,7 +227,7 @@ const DisplayPanel = memo(
       return () => {
         clientLeft = true;
       };
-    }, [dispatchAction]);
+    }, [dispatchDpAction]);
 
     useEffect(() => {
       if (refListVerses.current) refListVerses.current.scrollTop = 0;
@@ -239,7 +243,7 @@ const DisplayPanel = memo(
       );
 
     return (
-      <DisplayPanelContext.Provider value={{ dispatchAction }}>
+      <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
         <div className="browser-display" ref={refListVerses}>
           <div className="card browser-display-card" dir="rtl">
             {searchResult.length || searchError || selectedRootError ? (
@@ -261,7 +265,7 @@ const DisplayPanel = memo(
             ) : (
               <ListVerses
                 selectChapter={selectChapter}
-                scrollKey={scrollKey}
+                scrollKey={state.scrollKey}
                 myNotes={state.myNotes}
                 editableNotes={state.editableNotes}
                 areaDirection={state.areaDirection}
@@ -318,7 +322,7 @@ const ListSearchResults = memo(
     areaDirection,
   }: any) => {
     const { chapterNames } = useQuran();
-    const { dispatchAction } = useDisplayPanel();
+    const { dispatchDpAction } = useDisplayPanel();
 
     const chapterName = chapterNames[selectChapter - 1].name;
 
@@ -372,7 +376,7 @@ const ListSearchResults = memo(
                 noteDirection={areaDirection[verse.key] || ""}
                 isRootSearch={isRootSearch}
                 rootDerivations={rootDerivations}
-                dispatchAction={dispatchAction}
+                dispatchDpAction={dispatchDpAction}
               />
             </div>
           ))}
@@ -401,7 +405,7 @@ const SearchVerseComponent = memo(
     noteDirection,
     isRootSearch,
     rootDerivations,
-    dispatchAction,
+    dispatchDpAction,
   }: any) => {
     rootDerivations = (rootDerivations as []).filter(
       (value: any) => value.key === verse.key
@@ -416,13 +420,14 @@ const SearchVerseComponent = memo(
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
           rootDerivations={rootDerivations}
+          dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
           verseKey={verse.key}
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
-          dispatchAction={dispatchAction}
+          dispatchDpAction={dispatchDpAction}
         />
       </>
     );
@@ -484,6 +489,7 @@ const VerseContentComponent = memo(
     verseChapter,
     isRootSearch,
     rootDerivations,
+    dispatchDpAction,
   }: any) => {
     const { dispatchAction } = useQuranBrowser();
 
@@ -495,7 +501,7 @@ const VerseContentComponent = memo(
     }
 
     const handleVerseClick = (verse_key: string) => {
-      dispatchAction(QB_ACTIONS.SET_SCROLL_KEY, verse_key);
+      dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, verse_key);
       gotoChapter(verse.suraid);
     };
 
@@ -590,7 +596,7 @@ const ListVerses = memo(
     areaDirection,
   }: any) => {
     const { chapterNames, allQuranText } = useQuran();
-    const { dispatchAction } = useDisplayPanel();
+    const { dispatchDpAction } = useDisplayPanel();
 
     const versesRef = useRef<versesRefProp>({});
 
@@ -600,8 +606,9 @@ const ListVerses = memo(
     useEffect(() => {
       if (scrollKey) {
         versesRef.current[scrollKey].scrollIntoView();
+        dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
       }
-    }, [scrollKey]);
+    }, [scrollKey, dispatchDpAction]);
 
     return (
       <>
@@ -615,7 +622,7 @@ const ListVerses = memo(
               value={myNotes[verse.key] || ""}
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
-              dispatchAction={dispatchAction}
+              dispatchDpAction={dispatchDpAction}
             />
           ))}
         </div>
@@ -633,7 +640,7 @@ const VerseComponent = memo(
     value,
     isEditable,
     noteDirection,
-    dispatchAction,
+    dispatchDpAction,
   }: any) => {
     return (
       <div
@@ -646,7 +653,7 @@ const VerseComponent = memo(
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
-          dispatchAction={dispatchAction}
+          dispatchDpAction={dispatchDpAction}
         />
       </div>
     );
@@ -681,7 +688,7 @@ const InputTextForm = memo(
     verseNote,
     noteEditable,
     noteDirection,
-    dispatchAction,
+    dispatchDpAction,
   }: any) => {
     const { t } = useTranslation();
 
@@ -689,9 +696,9 @@ const InputTextForm = memo(
       (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
 
-        dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
+        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
       },
-      [dispatchAction]
+      [dispatchDpAction]
     );
 
     const onInputSubmit = useCallback(
@@ -709,33 +716,33 @@ const InputTextForm = memo(
             toast.success(t("save_failed") as string);
           });
 
-        dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
+        dispatchDpAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
       },
-      [dispatchAction, t]
+      [dispatchDpAction, t]
     );
 
     const handleSetDirection = useCallback(
       (verse_key: string, dir: string) => {
-        dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
+        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
           name: verse_key,
           value: dir,
         });
 
         saveData("notes_dir", { id: verse_key, dir: dir });
       },
-      [dispatchAction]
+      [dispatchDpAction]
     );
 
     const handleEditClick = useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
         let inputKey = event.currentTarget.name;
 
-        dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
+        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
           name: inputKey,
           value: true,
         });
       },
-      [dispatchAction]
+      [dispatchDpAction]
     );
 
     return (

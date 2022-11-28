@@ -62,8 +62,6 @@ const SearchPanel = memo(
       selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
       chapter: string
     ) {
-      dispatchAction(QB_ACTIONS.SET_SCROLL_KEY, null);
-
       if (!chapter) return;
 
       if (selectedOptions.length === 1) {

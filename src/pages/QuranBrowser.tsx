@@ -30,7 +30,6 @@ export enum QB_ACTIONS {
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
   SET_ROOT_DERIVATIONS = "dispatchSetRootDerivations",
-  SET_SCROLL_KEY = "dispatchSetScrollKey",
   SEARCH_SUBMIT = "dispatchSetSearchSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
 }
@@ -57,7 +56,6 @@ interface stateProps {
   radioSearchMethod: string;
   radioSearchingMethod: string;
   rootDerivations: derivationProps[];
-  scrollKey: null | string;
 }
 
 function reducer(state: stateProps, action: reducerAction): stateProps {
@@ -110,9 +108,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     }
     case QB_ACTIONS.SET_ROOT_DERIVATIONS: {
       return { ...state, rootDerivations: action.payload };
-    }
-    case QB_ACTIONS.SET_SCROLL_KEY: {
-      return { ...state, scrollKey: action.payload };
     }
     case QB_ACTIONS.SEARCH_SUBMIT: {
       let newState: stateProps = {
@@ -359,7 +354,6 @@ function QuranBrowser() {
     radioSearchMethod: "optionWordSearch",
     radioSearchingMethod: "optionWordSearch",
     rootDerivations: [],
-    scrollKey: null,
   };
 
   const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
@@ -384,7 +378,6 @@ function QuranBrowser() {
         />
 
         <DisplayPanel
-          scrollKey={state.scrollKey}
           searchingChapters={state.searchingChapters}
           searchResult={state.searchResult}
           searchError={state.searchError}
