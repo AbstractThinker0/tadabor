@@ -248,23 +248,22 @@ const DisplayPanel = memo(
                 searchError={searchError}
                 selectedRootError={selectedRootError}
                 radioSearchMethod={radioSearchingMethod}
-                myNotes={state.myNotes}
-                editableNotes={state.editableNotes}
                 searchMultipleChapters={searchMultipleChapters}
                 refListVerses={refListVerses}
                 searchingChapters={searchingChapters}
-                scrollKey={scrollKey}
                 rootDerivations={rootDerivations}
+                editableNotes={state.editableNotes}
+                myNotes={state.myNotes}
                 areaDirection={state.areaDirection}
               />
             ) : (
               <ListVerses
                 selectChapter={selectChapter}
-                myNotes={state.myNotes}
-                editableNotes={state.editableNotes}
                 refListVerses={refListVerses}
                 versesRef={versesRef}
                 scrollKey={scrollKey}
+                myNotes={state.myNotes}
+                editableNotes={state.editableNotes}
                 areaDirection={state.areaDirection}
               />
             )}
@@ -316,7 +315,6 @@ const ListSearchResults = memo(
     searchMultipleChapters,
     refListVerses,
     searchingChapters,
-    scrollKey,
     rootDerivations,
     areaDirection,
   }: any) => {
@@ -381,7 +379,6 @@ const ListSearchResults = memo(
                 scopeAllQuran={scopeAllQuran}
                 searchMultipleChapters={searchMultipleChapters}
                 chapterNames={chapterNames}
-                scrollKey={scrollKey}
                 value={myNotes[verse.key] || ""}
                 isEditable={editableNotes[verse.key]}
                 noteDirection={areaDirection[verse.key] || ""}
@@ -391,10 +388,12 @@ const ListSearchResults = memo(
               />
             </div>
           ))}
-          <SearchErrorsComponent
-            searchError={searchError}
-            selectedRootError={selectedRootError}
-          />
+          {(searchError || selectedRootError) && (
+            <SearchErrorsComponent
+              searchError={searchError}
+              selectedRootError={selectedRootError}
+            />
+          )}
         </div>
       </>
     );
@@ -409,7 +408,6 @@ const SearchVerseComponent = memo(
     scopeAllQuran,
     searchMultipleChapters,
     chapterNames,
-    scrollKey,
     value,
     isEditable,
     noteDirection,
@@ -429,7 +427,6 @@ const SearchVerseComponent = memo(
           searchMultipleChapters={searchMultipleChapters}
           verseChapter={chapterNames[verse.suraid - 1].name}
           chapterNames={chapterNames}
-          scrollKey={scrollKey}
           isRootSearch={isRootSearch}
           rootDerivations={rootDerivations}
         />
@@ -492,7 +489,6 @@ const VerseContentComponent = memo(
     searchMultipleChapters,
     verseChapter,
     chapterNames,
-    scrollKey,
     isRootSearch,
     rootDerivations,
   }: any) => {
