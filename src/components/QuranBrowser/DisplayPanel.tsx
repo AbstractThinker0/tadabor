@@ -36,6 +36,7 @@ enum DP_ACTIONS {
   SET_AREA_DIRECTION = "dispatchSetAreaDirection",
   CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
   SUBMIT_NOTE = "dispatchSubmitNote",
+  DATA_LOADED = "dispatchDataLoaded",
 }
 
 interface reducerAction {
@@ -111,6 +112,15 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           ...state.editableNotes,
           [action.payload.name]: false,
         },
+      };
+    }
+    case DP_ACTIONS.DATA_LOADED: {
+      return {
+        ...state,
+        myNotes: action.payload.extractNotes,
+        editableNotes: action.payload.markedNotes,
+        areaDirection: action.payload.extractNotesDir,
+        loadingState: false,
       };
     }
     default: {
@@ -202,10 +212,11 @@ const DisplayPanel = memo(
           extractNotesDir[note.id] = note.dir;
         });
 
-        dispatchAction(DP_ACTIONS.SET_USER_NOTES, extractNotes);
-        dispatchAction(DP_ACTIONS.SET_EDITABLE_NOTES, markedNotes);
-        dispatchAction(DP_ACTIONS.SET_AREA_DIRECTION, extractNotesDir);
-        dispatchAction(DP_ACTIONS.SET_LOADING_STATE, false);
+        dispatchAction(DP_ACTIONS.DATA_LOADED, {
+          extractNotes,
+          markedNotes,
+          extractNotesDir,
+        });
       }
 
       return () => {
