@@ -175,33 +175,26 @@ const RootsListComponent = memo(({ searchString }: any) => {
     });
   }
 
-  function handleNoteSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-    value: string
-  ) {
-    event.preventDefault();
-    let root_id = event.currentTarget.name;
-
+  function handleNoteSubmit(key: string, value: string) {
     setEditableNotes((state: any) => {
-      return { ...state, [root_id]: false };
+      return { ...state, [key]: false };
     });
 
     saveData("root_notes", {
-      id: root_id,
+      id: key,
       text: value,
       date_created: Date.now(),
       date_modified: Date.now(),
     })
       .then(function () {
-        toast.success(t("save_success"));
+        toast.success(t("save_success") as string);
       })
       .catch(function () {
-        toast.success(t("save_failed"));
+        toast.success(t("save_failed") as string);
       });
   }
 
-  // eslint-disable-next-line
-  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, []);
+  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
@@ -252,7 +245,7 @@ const RootsListComponent = memo(({ searchString }: any) => {
         <RootComponent
           key={root.id}
           root_name={root.name}
-          root_id={root.id}
+          root_id={root.id.toString()}
           value={myNotes[root.id] || ""}
           noteDirection={areaDirection[root.id] || ""}
           isEditable={editableNotes[root.id]}
@@ -288,7 +281,7 @@ const RootComponent = memo(
           inputDirection={noteDirection}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
-          handleInputSubmit={handleNoteSubmit}
+          onInputSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
         />
       </div>

@@ -1,10 +1,13 @@
 import {
+  useReducer,
+  Reducer,
   useEffect,
-  useState,
   useRef,
   useCallback,
   memo,
   Fragment,
+  createContext,
+  useContext,
 } from "react";
 
 import { toast } from "react-toastify";
@@ -24,6 +27,98 @@ import useQuran, {
 } from "../../context/QuranContext";
 import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
+enum DP_ACTIONS {
+  SET_LOADING_STATE = "dispatchSetLoadingState",
+  SET_USER_NOTES = "dspatchSetUserNotes",
+  CHANGE_NOTE = "dispatchChangeNote",
+  SET_EDITABLE_NOTES = "dispatchSetEditableNotes",
+  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
+  SET_AREA_DIRECTION = "dispatchSetAreaDirection",
+  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
+  SUBMIT_NOTE = "dispatchSubmitNote",
+}
+
+interface reducerAction {
+  type: DP_ACTIONS;
+  payload: any;
+}
+
+interface versesRefProp {
+  [key: string]: HTMLDivElement;
+}
+
+interface notesType {
+  [key: string]: string;
+}
+
+interface markedNotesType {
+  [key: string]: boolean;
+}
+
+interface stateProps {
+  loadingState: boolean;
+  myNotes: notesType;
+  editableNotes: markedNotesType;
+  areaDirection: notesType;
+}
+
+function reducer(state: stateProps, action: reducerAction): stateProps {
+  // ...
+  switch (action.type) {
+    case DP_ACTIONS.SET_LOADING_STATE: {
+      return { ...state, loadingState: action.payload };
+    }
+    case DP_ACTIONS.SET_USER_NOTES: {
+      return { ...state, myNotes: action.payload };
+    }
+    case DP_ACTIONS.CHANGE_NOTE: {
+      return {
+        ...state,
+        myNotes: {
+          ...state.myNotes,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.SET_EDITABLE_NOTES: {
+      return { ...state, editableNotes: action.payload };
+    }
+    case DP_ACTIONS.CHANGE_NOTE_EDITABLE: {
+      return {
+        ...state,
+        editableNotes: {
+          ...state.editableNotes,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.SET_AREA_DIRECTION: {
+      return { ...state, areaDirection: action.payload };
+    }
+    case DP_ACTIONS.CHANGE_NOTE_DIRECTION: {
+      return {
+        ...state,
+        areaDirection: {
+          ...state.areaDirection,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.SUBMIT_NOTE: {
+      return {
+        ...state,
+        editableNotes: {
+          ...state.editableNotes,
+          [action.payload.name]: false,
+        },
+      };
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+}
+
 interface DisplayPanelProps {
   searchingChapters: string[];
   scrollKey: string | null;
@@ -37,6 +132,14 @@ interface DisplayPanelProps {
   searchMultipleChapters: boolean;
   rootDerivations: derivationProps[];
 }
+
+type DisplayPanelContent = {
+  dispatchAction(type: DP_ACTIONS, payload: any): void;
+};
+
+const DisplayPanelContext = createContext<DisplayPanelContent>({
+  dispatchAction: () => {},
+});
 
 const DisplayPanel = memo(
   ({
@@ -54,27 +157,23 @@ const DisplayPanel = memo(
   }: DisplayPanelProps) => {
     const { chapterNames, allQuranText } = useQuran();
 
-    const { t } = useTranslation();
     const refListVerses = useRef<HTMLDivElement>(null);
-
-    interface versesRefProp {
-      [key: string]: HTMLDivElement;
-    }
-
     const versesRef = useRef<versesRefProp>({});
 
-    interface notesType {
-      [key: string]: string;
-    }
+    const initialState: stateProps = {
+      loadingState: true,
+      myNotes: {},
+      editableNotes: {},
+      areaDirection: {},
+    };
 
-    interface markedNotesType {
-      [key: string]: boolean;
-    }
+    const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
+      reducer,
+      initialState
+    );
 
-    const [loadingState, setLoadingState] = useState(true);
-    const [myNotes, setMyNotes] = useState<notesType>({});
-    const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-    const [areaDirection, setAreaDirection] = useState<notesType>({});
+    const dispatchAction = (type: DP_ACTIONS, payload: any) =>
+      dispatch({ type, payload });
 
     useEffect(() => {
       let clientLeft = false;
@@ -103,11 +202,10 @@ const DisplayPanel = memo(
           extractNotesDir[note.id] = note.dir;
         });
 
-        setMyNotes(extractNotes);
-        setEditableNotes(markedNotes);
-        setAreaDirection(extractNotesDir);
-
-        setLoadingState(false);
+        dispatchAction(DP_ACTIONS.SET_USER_NOTES, extractNotes);
+        dispatchAction(DP_ACTIONS.SET_EDITABLE_NOTES, markedNotes);
+        dispatchAction(DP_ACTIONS.SET_AREA_DIRECTION, extractNotesDir);
+        dispatchAction(DP_ACTIONS.SET_LOADING_STATE, false);
       }
 
       return () => {
@@ -115,63 +213,7 @@ const DisplayPanel = memo(
       };
     }, []);
 
-    const memoHandleNoteChange = useCallback(handleNoteChange, []);
-
-    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      const { name, value } = event.target;
-
-      setMyNotes((state) => {
-        return { ...state, [name]: value };
-      });
-    }
-
-    function handleSetDirection(verse_key: string, dir: string) {
-      setAreaDirection((state) => {
-        return { ...state, [verse_key]: dir };
-      });
-
-      saveData("notes_dir", { id: verse_key, dir: dir });
-    }
-
-    const memoHandleSetDirection = useCallback(handleSetDirection, []);
-
-    function handleNoteSubmit(
-      event: React.FormEvent<HTMLFormElement>,
-      value: string
-    ) {
-      event.preventDefault();
-      let verse_key = event.currentTarget.name;
-
-      setEditableNotes((state) => {
-        return { ...state, [verse_key]: false };
-      });
-
-      saveData("notes", {
-        id: verse_key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-        .then(function () {
-          toast.success(t("save_success"));
-        })
-        .catch(function () {
-          toast.success(t("save_failed"));
-        });
-    }
-
-    const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
-
-    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
-      let inputKey = event.currentTarget.name;
-      setEditableNotes((state) => {
-        return { ...state, [inputKey]: true };
-      });
-    }
-
-    const memoHandleEditClick = useCallback(handleEditClick, []);
-
-    if (loadingState)
+    if (state.loadingState)
       return (
         <div className="col h-75">
           <div className="h-100">
@@ -181,48 +223,42 @@ const DisplayPanel = memo(
       );
 
     return (
-      <div className="browser-display" ref={refListVerses}>
-        <div className="card browser-display-card" dir="rtl">
-          {searchResult.length || searchError || selectedRootError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              chapterName={chapterNames[selectChapter - 1].name}
-              searchToken={searchingString.trim()}
-              scopeAllQuran={searchingAllQuran}
-              searchError={searchError}
-              selectedRootError={selectedRootError}
-              radioSearchMethod={radioSearchingMethod}
-              myNotes={myNotes}
-              editableNotes={editableNotes}
-              handleEditClick={memoHandleEditClick}
-              searchMultipleChapters={searchMultipleChapters}
-              refListVerses={refListVerses}
-              searchingChapters={searchingChapters}
-              scrollKey={scrollKey}
-              rootDerivations={rootDerivations}
-              handleNoteChange={memoHandleNoteChange}
-              handleSetDirection={memoHandleSetDirection}
-              areaDirection={areaDirection}
-              handleNoteSubmit={memoHandleNoteSubmit}
-            />
-          ) : (
-            <ListVerses
-              chapterName={chapterNames[selectChapter - 1].name}
-              versesArray={allQuranText[selectChapter - 1].verses}
-              myNotes={myNotes}
-              handleEditClick={memoHandleEditClick}
-              editableNotes={editableNotes}
-              refListVerses={refListVerses}
-              versesRef={versesRef}
-              scrollKey={scrollKey}
-              handleNoteChange={memoHandleNoteChange}
-              handleSetDirection={memoHandleSetDirection}
-              areaDirection={areaDirection}
-              handleNoteSubmit={memoHandleNoteSubmit}
-            />
-          )}
+      <DisplayPanelContext.Provider value={{ dispatchAction: dispatchAction }}>
+        <div className="browser-display" ref={refListVerses}>
+          <div className="card browser-display-card" dir="rtl">
+            {searchResult.length || searchError || selectedRootError ? (
+              <ListSearchResults
+                versesArray={searchResult}
+                chapterName={chapterNames[selectChapter - 1].name}
+                searchToken={searchingString.trim()}
+                scopeAllQuran={searchingAllQuran}
+                searchError={searchError}
+                selectedRootError={selectedRootError}
+                radioSearchMethod={radioSearchingMethod}
+                myNotes={state.myNotes}
+                editableNotes={state.editableNotes}
+                searchMultipleChapters={searchMultipleChapters}
+                refListVerses={refListVerses}
+                searchingChapters={searchingChapters}
+                scrollKey={scrollKey}
+                rootDerivations={rootDerivations}
+                areaDirection={state.areaDirection}
+              />
+            ) : (
+              <ListVerses
+                chapterName={chapterNames[selectChapter - 1].name}
+                versesArray={allQuranText[selectChapter - 1].verses}
+                myNotes={state.myNotes}
+                editableNotes={state.editableNotes}
+                refListVerses={refListVerses}
+                versesRef={versesRef}
+                scrollKey={scrollKey}
+                areaDirection={state.areaDirection}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      </DisplayPanelContext.Provider>
     );
   }
 );
@@ -265,16 +301,12 @@ const ListSearchResults = memo(
     radioSearchMethod,
     myNotes,
     editableNotes,
-    handleEditClick,
     searchMultipleChapters,
     refListVerses,
     searchingChapters,
     scrollKey,
     rootDerivations,
-    handleNoteChange,
-    handleSetDirection,
     areaDirection,
-    handleNoteSubmit,
   }: any) => {
     const { chapterNames } = useQuran();
 
@@ -336,12 +368,8 @@ const ListSearchResults = memo(
                 chapterNames={chapterNames}
                 scrollKey={scrollKey}
                 value={myNotes[verse.key] || ""}
-                handleNoteChange={handleNoteChange}
                 isEditable={editableNotes[verse.key]}
-                handleEditClick={handleEditClick}
-                handleSetDirection={handleSetDirection}
                 noteDirection={areaDirection[verse.key] || ""}
-                handleNoteSubmit={handleNoteSubmit}
                 isRootSearch={isRootSearch}
                 rootDerivations={rootDerivations}
               />
@@ -367,18 +395,58 @@ const SearchVerseComponent = memo(
     chapterNames,
     scrollKey,
     value,
-    handleNoteChange,
     isEditable,
-    handleEditClick,
-    handleSetDirection,
     noteDirection,
-    handleNoteSubmit,
     isRootSearch,
     rootDerivations,
   }: any) => {
+    const { dispatchAction } = useContext(DisplayPanelContext);
+    const { t } = useTranslation();
+
     rootDerivations = (rootDerivations as []).filter(
       (value: any) => value.key === verse.key
     );
+
+    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+      const { name, value } = event.target;
+
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
+    }
+
+    function handleSetDirection(verse_key: string, dir: string) {
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
+        name: verse_key,
+        value: dir,
+      });
+
+      saveData("notes_dir", { id: verse_key, dir: dir });
+    }
+
+    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
+      let inputKey = event.currentTarget.name;
+
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
+        name: inputKey,
+        value: true,
+      });
+    }
+
+    function onInputSubmit(key: string, value: string) {
+      saveData("notes", {
+        id: key,
+        text: value,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
+
+      dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
+    }
 
     return (
       <>
@@ -400,7 +468,7 @@ const SearchVerseComponent = memo(
           handleEditClick={handleEditClick}
           handleSetDirection={handleSetDirection}
           inputDirection={noteDirection}
-          handleInputSubmit={handleNoteSubmit}
+          onInputSubmit={onInputSubmit}
         />
       </>
     );
@@ -560,14 +628,10 @@ const ListVerses = memo(
     chapterName,
     myNotes,
     editableNotes,
-    handleEditClick,
     refListVerses,
     versesRef,
     scrollKey,
-    handleNoteChange,
-    handleSetDirection,
     areaDirection,
-    handleNoteSubmit,
   }: any) => {
     useEffect(() => {
       if (scrollKey) {
@@ -587,12 +651,8 @@ const ListVerses = memo(
               versesRef={versesRef}
               verse={verse}
               value={myNotes[verse.key] || ""}
-              handleNoteChange={handleNoteChange}
               isEditable={editableNotes[verse.key]}
-              handleEditClick={handleEditClick}
-              handleSetDirection={handleSetDirection}
               noteDirection={areaDirection[verse.key] || ""}
-              handleNoteSubmit={handleNoteSubmit}
             />
           ))}
         </div>
@@ -604,17 +664,51 @@ const ListVerses = memo(
 ListVerses.displayName = "ListVerses";
 
 const VerseComponent = memo(
-  ({
-    versesRef,
-    verse,
-    value,
-    handleNoteChange,
-    isEditable,
-    handleEditClick,
-    handleSetDirection,
-    noteDirection,
-    handleNoteSubmit,
-  }: any) => {
+  ({ versesRef, verse, value, isEditable, noteDirection }: any) => {
+    const { dispatchAction } = useContext(DisplayPanelContext);
+    const { t } = useTranslation();
+
+    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+      const { name, value } = event.target;
+
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
+    }
+
+    function onInputSubmit(key: string, value: string) {
+      saveData("notes", {
+        id: key,
+        text: value,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
+
+      dispatchAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
+    }
+
+    function handleSetDirection(verse_key: string, dir: string) {
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
+        name: verse_key,
+        value: dir,
+      });
+
+      saveData("notes_dir", { id: verse_key, dir: dir });
+    }
+
+    function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
+      let inputKey = event.currentTarget.name;
+
+      dispatchAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
+        name: inputKey,
+        value: true,
+      });
+    }
+
     return (
       <div
         ref={(el) => (versesRef.current[verse.key] = el)}
@@ -629,7 +723,7 @@ const VerseComponent = memo(
           handleEditClick={handleEditClick}
           handleSetDirection={handleSetDirection}
           inputDirection={noteDirection}
-          handleInputSubmit={handleNoteSubmit}
+          onInputSubmit={onInputSubmit}
         />
       </div>
     );

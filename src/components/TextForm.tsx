@@ -8,11 +8,11 @@ interface TextFormProps {
   inputKey: string;
   inputValue: string;
   inputDirection: string;
-  handleSetDirection: React.MouseEventHandler<HTMLButtonElement>;
+  handleSetDirection: (verse_key: string, dir: string) => void;
   handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement>;
   isEditable: boolean;
   handleEditClick: React.MouseEventHandler<HTMLButtonElement>;
-  handleInputSubmit: React.FormEventHandler<HTMLFormElement>;
+  onInputSubmit: (key: string, value: string) => void;
 }
 
 const TextForm = ({
@@ -23,7 +23,7 @@ const TextForm = ({
   handleInputChange,
   isEditable,
   handleEditClick,
-  handleInputSubmit,
+  onInputSubmit,
 }: TextFormProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +68,7 @@ const TextForm = ({
               inputValue={inputValue}
               inputDirection={inputDirection}
               handleSetDirection={handleSetDirection}
-              handleInputSubmit={handleInputSubmit}
+              onInputSubmit={onInputSubmit}
               handleInputChange={handleInputChange}
             />
           )}
@@ -127,7 +127,7 @@ const FormComponent = ({
   inputValue,
   inputDirection,
   handleSetDirection,
-  handleInputSubmit,
+  onInputSubmit,
   handleInputChange,
 }: any) => {
   const minRows = 4;
@@ -150,12 +150,13 @@ const FormComponent = ({
     }
   }, [inputValue]);
 
+  function handleInputSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onInputSubmit(inputKey, inputValue);
+  }
+
   return (
-    <form
-      ref={formRef}
-      name={inputKey}
-      onSubmit={(event) => handleInputSubmit(event, inputValue)}
-    >
+    <form ref={formRef} name={inputKey} onSubmit={handleInputSubmit}>
       <div className="form-group">
         <TextareaToolbar>
           <ToolbarOption
