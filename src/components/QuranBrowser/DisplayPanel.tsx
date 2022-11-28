@@ -49,6 +49,10 @@ interface versesRefProp {
   [key: string]: HTMLDivElement;
 }
 
+interface refVersesResultType {
+  [key: string]: HTMLDivElement;
+}
+
 interface notesType {
   [key: string]: string;
 }
@@ -280,31 +284,6 @@ const DisplayPanel = memo(
 
 DisplayPanel.displayName = "DisplayPanel";
 
-const SearchTitle = memo(
-  ({
-    radioSearchMethod,
-    searchToken,
-    scopeAllQuran,
-    searchMultipleChapters,
-    searchChapters,
-    chapterName,
-  }: any) => {
-    let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
-    return (
-      <h3 className="mb-2 text-info p-1">
-        نتائج البحث عن {searchType} "{searchToken}"
-        {scopeAllQuran === true
-          ? " في كل السور"
-          : searchMultipleChapters
-          ? " في سور " + searchChapters.join(" و")
-          : " في سورة " + chapterName}
-      </h3>
-    );
-  }
-);
-
-SearchTitle.displayName = "SearchTitle";
-
 const ListSearchResults = memo(
   ({
     versesArray,
@@ -324,22 +303,18 @@ const ListSearchResults = memo(
     const { chapterNames } = useQuran();
     const { dispatchDpAction } = useDisplayPanel();
 
-    const chapterName = chapterNames[selectChapter - 1].name;
-
-    interface refVersesResultType {
-      [key: string]: HTMLDivElement;
-    }
-
     const refVersesResult = useRef<refVersesResultType>({});
-
-    const memoHandleRootClick = useCallback(handleRootClick, []);
 
     function handleRootClick(verse_key: string) {
       refVersesResult.current[verse_key].scrollIntoView();
     }
 
+    const memoHandleRootClick = useCallback(handleRootClick, []);
+
     const isRootSearch =
       radioSearchMethod === "optionRootSearch" ? true : false;
+
+    const chapterName = chapterNames[selectChapter - 1].name;
 
     return (
       <>
@@ -394,6 +369,64 @@ const ListSearchResults = memo(
 
 ListSearchResults.displayName = "ListSearchResults";
 
+const SearchTitle = memo(
+  ({
+    radioSearchMethod,
+    searchToken,
+    scopeAllQuran,
+    searchMultipleChapters,
+    searchChapters,
+    chapterName,
+  }: any) => {
+    let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
+    return (
+      <h3 className="mb-2 text-info p-1">
+        نتائج البحث عن {searchType} "{searchToken}"
+        {scopeAllQuran === true
+          ? " في كل السور"
+          : searchMultipleChapters
+          ? " في سور " + searchChapters.join(" و")
+          : " في سورة " + chapterName}
+      </h3>
+    );
+  }
+);
+
+SearchTitle.displayName = "SearchTitle";
+
+const DerivationsComponent = memo(
+  ({ rootDerivations, handleRootClick }: any) => {
+    useEffect(() => {
+      //init tooltip
+      Array.from(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
+    }, [rootDerivations]);
+
+    return (
+      <>
+        <hr />
+        <span className="p-2">
+          {rootDerivations.map((root: derivationProps, index: number) => (
+            <span
+              role="button"
+              key={index}
+              onClick={(e) => handleRootClick(root.key)}
+              data-bs-toggle="tooltip"
+              data-bs-title={root.text}
+            >
+              {index ? " -" : " "} {root.name}
+            </span>
+          ))}
+        </span>
+        <hr />
+      </>
+    );
+  }
+);
+
+DerivationsComponent.displayName = "DerivationsComponent";
+
 const SearchVerseComponent = memo(
   ({
     verse,
@@ -435,39 +468,6 @@ const SearchVerseComponent = memo(
 );
 
 SearchVerseComponent.displayName = "SearchVerseComponent";
-
-const DerivationsComponent = memo(
-  ({ rootDerivations, handleRootClick }: any) => {
-    useEffect(() => {
-      //init tooltip
-      Array.from(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
-    }, [rootDerivations]);
-
-    return (
-      <>
-        <hr />
-        <span className="p-2">
-          {rootDerivations.map((root: derivationProps, index: number) => (
-            <span
-              role="button"
-              key={index}
-              onClick={(e) => handleRootClick(root.key)}
-              data-bs-toggle="tooltip"
-              data-bs-title={root.text}
-            >
-              {index ? " -" : " "} {root.name}
-            </span>
-          ))}
-        </span>
-        <hr />
-      </>
-    );
-  }
-);
-
-DerivationsComponent.displayName = "DerivationsComponent";
 
 const SearchErrorsComponent = ({ searchError, selectedRootError }: any) => {
   const { t } = useTranslation();
