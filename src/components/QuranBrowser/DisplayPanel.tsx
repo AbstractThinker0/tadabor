@@ -333,13 +333,6 @@ const ListSearchResults = memo(
       refListVerses.current.scrollTop = 0;
     }, [refListVerses, versesArray]);
 
-    useEffect(() => {
-      //init tooltip
-      Array.from(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
-    }, [versesArray]);
-
     const memoHandleRootClick = useCallback(handleRootClick, []);
 
     function handleRootClick(verse_key: string) {
@@ -445,6 +438,13 @@ SearchVerseComponent.displayName = "SearchVerseComponent";
 
 const DerivationsComponent = memo(
   ({ rootDerivations, handleRootClick }: any) => {
+    useEffect(() => {
+      //init tooltip
+      Array.from(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
+    }, [rootDerivations]);
+
     return (
       <>
         <hr />
