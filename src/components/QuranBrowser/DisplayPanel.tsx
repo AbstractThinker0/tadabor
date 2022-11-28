@@ -165,8 +165,6 @@ const DisplayPanel = memo(
     searchMultipleChapters,
     rootDerivations,
   }: DisplayPanelProps) => {
-    const { chapterNames, allQuranText } = useQuran();
-
     const refListVerses = useRef<HTMLDivElement>(null);
     const versesRef = useRef<versesRefProp>({});
 
@@ -240,7 +238,7 @@ const DisplayPanel = memo(
             {searchResult.length || searchError || selectedRootError ? (
               <ListSearchResults
                 versesArray={searchResult}
-                chapterName={chapterNames[selectChapter - 1].name}
+                selectChapter={selectChapter}
                 searchToken={searchingString.trim()}
                 scopeAllQuran={searchingAllQuran}
                 searchError={searchError}
@@ -257,8 +255,7 @@ const DisplayPanel = memo(
               />
             ) : (
               <ListVerses
-                chapterName={chapterNames[selectChapter - 1].name}
-                versesArray={allQuranText[selectChapter - 1].verses}
+                selectChapter={selectChapter}
                 myNotes={state.myNotes}
                 editableNotes={state.editableNotes}
                 refListVerses={refListVerses}
@@ -304,7 +301,7 @@ SearchTitle.displayName = "SearchTitle";
 const ListSearchResults = memo(
   ({
     versesArray,
-    chapterName,
+    selectChapter,
     searchToken,
     scopeAllQuran,
     searchError,
@@ -320,6 +317,8 @@ const ListSearchResults = memo(
     areaDirection,
   }: any) => {
     const { chapterNames } = useQuran();
+
+    const chapterName = chapterNames[selectChapter - 1].name;
 
     interface refVersesResultType {
       [key: string]: HTMLDivElement;
@@ -635,8 +634,7 @@ ListTitle.displayName = "ListTitle";
 
 const ListVerses = memo(
   ({
-    versesArray,
-    chapterName,
+    selectChapter,
     myNotes,
     editableNotes,
     refListVerses,
@@ -644,13 +642,18 @@ const ListVerses = memo(
     scrollKey,
     areaDirection,
   }: any) => {
+    const { chapterNames, allQuranText } = useQuran();
+
+    const chapterName = chapterNames[selectChapter - 1].name;
+    const versesArray = allQuranText[selectChapter - 1].verses;
+
     useEffect(() => {
       if (scrollKey) {
         versesRef.current[scrollKey].scrollIntoView();
       } else {
         refListVerses.current.scrollTop = 0;
       }
-    }, [refListVerses, scrollKey, versesRef, versesArray]);
+    }, [refListVerses, scrollKey, versesRef]);
 
     return (
       <>
