@@ -1,7 +1,11 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran, { verseProps } from "../../context/QuranContext";
-import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
+import {
+  QB_ACTIONS,
+  SEARCH_SCOPE,
+  useQuranBrowser,
+} from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
@@ -34,7 +38,12 @@ const SearchPanel = memo(
     let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
 
     function setSearchAllQuran(status: boolean) {
-      dispatchAction(QB_ACTIONS.SET_SEARCH_ALLQURAN, status);
+      dispatchAction(
+        QB_ACTIONS.SET_SEARCH_SCORE,
+        status === true
+          ? SEARCH_SCOPE.ALL_CHAPTERS
+          : SEARCH_SCOPE.MULTIPLE_CHAPTERS
+      );
     }
 
     function setSearchDiacritics(status: boolean) {

@@ -25,7 +25,12 @@ import useQuran, {
   verseProps,
   derivationProps,
 } from "../../context/QuranContext";
-import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
+
+import {
+  QB_ACTIONS,
+  SEARCH_SCOPE,
+  useQuranBrowser,
+} from "../../pages/QuranBrowser";
 
 enum DP_ACTIONS {
   SET_LOADING_STATE = "dispatchSetLoadingState",
@@ -144,11 +149,10 @@ interface DisplayPanelProps {
   searchError: boolean;
   selectedRootError: boolean;
   searchingString: string;
-  searchingAllQuran: boolean;
   selectChapter: number;
   radioSearchingMethod: string;
-  searchMultipleChapters: boolean;
   rootDerivations: derivationProps[];
+  searchingScope: SEARCH_SCOPE;
 }
 
 type DisplayPanelContent = {
@@ -168,11 +172,10 @@ const DisplayPanel = memo(
     searchError,
     selectedRootError,
     searchingString,
-    searchingAllQuran,
     selectChapter,
     radioSearchingMethod,
-    searchMultipleChapters,
     rootDerivations,
+    searchingScope,
   }: DisplayPanelProps) => {
     const refListVerses = useRef<HTMLDivElement>(null);
 
@@ -255,11 +258,10 @@ const DisplayPanel = memo(
                 versesArray={searchResult}
                 selectChapter={selectChapter}
                 searchToken={searchingString.trim()}
-                scopeAllQuran={searchingAllQuran}
+                searchingScope={searchingScope}
                 searchError={searchError}
                 selectedRootError={selectedRootError}
                 radioSearchMethod={radioSearchingMethod}
-                searchMultipleChapters={searchMultipleChapters}
                 searchingChapters={searchingChapters}
                 rootDerivations={rootDerivations}
                 editableNotes={state.editableNotes}
@@ -289,16 +291,15 @@ const ListSearchResults = memo(
     versesArray,
     selectChapter,
     searchToken,
-    scopeAllQuran,
     searchError,
     selectedRootError,
     radioSearchMethod,
     myNotes,
     editableNotes,
-    searchMultipleChapters,
     searchingChapters,
     rootDerivations,
     areaDirection,
+    searchingScope,
   }: any) => {
     const { chapterNames } = useQuran();
     const { dispatchDpAction } = useDisplayPanel();
@@ -321,8 +322,7 @@ const ListSearchResults = memo(
         <SearchTitle
           radioSearchMethod={radioSearchMethod}
           searchToken={searchToken}
-          scopeAllQuran={scopeAllQuran}
-          searchMultipleChapters={searchMultipleChapters}
+          searchingScope={searchingScope}
           searchChapters={searchingChapters}
           chapterName={chapterName}
         />
@@ -343,8 +343,7 @@ const ListSearchResults = memo(
             >
               <SearchVerseComponent
                 verse={verse}
-                scopeAllQuran={scopeAllQuran}
-                searchMultipleChapters={searchMultipleChapters}
+                searchingScope={searchingScope}
                 verseChapter={chapterNames[Number(verse.suraid) - 1].name}
                 value={myNotes[verse.key] || ""}
                 isEditable={editableNotes[verse.key]}
@@ -373,8 +372,7 @@ const SearchTitle = memo(
   ({
     radioSearchMethod,
     searchToken,
-    scopeAllQuran,
-    searchMultipleChapters,
+    searchingScope,
     searchChapters,
     chapterName,
   }: any) => {
@@ -382,9 +380,9 @@ const SearchTitle = memo(
     return (
       <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"
-        {scopeAllQuran === true
+        {searchingScope === SEARCH_SCOPE.ALL_CHAPTERS
           ? " في كل السور"
-          : searchMultipleChapters
+          : searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS
           ? " في سور " + searchChapters.join(" و")
           : " في سورة " + chapterName}
       </h3>
@@ -430,8 +428,7 @@ DerivationsComponent.displayName = "DerivationsComponent";
 const SearchVerseComponent = memo(
   ({
     verse,
-    scopeAllQuran,
-    searchMultipleChapters,
+    searchingScope,
     verseChapter,
     value,
     isEditable,
@@ -448,8 +445,7 @@ const SearchVerseComponent = memo(
       <>
         <VerseContentComponent
           verse={verse}
-          scopeAllQuran={scopeAllQuran}
-          searchMultipleChapters={searchMultipleChapters}
+          searchingScope={searchingScope}
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
           rootDerivations={rootDerivations}
@@ -484,8 +480,7 @@ const SearchErrorsComponent = ({ searchError, selectedRootError }: any) => {
 const VerseContentComponent = memo(
   ({
     verse,
-    scopeAllQuran,
-    searchMultipleChapters,
+    searchingScope,
     verseChapter,
     isRootSearch,
     rootDerivations,
@@ -494,7 +489,9 @@ const VerseContentComponent = memo(
     const { dispatchAction } = useQuranBrowser();
 
     let verse_key = verse.key;
-    let isLinkable = scopeAllQuran || searchMultipleChapters;
+    let isLinkable =
+      searchingScope ===
+      (SEARCH_SCOPE.ALL_CHAPTERS || SEARCH_SCOPE.MULTIPLE_CHAPTERS);
 
     function gotoChapter(chapter: string) {
       dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);

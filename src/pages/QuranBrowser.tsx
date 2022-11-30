@@ -20,9 +20,6 @@ export enum QB_ACTIONS {
   SET_SEARCHING_STRING = "dispatchSetSearchingString",
   SET_SEARCHING_CHAPTERS = "dispatchSetSearchingChapters",
   SET_SEARCH_RESULT = "dispatchSetSearchResult",
-  SET_SEARCH_ALLQURAN = "dispatchSetSearchAllQuran",
-  SET_SEARCHING_ALLQURAN = "dispatchSetSearchingAllQuran",
-  SET_SEARCH_MULTIPLE = "dispatchSetSearchMultipleChapters",
   SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
   SET_SEARCH_ERROR = "dispatchSetSearchError",
@@ -30,8 +27,15 @@ export enum QB_ACTIONS {
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
   SET_ROOT_DERIVATIONS = "dispatchSetRootDerivations",
+  SET_SEARCH_SCORE = "dispatchSetSearchScope",
   SEARCH_SUBMIT = "dispatchSetSearchSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
+}
+
+export enum SEARCH_SCOPE {
+  ALL_CHAPTERS = "searchAllChapters",
+  MULTIPLE_CHAPTERS = "searchMultipleChapters",
+  SINGLE_CHAPTER = "searchSingleChapter",
 }
 
 interface reducerAction {
@@ -46,9 +50,6 @@ interface stateProps {
   searchingString: string;
   searchingChapters: string[];
   searchResult: verseProps[];
-  searchAllQuran: boolean;
-  searchingAllQuran: boolean;
-  searchMultipleChapters: boolean;
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchError: boolean;
@@ -56,6 +57,8 @@ interface stateProps {
   radioSearchMethod: string;
   radioSearchingMethod: string;
   rootDerivations: derivationProps[];
+  searchScope: SEARCH_SCOPE;
+  searchingScope: SEARCH_SCOPE;
 }
 
 function reducer(state: stateProps, action: reducerAction): stateProps {
@@ -79,15 +82,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_SEARCH_RESULT: {
       return { ...state, searchResult: action.payload };
     }
-    case QB_ACTIONS.SET_SEARCH_ALLQURAN: {
-      return { ...state, searchAllQuran: action.payload };
-    }
-    case QB_ACTIONS.SET_SEARCHING_ALLQURAN: {
-      return { ...state, searchingAllQuran: action.payload };
-    }
-    case QB_ACTIONS.SET_SEARCH_MULTIPLE: {
-      return { ...state, searchMultipleChapters: action.payload };
-    }
     case QB_ACTIONS.SET_SEARCH_DIACRITICS: {
       return { ...state, searchDiacritics: action.payload };
     }
@@ -109,12 +103,14 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_ROOT_DERIVATIONS: {
       return { ...state, rootDerivations: action.payload };
     }
+    case QB_ACTIONS.SET_SEARCH_SCORE: {
+      return { ...state, searchScope: action.payload };
+    }
     case QB_ACTIONS.SEARCH_SUBMIT: {
       let newState: stateProps = {
         ...state,
         searchError: false,
         selectedRootError: false,
-        searchMultipleChapters: false,
         searchResult: [],
         rootDerivations: [],
         searchingString: state.searchString,
@@ -154,12 +150,10 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           }
         };
 
-        if (state.searchAllQuran) {
-          newState = { ...newState, searchingAllQuran: true };
+        if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+          newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
           allChaptersMatches();
         } else {
-          newState = { ...newState, searchingAllQuran: false };
-
           if (state.selectedChapters.length > 1) {
             multipleChaptersMatches();
           } else {
@@ -180,6 +174,12 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           currentChapter.forEach((verse) => {
             checkVerseMatch(verse);
           });
+
+          newState = {
+            ...newState,
+            searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
+            searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
+          };
         }
 
         function multipleChaptersMatches() {
@@ -194,7 +194,8 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
           newState = {
             ...newState,
-            searchMultipleChapters: true,
+            searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
+            searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
             searchingChapters: searchChapters,
           };
         }
@@ -248,11 +249,9 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           });
         };
 
-        if (state.searchAllQuran) {
-          newState = { ...newState, searchingAllQuran: true };
+        if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+          newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
         } else {
-          newState = { ...newState, searchingAllQuran: false };
-
           if (state.selectedChapters.length > 1) {
             let searchChapters: string[] = [];
 
@@ -262,8 +261,15 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
             newState = {
               ...newState,
-              searchMultipleChapters: true,
+              searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
+              searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
               searchingChapters: searchChapters,
+            };
+          } else {
+            newState = {
+              ...newState,
+              searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
+              searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
             };
           }
         }
@@ -276,7 +282,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
           if (
             state.selectedChapters.includes(currentVerse.suraid) ||
-            state.searchAllQuran
+            state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS
           ) {
             let verseWords = currentVerse.versetext.split(" ");
 
@@ -315,7 +321,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         ...state,
         searchError: false,
         selectedRootError: false,
-        searchMultipleChapters: false,
         searchResult: [],
         rootDerivations: [],
         selectChapter: Number(action.payload),
@@ -344,9 +349,6 @@ function QuranBrowser() {
     searchingString: "",
     searchingChapters: [],
     searchResult: [],
-    searchAllQuran: true,
-    searchingAllQuran: true,
-    searchMultipleChapters: false,
     searchDiacritics: false,
     searchIdentical: false,
     searchError: false,
@@ -354,6 +356,8 @@ function QuranBrowser() {
     radioSearchMethod: "optionWordSearch",
     radioSearchingMethod: "optionWordSearch",
     rootDerivations: [],
+    searchScope: SEARCH_SCOPE.ALL_CHAPTERS,
+    searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
   };
 
   const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
@@ -374,7 +378,7 @@ function QuranBrowser() {
           searchDiacritics={state.searchDiacritics}
           searchIdentical={state.searchIdentical}
           radioSearchMethod={state.radioSearchMethod}
-          searchAllQuran={state.searchAllQuran}
+          searchAllQuran={state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS}
         />
 
         <DisplayPanel
@@ -383,10 +387,9 @@ function QuranBrowser() {
           searchError={state.searchError}
           selectedRootError={state.selectedRootError}
           searchingString={state.searchingString}
-          searchingAllQuran={state.searchingAllQuran}
+          searchingScope={state.searchingScope}
           selectChapter={state.selectChapter}
           radioSearchingMethod={state.radioSearchingMethod}
-          searchMultipleChapters={state.searchMultipleChapters}
           rootDerivations={state.rootDerivations}
         />
       </div>
