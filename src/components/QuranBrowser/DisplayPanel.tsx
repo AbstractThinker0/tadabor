@@ -487,8 +487,8 @@ const VerseContentComponent = memo(
 
     let verse_key = verse.key;
     let isLinkable =
-      searchingScope ===
-      (SEARCH_SCOPE.ALL_CHAPTERS || SEARCH_SCOPE.MULTIPLE_CHAPTERS);
+      searchingScope === SEARCH_SCOPE.ALL_CHAPTERS ||
+      searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS;
 
     function gotoChapter(chapter: string) {
       dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);
