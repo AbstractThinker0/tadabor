@@ -32,7 +32,7 @@ export enum QB_ACTIONS {
   SET_SELECTED_ROOT_ERROR = "dispatchSetSelectedRootError",
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
-  SET_SEARCH_SCORE = "dispatchSetSearchScope",
+  SET_SEARCH_SCOPE = "dispatchSetSearchScope",
   SEARCH_SUBMIT = "dispatchSetSearchSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
 }
@@ -105,7 +105,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_RADIO_SEARCHING: {
       return { ...state, radioSearchingMethod: action.payload };
     }
-    case QB_ACTIONS.SET_SEARCH_SCORE: {
+    case QB_ACTIONS.SET_SEARCH_SCOPE: {
       return { ...state, searchScope: action.payload };
     }
     case QB_ACTIONS.SEARCH_SUBMIT: {

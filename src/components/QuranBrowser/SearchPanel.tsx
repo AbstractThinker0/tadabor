@@ -39,7 +39,7 @@ const SearchPanel = memo(
 
     function setSearchAllQuran(status: boolean) {
       dispatchAction(
-        QB_ACTIONS.SET_SEARCH_SCORE,
+        QB_ACTIONS.SET_SEARCH_SCOPE,
         status === true
           ? SEARCH_SCOPE.ALL_CHAPTERS
           : SEARCH_SCOPE.MULTIPLE_CHAPTERS
