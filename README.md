@@ -28,7 +28,7 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc). (Partially implemented)
 - Create an English version of the app. (Partially implemented)
-- Add highlighting feature to search results
+- Add highlighting feature to search results. (Partially implemented)
 
 ## Future project:
 
