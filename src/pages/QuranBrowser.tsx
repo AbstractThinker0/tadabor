@@ -4,7 +4,6 @@ import { findWord, normalize_text, onlySpaces } from "../util/util";
 
 import {
   verseProps,
-  derivationProps,
   quranProps,
   rootProps,
   chapterProps,
@@ -12,6 +11,13 @@ import {
 
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
+
+export interface searchIndexProps {
+  name: string;
+  key: string;
+  text: string;
+  wordIndex: string;
+}
 
 export enum QB_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
@@ -26,7 +32,6 @@ export enum QB_ACTIONS {
   SET_SELECTED_ROOT_ERROR = "dispatchSetSelectedRootError",
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
-  SET_ROOT_DERIVATIONS = "dispatchSetRootDerivations",
   SET_SEARCH_SCORE = "dispatchSetSearchScope",
   SEARCH_SUBMIT = "dispatchSetSearchSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
@@ -56,7 +61,7 @@ interface stateProps {
   selectedRootError: boolean;
   radioSearchMethod: string;
   radioSearchingMethod: string;
-  rootDerivations: derivationProps[];
+  searchIndexes: searchIndexProps[];
   searchScope: SEARCH_SCOPE;
   searchingScope: SEARCH_SCOPE;
 }
@@ -100,9 +105,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_RADIO_SEARCHING: {
       return { ...state, radioSearchingMethod: action.payload };
     }
-    case QB_ACTIONS.SET_ROOT_DERIVATIONS: {
-      return { ...state, rootDerivations: action.payload };
-    }
     case QB_ACTIONS.SET_SEARCH_SCORE: {
       return { ...state, searchScope: action.payload };
     }
@@ -112,7 +114,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         searchError: false,
         selectedRootError: false,
         searchResult: [],
-        rootDerivations: [],
+        searchIndexes: [],
         searchingString: state.searchString,
         radioSearchingMethod: state.radioSearchMethod,
       };
@@ -134,6 +136,27 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
             : normalize_text(state.searchString)
         ).trim();
 
+        let searchIndexes: searchIndexProps[] = [];
+
+        const fillMatches = (
+          verseText: string,
+          verseKey: string,
+          searchToken: string
+        ) => {
+          let foundIndex = verseText
+            .split(" ")
+            .findIndex((word) => word.includes(searchToken));
+
+          if (foundIndex === -1) return;
+
+          searchIndexes.push({
+            name: searchToken,
+            key: verseKey,
+            text: verseText.split(" ")[foundIndex],
+            wordIndex: foundIndex.toString(),
+          });
+        };
+
         const checkVerseMatch = (verse: verseProps) => {
           let normal_text = state.searchDiacritics
             ? verse.versetext
@@ -142,10 +165,12 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           if (state.searchIdentical) {
             if (findWord(normal_search, normal_text)) {
               matchVerses.push(verse);
+              fillMatches(normal_text, verse.key, normal_search);
             }
           } else {
             if (normal_text.search(normal_search) !== -1) {
               matchVerses.push(verse);
+              fillMatches(normal_text, verse.key, normal_search);
             }
           }
         };
@@ -203,7 +228,11 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         if (matchVerses.length === 0) {
           newState = { ...newState, searchError: true };
         } else {
-          newState = { ...newState, searchResult: matchVerses };
+          newState = {
+            ...newState,
+            searchResult: matchVerses,
+            searchIndexes: searchIndexes,
+          };
         }
       };
 
@@ -229,7 +258,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         let occurencesArray = rootTarget.occurences;
 
         let matchVerses: verseProps[] = [];
-        let derivations: derivationProps[] = [];
+        let derivations: searchIndexProps[] = [];
 
         const fillDerivationsArray = (
           wordIndexes: string[],
@@ -297,7 +326,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           newState = { ...newState, selectedRootError: true };
         } else {
           newState = { ...newState, searchResult: matchVerses };
-          newState = { ...newState, rootDerivations: derivations };
+          newState = { ...newState, searchIndexes: derivations };
         }
       };
 
@@ -322,7 +351,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         searchError: false,
         selectedRootError: false,
         searchResult: [],
-        rootDerivations: [],
+        searchIndexes: [],
         selectChapter: Number(action.payload),
         selectedChapters: [action.payload],
       };
@@ -355,7 +384,7 @@ function QuranBrowser() {
     selectedRootError: false,
     radioSearchMethod: "optionWordSearch",
     radioSearchingMethod: "optionWordSearch",
-    rootDerivations: [],
+    searchIndexes: [],
     searchScope: SEARCH_SCOPE.ALL_CHAPTERS,
     searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
   };
@@ -390,7 +419,7 @@ function QuranBrowser() {
           searchingScope={state.searchingScope}
           selectChapter={state.selectChapter}
           radioSearchingMethod={state.radioSearchingMethod}
-          rootDerivations={state.rootDerivations}
+          searchIndexes={state.searchIndexes}
         />
       </div>
     </QuranBrowserContext.Provider>

@@ -38,13 +38,6 @@ export interface rootProps {
   occurences: string[];
 }
 
-export interface derivationProps {
-  name: string;
-  key: string;
-  text: string;
-  wordIndex: string;
-}
-
 type QuranContent = {
   chapterNames: chapterProps[];
   allQuranText: quranProps[];

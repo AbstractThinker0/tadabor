@@ -21,13 +21,11 @@ import { TextForm } from "../TextForm";
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
 
-import useQuran, {
-  verseProps,
-  derivationProps,
-} from "../../context/QuranContext";
+import useQuran, { verseProps } from "../../context/QuranContext";
 
 import {
   QB_ACTIONS,
+  searchIndexProps,
   SEARCH_SCOPE,
   useQuranBrowser,
 } from "../../pages/QuranBrowser";
@@ -151,7 +149,7 @@ interface DisplayPanelProps {
   searchingString: string;
   selectChapter: number;
   radioSearchingMethod: string;
-  rootDerivations: derivationProps[];
+  searchIndexes: searchIndexProps[];
   searchingScope: SEARCH_SCOPE;
 }
 
@@ -174,7 +172,7 @@ const DisplayPanel = memo(
     searchingString,
     selectChapter,
     radioSearchingMethod,
-    rootDerivations,
+    searchIndexes,
     searchingScope,
   }: DisplayPanelProps) => {
     // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
@@ -264,7 +262,7 @@ const DisplayPanel = memo(
                 selectedRootError={selectedRootError}
                 radioSearchMethod={radioSearchingMethod}
                 searchingChapters={searchingChapters}
-                rootDerivations={rootDerivations}
+                searchIndexes={searchIndexes}
                 editableNotes={state.editableNotes}
                 myNotes={state.myNotes}
                 areaDirection={state.areaDirection}
@@ -298,7 +296,7 @@ const ListSearchResults = memo(
     myNotes,
     editableNotes,
     searchingChapters,
-    rootDerivations,
+    searchIndexes,
     areaDirection,
     searchingScope,
   }: any) => {
@@ -330,7 +328,7 @@ const ListSearchResults = memo(
         {isRootSearch && (
           <DerivationsComponent
             handleRootClick={memoHandleRootClick}
-            rootDerivations={rootDerivations}
+            searchIndexes={searchIndexes}
           />
         )}
         <div className="card-body">
@@ -350,7 +348,7 @@ const ListSearchResults = memo(
                 isEditable={editableNotes[verse.key]}
                 noteDirection={areaDirection[verse.key] || ""}
                 isRootSearch={isRootSearch}
-                rootDerivations={rootDerivations}
+                searchIndexes={searchIndexes}
                 dispatchDpAction={dispatchDpAction}
               />
             </div>
@@ -393,36 +391,34 @@ const SearchTitle = memo(
 
 SearchTitle.displayName = "SearchTitle";
 
-const DerivationsComponent = memo(
-  ({ rootDerivations, handleRootClick }: any) => {
-    useEffect(() => {
-      //init tooltip
-      Array.from(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
-    }, [rootDerivations]);
-
-    return (
-      <>
-        <hr />
-        <span className="p-2">
-          {rootDerivations.map((root: derivationProps, index: number) => (
-            <span
-              role="button"
-              key={index}
-              onClick={(e) => handleRootClick(root.key)}
-              data-bs-toggle="tooltip"
-              data-bs-title={root.text}
-            >
-              {index ? " -" : " "} {root.name}
-            </span>
-          ))}
-        </span>
-        <hr />
-      </>
+const DerivationsComponent = memo(({ searchIndexes, handleRootClick }: any) => {
+  useEffect(() => {
+    //init tooltip
+    Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
+      (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
     );
-  }
-);
+  }, [searchIndexes]);
+
+  return (
+    <>
+      <hr />
+      <span className="p-2">
+        {searchIndexes.map((root: searchIndexProps, index: number) => (
+          <span
+            role="button"
+            key={index}
+            onClick={(e) => handleRootClick(root.key)}
+            data-bs-toggle="tooltip"
+            data-bs-title={root.text}
+          >
+            {index ? " -" : " "} {root.name}
+          </span>
+        ))}
+      </span>
+      <hr />
+    </>
+  );
+});
 
 DerivationsComponent.displayName = "DerivationsComponent";
 
@@ -435,10 +431,10 @@ const SearchVerseComponent = memo(
     isEditable,
     noteDirection,
     isRootSearch,
-    rootDerivations,
+    searchIndexes,
     dispatchDpAction,
   }: any) => {
-    rootDerivations = (rootDerivations as []).filter(
+    searchIndexes = (searchIndexes as []).filter(
       (value: any) => value.key === verse.key
     );
 
@@ -449,7 +445,7 @@ const SearchVerseComponent = memo(
           searchingScope={searchingScope}
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
-          rootDerivations={rootDerivations}
+          searchIndexes={searchIndexes}
           dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
@@ -484,7 +480,7 @@ const VerseContentComponent = memo(
     searchingScope,
     verseChapter,
     isRootSearch,
-    rootDerivations,
+    searchIndexes,
     dispatchDpAction,
   }: any) => {
     const { dispatchAction } = useQuranBrowser();
@@ -507,7 +503,7 @@ const VerseContentComponent = memo(
       <span className="fs-4">
         <Highlighted
           text={verse.versetext}
-          rootDerivations={rootDerivations}
+          searchIndexes={searchIndexes}
           isRootSearch={isRootSearch}
         />
         (
@@ -544,16 +540,12 @@ const VerseContentComponent = memo(
 
 VerseContentComponent.displayName = "VerseContentComponent";
 
-const Highlighted = ({ text = "", rootDerivations, isRootSearch }: any) => {
-  if (!isRootSearch) {
-    return <span>{text}</span>;
-  }
-
+const Highlighted = ({ text = "", searchIndexes, isRootSearch }: any) => {
   const parts = text.split(" ");
 
   function matchIndex(index: number) {
-    for (const root of rootDerivations) {
-      if (Number(root.wordIndex) === index + 1) {
+    for (const searchIndex of searchIndexes) {
+      if (Number(searchIndex.wordIndex) === index) {
         return true;
       }
     }
@@ -563,7 +555,7 @@ const Highlighted = ({ text = "", rootDerivations, isRootSearch }: any) => {
   return (
     <span>
       {parts.filter(String).map((part: string, i: number) => {
-        return matchIndex(i) ? (
+        return matchIndex(isRootSearch ? i + 1 : i) ? (
           <Fragment key={i}>
             <mark>{part}</mark>{" "}
           </Fragment>
