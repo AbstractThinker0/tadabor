@@ -48,10 +48,6 @@ interface reducerAction {
   payload: any;
 }
 
-interface versesRefProp {
-  [key: string]: HTMLDivElement;
-}
-
 interface refVersesResultType {
   [key: string]: HTMLDivElement;
 }
@@ -235,8 +231,15 @@ const DisplayPanel = memo(
       };
     }, [dispatchDpAction]);
 
+    const scrollRef = useRef(state.scrollKey);
+
     useEffect(() => {
-      if (refListVerses.current) refListVerses.current.scrollTop = 0;
+      scrollRef.current = state.scrollKey;
+    }, [state.scrollKey]);
+
+    useEffect(() => {
+      if (refListVerses.current && scrollRef.current === null)
+        refListVerses.current.scrollTop = 0;
     }, [selectChapter, searchResult]);
 
     if (state.loadingState)
@@ -588,17 +591,8 @@ const ListVerses = memo(
     const { chapterNames, allQuranText } = useQuran();
     const { dispatchDpAction } = useDisplayPanel();
 
-    const versesRef = useRef<versesRefProp>({});
-
     const chapterName = chapterNames[selectChapter - 1].name;
     const versesArray = allQuranText[selectChapter - 1].verses;
-
-    useEffect(() => {
-      if (scrollKey) {
-        versesRef.current[scrollKey].scrollIntoView();
-        dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
-      }
-    }, [scrollKey, dispatchDpAction]);
 
     return (
       <>
@@ -607,12 +601,12 @@ const ListVerses = memo(
           {versesArray.map((verse: verseProps) => (
             <VerseComponent
               key={verse.key}
-              versesRef={versesRef}
               verse={verse}
               value={myNotes[verse.key] || ""}
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
               dispatchDpAction={dispatchDpAction}
+              scrollKey={scrollKey}
             />
           ))}
         </div>
@@ -625,18 +619,26 @@ ListVerses.displayName = "ListVerses";
 
 const VerseComponent = memo(
   ({
-    versesRef,
     verse,
     value,
     isEditable,
     noteDirection,
     dispatchDpAction,
+    scrollKey,
   }: any) => {
+    const verseRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (scrollKey === verse.key) {
+        if (verseRef.current) {
+          verseRef.current.scrollIntoView();
+          dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
+        }
+      }
+    }, [scrollKey, dispatchDpAction, verse.key]);
+
     return (
-      <div
-        ref={(el) => (versesRef.current[verse.key] = el)}
-        className="border-bottom pt-1 pb-1"
-      >
+      <div ref={verseRef} className="border-bottom pt-1 pb-1">
         <VerseTextComponent verse={verse} />
         <InputTextForm
           verseKey={verse.key}
