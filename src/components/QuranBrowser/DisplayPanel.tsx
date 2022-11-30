@@ -177,6 +177,7 @@ const DisplayPanel = memo(
     rootDerivations,
     searchingScope,
   }: DisplayPanelProps) => {
+    // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
     const refListVerses = useRef<HTMLDivElement>(null);
 
     const initialState: stateProps = {
