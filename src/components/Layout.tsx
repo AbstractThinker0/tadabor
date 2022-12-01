@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
 import "../main.scss";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 interface Props {
   children?: ReactNode;
@@ -15,7 +15,11 @@ function Layout({ children }: Props) {
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
 
-  if (mainRef.current) mainRef.current.dir = i18n.dir();
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.dir = i18n.dir();
+    }
+  }, [i18n.resolvedLanguage, i18n]);
 
   return (
     <main ref={mainRef}>
