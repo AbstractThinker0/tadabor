@@ -603,12 +603,12 @@ const ListVerses = memo(
     const versesRef = useRef<versesRefType>({});
 
     useEffect(() => {
-      let verseToHighligh = versesRef.current[scrollKey];
-      if (verseToHighligh) {
-        verseToHighligh.scrollIntoView({ block: "center" });
-        verseToHighligh.classList.add("verse-selected");
+      let verseToHighlight = versesRef.current[scrollKey];
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({ block: "center" });
+        verseToHighlight.classList.add("verse-selected");
         selectedVerse.current =
-          verseToHighligh.firstElementChild?.firstElementChild;
+          verseToHighlight.firstElementChild?.firstElementChild;
         dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
       }
     }, [dispatchDpAction, scrollKey]);
