@@ -24,6 +24,17 @@ main {
       min-height: 100%;
     }
   }
+
+  .btn-verse {
+    cursor: pointer;
+    &:hover {
+      color: cornflowerblue;
+    }
+  }
+
+  .verse-selected {
+    background-color: bisque;
+  }
 }
 
 .translation {

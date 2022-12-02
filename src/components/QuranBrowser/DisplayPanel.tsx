@@ -594,6 +594,25 @@ const ListVerses = memo(
     const chapterName = chapterNames[selectChapter - 1].name;
     const versesArray = allQuranText[selectChapter - 1].verses;
 
+    const selectedVerse = useRef<Element | null | undefined>(null);
+
+    interface versesRefType {
+      [key: string]: HTMLDivElement;
+    }
+
+    const versesRef = useRef<versesRefType>({});
+
+    useEffect(() => {
+      let verseToHighligh = versesRef.current[scrollKey];
+      if (verseToHighligh) {
+        verseToHighligh.scrollIntoView({ block: "center" });
+        verseToHighligh.classList.add("verse-selected");
+        selectedVerse.current =
+          verseToHighligh.firstElementChild?.firstElementChild;
+        dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
+      }
+    }, [dispatchDpAction, scrollKey]);
+
     return (
       <>
         <ListTitle chapterName={chapterName} />
@@ -606,7 +625,8 @@ const ListVerses = memo(
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
               dispatchDpAction={dispatchDpAction}
-              scrollKey={scrollKey}
+              selectedVerse={selectedVerse}
+              versesRef={versesRef}
             />
           ))}
         </div>
@@ -617,6 +637,14 @@ const ListVerses = memo(
 
 ListVerses.displayName = "ListVerses";
 
+function hightlighVerse(verseElement: HTMLElement) {
+  verseElement.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+  verseElement.classList.add("verse-selected");
+}
+
 const VerseComponent = memo(
   ({
     verse,
@@ -624,22 +652,15 @@ const VerseComponent = memo(
     isEditable,
     noteDirection,
     dispatchDpAction,
-    scrollKey,
+    selectedVerse,
+    versesRef,
   }: any) => {
-    const verseRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      if (scrollKey === verse.key) {
-        if (verseRef.current) {
-          verseRef.current.scrollIntoView();
-          dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
-        }
-      }
-    }, [scrollKey, dispatchDpAction, verse.key]);
-
     return (
-      <div ref={verseRef} className="border-bottom pt-1 pb-1">
-        <VerseTextComponent verse={verse} />
+      <div
+        ref={(el) => (versesRef.current[verse.key] = el)}
+        className="border-bottom pt-1 pb-1"
+      >
+        <VerseTextComponent verse={verse} selectedVerse={selectedVerse} />
         <InputTextForm
           verseKey={verse.key}
           verseNote={value}
@@ -654,10 +675,34 @@ const VerseComponent = memo(
 
 VerseComponent.displayName = "VerseComponent";
 
-const VerseTextComponent = memo(({ verse }: any) => {
+const VerseTextComponent = memo(({ verse, selectedVerse }: any) => {
+  function onClickVerse(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    let verseElement = event.currentTarget.parentElement?.parentElement;
+
+    if (!verseElement) return;
+
+    if (selectedVerse.current) {
+      selectedVerse.current.parentElement?.parentElement?.classList.remove(
+        "verse-selected"
+      );
+
+      if (selectedVerse.current === event.currentTarget) {
+        selectedVerse.current = null;
+      } else {
+        hightlighVerse(verseElement);
+        selectedVerse.current = event.currentTarget;
+      }
+    } else {
+      hightlighVerse(verseElement);
+      selectedVerse.current = event.currentTarget;
+    }
+  }
   return (
     <span className="fs-4">
-      {verse.versetext} ({verse.verseid}){" "}
+      {verse.versetext}{" "}
+      <span className="btn-verse" onClick={onClickVerse}>
+        ({verse.verseid})
+      </span>{" "}
       <button
         className="btn"
         type="button"
