@@ -143,12 +143,13 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           verseKey: string,
           searchToken: string
         ) => {
-          verseText.split(" ").forEach((word, index) => {
+          let verseWords = verseText.split(" ");
+          verseWords.forEach((word, index) => {
             if (word.includes(searchToken)) {
               searchIndexes.push({
                 name: searchToken,
                 key: verseKey,
-                text: verseText.split(" ")[index],
+                text: verseWords[index],
                 wordIndex: index.toString(),
               });
             }
