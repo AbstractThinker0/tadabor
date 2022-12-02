@@ -54,7 +54,7 @@ function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
 
   return (
-    <div className="p-3" style={{ height: "90%" }}>
+    <div className="roots">
       <FormWordSearch
         searchString={searchString}
         setSearchString={setSearchString}
@@ -231,8 +231,8 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    // Reached the bottom, ( the +1 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-    if (scrollHeight - scrollTop <= clientHeight + 1) {
+    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+    if (scrollHeight - scrollTop <= clientHeight + 10) {
       fetchMoreData();
     }
   }
@@ -240,7 +240,7 @@ const RootsListComponent = memo(({ searchString }: any) => {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div onScroll={handleScroll} style={{ overflowY: "scroll", height: "85%" }}>
+    <div className="roots-list" onScroll={handleScroll}>
       {filteredArray.slice(0, itemsCount).map((root) => (
         <RootComponent
           key={root.id}
