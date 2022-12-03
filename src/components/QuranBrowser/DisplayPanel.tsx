@@ -308,8 +308,18 @@ const ListSearchResults = memo(
 
     const refVersesResult = useRef<refVersesResultType>({});
 
+    const refSelectedVerse = useRef<HTMLDivElement | null>(null);
+
     function handleRootClick(verse_key: string) {
-      refVersesResult.current[verse_key].scrollIntoView();
+      refVersesResult.current[verse_key].scrollIntoView({ behavior: "smooth" });
+
+      if (refSelectedVerse.current) {
+        refSelectedVerse.current.classList.remove("verse-selected");
+      }
+
+      refVersesResult.current[verse_key].classList.add("verse-selected");
+
+      refSelectedVerse.current = refVersesResult.current[verse_key];
     }
 
     const memoHandleRootClick = useCallback(handleRootClick, []);
