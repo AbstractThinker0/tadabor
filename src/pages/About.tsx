@@ -35,7 +35,7 @@ const AboutEnglish = () => {
             being to achieve an accurate understanding of the true message of
             the Qur'an By undoing all the semantic changes that have occurred
             over the centuries, no deadline has been set yet, and it all depends
-            on God's will first and foremost.
+            on God's will.
           </p>
           <h5>Credits</h5>
           <br />
@@ -111,7 +111,7 @@ const AboutArabic = () => {
             إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
             للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
             التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
-            يعتمد على مشيئة الله أولا وأخيرأ.
+            يعتمد على مشيئة الله.
           </p>
           <h5>الشكر</h5>
           <br />
