@@ -131,12 +131,17 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         }
 
         let matchVerses: verseProps[] = [];
+        let processedSearchString = "";
 
-        let normal_search = (
-          state.searchDiacritics
-            ? state.searchString
-            : normalizeArabic(state.searchString)
-        ).trim();
+        // Do not remove diacritics if not required.
+        if (state.searchDiacritics === true) {
+          processedSearchString = state.searchString;
+        } else {
+          processedSearchString = normalizeArabic(state.searchString);
+        }
+
+        // Remove extra spaces. (Note: in the future reconsider this step)
+        processedSearchString = processedSearchString.trim();
 
         let searchIndexes: searchIndexProps[] = [];
 
@@ -159,19 +164,23 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         };
 
         const checkVerseMatch = (verse: verseProps) => {
-          let normal_text = state.searchDiacritics
-            ? verse.versetext
-            : normalizeArabic(verse.versetext);
+          let processedVerseText = "";
+
+          if (state.searchDiacritics === true) {
+            processedVerseText = verse.versetext;
+          } else {
+            processedVerseText = normalizeArabic(verse.versetext);
+          }
 
           if (state.searchIdentical) {
-            if (findArabicWord(normal_search, normal_text)) {
+            if (findArabicWord(processedSearchString, processedVerseText)) {
               matchVerses.push(verse);
-              fillMatches(normal_text, verse.key, normal_search);
+              fillMatches(processedVerseText, verse.key, processedSearchString);
             }
           } else {
-            if (normal_text.search(normal_search) !== -1) {
+            if (processedVerseText.search(processedSearchString) !== -1) {
               matchVerses.push(verse);
-              fillMatches(normal_text, verse.key, normal_search);
+              fillMatches(processedVerseText, verse.key, processedSearchString);
             }
           }
         };
