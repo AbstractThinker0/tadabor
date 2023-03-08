@@ -4,6 +4,7 @@ import useQuran, { verseProps } from "../../context/QuranContext";
 import {
   QB_ACTIONS,
   SEARCH_SCOPE,
+  SEARCH_METHOD,
   useQuranBrowser,
 } from "../../pages/QuranBrowser";
 
@@ -35,7 +36,7 @@ const SearchPanel = memo(
     const { t } = useTranslation();
     const { dispatchAction } = useQuranBrowser();
 
-    let isRootSearch = radioSearchMethod === "optionRootSearch" ? true : false;
+    let isRootSearch = radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     function setSearchAllQuran(status: boolean) {
       dispatchAction(
@@ -158,8 +159,8 @@ const RadioSearchMethod = ({
           type="radio"
           name="inlineRadioOptions"
           id="inlineRadio1"
-          value="optionRootSearch"
-          checked={radioSearchMethod === "optionRootSearch"}
+          value={SEARCH_METHOD.ROOT}
+          checked={radioSearchMethod === SEARCH_METHOD.ROOT}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio1">
@@ -176,8 +177,8 @@ const RadioSearchMethod = ({
           type="radio"
           name="inlineRadioOptions"
           id="inlineRadio2"
-          value="optionWordSearch"
-          checked={radioSearchMethod === "optionWordSearch"}
+          value={SEARCH_METHOD.WORD}
+          checked={radioSearchMethod === SEARCH_METHOD.WORD}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio2">

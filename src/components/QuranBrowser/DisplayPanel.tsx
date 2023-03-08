@@ -28,6 +28,7 @@ import {
   searchIndexProps,
   SEARCH_SCOPE,
   useQuranBrowser,
+  SEARCH_METHOD,
 } from "../../pages/QuranBrowser";
 
 enum DP_ACTIONS {
@@ -325,7 +326,7 @@ const ListSearchResults = memo(
     const memoHandleRootClick = useCallback(handleRootClick, []);
 
     const isRootSearch =
-      radioSearchMethod === "optionRootSearch" ? true : false;
+      radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     const chapterName = chapterNames[selectChapter - 1].name;
 
@@ -388,7 +389,7 @@ const SearchTitle = memo(
     searchChapters,
     chapterName,
   }: any) => {
-    let searchType = radioSearchMethod === "optionRootSearch" ? "جذر" : "كلمة";
+    let searchType = radioSearchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"

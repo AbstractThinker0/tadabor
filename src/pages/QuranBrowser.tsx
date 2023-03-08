@@ -42,6 +42,11 @@ export enum SEARCH_SCOPE {
   SINGLE_CHAPTER = "searchSingleChapter",
 }
 
+export enum SEARCH_METHOD {
+  WORD = "optionWordSearch",
+  ROOT = "optionRootSearch",
+}
+
 interface reducerAction {
   type: QB_ACTIONS;
   payload: any;
@@ -105,6 +110,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
       return { ...state, searchScope: action.payload };
     }
     case QB_ACTIONS.SEARCH_SUBMIT: {
+      // initial search state
       let newState: stateProps = {
         ...state,
         searchError: false,
@@ -325,12 +331,12 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         }
       };
 
-      if (state.radioSearchMethod === "optionWordSearch") {
+      if (state.radioSearchMethod === SEARCH_METHOD.WORD) {
         handleSearchByWord(
           action.payload.allQuranText,
           action.payload.chapterNames
         );
-      } else if (state.radioSearchMethod === "optionRootSearch") {
+      } else if (state.radioSearchMethod === SEARCH_METHOD.ROOT) {
         handleSearchByRoot(
           action.payload.quranRoots,
           action.payload.chapterNames,
@@ -377,8 +383,8 @@ function QuranBrowser() {
     searchIdentical: false,
     searchError: false,
     selectedRootError: false,
-    radioSearchMethod: "optionWordSearch",
-    radioSearchingMethod: "optionWordSearch",
+    radioSearchMethod: SEARCH_METHOD.WORD,
+    radioSearchingMethod: SEARCH_METHOD.WORD,
     searchIndexes: [],
     searchScope: SEARCH_SCOPE.ALL_CHAPTERS,
     searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
