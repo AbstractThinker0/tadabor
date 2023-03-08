@@ -1,4 +1,4 @@
-export function normalize_text(text: string) {
+export function normalizeArabic(text: string) {
   //normalize Arabic
   text = text.replace(/(ٱ)/g, "ا");
 
@@ -23,7 +23,7 @@ export function onlySpaces(str: string) {
 }
 
 // Take into consideration Arabic boundaries
-export function findWord(word: string, str: string) {
+export function findArabicWord(word: string, str: string) {
   return RegExp("(^|[^\u0621-\u064A])" + word + "($|[^\u0621-\u064A])").test(
     str
   );

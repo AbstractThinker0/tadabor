@@ -1,6 +1,6 @@
 import React, { useReducer, Reducer } from "react";
 
-import { findWord, normalize_text, onlySpaces } from "../util/util";
+import { findArabicWord, normalizeArabic, onlySpaces } from "../util/util";
 
 import {
   verseProps,
@@ -133,7 +133,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         let normal_search = (
           state.searchDiacritics
             ? state.searchString
-            : normalize_text(state.searchString)
+            : normalizeArabic(state.searchString)
         ).trim();
 
         let searchIndexes: searchIndexProps[] = [];
@@ -159,10 +159,10 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         const checkVerseMatch = (verse: verseProps) => {
           let normal_text = state.searchDiacritics
             ? verse.versetext
-            : normalize_text(verse.versetext);
+            : normalizeArabic(verse.versetext);
 
           if (state.searchIdentical) {
-            if (findWord(normal_search, normal_text)) {
+            if (findArabicWord(normal_search, normal_text)) {
               matchVerses.push(verse);
               fillMatches(normal_text, verse.key, normal_search);
             }
