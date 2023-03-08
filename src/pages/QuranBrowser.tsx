@@ -20,7 +20,6 @@ export interface searchIndexProps {
 }
 
 export enum QB_ACTIONS {
-  SET_CHAPTER = "dispatchSetChapter",
   SET_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
   SET_SEARCHING_STRING = "dispatchSetSearchingString",
@@ -69,9 +68,6 @@ interface stateProps {
 function reducer(state: stateProps, action: reducerAction): stateProps {
   // ...
   switch (action.type) {
-    case QB_ACTIONS.SET_CHAPTER: {
-      return { ...state, selectChapter: action.payload };
-    }
     case QB_ACTIONS.SET_CHAPTERS: {
       return { ...state, selectedChapters: action.payload };
     }
