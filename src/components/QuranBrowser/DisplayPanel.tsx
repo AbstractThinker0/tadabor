@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { INote, INoteDir, loadData, saveData } from "../../util/db";
 
 import LoadingSpinner from "../LoadingSpinner";
-import { ArrowDownCircleFill } from "react-bootstrap-icons";
+import { IconCircleArrowDownFilled } from "@tabler/icons-react";
 
 import { TextForm } from "../TextForm";
 
@@ -546,7 +546,7 @@ const VerseContentComponent = memo(
           aria-expanded="false"
           aria-controls={"collapseExample" + verse_key}
         >
-          <ArrowDownCircleFill />
+          <IconCircleArrowDownFilled />
         </button>
       </span>
     );
@@ -723,7 +723,7 @@ const VerseTextComponent = memo(({ verse, selectedVerse }: any) => {
         aria-expanded="false"
         aria-controls={"collapseExample" + verse.key}
       >
-        <ArrowDownCircleFill />
+        <IconCircleArrowDownFilled />
       </button>
     </span>
   );
