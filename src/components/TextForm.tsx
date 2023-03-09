@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { FormEvent, memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconTextDirectionLtr } from "@tabler/icons-react";
@@ -116,9 +116,18 @@ const TextareaToolbar = memo((props: any) => {
   );
 });
 
-function ToolbarOption(props: any) {
+interface ToolbarOptionProps {
+  handleClick: () => void;
+  children: JSX.Element;
+}
+
+function ToolbarOption(props: ToolbarOptionProps) {
+  function onClickButton() {
+    props.handleClick();
+  }
+
   return (
-    <button type="button" className="btn btn-sm" onClick={props.handleClick}>
+    <button type="button" className="btn btn-sm" onClick={onClickButton}>
       {props.children}
     </button>
   );
@@ -195,6 +204,15 @@ const FormComponent = ({
   );
 };
 
+interface YourNoteFormProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleSetDirection: (key: string, direction: string) => void;
+  handleInputSubmit: (key: string, value: string) => void;
+  handleInputChange: (key: string, value: string) => void;
+}
+
 const YourNoteForm = ({
   inputKey,
   inputValue,
@@ -202,7 +220,7 @@ const YourNoteForm = ({
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-}: any) => {
+}: YourNoteFormProps) => {
   const minRows = 4;
   const [rows, setRows] = useState(minRows);
   const formRef = useRef<HTMLFormElement>(null);
@@ -223,12 +241,18 @@ const YourNoteForm = ({
     }
   }, [inputValue]);
 
+  function onSubmitForm(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    handleInputSubmit(inputKey, inputValue);
+  }
+
+  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    handleInputChange(inputKey, event.target.value);
+  }
+
   return (
-    <form
-      ref={formRef}
-      name={inputKey}
-      onSubmit={(event) => handleInputSubmit(event, inputValue)}
-    >
+    <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
       <div className="card-body form-group">
         <TextareaToolbar>
           <ToolbarOption
@@ -248,7 +272,7 @@ const YourNoteForm = ({
           placeholder="أدخل كتاباتك"
           name={inputKey}
           value={inputValue}
-          onChange={handleInputChange}
+          onChange={onChangeInput}
           rows={rows}
           dir={inputDirection}
           required

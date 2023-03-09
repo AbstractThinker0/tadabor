@@ -70,19 +70,13 @@ function YourNotes() {
 
   const memoHandleEditOnClick = useCallback(handleEditOnClick, []);
 
-  function handleNoteSave(
-    event: React.FormEvent<HTMLFormElement>,
-    value: string
-  ) {
-    event.preventDefault();
-    let note_key = event.currentTarget.name;
-
+  function handleNoteSave(noteKey: string, value: string) {
     setEditableNotes((state: any) => {
-      return { ...state, [note_key]: false };
+      return { ...state, [noteKey]: false };
     });
 
     saveData("notes", {
-      id: note_key,
+      id: noteKey,
       text: value,
       date_created: Date.now(),
       date_modified: Date.now(),
@@ -95,11 +89,9 @@ function YourNotes() {
       });
   }
 
-  function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    const { name, value } = event.target;
-
+  function handleNoteChange(noteKey: string, value: string) {
     setMyNotes((state: any) => {
-      return { ...state, [name]: value };
+      return { ...state, [noteKey]: value };
     });
   }
 
