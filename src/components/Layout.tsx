@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../context/QuranContext";
-import "../main.scss";
+import "../styles/main.scss";
 import { ReactNode, useEffect, useRef } from "react";
 
 interface Props {
