@@ -265,13 +265,25 @@ const YourNoteForm = ({
   );
 };
 
+interface YourNoteTextProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleEditButtonClick: (key: string) => void;
+}
+
 const YourNoteText = ({
   inputValue,
   inputKey,
   inputDirection,
-  handleEditClick,
-}: any) => {
+  handleEditButtonClick,
+}: YourNoteTextProps) => {
   const { t } = useTranslation();
+
+  function onClickEditButton(event: React.MouseEvent<HTMLButtonElement>) {
+    handleEditButtonClick(inputKey);
+  }
+
   return (
     <>
       <div className="card-body" dir={inputDirection}>
@@ -280,7 +292,7 @@ const YourNoteText = ({
       <div className="card-footer text-center">
         <button
           name={inputKey}
-          onClick={handleEditClick}
+          onClick={onClickEditButton}
           className="mt-2 btn btn-primary btn-sm"
         >
           {t("text_edit")}

@@ -62,8 +62,7 @@ function YourNotes() {
     return allQuranText[+info[0] - 1].verses[+info[1] - 1].versetext;
   };
 
-  function handleEditOnClick(event: React.MouseEvent<HTMLButtonElement>) {
-    let inputKey = event.currentTarget.name;
+  function handleEditOnClick(inputKey: string) {
     setEditableNotes((state: any) => {
       return { ...state, [inputKey]: true };
     });
@@ -136,7 +135,7 @@ function YourNotes() {
               inputKey={key}
               inputValue={myNotes[key]}
               inputDirection={areaDirection[key] || ""}
-              handleEditClick={memoHandleEditOnClick}
+              handleEditButtonClick={memoHandleEditOnClick}
             />
           )}
         </div>
