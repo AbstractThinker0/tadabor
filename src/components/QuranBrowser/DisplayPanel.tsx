@@ -21,7 +21,7 @@ import { TextForm } from "../TextForm";
 import * as bootstrap from "bootstrap";
 import { useTranslation } from "react-i18next";
 
-import useQuran, { verseProps } from "../../context/QuranContext";
+import useQuran from "../../context/QuranContext";
 
 import {
   QB_ACTIONS,
@@ -30,6 +30,7 @@ import {
   useQuranBrowser,
   SEARCH_METHOD,
 } from "../../pages/QuranBrowser";
+import { verseProps } from "../../types";
 
 enum DP_ACTIONS {
   SET_LOADING_STATE = "dispatchSetLoadingState",

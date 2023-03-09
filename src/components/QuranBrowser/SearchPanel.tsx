@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import useQuran, { verseProps } from "../../context/QuranContext";
+import useQuran from "../../context/QuranContext";
 import {
   QB_ACTIONS,
   SEARCH_SCOPE,
@@ -10,6 +10,7 @@ import {
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
+import { verseProps } from "../../types";
 
 interface SearchPanelProps {
   radioSearchMethod: string;

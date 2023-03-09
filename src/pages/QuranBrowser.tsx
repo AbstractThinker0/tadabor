@@ -2,15 +2,9 @@ import React, { useReducer, Reducer } from "react";
 
 import { findArabicWord, normalizeArabic, onlySpaces } from "../util/util";
 
-import {
-  verseProps,
-  quranProps,
-  rootProps,
-  chapterProps,
-} from "../context/QuranContext";
-
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
+import { chapterProps, quranProps, rootProps, verseProps } from "../types";
 
 export interface searchIndexProps {
   name: string;

@@ -8,34 +8,10 @@ import {
   ReactNode,
 } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { chapterProps, quranProps, rootProps, verseProps } from "../types";
 
 interface Props {
   children?: ReactNode;
-}
-
-export interface chapterProps {
-  id: number;
-  name: string;
-  transliteration: string;
-}
-
-export type verseProps = {
-  key: string;
-  suraid: string;
-  verseid: string;
-  versetext: string;
-};
-
-export interface quranProps {
-  id: number;
-  verses: verseProps[];
-}
-
-export interface rootProps {
-  id: number;
-  name: string;
-  count: string;
-  occurences: string[];
 }
 
 type QuranContent = {
