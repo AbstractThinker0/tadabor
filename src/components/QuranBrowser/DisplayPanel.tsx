@@ -742,15 +742,13 @@ const InputTextForm = memo(
     const { t } = useTranslation();
 
     const handleNoteChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = event.target;
-
+      (name: string, value: string) => {
         dispatchDpAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
       },
       [dispatchDpAction]
     );
 
-    const onInputSubmit = useCallback(
+    const handleInputSubmit = useCallback(
       (key: string, value: string) => {
         saveData("notes", {
           id: key,
@@ -783,9 +781,7 @@ const InputTextForm = memo(
     );
 
     const handleEditClick = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
-        let inputKey = event.currentTarget.name;
-
+      (inputKey: string) => {
         dispatchDpAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
           name: inputKey,
           value: true,
@@ -803,7 +799,7 @@ const InputTextForm = memo(
         handleInputChange={handleNoteChange}
         handleEditClick={handleEditClick}
         handleSetDirection={handleSetDirection}
-        onInputSubmit={onInputSubmit}
+        handleInputSubmit={handleInputSubmit}
       />
     );
   }

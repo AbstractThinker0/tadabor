@@ -167,9 +167,7 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
   const memoHandleNoteChange = useCallback(handleNoteChange, []);
 
-  function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    const { name, value } = event.target;
-
+  function handleNoteChange(name: string, value: string) {
     setMyNotes((state: any) => {
       return { ...state, [name]: value };
     });
@@ -198,10 +196,9 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
-  function handleEditClick(event: React.MouseEvent<HTMLButtonElement>) {
-    let root_id = event.currentTarget.name;
+  function handleEditClick(rootID: string) {
     setEditableNotes((state: any) => {
-      return { ...state, [root_id]: true };
+      return { ...state, [rootID]: true };
     });
   }
 
@@ -259,6 +256,18 @@ const RootsListComponent = memo(({ searchString }: any) => {
   );
 });
 
+interface RootComponentProps {
+  root_name: string;
+  root_id: string;
+  noteDirection: string;
+  value: string;
+  handleSetDirection: (verse_key: string, dir: string) => void;
+  handleNoteChange: (key: string, value: string) => void;
+  isEditable: boolean;
+  handleEditClick: (key: string) => void;
+  handleNoteSubmit: (key: string, value: string) => void;
+}
+
 const RootComponent = memo(
   ({
     root_name,
@@ -270,7 +279,7 @@ const RootComponent = memo(
     isEditable,
     noteDirection,
     handleSetDirection,
-  }: any) => {
+  }: RootComponentProps) => {
     return (
       <div className="border">
         <RootButton root_name={root_name} root_id={root_id} />
@@ -281,7 +290,7 @@ const RootComponent = memo(
           inputDirection={noteDirection}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
-          onInputSubmit={handleNoteSubmit}
+          handleInputSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
         />
       </div>

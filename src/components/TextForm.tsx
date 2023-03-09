@@ -9,10 +9,10 @@ interface TextFormProps {
   inputValue: string;
   inputDirection: string;
   handleSetDirection: (verse_key: string, dir: string) => void;
-  handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  handleInputChange: (key: string, value: string) => void;
   isEditable: boolean;
-  handleEditClick: React.MouseEventHandler<HTMLButtonElement>;
-  onInputSubmit: (key: string, value: string) => void;
+  handleEditClick: (key: string) => void;
+  handleInputSubmit: (key: string, value: string) => void;
 }
 
 const TextForm = memo(
@@ -24,7 +24,7 @@ const TextForm = memo(
     handleInputChange,
     isEditable,
     handleEditClick,
-    onInputSubmit,
+    handleInputSubmit,
   }: TextFormProps) => {
     const collapseRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +59,7 @@ const TextForm = memo(
             {isEditable === false ? (
               <TextComponent
                 inputValue={inputValue}
-                handleEditClick={handleEditClick}
+                handleEditButtonClick={handleEditClick}
                 inputKey={inputKey}
                 inputDirection={inputDirection}
               />
@@ -69,7 +69,7 @@ const TextForm = memo(
                 inputValue={inputValue}
                 inputDirection={inputDirection}
                 handleSetDirection={handleSetDirection}
-                onInputSubmit={onInputSubmit}
+                handleInputSubmit={handleInputSubmit}
                 handleInputChange={handleInputChange}
               />
             )}
@@ -80,13 +80,25 @@ const TextForm = memo(
   }
 );
 
+interface TextComponentProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleEditButtonClick: (key: string) => void;
+}
+
 const TextComponent = ({
   inputValue,
   inputKey,
   inputDirection,
-  handleEditClick,
-}: any) => {
+  handleEditButtonClick,
+}: TextComponentProps) => {
   const { t } = useTranslation();
+
+  function onClickEditButton(event: React.MouseEvent<HTMLButtonElement>) {
+    handleEditButtonClick(inputKey);
+  }
+
   return (
     <>
       <div
@@ -98,7 +110,7 @@ const TextComponent = ({
       <div className="text-center">
         <button
           name={inputKey}
-          onClick={handleEditClick}
+          onClick={onClickEditButton}
           className="mt-2 btn btn-primary btn-sm"
         >
           {t("text_edit")}
@@ -133,14 +145,23 @@ function ToolbarOption(props: ToolbarOptionProps) {
   );
 }
 
+interface FormComponentProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleSetDirection: (key: string, direction: string) => void;
+  handleInputSubmit: (key: string, value: string) => void;
+  handleInputChange: (key: string, value: string) => void;
+}
+
 const FormComponent = ({
   inputKey,
   inputValue,
   inputDirection,
   handleSetDirection,
-  onInputSubmit,
+  handleInputSubmit,
   handleInputChange,
-}: any) => {
+}: FormComponentProps) => {
   const minRows = 4;
   const [rows, setRows] = useState(minRows);
   const formRef = useRef<HTMLFormElement>(null);
@@ -161,13 +182,17 @@ const FormComponent = ({
     }
   }, [inputValue]);
 
-  function handleInputSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onInputSubmit(inputKey, inputValue);
+    handleInputSubmit(inputKey, inputValue);
+  }
+
+  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    handleInputChange(inputKey, event.target.value);
   }
 
   return (
-    <form ref={formRef} name={inputKey} onSubmit={handleInputSubmit}>
+    <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
       <div className="form-group">
         <TextareaToolbar>
           <ToolbarOption
@@ -187,7 +212,7 @@ const FormComponent = ({
           placeholder="أدخل كتاباتك"
           name={inputKey}
           value={inputValue}
-          onChange={handleInputChange}
+          onChange={onChangeInput}
           rows={rows}
           dir={inputDirection}
           required
@@ -204,15 +229,6 @@ const FormComponent = ({
   );
 };
 
-interface YourNoteFormProps {
-  inputKey: string;
-  inputValue: string;
-  inputDirection: string;
-  handleSetDirection: (key: string, direction: string) => void;
-  handleInputSubmit: (key: string, value: string) => void;
-  handleInputChange: (key: string, value: string) => void;
-}
-
 const YourNoteForm = ({
   inputKey,
   inputValue,
@@ -220,7 +236,7 @@ const YourNoteForm = ({
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-}: YourNoteFormProps) => {
+}: FormComponentProps) => {
   const minRows = 4;
   const [rows, setRows] = useState(minRows);
   const formRef = useRef<HTMLFormElement>(null);
