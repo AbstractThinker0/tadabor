@@ -32,7 +32,8 @@ export enum QB_ACTIONS {
   SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
   SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
   SET_SEARCH_SCOPE = "dispatchSetSearchScope",
-  SEARCH_SUBMIT = "dispatchSetSearchSubmit",
+  SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
+  SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
 }
 
@@ -109,7 +110,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_SEARCH_SCOPE: {
       return { ...state, searchScope: action.payload };
     }
-    case QB_ACTIONS.SEARCH_SUBMIT: {
+    case QB_ACTIONS.SEARCH_ROOT_SUBMIT: {
       // initial search state
       let newState: stateProps = {
         ...state,
@@ -119,97 +120,81 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         searchIndexes: [],
         searchingString: state.searchString,
         radioSearchingMethod: state.radioSearchMethod,
+        searchingScope: state.searchingScope,
       };
 
-      const handleSearchByWord = (
-        allQuranText: quranProps[],
-        chapterNames: chapterProps[]
+      if (onlySpaces(state.searchString)) {
+        return { ...newState, selectedRootError: true };
+      }
+
+      let absoluteQuran: verseProps[] = action.payload.absoluteQuran;
+      let chapterNames: chapterProps[] = action.payload.chapterNames;
+      let quranRoots: rootProps[] = action.payload.quranRoots;
+
+      let rootTarget = quranRoots.find(
+        (root) => root.name === state.searchString
+      );
+
+      if (rootTarget === undefined) {
+        return { ...newState, selectedRootError: true };
+      }
+
+      let occurencesArray = rootTarget.occurences;
+
+      const getDerivationsInVerse = (
+        wordIndexes: string[],
+        verse: verseProps
       ) => {
-        if (onlySpaces(state.searchString)) {
-          newState = { ...newState, searchError: true };
-          return;
-        }
+        let verseDerivations: searchIndexProps[] = [];
+        let verseWords = verse.versetext.split(" ");
+        wordIndexes.forEach((word) => {
+          verseDerivations.push({
+            name: verseWords[Number(word) - 1],
+            key: verse.key,
+            text:
+              chapterNames[Number(verse.suraid) - 1].name + ":" + verse.verseid,
+            wordIndex: word,
+          });
+        });
+        return verseDerivations;
+      };
 
-        let matchVerses: verseProps[] = [];
-        let processedSearchString = "";
+      let matchVerses: verseProps[] = [];
 
-        // Do not remove diacritics if not required.
-        if (state.searchDiacritics === true) {
-          processedSearchString = state.searchString;
+      let derivations: searchIndexProps[] = [];
+
+      if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+        // occurences array have the verserank1:derivativeIndex1,derivativeIndex2...etc format
+        occurencesArray.forEach((item) => {
+          let info = item.split(":");
+          let currentVerse = absoluteQuran[Number(info[0])];
+
+          let wordIndexes = info[1].split(",");
+
+          let verseDerivations = getDerivationsInVerse(
+            wordIndexes,
+            currentVerse
+          );
+
+          derivations = derivations.concat(verseDerivations);
+          matchVerses.push(currentVerse);
+        });
+      } else {
+        // Get selected chapters
+        if (state.selectedChapters.length > 1) {
+          let searchChapters: string[] = [];
+
+          state.selectedChapters.forEach((chapter) => {
+            searchChapters.push(chapterNames[Number(chapter) - 1].name);
+          });
+
+          newState = {
+            ...newState,
+            searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
+            searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
+            searchingChapters: searchChapters,
+          };
         } else {
-          processedSearchString = normalizeArabic(state.searchString);
-        }
-
-        // Remove extra spaces. (Note: in the future reconsider this step)
-        processedSearchString = processedSearchString.trim();
-
-        let searchIndexes: searchIndexProps[] = [];
-
-        const fillMatches = (
-          verseText: string,
-          verseKey: string,
-          searchToken: string
-        ) => {
-          let verseWords = verseText.split(" ");
-          verseWords.forEach((word, index) => {
-            if (word.includes(searchToken)) {
-              searchIndexes.push({
-                name: searchToken,
-                key: verseKey,
-                text: verseWords[index],
-                wordIndex: index.toString(),
-              });
-            }
-          });
-        };
-
-        const checkVerseMatch = (verse: verseProps) => {
-          let processedVerseText = "";
-
-          if (state.searchDiacritics === true) {
-            processedVerseText = verse.versetext;
-          } else {
-            processedVerseText = normalizeArabic(verse.versetext);
-          }
-
-          if (state.searchIdentical) {
-            if (findArabicWord(processedSearchString, processedVerseText)) {
-              matchVerses.push(verse);
-              fillMatches(processedVerseText, verse.key, processedSearchString);
-            }
-          } else {
-            if (processedVerseText.search(processedSearchString) !== -1) {
-              matchVerses.push(verse);
-              fillMatches(processedVerseText, verse.key, processedSearchString);
-            }
-          }
-        };
-
-        if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
-          newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
-          allChaptersMatches();
-        } else {
-          if (state.selectedChapters.length > 1) {
-            multipleChaptersMatches();
-          } else {
-            oneChapterMatches();
-          }
-        }
-
-        function allChaptersMatches() {
-          allQuranText.forEach((sura) => {
-            sura.verses.forEach((verse) => {
-              checkVerseMatch(verse);
-            });
-          });
-        }
-
-        function oneChapterMatches() {
-          let currentChapter = allQuranText[state.selectChapter - 1].verses;
-          currentChapter.forEach((verse) => {
-            checkVerseMatch(verse);
-          });
-
           newState = {
             ...newState,
             searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
@@ -217,13 +202,162 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           };
         }
 
-        function multipleChaptersMatches() {
+        occurencesArray.forEach((item) => {
+          let info = item.split(":");
+          let currentVerse = absoluteQuran[Number(info[0])];
+
+          if (state.selectedChapters.includes(currentVerse.suraid)) {
+            let wordIndexes = info[1].split(",");
+
+            let verseDerivations = getDerivationsInVerse(
+              wordIndexes,
+              currentVerse
+            );
+
+            derivations = derivations.concat(verseDerivations);
+            matchVerses.push(currentVerse);
+          }
+        });
+      }
+
+      if (matchVerses.length === 0) {
+        return { ...newState, selectedRootError: true };
+      } else {
+        return {
+          ...newState,
+          searchResult: matchVerses,
+          searchIndexes: derivations,
+        };
+      }
+    }
+    case QB_ACTIONS.SEARCH_WORD_SUBMIT: {
+      // initial search state
+      let newState: stateProps = {
+        ...state,
+        searchError: false,
+        selectedRootError: false,
+        searchResult: [],
+        searchIndexes: [],
+        searchingString: state.searchString,
+        radioSearchingMethod: state.radioSearchMethod,
+        searchingScope: state.searchScope,
+      };
+
+      if (onlySpaces(state.searchString)) {
+        return { ...newState, searchError: true };
+      }
+
+      let processedSearchString = "";
+
+      // Do not remove diacritics if not required.
+      if (state.searchDiacritics === true) {
+        processedSearchString = state.searchString;
+      } else {
+        processedSearchString = normalizeArabic(state.searchString);
+      }
+
+      // Remove extra spaces. (Note: in the future reconsider this step)
+      processedSearchString = processedSearchString.trim();
+
+      let QuranText: quranProps[];
+      let chapterNames: chapterProps[];
+      QuranText = action.payload.allQuranText;
+      chapterNames = action.payload.chapterNames;
+
+      const getSearchIndexes = (
+        verseText: string,
+        verseKey: string,
+        searchToken: string
+      ) => {
+        let verseIndexes: searchIndexProps[] = [];
+        let verseWords = verseText.split(" ");
+        verseWords.forEach((word, index) => {
+          if (word.includes(searchToken)) {
+            verseIndexes.push({
+              name: searchToken,
+              key: verseKey,
+              text: verseWords[index],
+              wordIndex: index.toString(),
+            });
+          }
+        });
+
+        return verseIndexes;
+      };
+
+      const searchVerse = (
+        verse: verseProps,
+        searchToken: string,
+        searchIdentical: boolean,
+        searchDiacritics: boolean
+      ) => {
+        let verseIndexes: searchIndexProps[] = [];
+        let processedVerseText = "";
+
+        if (searchDiacritics === true) {
+        } else {
+          processedVerseText = normalizeArabic(verse.versetext);
+        }
+
+        if (searchIdentical === true) {
+          if (findArabicWord(searchToken, processedVerseText)) {
+            verseIndexes = getSearchIndexes(
+              processedVerseText,
+              verse.key,
+              searchToken
+            );
+            return { verse, verseIndexes };
+          }
+        } else {
+          if (processedVerseText.search(searchToken) !== -1) {
+            verseIndexes = getSearchIndexes(
+              processedVerseText,
+              verse.key,
+              searchToken
+            );
+            return { verse, verseIndexes };
+          }
+        }
+        return false;
+      };
+
+      let matchVerses: verseProps[] = [];
+      let searchIndexes: searchIndexProps[] = [];
+
+      if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+        QuranText.forEach((sura) => {
+          sura.verses.forEach((verse) => {
+            let result = searchVerse(
+              verse,
+              processedSearchString,
+              state.searchIdentical,
+              state.searchDiacritics
+            );
+
+            if (result !== false) {
+              matchVerses.push(result.verse);
+              searchIndexes = searchIndexes.concat(result.verseIndexes);
+            }
+          });
+        });
+      } else {
+        if (state.selectedChapters.length > 1) {
           let searchChapters: string[] = [];
 
           state.selectedChapters.forEach((chapter) => {
             searchChapters.push(chapterNames[Number(chapter) - 1].name);
-            allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
-              checkVerseMatch(verse);
+            QuranText[Number(chapter) - 1].verses.forEach((verse) => {
+              let result = searchVerse(
+                verse,
+                processedSearchString,
+                state.searchIdentical,
+                state.searchDiacritics
+              );
+
+              if (result !== false) {
+                matchVerses.push(result.verse);
+                searchIndexes = searchIndexes.concat(result.verseIndexes);
+              }
             });
           });
 
@@ -233,127 +367,38 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
             searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
             searchingChapters: searchChapters,
           };
-        }
-
-        if (matchVerses.length === 0) {
-          newState = { ...newState, searchError: true };
         } else {
+          QuranText[state.selectChapter - 1].verses.forEach((verse) => {
+            let result = searchVerse(
+              verse,
+              processedSearchString,
+              state.searchIdentical,
+              state.searchDiacritics
+            );
+
+            if (result !== false) {
+              matchVerses.push(result.verse);
+              searchIndexes = searchIndexes.concat(result.verseIndexes);
+            }
+          });
+
           newState = {
             ...newState,
-            searchResult: matchVerses,
-            searchIndexes: searchIndexes,
+            searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
+            searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
           };
         }
-      };
-
-      const handleSearchByRoot = (
-        quranRoots: rootProps[],
-        chapterNames: chapterProps[],
-        absoluteQuran: verseProps[]
-      ) => {
-        if (onlySpaces(state.searchString)) {
-          newState = { ...newState, selectedRootError: true };
-          return;
-        }
-
-        let rootTarget = quranRoots.find(
-          (root) => root.name === state.searchString
-        );
-
-        if (rootTarget === undefined) {
-          newState = { ...newState, selectedRootError: true };
-          return;
-        }
-
-        let occurencesArray = rootTarget.occurences;
-
-        let matchVerses: verseProps[] = [];
-        let derivations: searchIndexProps[] = [];
-
-        const fillDerivationsArray = (
-          wordIndexes: string[],
-          verseWords: string[],
-          currentVerse: verseProps
-        ) => {
-          wordIndexes.forEach((word) => {
-            derivations.push({
-              name: verseWords[Number(word) - 1],
-              key: currentVerse.key,
-              text:
-                chapterNames[Number(currentVerse.suraid) - 1].name +
-                ":" +
-                currentVerse.verseid,
-              wordIndex: word,
-            });
-          });
-        };
-
-        if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
-          newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
-        } else {
-          if (state.selectedChapters.length > 1) {
-            let searchChapters: string[] = [];
-
-            state.selectedChapters.forEach((chapter) => {
-              searchChapters.push(chapterNames[Number(chapter) - 1].name);
-            });
-
-            newState = {
-              ...newState,
-              searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-              searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-              searchingChapters: searchChapters,
-            };
-          } else {
-            newState = {
-              ...newState,
-              searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-              searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-            };
-          }
-        }
-
-        // ابى	13	40:9;288:17,74;1242:13;1266:7;1832:3;2117:10;2127:20;2216:9;2403:6;2463:9;2904:5;3604:8
-        // occurences array have the verserank:index1,index2...etc format
-        occurencesArray.forEach((item) => {
-          let info = item.split(":");
-          let currentVerse = absoluteQuran[Number(info[0])];
-
-          if (
-            state.selectedChapters.includes(currentVerse.suraid) ||
-            state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS
-          ) {
-            let verseWords = currentVerse.versetext.split(" ");
-
-            let wordIndexes = info[1].split(",");
-
-            fillDerivationsArray(wordIndexes, verseWords, currentVerse);
-            matchVerses.push(currentVerse);
-          }
-        });
-
-        if (matchVerses.length === 0) {
-          newState = { ...newState, selectedRootError: true };
-        } else {
-          newState = { ...newState, searchResult: matchVerses };
-          newState = { ...newState, searchIndexes: derivations };
-        }
-      };
-
-      if (state.radioSearchMethod === SEARCH_METHOD.WORD) {
-        handleSearchByWord(
-          action.payload.allQuranText,
-          action.payload.chapterNames
-        );
-      } else if (state.radioSearchMethod === SEARCH_METHOD.ROOT) {
-        handleSearchByRoot(
-          action.payload.quranRoots,
-          action.payload.chapterNames,
-          action.payload.absoluteQuran
-        );
       }
 
-      return { ...newState };
+      if (matchVerses.length === 0) {
+        return { ...newState, searchError: true };
+      } else {
+        return {
+          ...newState,
+          searchResult: matchVerses,
+          searchIndexes: searchIndexes,
+        };
+      }
     }
     case QB_ACTIONS.GOTO_CHAPTER: {
       return {

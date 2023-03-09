@@ -60,12 +60,18 @@ const SearchPanel = memo(
     }
 
     function onSearchSubmit() {
-      dispatchAction(QB_ACTIONS.SEARCH_SUBMIT, {
-        allQuranText,
-        absoluteQuran,
-        chapterNames,
-        quranRoots,
-      });
+      if (isRootSearch) {
+        dispatchAction(QB_ACTIONS.SEARCH_ROOT_SUBMIT, {
+          absoluteQuran,
+          chapterNames,
+          quranRoots,
+        });
+      } else {
+        dispatchAction(QB_ACTIONS.SEARCH_WORD_SUBMIT, {
+          allQuranText,
+          chapterNames,
+        });
+      }
     }
 
     function OnSelectionListChapters(
