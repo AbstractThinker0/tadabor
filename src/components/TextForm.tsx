@@ -1,8 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconTextDirectionLtr } from "@tabler/icons";
-import { IconTextDirectionRtl } from "@tabler/icons";
+import { IconTextDirectionLtr } from "@tabler/icons-react";
+import { IconTextDirectionRtl } from "@tabler/icons-react";
 
 interface TextFormProps {
   inputKey: string;
