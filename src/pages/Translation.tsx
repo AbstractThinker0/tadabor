@@ -9,14 +9,14 @@ import LoadingSpinner from "../components/LoadingSpinner";
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
 
-  const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectChapter(+event.target.value);
+  const handleChapterChange = (chapter: number) => {
+    setSelectChapter(chapter);
   };
 
   return (
     <div className="translation">
       <SelectionListChapters
-        onSelectChange={onSelectChange}
+        handleChapterChange={handleChapterChange}
         selectChapter={selectChapter}
       />
       <DisplayPanel selectChapter={selectChapter} />
@@ -25,12 +25,12 @@ const Translation = () => {
 };
 
 interface SelectionListChaptersProps {
-  onSelectChange: React.ChangeEventHandler<HTMLSelectElement>;
+  handleChapterChange: (chapter: number) => void;
   selectChapter: number;
 }
 
 const SelectionListChapters = ({
-  onSelectChange,
+  handleChapterChange,
   selectChapter,
 }: SelectionListChaptersProps) => {
   const { t } = useTranslation();
@@ -40,6 +40,14 @@ const SelectionListChapters = ({
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChapterSearch(event.target.value);
   };
+
+  function onFocusSelect(event: React.FocusEvent<HTMLSelectElement, Element>) {
+    handleChapterChange(Number(event.target.value));
+  }
+
+  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+    handleChapterChange(Number(event.target.value));
+  }
 
   return (
     <div className="col-sm-3 border-start justify-content-center">
@@ -58,8 +66,8 @@ const SelectionListChapters = ({
           className="form-select"
           size={7}
           aria-label="size 7 select"
-          onChange={onSelectChange}
-          onFocus={onSelectChange}
+          onChange={onChangeSelect}
+          onFocus={onFocusSelect}
           value={selectChapter}
         >
           {chapterNames
@@ -116,18 +124,15 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
 
   const displayVerses = allQuranText[selectChapter - 1].verses;
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-
+  const handleInputChange = (inputKey: string, value: string) => {
     setVersesTranslation((state: any) => {
-      return { ...state, [name]: value };
+      return { ...state, [inputKey]: value };
     });
   };
 
   const memoHandleInputChange = useCallback(handleInputChange, []);
 
-  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    let inputKey = event.currentTarget.name;
+  const handleEditClick = (inputKey: string) => {
     setEditableTranslations((state: any) => {
       return { ...state, [inputKey]: true };
     });
@@ -135,18 +140,13 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
 
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
-  function handleInputSubmit(
-    event: React.MouseEvent<HTMLButtonElement>,
-    inputValue: string
-  ) {
-    let note_key = event.currentTarget.name;
-
+  function handleInputSubmit(inputKey: string, inputValue: string) {
     setEditableTranslations((state: any) => {
-      return { ...state, [note_key]: false };
+      return { ...state, [inputKey]: false };
     });
 
     saveData("translations", {
-      id: note_key,
+      id: inputKey,
       text: inputValue,
       date_created: Date.now(),
       date_modified: Date.now(),
@@ -231,6 +231,10 @@ const VerseComponent = memo(
 const Versetext = ({ inputValue, inputKey, handleEditClick }: any) => {
   const { t } = useTranslation();
 
+  function onClickEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    handleEditClick(inputKey);
+  }
+
   return (
     <div className="p-2">
       <div className="border p-1">
@@ -239,7 +243,7 @@ const Versetext = ({ inputValue, inputKey, handleEditClick }: any) => {
       <div className="text-center">
         <button
           name={inputKey}
-          onClick={handleEditClick}
+          onClick={onClickEdit}
           className="mt-2 btn btn-primary btn-sm"
         >
           {t("text_edit")}
@@ -257,6 +261,14 @@ const Versearea = ({
 }: any) => {
   const { t } = useTranslation();
 
+  function onChangeTextarea(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    handleInputChange(inputKey, event.target.value);
+  }
+
+  function onClickSave(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    handleInputSubmit(inputKey, inputValue);
+  }
+
   return (
     <div className="p-2" dir="ltr">
       <textarea
@@ -264,13 +276,13 @@ const Versearea = ({
         id="textInput"
         name={inputKey}
         value={inputValue}
-        onChange={handleInputChange}
+        onChange={onChangeTextarea}
         required
       />
       <div className="text-center">
         <button
           name={inputKey}
-          onClick={(event) => handleInputSubmit(event, inputValue)}
+          onClick={onClickSave}
           className="mt-2 btn btn-primary btn-sm"
         >
           {t("text_save")}
