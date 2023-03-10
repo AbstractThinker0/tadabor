@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import useQuran from "../../context/QuranContext";
 
 interface SelectionListChaptersProps {
-  handleSelectionListChapters: React.ChangeEventHandler<HTMLSelectElement>;
+  handleSelectionListChapters: (options: string[], chapter: string) => void;
   selectedChapters: string[];
 }
 
@@ -18,6 +18,22 @@ const SelectionListChapters = memo(
       setChapterSearch(event.target.value);
     };
 
+    function onFocusSelect(
+      event: React.FocusEvent<HTMLSelectElement, Element>
+    ) {
+      handleSelectionListChapters(
+        Array.from(event.target.selectedOptions, (option) => option.value),
+        event.target.value
+      );
+    }
+
+    function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+      handleSelectionListChapters(
+        Array.from(event.target.selectedOptions, (option) => option.value),
+        event.target.value
+      );
+    }
+
     return (
       <div className="container mt-2 mb-2 p-0">
         <input
@@ -32,8 +48,8 @@ const SelectionListChapters = memo(
         <select
           className="form-select"
           size={7}
-          onFocus={handleSelectionListChapters}
-          onChange={handleSelectionListChapters}
+          onFocus={onFocusSelect}
+          onChange={onChangeSelect}
           aria-label="size 7 select example"
           value={selectedChapters}
           multiple

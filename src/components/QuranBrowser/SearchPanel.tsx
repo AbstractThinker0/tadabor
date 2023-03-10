@@ -75,26 +75,17 @@ const SearchPanel = memo(
       }
     }
 
-    function OnSelectionListChapters(
-      selectedOptions: HTMLCollectionOf<HTMLOptionElement>,
-      chapter: string
+    function handleSelectionListChapters(
+      selectedOptions: string[],
+      selectedChapter: string
     ) {
-      if (!chapter) return;
+      if (!selectedChapter) return;
 
       if (selectedOptions.length === 1) {
-        dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);
+        dispatchAction(QB_ACTIONS.GOTO_CHAPTER, selectedChapter);
       } else {
-        dispatchAction(
-          QB_ACTIONS.SET_CHAPTERS,
-          Array.from(selectedOptions, (option) => option.value)
-        );
+        dispatchAction(QB_ACTIONS.SET_CHAPTERS, selectedOptions);
       }
-    }
-
-    function handleSelectionListChapters(
-      event: React.ChangeEvent<HTMLSelectElement>
-    ) {
-      OnSelectionListChapters(event.target.selectedOptions, event.target.value);
     }
 
     return (
