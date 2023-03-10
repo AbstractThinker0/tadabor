@@ -120,7 +120,11 @@ const TextComponent = ({
   );
 };
 
-const TextareaToolbar = memo((props: any) => {
+interface TextareaToolbarProps {
+  children: JSX.Element | JSX.Element[];
+}
+
+const TextareaToolbar = memo((props: TextareaToolbarProps) => {
   return (
     <div dir="ltr" className="text-center">
       {props.children}
