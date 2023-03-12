@@ -93,6 +93,50 @@ const TextComponent = ({
   inputDirection,
   handleEditButtonClick,
 }: TextComponentProps) => {
+  return (
+    <>
+      <TextContainer
+        inputDirection={inputDirection}
+        inputValue={inputValue}
+        className="p-2 border border-1 border-success rounded"
+      />
+      <TextEditButton
+        inputKey={inputKey}
+        handleEditButtonClick={handleEditButtonClick}
+      />
+    </>
+  );
+};
+
+interface TextContainerProps {
+  inputValue: string;
+  inputDirection: string;
+  className?: string;
+}
+
+const TextContainer = ({
+  inputDirection,
+  inputValue,
+  className = "",
+}: TextContainerProps) => {
+  return (
+    <div className={className} dir={inputDirection}>
+      <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
+    </div>
+  );
+};
+
+interface TextEditButtonProps {
+  inputKey: string;
+  handleEditButtonClick: (key: string) => void;
+  className?: string;
+}
+
+const TextEditButton = ({
+  inputKey,
+  handleEditButtonClick,
+  className = "",
+}: TextEditButtonProps) => {
   const { t } = useTranslation();
 
   function onClickEditButton(event: React.MouseEvent<HTMLButtonElement>) {
@@ -100,23 +144,15 @@ const TextComponent = ({
   }
 
   return (
-    <>
-      <div
-        className="p-2 border border-1 border-success rounded"
-        dir={inputDirection}
+    <div className={"text-center ".concat(className)}>
+      <button
+        name={inputKey}
+        onClick={onClickEditButton}
+        className="mt-2 btn btn-primary btn-sm"
       >
-        <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
-      </div>
-      <div className="text-center">
-        <button
-          name={inputKey}
-          onClick={onClickEditButton}
-          className="mt-2 btn btn-primary btn-sm"
-        >
-          {t("text_edit")}
-        </button>
-      </div>
-    </>
+        {t("text_edit")}
+      </button>
+    </div>
   );
 };
 
@@ -273,26 +309,18 @@ const YourNoteText = ({
   inputDirection,
   handleEditButtonClick,
 }: YourNoteTextProps) => {
-  const { t } = useTranslation();
-
-  function onClickEditButton(event: React.MouseEvent<HTMLButtonElement>) {
-    handleEditButtonClick(inputKey);
-  }
-
   return (
     <>
-      <div className="card-body" dir={inputDirection}>
-        <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
-      </div>
-      <div className="card-footer text-center">
-        <button
-          name={inputKey}
-          onClick={onClickEditButton}
-          className="mt-2 btn btn-primary btn-sm"
-        >
-          {t("text_edit")}
-        </button>
-      </div>
+      <TextContainer
+        inputDirection={inputDirection}
+        inputValue={inputValue}
+        className="card-body"
+      />
+      <TextEditButton
+        inputKey={inputKey}
+        handleEditButtonClick={handleEditButtonClick}
+        className="card-footer"
+      />
     </>
   );
 };
