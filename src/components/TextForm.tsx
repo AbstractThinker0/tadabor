@@ -61,6 +61,7 @@ const TextForm = ({
               handleEditButtonClick={handleEditClick}
               inputKey={inputKey}
               inputDirection={inputDirection}
+              textClassname="p-2 border border-1 border-success rounded"
             />
           ) : (
             <FormComponent
@@ -82,6 +83,8 @@ interface TextComponentProps {
   inputValue: string;
   inputDirection: string;
   handleEditButtonClick: (key: string) => void;
+  textClassname?: string;
+  editClassname?: string;
 }
 
 const TextComponent = ({
@@ -89,17 +92,20 @@ const TextComponent = ({
   inputKey,
   inputDirection,
   handleEditButtonClick,
+  textClassname = "",
+  editClassname = "",
 }: TextComponentProps) => {
   return (
     <>
       <TextContainer
         inputDirection={inputDirection}
         inputValue={inputValue}
-        className="p-2 border border-1 border-success rounded"
+        className={textClassname}
       />
       <TextEditButton
         inputKey={inputKey}
         handleEditButtonClick={handleEditButtonClick}
+        className={editClassname}
       />
     </>
   );
@@ -257,35 +263,6 @@ const FormSaveButton = ({ className = "" }) => {
   );
 };
 
-interface YourNoteTextProps {
-  inputKey: string;
-  inputValue: string;
-  inputDirection: string;
-  handleEditButtonClick: (key: string) => void;
-}
-
-const YourNoteText = ({
-  inputValue,
-  inputKey,
-  inputDirection,
-  handleEditButtonClick,
-}: YourNoteTextProps) => {
-  return (
-    <>
-      <TextContainer
-        inputDirection={inputDirection}
-        inputValue={inputValue}
-        className="card-body"
-      />
-      <TextEditButton
-        inputKey={inputKey}
-        handleEditButtonClick={handleEditButtonClick}
-        className="card-footer"
-      />
-    </>
-  );
-};
-
 interface TextAreaProps {
   inputKey: string;
   inputValue: string;
@@ -331,4 +308,4 @@ const TextAreaComponent = ({
   );
 };
 
-export { TextForm, FormComponent, YourNoteText };
+export { TextForm, FormComponent, TextComponent };
