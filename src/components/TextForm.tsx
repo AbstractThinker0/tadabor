@@ -121,13 +121,22 @@ const TextComponent = ({
 };
 
 interface TextareaToolbarProps {
-  children: JSX.Element | JSX.Element[];
+  inputKey: string;
+  handleSetDirection: (key: string, direction: string) => void;
 }
 
-const TextareaToolbar = (props: TextareaToolbarProps) => {
+const TextareaToolbar = ({
+  inputKey,
+  handleSetDirection,
+}: TextareaToolbarProps) => {
   return (
     <div dir="ltr" className="text-center">
-      {props.children}
+      <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
+        <IconTextDirectionLtr />
+      </ToolbarOption>
+      <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
+        <IconTextDirectionRtl />
+      </ToolbarOption>
     </div>
   );
 };
@@ -182,18 +191,10 @@ const FormComponent = ({
   return (
     <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
       <div className="form-group">
-        <TextareaToolbar>
-          <ToolbarOption
-            handleClick={() => handleSetDirection(inputKey, "ltr")}
-          >
-            <IconTextDirectionLtr />
-          </ToolbarOption>
-          <ToolbarOption
-            handleClick={() => handleSetDirection(inputKey, "rtl")}
-          >
-            <IconTextDirectionRtl />
-          </ToolbarOption>
-        </TextareaToolbar>
+        <TextareaToolbar
+          inputKey={inputKey}
+          handleSetDirection={handleSetDirection}
+        />
         <TextAreaComponent
           inputKey={inputKey}
           inputValue={inputValue}
@@ -237,18 +238,10 @@ const YourNoteForm = ({
   return (
     <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
       <div className="card-body form-group">
-        <TextareaToolbar>
-          <ToolbarOption
-            handleClick={() => handleSetDirection(inputKey, "ltr")}
-          >
-            <IconTextDirectionLtr />
-          </ToolbarOption>
-          <ToolbarOption
-            handleClick={() => handleSetDirection(inputKey, "rtl")}
-          >
-            <IconTextDirectionRtl />
-          </ToolbarOption>
-        </TextareaToolbar>
+        <TextareaToolbar
+          inputKey={inputKey}
+          handleSetDirection={handleSetDirection}
+        />
         <TextAreaComponent
           inputKey={inputKey}
           inputValue={inputValue}
