@@ -198,6 +198,8 @@ interface FormComponentProps {
   handleSetDirection: (key: string, direction: string) => void;
   handleInputSubmit: (key: string, value: string) => void;
   handleInputChange: (key: string, value: string) => void;
+  bodyClassname?: string;
+  saveClassname?: string;
 }
 
 const FormComponent = ({
@@ -207,45 +209,8 @@ const FormComponent = ({
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-}: FormComponentProps) => {
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (formRef.current !== null)
-      formRef.current.scrollIntoView({ block: "nearest" });
-  }, []);
-
-  function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    handleInputSubmit(inputKey, inputValue);
-  }
-
-  return (
-    <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
-      <div className="form-group">
-        <TextareaToolbar
-          inputKey={inputKey}
-          handleSetDirection={handleSetDirection}
-        />
-        <TextAreaComponent
-          inputKey={inputKey}
-          inputValue={inputValue}
-          inputDirection={inputDirection}
-          handleInputChange={handleInputChange}
-        />
-      </div>
-      <FormSaveButton />
-    </form>
-  );
-};
-
-const YourNoteForm = ({
-  inputKey,
-  inputValue,
-  inputDirection,
-  handleSetDirection,
-  handleInputSubmit,
-  handleInputChange,
+  bodyClassname = "",
+  saveClassname = "",
 }: FormComponentProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -256,13 +221,12 @@ const YourNoteForm = ({
 
   function onSubmitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     handleInputSubmit(inputKey, inputValue);
   }
 
   return (
     <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
-      <div className="card-body form-group">
+      <div className={"form-group ".concat(bodyClassname)}>
         <TextareaToolbar
           inputKey={inputKey}
           handleSetDirection={handleSetDirection}
@@ -274,7 +238,7 @@ const YourNoteForm = ({
           handleInputChange={handleInputChange}
         />
       </div>
-      <FormSaveButton className="card-footer" />
+      <FormSaveButton className={saveClassname} />
     </form>
   );
 };
@@ -367,4 +331,4 @@ const TextAreaComponent = ({
   );
 };
 
-export { TextForm, YourNoteForm, YourNoteText };
+export { TextForm, FormComponent, YourNoteText };

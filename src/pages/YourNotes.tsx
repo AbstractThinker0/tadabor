@@ -6,7 +6,7 @@ import { saveData, loadData } from "../util/db";
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
-import { YourNoteForm, YourNoteText } from "../components/TextForm";
+import { FormComponent, YourNoteText } from "../components/TextForm";
 
 function YourNotes() {
   const [loadingState, setLoadingState] = useState(true);
@@ -114,13 +114,15 @@ function YourNotes() {
             {convertKey(key)} <br /> {getVerse(key)}{" "}
           </div>
           {editableNotes[key] ? (
-            <YourNoteForm
+            <FormComponent
               inputValue={myNotes[key]}
               inputKey={key}
               inputDirection={areaDirection[key] || ""}
               handleInputChange={handleNoteChange}
               handleInputSubmit={handleNoteSave}
               handleSetDirection={memoHandleSetDirection}
+              bodyClassname="card-body"
+              saveClassname="card-footer"
             />
           ) : (
             <YourNoteText
