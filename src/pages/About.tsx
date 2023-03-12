@@ -9,7 +9,13 @@ const AboutEnglish = () => {
       <div className="pt-4 card about-card" dir="ltr">
         <p className="text-center">
           Check out the project{" "}
-          <a href="https://github.com/EnlightenCode/tadabor">Github repo</a>
+          <a
+            href="https://github.com/EnlightenCode/tadabor"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github repo
+          </a>
         </p>
         <div className="card-body">
           <h5>Intro</h5>
@@ -59,7 +65,11 @@ const AboutEnglish = () => {
             <li>
               Credits Tanzil project for the Quran text compilation ( Check the
               bottom of{" "}
-              <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">
+              <a
+                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
                 quran-simple-plain.txt{" "}
               </a>{" "}
               )
@@ -69,7 +79,11 @@ const AboutEnglish = () => {
               Computer Research Center of Islamic Sciences (noorsoft.org) and
               Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the
               Quran roots compilation ( Check the bottom of{" "}
-              <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">
+              <a
+                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
                 quran-root.txt
               </a>{" "}
               )
@@ -89,7 +103,13 @@ const AboutArabic = () => {
       <div className="pt-4 card about-card" dir="rtl">
         <p className="text-center">
           إطلع على موقع البرنامج في{" "}
-          <a href="https://github.com/EnlightenCode/tadabor">Github</a>
+          <a
+            href="https://github.com/EnlightenCode/tadabor"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github
+          </a>
         </p>
         <div className="card-body">
           <h5>تقديم</h5>
@@ -132,7 +152,11 @@ const AboutArabic = () => {
             </li>
             <li>
               الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر{" "}
-              <a href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt">
+              <a
+                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
                 quran-simple-plain.txt
               </a>{" "}
               )
@@ -142,7 +166,11 @@ const AboutArabic = () => {
               الشكر إلى Computer Research Center of Islamic Sciences
               (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
               (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر{" "}
-              <a href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt">
+              <a
+                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
                 quran-root.txt
               </a>{" "}
               )
