@@ -1,4 +1,4 @@
-import { FormEvent, memo, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconTextDirectionLtr } from "@tabler/icons-react";
@@ -15,71 +15,68 @@ interface TextFormProps {
   handleInputSubmit: (key: string, value: string) => void;
 }
 
-const TextForm = memo(
-  ({
-    inputKey,
-    inputValue,
-    inputDirection,
-    handleSetDirection,
-    handleInputChange,
-    isEditable,
-    handleEditClick,
-    handleInputSubmit,
-  }: TextFormProps) => {
-    const collapseRef = useRef<HTMLDivElement>(null);
+const TextForm = ({
+  inputKey,
+  inputValue,
+  inputDirection,
+  handleSetDirection,
+  handleInputChange,
+  isEditable,
+  handleEditClick,
+  handleInputSubmit,
+}: TextFormProps) => {
+  const collapseRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      let collapseElement = collapseRef.current;
-      function onShownCollapse(event: any) {
-        event.target.scrollIntoView({ block: "nearest" });
-      }
+  useEffect(() => {
+    let collapseElement = collapseRef.current;
+    function onShownCollapse(event: any) {
+      event.target.scrollIntoView({ block: "nearest" });
+    }
 
+    if (collapseElement !== null) {
+      collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+    }
+
+    return () => {
       if (collapseElement !== null) {
-        collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+        collapseElement.removeEventListener(
+          "shown.bs.collapse",
+          onShownCollapse
+        );
       }
+    };
+  }, []);
 
-      return () => {
-        if (collapseElement !== null) {
-          collapseElement.removeEventListener(
-            "shown.bs.collapse",
-            onShownCollapse
-          );
-        }
-      };
-    }, []);
-
-    return (
-      <div
-        className="collapse"
-        id={"collapseExample" + inputKey}
-        ref={collapseRef}
-      >
-        <div className="card border-primary">
-          <div className="card-body">
-            {isEditable === false ? (
-              <TextComponent
-                inputValue={inputValue}
-                handleEditButtonClick={handleEditClick}
-                inputKey={inputKey}
-                inputDirection={inputDirection}
-              />
-            ) : (
-              <FormComponent
-                inputKey={inputKey}
-                inputValue={inputValue}
-                inputDirection={inputDirection}
-                handleSetDirection={handleSetDirection}
-                handleInputSubmit={handleInputSubmit}
-                handleInputChange={handleInputChange}
-              />
-            )}
-          </div>
+  return (
+    <div
+      className="collapse"
+      id={"collapseExample" + inputKey}
+      ref={collapseRef}
+    >
+      <div className="card border-primary">
+        <div className="card-body">
+          {isEditable === false ? (
+            <TextComponent
+              inputValue={inputValue}
+              handleEditButtonClick={handleEditClick}
+              inputKey={inputKey}
+              inputDirection={inputDirection}
+            />
+          ) : (
+            <FormComponent
+              inputKey={inputKey}
+              inputValue={inputValue}
+              inputDirection={inputDirection}
+              handleSetDirection={handleSetDirection}
+              handleInputSubmit={handleInputSubmit}
+              handleInputChange={handleInputChange}
+            />
+          )}
         </div>
       </div>
-    );
-  }
-);
-
+    </div>
+  );
+};
 interface TextComponentProps {
   inputKey: string;
   inputValue: string;
