@@ -124,13 +124,13 @@ interface TextareaToolbarProps {
   children: JSX.Element | JSX.Element[];
 }
 
-const TextareaToolbar = memo((props: TextareaToolbarProps) => {
+const TextareaToolbar = (props: TextareaToolbarProps) => {
   return (
     <div dir="ltr" className="text-center">
       {props.children}
     </div>
   );
-});
+};
 
 interface ToolbarOptionProps {
   handleClick: () => void;
