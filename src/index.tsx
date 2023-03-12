@@ -4,7 +4,7 @@ import "./styles/index.css";
 import App from "./App";
 
 import { BrowserRouter } from "react-router-dom";
-import Layout from "./components/Layout";
+import Layout from "./components/Layout/Layout";
 
 import "./i18n";
 

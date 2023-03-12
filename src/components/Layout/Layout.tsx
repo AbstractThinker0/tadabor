@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { QuranProvider } from "../context/QuranContext";
-import "../styles/main.scss";
+import { QuranProvider } from "../../context/QuranContext";
+import "../../styles/main.scss";
 import { ReactNode, useEffect, useRef } from "react";
 import Navbar from "./Navbar";
 

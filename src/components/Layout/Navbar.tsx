@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import LanguageButton from "./LanguageButton";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -62,24 +63,6 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
-};
-
-const LanguageButton = () => {
-  const { i18n } = useTranslation();
-  let resolvedLang = i18n.resolvedLanguage;
-
-  const onLangClick = () => {
-    resolvedLang === "en"
-      ? i18n.changeLanguage("ar")
-      : i18n.changeLanguage("en");
-  };
-  return (
-    <div className={`d-flex ${resolvedLang === "ar" && "me-auto"}`}>
-      <button className="btn btn-light" onClick={onLangClick}>
-        {resolvedLang === "en" ? "العربية" : "English"}
-      </button>
-    </div>
   );
 };
 
