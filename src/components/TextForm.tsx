@@ -166,8 +166,6 @@ const FormComponent = ({
   handleInputSubmit,
   handleInputChange,
 }: FormComponentProps) => {
-  const minRows = 4;
-  const [rows, setRows] = useState(minRows);
   const formRef = useRef<HTMLFormElement>(null);
   const { t } = useTranslation();
 
@@ -176,23 +174,9 @@ const FormComponent = ({
       formRef.current.scrollIntoView({ block: "nearest" });
   }, []);
 
-  useEffect(() => {
-    const rowlen = inputValue.split("\n").length;
-
-    if (rowlen >= minRows) {
-      setRows(rowlen + 2);
-    } else {
-      setRows(minRows);
-    }
-  }, [inputValue]);
-
   function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     handleInputSubmit(inputKey, inputValue);
-  }
-
-  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    handleInputChange(inputKey, event.target.value);
   }
 
   return (
@@ -210,16 +194,11 @@ const FormComponent = ({
             <IconTextDirectionRtl />
           </ToolbarOption>
         </TextareaToolbar>
-        <textarea
-          className="form-control mb-2"
-          id="textInput"
-          placeholder="أدخل كتاباتك"
-          name={inputKey}
-          value={inputValue}
-          onChange={onChangeInput}
-          rows={rows}
-          dir={inputDirection}
-          required
+        <TextAreaComponent
+          inputKey={inputKey}
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          handleInputChange={handleInputChange}
         />
       </div>
       <div className="text-center">
@@ -241,8 +220,6 @@ const YourNoteForm = ({
   handleInputSubmit,
   handleInputChange,
 }: FormComponentProps) => {
-  const minRows = 4;
-  const [rows, setRows] = useState(minRows);
   const formRef = useRef<HTMLFormElement>(null);
   const { t } = useTranslation();
 
@@ -251,24 +228,10 @@ const YourNoteForm = ({
       formRef.current.scrollIntoView({ block: "nearest" });
   }, []);
 
-  useEffect(() => {
-    const rowlen = inputValue.split("\n").length;
-
-    if (rowlen >= minRows) {
-      setRows(rowlen + 2);
-    } else {
-      setRows(minRows);
-    }
-  }, [inputValue]);
-
   function onSubmitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     handleInputSubmit(inputKey, inputValue);
-  }
-
-  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    handleInputChange(inputKey, event.target.value);
   }
 
   return (
@@ -286,16 +249,11 @@ const YourNoteForm = ({
             <IconTextDirectionRtl />
           </ToolbarOption>
         </TextareaToolbar>
-        <textarea
-          className="form-control  mb-2"
-          id="textInput"
-          placeholder="أدخل كتاباتك"
-          name={inputKey}
-          value={inputValue}
-          onChange={onChangeInput}
-          rows={rows}
-          dir={inputDirection}
-          required
+        <TextAreaComponent
+          inputKey={inputKey}
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          handleInputChange={handleInputChange}
         />
       </div>
       <div className="card-footer text-center">
@@ -343,6 +301,51 @@ const YourNoteText = ({
         </button>
       </div>
     </>
+  );
+};
+
+interface TextAreaProps {
+  inputKey: string;
+  inputValue: string;
+  inputDirection: string;
+  handleInputChange: (key: string, value: string) => void;
+}
+
+const TextAreaComponent = ({
+  inputKey,
+  inputValue,
+  inputDirection,
+  handleInputChange,
+}: TextAreaProps) => {
+  const minRows = 4;
+  const [rows, setRows] = useState(minRows);
+
+  useEffect(() => {
+    const rowlen = inputValue.split("\n").length;
+
+    if (rowlen >= minRows) {
+      setRows(rowlen + 2);
+    } else {
+      setRows(minRows);
+    }
+  }, [inputValue]);
+
+  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    handleInputChange(inputKey, event.target.value);
+  }
+
+  return (
+    <textarea
+      className="form-control  mb-2"
+      id="textInput"
+      placeholder="أدخل كتاباتك"
+      name={inputKey}
+      value={inputValue}
+      onChange={onChangeInput}
+      rows={rows}
+      dir={inputDirection}
+      required
+    />
   );
 };
 
