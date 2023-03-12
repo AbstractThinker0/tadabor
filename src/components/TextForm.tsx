@@ -176,7 +176,6 @@ const FormComponent = ({
   handleInputChange,
 }: FormComponentProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (formRef.current !== null)
@@ -202,13 +201,7 @@ const FormComponent = ({
           handleInputChange={handleInputChange}
         />
       </div>
-      <div className="text-center">
-        <input
-          type="submit"
-          value={t("text_save")}
-          className="btn btn-success btn-sm"
-        />
-      </div>
+      <FormSaveButton />
     </form>
   );
 };
@@ -222,7 +215,6 @@ const YourNoteForm = ({
   handleInputChange,
 }: FormComponentProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (formRef.current !== null)
@@ -249,14 +241,22 @@ const YourNoteForm = ({
           handleInputChange={handleInputChange}
         />
       </div>
-      <div className="card-footer text-center">
-        <input
-          type="submit"
-          value={t("text_save")}
-          className="btn btn-success btn-sm"
-        />
-      </div>
+      <FormSaveButton className="card-footer" />
     </form>
+  );
+};
+
+const FormSaveButton = ({ className = "" }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={"text-center ".concat(className)}>
+      <input
+        type="submit"
+        value={t("text_save")}
+        className="btn btn-success btn-sm"
+      />
+    </div>
   );
 };
 
