@@ -30,7 +30,7 @@ const Navbar = () => {
           >
             <li className="nav-item">
               <Link className="nav-link" aria-current="page" to="/">
-                {t("nav_home")}
+                {t("nav_browser")}
               </Link>
             </li>
             <li className="nav-item">

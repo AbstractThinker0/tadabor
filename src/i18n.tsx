@@ -19,7 +19,7 @@ i18n
           alert_message:
             "This is a beta version of the website, please make sure to have a backup of everything you save here.",
           nav_brand: "Tadabor",
-          nav_home: "Home",
+          nav_browser: "Browser",
           nav_about: "About",
           nav_roots: "Roots",
           nav_notes: "Your notes",
@@ -47,7 +47,7 @@ i18n
           alert_message:
             "هذه نسخة تجريبيّة من الموقع، الرجاء إبقاء نسخة إحتياط لكل ما تكتبه هنا.",
           nav_brand: "تدبر",
-          nav_home: "الرئيسية",
+          nav_browser: "المتصفح",
           nav_about: "حول الموقع",
           nav_roots: "الجذور",
           nav_notes: "كتاباتك",

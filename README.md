@@ -2,6 +2,8 @@
 
 This project is a web App that allows you to browse through the Quran and write your notes/reflections below the verses, everything will be saved in your browser.
 
+# For a desktop version check [tadabor-desktop](https://github.com/EnlightenCode/tadabor-desktop) repo.
+
 ## Table of contents
 
 - [How to use](#How-to-use)
@@ -27,12 +29,11 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 ## TODO List
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc). (Partially implemented)
-- Create an English version of the app. (Partially implemented)
 - Add highlighting feature to search results. (Partially implemented)
 
 ## Future project:
 
-Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's will first and foremost.
+Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's.
 
 ## Credits
 
