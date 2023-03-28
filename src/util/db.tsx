@@ -37,7 +37,7 @@ class tadaborDatabase extends Dexie {
   }
 }
 
-export const db = new tadaborDatabase();
+const db = new tadaborDatabase();
 
 export function saveData(store: string, data: INote | INoteDir) {
   return db.table(store).put(data);
