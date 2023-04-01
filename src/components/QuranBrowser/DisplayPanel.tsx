@@ -713,8 +713,8 @@ const VerseTextComponent = memo(({ verse, selectedVerse }: any) => {
     <span className="fs-4">
       {verse.versetext}{" "}
       <span className="btn-verse" onClick={onClickVerse}>
-        ({verse.verseid})
-      </span>{" "}
+        {"(" + verse.verseid + ")"}
+      </span>
       <button
         className="btn"
         type="button"
