@@ -606,7 +606,7 @@ const ListVerses = memo(
     const chapterName = chapterNames[selectChapter - 1].name;
     const versesArray = allQuranText[selectChapter - 1].verses;
 
-    const selectedVerse = useRef<Element | null | undefined>(null);
+    const selectedVerse = useRef<Element | null>(null);
 
     interface versesRefType {
       [key: string]: HTMLDivElement;
