@@ -619,8 +619,7 @@ const ListVerses = memo(
       if (verseToHighlight) {
         verseToHighlight.scrollIntoView({ block: "center" });
         verseToHighlight.classList.add("verse-selected");
-        selectedVerse.current =
-          verseToHighlight.firstElementChild?.firstElementChild;
+        selectedVerse.current = verseToHighlight;
         dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
       }
     }, [dispatchDpAction, scrollKey]);
@@ -694,20 +693,16 @@ const VerseTextComponent = memo(({ verse, selectedVerse }: any) => {
     if (!verseElement) return;
 
     if (selectedVerse.current) {
-      selectedVerse.current.parentElement?.parentElement?.classList.remove(
-        "verse-selected"
-      );
+      selectedVerse.current.classList.remove("verse-selected");
 
-      if (selectedVerse.current === event.currentTarget) {
+      if (selectedVerse.current === verseElement) {
         selectedVerse.current = null;
-      } else {
-        hightlighVerse(verseElement);
-        selectedVerse.current = event.currentTarget;
+        return;
       }
-    } else {
-      hightlighVerse(verseElement);
-      selectedVerse.current = event.currentTarget;
     }
+
+    hightlighVerse(verseElement);
+    selectedVerse.current = verseElement;
   }
   return (
     <span className="fs-4">
