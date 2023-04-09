@@ -114,7 +114,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         searchIndexes: [],
         searchingString: state.searchString,
         radioSearchingMethod: state.radioSearchMethod,
-        searchingScope: state.searchingScope,
       };
 
       if (onlySpaces(state.searchString)) {
@@ -173,6 +172,8 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           derivations = derivations.concat(verseDerivations);
           matchVerses.push(currentVerse);
         });
+
+        newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
       } else {
         // Get selected chapters
         if (state.selectedChapters.length > 1) {
