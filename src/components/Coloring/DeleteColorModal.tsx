@@ -21,7 +21,7 @@ function DeleteColorModal({
   return (
     <div
       dir="ltr"
-      className="modal fade"
+      className="modal fade modal-deletecolor"
       id="deleteColorModal"
       tabIndex={-1}
       aria-labelledby="deleteColorModal"
@@ -44,6 +44,7 @@ function DeleteColorModal({
             <p>
               Are you sure you want to delete{" "}
               <span
+                className="modal-deletecolor-label rounded"
                 style={
                   currentColor
                     ? {

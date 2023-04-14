@@ -19,10 +19,9 @@ const ColorModal = ({ addColor }: ColorModalProps) => {
     setColorCode(event.currentTarget.value);
   }
 
-  function onClickSave(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function onClickSave() {
     if (!colorName) {
       alert("Please enter the color display name");
-      event.preventDefault();
       return;
     }
 

@@ -185,8 +185,8 @@ function Coloring() {
     if (localStorage.getItem("defaultColorsInitiated") === null) {
       const initialColors: colorProps[] = [
         { colorID: "0", colorCode: "#00ff00", colorDisplay: "Studied" },
-        { colorID: "1", colorCode: "#ffff00", colorDisplay: "Ongoing" },
-        { colorID: "2", colorCode: "#ff0000", colorDisplay: "Unfinished" },
+        { colorID: "1", colorCode: "#ffff00", colorDisplay: "In progress" },
+        { colorID: "2", colorCode: "#ff0000", colorDisplay: "Unexplored" },
       ];
 
       dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
@@ -396,7 +396,7 @@ function Coloring() {
             }).length
           }
         />
-        <div className="text-center">
+        <div className="text-center d-flex gap-2" dir="ltr">
           <button
             className="btn btn-dark mt-1"
             data-bs-toggle="modal"

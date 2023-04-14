@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { getTextColor } from "./util";
 import { verseProps } from "../../types";
 import { colorProps } from "./consts";
+import useQuran from "../../context/QuranContext";
 
 const activeClassName = "verse-modal-colors-item-active";
 
@@ -24,6 +25,7 @@ const VerseModal = ({
   verseColor,
   setCurrentVerse,
 }: VerseModalProps) => {
+  const { chapterNames } = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
   const refSelectedColor = useRef<HTMLDivElement | null>(null);
@@ -117,7 +119,13 @@ const VerseModal = ({
           </div>
           <div className="modal-body">
             <div className="verse-modal-title text-center">
-              {currentVerse?.key}
+              (
+              {currentVerse
+                ? chapterNames[Number(currentVerse.suraid) - 1].name +
+                  ":" +
+                  currentVerse.verseid
+                : ""}
+              )
             </div>
             <div
               className="verse-modal-text text-center"

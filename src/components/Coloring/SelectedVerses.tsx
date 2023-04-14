@@ -16,7 +16,7 @@ function SelectedVerses({
 
   function getVerseByKey(key: string) {
     let info = key.split("-");
-    return allQuranText[+info[0] - 1].verses[+info[1] - 1];
+    return allQuranText[Number(info[0]) - 1].verses[Number(info[1]) - 1];
   }
 
   return (
