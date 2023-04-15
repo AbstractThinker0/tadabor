@@ -6,7 +6,7 @@ interface ColorModalProps {
   addColor: (color: colorProps) => void;
 }
 
-const ColorModal = ({ addColor }: ColorModalProps) => {
+const AddColorModal = ({ addColor }: ColorModalProps) => {
   const refCloseButton = useRef<HTMLButtonElement>(null);
   const [colorName, setColorName] = useState("");
   const [colorCode, setColorCode] = useState("#000000");
@@ -113,4 +113,4 @@ const ColorModal = ({ addColor }: ColorModalProps) => {
   );
 };
 
-export default ColorModal;
+export default AddColorModal;

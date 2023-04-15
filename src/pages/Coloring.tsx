@@ -3,7 +3,7 @@ import useQuran from "../context/QuranContext";
 import { verseProps } from "../types";
 import { getTextColor } from "../components/Coloring/util";
 import VerseModal from "../components/Coloring/VerseModal";
-import ColorModal from "../components/Coloring/ColorModal";
+import AddColorModal from "../components/Coloring/AddColorModal";
 import { colorProps, coloredProps } from "../components/Coloring/consts";
 import SelectedVerses from "../components/Coloring/SelectedVerses";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -405,7 +405,7 @@ function Coloring() {
             New color
           </button>
         </div>
-        <ColorModal addColor={addColor} />
+        <AddColorModal addColor={addColor} />
       </div>
       <div className="verses-side">
         <div className="verses-side-colors" dir="ltr">
