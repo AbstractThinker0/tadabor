@@ -188,13 +188,13 @@ function Coloring() {
     }
     if (localStorage.getItem("defaultColorsInitiated") === null) {
       const initialColors: coloredProps = {
-        "0": { colorID: "0", colorCode: "#00ff00", colorDisplay: "Studied" },
+        "0": { colorID: "0", colorCode: "#3dc23d", colorDisplay: "Studied" },
         "1": {
           colorID: "1",
-          colorCode: "#ffff00",
+          colorCode: "#dfdf58",
           colorDisplay: "In progress",
         },
-        "2": { colorID: "2", colorCode: "#ff0000", colorDisplay: "Unexplored" },
+        "2": { colorID: "2", colorCode: "#da5252", colorDisplay: "Unexplored" },
       };
 
       dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
