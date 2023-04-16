@@ -290,6 +290,21 @@ const DisplayPanel = memo(
 
 DisplayPanel.displayName = "DisplayPanel";
 
+interface ListSearchResultsProps {
+  versesArray: verseProps[];
+  selectChapter: number;
+  searchToken: string;
+  searchingScope: SEARCH_SCOPE;
+  searchError: boolean;
+  selectedRootError: boolean;
+  radioSearchMethod: string;
+  searchingChapters: string[];
+  searchIndexes: searchIndexProps[];
+  editableNotes: markedNotesType;
+  myNotes: notesType;
+  areaDirection: notesType;
+}
+
 const ListSearchResults = memo(
   ({
     versesArray,
@@ -304,7 +319,7 @@ const ListSearchResults = memo(
     searchIndexes,
     areaDirection,
     searchingScope,
-  }: any) => {
+  }: ListSearchResultsProps) => {
     const { chapterNames } = useQuran();
     const { dispatchDpAction } = useDisplayPanel();
 
@@ -382,6 +397,14 @@ const ListSearchResults = memo(
 
 ListSearchResults.displayName = "ListSearchResults";
 
+interface SearchTitleProps {
+  radioSearchMethod: string;
+  searchToken: string;
+  searchingScope: SEARCH_SCOPE;
+  searchChapters: string[];
+  chapterName: string;
+}
+
 const SearchTitle = memo(
   ({
     radioSearchMethod,
@@ -389,7 +412,7 @@ const SearchTitle = memo(
     searchingScope,
     searchChapters,
     chapterName,
-  }: any) => {
+  }: SearchTitleProps) => {
     let searchType = radioSearchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
@@ -406,36 +429,55 @@ const SearchTitle = memo(
 
 SearchTitle.displayName = "SearchTitle";
 
-const DerivationsComponent = memo(({ searchIndexes, handleRootClick }: any) => {
-  useEffect(() => {
-    //init tooltip
-    Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(
-      (tooltipNode) => new bootstrap.Tooltip(tooltipNode)
-    );
-  }, [searchIndexes]);
+interface DerivationsComponentProps {
+  handleRootClick: (verse_key: string) => void;
+  searchIndexes: searchIndexProps[];
+}
 
-  return (
-    <>
-      <hr />
-      <span className="p-2">
-        {searchIndexes.map((root: searchIndexProps, index: number) => (
-          <span
-            role="button"
-            key={index}
-            onClick={(e) => handleRootClick(root.key)}
-            data-bs-toggle="tooltip"
-            data-bs-title={root.text}
-          >
-            {index ? " -" : " "} {root.name}
-          </span>
-        ))}
-      </span>
-      <hr />
-    </>
-  );
-});
+const DerivationsComponent = memo(
+  ({ searchIndexes, handleRootClick }: DerivationsComponentProps) => {
+    useEffect(() => {
+      //init tooltip
+      Array.from(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
+    }, [searchIndexes]);
+
+    return (
+      <>
+        <hr />
+        <span className="p-2">
+          {searchIndexes.map((root: searchIndexProps, index: number) => (
+            <span
+              role="button"
+              key={index}
+              onClick={(e) => handleRootClick(root.key)}
+              data-bs-toggle="tooltip"
+              data-bs-title={root.text}
+            >
+              {index ? " -" : " "} {root.name}
+            </span>
+          ))}
+        </span>
+        <hr />
+      </>
+    );
+  }
+);
 
 DerivationsComponent.displayName = "DerivationsComponent";
+
+interface SearchVerseComponentProps {
+  verse: verseProps;
+  searchingScope: SEARCH_SCOPE;
+  verseChapter: string;
+  value: string;
+  isEditable: boolean;
+  noteDirection: string;
+  isRootSearch: boolean;
+  searchIndexes: searchIndexProps[];
+  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
+}
 
 const SearchVerseComponent = memo(
   ({
@@ -448,7 +490,7 @@ const SearchVerseComponent = memo(
     isRootSearch,
     searchIndexes,
     dispatchDpAction,
-  }: any) => {
+  }: SearchVerseComponentProps) => {
     searchIndexes = (searchIndexes as []).filter(
       (value: any) => value.key === verse.key
     );
