@@ -9,6 +9,7 @@ import SelectedVerses from "../components/Coloring/SelectedVerses";
 import VerseModal from "../components/Coloring/VerseModal";
 import AddColorModal from "../components/Coloring/AddColorModal";
 import DeleteColorModal from "../components/Coloring/DeleteColorModal";
+import EditColorsModal from "../components/Coloring/EditColorsModal";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 
@@ -319,6 +320,26 @@ function Coloring() {
     });
   }
 
+  function setColorsList(colorsList: coloredProps) {
+    dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, colorsList);
+
+    Object.keys(colorsList).forEach((colorID) => {
+      dbSaveColor({
+        id: colorsList[colorID].colorID,
+        name: colorsList[colorID].colorDisplay,
+        code: colorsList[colorID].colorCode,
+      });
+    });
+
+    let newColoredVerses: coloredProps = {};
+    Object.keys(state.coloredVerses).forEach((verseKey) => {
+      newColoredVerses[verseKey] =
+        colorsList[state.coloredVerses[verseKey].colorID];
+    });
+
+    dispatchClAction(CL_ACTIONS.SET_COLORED_VERSES, newColoredVerses);
+  }
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -411,8 +432,19 @@ function Coloring() {
           >
             New color
           </button>
+          <button
+            className="btn btn-info mt-1"
+            data-bs-toggle="modal"
+            data-bs-target="#editColorsModal"
+          >
+            Edit colors
+          </button>
         </div>
         <AddColorModal addColor={addColor} />
+        <EditColorsModal
+          colorsList={{ ...state.colorsList }}
+          setColorsList={setColorsList}
+        />
       </div>
       <div className="verses-side">
         <div className="verses-side-colors" dir="ltr">
