@@ -1,12 +1,17 @@
 import { Reducer, useEffect, useReducer, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 import { verseProps } from "../types";
+
 import { getTextColor } from "../components/Coloring/util";
-import VerseModal from "../components/Coloring/VerseModal";
-import AddColorModal from "../components/Coloring/AddColorModal";
 import { colorProps, coloredProps } from "../components/Coloring/consts";
 import SelectedVerses from "../components/Coloring/SelectedVerses";
+
+import VerseModal from "../components/Coloring/VerseModal";
+import AddColorModal from "../components/Coloring/AddColorModal";
+import DeleteColorModal from "../components/Coloring/DeleteColorModal";
+
 import LoadingSpinner from "../components/LoadingSpinner";
+
 import {
   IColor,
   IVerseColor,
@@ -17,12 +22,11 @@ import {
   dbSaveColor,
   dbSaveVerseColor,
 } from "../util/db";
-import DeleteColorModal from "../components/Coloring/DeleteColorModal";
 
 interface stateProps {
   currentChapter: number;
   chapterToken: string;
-  colorsList: colorProps[];
+  colorsList: coloredProps;
   selectedColors: coloredProps;
   coloredVerses: coloredProps;
   currentVerse: verseProps | null;
@@ -65,7 +69,10 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
       return {
         ...state,
-        colorsList: [...state.colorsList, { ...newColor }],
+        colorsList: {
+          ...state.colorsList,
+          [newColor.colorID]: { ...newColor },
+        },
       };
     }
     case CL_ACTIONS.SELECT_COLOR: {
@@ -86,9 +93,8 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
       };
     }
     case CL_ACTIONS.DELETE_COLOR: {
-      let colorsList = state.colorsList.filter(
-        (color) => color.colorID !== action.payload
-      );
+      let newColorsList = { ...state.colorsList };
+      delete newColorsList[action.payload];
 
       let coloredVerses = { ...state.coloredVerses };
 
@@ -103,7 +109,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 
       return {
         ...state,
-        colorsList: colorsList,
+        colorsList: newColorsList,
         coloredVerses: coloredVerses,
         selectedColors: selectedColors,
       };
@@ -152,14 +158,14 @@ function Coloring() {
 
       savedColors = await dbLoadColors();
 
-      let initialColors: colorProps[] = [];
+      let initialColors: coloredProps = {};
 
       savedColors.forEach((color) => {
-        initialColors.push({
+        initialColors[color.id] = {
           colorID: color.id,
           colorDisplay: color.name,
           colorCode: color.code,
-        });
+        };
       });
 
       dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
@@ -171,11 +177,8 @@ function Coloring() {
       let initialColoredVerses: coloredProps = {};
 
       savedVersesColor.forEach((verseColor) => {
-        initialColoredVerses[verseColor.verse_key] = {
-          colorID: verseColor.id,
-          colorDisplay: verseColor.name,
-          colorCode: verseColor.code,
-        };
+        initialColoredVerses[verseColor.verse_key] =
+          initialColors[verseColor.color_id];
       });
 
       dispatchClAction(CL_ACTIONS.SET_COLORED_VERSES, initialColoredVerses);
@@ -183,20 +186,26 @@ function Coloring() {
       setLoadingState(false);
     }
     if (localStorage.getItem("defaultColorsInitiated") === null) {
-      const initialColors: colorProps[] = [
-        { colorID: "0", colorCode: "#00ff00", colorDisplay: "Studied" },
-        { colorID: "1", colorCode: "#ffff00", colorDisplay: "In progress" },
-        { colorID: "2", colorCode: "#ff0000", colorDisplay: "Unexplored" },
-      ];
+      const initialColors: coloredProps = {
+        "0": { colorID: "0", colorCode: "#00ff00", colorDisplay: "Studied" },
+        "1": {
+          colorID: "1",
+          colorCode: "#ffff00",
+          colorDisplay: "In progress",
+        },
+        "2": { colorID: "2", colorCode: "#ff0000", colorDisplay: "Unexplored" },
+      };
 
       dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
-      initialColors.forEach((color) => {
+
+      Object.keys(initialColors).forEach((colorID) => {
         dbSaveColor({
-          id: color.colorID,
-          name: color.colorDisplay,
-          code: color.colorCode,
+          id: initialColors[colorID].colorID,
+          name: initialColors[colorID].colorDisplay,
+          code: initialColors[colorID].colorCode,
         });
       });
+
       localStorage.setItem("defaultColorsInitiated", "true");
       setLoadingState(false);
     } else {
@@ -207,7 +216,7 @@ function Coloring() {
   const initialState: stateProps = {
     currentChapter: 1,
     chapterToken: "",
-    colorsList: [],
+    colorsList: {},
     selectedColors: {},
     coloredVerses: {},
     currentVerse: null,
@@ -282,12 +291,6 @@ function Coloring() {
     }
   }
 
-  /*
-  function onClickEditColor(colorID: string) {
-    dispatchClAction(CL_ACTIONS.DELETE_COLOR, colorID);
-  }
-  */
-
   function onClickVerseColor(verse: verseProps) {
     setCurrentVerse(verse);
   }
@@ -306,9 +309,7 @@ function Coloring() {
     } else {
       dbSaveVerseColor({
         verse_key: verseKey,
-        id: color.colorID,
-        name: color.colorDisplay,
-        code: color.colorCode,
+        color_id: color.colorID,
       });
     }
 
@@ -351,32 +352,38 @@ function Coloring() {
           Colors list:
         </div>
         <div className="chapters-side-colors" dir="ltr">
-          {state.colorsList.length > 0
-            ? state.colorsList.map((color) => (
+          {Object.keys(state.colorsList).length > 0
+            ? Object.keys(state.colorsList).map((colorID) => (
                 <div
-                  key={color.colorID}
+                  key={state.colorsList[colorID].colorID}
                   className="chapters-side-colors-item text-center rounded mb-1"
                   style={{
-                    backgroundColor: color.colorCode,
-                    color: getTextColor(color.colorCode),
+                    backgroundColor: state.colorsList[colorID].colorCode,
+                    color: getTextColor(state.colorsList[colorID].colorCode),
                   }}
                 >
                   <div
-                    onClick={() => onClickSelectColor(color)}
+                    onClick={() =>
+                      onClickSelectColor(state.colorsList[colorID])
+                    }
                     className="opacity-0"
                   >
                     🗑
                   </div>
                   <div
                     className="flex-grow-1"
-                    onClick={() => onClickSelectColor(color)}
+                    onClick={() =>
+                      onClickSelectColor(state.colorsList[colorID])
+                    }
                   >
-                    {color.colorDisplay}
+                    {state.colorsList[colorID].colorDisplay}
                   </div>
                   <div
                     data-bs-toggle="modal"
                     data-bs-target="#deleteColorModal"
-                    onClick={() => onClickDeleteColor(color)}
+                    onClick={() =>
+                      onClickDeleteColor(state.colorsList[colorID])
+                    }
                   >
                     🗑
                   </div>
@@ -390,7 +397,7 @@ function Coloring() {
           versesCount={
             Object.keys(state.coloredVerses).filter((verseKey) => {
               return (
-                state.coloredVerses[verseKey].colorID ===
+                state.coloredVerses[verseKey]?.colorID ===
                 state.currentColor?.colorID
               );
             }).length

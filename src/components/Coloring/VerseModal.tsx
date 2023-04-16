@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { getTextColor } from "./util";
 import { verseProps } from "../../types";
-import { colorProps } from "./consts";
+import { colorProps, coloredProps } from "./consts";
 import useQuran from "../../context/QuranContext";
 
 const activeClassName = "verse-modal-colors-item-active";
 
 interface VerseModalProps {
-  colorsList: colorProps[];
+  colorsList: coloredProps;
   currentVerse: verseProps | null;
   setVerseColor: (verseKey: string, color: colorProps | null) => void;
   setCurrentVerse: (verse: verseProps | null) => void;
@@ -128,7 +128,7 @@ const VerseModal = ({
               )
             </div>
             <div
-              className="verse-modal-text text-center"
+              className="verse-modal-text text-center rounded"
               style={
                 chosenColor
                   ? {
@@ -141,20 +141,21 @@ const VerseModal = ({
               {currentVerse?.versetext}
             </div>
             <div className="verse-modal-colors">
-              {colorsList.map((color, index) => (
+              {Object.keys(colorsList).map((colorID) => (
                 <div
                   ref={(el) => {
-                    if (el !== null) refListColors.current[color.colorID] = el;
+                    if (el !== null)
+                      refListColors.current[colorsList[colorID].colorID] = el;
                   }}
-                  onClick={(event) => onClickColor(event, color)}
-                  key={index}
+                  onClick={(event) => onClickColor(event, colorsList[colorID])}
+                  key={colorID}
                   className="verse-modal-colors-item text-center fs-4 mb-1"
                   style={{
-                    backgroundColor: color.colorCode,
-                    color: getTextColor(color.colorCode),
+                    backgroundColor: colorsList[colorID].colorCode,
+                    color: getTextColor(colorsList[colorID].colorCode),
                   }}
                 >
-                  {color.colorDisplay}
+                  {colorsList[colorID].colorDisplay}
                 </div>
               ))}
             </div>

@@ -21,9 +21,7 @@ export interface IColor {
 
 export interface IVerseColor {
   verse_key: string;
-  id: string;
-  name: string;
-  code: string;
+  color_id: string;
 }
 
 class tadaborDatabase extends Dexie {
@@ -42,14 +40,14 @@ class tadaborDatabase extends Dexie {
     // Define tables and indexes
     // (Here's where the implicit table props are dynamically created)
     //
-    this.version(6).stores({
+    this.version(7).stores({
       notes: "id, text, date_created, date_modified",
       notes_dir: "id, dir",
       root_notes: "id, text, date_created, date_modified",
       root_notes_dir: "id, dir",
       translations: "id, text, date_created, date_modified",
       colors: "id, name, code",
-      verses_color: "verse_key, id, name, code",
+      verses_color: "verse_key, color_id",
     });
   }
 }
