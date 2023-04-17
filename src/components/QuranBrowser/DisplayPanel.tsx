@@ -8,6 +8,7 @@ import {
   Fragment,
   createContext,
   useContext,
+  MutableRefObject,
 } from "react";
 
 import { toast } from "react-toastify";
@@ -491,10 +492,6 @@ const SearchVerseComponent = memo(
     searchIndexes,
     dispatchDpAction,
   }: SearchVerseComponentProps) => {
-    searchIndexes = (searchIndexes as []).filter(
-      (value: any) => value.key === verse.key
-    );
-
     return (
       <>
         <VerseContentComponent
@@ -502,7 +499,9 @@ const SearchVerseComponent = memo(
           searchingScope={searchingScope}
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
-          searchIndexes={searchIndexes}
+          searchIndexes={searchIndexes.filter(
+            (value) => value.key === verse.key
+          )}
           dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
@@ -519,7 +518,15 @@ const SearchVerseComponent = memo(
 
 SearchVerseComponent.displayName = "SearchVerseComponent";
 
-const SearchErrorsComponent = ({ searchError, selectedRootError }: any) => {
+interface SearchErrorsComponentProps {
+  searchError: boolean;
+  selectedRootError: boolean;
+}
+
+const SearchErrorsComponent = ({
+  searchError,
+  selectedRootError,
+}: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
     <>
@@ -531,6 +538,15 @@ const SearchErrorsComponent = ({ searchError, selectedRootError }: any) => {
   );
 };
 
+interface VerseContentComponentProps {
+  verse: verseProps;
+  searchingScope: SEARCH_SCOPE;
+  verseChapter: string;
+  isRootSearch: boolean;
+  searchIndexes: searchIndexProps[];
+  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
+}
+
 const VerseContentComponent = memo(
   ({
     verse,
@@ -539,7 +555,7 @@ const VerseContentComponent = memo(
     isRootSearch,
     searchIndexes,
     dispatchDpAction,
-  }: any) => {
+  }: VerseContentComponentProps) => {
     const { dispatchAction } = useQuranBrowser();
 
     let verse_key = verse.key;
@@ -597,7 +613,17 @@ const VerseContentComponent = memo(
 
 VerseContentComponent.displayName = "VerseContentComponent";
 
-const Highlighted = ({ text = "", searchIndexes, isRootSearch }: any) => {
+interface HighlightedProps {
+  text: string;
+  searchIndexes: searchIndexProps[];
+  isRootSearch: boolean;
+}
+
+const Highlighted = ({
+  text = "",
+  searchIndexes,
+  isRootSearch,
+}: HighlightedProps) => {
   const parts = text.split(" ");
 
   function matchIndex(index: number) {
@@ -624,7 +650,11 @@ const Highlighted = ({ text = "", searchIndexes, isRootSearch }: any) => {
   );
 };
 
-const ListTitle = memo(({ chapterName }: any) => {
+interface ListTitleProps {
+  chapterName: string;
+}
+
+const ListTitle = memo(({ chapterName }: ListTitleProps) => {
   return (
     <div className="card-header">
       <h3 className="text-primary text-center">سورة {chapterName}</h3>
@@ -634,6 +664,18 @@ const ListTitle = memo(({ chapterName }: any) => {
 
 ListTitle.displayName = "ListTitle";
 
+interface ListVersesProps {
+  selectChapter: number;
+  scrollKey: string | null;
+  myNotes: notesType;
+  editableNotes: markedNotesType;
+  areaDirection: notesType;
+}
+
+interface versesRefType {
+  [key: string]: HTMLDivElement;
+}
+
 const ListVerses = memo(
   ({
     selectChapter,
@@ -641,7 +683,7 @@ const ListVerses = memo(
     editableNotes,
     scrollKey,
     areaDirection,
-  }: any) => {
+  }: ListVersesProps) => {
     const { chapterNames, allQuranText } = useQuran();
     const { dispatchDpAction } = useDisplayPanel();
 
@@ -650,14 +692,10 @@ const ListVerses = memo(
 
     const selectedVerse = useRef<Element | null>(null);
 
-    interface versesRefType {
-      [key: string]: HTMLDivElement;
-    }
-
     const versesRef = useRef<versesRefType>({});
 
     useEffect(() => {
-      let verseToHighlight = versesRef.current[scrollKey];
+      let verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
       if (verseToHighlight) {
         verseToHighlight.scrollIntoView({ block: "center" });
         verseToHighlight.classList.add("verse-selected");
@@ -698,6 +736,17 @@ function hightlighVerse(verseElement: HTMLElement) {
   verseElement.classList.add("verse-selected");
 }
 
+interface VerseComponentProps {
+  key: string;
+  verse: verseProps;
+  value: string;
+  isEditable: boolean;
+  noteDirection: string;
+  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
+  selectedVerse: MutableRefObject<Element | null>;
+  versesRef: MutableRefObject<versesRefType>;
+}
+
 const VerseComponent = memo(
   ({
     verse,
@@ -707,10 +756,12 @@ const VerseComponent = memo(
     dispatchDpAction,
     selectedVerse,
     versesRef,
-  }: any) => {
+  }: VerseComponentProps) => {
     return (
       <div
-        ref={(el) => (versesRef.current[verse.key] = el)}
+        ref={(el) => {
+          if (el !== null) versesRef.current[verse.key] = el;
+        }}
         className="border-bottom pt-1 pb-1"
       >
         <VerseTextComponent verse={verse} selectedVerse={selectedVerse} />
@@ -728,45 +779,62 @@ const VerseComponent = memo(
 
 VerseComponent.displayName = "VerseComponent";
 
-const VerseTextComponent = memo(({ verse, selectedVerse }: any) => {
-  function onClickVerse(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
-    let verseElement = event.currentTarget.parentElement?.parentElement;
+interface VerseTextComponentProps {
+  verse: verseProps;
+  selectedVerse: MutableRefObject<Element | null>;
+}
 
-    if (!verseElement) return;
+const VerseTextComponent = memo(
+  ({ verse, selectedVerse }: VerseTextComponentProps) => {
+    function onClickVerse(
+      event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+    ) {
+      let verseElement = event.currentTarget.parentElement?.parentElement;
 
-    if (selectedVerse.current) {
-      selectedVerse.current.classList.remove("verse-selected");
+      if (!verseElement) return;
 
-      if (selectedVerse.current === verseElement) {
-        selectedVerse.current = null;
-        return;
+      if (selectedVerse.current) {
+        selectedVerse.current.classList.remove("verse-selected");
+
+        if (selectedVerse.current === verseElement) {
+          selectedVerse.current = null;
+          return;
+        }
       }
-    }
 
-    hightlighVerse(verseElement);
-    selectedVerse.current = verseElement;
-  }
-  return (
-    <span className="fs-4">
-      {verse.versetext}{" "}
-      <span className="btn-verse" onClick={onClickVerse}>
-        {"(" + verse.verseid + ")"}
+      hightlighVerse(verseElement);
+      selectedVerse.current = verseElement;
+    }
+    return (
+      <span className="fs-4">
+        {verse.versetext}{" "}
+        <span className="btn-verse" onClick={onClickVerse}>
+          {"(" + verse.verseid + ")"}
+        </span>
+        <button
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={"#collapseExample" + verse.key}
+          aria-expanded="false"
+          aria-controls={"collapseExample" + verse.key}
+        >
+          <IconCircleArrowDownFilled />
+        </button>
       </span>
-      <button
-        className="btn"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target={"#collapseExample" + verse.key}
-        aria-expanded="false"
-        aria-controls={"collapseExample" + verse.key}
-      >
-        <IconCircleArrowDownFilled />
-      </button>
-    </span>
-  );
-});
+    );
+  }
+);
 
 VerseTextComponent.displayName = "VerseTextComponent";
+
+interface InputTextFormProps {
+  verseKey: string;
+  verseNote: string;
+  noteEditable: boolean;
+  noteDirection: string;
+  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
+}
 
 const InputTextForm = memo(
   ({
@@ -775,7 +843,7 @@ const InputTextForm = memo(
     noteEditable,
     noteDirection,
     dispatchDpAction,
-  }: any) => {
+  }: InputTextFormProps) => {
     const { t } = useTranslation();
 
     const handleNoteChange = useCallback(
