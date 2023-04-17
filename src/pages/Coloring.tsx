@@ -389,7 +389,7 @@ function Coloring() {
                     }
                     className="opacity-0"
                   >
-                    🗑
+                    🗑️
                   </div>
                   <div
                     className="flex-grow-1"
@@ -406,7 +406,7 @@ function Coloring() {
                       onClickDeleteColor(state.colorsList[colorID])
                     }
                   >
-                    🗑
+                    🗑️
                   </div>
                 </div>
               ))
