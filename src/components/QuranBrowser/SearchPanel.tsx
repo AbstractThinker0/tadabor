@@ -187,7 +187,15 @@ const RadioSearchMethod = ({
   );
 };
 
-const FormWordSearch = ({ onSearchSubmit, searchString }: any) => {
+interface FormWordSearchProps {
+  onSearchSubmit: () => void;
+  searchString: string;
+}
+
+const FormWordSearch = ({
+  onSearchSubmit,
+  searchString,
+}: FormWordSearchProps) => {
   const { dispatchAction } = useQuranBrowser();
   const { t } = useTranslation();
 
@@ -270,7 +278,13 @@ const CheckboxComponent = ({
   );
 };
 
-const SearchSuccessComponent = ({ searchResult }: any) => {
+interface SearchSuccessComponentProps {
+  searchResult: verseProps[];
+}
+
+const SearchSuccessComponent = ({
+  searchResult,
+}: SearchSuccessComponentProps) => {
   const { t } = useTranslation();
   return (
     <>

@@ -2,8 +2,13 @@ import { memo, useMemo, useState } from "react";
 import useQuran from "../../context/QuranContext";
 import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
 
+interface SelectionListRootsProps {
+  isDisabled: boolean;
+  searchString: string;
+}
+
 const SelectionListRoots = memo(
-  ({ isDisabled, searchString }: any) => {
+  ({ isDisabled, searchString }: SelectionListRootsProps) => {
     const { quranRoots } = useQuran();
     const { dispatchAction } = useQuranBrowser();
 

@@ -9,12 +9,24 @@ import { useTranslation } from "react-i18next";
 import { FormComponent, TextComponent } from "../components/TextForm";
 
 function YourNotes() {
+  interface notesType {
+    [key: string]: string;
+  }
+
+  interface notesDirType {
+    [key: string]: string; // "rtl" | "ltr";
+  }
+
+  interface markedNotesType {
+    [key: string]: boolean;
+  }
+
   const [loadingState, setLoadingState] = useState(true);
   const { t } = useTranslation();
   const { chapterNames, allQuranText } = useQuran();
-  const [editableNotes, setEditableNotes] = useState<any>({});
-  const [areaDirection, setAreaDirection] = useState<any>({});
-  const [myNotes, setMyNotes] = useState<any>({});
+  const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
+  const [areaDirection, setAreaDirection] = useState<notesDirType>({});
+  const [myNotes, setMyNotes] = useState<notesType>({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -26,19 +38,19 @@ function YourNotes() {
 
       if (clientLeft) return;
 
-      let extractNotes = {};
-      userNotes.forEach((note: any) => {
-        (extractNotes as any)[note.id] = note.text;
+      let extractNotes: notesType = {};
+      userNotes.forEach((note) => {
+        extractNotes[note.id] = note.text;
       });
 
       let userNotesDir = await loadData("notes_dir");
 
       if (clientLeft) return;
 
-      let extractNotesDir = {};
+      let extractNotesDir: notesDirType = {};
 
-      userNotesDir.forEach((note: { id: string | number; dir: string }) => {
-        (extractNotesDir as any)[note.id] = note.dir;
+      userNotesDir.forEach((note) => {
+        extractNotesDir[note.id] = note.dir;
       });
 
       setMyNotes(extractNotes);
@@ -63,7 +75,7 @@ function YourNotes() {
   };
 
   function handleEditOnClick(inputKey: string) {
-    setEditableNotes((state: any) => {
+    setEditableNotes((state) => {
       return { ...state, [inputKey]: true };
     });
   }
@@ -71,7 +83,7 @@ function YourNotes() {
   const memoHandleEditOnClick = useCallback(handleEditOnClick, []);
 
   function handleNoteSave(noteKey: string, value: string) {
-    setEditableNotes((state: any) => {
+    setEditableNotes((state) => {
       return { ...state, [noteKey]: false };
     });
 
@@ -90,13 +102,13 @@ function YourNotes() {
   }
 
   function handleNoteChange(noteKey: string, value: string) {
-    setMyNotes((state: any) => {
+    setMyNotes((state) => {
       return { ...state, [noteKey]: value };
     });
   }
 
   function handleSetDirection(verse_key: string, dir: string) {
-    setAreaDirection((state: any) => {
+    setAreaDirection((state) => {
       return { ...state, [verse_key]: dir };
     });
     saveData("notes_dir", { id: verse_key, dir: dir });

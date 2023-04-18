@@ -88,11 +88,22 @@ interface DisplayPanelProps {
 }
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
+  interface translationsType {
+    [key: string]: string;
+  }
+
+  interface markedTranslationsType {
+    [key: string]: boolean;
+  }
+
   const { allQuranText, chapterNames } = useQuran();
   const { t } = useTranslation();
   const [loadingState, setLoadingState] = useState(true);
-  const [versesTranslation, setVersesTranslation] = useState<any>({});
-  const [editableTranslations, setEditableTranslations] = useState<any>({});
+  const [versesTranslation, setVersesTranslation] = useState<translationsType>(
+    {}
+  );
+  const [editableTranslations, setEditableTranslations] =
+    useState<markedTranslationsType>({});
 
   useEffect(() => {
     let clientLeft = false;
@@ -104,9 +115,9 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
 
       if (clientLeft) return;
 
-      let extractTranslations = {} as any;
-      let markedTranslations = {} as any;
-      userTranslations.forEach((trans: any) => {
+      let extractTranslations: translationsType = {};
+      let markedTranslations: markedTranslationsType = {};
+      userTranslations.forEach((trans) => {
         extractTranslations[trans.id] = trans.text;
         markedTranslations[trans.id] = false;
       });
@@ -125,7 +136,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const displayVerses = allQuranText[selectChapter - 1].verses;
 
   const handleInputChange = (inputKey: string, value: string) => {
-    setVersesTranslation((state: any) => {
+    setVersesTranslation((state) => {
       return { ...state, [inputKey]: value };
     });
   };
@@ -133,7 +144,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const memoHandleInputChange = useCallback(handleInputChange, []);
 
   const handleEditClick = (inputKey: string) => {
-    setEditableTranslations((state: any) => {
+    setEditableTranslations((state) => {
       return { ...state, [inputKey]: true };
     });
   };
@@ -141,7 +152,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
   function handleInputSubmit(inputKey: string, inputValue: string) {
-    setEditableTranslations((state: any) => {
+    setEditableTranslations((state) => {
       return { ...state, [inputKey]: false };
     });
 
@@ -193,6 +204,17 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   );
 };
 
+interface VerseComponentProps {
+  isEditable: boolean;
+  verse_key: string;
+  verse_text: string;
+  verse_id: string;
+  verse_trans: string;
+  handleInputChange: (inputKey: string, value: string) => void;
+  handleEditClick: (inputKey: string) => void;
+  handleInputSubmit: (inputKey: string, inputValue: string) => void;
+}
+
 const VerseComponent = memo(
   ({
     isEditable,
@@ -203,7 +225,7 @@ const VerseComponent = memo(
     handleEditClick,
     handleInputChange,
     handleInputSubmit,
-  }: any) => {
+  }: VerseComponentProps) => {
     return (
       <>
         <p className="fs-4 mb-0" dir="rtl">
@@ -228,7 +250,17 @@ const VerseComponent = memo(
   }
 );
 
-const Versetext = ({ inputValue, inputKey, handleEditClick }: any) => {
+interface VersetextProps {
+  inputValue: string;
+  inputKey: string;
+  handleEditClick: (inputKey: string) => void;
+}
+
+const Versetext = ({
+  inputValue,
+  inputKey,
+  handleEditClick,
+}: VersetextProps) => {
   const { t } = useTranslation();
 
   function onClickEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -253,12 +285,19 @@ const Versetext = ({ inputValue, inputKey, handleEditClick }: any) => {
   );
 };
 
+interface VerseareaProps {
+  inputKey: string;
+  inputValue: string;
+  handleInputChange: (inputKey: string, value: string) => void;
+  handleInputSubmit: (inputKey: string, inputValue: string) => void;
+}
+
 const Versearea = ({
   inputValue,
   inputKey,
   handleInputChange,
   handleInputSubmit,
-}: any) => {
+}: VerseareaProps) => {
   const { t } = useTranslation();
 
   function onChangeTextarea(event: React.ChangeEvent<HTMLTextAreaElement>) {

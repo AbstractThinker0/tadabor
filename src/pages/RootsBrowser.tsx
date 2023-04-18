@@ -1,5 +1,7 @@
 import {
+  Dispatch,
   Fragment,
+  SetStateAction,
   memo,
   useCallback,
   useEffect,
@@ -65,7 +67,15 @@ function RootsBrowser() {
   );
 }
 
-const FormWordSearch = ({ searchString, setSearchString }: any) => {
+interface FormWordSearchProps {
+  searchString: string;
+  setSearchString: Dispatch<SetStateAction<string>>;
+}
+
+const FormWordSearch = ({
+  searchString,
+  setSearchString,
+}: FormWordSearchProps) => {
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
   };
@@ -115,14 +125,30 @@ const FormWordSearch = ({ searchString, setSearchString }: any) => {
   );
 };
 
-const RootsListComponent = memo(({ searchString }: any) => {
+interface RootsListComponentProps {
+  searchString: string;
+}
+
+const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
+  interface notesType {
+    [key: string]: string;
+  }
+
+  interface notesDirType {
+    [key: string]: string; // "rtl" | "ltr";
+  }
+
+  interface markedNotesType {
+    [key: string]: boolean;
+  }
+
   const { t } = useTranslation();
   const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
-  const [myNotes, setMyNotes] = useState<any>({});
-  const [editableNotes, setEditableNotes] = useState<any>({});
-  const [areaDirection, setAreaDirection] = useState<any>({});
+  const [myNotes, setMyNotes] = useState<notesType>({});
+  const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
+  const [areaDirection, setAreaDirection] = useState<notesDirType>({});
   const [itemsCount, setItemsCount] = useState(100);
 
   useEffect(() => {
@@ -135,10 +161,10 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
       if (clientLeft) return;
 
-      let markedNotes = {} as any;
+      let markedNotes: markedNotesType = {};
 
-      let extractNotes = {} as any;
-      userNotes.forEach((note: any) => {
+      let extractNotes: notesType = {};
+      userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
         markedNotes[note.id] = false;
       });
@@ -147,9 +173,9 @@ const RootsListComponent = memo(({ searchString }: any) => {
 
       if (clientLeft) return;
 
-      let extractNotesDir = {} as any;
+      let extractNotesDir: notesDirType = {};
 
-      userNotesDir.forEach((note: any) => {
+      userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;
       });
 
@@ -168,13 +194,13 @@ const RootsListComponent = memo(({ searchString }: any) => {
   const memoHandleNoteChange = useCallback(handleNoteChange, []);
 
   function handleNoteChange(name: string, value: string) {
-    setMyNotes((state: any) => {
+    setMyNotes((state) => {
       return { ...state, [name]: value };
     });
   }
 
   function handleNoteSubmit(key: string, value: string) {
-    setEditableNotes((state: any) => {
+    setEditableNotes((state) => {
       return { ...state, [key]: false };
     });
 
@@ -197,13 +223,13 @@ const RootsListComponent = memo(({ searchString }: any) => {
   const memoHandleEditClick = useCallback(handleEditClick, []);
 
   function handleEditClick(rootID: string) {
-    setEditableNotes((state: any) => {
+    setEditableNotes((state) => {
       return { ...state, [rootID]: true };
     });
   }
 
   function handleSetDirection(root_id: string, dir: string) {
-    setAreaDirection((state: any) => {
+    setAreaDirection((state) => {
       return { ...state, [root_id]: dir };
     });
     saveData("root_notes_dir", { id: root_id, dir: dir });
@@ -298,7 +324,12 @@ const RootComponent = memo(
   }
 );
 
-const RootButton = memo(({ root_name, root_id }: any) => {
+interface RootButtonProps {
+  root_name: string;
+  root_id: string;
+}
+
+const RootButton = memo(({ root_name, root_id }: RootButtonProps) => {
   return (
     <div className="text-center">
       <button
