@@ -643,7 +643,8 @@ const Highlighted = ({
             <mark>{part}</mark>{" "}
           </Fragment>
         ) : (
-          <span key={i}>{part} </span>
+          // TODO: Concat all adjacent text and output it at once to avoid multiple text nodes.
+          <>{part} </>
         );
       })}
     </span>
