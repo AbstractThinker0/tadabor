@@ -9,6 +9,7 @@ import {
   createContext,
   useContext,
   MutableRefObject,
+  useState,
 } from "react";
 
 import { toast } from "react-toastify";
@@ -162,132 +163,130 @@ const DisplayPanelContext = createContext<DisplayPanelContent>({
 
 const useDisplayPanel = () => useContext(DisplayPanelContext);
 
-const DisplayPanel = memo(
-  ({
-    searchingChapters,
-    searchResult,
-    searchError,
-    selectedRootError,
-    searchingString,
-    selectChapter,
-    radioSearchingMethod,
-    searchIndexes,
-    searchingScope,
-  }: DisplayPanelProps) => {
-    // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
-    const refListVerses = useRef<HTMLDivElement>(null);
+const DisplayPanel = ({
+  searchingChapters,
+  searchResult,
+  searchError,
+  selectedRootError,
+  searchingString,
+  selectChapter,
+  radioSearchingMethod,
+  searchIndexes,
+  searchingScope,
+}: DisplayPanelProps) => {
+  // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
+  const refListVerses = useRef<HTMLDivElement>(null);
 
-    const initialState: stateProps = {
-      loadingState: true,
-      myNotes: {},
-      editableNotes: {},
-      areaDirection: {},
-      scrollKey: null,
+  const initialState: stateProps = {
+    loadingState: true,
+    myNotes: {},
+    editableNotes: {},
+    areaDirection: {},
+    scrollKey: null,
+  };
+
+  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
+    reducer,
+    initialState
+  );
+
+  const dispatchDpAction = useCallback(
+    (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
+    []
+  );
+
+  useEffect(() => {
+    let clientLeft = false;
+
+    fetchData();
+
+    async function fetchData() {
+      let userNotes: INote[] = await loadData("notes");
+
+      if (clientLeft) return;
+
+      let markedNotes: markedNotesType = {};
+      let extractNotes: notesType = {};
+      userNotes.forEach((note) => {
+        extractNotes[note.id] = note.text;
+        markedNotes[note.id] = false;
+      });
+
+      let userNotesDir: INoteDir[] = await loadData("notes_dir");
+
+      if (clientLeft) return;
+
+      let extractNotesDir: notesType = {};
+
+      userNotesDir.forEach((note) => {
+        extractNotesDir[note.id] = note.dir;
+      });
+
+      dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
+        extractNotes,
+        markedNotes,
+        extractNotesDir,
+      });
+    }
+
+    return () => {
+      clientLeft = true;
     };
+  }, [dispatchDpAction]);
 
-    const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-      reducer,
-      initialState
-    );
+  const scrollRef = useRef(state.scrollKey);
 
-    const dispatchDpAction = useCallback(
-      (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
-      []
-    );
+  useEffect(() => {
+    scrollRef.current = state.scrollKey;
+  }, [state.scrollKey]);
 
-    useEffect(() => {
-      let clientLeft = false;
+  useEffect(() => {
+    if (refListVerses.current && scrollRef.current === null)
+      refListVerses.current.scrollTop = 0;
+  }, [selectChapter, searchResult]);
 
-      fetchData();
-
-      async function fetchData() {
-        let userNotes: INote[] = await loadData("notes");
-
-        if (clientLeft) return;
-
-        let markedNotes: markedNotesType = {};
-        let extractNotes: notesType = {};
-        userNotes.forEach((note) => {
-          extractNotes[note.id] = note.text;
-          markedNotes[note.id] = false;
-        });
-
-        let userNotesDir: INoteDir[] = await loadData("notes_dir");
-
-        if (clientLeft) return;
-
-        let extractNotesDir: notesType = {};
-
-        userNotesDir.forEach((note) => {
-          extractNotesDir[note.id] = note.dir;
-        });
-
-        dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
-          extractNotes,
-          markedNotes,
-          extractNotesDir,
-        });
-      }
-
-      return () => {
-        clientLeft = true;
-      };
-    }, [dispatchDpAction]);
-
-    const scrollRef = useRef(state.scrollKey);
-
-    useEffect(() => {
-      scrollRef.current = state.scrollKey;
-    }, [state.scrollKey]);
-
-    useEffect(() => {
-      if (refListVerses.current && scrollRef.current === null)
-        refListVerses.current.scrollTop = 0;
-    }, [selectChapter, searchResult]);
-
-    if (state.loadingState)
-      return (
-        <div className="col h-75">
-          <div className="h-100">
-            <LoadingSpinner />
-          </div>
-        </div>
-      );
-
+  if (state.loadingState)
     return (
-      <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
-        <div className="browser-display" ref={refListVerses}>
-          <div className="card browser-display-card" dir="rtl">
-            {searchResult.length || searchError || selectedRootError ? (
-              <ListSearchResults
-                versesArray={searchResult}
-                selectChapter={selectChapter}
-                searchToken={searchingString.trim()}
-                searchingScope={searchingScope}
-                searchError={searchError}
-                selectedRootError={selectedRootError}
-                radioSearchMethod={radioSearchingMethod}
-                searchingChapters={searchingChapters}
-                searchIndexes={searchIndexes}
-                editableNotes={state.editableNotes}
-                myNotes={state.myNotes}
-                areaDirection={state.areaDirection}
-              />
-            ) : (
-              <ListVerses
-                selectChapter={selectChapter}
-                scrollKey={state.scrollKey}
-                myNotes={state.myNotes}
-                editableNotes={state.editableNotes}
-                areaDirection={state.areaDirection}
-              />
-            )}
-          </div>
+      <div className="col h-75">
+        <div className="h-100">
+          <LoadingSpinner />
         </div>
-      </DisplayPanelContext.Provider>
+      </div>
     );
-  }
-);
+
+  return (
+    <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
+      <div className="browser-display" ref={refListVerses}>
+        <div className="card browser-display-card" dir="rtl">
+          {searchResult.length || searchError || selectedRootError ? (
+            <ListSearchResults
+              versesArray={searchResult}
+              selectChapter={selectChapter}
+              searchToken={searchingString.trim()}
+              searchingScope={searchingScope}
+              searchError={searchError}
+              selectedRootError={selectedRootError}
+              radioSearchMethod={radioSearchingMethod}
+              searchingChapters={searchingChapters}
+              searchIndexes={searchIndexes}
+              editableNotes={state.editableNotes}
+              myNotes={state.myNotes}
+              areaDirection={state.areaDirection}
+            />
+          ) : (
+            <ListVerses
+              selectChapter={selectChapter}
+              scrollKey={state.scrollKey}
+              myNotes={state.myNotes}
+              editableNotes={state.editableNotes}
+              areaDirection={state.areaDirection}
+            />
+          )}
+        </div>
+      </div>
+    </DisplayPanelContext.Provider>
+  );
+};
 
 DisplayPanel.displayName = "DisplayPanel";
 
@@ -306,96 +305,92 @@ interface ListSearchResultsProps {
   areaDirection: notesType;
 }
 
-const ListSearchResults = memo(
-  ({
-    versesArray,
-    selectChapter,
-    searchToken,
-    searchError,
-    selectedRootError,
-    radioSearchMethod,
-    myNotes,
-    editableNotes,
-    searchingChapters,
-    searchIndexes,
-    areaDirection,
-    searchingScope,
-  }: ListSearchResultsProps) => {
-    const { chapterNames } = useQuran();
-    const { dispatchDpAction } = useDisplayPanel();
+const ListSearchResults = ({
+  versesArray,
+  selectChapter,
+  searchToken,
+  searchError,
+  selectedRootError,
+  radioSearchMethod,
+  myNotes,
+  editableNotes,
+  searchingChapters,
+  searchIndexes,
+  areaDirection,
+  searchingScope,
+}: ListSearchResultsProps) => {
+  const { chapterNames } = useQuran();
+  const { dispatchDpAction } = useDisplayPanel();
 
-    const refVersesResult = useRef<refVersesResultType>({});
+  const refVersesResult = useRef<refVersesResultType>({});
 
-    const refSelectedVerse = useRef<HTMLDivElement | null>(null);
+  const refSelectedVerse = useRef<HTMLDivElement | null>(null);
 
-    function handleRootClick(verse_key: string) {
-      refVersesResult.current[verse_key].scrollIntoView({ behavior: "smooth" });
+  function handleRootClick(verse_key: string) {
+    refVersesResult.current[verse_key].scrollIntoView({ behavior: "smooth" });
 
-      if (refSelectedVerse.current) {
-        refSelectedVerse.current.classList.remove("verse-selected");
-      }
-
-      refVersesResult.current[verse_key].classList.add("verse-selected");
-
-      refSelectedVerse.current = refVersesResult.current[verse_key];
+    if (refSelectedVerse.current) {
+      refSelectedVerse.current.classList.remove("verse-selected");
     }
 
-    const memoHandleRootClick = useCallback(handleRootClick, []);
+    refVersesResult.current[verse_key].classList.add("verse-selected");
 
-    const isRootSearch =
-      radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+    refSelectedVerse.current = refVersesResult.current[verse_key];
+  }
 
-    const chapterName = chapterNames[selectChapter - 1].name;
+  const memoHandleRootClick = useCallback(handleRootClick, []);
 
-    return (
-      <>
-        <SearchTitle
-          radioSearchMethod={radioSearchMethod}
-          searchToken={searchToken}
-          searchingScope={searchingScope}
-          searchChapters={searchingChapters}
-          chapterName={chapterName}
+  const isRootSearch = radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+
+  const chapterName = chapterNames[selectChapter - 1].name;
+
+  return (
+    <>
+      <SearchTitle
+        radioSearchMethod={radioSearchMethod}
+        searchToken={searchToken}
+        searchingScope={searchingScope}
+        searchChapters={searchingChapters}
+        chapterName={chapterName}
+      />
+      {isRootSearch && (
+        <DerivationsComponent
+          handleRootClick={memoHandleRootClick}
+          searchIndexes={searchIndexes}
         />
-        {isRootSearch && (
-          <DerivationsComponent
-            handleRootClick={memoHandleRootClick}
-            searchIndexes={searchIndexes}
+      )}
+      <div className="card-body">
+        {versesArray.map((verse: verseProps) => (
+          <div
+            key={verse.key}
+            ref={(el) => {
+              if (el !== null) refVersesResult.current[verse.key] = el;
+            }}
+            className="border-bottom pt-1 pb-1"
+          >
+            <SearchVerseComponent
+              verse={verse}
+              searchingScope={searchingScope}
+              verseChapter={chapterNames[Number(verse.suraid) - 1].name}
+              value={myNotes[verse.key] || ""}
+              isEditable={editableNotes[verse.key]}
+              noteDirection={areaDirection[verse.key] || ""}
+              isRootSearch={isRootSearch}
+              searchIndexes={searchIndexes}
+              dispatchDpAction={dispatchDpAction}
+            />
+          </div>
+        ))}
+        {(searchError || selectedRootError) && (
+          <SearchErrorsComponent
+            searchError={searchError}
+            selectedRootError={selectedRootError}
           />
         )}
-        <div className="card-body">
-          {versesArray.map((verse: verseProps) => (
-            <div
-              key={verse.key}
-              ref={(el) => {
-                if (el !== null) refVersesResult.current[verse.key] = el;
-              }}
-              className="border-bottom pt-1 pb-1"
-            >
-              <SearchVerseComponent
-                verse={verse}
-                searchingScope={searchingScope}
-                verseChapter={chapterNames[Number(verse.suraid) - 1].name}
-                value={myNotes[verse.key] || ""}
-                isEditable={editableNotes[verse.key]}
-                noteDirection={areaDirection[verse.key] || ""}
-                isRootSearch={isRootSearch}
-                searchIndexes={searchIndexes}
-                dispatchDpAction={dispatchDpAction}
-              />
-            </div>
-          ))}
-          {(searchError || selectedRootError) && (
-            <SearchErrorsComponent
-              searchError={searchError}
-              selectedRootError={selectedRootError}
-            />
-          )}
-        </div>
-      </>
-    );
-  }
-);
-
+      </div>
+    </>
+  );
+};
 ListSearchResults.displayName = "ListSearchResults";
 
 interface SearchTitleProps {
@@ -492,6 +487,16 @@ const SearchVerseComponent = memo(
     searchIndexes,
     dispatchDpAction,
   }: SearchVerseComponentProps) => {
+    const [verseSearchIndexes, setVerseSearchIndexes] = useState(
+      searchIndexes.filter((value) => value.key === verse.key)
+    );
+
+    useEffect(() => {
+      setVerseSearchIndexes(
+        searchIndexes.filter((value) => value.key === verse.key)
+      );
+    }, [searchIndexes, verse.key]);
+
     return (
       <>
         <VerseContentComponent
@@ -499,9 +504,7 @@ const SearchVerseComponent = memo(
           searchingScope={searchingScope}
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
-          searchIndexes={searchIndexes.filter(
-            (value) => value.key === verse.key
-          )}
+          searchIndexes={verseSearchIndexes}
           dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
@@ -677,55 +680,53 @@ interface versesRefType {
   [key: string]: HTMLDivElement;
 }
 
-const ListVerses = memo(
-  ({
-    selectChapter,
-    myNotes,
-    editableNotes,
-    scrollKey,
-    areaDirection,
-  }: ListVersesProps) => {
-    const { chapterNames, allQuranText } = useQuran();
-    const { dispatchDpAction } = useDisplayPanel();
+const ListVerses = ({
+  selectChapter,
+  myNotes,
+  editableNotes,
+  scrollKey,
+  areaDirection,
+}: ListVersesProps) => {
+  const { chapterNames, allQuranText } = useQuran();
+  const { dispatchDpAction } = useDisplayPanel();
 
-    const chapterName = chapterNames[selectChapter - 1].name;
-    const versesArray = allQuranText[selectChapter - 1].verses;
+  const chapterName = chapterNames[selectChapter - 1].name;
+  const versesArray = allQuranText[selectChapter - 1].verses;
 
-    const selectedVerse = useRef<Element | null>(null);
+  const selectedVerse = useRef<Element | null>(null);
 
-    const versesRef = useRef<versesRefType>({});
+  const versesRef = useRef<versesRefType>({});
 
-    useEffect(() => {
-      let verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({ block: "center" });
-        verseToHighlight.classList.add("verse-selected");
-        selectedVerse.current = verseToHighlight;
-        dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
-      }
-    }, [dispatchDpAction, scrollKey]);
+  useEffect(() => {
+    let verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
+    if (verseToHighlight) {
+      verseToHighlight.scrollIntoView({ block: "center" });
+      verseToHighlight.classList.add("verse-selected");
+      selectedVerse.current = verseToHighlight;
+      dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
+    }
+  }, [dispatchDpAction, scrollKey]);
 
-    return (
-      <>
-        <ListTitle chapterName={chapterName} />
-        <div className="card-body">
-          {versesArray.map((verse: verseProps) => (
-            <VerseComponent
-              key={verse.key}
-              verse={verse}
-              value={myNotes[verse.key] || ""}
-              isEditable={editableNotes[verse.key]}
-              noteDirection={areaDirection[verse.key] || ""}
-              dispatchDpAction={dispatchDpAction}
-              selectedVerse={selectedVerse}
-              versesRef={versesRef}
-            />
-          ))}
-        </div>
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <ListTitle chapterName={chapterName} />
+      <div className="card-body">
+        {versesArray.map((verse: verseProps) => (
+          <VerseComponent
+            key={verse.key}
+            verse={verse}
+            value={myNotes[verse.key] || ""}
+            isEditable={editableNotes[verse.key]}
+            noteDirection={areaDirection[verse.key] || ""}
+            dispatchDpAction={dispatchDpAction}
+            selectedVerse={selectedVerse}
+            versesRef={versesRef}
+          />
+        ))}
+      </div>
+    </>
+  );
+};
 
 ListVerses.displayName = "ListVerses";
 
