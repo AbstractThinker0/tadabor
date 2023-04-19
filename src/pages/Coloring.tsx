@@ -3,10 +3,12 @@ import useQuran from "../context/QuranContext";
 import { verseProps } from "../types";
 
 import { getTextColor } from "../components/Coloring/util";
-import { colorProps, coloredProps } from "../components/Coloring/consts";
-import SelectedVerses from "../components/Coloring/SelectedVerses";
+import {
+  CL_ACTIONS,
+  colorProps,
+  coloredProps,
+} from "../components/Coloring/consts";
 
-import VerseModal from "../components/Coloring/VerseModal";
 import AddColorModal from "../components/Coloring/AddColorModal";
 import DeleteColorModal from "../components/Coloring/DeleteColorModal";
 import EditColorsModal from "../components/Coloring/EditColorsModal";
@@ -21,8 +23,8 @@ import {
   dbLoadColors,
   dbLoadVersesColor,
   dbSaveColor,
-  dbSaveVerseColor,
 } from "../util/db";
+import VersesSide from "../components/Coloring/VersesSide";
 
 interface stateProps {
   currentChapter: number;
@@ -32,20 +34,6 @@ interface stateProps {
   coloredVerses: coloredProps;
   currentVerse: verseProps | null;
   currentColor: colorProps | null;
-}
-
-enum CL_ACTIONS {
-  SET_CHAPTER = "dispatchSetChapter",
-  SET_CHAPTER_TOKEN = "dispatchSetChapterToken",
-  SET_COLORS_LIST = "dispatchSetColorsList",
-  ADD_COLOR = "dispatchAddColor",
-  SELECT_COLOR = "dispatchSelectColor",
-  DESELECT_COLOR = "dispatchDeselectColor",
-  DELETE_COLOR = "dispatchDeleteColor",
-  SET_VERSE_COLOR = "dispatchSetVerseColor",
-  SET_COLORED_VERSES = "dispatchSetColoredVerses",
-  SET_CURRENT_VERSE = "dispatchSetCurrentVerse",
-  SET_CURRENT_COLOR = "dispatchSetCurrentColor",
 }
 
 interface reducerAction {
@@ -150,7 +138,7 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 }
 
 function Coloring() {
-  const { chapterNames, allQuranText } = useQuran();
+  const { chapterNames } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
   useEffect(() => {
@@ -273,10 +261,6 @@ function Coloring() {
     dispatchClAction(CL_ACTIONS.SELECT_COLOR, color);
   }
 
-  function onClickDeleteSelected(colorID: string) {
-    dispatchClAction(CL_ACTIONS.DESELECT_COLOR, colorID);
-  }
-
   function onClickDeleteColor(color: colorProps) {
     dispatchClAction(CL_ACTIONS.SET_CURRENT_COLOR, color);
   }
@@ -292,32 +276,8 @@ function Coloring() {
     }
   }
 
-  function onClickVerseColor(verse: verseProps) {
-    setCurrentVerse(verse);
-  }
-
-  function setCurrentVerse(verse: verseProps | null) {
-    dispatchClAction(CL_ACTIONS.SET_CURRENT_VERSE, verse);
-  }
-
   function addColor(color: colorProps) {
     dispatchClAction(CL_ACTIONS.ADD_COLOR, color);
-  }
-
-  function setVerseColor(verseKey: string, color: colorProps | null) {
-    if (color === null) {
-      dbDeleteVerseColor(verseKey);
-    } else {
-      dbSaveVerseColor({
-        verse_key: verseKey,
-        color_id: color.colorID,
-      });
-    }
-
-    dispatchClAction(CL_ACTIONS.SET_VERSE_COLOR, {
-      verseKey: verseKey,
-      color: color,
-    });
   }
 
   function setColorsList(colorsList: coloredProps) {
@@ -446,89 +406,14 @@ function Coloring() {
           setColorsList={setColorsList}
         />
       </div>
-      <div className="verses-side">
-        <div className="verses-side-colors" dir="ltr">
-          {Object.keys(state.selectedColors).map((colorID) => (
-            <div
-              key={colorID}
-              className="verses-side-colors-item text-center rounded"
-              style={
-                state.selectedColors[colorID]
-                  ? {
-                      backgroundColor: state.selectedColors[colorID].colorCode,
-                      color: getTextColor(
-                        state.selectedColors[colorID].colorCode
-                      ),
-                    }
-                  : {}
-              }
-            >
-              <div></div>
-              <div>{state.selectedColors[colorID].colorDisplay}</div>
-              <div
-                className="verses-side-colors-item-close"
-                onClick={(e) => onClickDeleteSelected(colorID)}
-              >
-                X
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="card verse-list fs-4" dir="rtl">
-          {Object.keys(state.selectedColors).length ? (
-            <SelectedVerses
-              selectedColors={state.selectedColors}
-              coloredVerses={state.coloredVerses}
-            />
-          ) : (
-            <>
-              <div className="card-title">
-                سورة {chapterNames[state.currentChapter - 1].name}
-              </div>
-              {allQuranText[state.currentChapter - 1].verses.map((verse) => (
-                <div
-                  className="verse-item"
-                  key={verse.key}
-                  style={
-                    state.coloredVerses[verse.key]
-                      ? {
-                          backgroundColor:
-                            state.coloredVerses[verse.key].colorCode,
-                          color: getTextColor(
-                            state.coloredVerses[verse.key].colorCode
-                          ),
-                        }
-                      : {}
-                  }
-                >
-                  {verse.versetext} ({verse.verseid}){" "}
-                  <button
-                    className="verse-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#verseModal"
-                    onClick={(e) => onClickVerseColor(verse)}
-                  >
-                    🎨
-                  </button>
-                </div>
-              ))}
-            </>
-          )}
-          <VerseModal
-            colorsList={state.colorsList}
-            currentVerse={state.currentVerse}
-            setVerseColor={setVerseColor}
-            setCurrentVerse={setCurrentVerse}
-            verseColor={
-              state.currentVerse
-                ? state.coloredVerses[state.currentVerse.key]
-                  ? state.coloredVerses[state.currentVerse.key]
-                  : null
-                : null
-            }
-          />
-        </div>
-      </div>
+      <VersesSide
+        selectedColors={state.selectedColors}
+        coloredVerses={state.coloredVerses}
+        currentChapter={state.currentChapter}
+        colorsList={state.colorsList}
+        currentVerse={state.currentVerse}
+        dispatchClAction={dispatchClAction}
+      />
     </div>
   );
 }
