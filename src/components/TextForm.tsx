@@ -13,6 +13,7 @@ interface TextFormProps {
   isEditable: boolean;
   handleEditClick: (key: string) => void;
   handleInputSubmit: (key: string, value: string) => void;
+  className?: string;
 }
 
 const TextForm = ({
@@ -24,6 +25,7 @@ const TextForm = ({
   isEditable,
   handleEditClick,
   handleInputSubmit,
+  className,
 }: TextFormProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +51,7 @@ const TextForm = ({
 
   return (
     <div
-      className="collapse"
+      className={className ? className.concat(" collapse") : "collapse"}
       id={"collapseExample" + inputKey}
       ref={collapseRef}
     >
