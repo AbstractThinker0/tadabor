@@ -1,4 +1,4 @@
-import React, { useReducer, Reducer } from "react";
+import { useReducer, useContext, createContext } from "react";
 
 import { findArabicWord, normalizeArabic, onlySpaces } from "../util/util";
 
@@ -6,46 +6,13 @@ import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
 import { chapterProps, quranProps, rootProps, verseProps } from "../types";
 
-export interface searchIndexProps {
-  name: string;
-  key: string;
-  text: string;
-  wordIndex: string;
-}
-
-export enum QB_ACTIONS {
-  SET_CHAPTERS = "dispatchSetChapters",
-  SET_SEARCH_STRING = "dispatchSetSearchString",
-  SET_SEARCHING_STRING = "dispatchSetSearchingString",
-  SET_SEARCHING_CHAPTERS = "dispatchSetSearchingChapters",
-  SET_SEARCH_RESULT = "dispatchSetSearchResult",
-  SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
-  SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
-  SET_SEARCH_ERROR = "dispatchSetSearchError",
-  SET_SELECTED_ROOT_ERROR = "dispatchSetSelectedRootError",
-  SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
-  SET_RADIO_SEARCHING = "dispatchSetRadioSearchingMethod",
-  SET_SEARCH_SCOPE = "dispatchSetSearchScope",
-  SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
-  SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
-  GOTO_CHAPTER = "dispatchGotoChapter",
-}
-
-export enum SEARCH_SCOPE {
-  ALL_CHAPTERS = "searchAllChapters",
-  MULTIPLE_CHAPTERS = "searchMultipleChapters",
-  SINGLE_CHAPTER = "searchSingleChapter",
-}
-
-export enum SEARCH_METHOD {
-  WORD = "optionWordSearch",
-  ROOT = "optionRootSearch",
-}
-
-interface reducerAction {
-  type: QB_ACTIONS;
-  payload: any;
-}
+import {
+  QB_ACTIONS,
+  SEARCH_METHOD,
+  SEARCH_SCOPE,
+  qbActionsProps,
+  searchIndexProps,
+} from "../components/QuranBrowser/consts";
 
 interface stateProps {
   selectChapter: number;
@@ -58,14 +25,14 @@ interface stateProps {
   searchIdentical: boolean;
   searchError: boolean;
   selectedRootError: boolean;
-  radioSearchMethod: string;
-  radioSearchingMethod: string;
+  radioSearchMethod: SEARCH_METHOD;
+  radioSearchingMethod: SEARCH_METHOD;
   searchIndexes: searchIndexProps[];
   searchScope: SEARCH_SCOPE;
   searchingScope: SEARCH_SCOPE;
 }
 
-function reducer(state: stateProps, action: reducerAction): stateProps {
+function reducer(state: stateProps, action: qbActionsProps): stateProps {
   // ...
   switch (action.type) {
     case QB_ACTIONS.SET_CHAPTERS: {
@@ -74,32 +41,14 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case QB_ACTIONS.SET_SEARCH_STRING: {
       return { ...state, searchString: action.payload };
     }
-    case QB_ACTIONS.SET_SEARCHING_STRING: {
-      return { ...state, searchingString: action.payload };
-    }
-    case QB_ACTIONS.SET_SEARCHING_CHAPTERS: {
-      return { ...state, searchingChapters: action.payload };
-    }
-    case QB_ACTIONS.SET_SEARCH_RESULT: {
-      return { ...state, searchResult: action.payload };
-    }
     case QB_ACTIONS.SET_SEARCH_DIACRITICS: {
       return { ...state, searchDiacritics: action.payload };
     }
     case QB_ACTIONS.SET_SEARCH_IDENTICAL: {
       return { ...state, searchIdentical: action.payload };
     }
-    case QB_ACTIONS.SET_SEARCH_ERROR: {
-      return { ...state, searchError: action.payload };
-    }
-    case QB_ACTIONS.SET_SELECTED_ROOT_ERROR: {
-      return { ...state, selectedRootError: action.payload };
-    }
     case QB_ACTIONS.SET_RADIO_SEARCH: {
       return { ...state, radioSearchMethod: action.payload };
-    }
-    case QB_ACTIONS.SET_RADIO_SEARCHING: {
-      return { ...state, radioSearchingMethod: action.payload };
     }
     case QB_ACTIONS.SET_SEARCH_SCOPE: {
       return { ...state, searchScope: action.payload };
@@ -413,10 +362,10 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
 }
 
 type QuranBrowserContent = {
-  dispatchAction(type: QB_ACTIONS, payload: any): void;
+  dispatchAction(value: qbActionsProps): void;
 };
 
-const QuranBrowserContext = React.createContext<QuranBrowserContent>({
+const QuranBrowserContext = createContext<QuranBrowserContent>({
   dispatchAction: () => {},
 });
 
@@ -439,13 +388,7 @@ function QuranBrowser() {
     searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
   };
 
-  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-    reducer,
-    initialState
-  );
-
-  const dispatchAction = (type: QB_ACTIONS, payload: any) =>
-    dispatch({ type, payload });
+  const [state, dispatchAction] = useReducer(reducer, initialState);
 
   return (
     <QuranBrowserContext.Provider value={{ dispatchAction: dispatchAction }}>
@@ -476,6 +419,6 @@ function QuranBrowser() {
   );
 }
 
-export const useQuranBrowser = () => React.useContext(QuranBrowserContext);
+export const useQuranBrowser = () => useContext(QuranBrowserContext);
 
 export default QuranBrowser;

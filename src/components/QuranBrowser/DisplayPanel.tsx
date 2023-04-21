@@ -25,14 +25,14 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "../../context/QuranContext";
 
-import {
-  QB_ACTIONS,
-  searchIndexProps,
-  SEARCH_SCOPE,
-  useQuranBrowser,
-  SEARCH_METHOD,
-} from "../../pages/QuranBrowser";
+import { useQuranBrowser } from "../../pages/QuranBrowser";
 import { verseProps } from "../../types";
+import {
+  SEARCH_METHOD,
+  SEARCH_SCOPE,
+  qbActions,
+  searchIndexProps,
+} from "./consts";
 
 enum DP_ACTIONS {
   SET_LOADING_STATE = "dispatchSetLoadingState",
@@ -567,7 +567,7 @@ const VerseContentComponent = memo(
       searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS;
 
     function gotoChapter(chapter: string) {
-      dispatchAction(QB_ACTIONS.GOTO_CHAPTER, chapter);
+      dispatchAction(qbActions.gotoChapter(chapter));
     }
 
     const handleVerseClick = (verse_key: string) => {

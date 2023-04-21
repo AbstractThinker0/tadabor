@@ -1,16 +1,12 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran from "../../context/QuranContext";
-import {
-  QB_ACTIONS,
-  SEARCH_SCOPE,
-  SEARCH_METHOD,
-  useQuranBrowser,
-} from "../../pages/QuranBrowser";
+import { useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
 import { verseProps } from "../../types";
+import { SEARCH_METHOD, SEARCH_SCOPE, qbActions } from "./consts";
 
 interface SearchPanelProps {
   radioSearchMethod: string;
@@ -41,37 +37,42 @@ const SearchPanel = memo(
 
     function setSearchAllQuran(status: boolean) {
       dispatchAction(
-        QB_ACTIONS.SET_SEARCH_SCOPE,
-        status === true
-          ? SEARCH_SCOPE.ALL_CHAPTERS
-          : SEARCH_SCOPE.MULTIPLE_CHAPTERS
+        qbActions.setSearchScope(
+          status === true
+            ? SEARCH_SCOPE.ALL_CHAPTERS
+            : SEARCH_SCOPE.MULTIPLE_CHAPTERS
+        )
       );
     }
 
     function setSearchDiacritics(status: boolean) {
-      dispatchAction(QB_ACTIONS.SET_SEARCH_DIACRITICS, status);
+      dispatchAction(qbActions.setSearchDiacritics(status));
     }
 
     function setSearchIdentical(status: boolean) {
-      dispatchAction(QB_ACTIONS.SET_SEARCH_IDENTICAL, status);
+      dispatchAction(qbActions.setSearchIdentical(status));
     }
 
-    function setRadioSearchMethod(method: string) {
-      dispatchAction(QB_ACTIONS.SET_RADIO_SEARCH, method);
+    function setRadioSearchMethod(method: SEARCH_METHOD) {
+      dispatchAction(qbActions.setRadioSearch(method));
     }
 
     function onSearchSubmit() {
       if (isRootSearch) {
-        dispatchAction(QB_ACTIONS.SEARCH_ROOT_SUBMIT, {
-          absoluteQuran,
-          chapterNames,
-          quranRoots,
-        });
+        dispatchAction(
+          qbActions.submitRootSearch({
+            absoluteQuran,
+            chapterNames,
+            quranRoots,
+          })
+        );
       } else {
-        dispatchAction(QB_ACTIONS.SEARCH_WORD_SUBMIT, {
-          allQuranText,
-          chapterNames,
-        });
+        dispatchAction(
+          qbActions.submitWordSearch({
+            allQuranText,
+            chapterNames,
+          })
+        );
       }
     }
 
@@ -82,9 +83,9 @@ const SearchPanel = memo(
       if (!selectedChapter) return;
 
       if (selectedOptions.length === 1) {
-        dispatchAction(QB_ACTIONS.GOTO_CHAPTER, selectedChapter);
+        dispatchAction(qbActions.gotoChapter(selectedChapter));
       } else {
-        dispatchAction(QB_ACTIONS.SET_CHAPTERS, selectedOptions);
+        dispatchAction(qbActions.setChapters(selectedOptions));
       }
     }
 
@@ -133,7 +134,7 @@ SearchPanel.displayName = "SearchPanel";
 
 interface RadioSearchMethodProps {
   radioSearchMethod: string;
-  setRadioSearchMethod: (method: string) => void;
+  setRadioSearchMethod: (method: SEARCH_METHOD) => void;
 }
 
 const RadioSearchMethod = ({
@@ -142,7 +143,7 @@ const RadioSearchMethod = ({
 }: RadioSearchMethodProps) => {
   const { t, i18n } = useTranslation();
   const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioSearchMethod(event.target.value);
+    setRadioSearchMethod(event.target.value as SEARCH_METHOD);
   };
   return (
     <div>
@@ -200,7 +201,7 @@ const FormWordSearch = ({
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(QB_ACTIONS.SET_SEARCH_STRING, event.target.value);
+    dispatchAction(qbActions.setSearchString(event.target.value));
   };
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
