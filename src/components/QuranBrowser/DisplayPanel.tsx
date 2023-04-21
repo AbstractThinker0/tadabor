@@ -163,130 +163,132 @@ const DisplayPanelContext = createContext<DisplayPanelContent>({
 
 const useDisplayPanel = () => useContext(DisplayPanelContext);
 
-const DisplayPanel = ({
-  searchingChapters,
-  searchResult,
-  searchError,
-  selectedRootError,
-  searchingString,
-  selectChapter,
-  radioSearchingMethod,
-  searchIndexes,
-  searchingScope,
-}: DisplayPanelProps) => {
-  // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
-  const refListVerses = useRef<HTMLDivElement>(null);
+const DisplayPanel = memo(
+  ({
+    searchingChapters,
+    searchResult,
+    searchError,
+    selectedRootError,
+    searchingString,
+    selectChapter,
+    radioSearchingMethod,
+    searchIndexes,
+    searchingScope,
+  }: DisplayPanelProps) => {
+    // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
+    const refListVerses = useRef<HTMLDivElement>(null);
 
-  const initialState: stateProps = {
-    loadingState: true,
-    myNotes: {},
-    editableNotes: {},
-    areaDirection: {},
-    scrollKey: null,
-  };
-
-  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-    reducer,
-    initialState
-  );
-
-  const dispatchDpAction = useCallback(
-    (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
-    []
-  );
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      let userNotes: INote[] = await loadData("notes");
-
-      if (clientLeft) return;
-
-      let markedNotes: markedNotesType = {};
-      let extractNotes: notesType = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-        markedNotes[note.id] = false;
-      });
-
-      let userNotesDir: INoteDir[] = await loadData("notes_dir");
-
-      if (clientLeft) return;
-
-      let extractNotesDir: notesType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
-
-      dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
-        extractNotes,
-        markedNotes,
-        extractNotesDir,
-      });
-    }
-
-    return () => {
-      clientLeft = true;
+    const initialState: stateProps = {
+      loadingState: true,
+      myNotes: {},
+      editableNotes: {},
+      areaDirection: {},
+      scrollKey: null,
     };
-  }, [dispatchDpAction]);
 
-  const scrollRef = useRef(state.scrollKey);
-
-  useEffect(() => {
-    scrollRef.current = state.scrollKey;
-  }, [state.scrollKey]);
-
-  useEffect(() => {
-    if (refListVerses.current && scrollRef.current === null)
-      refListVerses.current.scrollTop = 0;
-  }, [selectChapter, searchResult]);
-
-  if (state.loadingState)
-    return (
-      <div className="col h-75">
-        <div className="h-100">
-          <LoadingSpinner />
-        </div>
-      </div>
+    const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
+      reducer,
+      initialState
     );
 
-  return (
-    <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
-      <div className="browser-display" ref={refListVerses}>
-        <div className="card browser-display-card" dir="rtl">
-          {searchResult.length || searchError || selectedRootError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              selectChapter={selectChapter}
-              searchToken={searchingString.trim()}
-              searchingScope={searchingScope}
-              searchError={searchError}
-              selectedRootError={selectedRootError}
-              radioSearchMethod={radioSearchingMethod}
-              searchingChapters={searchingChapters}
-              searchIndexes={searchIndexes}
-              editableNotes={state.editableNotes}
-              myNotes={state.myNotes}
-              areaDirection={state.areaDirection}
-            />
-          ) : (
-            <ListVerses
-              selectChapter={selectChapter}
-              scrollKey={state.scrollKey}
-              myNotes={state.myNotes}
-              editableNotes={state.editableNotes}
-              areaDirection={state.areaDirection}
-            />
-          )}
+    const dispatchDpAction = useCallback(
+      (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
+      []
+    );
+
+    useEffect(() => {
+      let clientLeft = false;
+
+      fetchData();
+
+      async function fetchData() {
+        let userNotes: INote[] = await loadData("notes");
+
+        if (clientLeft) return;
+
+        let markedNotes: markedNotesType = {};
+        let extractNotes: notesType = {};
+        userNotes.forEach((note) => {
+          extractNotes[note.id] = note.text;
+          markedNotes[note.id] = false;
+        });
+
+        let userNotesDir: INoteDir[] = await loadData("notes_dir");
+
+        if (clientLeft) return;
+
+        let extractNotesDir: notesType = {};
+
+        userNotesDir.forEach((note) => {
+          extractNotesDir[note.id] = note.dir;
+        });
+
+        dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
+          extractNotes,
+          markedNotes,
+          extractNotesDir,
+        });
+      }
+
+      return () => {
+        clientLeft = true;
+      };
+    }, [dispatchDpAction]);
+
+    const scrollRef = useRef(state.scrollKey);
+
+    useEffect(() => {
+      scrollRef.current = state.scrollKey;
+    }, [state.scrollKey]);
+
+    useEffect(() => {
+      if (refListVerses.current && scrollRef.current === null)
+        refListVerses.current.scrollTop = 0;
+    }, [selectChapter, searchResult]);
+
+    if (state.loadingState)
+      return (
+        <div className="col h-75">
+          <div className="h-100">
+            <LoadingSpinner />
+          </div>
         </div>
-      </div>
-    </DisplayPanelContext.Provider>
-  );
-};
+      );
+
+    return (
+      <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
+        <div className="browser-display" ref={refListVerses}>
+          <div className="card browser-display-card" dir="rtl">
+            {searchResult.length || searchError || selectedRootError ? (
+              <ListSearchResults
+                versesArray={searchResult}
+                selectChapter={selectChapter}
+                searchToken={searchingString.trim()}
+                searchingScope={searchingScope}
+                searchError={searchError}
+                selectedRootError={selectedRootError}
+                radioSearchMethod={radioSearchingMethod}
+                searchingChapters={searchingChapters}
+                searchIndexes={searchIndexes}
+                editableNotes={state.editableNotes}
+                myNotes={state.myNotes}
+                areaDirection={state.areaDirection}
+              />
+            ) : (
+              <ListVerses
+                selectChapter={selectChapter}
+                scrollKey={state.scrollKey}
+                myNotes={state.myNotes}
+                editableNotes={state.editableNotes}
+                areaDirection={state.areaDirection}
+              />
+            )}
+          </div>
+        </div>
+      </DisplayPanelContext.Provider>
+    );
+  }
+);
 
 DisplayPanel.displayName = "DisplayPanel";
 
@@ -647,7 +649,7 @@ const Highlighted = ({
           </Fragment>
         ) : (
           // TODO: Concat all adjacent text and output it at once to avoid multiple text nodes.
-          <>{part} </>
+          <Fragment key={i}>{part} </Fragment>
         );
       })}
     </span>
