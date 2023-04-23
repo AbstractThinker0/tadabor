@@ -13,7 +13,7 @@ import {
 } from "react";
 
 import { toast } from "react-toastify";
-import { INote, INoteDir, loadData, saveData } from "../../util/db";
+import { INote, INoteDir, dbFuncs } from "../../util/db";
 
 import LoadingSpinner from "../LoadingSpinner";
 import { IconCircleArrowDownFilled } from "@tabler/icons-react";
@@ -202,7 +202,7 @@ const DisplayPanel = memo(
       fetchData();
 
       async function fetchData() {
-        let userNotes: INote[] = await loadData("notes");
+        let userNotes: INote[] = await dbFuncs.loadNotes();
 
         if (clientLeft) return;
 
@@ -213,7 +213,7 @@ const DisplayPanel = memo(
           markedNotes[note.id] = false;
         });
 
-        let userNotesDir: INoteDir[] = await loadData("notes_dir");
+        let userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
 
         if (clientLeft) return;
 
@@ -859,12 +859,13 @@ const InputTextForm = memo(
 
     const handleInputSubmit = useCallback(
       (key: string, value: string) => {
-        saveData("notes", {
-          id: key,
-          text: value,
-          date_created: Date.now(),
-          date_modified: Date.now(),
-        })
+        dbFuncs
+          .saveNote({
+            id: key,
+            text: value,
+            date_created: Date.now(),
+            date_modified: Date.now(),
+          })
           .then(function () {
             toast.success(t("save_success") as string);
           })
@@ -884,7 +885,7 @@ const InputTextForm = memo(
           value: dir,
         });
 
-        saveData("notes_dir", { id: verse_key, dir: dir });
+        dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
       },
       [dispatchDpAction]
     );

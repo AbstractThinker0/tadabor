@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
 import useQuran from "../context/QuranContext";
 
-import { loadData, saveData } from "../util/db";
+import { dbFuncs } from "../util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -111,7 +111,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     fetchData();
 
     async function fetchData() {
-      let userTranslations = await loadData("translations");
+      let userTranslations = await dbFuncs.loadTranslations();
 
       if (clientLeft) return;
 
@@ -156,12 +156,13 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
       return { ...state, [inputKey]: false };
     });
 
-    saveData("translations", {
-      id: inputKey,
-      text: inputValue,
-      date_created: Date.now(),
-      date_modified: Date.now(),
-    })
+    dbFuncs
+      .saveTranslation({
+        id: inputKey,
+        text: inputValue,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
       .then(function () {
         toast.success(t("save_success") as string);
       })

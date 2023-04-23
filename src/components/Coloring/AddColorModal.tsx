@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { colorProps } from "./consts";
-import { dbSaveColor } from "../../util/db";
+import { dbFuncs } from "../../util/db";
 
 interface ColorModalProps {
   addColor: (color: colorProps) => void;
@@ -35,7 +35,7 @@ const AddColorModal = ({ addColor }: ColorModalProps) => {
 
     addColor(newColor);
 
-    dbSaveColor({
+    dbFuncs.saveColor({
       id: newColor.colorID,
       name: newColor.colorDisplay,
       code: newColor.colorCode,

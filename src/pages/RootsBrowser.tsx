@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { loadData, saveData } from "../util/db";
+import { dbFuncs } from "../util/db";
 
 import { toast } from "react-toastify";
 
@@ -157,7 +157,7 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await loadData("root_notes");
+      let userNotes = await dbFuncs.loadRootNotes();
 
       if (clientLeft) return;
 
@@ -169,7 +169,7 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
         markedNotes[note.id] = false;
       });
 
-      let userNotesDir = await loadData("root_notes_dir");
+      let userNotesDir = await dbFuncs.loadRootNotesDir();
 
       if (clientLeft) return;
 
@@ -204,12 +204,13 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
       return { ...state, [key]: false };
     });
 
-    saveData("root_notes", {
-      id: key,
-      text: value,
-      date_created: Date.now(),
-      date_modified: Date.now(),
-    })
+    dbFuncs
+      .saveRootNote({
+        id: key,
+        text: value,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
       .then(function () {
         toast.success(t("save_success") as string);
       })
@@ -232,7 +233,7 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
     setAreaDirection((state) => {
       return { ...state, [root_id]: dir };
     });
-    saveData("root_notes_dir", { id: root_id, dir: dir });
+    dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);

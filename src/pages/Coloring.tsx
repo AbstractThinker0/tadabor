@@ -15,15 +15,7 @@ import EditColorsModal from "../components/Coloring/EditColorsModal";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 
-import {
-  IColor,
-  IVerseColor,
-  dbDeleteColor,
-  dbDeleteVerseColor,
-  dbLoadColors,
-  dbLoadVersesColor,
-  dbSaveColor,
-} from "../util/db";
+import { IColor, IVerseColor, dbFuncs } from "../util/db";
 import VersesSide from "../components/Coloring/VersesSide";
 
 interface stateProps {
@@ -145,7 +137,7 @@ function Coloring() {
     async function fetchData() {
       let savedColors: IColor[];
 
-      savedColors = await dbLoadColors();
+      savedColors = await dbFuncs.loadColors();
 
       let initialColors: coloredProps = {};
 
@@ -161,7 +153,7 @@ function Coloring() {
 
       let savedVersesColor: IVerseColor[];
 
-      savedVersesColor = await dbLoadVersesColor();
+      savedVersesColor = await dbFuncs.loadVersesColor();
 
       let initialColoredVerses: coloredProps = {};
 
@@ -188,7 +180,7 @@ function Coloring() {
       dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
 
       Object.keys(initialColors).forEach((colorID) => {
-        dbSaveColor({
+        dbFuncs.saveColor({
           id: initialColors[colorID].colorID,
           name: initialColors[colorID].colorDisplay,
           code: initialColors[colorID].colorCode,
@@ -267,11 +259,11 @@ function Coloring() {
 
   function deleteColor(colorID: string) {
     dispatchClAction(CL_ACTIONS.DELETE_COLOR, colorID);
-    dbDeleteColor(colorID);
+    dbFuncs.deleteColor(colorID);
 
     for (const verseKey in state.coloredVerses) {
       if (state.coloredVerses[verseKey].colorID === colorID) {
-        dbDeleteVerseColor(verseKey);
+        dbFuncs.deleteVerseColor(verseKey);
       }
     }
   }
@@ -284,7 +276,7 @@ function Coloring() {
     dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, colorsList);
 
     Object.keys(colorsList).forEach((colorID) => {
-      dbSaveColor({
+      dbFuncs.saveColor({
         id: colorsList[colorID].colorID,
         name: colorsList[colorID].colorDisplay,
         code: colorsList[colorID].colorCode,

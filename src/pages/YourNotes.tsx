@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-import { saveData, loadData } from "../util/db";
+import { dbFuncs } from "../util/db";
 
 import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
@@ -34,7 +34,7 @@ function YourNotes() {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await loadData("notes");
+      let userNotes = await dbFuncs.loadNotes();
 
       if (clientLeft) return;
 
@@ -43,7 +43,7 @@ function YourNotes() {
         extractNotes[note.id] = note.text;
       });
 
-      let userNotesDir = await loadData("notes_dir");
+      let userNotesDir = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
 
@@ -87,12 +87,13 @@ function YourNotes() {
       return { ...state, [noteKey]: false };
     });
 
-    saveData("notes", {
-      id: noteKey,
-      text: value,
-      date_created: Date.now(),
-      date_modified: Date.now(),
-    })
+    dbFuncs
+      .saveNote({
+        id: noteKey,
+        text: value,
+        date_created: Date.now(),
+        date_modified: Date.now(),
+      })
       .then(function () {
         toast.success(t("save_success") as string);
       })
@@ -111,7 +112,7 @@ function YourNotes() {
     setAreaDirection((state) => {
       return { ...state, [verse_key]: dir };
     });
-    saveData("notes_dir", { id: verse_key, dir: dir });
+    dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
   }
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);

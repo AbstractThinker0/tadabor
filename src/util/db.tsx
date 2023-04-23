@@ -1,4 +1,3 @@
-// db.js
 import Dexie from "dexie";
 
 export interface INote {
@@ -11,6 +10,25 @@ export interface INote {
 export interface INoteDir {
   id: string;
   dir: string;
+}
+
+export interface IRootNote {
+  id: string;
+  text: string;
+  date_created: number;
+  date_modified: number;
+}
+
+export interface IRootNoteDir {
+  id: string;
+  dir: string;
+}
+
+export interface ITranslation {
+  id: string;
+  text: string;
+  date_created: number;
+  date_modified: number;
 }
 
 export interface IColor {
@@ -27,9 +45,9 @@ export interface IVerseColor {
 class tadaborDatabase extends Dexie {
   notes!: Dexie.Table<INote, string>;
   notes_dir!: Dexie.Table<INoteDir, string>;
-  root_notes!: Dexie.Table<INote, string>;
-  root_notes_dir!: Dexie.Table<INoteDir, string>;
-  translations!: Dexie.Table<INote, string>;
+  root_notes!: Dexie.Table<IRootNote, string>;
+  root_notes_dir!: Dexie.Table<IRootNoteDir, string>;
+  translations!: Dexie.Table<ITranslation, string>;
   colors!: Dexie.Table<IColor, string>;
   verses_color!: Dexie.Table<IVerseColor, string>;
 
@@ -40,7 +58,7 @@ class tadaborDatabase extends Dexie {
     // Define tables and indexes
     // (Here's where the implicit table props are dynamically created)
     //
-    this.version(7).stores({
+    this.version(8).stores({
       notes: "id, text, date_created, date_modified",
       notes_dir: "id, dir",
       root_notes: "id, text, date_created, date_modified",
@@ -54,34 +72,53 @@ class tadaborDatabase extends Dexie {
 
 const db = new tadaborDatabase();
 
-export function saveData(store: string, data: INote | INoteDir) {
-  return db.table(store).put(data);
-}
-
-export function loadData(store: string) {
-  return db.table(store).toArray();
-}
-
-export function dbSaveColor(data: IColor) {
-  return db.colors.put(data);
-}
-
-export function dbLoadColors() {
-  return db.colors.toArray();
-}
-
-export function dbDeleteColor(id: string) {
-  return db.colors.delete(id);
-}
-
-export function dbSaveVerseColor(data: IVerseColor) {
-  return db.verses_color.put(data);
-}
-
-export function dbDeleteVerseColor(verse_key: string) {
-  return db.verses_color.delete(verse_key);
-}
-
-export function dbLoadVersesColor() {
-  return db.verses_color.toArray();
-}
+export const dbFuncs = {
+  saveNote: (data: INote) => {
+    return db.notes.put(data);
+  },
+  loadNotes: () => {
+    return db.notes.toArray();
+  },
+  saveNoteDir: (data: INoteDir) => {
+    return db.notes_dir.put(data);
+  },
+  loadNotesDir: () => {
+    return db.notes_dir.toArray();
+  },
+  saveRootNote: (data: IRootNote) => {
+    return db.root_notes.put(data);
+  },
+  loadRootNotes: () => {
+    return db.root_notes.toArray();
+  },
+  saveRootNoteDir: (data: IRootNoteDir) => {
+    return db.root_notes_dir.put(data);
+  },
+  loadRootNotesDir: () => {
+    return db.root_notes_dir.toArray();
+  },
+  loadTranslations: () => {
+    return db.translations.toArray();
+  },
+  saveTranslation: (data: ITranslation) => {
+    return db.translations.put(data);
+  },
+  saveColor: (data: IColor) => {
+    return db.colors.put(data);
+  },
+  loadColors: () => {
+    return db.colors.toArray();
+  },
+  deleteColor: (id: string) => {
+    return db.colors.delete(id);
+  },
+  saveVerseColor: (data: IVerseColor) => {
+    return db.verses_color.put(data);
+  },
+  deleteVerseColor: (verse_key: string) => {
+    return db.verses_color.delete(verse_key);
+  },
+  loadVersesColor: () => {
+    return db.verses_color.toArray();
+  },
+};

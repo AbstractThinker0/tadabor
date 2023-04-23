@@ -3,14 +3,7 @@ import { useReducer, Reducer, useCallback, useEffect, memo } from "react";
 import useQuran from "../../context/QuranContext";
 import { toast } from "react-toastify";
 import { verseProps } from "../../types";
-import {
-  dbDeleteVerseColor,
-  dbSaveVerseColor,
-  INote,
-  INoteDir,
-  loadData,
-  saveData,
-} from "../../util/db";
+import { dbFuncs, INote, INoteDir } from "../../util/db";
 import VerseModal from "./VerseModal";
 import { CL_ACTIONS, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
@@ -162,7 +155,7 @@ function VersesSide({
     fetchData();
 
     async function fetchData() {
-      let userNotes: INote[] = await loadData("notes");
+      let userNotes: INote[] = await dbFuncs.loadNotes();
 
       if (clientLeft) return;
 
@@ -173,7 +166,7 @@ function VersesSide({
         markedNotes[note.id] = false;
       });
 
-      let userNotesDir: INoteDir[] = await loadData("notes_dir");
+      let userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
 
@@ -212,9 +205,9 @@ function VersesSide({
 
   function setVerseColor(verseKey: string, color: colorProps | null) {
     if (color === null) {
-      dbDeleteVerseColor(verseKey);
+      dbFuncs.deleteVerseColor(verseKey);
     } else {
-      dbSaveVerseColor({
+      dbFuncs.saveVerseColor({
         verse_key: verseKey,
         color_id: color.colorID,
       });
@@ -476,12 +469,13 @@ const InputTextForm = memo(
 
     const handleInputSubmit = useCallback(
       (key: string, value: string) => {
-        saveData("notes", {
-          id: key,
-          text: value,
-          date_created: Date.now(),
-          date_modified: Date.now(),
-        })
+        dbFuncs
+          .saveNote({
+            id: key,
+            text: value,
+            date_created: Date.now(),
+            date_modified: Date.now(),
+          })
           .then(function () {
             toast.success(t("save_success") as string);
           })
@@ -501,7 +495,7 @@ const InputTextForm = memo(
           value: dir,
         });
 
-        saveData("notes_dir", { id: verse_key, dir: dir });
+        dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
       },
       [dispatchVsAction]
     );
