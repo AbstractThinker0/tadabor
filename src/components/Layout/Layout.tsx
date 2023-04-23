@@ -6,6 +6,8 @@ import "../../styles/main.scss";
 import { ReactNode, useEffect, useRef } from "react";
 import Navbar from "./Navbar";
 
+const localStorageBetaKey = "betaNotified";
+
 interface Props {
   children?: ReactNode;
 }
@@ -24,7 +26,7 @@ function Layout({ children }: Props) {
   return (
     <main ref={mainRef}>
       <Navbar />
-      <AlertMessage />
+      {localStorage.getItem(localStorageBetaKey) ?? <AlertMessage />}
       <QuranProvider>{children}</QuranProvider>
       <ToastContainer
         position={`${isRtl ? "top-left" : "top-right"}`}
@@ -37,6 +39,10 @@ function Layout({ children }: Props) {
 const AlertMessage = () => {
   const { t } = useTranslation();
 
+  function onClickClose() {
+    localStorage.setItem(localStorageBetaKey, "true");
+  }
+
   return (
     <div
       className="alert alert-warning alert-dismissible fade show d-flex justify-content-center m-0"
@@ -48,6 +54,7 @@ const AlertMessage = () => {
         className="btn-close"
         data-bs-dismiss="alert"
         aria-label="Close"
+        onClick={onClickClose}
       ></button>
     </div>
   );
