@@ -175,7 +175,7 @@ const DisplayPanel = memo(
       return () => {
         clientLeft = true;
       };
-    }, [dispatchDpAction]);
+    }, []);
 
     const scrollRef = useRef(state.scrollKey);
 
