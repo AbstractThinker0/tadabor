@@ -3,8 +3,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../../context/QuranContext";
 import "../../styles/main.scss";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import Navbar from "./Navbar";
+import AlertMessage from "./AlertMessage";
 
 interface Props {
   children?: ReactNode;
@@ -33,37 +34,5 @@ function Layout({ children }: Props) {
     </main>
   );
 }
-
-const AlertMessage = () => {
-  const localStorageBetaKey = "betaNotified";
-
-  const [betaNotified, setBetaNotified] = useState(
-    localStorage.getItem(localStorageBetaKey) !== null
-  );
-  const { t } = useTranslation();
-
-  function onClickClose() {
-    localStorage.setItem(localStorageBetaKey, "true");
-    setBetaNotified(true);
-  }
-
-  if (betaNotified) return <></>;
-
-  return (
-    <div
-      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center m-0"
-      role="alert"
-    >
-      {t("alert_message")}
-      <button
-        type="button"
-        className="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-        onClick={onClickClose}
-      ></button>
-    </div>
-  );
-};
 
 export default Layout;
