@@ -79,3 +79,47 @@ export const qbActions = {
 };
 
 export type qbActionsProps = ActionsUnion<typeof qbActions>;
+
+export interface notesType {
+  [key: string]: string;
+}
+
+export interface markedNotesType {
+  [key: string]: boolean;
+}
+
+export enum DP_ACTIONS {
+  CHANGE_NOTE = "dispatchChangeNote",
+  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
+  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
+  DATA_LOADED = "dispatchDataLoaded",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
+}
+
+export const dpActions = {
+  setNote: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE,
+    { name: string; value: string }
+  >(DP_ACTIONS.CHANGE_NOTE),
+  setNoteEditable: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE_EDITABLE,
+    { name: string; value: boolean }
+  >(DP_ACTIONS.CHANGE_NOTE_EDITABLE),
+  setNoteDir: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE_DIRECTION,
+    { name: string; value: string }
+  >(DP_ACTIONS.CHANGE_NOTE_DIRECTION),
+  dataLoaded: createActionPayload<
+    DP_ACTIONS.DATA_LOADED,
+    {
+      extractNotes: notesType;
+      markedNotes: markedNotesType;
+      extractNotesDir: notesType;
+    }
+  >(DP_ACTIONS.DATA_LOADED),
+  setScrollKey: createActionPayload<DP_ACTIONS.SET_SCROLL_KEY, string | null>(
+    DP_ACTIONS.SET_SCROLL_KEY
+  ),
+};
+
+export type dpActionsProps = ActionsUnion<typeof dpActions>;

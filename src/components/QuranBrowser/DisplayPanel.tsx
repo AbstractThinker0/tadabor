@@ -1,6 +1,5 @@
 import {
   useReducer,
-  Reducer,
   useEffect,
   useRef,
   useCallback,
@@ -28,40 +27,19 @@ import useQuran from "../../context/QuranContext";
 import { useQuranBrowser } from "../../pages/QuranBrowser";
 import { verseProps } from "../../types";
 import {
+  DP_ACTIONS,
   SEARCH_METHOD,
   SEARCH_SCOPE,
+  dpActions,
+  dpActionsProps,
+  markedNotesType,
+  notesType,
   qbActions,
   searchIndexProps,
 } from "./consts";
 
-enum DP_ACTIONS {
-  SET_LOADING_STATE = "dispatchSetLoadingState",
-  SET_USER_NOTES = "dspatchSetUserNotes",
-  CHANGE_NOTE = "dispatchChangeNote",
-  SET_EDITABLE_NOTES = "dispatchSetEditableNotes",
-  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
-  SET_AREA_DIRECTION = "dispatchSetAreaDirection",
-  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
-  SUBMIT_NOTE = "dispatchSubmitNote",
-  DATA_LOADED = "dispatchDataLoaded",
-  SET_SCROLL_KEY = "dispatchSetScrollKey",
-}
-
-interface reducerAction {
-  type: DP_ACTIONS;
-  payload: any;
-}
-
 interface refVersesResultType {
   [key: string]: HTMLDivElement;
-}
-
-interface notesType {
-  [key: string]: string;
-}
-
-interface markedNotesType {
-  [key: string]: boolean;
 }
 
 interface stateProps {
@@ -72,15 +50,9 @@ interface stateProps {
   scrollKey: null | string;
 }
 
-function reducer(state: stateProps, action: reducerAction): stateProps {
+function reducer(state: stateProps, action: dpActionsProps): stateProps {
   // ...
   switch (action.type) {
-    case DP_ACTIONS.SET_LOADING_STATE: {
-      return { ...state, loadingState: action.payload };
-    }
-    case DP_ACTIONS.SET_USER_NOTES: {
-      return { ...state, myNotes: action.payload };
-    }
     case DP_ACTIONS.CHANGE_NOTE: {
       return {
         ...state,
@@ -89,9 +61,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           [action.payload.name]: action.payload.value,
         },
       };
-    }
-    case DP_ACTIONS.SET_EDITABLE_NOTES: {
-      return { ...state, editableNotes: action.payload };
     }
     case DP_ACTIONS.CHANGE_NOTE_EDITABLE: {
       return {
@@ -102,24 +71,12 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         },
       };
     }
-    case DP_ACTIONS.SET_AREA_DIRECTION: {
-      return { ...state, areaDirection: action.payload };
-    }
     case DP_ACTIONS.CHANGE_NOTE_DIRECTION: {
       return {
         ...state,
         areaDirection: {
           ...state.areaDirection,
           [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case DP_ACTIONS.SUBMIT_NOTE: {
-      return {
-        ...state,
-        editableNotes: {
-          ...state.editableNotes,
-          [action.payload.name]: false,
         },
       };
     }
@@ -134,9 +91,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     }
     case DP_ACTIONS.SET_SCROLL_KEY: {
       return { ...state, scrollKey: action.payload };
-    }
-    default: {
-      throw Error("Unknown action: " + action.type);
     }
   }
 }
@@ -153,13 +107,7 @@ interface DisplayPanelProps {
   searchingScope: SEARCH_SCOPE;
 }
 
-type DisplayPanelContent = {
-  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
-};
-
-const DisplayPanelContext = createContext<DisplayPanelContent>({
-  dispatchDpAction: () => {},
-});
+const DisplayPanelContext = createContext((value: dpActionsProps) => {});
 
 const useDisplayPanel = () => useContext(DisplayPanelContext);
 
@@ -186,15 +134,7 @@ const DisplayPanel = memo(
       scrollKey: null,
     };
 
-    const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-      reducer,
-      initialState
-    );
-
-    const dispatchDpAction = useCallback(
-      (type: DP_ACTIONS, payload: any) => dispatch({ type, payload }),
-      []
-    );
+    const [state, dispatchDpAction] = useReducer(reducer, initialState);
 
     useEffect(() => {
       let clientLeft = false;
@@ -223,11 +163,13 @@ const DisplayPanel = memo(
           extractNotesDir[note.id] = note.dir;
         });
 
-        dispatchDpAction(DP_ACTIONS.DATA_LOADED, {
-          extractNotes,
-          markedNotes,
-          extractNotesDir,
-        });
+        dispatchDpAction(
+          dpActions.dataLoaded({
+            extractNotes,
+            markedNotes,
+            extractNotesDir,
+          })
+        );
       }
 
       return () => {
@@ -256,7 +198,7 @@ const DisplayPanel = memo(
       );
 
     return (
-      <DisplayPanelContext.Provider value={{ dispatchDpAction }}>
+      <DisplayPanelContext.Provider value={dispatchDpAction}>
         <div className="browser-display" ref={refListVerses}>
           <div className="card browser-display-card" dir="rtl">
             {searchResult.length || searchError || selectedRootError ? (
@@ -322,7 +264,6 @@ const ListSearchResults = ({
   searchingScope,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
-  const { dispatchDpAction } = useDisplayPanel();
 
   const refVersesResult = useRef<refVersesResultType>({});
 
@@ -379,7 +320,6 @@ const ListSearchResults = ({
               noteDirection={areaDirection[verse.key] || ""}
               isRootSearch={isRootSearch}
               searchIndexes={searchIndexes}
-              dispatchDpAction={dispatchDpAction}
             />
           </div>
         ))}
@@ -474,7 +414,6 @@ interface SearchVerseComponentProps {
   noteDirection: string;
   isRootSearch: boolean;
   searchIndexes: searchIndexProps[];
-  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
 }
 
 const SearchVerseComponent = memo(
@@ -487,7 +426,6 @@ const SearchVerseComponent = memo(
     noteDirection,
     isRootSearch,
     searchIndexes,
-    dispatchDpAction,
   }: SearchVerseComponentProps) => {
     const [verseSearchIndexes, setVerseSearchIndexes] = useState(
       searchIndexes.filter((value) => value.key === verse.key)
@@ -507,14 +445,12 @@ const SearchVerseComponent = memo(
           verseChapter={verseChapter}
           isRootSearch={isRootSearch}
           searchIndexes={verseSearchIndexes}
-          dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
           verseKey={verse.key}
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
-          dispatchDpAction={dispatchDpAction}
         />
       </>
     );
@@ -549,7 +485,6 @@ interface VerseContentComponentProps {
   verseChapter: string;
   isRootSearch: boolean;
   searchIndexes: searchIndexProps[];
-  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
 }
 
 const VerseContentComponent = memo(
@@ -559,8 +494,8 @@ const VerseContentComponent = memo(
     verseChapter,
     isRootSearch,
     searchIndexes,
-    dispatchDpAction,
   }: VerseContentComponentProps) => {
+    const dispatchDpAction = useDisplayPanel();
     const { dispatchAction } = useQuranBrowser();
 
     let verse_key = verse.key;
@@ -573,7 +508,7 @@ const VerseContentComponent = memo(
     }
 
     const handleVerseClick = (verse_key: string) => {
-      dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, verse_key);
+      dispatchDpAction(dpActions.setScrollKey(verse_key));
       gotoChapter(verse.suraid);
     };
 
@@ -690,7 +625,7 @@ const ListVerses = ({
   areaDirection,
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
-  const { dispatchDpAction } = useDisplayPanel();
+  const dispatchDpAction = useDisplayPanel();
 
   const chapterName = chapterNames[selectChapter - 1].name;
   const versesArray = allQuranText[selectChapter - 1].verses;
@@ -705,7 +640,7 @@ const ListVerses = ({
       verseToHighlight.scrollIntoView({ block: "center" });
       verseToHighlight.classList.add("verse-selected");
       selectedVerse.current = verseToHighlight;
-      dispatchDpAction(DP_ACTIONS.SET_SCROLL_KEY, null);
+      dispatchDpAction(dpActions.setScrollKey(null));
     }
   }, [dispatchDpAction, scrollKey]);
 
@@ -720,7 +655,6 @@ const ListVerses = ({
             value={myNotes[verse.key] || ""}
             isEditable={editableNotes[verse.key]}
             noteDirection={areaDirection[verse.key] || ""}
-            dispatchDpAction={dispatchDpAction}
             selectedVerse={selectedVerse}
             versesRef={versesRef}
           />
@@ -746,7 +680,6 @@ interface VerseComponentProps {
   value: string;
   isEditable: boolean;
   noteDirection: string;
-  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
   selectedVerse: MutableRefObject<Element | null>;
   versesRef: MutableRefObject<versesRefType>;
 }
@@ -757,7 +690,6 @@ const VerseComponent = memo(
     value,
     isEditable,
     noteDirection,
-    dispatchDpAction,
     selectedVerse,
     versesRef,
   }: VerseComponentProps) => {
@@ -774,7 +706,6 @@ const VerseComponent = memo(
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
-          dispatchDpAction={dispatchDpAction}
         />
       </div>
     );
@@ -837,7 +768,6 @@ interface InputTextFormProps {
   verseNote: string;
   noteEditable: boolean;
   noteDirection: string;
-  dispatchDpAction: (type: DP_ACTIONS, payload: any) => void;
 }
 
 const InputTextForm = memo(
@@ -846,13 +776,13 @@ const InputTextForm = memo(
     verseNote,
     noteEditable,
     noteDirection,
-    dispatchDpAction,
   }: InputTextFormProps) => {
+    const dispatchDpAction = useDisplayPanel();
     const { t } = useTranslation();
 
     const handleNoteChange = useCallback(
       (name: string, value: string) => {
-        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE, { name, value });
+        dispatchDpAction(dpActions.setNote({ name, value }));
       },
       [dispatchDpAction]
     );
@@ -873,17 +803,21 @@ const InputTextForm = memo(
             toast.success(t("save_failed") as string);
           });
 
-        dispatchDpAction(DP_ACTIONS.SUBMIT_NOTE, { name: key });
+        dispatchDpAction(
+          dpActions.setNoteEditable({ name: key, value: false })
+        );
       },
       [dispatchDpAction, t]
     );
 
     const handleSetDirection = useCallback(
       (verse_key: string, dir: string) => {
-        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE_DIRECTION, {
-          name: verse_key,
-          value: dir,
-        });
+        dispatchDpAction(
+          dpActions.setNoteDir({
+            name: verse_key,
+            value: dir,
+          })
+        );
 
         dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
       },
@@ -892,10 +826,12 @@ const InputTextForm = memo(
 
     const handleEditClick = useCallback(
       (inputKey: string) => {
-        dispatchDpAction(DP_ACTIONS.CHANGE_NOTE_EDITABLE, {
-          name: inputKey,
-          value: true,
-        });
+        dispatchDpAction(
+          dpActions.setNoteEditable({
+            name: inputKey,
+            value: true,
+          })
+        );
       },
       [dispatchDpAction]
     );
