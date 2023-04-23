@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../../context/QuranContext";
 import "../../styles/main.scss";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import Navbar from "./Navbar";
 
 const localStorageBetaKey = "betaNotified";
@@ -26,7 +26,7 @@ function Layout({ children }: Props) {
   return (
     <main ref={mainRef}>
       <Navbar />
-      {localStorage.getItem(localStorageBetaKey) ?? <AlertMessage />}
+      <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
       <ToastContainer
         position={`${isRtl ? "top-left" : "top-right"}`}
@@ -37,11 +37,17 @@ function Layout({ children }: Props) {
 }
 
 const AlertMessage = () => {
+  const [betaNotified, setBetaNotified] = useState(
+    localStorage.getItem(localStorageBetaKey) !== null
+  );
   const { t } = useTranslation();
 
   function onClickClose() {
     localStorage.setItem(localStorageBetaKey, "true");
+    setBetaNotified(true);
   }
+
+  if (betaNotified) return <></>;
 
   return (
     <div
