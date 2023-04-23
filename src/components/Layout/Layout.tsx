@@ -6,8 +6,6 @@ import "../../styles/main.scss";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Navbar from "./Navbar";
 
-const localStorageBetaKey = "betaNotified";
-
 interface Props {
   children?: ReactNode;
 }
@@ -37,6 +35,8 @@ function Layout({ children }: Props) {
 }
 
 const AlertMessage = () => {
+  const localStorageBetaKey = "betaNotified";
+
   const [betaNotified, setBetaNotified] = useState(
     localStorage.getItem(localStorageBetaKey) !== null
   );
