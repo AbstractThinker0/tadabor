@@ -17,7 +17,6 @@ export interface searchIndexProps {
 export enum QB_ACTIONS {
   SET_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
-  SET_SEARCHING_STRING = "dispatchSetSearchingString",
   SET_SEARCH_RESULT = "dispatchSetSearchResult",
   SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
@@ -46,10 +45,6 @@ export const qbActions = {
   setSearchString: createActionPayload<QB_ACTIONS.SET_SEARCH_STRING, string>(
     QB_ACTIONS.SET_SEARCH_STRING
   ),
-  setSearchingString: createActionPayload<
-    QB_ACTIONS.SET_SEARCHING_STRING,
-    string
-  >(QB_ACTIONS.SET_SEARCHING_STRING),
   setSearchDiacritics: createActionPayload<
     QB_ACTIONS.SET_SEARCH_DIACRITICS,
     boolean

@@ -355,9 +355,6 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         selectedChapters: [action.payload],
       };
     }
-    default: {
-      throw Error("Unknown action: " + action.type);
-    }
   }
 }
 
