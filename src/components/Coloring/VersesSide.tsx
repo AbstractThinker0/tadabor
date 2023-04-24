@@ -1,44 +1,25 @@
-import { useReducer, Reducer, useCallback, useEffect, memo } from "react";
+import { useReducer, useCallback, useEffect, memo } from "react";
 
 import useQuran from "../../context/QuranContext";
 import { toast } from "react-toastify";
 import { verseProps } from "../../types";
 import { dbFuncs, INote, INoteDir } from "../../util/db";
 import VerseModal from "./VerseModal";
-import { CL_ACTIONS, colorProps, coloredProps } from "./consts";
+import {
+  CL_ACTIONS,
+  VS_ACTIONS,
+  colorProps,
+  coloredProps,
+  markedNotesType,
+  notesDirectionType,
+  notesType,
+  vsActions,
+  vsActionsProps,
+} from "./consts";
 import { getTextColor } from "./util";
 import { TextForm } from "../TextForm";
 import { useTranslation } from "react-i18next";
 import { IconCircleArrowDownFilled } from "@tabler/icons-react";
-
-enum VS_ACTIONS {
-  SET_LOADING_STATE = "dispatchSetLoadingState",
-  SET_USER_NOTES = "dspatchSetUserNotes",
-  CHANGE_NOTE = "dispatchChangeNote",
-  SET_EDITABLE_NOTES = "dispatchSetEditableNotes",
-  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
-  SET_AREA_DIRECTION = "dispatchSetAreaDirection",
-  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
-  SUBMIT_NOTE = "dispatchSubmitNote",
-  DATA_LOADED = "dispatchDataLoaded",
-}
-
-interface reducerAction {
-  type: VS_ACTIONS;
-  payload: any;
-}
-
-interface notesType {
-  [key: string]: string;
-}
-
-interface notesDirectionType {
-  [key: string]: string;
-}
-
-interface markedNotesType {
-  [key: string]: boolean;
-}
 
 interface stateProps {
   loadingState: boolean;
@@ -47,15 +28,9 @@ interface stateProps {
   areaDirection: notesDirectionType;
 }
 
-function reducer(state: stateProps, action: reducerAction): stateProps {
+function reducer(state: stateProps, action: vsActionsProps): stateProps {
   // ...
   switch (action.type) {
-    case VS_ACTIONS.SET_LOADING_STATE: {
-      return { ...state, loadingState: action.payload };
-    }
-    case VS_ACTIONS.SET_USER_NOTES: {
-      return { ...state, myNotes: action.payload };
-    }
     case VS_ACTIONS.CHANGE_NOTE: {
       return {
         ...state,
@@ -64,9 +39,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
           [action.payload.name]: action.payload.value,
         },
       };
-    }
-    case VS_ACTIONS.SET_EDITABLE_NOTES: {
-      return { ...state, editableNotes: action.payload };
     }
     case VS_ACTIONS.CHANGE_NOTE_EDITABLE: {
       return {
@@ -77,24 +49,12 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         },
       };
     }
-    case VS_ACTIONS.SET_AREA_DIRECTION: {
-      return { ...state, areaDirection: action.payload };
-    }
     case VS_ACTIONS.CHANGE_NOTE_DIRECTION: {
       return {
         ...state,
         areaDirection: {
           ...state.areaDirection,
           [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case VS_ACTIONS.SUBMIT_NOTE: {
-      return {
-        ...state,
-        editableNotes: {
-          ...state.editableNotes,
-          [action.payload.name]: false,
         },
       };
     }
@@ -106,9 +66,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
         areaDirection: action.payload.extractNotesDir,
         loadingState: false,
       };
-    }
-    default: {
-      throw Error("Unknown action: " + action.type);
     }
   }
 }
@@ -139,15 +96,7 @@ function VersesSide({
     areaDirection: {},
   };
 
-  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-    reducer,
-    initialState
-  );
-
-  const dispatchVsAction = useCallback(
-    (type: VS_ACTIONS, payload: any) => dispatch({ type, payload }),
-    []
-  );
+  const [state, dispatchVsAction] = useReducer(reducer, initialState);
 
   useEffect(() => {
     let clientLeft = false;
@@ -176,17 +125,19 @@ function VersesSide({
         extractNotesDir[note.id] = note.dir;
       });
 
-      dispatchVsAction(VS_ACTIONS.DATA_LOADED, {
-        extractNotes,
-        markedNotes,
-        extractNotesDir,
-      });
+      dispatchVsAction(
+        vsActions.dataLoaded({
+          extractNotes,
+          markedNotes,
+          extractNotesDir,
+        })
+      );
     }
 
     return () => {
       clientLeft = true;
     };
-  }, [dispatchVsAction]);
+  }, []);
 
   function onClickDeleteSelected(colorID: string) {
     dispatchClAction(CL_ACTIONS.DESELECT_COLOR, colorID);
@@ -358,7 +309,7 @@ interface SelectedVersesProps {
   myNotes: notesType;
   editableNotes: markedNotesType;
   areaDirection: notesDirectionType;
-  dispatchVsAction: (type: VS_ACTIONS, payload: any) => void;
+  dispatchVsAction: (value: vsActionsProps) => void;
 }
 
 function SelectedVerses({
@@ -447,7 +398,7 @@ interface InputTextFormProps {
   verseNote: string;
   noteEditable: boolean;
   noteDirection: string;
-  dispatchVsAction: (type: VS_ACTIONS, payload: any) => void;
+  dispatchVsAction: (value: vsActionsProps) => void;
 }
 
 const InputTextForm = memo(
@@ -462,7 +413,7 @@ const InputTextForm = memo(
 
     const handleNoteChange = useCallback(
       (name: string, value: string) => {
-        dispatchVsAction(VS_ACTIONS.CHANGE_NOTE, { name, value });
+        dispatchVsAction(vsActions.setNote({ name, value }));
       },
       [dispatchVsAction]
     );
@@ -483,17 +434,21 @@ const InputTextForm = memo(
             toast.success(t("save_failed") as string);
           });
 
-        dispatchVsAction(VS_ACTIONS.SUBMIT_NOTE, { name: key });
+        dispatchVsAction(
+          vsActions.setNoteEditable({ name: key, value: false })
+        );
       },
       [dispatchVsAction, t]
     );
 
     const handleSetDirection = useCallback(
       (verse_key: string, dir: string) => {
-        dispatchVsAction(VS_ACTIONS.CHANGE_NOTE_DIRECTION, {
-          name: verse_key,
-          value: dir,
-        });
+        dispatchVsAction(
+          vsActions.setNoteDir({
+            name: verse_key,
+            value: dir,
+          })
+        );
 
         dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
       },
@@ -502,10 +457,12 @@ const InputTextForm = memo(
 
     const handleEditClick = useCallback(
       (inputKey: string) => {
-        dispatchVsAction(VS_ACTIONS.CHANGE_NOTE_EDITABLE, {
-          name: inputKey,
-          value: true,
-        });
+        dispatchVsAction(
+          vsActions.setNoteEditable({
+            name: inputKey,
+            value: true,
+          })
+        );
       },
       [dispatchVsAction]
     );
