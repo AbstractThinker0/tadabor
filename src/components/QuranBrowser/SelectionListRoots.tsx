@@ -11,7 +11,7 @@ interface SelectionListRootsProps {
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
     const { quranRoots } = useQuran();
-    const { dispatchAction } = useQuranBrowser();
+    const dispatchAction = useQuranBrowser();
 
     const [stateSelect, setStateSelect] = useState<string>();
     const [itemsCount, setItemsCount] = useState(100);

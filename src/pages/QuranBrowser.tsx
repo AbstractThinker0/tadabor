@@ -358,13 +358,7 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
   }
 }
 
-type QuranBrowserContent = {
-  dispatchAction(value: qbActionsProps): void;
-};
-
-const QuranBrowserContext = createContext<QuranBrowserContent>({
-  dispatchAction: () => {},
-});
+const QuranBrowserContext = createContext((value: qbActionsProps) => {});
 
 function QuranBrowser() {
   const initialState: stateProps = {
@@ -388,7 +382,7 @@ function QuranBrowser() {
   const [state, dispatchAction] = useReducer(reducer, initialState);
 
   return (
-    <QuranBrowserContext.Provider value={{ dispatchAction: dispatchAction }}>
+    <QuranBrowserContext.Provider value={dispatchAction}>
       <div className="browser">
         <SearchPanel
           selectedChapters={state.selectedChapters}

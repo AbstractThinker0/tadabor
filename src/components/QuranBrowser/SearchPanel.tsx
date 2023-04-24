@@ -31,7 +31,7 @@ const SearchPanel = memo(
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
     const { t } = useTranslation();
-    const { dispatchAction } = useQuranBrowser();
+    const dispatchAction = useQuranBrowser();
 
     let isRootSearch = radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
 
@@ -197,7 +197,7 @@ const FormWordSearch = ({
   onSearchSubmit,
   searchString,
 }: FormWordSearchProps) => {
-  const { dispatchAction } = useQuranBrowser();
+  const dispatchAction = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -496,7 +496,7 @@ const VerseContentComponent = memo(
     searchIndexes,
   }: VerseContentComponentProps) => {
     const dispatchDpAction = useDisplayPanel();
-    const { dispatchAction } = useQuranBrowser();
+    const dispatchAction = useQuranBrowser();
 
     let verse_key = verse.key;
     let isLinkable =
