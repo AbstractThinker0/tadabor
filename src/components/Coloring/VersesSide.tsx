@@ -6,8 +6,9 @@ import { verseProps } from "../../types";
 import { dbFuncs, INote, INoteDir } from "../../util/db";
 import VerseModal from "./VerseModal";
 import {
-  CL_ACTIONS,
   VS_ACTIONS,
+  clActions,
+  clActionsProps,
   colorProps,
   coloredProps,
   markedNotesType,
@@ -76,7 +77,7 @@ interface VersesSideProps {
   currentChapter: number;
   colorsList: coloredProps;
   currentVerse: verseProps | null;
-  dispatchClAction: (action: CL_ACTIONS, payload: any) => void;
+  dispatchClAction: (value: clActionsProps) => void;
 }
 
 function VersesSide({
@@ -140,18 +141,18 @@ function VersesSide({
   }, []);
 
   function onClickDeleteSelected(colorID: string) {
-    dispatchClAction(CL_ACTIONS.DESELECT_COLOR, colorID);
+    dispatchClAction(clActions.deselectColor(colorID));
   }
 
   const onClickVerseColor = useCallback(
     (verse: verseProps) => {
-      dispatchClAction(CL_ACTIONS.SET_CURRENT_VERSE, verse);
+      dispatchClAction(clActions.setCurrentVerse(verse));
     },
     [dispatchClAction]
   );
 
   function setCurrentVerse(verse: verseProps | null) {
-    dispatchClAction(CL_ACTIONS.SET_CURRENT_VERSE, verse);
+    dispatchClAction(clActions.setCurrentVerse(verse));
   }
 
   function setVerseColor(verseKey: string, color: colorProps | null) {
@@ -164,10 +165,12 @@ function VersesSide({
       });
     }
 
-    dispatchClAction(CL_ACTIONS.SET_VERSE_COLOR, {
-      verseKey: verseKey,
-      color: color,
-    });
+    dispatchClAction(
+      clActions.setVerseColor({
+        verseKey: verseKey,
+        color: color,
+      })
+    );
   }
 
   return (

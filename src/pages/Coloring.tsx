@@ -1,10 +1,12 @@
-import { Reducer, useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 import { verseProps } from "../types";
 
 import { getTextColor } from "../components/Coloring/util";
 import {
   CL_ACTIONS,
+  clActions,
+  clActionsProps,
   colorProps,
   coloredProps,
 } from "../components/Coloring/consts";
@@ -28,12 +30,7 @@ interface stateProps {
   currentColor: colorProps | null;
 }
 
-interface reducerAction {
-  type: CL_ACTIONS;
-  payload: any;
-}
-
-function reducer(state: stateProps, action: reducerAction): stateProps {
+function reducer(state: stateProps, action: clActionsProps): stateProps {
   switch (action.type) {
     case CL_ACTIONS.SET_CHAPTER: {
       return { ...state, currentChapter: action.payload };
@@ -124,8 +121,6 @@ function reducer(state: stateProps, action: reducerAction): stateProps {
     case CL_ACTIONS.SET_CURRENT_COLOR: {
       return { ...state, currentColor: action.payload };
     }
-    default:
-      throw action.type;
   }
 }
 
@@ -149,7 +144,7 @@ function Coloring() {
         };
       });
 
-      dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
+      dispatchClAction(clActions.setColorsList(initialColors));
 
       let savedVersesColor: IVerseColor[];
 
@@ -162,7 +157,7 @@ function Coloring() {
           initialColors[verseColor.color_id];
       });
 
-      dispatchClAction(CL_ACTIONS.SET_COLORED_VERSES, initialColoredVerses);
+      dispatchClAction(clActions.setColoredVerses(initialColoredVerses));
 
       setLoadingState(false);
     }
@@ -177,7 +172,7 @@ function Coloring() {
         "2": { colorID: "2", colorCode: "#da5252", colorDisplay: "Unexplored" },
       };
 
-      dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, initialColors);
+      dispatchClAction(clActions.setColorsList(initialColors));
 
       Object.keys(initialColors).forEach((colorID) => {
         dbFuncs.saveColor({
@@ -204,13 +199,7 @@ function Coloring() {
     currentColor: null,
   };
 
-  const [state, dispatch] = useReducer<Reducer<stateProps, reducerAction>>(
-    reducer,
-    initialState
-  );
-
-  const dispatchClAction = (action: CL_ACTIONS, payload: any) =>
-    dispatch({ type: action, payload: payload });
+  const [state, dispatchClAction] = useReducer(reducer, initialState);
 
   const refChapter = useRef<HTMLDivElement | null>(null);
 
@@ -218,8 +207,8 @@ function Coloring() {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     chapterID: number
   ) {
-    dispatchClAction(CL_ACTIONS.SET_CHAPTER, chapterID);
-    dispatchClAction(CL_ACTIONS.SET_CHAPTER_TOKEN, "");
+    dispatchClAction(clActions.setChapter(chapterID));
+    dispatchClAction(clActions.setChapterToken(""));
 
     document.documentElement.scrollTop = 0;
 
@@ -246,19 +235,19 @@ function Coloring() {
   }, [state.currentChapter]);
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
-    dispatchClAction(CL_ACTIONS.SET_CHAPTER_TOKEN, event.target.value);
+    dispatchClAction(clActions.setChapterToken(event.target.value));
   }
 
   function onClickSelectColor(color: colorProps) {
-    dispatchClAction(CL_ACTIONS.SELECT_COLOR, color);
+    dispatchClAction(clActions.selectColor(color));
   }
 
   function onClickDeleteColor(color: colorProps) {
-    dispatchClAction(CL_ACTIONS.SET_CURRENT_COLOR, color);
+    dispatchClAction(clActions.setCurrentColor(color));
   }
 
   function deleteColor(colorID: string) {
-    dispatchClAction(CL_ACTIONS.DELETE_COLOR, colorID);
+    dispatchClAction(clActions.deleteColor(colorID));
     dbFuncs.deleteColor(colorID);
 
     for (const verseKey in state.coloredVerses) {
@@ -269,11 +258,11 @@ function Coloring() {
   }
 
   function addColor(color: colorProps) {
-    dispatchClAction(CL_ACTIONS.ADD_COLOR, color);
+    dispatchClAction(clActions.addColor(color));
   }
 
   function setColorsList(colorsList: coloredProps) {
-    dispatchClAction(CL_ACTIONS.SET_COLORS_LIST, colorsList);
+    dispatchClAction(clActions.setColorsList(colorsList));
 
     Object.keys(colorsList).forEach((colorID) => {
       dbFuncs.saveColor({
@@ -289,7 +278,7 @@ function Coloring() {
         colorsList[state.coloredVerses[verseKey].colorID];
     });
 
-    dispatchClAction(CL_ACTIONS.SET_COLORED_VERSES, newColoredVerses);
+    dispatchClAction(clActions.setColoredVerses(newColoredVerses));
   }
 
   if (loadingState) return <LoadingSpinner />;

@@ -1,4 +1,4 @@
-import { ActionsUnion, createActionPayload } from "../../types";
+import { ActionsUnion, createActionPayload, verseProps } from "../../types";
 
 export interface colorProps {
   colorID: string;
@@ -23,6 +23,51 @@ export enum CL_ACTIONS {
   SET_CURRENT_VERSE = "dispatchSetCurrentVerse",
   SET_CURRENT_COLOR = "dispatchSetCurrentColor",
 }
+
+export const clActions = {
+  setChapter: createActionPayload<CL_ACTIONS.SET_CHAPTER, number>(
+    CL_ACTIONS.SET_CHAPTER
+  ),
+  setChapterToken: createActionPayload<CL_ACTIONS.SET_CHAPTER_TOKEN, string>(
+    CL_ACTIONS.SET_CHAPTER_TOKEN
+  ),
+  setColorsList: createActionPayload<CL_ACTIONS.SET_COLORS_LIST, coloredProps>(
+    CL_ACTIONS.SET_COLORS_LIST
+  ),
+  addColor: createActionPayload<CL_ACTIONS.ADD_COLOR, colorProps>(
+    CL_ACTIONS.ADD_COLOR
+  ),
+  selectColor: createActionPayload<CL_ACTIONS.SELECT_COLOR, colorProps>(
+    CL_ACTIONS.SELECT_COLOR
+  ),
+  deselectColor: createActionPayload<CL_ACTIONS.DESELECT_COLOR, string>(
+    CL_ACTIONS.DESELECT_COLOR
+  ),
+  deleteColor: createActionPayload<CL_ACTIONS.DELETE_COLOR, string>(
+    CL_ACTIONS.DELETE_COLOR
+  ),
+  setVerseColor: createActionPayload<
+    CL_ACTIONS.SET_VERSE_COLOR,
+    {
+      verseKey: string;
+      color: colorProps | null;
+    }
+  >(CL_ACTIONS.SET_VERSE_COLOR),
+  setColoredVerses: createActionPayload<
+    CL_ACTIONS.SET_COLORED_VERSES,
+    coloredProps
+  >(CL_ACTIONS.SET_COLORED_VERSES),
+  setCurrentVerse: createActionPayload<
+    CL_ACTIONS.SET_CURRENT_VERSE,
+    verseProps | null
+  >(CL_ACTIONS.SET_CURRENT_VERSE),
+  setCurrentColor: createActionPayload<
+    CL_ACTIONS.SET_CURRENT_COLOR,
+    colorProps
+  >(CL_ACTIONS.SET_CURRENT_COLOR),
+};
+
+export type clActionsProps = ActionsUnion<typeof clActions>;
 
 export interface notesType {
   [key: string]: string;
