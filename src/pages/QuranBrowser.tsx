@@ -1,4 +1,4 @@
-import { useReducer, useContext, createContext } from "react";
+import { useReducer, useContext, createContext, Dispatch } from "react";
 
 import { findArabicWord, normalizeArabic, onlySpaces } from "../util/util";
 
@@ -69,11 +69,11 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         return { ...newState, selectedRootError: true };
       }
 
-      let absoluteQuran: verseProps[] = action.payload.absoluteQuran;
-      let chapterNames: chapterProps[] = action.payload.chapterNames;
-      let quranRoots: rootProps[] = action.payload.quranRoots;
+      const absoluteQuran: verseProps[] = action.payload.absoluteQuran;
+      const chapterNames: chapterProps[] = action.payload.chapterNames;
+      const quranRoots: rootProps[] = action.payload.quranRoots;
 
-      let rootTarget = quranRoots.find(
+      const rootTarget = quranRoots.find(
         (root) => root.name === state.searchString
       );
 
@@ -81,14 +81,14 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         return { ...newState, selectedRootError: true };
       }
 
-      let occurencesArray = rootTarget.occurences;
+      const occurencesArray = rootTarget.occurences;
 
       const getDerivationsInVerse = (
         wordIndexes: string[],
         verse: verseProps
       ) => {
-        let verseDerivations: searchIndexProps[] = [];
-        let verseWords = verse.versetext.split(" ");
+        const verseDerivations: searchIndexProps[] = [];
+        const verseWords = verse.versetext.split(" ");
         wordIndexes.forEach((word) => {
           verseDerivations.push({
             name: verseWords[Number(word) - 1],
@@ -101,19 +101,19 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         return verseDerivations;
       };
 
-      let matchVerses: verseProps[] = [];
+      const matchVerses: verseProps[] = [];
 
       let derivations: searchIndexProps[] = [];
 
       if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
         // occurences array have the verserank1:derivativeIndex1,derivativeIndex2...etc format
         occurencesArray.forEach((item) => {
-          let info = item.split(":");
-          let currentVerse = absoluteQuran[Number(info[0])];
+          const info = item.split(":");
+          const currentVerse = absoluteQuran[Number(info[0])];
 
-          let wordIndexes = info[1].split(",");
+          const wordIndexes = info[1].split(",");
 
-          let verseDerivations = getDerivationsInVerse(
+          const verseDerivations = getDerivationsInVerse(
             wordIndexes,
             currentVerse
           );
@@ -126,7 +126,7 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
       } else {
         // Get selected chapters
         if (state.selectedChapters.length > 1) {
-          let searchChapters: string[] = [];
+          const searchChapters: string[] = [];
 
           state.selectedChapters.forEach((chapter) => {
             searchChapters.push(chapterNames[Number(chapter) - 1].name);
@@ -147,13 +147,13 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         }
 
         occurencesArray.forEach((item) => {
-          let info = item.split(":");
-          let currentVerse = absoluteQuran[Number(info[0])];
+          const info = item.split(":");
+          const currentVerse = absoluteQuran[Number(info[0])];
 
           if (state.selectedChapters.includes(currentVerse.suraid)) {
-            let wordIndexes = info[1].split(",");
+            const wordIndexes = info[1].split(",");
 
-            let verseDerivations = getDerivationsInVerse(
+            const verseDerivations = getDerivationsInVerse(
               wordIndexes,
               currentVerse
             );
@@ -203,18 +203,16 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
       // Remove extra spaces. (Note: in the future reconsider this step)
       processedSearchString = processedSearchString.trim();
 
-      let QuranText: quranProps[];
-      let chapterNames: chapterProps[];
-      QuranText = action.payload.allQuranText;
-      chapterNames = action.payload.chapterNames;
+      const QuranText: quranProps[] = action.payload.allQuranText;
+      const chapterNames: chapterProps[] = action.payload.chapterNames;
 
       const getSearchIndexes = (
         verseText: string,
         verseKey: string,
         searchToken: string
       ) => {
-        let verseIndexes: searchIndexProps[] = [];
-        let verseWords = verseText.split(" ");
+        const verseIndexes: searchIndexProps[] = [];
+        const verseWords = verseText.split(" ");
         verseWords.forEach((word, index) => {
           if (word.includes(searchToken)) {
             verseIndexes.push({
@@ -238,8 +236,7 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         let verseIndexes: searchIndexProps[] = [];
         let processedVerseText = "";
 
-        if (searchDiacritics === true) {
-        } else {
+        if (searchDiacritics !== true) {
           processedVerseText = normalizeArabic(verse.versetext);
         }
 
@@ -265,13 +262,13 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         return false;
       };
 
-      let matchVerses: verseProps[] = [];
+      const matchVerses: verseProps[] = [];
       let searchIndexes: searchIndexProps[] = [];
 
       if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
         QuranText.forEach((sura) => {
           sura.verses.forEach((verse) => {
-            let result = searchVerse(
+            const result = searchVerse(
               verse,
               processedSearchString,
               state.searchIdentical,
@@ -286,12 +283,12 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
         });
       } else {
         if (state.selectedChapters.length > 1) {
-          let searchChapters: string[] = [];
+          const searchChapters: string[] = [];
 
           state.selectedChapters.forEach((chapter) => {
             searchChapters.push(chapterNames[Number(chapter) - 1].name);
             QuranText[Number(chapter) - 1].verses.forEach((verse) => {
-              let result = searchVerse(
+              const result = searchVerse(
                 verse,
                 processedSearchString,
                 state.searchIdentical,
@@ -313,7 +310,7 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
           };
         } else {
           QuranText[state.selectChapter - 1].verses.forEach((verse) => {
-            let result = searchVerse(
+            const result = searchVerse(
               verse,
               processedSearchString,
               state.searchIdentical,
@@ -358,7 +355,7 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
   }
 }
 
-const QuranBrowserContext = createContext((value: qbActionsProps) => {});
+const QuranBrowserContext = createContext({} as Dispatch<qbActionsProps>);
 
 function QuranBrowser() {
   const initialState: stateProps = {

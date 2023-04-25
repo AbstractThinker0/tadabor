@@ -88,16 +88,16 @@ export const QuranProvider = ({ children }: Props) => {
 
         if (!quranRoots.current.length) {
           let index = 0;
-          let arrayOfLines = response.data.split("\n");
+          const arrayOfLines = response.data.split("\n");
 
           arrayOfLines.forEach((line: string) => {
             if (line[0] === "#" || line[0] === "\r") {
               return;
             }
 
-            let lineArgs = line.split(/[\r\n\t]+/g);
+            const lineArgs = line.split(/[\r\n\t]+/g);
 
-            let occurences = lineArgs[2].split(";");
+            const occurences = lineArgs[2].split(";");
 
             quranRoots.current.push({
               id: index,

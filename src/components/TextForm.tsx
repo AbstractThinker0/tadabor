@@ -1,8 +1,10 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconTextDirectionLtr } from "@tabler/icons-react";
-import { IconTextDirectionRtl } from "@tabler/icons-react";
+import {
+  IconTextDirectionLtr,
+  IconTextDirectionRtl,
+} from "@tabler/icons-react";
 
 interface TextFormProps {
   inputKey: string;
@@ -30,7 +32,7 @@ const TextForm = ({
   const collapseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let collapseElement = collapseRef.current;
+    const collapseElement = collapseRef.current;
     function onShownCollapse(event: Event) {
       (event.target as HTMLDivElement).scrollIntoView({ block: "nearest" });
     }

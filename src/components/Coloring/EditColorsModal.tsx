@@ -28,7 +28,7 @@ function EditColorsModal({ colorsList, setColorsList }: EditColorsModalProps) {
   }
 
   function onInputColor(event: React.FormEvent<HTMLInputElement>) {
-    let newColorsList = { ...listColors };
+    const newColorsList = { ...listColors };
 
     newColorsList[event.currentTarget.name] = {
       ...newColorsList[event.currentTarget.name],

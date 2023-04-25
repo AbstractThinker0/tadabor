@@ -42,8 +42,7 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
       return { ...state, colorsList: action.payload };
     }
     case CL_ACTIONS.ADD_COLOR: {
-      let newColor: colorProps;
-      newColor = action.payload;
+      const newColor: colorProps = action.payload;
 
       return {
         ...state,
@@ -63,7 +62,7 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
       };
     }
     case CL_ACTIONS.DESELECT_COLOR: {
-      let selectedColors = { ...state.selectedColors };
+      const selectedColors = { ...state.selectedColors };
       delete selectedColors[action.payload];
       return {
         ...state,
@@ -71,10 +70,10 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
       };
     }
     case CL_ACTIONS.DELETE_COLOR: {
-      let newColorsList = { ...state.colorsList };
+      const newColorsList = { ...state.colorsList };
       delete newColorsList[action.payload];
 
-      let coloredVerses = { ...state.coloredVerses };
+      const coloredVerses = { ...state.coloredVerses };
 
       for (const verseKey in coloredVerses) {
         if (coloredVerses[verseKey].colorID === action.payload) {
@@ -82,7 +81,7 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
         }
       }
 
-      let selectedColors = { ...state.selectedColors };
+      const selectedColors = { ...state.selectedColors };
       delete selectedColors[action.payload];
 
       return {
@@ -93,7 +92,7 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
       };
     }
     case CL_ACTIONS.SET_VERSE_COLOR: {
-      let coloredVerses = { ...state.coloredVerses };
+      const coloredVerses = { ...state.coloredVerses };
 
       if (action.payload.color === null) {
         delete coloredVerses[action.payload.verseKey];
@@ -130,11 +129,9 @@ function Coloring() {
 
   useEffect(() => {
     async function fetchData() {
-      let savedColors: IColor[];
+      const savedColors: IColor[] = await dbFuncs.loadColors();
 
-      savedColors = await dbFuncs.loadColors();
-
-      let initialColors: coloredProps = {};
+      const initialColors: coloredProps = {};
 
       savedColors.forEach((color) => {
         initialColors[color.id] = {
@@ -146,11 +143,9 @@ function Coloring() {
 
       dispatchClAction(clActions.setColorsList(initialColors));
 
-      let savedVersesColor: IVerseColor[];
+      const savedVersesColor: IVerseColor[] = await dbFuncs.loadVersesColor();
 
-      savedVersesColor = await dbFuncs.loadVersesColor();
-
-      let initialColoredVerses: coloredProps = {};
+      const initialColoredVerses: coloredProps = {};
 
       savedVersesColor.forEach((verseColor) => {
         initialColoredVerses[verseColor.verse_key] =
@@ -272,7 +267,7 @@ function Coloring() {
       });
     });
 
-    let newColoredVerses: coloredProps = {};
+    const newColoredVerses: coloredProps = {};
     Object.keys(state.coloredVerses).forEach((verseKey) => {
       newColoredVerses[verseKey] =
         colorsList[state.coloredVerses[verseKey].colorID];

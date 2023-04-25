@@ -157,23 +157,23 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await dbFuncs.loadRootNotes();
+      const userNotes = await dbFuncs.loadRootNotes();
 
       if (clientLeft) return;
 
-      let markedNotes: markedNotesType = {};
+      const markedNotes: markedNotesType = {};
 
-      let extractNotes: notesType = {};
+      const extractNotes: notesType = {};
       userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
         markedNotes[note.id] = false;
       });
 
-      let userNotesDir = await dbFuncs.loadRootNotesDir();
+      const userNotesDir = await dbFuncs.loadRootNotesDir();
 
       if (clientLeft) return;
 
-      let extractNotesDir: notesDirType = {};
+      const extractNotesDir: notesDirType = {};
 
       userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;
@@ -238,7 +238,7 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
 
   const memoHandleSetDirection = useCallback(handleSetDirection, []);
 
-  let filteredArray = useMemo(
+  const filteredArray = useMemo(
     () =>
       quranRoots.filter(
         (root) =>

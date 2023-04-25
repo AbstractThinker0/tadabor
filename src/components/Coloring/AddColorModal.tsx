@@ -25,9 +25,7 @@ const AddColorModal = ({ addColor }: ColorModalProps) => {
       return;
     }
 
-    let newColor: colorProps;
-
-    newColor = {
+    const newColor: colorProps = {
       colorID: Date.now().toString(),
       colorCode: colorCode,
       colorDisplay: colorName,

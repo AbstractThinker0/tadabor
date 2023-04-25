@@ -34,20 +34,20 @@ function YourNotes() {
     fetchData();
 
     async function fetchData() {
-      let userNotes = await dbFuncs.loadNotes();
+      const userNotes = await dbFuncs.loadNotes();
 
       if (clientLeft) return;
 
-      let extractNotes: notesType = {};
+      const extractNotes: notesType = {};
       userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
       });
 
-      let userNotesDir = await dbFuncs.loadNotesDir();
+      const userNotesDir = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
 
-      let extractNotesDir: notesDirType = {};
+      const extractNotesDir: notesDirType = {};
 
       userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;
@@ -65,12 +65,12 @@ function YourNotes() {
   }, []);
 
   const convertKey = (key: string) => {
-    let info = key.split("-");
+    const info = key.split("-");
     return chapterNames[+info[0] - 1].name + ":" + info[1];
   };
 
   const getVerse = (key: string) => {
-    let info = key.split("-");
+    const info = key.split("-");
     return allQuranText[+info[0] - 1].verses[+info[1] - 1].versetext;
   };
 

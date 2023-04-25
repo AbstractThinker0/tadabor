@@ -105,22 +105,22 @@ function VersesSide({
     fetchData();
 
     async function fetchData() {
-      let userNotes: INote[] = await dbFuncs.loadNotes();
+      const userNotes: INote[] = await dbFuncs.loadNotes();
 
       if (clientLeft) return;
 
-      let markedNotes: markedNotesType = {};
-      let extractNotes: notesType = {};
+      const markedNotes: markedNotesType = {};
+      const extractNotes: notesType = {};
       userNotes.forEach((note) => {
         extractNotes[note.id] = note.text;
         markedNotes[note.id] = false;
       });
 
-      let userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
+      const userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
 
-      let extractNotesDir: notesType = {};
+      const extractNotesDir: notesType = {};
 
       userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;
@@ -326,11 +326,11 @@ function SelectedVerses({
   const { allQuranText, chapterNames } = useQuran();
 
   function getVerseByKey(key: string) {
-    let info = key.split("-");
+    const info = key.split("-");
     return allQuranText[Number(info[0]) - 1].verses[Number(info[1]) - 1];
   }
 
-  let selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
+  const selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
     Object.keys(selectedColors).includes(coloredVerses[verseKey].colorID)
   );
 
@@ -339,14 +339,14 @@ function SelectedVerses({
       {selectedVerses.length ? (
         selectedVerses
           .sort((keyA, KeyB) => {
-            let infoA = keyA.split("-");
-            let infoB = KeyB.split("-");
+            const infoA = keyA.split("-");
+            const infoB = KeyB.split("-");
             if (Number(infoA[0]) !== Number(infoB[0]))
               return Number(infoA[0]) - Number(infoB[0]);
             else return Number(infoA[1]) - Number(infoB[1]);
           })
           .map((verseKey) => {
-            let verse = getVerseByKey(verseKey);
+            const verse = getVerseByKey(verseKey);
             return (
               <div
                 className="verse-item"

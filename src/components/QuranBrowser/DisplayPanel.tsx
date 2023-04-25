@@ -1,4 +1,5 @@
 import {
+  Dispatch,
   useReducer,
   useEffect,
   useRef,
@@ -107,7 +108,7 @@ interface DisplayPanelProps {
   searchingScope: SEARCH_SCOPE;
 }
 
-const DisplayPanelContext = createContext((value: dpActionsProps) => {});
+const DisplayPanelContext = createContext({} as Dispatch<dpActionsProps>);
 
 const useDisplayPanel = () => useContext(DisplayPanelContext);
 
@@ -142,22 +143,22 @@ const DisplayPanel = memo(
       fetchData();
 
       async function fetchData() {
-        let userNotes: INote[] = await dbFuncs.loadNotes();
+        const userNotes: INote[] = await dbFuncs.loadNotes();
 
         if (clientLeft) return;
 
-        let markedNotes: markedNotesType = {};
-        let extractNotes: notesType = {};
+        const markedNotes: markedNotesType = {};
+        const extractNotes: notesType = {};
         userNotes.forEach((note) => {
           extractNotes[note.id] = note.text;
           markedNotes[note.id] = false;
         });
 
-        let userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
+        const userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
 
         if (clientLeft) return;
 
-        let extractNotesDir: notesType = {};
+        const extractNotesDir: notesType = {};
 
         userNotesDir.forEach((note) => {
           extractNotesDir[note.id] = note.dir;
@@ -351,7 +352,8 @@ const SearchTitle = memo(
     searchChapters,
     chapterName,
   }: SearchTitleProps) => {
-    let searchType = radioSearchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
+    const searchType =
+      radioSearchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"
@@ -498,8 +500,8 @@ const VerseContentComponent = memo(
     const dispatchDpAction = useDisplayPanel();
     const dispatchAction = useQuranBrowser();
 
-    let verse_key = verse.key;
-    let isLinkable =
+    const verse_key = verse.key;
+    const isLinkable =
       searchingScope === SEARCH_SCOPE.ALL_CHAPTERS ||
       searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS;
 
@@ -635,7 +637,7 @@ const ListVerses = ({
   const versesRef = useRef<versesRefType>({});
 
   useEffect(() => {
-    let verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
+    const verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
     if (verseToHighlight) {
       verseToHighlight.scrollIntoView({ block: "center" });
       verseToHighlight.classList.add("verse-selected");
@@ -724,7 +726,7 @@ const VerseTextComponent = memo(
     function onClickVerse(
       event: React.MouseEvent<HTMLSpanElement, MouseEvent>
     ) {
-      let verseElement = event.currentTarget.parentElement?.parentElement;
+      const verseElement = event.currentTarget.parentElement?.parentElement;
 
       if (!verseElement) return;
 

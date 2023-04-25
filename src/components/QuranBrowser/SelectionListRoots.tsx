@@ -25,10 +25,10 @@ const SelectionListRoots = memo(
     }
 
     const handleSelectRoot = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      let rootId = event.currentTarget.value;
+      const rootId = event.currentTarget.value;
       setStateSelect(rootId);
 
-      let selectedRoot = quranRoots[Number(rootId)];
+      const selectedRoot = quranRoots[Number(rootId)];
 
       dispatchAction(qbActions.setSearchString(selectedRoot.name));
     };
@@ -37,7 +37,7 @@ const SelectionListRoots = memo(
       setItemsCount((state) => state + 20);
     };
 
-    let filteredArray = useMemo(
+    const filteredArray = useMemo(
       () =>
         quranRoots.filter(
           (root) => root.name.startsWith(searchString) || isDisabled

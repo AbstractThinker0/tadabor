@@ -33,7 +33,8 @@ const SearchPanel = memo(
     const { t } = useTranslation();
     const dispatchAction = useQuranBrowser();
 
-    let isRootSearch = radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+    const isRootSearch =
+      radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     function setSearchAllQuran(status: boolean) {
       dispatchAction(

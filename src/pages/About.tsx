@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
 
 const APP_VERSION = "0.2.3";
 

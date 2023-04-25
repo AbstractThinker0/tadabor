@@ -49,7 +49,7 @@ const VerseModal = ({
   }, [verseColor]);
 
   useEffect(() => {
-    let modelElement = refVerseModal.current;
+    const modelElement = refVerseModal.current;
     if (modelElement === null) return;
 
     function onModalHide() {

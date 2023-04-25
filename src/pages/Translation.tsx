@@ -111,12 +111,12 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     fetchData();
 
     async function fetchData() {
-      let userTranslations = await dbFuncs.loadTranslations();
+      const userTranslations = await dbFuncs.loadTranslations();
 
       if (clientLeft) return;
 
-      let extractTranslations: translationsType = {};
-      let markedTranslations: markedTranslationsType = {};
+      const extractTranslations: translationsType = {};
+      const markedTranslations: markedTranslationsType = {};
       userTranslations.forEach((trans) => {
         extractTranslations[trans.id] = trans.text;
         markedTranslations[trans.id] = false;

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 const LanguageButton = () => {
   const { i18n } = useTranslation();
-  let resolvedLang = i18n.resolvedLanguage;
+  const resolvedLang = i18n.resolvedLanguage;
 
   const onLangClick = () => {
     resolvedLang === "en"
