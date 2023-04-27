@@ -238,6 +238,8 @@ function reducer(state: stateProps, action: qbActionsProps): stateProps {
 
         if (searchDiacritics !== true) {
           processedVerseText = normalizeArabic(verse.versetext);
+        } else {
+          processedVerseText = verse.versetext;
         }
 
         if (searchIdentical === true) {
