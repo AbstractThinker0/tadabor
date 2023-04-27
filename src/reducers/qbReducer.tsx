@@ -79,7 +79,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
 
       const matchVerses: verseProps[] = [];
 
-      let derivations: searchIndexProps[] = [];
+      const derivations: searchIndexProps[] = [];
 
       if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
         // occurences array have the verserank1:derivativeIndex1,derivativeIndex2...etc format
@@ -94,7 +94,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
             currentVerse
           );
 
-          derivations = derivations.concat(verseDerivations);
+          derivations.push(...verseDerivations);
           matchVerses.push(currentVerse);
         });
 
@@ -134,7 +134,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
               currentVerse
             );
 
-            derivations = derivations.concat(verseDerivations);
+            derivations.push(...verseDerivations);
             matchVerses.push(currentVerse);
           }
         });
@@ -241,7 +241,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
       };
 
       const matchVerses: verseProps[] = [];
-      let searchIndexes: searchIndexProps[] = [];
+      const searchIndexes: searchIndexProps[] = [];
 
       if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
         QuranText.forEach((sura) => {
@@ -255,7 +255,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
 
             if (result !== false) {
               matchVerses.push(result.verse);
-              searchIndexes = searchIndexes.concat(result.verseIndexes);
+              searchIndexes.push(...result.verseIndexes);
             }
           });
         });
@@ -275,7 +275,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
 
               if (result !== false) {
                 matchVerses.push(result.verse);
-                searchIndexes = searchIndexes.concat(result.verseIndexes);
+                searchIndexes.push(...result.verseIndexes);
               }
             });
           });
@@ -297,7 +297,7 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
 
             if (result !== false) {
               matchVerses.push(result.verse);
-              searchIndexes = searchIndexes.concat(result.verseIndexes);
+              searchIndexes.push(...result.verseIndexes);
             }
           });
 
