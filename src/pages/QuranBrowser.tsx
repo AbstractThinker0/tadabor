@@ -4,7 +4,7 @@ import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
 
 import {
-  QbStateProps,
+  qbStateProps,
   SEARCH_METHOD,
   SEARCH_SCOPE,
   qbActionsProps,
@@ -14,7 +14,7 @@ import qbReducer from "../reducers/qbReducer";
 const QuranBrowserContext = createContext({} as Dispatch<qbActionsProps>);
 
 function QuranBrowser() {
-  const initialState: QbStateProps = {
+  const initialState: qbStateProps = {
     selectChapter: 1,
     selectedChapters: ["1"],
     searchString: "",
