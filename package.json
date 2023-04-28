@@ -1,6 +1,6 @@
 {
   "name": "tadabor",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "dependencies": {
     "@tabler/icons-react": "^2.9.0",

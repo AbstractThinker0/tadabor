@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-const APP_VERSION = "0.2.3";
+const APP_VERSION = "0.2.4";
 
 const AboutEnglish = () => {
   return (
