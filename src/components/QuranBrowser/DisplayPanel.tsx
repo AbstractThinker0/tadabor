@@ -271,7 +271,10 @@ const ListSearchResults = ({
   const refSelectedVerse = useRef<HTMLDivElement | null>(null);
 
   function handleRootClick(verse_key: string) {
-    refVersesResult.current[verse_key].scrollIntoView({ behavior: "smooth" });
+    refVersesResult.current[verse_key].scrollIntoView({
+      block: "center",
+      behavior: "smooth",
+    });
 
     if (refSelectedVerse.current) {
       refSelectedVerse.current.classList.remove("verse-selected");
@@ -592,7 +595,7 @@ const ListVerses = ({
   useEffect(() => {
     const verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
     if (verseToHighlight) {
-      verseToHighlight.scrollIntoView({ block: "center" });
+      verseToHighlight.scrollIntoView({ behavior: "smooth", block: "center" });
       verseToHighlight.classList.add("verse-selected");
       selectedVerse.current = verseToHighlight;
       dispatchDpAction(dpActions.setScrollKey(null));

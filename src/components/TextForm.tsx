@@ -35,7 +35,10 @@ const TextForm = ({
     const collapseElement = collapseRef.current;
     function onShownCollapse(event: Event) {
       if (collapseRef.current?.parentElement)
-        collapseRef.current.parentElement.scrollIntoView({ block: "nearest" });
+        collapseRef.current.parentElement.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
     }
 
     if (collapseElement !== null) {
@@ -227,7 +230,7 @@ const FormComponent = ({
 
   useEffect(() => {
     if (formRef.current !== null)
-      formRef.current.scrollIntoView({ block: "nearest" });
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, []);
 
   function onSubmitForm(event: FormEvent<HTMLFormElement>) {
