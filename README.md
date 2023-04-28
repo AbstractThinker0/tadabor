@@ -10,9 +10,9 @@ This project is a web App that allows you to browse through the Quran and write 
 - [Contributing](#Contributing)
 - [Known bugs](#Known-bugs)
 - [TODO List](#TODO-List)
-- [Future project](#Future-project)
 - [Credits](#Credits)
 - [Local use](#Local-use)
+- [Future project](#Future-project)
 
 ## How to use
 
@@ -34,10 +34,6 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 - Document code and improve readability when possible.
 - Document all the features and how they can be used.
 
-## Future project:
-
-Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's.
-
 ## Credits
 
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
@@ -58,3 +54,7 @@ Once you have satisfied the prerequisites, you can install and start the applica
 2. `npm start`
 
 usually the domain to access the app will be http://localhost:3000/
+
+## Future project:
+
+Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's.
