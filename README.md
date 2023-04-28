@@ -29,7 +29,10 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 ## TODO List
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc). (Partially implemented)
-- Add highlighting feature to search results. (Partially implemented)
+- Add unit tests or similar to assure that everything works as expected.
+- Revamp the interface for a better user experience.
+- Document code and improve readability when possible.
+- Document all the features and how they can be used.
 
 ## Future project:
 
@@ -38,7 +41,6 @@ Once this project is complete (all features implemented), it will be used as the
 ## Credits
 
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
-
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
 - Tanzil project for the Quran text compilation ( Check the bottom of [quran-simple-plain.txt](https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt) )
 - Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation ( Check the bottom of [quran-root.txt](https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt) )
