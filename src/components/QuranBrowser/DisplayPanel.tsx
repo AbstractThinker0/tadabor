@@ -9,7 +9,6 @@ import {
   createContext,
   useContext,
   MutableRefObject,
-  useState,
 } from "react";
 
 import { toast } from "react-toastify";
@@ -37,6 +36,7 @@ import {
   notesType,
   qbActions,
   searchIndexProps,
+  searchResult,
 } from "./consts";
 
 interface refVersesResultType {
@@ -98,7 +98,7 @@ function reducer(state: stateProps, action: dpActionsProps): stateProps {
 
 interface DisplayPanelProps {
   searchingChapters: string[];
-  searchResult: verseProps[];
+  searchResult: searchResult[];
   searchError: boolean;
   selectedRootError: boolean;
   searchingString: string;
@@ -236,7 +236,7 @@ const DisplayPanel = memo(
 DisplayPanel.displayName = "DisplayPanel";
 
 interface ListSearchResultsProps {
-  versesArray: verseProps[];
+  versesArray: searchResult[];
   selectChapter: number;
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
@@ -304,7 +304,7 @@ const ListSearchResults = ({
         />
       )}
       <div className="card-body">
-        {versesArray.map((verse: verseProps) => (
+        {versesArray.map((verse) => (
           <div
             key={verse.key}
             ref={(el) => {
@@ -319,8 +319,6 @@ const ListSearchResults = ({
               value={myNotes[verse.key] || ""}
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
-              isRootSearch={isRootSearch}
-              searchIndexes={searchIndexes}
             />
           </div>
         ))}
@@ -408,14 +406,12 @@ const DerivationsComponent = memo(
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface SearchVerseComponentProps {
-  verse: verseProps;
+  verse: searchResult;
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
   value: string;
   isEditable: boolean;
   noteDirection: string;
-  isRootSearch: boolean;
-  searchIndexes: searchIndexProps[];
 }
 
 const SearchVerseComponent = memo(
@@ -426,27 +422,13 @@ const SearchVerseComponent = memo(
     value,
     isEditable,
     noteDirection,
-    isRootSearch,
-    searchIndexes,
   }: SearchVerseComponentProps) => {
-    const [verseSearchIndexes, setVerseSearchIndexes] = useState(
-      searchIndexes.filter((value) => value.key === verse.key)
-    );
-
-    useEffect(() => {
-      setVerseSearchIndexes(
-        searchIndexes.filter((value) => value.key === verse.key)
-      );
-    }, [searchIndexes, verse.key]);
-
     return (
       <>
         <VerseContentComponent
           verse={verse}
           searchingScope={searchingScope}
           verseChapter={verseChapter}
-          isRootSearch={isRootSearch}
-          searchIndexes={verseSearchIndexes}
         />
         <InputTextForm
           verseKey={verse.key}
@@ -482,21 +464,13 @@ const SearchErrorsComponent = ({
 };
 
 interface VerseContentComponentProps {
-  verse: verseProps;
+  verse: searchResult;
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
-  isRootSearch: boolean;
-  searchIndexes: searchIndexProps[];
 }
 
 const VerseContentComponent = memo(
-  ({
-    verse,
-    searchingScope,
-    verseChapter,
-    isRootSearch,
-    searchIndexes,
-  }: VerseContentComponentProps) => {
+  ({ verse, searchingScope, verseChapter }: VerseContentComponentProps) => {
     const dispatchDpAction = useDisplayPanel();
     const dispatchAction = useQuranBrowser();
 
@@ -516,12 +490,7 @@ const VerseContentComponent = memo(
 
     return (
       <span className="fs-4">
-        <Highlighted
-          text={verse.versetext}
-          searchIndexes={searchIndexes}
-          isRootSearch={isRootSearch}
-        />
-        (
+        <HighlightedText verse={verse} /> (
         {isLinkable ? (
           <button
             className="p-0 border-0 bg-transparent"
@@ -555,41 +524,25 @@ const VerseContentComponent = memo(
 
 VerseContentComponent.displayName = "VerseContentComponent";
 
-interface HighlightedProps {
-  text: string;
-  searchIndexes: searchIndexProps[];
-  isRootSearch: boolean;
+interface HighlightedTextProps {
+  verse: searchResult;
 }
 
-const Highlighted = ({
-  text = "",
-  searchIndexes,
-  isRootSearch,
-}: HighlightedProps) => {
-  const parts = text.split(" ");
-
-  function matchIndex(index: number) {
-    for (const searchIndex of searchIndexes) {
-      if (Number(searchIndex.wordIndex) === index) {
-        return true;
-      }
-    }
-    return false;
-  }
+const HighlightedText = ({ verse }: HighlightedTextProps) => {
+  const verseParts = verse.verseParts;
 
   return (
-    <span>
-      {parts.filter(String).map((part: string, i: number) => {
-        return matchIndex(isRootSearch ? i + 1 : i) ? (
+    <>
+      {verseParts.map((part, i) => {
+        const isHighlighted = part.highlight;
+
+        return (
           <Fragment key={i}>
-            <mark>{part}</mark>{" "}
+            {isHighlighted ? <mark>{part.text}</mark> : part.text}
           </Fragment>
-        ) : (
-          // TODO: Concat all adjacent text and output it at once to avoid multiple text nodes.
-          <Fragment key={i}>{part} </Fragment>
         );
       })}
-    </span>
+    </>
   );
 };
 

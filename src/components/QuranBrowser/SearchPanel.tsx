@@ -5,8 +5,7 @@ import { useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
-import { verseProps } from "../../types";
-import { SEARCH_METHOD, SEARCH_SCOPE, qbActions } from "./consts";
+import { SEARCH_METHOD, SEARCH_SCOPE, qbActions, searchResult } from "./consts";
 
 interface SearchPanelProps {
   radioSearchMethod: string;
@@ -14,7 +13,7 @@ interface SearchPanelProps {
   searchIdentical: boolean;
   searchAllQuran: boolean;
   searchString: string;
-  searchResult: verseProps[];
+  searchResult: searchResult[];
   selectedChapters: string[];
 }
 
@@ -281,7 +280,7 @@ const CheckboxComponent = ({
 };
 
 interface SearchSuccessComponentProps {
-  searchResult: verseProps[];
+  searchResult: searchResult[];
 }
 
 const SearchSuccessComponent = ({

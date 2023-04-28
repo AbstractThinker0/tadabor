@@ -26,6 +26,11 @@ main {
     &-card {
       min-height: 100%;
     }
+
+    mark {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 
   .btn-verse {

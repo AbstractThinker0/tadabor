@@ -14,13 +14,25 @@ export interface searchIndexProps {
   wordIndex: string;
 }
 
+export interface versePart {
+  text: string;
+  highlight: boolean;
+}
+
+export interface searchResult {
+  key: string;
+  suraid: string;
+  verseid: string;
+  verseParts: versePart[];
+}
+
 export interface qbStateProps {
   selectChapter: number;
   selectedChapters: string[];
   searchString: string;
   searchingString: string;
   searchingChapters: string[];
-  searchResult: verseProps[];
+  searchResult: searchResult[];
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchError: boolean;
