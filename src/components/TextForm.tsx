@@ -34,7 +34,8 @@ const TextForm = ({
   useEffect(() => {
     const collapseElement = collapseRef.current;
     function onShownCollapse(event: Event) {
-      (event.target as HTMLDivElement).scrollIntoView({ block: "nearest" });
+      if (collapseRef.current?.parentElement)
+        collapseRef.current.parentElement.scrollIntoView({ block: "nearest" });
     }
 
     if (collapseElement !== null) {
