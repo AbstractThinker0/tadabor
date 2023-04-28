@@ -282,13 +282,14 @@ const TextAreaComponent = ({
   handleInputChange,
 }: TextAreaProps) => {
   const minRows = 4;
+  const extraRows = 3;
   const [rows, setRows] = useState(minRows);
 
   useEffect(() => {
     const rowlen = inputValue.split("\n").length;
 
     if (rowlen >= minRows) {
-      setRows(rowlen + 2);
+      setRows(rowlen + extraRows);
     } else {
       setRows(minRows);
     }
