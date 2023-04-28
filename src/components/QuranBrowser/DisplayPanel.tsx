@@ -595,7 +595,7 @@ const ListVerses = ({
   useEffect(() => {
     const verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
     if (verseToHighlight) {
-      verseToHighlight.scrollIntoView({ behavior: "smooth", block: "center" });
+      verseToHighlight.scrollIntoView({ block: "center" });
       verseToHighlight.classList.add("verse-selected");
       selectedVerse.current = verseToHighlight;
       dispatchDpAction(dpActions.setScrollKey(null));
