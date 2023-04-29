@@ -37,8 +37,8 @@ export interface qbStateProps {
   searchIdentical: boolean;
   searchError: boolean;
   selectedRootError: boolean;
-  radioSearchMethod: SEARCH_METHOD;
-  radioSearchingMethod: SEARCH_METHOD;
+  searchMethod: SEARCH_METHOD;
+  searchingMethod: SEARCH_METHOD;
   searchIndexes: searchIndexProps[];
   searchScope: SEARCH_SCOPE;
   searchingScope: SEARCH_SCOPE;
@@ -47,11 +47,10 @@ export interface qbStateProps {
 export enum QB_ACTIONS {
   SET_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
-  SET_SEARCH_RESULT = "dispatchSetSearchResult",
   SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
   SET_SEARCH_SCOPE = "dispatchSetSearchScope",
-  SET_RADIO_SEARCH = "dispatchSetRadioSearchMethod",
+  SET_SEARCH_METHOD = "dispatchSetsearchMethod",
   SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
   SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
@@ -87,10 +86,10 @@ export const qbActions = {
     QB_ACTIONS.SET_SEARCH_SCOPE,
     SEARCH_SCOPE
   >(QB_ACTIONS.SET_SEARCH_SCOPE),
-  setRadioSearch: createActionPayload<
-    QB_ACTIONS.SET_RADIO_SEARCH,
+  setSearchMethod: createActionPayload<
+    QB_ACTIONS.SET_SEARCH_METHOD,
     SEARCH_METHOD
-  >(QB_ACTIONS.SET_RADIO_SEARCH),
+  >(QB_ACTIONS.SET_SEARCH_METHOD),
   submitWordSearch: createActionPayload<
     QB_ACTIONS.SEARCH_WORD_SUBMIT,
     { allQuranText: quranProps[]; chapterNames: chapterProps[] }

@@ -20,8 +20,8 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
     case QB_ACTIONS.SET_SEARCH_IDENTICAL: {
       return { ...state, searchIdentical: action.payload };
     }
-    case QB_ACTIONS.SET_RADIO_SEARCH: {
-      return { ...state, radioSearchMethod: action.payload };
+    case QB_ACTIONS.SET_SEARCH_METHOD: {
+      return { ...state, searchMethod: action.payload };
     }
     case QB_ACTIONS.SET_SEARCH_SCOPE: {
       return { ...state, searchScope: action.payload };

@@ -30,7 +30,7 @@ export function qbSearchRoot(
     searchResult: [],
     searchIndexes: [],
     searchingString: state.searchString,
-    radioSearchingMethod: state.radioSearchMethod,
+    searchingMethod: state.searchMethod,
   };
 
   if (onlySpaces(state.searchString)) {
@@ -165,7 +165,7 @@ export function qbSearchWord(
     searchResult: [],
     searchIndexes: [],
     searchingString: state.searchString,
-    radioSearchingMethod: state.radioSearchMethod,
+    searchingMethod: state.searchMethod,
     searchingScope: state.searchScope,
   };
 

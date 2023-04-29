@@ -8,7 +8,7 @@ import SelectionListRoots from "./SelectionListRoots";
 import { SEARCH_METHOD, SEARCH_SCOPE, qbActions, searchResult } from "./consts";
 
 interface SearchPanelProps {
-  radioSearchMethod: string;
+  searchMethod: string;
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchAllQuran: boolean;
@@ -19,7 +19,7 @@ interface SearchPanelProps {
 
 const SearchPanel = memo(
   ({
-    radioSearchMethod,
+    searchMethod,
     searchDiacritics,
     searchIdentical,
     searchAllQuran,
@@ -32,8 +32,7 @@ const SearchPanel = memo(
     const { t } = useTranslation();
     const dispatchAction = useQuranBrowser();
 
-    const isRootSearch =
-      radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+    const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     function setSearchAllQuran(status: boolean) {
       dispatchAction(
@@ -53,8 +52,8 @@ const SearchPanel = memo(
       dispatchAction(qbActions.setSearchIdentical(status));
     }
 
-    function setRadioSearchMethod(method: SEARCH_METHOD) {
-      dispatchAction(qbActions.setRadioSearch(method));
+    function setSearchMethod(method: SEARCH_METHOD) {
+      dispatchAction(qbActions.setSearchMethod(method));
     }
 
     function onSearchSubmit() {
@@ -96,8 +95,8 @@ const SearchPanel = memo(
           selectedChapters={selectedChapters}
         />
         <RadioSearchMethod
-          radioSearchMethod={radioSearchMethod}
-          setRadioSearchMethod={setRadioSearchMethod}
+          searchMethod={searchMethod}
+          setSearchMethod={setSearchMethod}
         />
         <CheckboxComponent
           checkboxState={searchDiacritics}
@@ -133,17 +132,17 @@ const SearchPanel = memo(
 SearchPanel.displayName = "SearchPanel";
 
 interface RadioSearchMethodProps {
-  radioSearchMethod: string;
-  setRadioSearchMethod: (method: SEARCH_METHOD) => void;
+  searchMethod: string;
+  setSearchMethod: (method: SEARCH_METHOD) => void;
 }
 
 const RadioSearchMethod = ({
-  radioSearchMethod,
-  setRadioSearchMethod,
+  searchMethod,
+  setSearchMethod,
 }: RadioSearchMethodProps) => {
   const { t, i18n } = useTranslation();
   const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioSearchMethod(event.target.value as SEARCH_METHOD);
+    setSearchMethod(event.target.value as SEARCH_METHOD);
   };
   return (
     <div>
@@ -159,7 +158,7 @@ const RadioSearchMethod = ({
           name="inlineRadioOptions"
           id="inlineRadio1"
           value={SEARCH_METHOD.ROOT}
-          checked={radioSearchMethod === SEARCH_METHOD.ROOT}
+          checked={searchMethod === SEARCH_METHOD.ROOT}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio1">
@@ -177,7 +176,7 @@ const RadioSearchMethod = ({
           name="inlineRadioOptions"
           id="inlineRadio2"
           value={SEARCH_METHOD.WORD}
-          checked={radioSearchMethod === SEARCH_METHOD.WORD}
+          checked={searchMethod === SEARCH_METHOD.WORD}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio2">

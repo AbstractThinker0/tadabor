@@ -103,7 +103,7 @@ interface DisplayPanelProps {
   selectedRootError: boolean;
   searchingString: string;
   selectChapter: number;
-  radioSearchingMethod: string;
+  searchingMethod: string;
   searchIndexes: searchIndexProps[];
   searchingScope: SEARCH_SCOPE;
 }
@@ -120,7 +120,7 @@ const DisplayPanel = memo(
     selectedRootError,
     searchingString,
     selectChapter,
-    radioSearchingMethod,
+    searchingMethod,
     searchIndexes,
     searchingScope,
   }: DisplayPanelProps) => {
@@ -210,7 +210,7 @@ const DisplayPanel = memo(
                 searchingScope={searchingScope}
                 searchError={searchError}
                 selectedRootError={selectedRootError}
-                radioSearchMethod={radioSearchingMethod}
+                searchMethod={searchingMethod}
                 searchingChapters={searchingChapters}
                 searchIndexes={searchIndexes}
                 editableNotes={state.editableNotes}
@@ -242,7 +242,7 @@ interface ListSearchResultsProps {
   searchingScope: SEARCH_SCOPE;
   searchError: boolean;
   selectedRootError: boolean;
-  radioSearchMethod: string;
+  searchMethod: string;
   searchingChapters: string[];
   searchIndexes: searchIndexProps[];
   editableNotes: markedNotesType;
@@ -256,7 +256,7 @@ const ListSearchResults = ({
   searchToken,
   searchError,
   selectedRootError,
-  radioSearchMethod,
+  searchMethod,
   myNotes,
   editableNotes,
   searchingChapters,
@@ -287,14 +287,14 @@ const ListSearchResults = ({
 
   const memoHandleRootClick = useCallback(handleRootClick, []);
 
-  const isRootSearch = radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+  const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
   const chapterName = chapterNames[selectChapter - 1].name;
 
   return (
     <>
       <SearchTitle
-        radioSearchMethod={radioSearchMethod}
+        searchMethod={searchMethod}
         searchToken={searchToken}
         searchingScope={searchingScope}
         searchChapters={searchingChapters}
@@ -338,7 +338,7 @@ const ListSearchResults = ({
 ListSearchResults.displayName = "ListSearchResults";
 
 interface SearchTitleProps {
-  radioSearchMethod: string;
+  searchMethod: string;
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
   searchChapters: string[];
@@ -347,14 +347,14 @@ interface SearchTitleProps {
 
 const SearchTitle = memo(
   ({
-    radioSearchMethod,
+    searchMethod,
     searchToken,
     searchingScope,
     searchChapters,
     chapterName,
   }: SearchTitleProps) => {
     const searchType =
-      radioSearchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
+      searchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"
