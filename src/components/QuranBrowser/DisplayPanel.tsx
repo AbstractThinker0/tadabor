@@ -6,8 +6,6 @@ import {
   useCallback,
   memo,
   Fragment,
-  createContext,
-  useContext,
   MutableRefObject,
 } from "react";
 
@@ -108,10 +106,6 @@ interface DisplayPanelProps {
   searchingScope: SEARCH_SCOPE;
 }
 
-const DisplayPanelContext = createContext({} as Dispatch<dpActionsProps>);
-
-const useDisplayPanel = () => useContext(DisplayPanelContext);
-
 const DisplayPanel = memo(
   ({
     searchingChapters,
@@ -199,36 +193,36 @@ const DisplayPanel = memo(
       );
 
     return (
-      <DisplayPanelContext.Provider value={dispatchDpAction}>
-        <div className="browser-display" ref={refListVerses}>
-          <div className="card browser-display-card" dir="rtl">
-            {searchResult.length || searchError || selectedRootError ? (
-              <ListSearchResults
-                versesArray={searchResult}
-                selectChapter={selectChapter}
-                searchToken={searchingString.trim()}
-                searchingScope={searchingScope}
-                searchError={searchError}
-                selectedRootError={selectedRootError}
-                searchMethod={searchingMethod}
-                searchingChapters={searchingChapters}
-                searchIndexes={searchIndexes}
-                editableNotes={state.editableNotes}
-                myNotes={state.myNotes}
-                areaDirection={state.areaDirection}
-              />
-            ) : (
-              <ListVerses
-                selectChapter={selectChapter}
-                scrollKey={state.scrollKey}
-                myNotes={state.myNotes}
-                editableNotes={state.editableNotes}
-                areaDirection={state.areaDirection}
-              />
-            )}
-          </div>
+      <div className="browser-display" ref={refListVerses}>
+        <div className="card browser-display-card" dir="rtl">
+          {searchResult.length || searchError || selectedRootError ? (
+            <ListSearchResults
+              versesArray={searchResult}
+              selectChapter={selectChapter}
+              searchToken={searchingString.trim()}
+              searchingScope={searchingScope}
+              searchError={searchError}
+              selectedRootError={selectedRootError}
+              searchMethod={searchingMethod}
+              searchingChapters={searchingChapters}
+              searchIndexes={searchIndexes}
+              editableNotes={state.editableNotes}
+              myNotes={state.myNotes}
+              areaDirection={state.areaDirection}
+              dispatchDpAction={dispatchDpAction}
+            />
+          ) : (
+            <ListVerses
+              selectChapter={selectChapter}
+              scrollKey={state.scrollKey}
+              myNotes={state.myNotes}
+              editableNotes={state.editableNotes}
+              areaDirection={state.areaDirection}
+              dispatchDpAction={dispatchDpAction}
+            />
+          )}
         </div>
-      </DisplayPanelContext.Provider>
+      </div>
     );
   }
 );
@@ -248,6 +242,7 @@ interface ListSearchResultsProps {
   editableNotes: markedNotesType;
   myNotes: notesType;
   areaDirection: notesType;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 const ListSearchResults = ({
@@ -263,6 +258,7 @@ const ListSearchResults = ({
   searchIndexes,
   areaDirection,
   searchingScope,
+  dispatchDpAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
 
@@ -322,6 +318,7 @@ const ListSearchResults = ({
               value={myNotes[verse.key] || ""}
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
+              dispatchDpAction={dispatchDpAction}
             />
           </div>
         ))}
@@ -353,8 +350,7 @@ const SearchTitle = memo(
     searchChapters,
     chapterName,
   }: SearchTitleProps) => {
-    const searchType =
-      searchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
+    const searchType = searchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
     return (
       <h3 className="mb-2 text-info p-1">
         نتائج البحث عن {searchType} "{searchToken}"
@@ -415,6 +411,7 @@ interface SearchVerseComponentProps {
   value: string;
   isEditable: boolean;
   noteDirection: string;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 const SearchVerseComponent = memo(
@@ -425,6 +422,7 @@ const SearchVerseComponent = memo(
     value,
     isEditable,
     noteDirection,
+    dispatchDpAction,
   }: SearchVerseComponentProps) => {
     return (
       <>
@@ -432,12 +430,14 @@ const SearchVerseComponent = memo(
           verse={verse}
           searchingScope={searchingScope}
           verseChapter={verseChapter}
+          dispatchDpAction={dispatchDpAction}
         />
         <InputTextForm
           verseKey={verse.key}
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
+          dispatchDpAction={dispatchDpAction}
         />
       </>
     );
@@ -470,11 +470,16 @@ interface VerseContentComponentProps {
   verse: searchResult;
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 const VerseContentComponent = memo(
-  ({ verse, searchingScope, verseChapter }: VerseContentComponentProps) => {
-    const dispatchDpAction = useDisplayPanel();
+  ({
+    verse,
+    searchingScope,
+    verseChapter,
+    dispatchDpAction,
+  }: VerseContentComponentProps) => {
     const dispatchAction = useQuranBrowser();
 
     const verse_key = verse.key;
@@ -569,6 +574,7 @@ interface ListVersesProps {
   myNotes: notesType;
   editableNotes: markedNotesType;
   areaDirection: notesType;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 interface versesRefType {
@@ -581,9 +587,9 @@ const ListVerses = ({
   editableNotes,
   scrollKey,
   areaDirection,
+  dispatchDpAction,
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
-  const dispatchDpAction = useDisplayPanel();
 
   const chapterName = chapterNames[selectChapter - 1].name;
   const versesArray = allQuranText[selectChapter - 1].verses;
@@ -615,6 +621,7 @@ const ListVerses = ({
             noteDirection={areaDirection[verse.key] || ""}
             selectedVerse={selectedVerse}
             versesRef={versesRef}
+            dispatchDpAction={dispatchDpAction}
           />
         ))}
       </div>
@@ -640,6 +647,7 @@ interface VerseComponentProps {
   noteDirection: string;
   selectedVerse: MutableRefObject<Element | null>;
   versesRef: MutableRefObject<versesRefType>;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 const VerseComponent = memo(
@@ -650,6 +658,7 @@ const VerseComponent = memo(
     noteDirection,
     selectedVerse,
     versesRef,
+    dispatchDpAction,
   }: VerseComponentProps) => {
     return (
       <div
@@ -664,6 +673,7 @@ const VerseComponent = memo(
           verseNote={value}
           noteEditable={isEditable}
           noteDirection={noteDirection}
+          dispatchDpAction={dispatchDpAction}
         />
       </div>
     );
@@ -726,6 +736,7 @@ interface InputTextFormProps {
   verseNote: string;
   noteEditable: boolean;
   noteDirection: string;
+  dispatchDpAction: Dispatch<dpActionsProps>;
 }
 
 const InputTextForm = memo(
@@ -734,8 +745,8 @@ const InputTextForm = memo(
     verseNote,
     noteEditable,
     noteDirection,
+    dispatchDpAction,
   }: InputTextFormProps) => {
-    const dispatchDpAction = useDisplayPanel();
     const { t } = useTranslation();
 
     const handleNoteChange = useCallback(
