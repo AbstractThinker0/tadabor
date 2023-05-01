@@ -14,6 +14,36 @@ import {
   splitByArray,
 } from "../util/util";
 
+const getDerivationsInVerse = (
+  wordIndexes: string[],
+  verse: verseProps,
+  chapterName: string
+) => {
+  const { versetext, key, suraid, verseid } = verse;
+  const verseWords = versetext.split(" ");
+  const derivationsArray = wordIndexes.map(
+    (index) => verseWords[Number(index) - 1]
+  );
+
+  const rootParts = splitByArray(versetext, derivationsArray);
+
+  const verseParts = rootParts.filter(Boolean).map((part) => ({
+    text: part,
+    highlight: derivationsArray.includes(part),
+  }));
+
+  const verseDerivations = derivationsArray.map((name, index) => ({
+    name,
+    key,
+    text: `${chapterName}:${verseid}`,
+    wordIndex: wordIndexes[index],
+  }));
+
+  const verseResult = { key, suraid, verseid, verseParts };
+
+  return { verseDerivations, verseResult };
+};
+
 export function qbSearchRoot(
   state: qbStateProps,
   payload: {
@@ -51,32 +81,6 @@ export function qbSearchRoot(
 
   const occurencesArray = rootTarget.occurences;
 
-  const getDerivationsInVerse = (wordIndexes: string[], verse: verseProps) => {
-    const { versetext, key, suraid, verseid } = verse;
-    const verseWords = versetext.split(" ");
-    const derivationsArray = wordIndexes.map(
-      (index) => verseWords[Number(index) - 1]
-    );
-
-    const rootParts = splitByArray(versetext, derivationsArray);
-
-    const verseParts = rootParts.filter(Boolean).map((part) => ({
-      text: part,
-      highlight: derivationsArray.includes(part),
-    }));
-
-    const verseDerivations = derivationsArray.map((name, index) => ({
-      name,
-      key,
-      text: `${chapterNames[Number(suraid) - 1].name}:${verseid}`,
-      wordIndex: wordIndexes[index],
-    }));
-
-    const verseResult = { key, suraid, verseid, verseParts };
-
-    return { verseDerivations, verseResult };
-  };
-
   const matchVerses: searchResult[] = [];
   const derivations: searchIndexProps[] = [];
 
@@ -86,11 +90,14 @@ export function qbSearchRoot(
       const info = item.split(":");
       const currentVerse = absoluteQuran[Number(info[0])];
 
+      const chapterName = chapterNames[Number(currentVerse.suraid) - 1].name;
+
       const wordIndexes = info[1].split(",");
 
       const { verseDerivations, verseResult } = getDerivationsInVerse(
         wordIndexes,
-        currentVerse
+        currentVerse,
+        chapterName
       );
 
       derivations.push(...verseDerivations);
@@ -128,9 +135,12 @@ export function qbSearchRoot(
       if (state.selectedChapters.includes(currentVerse.suraid)) {
         const wordIndexes = info[1].split(",");
 
+        const chapterName = chapterNames[Number(currentVerse.suraid) - 1].name;
+
         const { verseDerivations, verseResult } = getDerivationsInVerse(
           wordIndexes,
-          currentVerse
+          currentVerse,
+          chapterName
         );
 
         derivations.push(...verseDerivations);
@@ -149,6 +159,83 @@ export function qbSearchRoot(
     };
   }
 }
+
+const getSearchIndexes = (
+  processedVerseText: string,
+  searchToken: string,
+  verse: verseProps,
+  searchDiacritics: boolean
+) => {
+  const regex = new RegExp(`(${searchToken})`);
+  const parts = searchDiacritics
+    ? verse.versetext.split(regex)
+    : processedVerseText.split(regex);
+
+  const arrayText = splitArabicLetters(verse.versetext);
+  const verseParts: versePart[] = [];
+
+  parts.forEach((part) => {
+    const isMatch = part.includes(searchToken);
+
+    const originalPart = searchDiacritics
+      ? part
+      : arrayText
+          .slice(
+            processedVerseText.indexOf(part),
+            processedVerseText.indexOf(part) + part.length
+          )
+          .join("");
+
+    verseParts.push({ text: originalPart, highlight: isMatch });
+  });
+
+  const verseResult: searchResult = {
+    key: verse.key,
+    suraid: verse.suraid,
+    verseid: verse.verseid,
+    verseParts,
+  };
+
+  return verseResult;
+};
+
+const searchVerse = (
+  verse: verseProps,
+  searchToken: string,
+  searchIdentical: boolean,
+  searchDiacritics: boolean
+) => {
+  let processedVerseText = "";
+
+  if (searchDiacritics !== true) {
+    processedVerseText = removeDiacritics(verse.versetext);
+  } else {
+    processedVerseText = verse.versetext;
+  }
+
+  if (searchIdentical === true) {
+    if (findSubstring(searchToken, processedVerseText)) {
+      const verseResult = getSearchIndexes(
+        processedVerseText,
+        searchToken,
+        verse,
+        searchDiacritics
+      );
+      return verseResult;
+    }
+  } else {
+    if (processedVerseText.search(searchToken) !== -1) {
+      const verseResult = getSearchIndexes(
+        processedVerseText,
+        searchToken,
+        verse,
+        searchDiacritics
+      );
+      return verseResult;
+    }
+  }
+  return false;
+};
 
 export function qbSearchWord(
   state: qbStateProps,
@@ -187,83 +274,6 @@ export function qbSearchWord(
 
   const QuranText: quranProps[] = payload.allQuranText;
   const chapterNames: chapterProps[] = payload.chapterNames;
-
-  const getSearchIndexes = (
-    processedVerseText: string,
-    searchToken: string,
-    verse: verseProps,
-    searchDiacritics: boolean
-  ) => {
-    const regex = new RegExp(`(${searchToken})`);
-    const parts = searchDiacritics
-      ? verse.versetext.split(regex)
-      : processedVerseText.split(regex);
-
-    const arrayText = splitArabicLetters(verse.versetext);
-    const verseParts: versePart[] = [];
-
-    parts.forEach((part) => {
-      const isMatch = part.includes(searchToken);
-
-      const originalPart = searchDiacritics
-        ? part
-        : arrayText
-            .slice(
-              processedVerseText.indexOf(part),
-              processedVerseText.indexOf(part) + part.length
-            )
-            .join("");
-
-      verseParts.push({ text: originalPart, highlight: isMatch });
-    });
-
-    const verseResult: searchResult = {
-      key: verse.key,
-      suraid: verse.suraid,
-      verseid: verse.verseid,
-      verseParts,
-    };
-
-    return verseResult;
-  };
-
-  const searchVerse = (
-    verse: verseProps,
-    searchToken: string,
-    searchIdentical: boolean,
-    searchDiacritics: boolean
-  ) => {
-    let processedVerseText = "";
-
-    if (searchDiacritics !== true) {
-      processedVerseText = removeDiacritics(verse.versetext);
-    } else {
-      processedVerseText = verse.versetext;
-    }
-
-    if (searchIdentical === true) {
-      if (findSubstring(searchToken, processedVerseText)) {
-        const verseResult = getSearchIndexes(
-          processedVerseText,
-          searchToken,
-          verse,
-          searchDiacritics
-        );
-        return verseResult;
-      }
-    } else {
-      if (processedVerseText.search(searchToken) !== -1) {
-        const verseResult = getSearchIndexes(
-          processedVerseText,
-          searchToken,
-          verse,
-          searchDiacritics
-        );
-        return verseResult;
-      }
-    }
-    return false;
-  };
 
   const matchVerses: searchResult[] = [];
 
