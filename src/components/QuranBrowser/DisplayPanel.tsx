@@ -22,7 +22,6 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "../../context/QuranContext";
 
-import { useQuranBrowser } from "../../pages/QuranBrowser";
 import { verseProps } from "../../types";
 import {
   DP_ACTIONS,
@@ -33,6 +32,7 @@ import {
   markedNotesType,
   notesType,
   qbActions,
+  qbActionsProps,
   searchIndexProps,
   searchResult,
 } from "./consts";
@@ -104,6 +104,7 @@ interface DisplayPanelProps {
   searchingMethod: string;
   searchIndexes: searchIndexProps[];
   searchingScope: SEARCH_SCOPE;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const DisplayPanel = memo(
@@ -117,6 +118,7 @@ const DisplayPanel = memo(
     searchingMethod,
     searchIndexes,
     searchingScope,
+    dispatchQbAction,
   }: DisplayPanelProps) => {
     // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
     const refListVerses = useRef<HTMLDivElement>(null);
@@ -210,6 +212,7 @@ const DisplayPanel = memo(
               myNotes={state.myNotes}
               areaDirection={state.areaDirection}
               dispatchDpAction={dispatchDpAction}
+              dispatchQbAction={dispatchQbAction}
             />
           ) : (
             <ListVerses
@@ -243,6 +246,7 @@ interface ListSearchResultsProps {
   myNotes: notesType;
   areaDirection: notesType;
   dispatchDpAction: Dispatch<dpActionsProps>;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const ListSearchResults = ({
@@ -259,6 +263,7 @@ const ListSearchResults = ({
   areaDirection,
   searchingScope,
   dispatchDpAction,
+  dispatchQbAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
 
@@ -319,6 +324,7 @@ const ListSearchResults = ({
               isEditable={editableNotes[verse.key]}
               noteDirection={areaDirection[verse.key] || ""}
               dispatchDpAction={dispatchDpAction}
+              dispatchQbAction={dispatchQbAction}
             />
           </div>
         ))}
@@ -412,6 +418,7 @@ interface SearchVerseComponentProps {
   isEditable: boolean;
   noteDirection: string;
   dispatchDpAction: Dispatch<dpActionsProps>;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SearchVerseComponent = memo(
@@ -423,6 +430,7 @@ const SearchVerseComponent = memo(
     isEditable,
     noteDirection,
     dispatchDpAction,
+    dispatchQbAction,
   }: SearchVerseComponentProps) => {
     return (
       <>
@@ -431,6 +439,7 @@ const SearchVerseComponent = memo(
           searchingScope={searchingScope}
           verseChapter={verseChapter}
           dispatchDpAction={dispatchDpAction}
+          dispatchQbAction={dispatchQbAction}
         />
         <InputTextForm
           verseKey={verse.key}
@@ -471,6 +480,7 @@ interface VerseContentComponentProps {
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
   dispatchDpAction: Dispatch<dpActionsProps>;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseContentComponent = memo(
@@ -479,9 +489,8 @@ const VerseContentComponent = memo(
     searchingScope,
     verseChapter,
     dispatchDpAction,
+    dispatchQbAction,
   }: VerseContentComponentProps) => {
-    const dispatchQbAction = useQuranBrowser();
-
     const verse_key = verse.key;
     const isLinkable =
       searchingScope === SEARCH_SCOPE.ALL_CHAPTERS ||

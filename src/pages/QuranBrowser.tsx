@@ -1,4 +1,4 @@
-import { useReducer, useContext, createContext, Dispatch } from "react";
+import { useReducer } from "react";
 
 import SearchPanel from "../components/QuranBrowser/SearchPanel";
 import DisplayPanel from "../components/QuranBrowser/DisplayPanel";
@@ -7,11 +7,8 @@ import {
   qbStateProps,
   SEARCH_METHOD,
   SEARCH_SCOPE,
-  qbActionsProps,
 } from "../components/QuranBrowser/consts";
 import qbReducer from "../reducers/qbReducer";
-
-const QuranBrowserContext = createContext({} as Dispatch<qbActionsProps>);
 
 function QuranBrowser() {
   const initialState: qbStateProps = {
@@ -35,34 +32,32 @@ function QuranBrowser() {
   const [state, dispatchQbAction] = useReducer(qbReducer, initialState);
 
   return (
-    <QuranBrowserContext.Provider value={dispatchQbAction}>
-      <div className="browser">
-        <SearchPanel
-          selectedChapters={state.selectedChapters}
-          searchResult={state.searchResult}
-          searchString={state.searchString}
-          searchDiacritics={state.searchDiacritics}
-          searchIdentical={state.searchIdentical}
-          searchMethod={state.searchMethod}
-          searchAllQuran={state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS}
-        />
+    <div className="browser">
+      <SearchPanel
+        selectedChapters={state.selectedChapters}
+        searchResult={state.searchResult}
+        searchString={state.searchString}
+        searchDiacritics={state.searchDiacritics}
+        searchIdentical={state.searchIdentical}
+        searchMethod={state.searchMethod}
+        searchAllQuran={state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS}
+        dispatchQbAction={dispatchQbAction}
+      />
 
-        <DisplayPanel
-          searchingChapters={state.searchingChapters}
-          searchResult={state.searchResult}
-          searchError={state.searchError}
-          selectedRootError={state.selectedRootError}
-          searchingString={state.searchingString}
-          searchingScope={state.searchingScope}
-          selectChapter={state.selectChapter}
-          searchingMethod={state.searchingMethod}
-          searchIndexes={state.searchIndexes}
-        />
-      </div>
-    </QuranBrowserContext.Provider>
+      <DisplayPanel
+        searchingChapters={state.searchingChapters}
+        searchResult={state.searchResult}
+        searchError={state.searchError}
+        selectedRootError={state.selectedRootError}
+        searchingString={state.searchingString}
+        searchingScope={state.searchingScope}
+        selectChapter={state.selectChapter}
+        searchingMethod={state.searchingMethod}
+        searchIndexes={state.searchIndexes}
+        dispatchQbAction={dispatchQbAction}
+      />
+    </div>
   );
 }
-
-export const useQuranBrowser = () => useContext(QuranBrowserContext);
 
 export default QuranBrowser;

@@ -1,11 +1,16 @@
-import { memo } from "react";
+import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran from "../../context/QuranContext";
-import { useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
-import { SEARCH_METHOD, SEARCH_SCOPE, qbActions, searchResult } from "./consts";
+import {
+  SEARCH_METHOD,
+  SEARCH_SCOPE,
+  qbActions,
+  qbActionsProps,
+  searchResult,
+} from "./consts";
 
 interface SearchPanelProps {
   searchMethod: string;
@@ -15,6 +20,7 @@ interface SearchPanelProps {
   searchString: string;
   searchResult: searchResult[];
   selectedChapters: string[];
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SearchPanel = memo(
@@ -26,11 +32,11 @@ const SearchPanel = memo(
     searchString,
     searchResult,
     selectedChapters,
+    dispatchQbAction,
   }: SearchPanelProps) => {
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
     const { t } = useTranslation();
-    const dispatchQbAction = useQuranBrowser();
 
     const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
@@ -118,10 +124,12 @@ const SearchPanel = memo(
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
           searchString={searchString}
+          dispatchQbAction={dispatchQbAction}
         />
         <SelectionListRoots
           isDisabled={!isRootSearch}
           searchString={searchString}
+          dispatchQbAction={dispatchQbAction}
         />
         <SearchSuccessComponent searchResult={searchResult} />
       </div>
@@ -190,13 +198,14 @@ const RadioSearchMethod = ({
 interface FormWordSearchProps {
   onSearchSubmit: () => void;
   searchString: string;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const FormWordSearch = ({
   onSearchSubmit,
   searchString,
+  dispatchQbAction,
 }: FormWordSearchProps) => {
-  const dispatchQbAction = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
