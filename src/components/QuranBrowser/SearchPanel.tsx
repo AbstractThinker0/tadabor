@@ -30,12 +30,12 @@ const SearchPanel = memo(
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
     const { t } = useTranslation();
-    const dispatchAction = useQuranBrowser();
+    const dispatchQbAction = useQuranBrowser();
 
     const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     function setSearchAllQuran(status: boolean) {
-      dispatchAction(
+      dispatchQbAction(
         qbActions.setSearchScope(
           status === true
             ? SEARCH_SCOPE.ALL_CHAPTERS
@@ -45,20 +45,20 @@ const SearchPanel = memo(
     }
 
     function setSearchDiacritics(status: boolean) {
-      dispatchAction(qbActions.setSearchDiacritics(status));
+      dispatchQbAction(qbActions.setSearchDiacritics(status));
     }
 
     function setSearchIdentical(status: boolean) {
-      dispatchAction(qbActions.setSearchIdentical(status));
+      dispatchQbAction(qbActions.setSearchIdentical(status));
     }
 
     function setSearchMethod(method: SEARCH_METHOD) {
-      dispatchAction(qbActions.setSearchMethod(method));
+      dispatchQbAction(qbActions.setSearchMethod(method));
     }
 
     function onSearchSubmit() {
       if (isRootSearch) {
-        dispatchAction(
+        dispatchQbAction(
           qbActions.submitRootSearch({
             absoluteQuran,
             chapterNames,
@@ -66,7 +66,7 @@ const SearchPanel = memo(
           })
         );
       } else {
-        dispatchAction(
+        dispatchQbAction(
           qbActions.submitWordSearch({
             allQuranText,
             chapterNames,
@@ -82,9 +82,9 @@ const SearchPanel = memo(
       if (!selectedChapter) return;
 
       if (selectedOptions.length === 1) {
-        dispatchAction(qbActions.gotoChapter(selectedChapter));
+        dispatchQbAction(qbActions.gotoChapter(selectedChapter));
       } else {
-        dispatchAction(qbActions.setChapters(selectedOptions));
+        dispatchQbAction(qbActions.setChapters(selectedOptions));
       }
     }
 
@@ -196,11 +196,11 @@ const FormWordSearch = ({
   onSearchSubmit,
   searchString,
 }: FormWordSearchProps) => {
-  const dispatchAction = useQuranBrowser();
+  const dispatchQbAction = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(qbActions.setSearchString(event.target.value));
+    dispatchQbAction(qbActions.setSearchString(event.target.value));
   };
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {

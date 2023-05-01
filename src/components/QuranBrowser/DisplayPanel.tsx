@@ -480,7 +480,7 @@ const VerseContentComponent = memo(
     verseChapter,
     dispatchDpAction,
   }: VerseContentComponentProps) => {
-    const dispatchAction = useQuranBrowser();
+    const dispatchQbAction = useQuranBrowser();
 
     const verse_key = verse.key;
     const isLinkable =
@@ -488,7 +488,7 @@ const VerseContentComponent = memo(
       searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS;
 
     function gotoChapter(chapter: string) {
-      dispatchAction(qbActions.gotoChapter(chapter));
+      dispatchQbAction(qbActions.gotoChapter(chapter));
     }
 
     const handleVerseClick = (verse_key: string) => {

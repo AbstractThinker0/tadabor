@@ -11,7 +11,7 @@ interface SelectionListRootsProps {
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
     const { quranRoots } = useQuran();
-    const dispatchAction = useQuranBrowser();
+    const dispatchQbAction = useQuranBrowser();
 
     const [stateSelect, setStateSelect] = useState<string>();
     const [itemsCount, setItemsCount] = useState(100);
@@ -30,7 +30,7 @@ const SelectionListRoots = memo(
 
       const selectedRoot = quranRoots[Number(rootId)];
 
-      dispatchAction(qbActions.setSearchString(selectedRoot.name));
+      dispatchQbAction(qbActions.setSearchString(selectedRoot.name));
     };
 
     const fetchMoreData = () => {

@@ -32,10 +32,10 @@ function QuranBrowser() {
     searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
   };
 
-  const [state, dispatchAction] = useReducer(qbReducer, initialState);
+  const [state, dispatchQbAction] = useReducer(qbReducer, initialState);
 
   return (
-    <QuranBrowserContext.Provider value={dispatchAction}>
+    <QuranBrowserContext.Provider value={dispatchQbAction}>
       <div className="browser">
         <SearchPanel
           selectedChapters={state.selectedChapters}
