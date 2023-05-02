@@ -281,29 +281,31 @@ function Coloring() {
   return (
     <div className="coloring">
       <div className="chapters-side">
-        <input
-          className="chapter-search"
-          type="text"
-          placeholder={chapterNames[state.currentChapter - 1].name}
-          value={state.chapterToken}
-          onChange={onChangeChapterToken}
-        />
-        <div className="chapter-list">
-          {chapterNames
-            .filter((chapter) => chapter.name.includes(state.chapterToken))
-            .map((chapter) => (
-              <div
-                key={chapter.id}
-                onClick={(event) => onClickChapter(event, chapter.id)}
-                className={`chapter-list-item ${
-                  state.currentChapter === chapter.id
-                    ? "chapter-list-item-selected"
-                    : ""
-                }`}
-              >
-                {chapter.name}
-              </div>
-            ))}
+        <div className="chapter-block">
+          <input
+            className="chapter-search"
+            type="text"
+            placeholder={chapterNames[state.currentChapter - 1].name}
+            value={state.chapterToken}
+            onChange={onChangeChapterToken}
+          />
+          <div className="chapter-list">
+            {chapterNames
+              .filter((chapter) => chapter.name.includes(state.chapterToken))
+              .map((chapter) => (
+                <div
+                  key={chapter.id}
+                  onClick={(event) => onClickChapter(event, chapter.id)}
+                  className={`chapter-list-item ${
+                    state.currentChapter === chapter.id
+                      ? "chapter-list-item-selected"
+                      : ""
+                  }`}
+                >
+                  {chapter.name}
+                </div>
+              ))}
+          </div>
         </div>
         <div className="text-center" dir="ltr">
           Colors list:

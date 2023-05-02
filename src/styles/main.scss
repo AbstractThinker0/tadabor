@@ -89,9 +89,13 @@ main {
   .chapters-side {
     padding: 16px;
 
+    .chapter-block {
+      max-width: 200px;
+      min-width: 200px;
+    }
+
     .chapter-search {
       height: 30px;
-      min-width: 200px;
       border: none;
       border: 1px solid rgb(201, 202, 204);
       border-bottom: none;
@@ -104,9 +108,11 @@ main {
     }
 
     .chapter-list {
-      min-width: 200px;
       max-height: 400px;
       overflow-y: scroll;
+      scrollbar-width: 20px;
+      max-width: 187px;
+      min-width: 187px;
 
       &-item {
         background-color: rgb(201, 202, 204);
