@@ -127,6 +127,13 @@ main {
       }
     }
 
+    &-colors-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: rgb(245, 244, 244);
+      border-radius: 0.275rem;
+    }
+
     &-colors {
       overflow-y: auto;
       max-height: 200px;
