@@ -146,7 +146,7 @@ function ChaptersSide({
     dispatchClAction(clActions.setSelectedChapters(selectedChapters));
   }
 
-  function getSelectedCounted() {
+  function getSelectedCount() {
     return Object.keys(selectedChapters).filter(
       (chapterID) => selectedChapters[chapterID] === true
     ).length;
@@ -195,14 +195,14 @@ function ChaptersSide({
         </div>
         <div className="chapter-block-buttons" dir="ltr">
           <button
-            disabled={getSelectedCounted() === 114}
+            disabled={getSelectedCount() === 114}
             onClick={onClickSelectAll}
             className="btn btn-dark"
           >
             Select all
           </button>
           <button
-            disabled={getSelectedCounted() === 0}
+            disabled={getSelectedCount() === 0}
             onClick={onClickDeselectAll}
             className="btn btn-dark"
           >
