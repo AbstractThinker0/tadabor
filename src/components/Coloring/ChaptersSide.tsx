@@ -3,7 +3,13 @@ import useQuran from "../../context/QuranContext";
 import AddColorModal from "./AddColorModal";
 import DeleteColorModal from "./DeleteColorModal";
 import EditColorsModal from "./EditColorsModal";
-import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
+import {
+  clActions,
+  clActionsProps,
+  colorProps,
+  coloredProps,
+  selectedChaptersType,
+} from "./consts";
 import { getTextColor } from "./util";
 import { dbFuncs } from "../../util/db";
 
@@ -11,18 +17,20 @@ interface ChaptersSideProps {
   currentChapter: number;
   chapterToken: string;
   colorsList: coloredProps;
-  dispatchClAction: Dispatch<clActionsProps>;
   currentColor: colorProps | null;
   coloredVerses: coloredProps;
+  selectedChapters: selectedChaptersType;
+  dispatchClAction: Dispatch<clActionsProps>;
 }
 
 function ChaptersSide({
   currentChapter,
   chapterToken,
   colorsList,
-  dispatchClAction,
   currentColor,
   coloredVerses,
+  selectedChapters,
+  dispatchClAction,
 }: ChaptersSideProps) {
   const { chapterNames } = useQuran();
   const refChapter = useRef<HTMLDivElement | null>(null);
@@ -57,6 +65,16 @@ function ChaptersSide({
       }
     }
   }, [currentChapter]);
+
+  useEffect(() => {
+    const selectedChapters: selectedChaptersType = {};
+
+    chapterNames.forEach((chapter) => {
+      selectedChapters[chapter.id] = true;
+    });
+
+    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
+  }, [chapterNames, dispatchClAction]);
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
     dispatchClAction(clActions.setChapterToken(event.target.value));
@@ -104,6 +122,36 @@ function ChaptersSide({
     dispatchClAction(clActions.setColoredVerses(newColoredVerses));
   }
 
+  function onChangeSelectChapter(chapterID: number) {
+    dispatchClAction(clActions.toggleSelectChapter(chapterID));
+  }
+
+  function onClickSelectAll() {
+    const selectedChapters: selectedChaptersType = {};
+
+    chapterNames.forEach((chapter) => {
+      selectedChapters[chapter.id] = true;
+    });
+
+    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
+  }
+
+  function onClickDeselectAll() {
+    const selectedChapters: selectedChaptersType = {};
+
+    chapterNames.forEach((chapter) => {
+      selectedChapters[chapter.id] = false;
+    });
+
+    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
+  }
+
+  function getSelectedCounted() {
+    return Object.keys(selectedChapters).filter(
+      (chapterID) => selectedChapters[chapterID] === true
+    ).length;
+  }
+
   return (
     <div className="chapters-side">
       <div className="chapter-block">
@@ -120,16 +168,46 @@ function ChaptersSide({
             .map((chapter) => (
               <div
                 key={chapter.id}
-                onClick={(event) => onClickChapter(event, chapter.id)}
                 className={`chapter-list-item ${
                   currentChapter === chapter.id
                     ? "chapter-list-item-selected"
                     : ""
                 }`}
               >
-                {chapter.name}
+                <div
+                  className="chapter-list-item-name"
+                  onClick={(event) => onClickChapter(event, chapter.id)}
+                >
+                  {chapter.name}
+                </div>
+
+                <input
+                  type="checkbox"
+                  checked={
+                    selectedChapters[chapter.id] !== undefined
+                      ? selectedChapters[chapter.id]
+                      : true
+                  }
+                  onChange={() => onChangeSelectChapter(chapter.id)}
+                />
               </div>
             ))}
+        </div>
+        <div className="chapter-block-buttons" dir="ltr">
+          <button
+            disabled={getSelectedCounted() === 114}
+            onClick={onClickSelectAll}
+            className="btn btn-dark"
+          >
+            Select all
+          </button>
+          <button
+            disabled={getSelectedCounted() === 0}
+            onClick={onClickDeselectAll}
+            className="btn btn-dark"
+          >
+            Deselect all
+          </button>
         </div>
       </div>
       <div className="chapters-side-colors-block">

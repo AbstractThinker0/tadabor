@@ -90,11 +90,19 @@ main {
     padding: 16px;
 
     .chapter-block {
-      max-width: 200px;
-      min-width: 200px;
+      &-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: rgb(245, 244, 244);
+        border-bottom-left-radius: 0.275rem;
+        border-bottom-right-radius: 0.275rem;
+      }
     }
 
     .chapter-search {
+      width: 100%;
       height: 30px;
       border: none;
       border: 1px solid rgb(201, 202, 204);
@@ -111,14 +119,18 @@ main {
       max-height: 400px;
       overflow-y: scroll;
       scrollbar-width: 20px;
-      max-width: 187px;
-      min-width: 187px;
+      width: 100%;
 
       &-item {
         background-color: rgb(201, 202, 204);
         cursor: pointer;
         margin-bottom: 2px;
         padding: 2px;
+        display: flex;
+
+        &-name {
+          flex-grow: 1;
+        }
 
         &-selected {
           background-color: rgba(76, 76, 167, 0.623);

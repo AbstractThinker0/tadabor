@@ -14,6 +14,7 @@ import {
   markedNotesType,
   notesDirectionType,
   notesType,
+  selectedChaptersType,
   vsActions,
   vsActionsProps,
 } from "./consts";
@@ -77,6 +78,7 @@ interface VersesSideProps {
   currentChapter: number;
   colorsList: coloredProps;
   currentVerse: verseProps | null;
+  selectedChapters: selectedChaptersType;
   dispatchClAction: (value: clActionsProps) => void;
 }
 
@@ -87,6 +89,7 @@ function VersesSide({
   colorsList,
   currentVerse,
   dispatchClAction,
+  selectedChapters,
 }: VersesSideProps) {
   const { chapterNames, allQuranText } = useQuran();
 
@@ -173,6 +176,15 @@ function VersesSide({
     );
   }
 
+  const asArray = Object.entries(coloredVerses);
+
+  const filtered = asArray.filter(([key, value]) => {
+    const info = key.split("-");
+    return selectedChapters[info[0]] === true;
+  });
+
+  const selectedColoredVerses = Object.fromEntries(filtered);
+
   return (
     <div className="verses-side">
       <div className="verses-side-colors" dir="ltr">
@@ -204,7 +216,7 @@ function VersesSide({
         {Object.keys(selectedColors).length ? (
           <SelectedVerses
             selectedColors={selectedColors}
-            coloredVerses={coloredVerses}
+            coloredVerses={selectedColoredVerses}
             myNotes={state.myNotes}
             areaDirection={state.areaDirection}
             editableNotes={state.editableNotes}

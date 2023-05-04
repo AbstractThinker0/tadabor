@@ -7,6 +7,7 @@ import {
   clActionsProps,
   colorProps,
   coloredProps,
+  selectedChaptersType,
 } from "../components/Coloring/consts";
 
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -23,6 +24,7 @@ interface stateProps {
   coloredVerses: coloredProps;
   currentVerse: verseProps | null;
   currentColor: colorProps | null;
+  selectedChapters: selectedChaptersType;
 }
 
 function reducer(state: stateProps, action: clActionsProps): stateProps {
@@ -115,6 +117,14 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
     case CL_ACTIONS.SET_CURRENT_COLOR: {
       return { ...state, currentColor: action.payload };
     }
+    case CL_ACTIONS.SET_SELECTED_CHAPTERS: {
+      return { ...state, selectedChapters: action.payload };
+    }
+    case CL_ACTIONS.TOGGLE_SELECT_CHAPTER: {
+      const newSelectChapters = { ...state.selectedChapters };
+      newSelectChapters[action.payload] = !newSelectChapters[action.payload];
+      return { ...state, selectedChapters: newSelectChapters };
+    }
   }
 }
 
@@ -186,6 +196,7 @@ function Coloring() {
     coloredVerses: {},
     currentVerse: null,
     currentColor: null,
+    selectedChapters: {},
   };
 
   const [state, dispatchClAction] = useReducer(reducer, initialState);
@@ -200,6 +211,7 @@ function Coloring() {
         colorsList={state.colorsList}
         currentColor={state.currentColor}
         coloredVerses={state.coloredVerses}
+        selectedChapters={state.selectedChapters}
         dispatchClAction={dispatchClAction}
       />
       <VersesSide
@@ -208,6 +220,7 @@ function Coloring() {
         currentChapter={state.currentChapter}
         colorsList={state.colorsList}
         currentVerse={state.currentVerse}
+        selectedChapters={state.selectedChapters}
         dispatchClAction={dispatchClAction}
       />
     </div>
