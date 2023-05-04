@@ -48,21 +48,21 @@ function ChaptersSide({
   }
 
   useEffect(() => {
-    if (refChapter.current && refChapter.current.parentElement) {
-      const child = refChapter.current;
-      const parent = refChapter.current.parentElement;
+    const child = refChapter.current;
+    const parent = refChapter.current?.parentElement?.parentElement;
 
-      const parentOffsetTop = parent.offsetTop;
+    if (!child || !parent) return;
 
-      if (
-        parent.scrollTop + parentOffsetTop <
-          child.offsetTop - parent.clientHeight + child.clientHeight * 2 ||
-        parent.scrollTop + parentOffsetTop >
-          child.offsetTop - child.clientHeight * 1.5
-      ) {
-        parent.scrollTop =
-          child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
-      }
+    const parentOffsetTop = parent.offsetTop;
+
+    if (
+      parent.scrollTop + parentOffsetTop <
+        child.offsetTop - parent.clientHeight + child.clientHeight * 2.5 ||
+      parent.scrollTop + parentOffsetTop >
+        child.offsetTop - child.clientHeight * 2.5
+    ) {
+      parent.scrollTop =
+        child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
     }
   }, [currentChapter]);
 
