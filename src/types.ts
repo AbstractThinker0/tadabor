@@ -23,6 +23,10 @@ export interface rootProps {
   occurences: string[];
 }
 
+export interface selectedChaptersType {
+  [key: string]: boolean;
+}
+
 // Bellow snippets are thanks to this article https://patrickdesjardins.com/blog/typescript-with-strong-typed-action-when-using-usereducer-of-react-hooks
 
 /**

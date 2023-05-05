@@ -3,15 +3,10 @@ import useQuran from "../../context/QuranContext";
 import AddColorModal from "./AddColorModal";
 import DeleteColorModal from "./DeleteColorModal";
 import EditColorsModal from "./EditColorsModal";
-import {
-  clActions,
-  clActionsProps,
-  colorProps,
-  coloredProps,
-  selectedChaptersType,
-} from "./consts";
+import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
 import { dbFuncs } from "../../util/db";
+import { selectedChaptersType } from "../../types";
 
 interface ChaptersSideProps {
   currentChapter: number;
@@ -65,16 +60,6 @@ function ChaptersSide({
         child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
     }
   }, [currentChapter]);
-
-  useEffect(() => {
-    const selectedChapters: selectedChaptersType = {};
-
-    chapterNames.forEach((chapter) => {
-      selectedChapters[chapter.id] = true;
-    });
-
-    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
-  }, [chapterNames, dispatchClAction]);
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
     dispatchClAction(clActions.setChapterToken(event.target.value));

@@ -2,7 +2,7 @@ import { useReducer, useCallback, useEffect, memo } from "react";
 
 import useQuran from "../../context/QuranContext";
 import { toast } from "react-toastify";
-import { verseProps } from "../../types";
+import { selectedChaptersType, verseProps } from "../../types";
 import { dbFuncs, INote, INoteDir } from "../../util/db";
 import VerseModal from "./VerseModal";
 import {
@@ -14,7 +14,6 @@ import {
   markedNotesType,
   notesDirectionType,
   notesType,
-  selectedChaptersType,
   vsActions,
   vsActionsProps,
 } from "./consts";

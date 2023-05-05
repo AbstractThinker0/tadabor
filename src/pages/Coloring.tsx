@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import { verseProps } from "../types";
+import { selectedChaptersType, verseProps } from "../types";
 
 import {
   CL_ACTIONS,
@@ -7,7 +7,6 @@ import {
   clActionsProps,
   colorProps,
   coloredProps,
-  selectedChaptersType,
 } from "../components/Coloring/consts";
 
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -15,6 +14,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { IColor, IVerseColor, dbFuncs } from "../util/db";
 import VersesSide from "../components/Coloring/VersesSide";
 import ChaptersSide from "../components/Coloring/ChaptersSide";
+import useQuran from "../context/QuranContext";
 
 interface stateProps {
   currentChapter: number;
@@ -129,6 +129,7 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
 }
 
 function Coloring() {
+  const { chapterNames } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
   useEffect(() => {
@@ -188,6 +189,12 @@ function Coloring() {
     }
   }, []);
 
+  const initialSelectedChapters: selectedChaptersType = {};
+
+  chapterNames.forEach((chapter) => {
+    initialSelectedChapters[chapter.id] = true;
+  });
+
   const initialState: stateProps = {
     currentChapter: 1,
     chapterToken: "",
@@ -196,7 +203,7 @@ function Coloring() {
     coloredVerses: {},
     currentVerse: null,
     currentColor: null,
-    selectedChapters: {},
+    selectedChapters: initialSelectedChapters,
   };
 
   const [state, dispatchClAction] = useReducer(reducer, initialState);

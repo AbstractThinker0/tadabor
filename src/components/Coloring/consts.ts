@@ -1,4 +1,9 @@
-import { ActionsUnion, createActionPayload, verseProps } from "../../types";
+import {
+  ActionsUnion,
+  createActionPayload,
+  selectedChaptersType,
+  verseProps,
+} from "../../types";
 
 export interface colorProps {
   colorID: string;
@@ -8,10 +13,6 @@ export interface colorProps {
 
 export interface coloredProps {
   [key: string]: colorProps;
-}
-
-export interface selectedChaptersType {
-  [key: string]: boolean;
 }
 
 export enum CL_ACTIONS {
