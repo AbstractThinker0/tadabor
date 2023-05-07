@@ -57,4 +57,4 @@ usually the domain to access the app will be http://localhost:3000/
 
 ## Future project:
 
-Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's will.
+Once all features of this project are implemented, it will serve as the foundation for another project that aims to create a platform for collaborative translation and reflection upon the Quran. The ultimate goal is to achieve an accurate understanding of the true message of the Quran by undoing all the semantic changes that have occurred over the centuries. There is currently no set deadline, and it all depends on God's will.
