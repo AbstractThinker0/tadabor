@@ -184,43 +184,81 @@ function VersesSide({
 
   const selectedColoredVerses = Object.fromEntries(filtered);
 
+  const getSelectedCount = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
+  ).length;
+
+  const chaptersScope = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
+  );
+
   return (
     <div className="verses-side">
-      <div className="verses-side-colors" dir="ltr">
-        {Object.keys(selectedColors).map((colorID) => (
-          <div
-            key={colorID}
-            className="verses-side-colors-item text-center rounded"
-            style={
-              selectedColors[colorID]
-                ? {
-                    backgroundColor: selectedColors[colorID].colorCode,
-                    color: getTextColor(selectedColors[colorID].colorCode),
-                  }
-                : {}
-            }
-          >
-            <div></div>
-            <div>{selectedColors[colorID].colorDisplay}</div>
-            <div
-              className="verses-side-colors-item-close"
-              onClick={(e) => onClickDeleteSelected(colorID)}
-            >
-              X
-            </div>
+      {Object.keys(selectedColors).length > 0 && (
+        <div className="verses-side-colors" dir="ltr">
+          <div className="verses-side-colors-selected">
+            <div className="fw-bold">Selected colors:</div>
+            {Object.keys(selectedColors).map((colorID) => (
+              <div
+                key={colorID}
+                className="verses-side-colors-item text-center rounded"
+                style={
+                  selectedColors[colorID]
+                    ? {
+                        backgroundColor: selectedColors[colorID].colorCode,
+                        color: getTextColor(selectedColors[colorID].colorCode),
+                      }
+                    : {}
+                }
+              >
+                <div></div>
+                <div className="verses-side-colors-item-text">
+                  {selectedColors[colorID].colorDisplay}
+                </div>
+                <div
+                  className="verses-side-colors-item-close"
+                  onClick={(e) => onClickDeleteSelected(colorID)}
+                >
+                  X
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+          <div className="verses-side-colors-chapters">
+            <div className="fw-bold">Selected chapters:</div>
+            {chaptersScope.length === 114 ? (
+              <div className="fw-bold">All chapters.</div>
+            ) : chaptersScope.length === 0 ? (
+              <div className="fw-bold">No chapters selected.</div>
+            ) : (
+              chaptersScope.map((chapterID) => (
+                <div
+                  key={chapterID}
+                  className="verses-side-colors-chapters-item"
+                >
+                  {chapterNames[Number(chapterID) - 1].name}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
       <div className="card verse-list fs-4" dir="rtl">
         {Object.keys(selectedColors).length ? (
-          <SelectedVerses
-            selectedColors={selectedColors}
-            coloredVerses={selectedColoredVerses}
-            myNotes={state.myNotes}
-            areaDirection={state.areaDirection}
-            editableNotes={state.editableNotes}
-            dispatchVsAction={dispatchVsAction}
-          />
+          getSelectedCount ? (
+            <SelectedVerses
+              selectedColors={selectedColors}
+              coloredVerses={selectedColoredVerses}
+              myNotes={state.myNotes}
+              areaDirection={state.areaDirection}
+              editableNotes={state.editableNotes}
+              dispatchVsAction={dispatchVsAction}
+            />
+          ) : (
+            <div className="text-center" dir="ltr">
+              You have to select at least one chapter.
+            </div>
+          )
         ) : (
           <>
             <div className="card-title">
@@ -399,8 +437,8 @@ function SelectedVerses({
             );
           })
       ) : (
-        <p className="text-center">
-          There are no verses matching the selected colors
+        <p className="text-center" dir="ltr">
+          There are no verses matching the selected colors.
         </p>
       )}
     </div>

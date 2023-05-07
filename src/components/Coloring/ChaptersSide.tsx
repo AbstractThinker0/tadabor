@@ -182,14 +182,14 @@ function ChaptersSide({
           <button
             disabled={getSelectedCount() === 114}
             onClick={onClickSelectAll}
-            className="btn btn-dark"
+            className="btn btn-dark btn-sm"
           >
             Select all
           </button>
           <button
             disabled={getSelectedCount() === 0}
             onClick={onClickDeselectAll}
-            className="btn btn-dark"
+            className="btn btn-dark btn-sm"
           >
             Deselect all
           </button>
@@ -217,7 +217,7 @@ function ChaptersSide({
                     🗑️
                   </div>
                   <div
-                    className="flex-grow-1"
+                    className="flex-grow-1 chapters-side-colors-item-text"
                     onClick={() => onClickSelectColor(colorsList[colorID])}
                   >
                     {colorsList[colorID].colorDisplay}

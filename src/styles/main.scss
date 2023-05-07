@@ -87,6 +87,7 @@ main {
   height: 100%;
 
   .chapters-side {
+    max-width: 400px;
     padding: 16px;
 
     .chapter-block {
@@ -116,6 +117,7 @@ main {
     }
 
     .chapter-list {
+      border: 1px solid gainsboro;
       max-height: 400px;
       overflow-y: scroll;
       scrollbar-width: 20px;
@@ -155,6 +157,11 @@ main {
         justify-content: space-between;
         font-size: large;
         cursor: pointer;
+
+        &-text {
+          overflow-wrap: break-word;
+          overflow-x: hidden;
+        }
       }
     }
   }
@@ -167,11 +174,27 @@ main {
     flex-direction: column;
 
     &-colors {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
       padding-top: 10px;
       padding-bottom: 10px;
+
+      &-selected {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      &-chapters {
+        padding-top: 10px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+
+        &-item {
+          background-color: beige;
+          padding: 2px;
+          border-radius: 0.3rem;
+        }
+      }
 
       &-item {
         display: flex;
@@ -180,8 +203,16 @@ main {
         padding-left: 5px;
         padding-right: 5px;
 
+        &-text {
+          max-width: 500px;
+          overflow-y: hidden;
+          overflow-wrap: break-word;
+        }
+
         &-close {
           cursor: pointer;
+          padding-left: 3px;
+          padding-right: 3px;
         }
       }
     }
@@ -260,6 +291,7 @@ main {
       padding-right: 4px;
       padding-top: 4px;
       padding-bottom: 4px;
+      overflow-wrap: break-word;
     }
   }
 }
