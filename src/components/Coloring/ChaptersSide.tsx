@@ -200,38 +200,37 @@ function ChaptersSide({
           Colors list:
         </div>
         <div className="chapters-side-colors" dir="ltr">
-          {Object.keys(colorsList).length > 0
-            ? Object.keys(colorsList).map((colorID) => (
+          {Object.keys(colorsList).length > 0 &&
+            Object.keys(colorsList).map((colorID) => (
+              <div
+                key={colorsList[colorID].colorID}
+                className="chapters-side-colors-item text-center rounded mb-1"
+                style={{
+                  backgroundColor: colorsList[colorID].colorCode,
+                  color: getTextColor(colorsList[colorID].colorCode),
+                }}
+              >
                 <div
-                  key={colorsList[colorID].colorID}
-                  className="chapters-side-colors-item text-center rounded mb-1"
-                  style={{
-                    backgroundColor: colorsList[colorID].colorCode,
-                    color: getTextColor(colorsList[colorID].colorCode),
-                  }}
+                  onClick={() => onClickSelectColor(colorsList[colorID])}
+                  className="opacity-0"
                 >
-                  <div
-                    onClick={() => onClickSelectColor(colorsList[colorID])}
-                    className="opacity-0"
-                  >
-                    🗑️
-                  </div>
-                  <div
-                    className="flex-grow-1 chapters-side-colors-item-text"
-                    onClick={() => onClickSelectColor(colorsList[colorID])}
-                  >
-                    {colorsList[colorID].colorDisplay}
-                  </div>
-                  <div
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteColorModal"
-                    onClick={() => onClickDeleteColor(colorsList[colorID])}
-                  >
-                    🗑️
-                  </div>
+                  🗑️
                 </div>
-              ))
-            : ""}
+                <div
+                  className="flex-grow-1 chapters-side-colors-item-text"
+                  onClick={() => onClickSelectColor(colorsList[colorID])}
+                >
+                  {colorsList[colorID].colorDisplay}
+                </div>
+                <div
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteColorModal"
+                  onClick={() => onClickDeleteColor(colorsList[colorID])}
+                >
+                  🗑️
+                </div>
+              </div>
+            ))}
         </div>
         <DeleteColorModal
           currentColor={currentColor}
