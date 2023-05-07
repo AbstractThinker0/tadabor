@@ -199,9 +199,9 @@ function ChaptersSide({
         <div className="text-center" dir="ltr">
           Colors list:
         </div>
-        <div className="chapters-side-colors" dir="ltr">
-          {Object.keys(colorsList).length > 0 &&
-            Object.keys(colorsList).map((colorID) => (
+        {Object.keys(colorsList).length > 0 && (
+          <div className="chapters-side-colors" dir="ltr">
+            {Object.keys(colorsList).map((colorID) => (
               <div
                 key={colorsList[colorID].colorID}
                 className="chapters-side-colors-item text-center rounded mb-1"
@@ -231,7 +231,8 @@ function ChaptersSide({
                 </div>
               </div>
             ))}
-        </div>
+          </div>
+        )}
         <DeleteColorModal
           currentColor={currentColor}
           deleteColor={deleteColor}
