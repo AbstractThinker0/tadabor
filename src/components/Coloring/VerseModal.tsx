@@ -14,10 +14,6 @@ interface VerseModalProps {
   verseColor: colorProps | null;
 }
 
-interface ListColorsType {
-  [key: string]: HTMLDivElement;
-}
-
 const VerseModal = ({
   colorsList,
   currentVerse,
@@ -28,24 +24,10 @@ const VerseModal = ({
   const { chapterNames } = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
-  const refSelectedColor = useRef<HTMLDivElement | null>(null);
-
-  const refListColors = useRef<ListColorsType>({});
   const [chosenColor, setChosenColor] = useState(verseColor);
 
   useEffect(() => {
     setChosenColor(verseColor);
-
-    if (verseColor === null) {
-      if (refSelectedColor.current) {
-        refSelectedColor.current.classList.remove(activeClassName);
-        refSelectedColor.current = null;
-      }
-      return;
-    }
-
-    refSelectedColor.current = refListColors.current[verseColor.colorID];
-    refSelectedColor.current.classList.add(activeClassName);
   }, [verseColor]);
 
   useEffect(() => {
@@ -55,11 +37,6 @@ const VerseModal = ({
     function onModalHide() {
       setChosenColor(null);
       setCurrentVerse(null);
-
-      if (refSelectedColor.current) {
-        refSelectedColor.current.classList.remove(activeClassName);
-        refSelectedColor.current = null;
-      }
     }
 
     modelElement.addEventListener("hide.bs.modal", onModalHide);
@@ -79,18 +56,11 @@ const VerseModal = ({
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     color: colorProps
   ) {
-    if (refSelectedColor.current) {
-      refSelectedColor.current.classList.remove(activeClassName);
-
-      if (refSelectedColor.current === event.currentTarget) {
-        refSelectedColor.current = null;
-        setChosenColor(null);
-        return;
-      }
+    if (color.colorID === chosenColor?.colorID) {
+      setChosenColor(null);
+      return;
     }
 
-    refSelectedColor.current = event.currentTarget;
-    event.currentTarget.classList.add(activeClassName);
     setChosenColor(color);
   }
 
@@ -143,13 +113,11 @@ const VerseModal = ({
             <div className="verse-modal-colors">
               {Object.keys(colorsList).map((colorID) => (
                 <div
-                  ref={(el) => {
-                    if (el !== null)
-                      refListColors.current[colorsList[colorID].colorID] = el;
-                  }}
                   onClick={(event) => onClickColor(event, colorsList[colorID])}
                   key={colorID}
-                  className="verse-modal-colors-item text-center fs-4 mb-1"
+                  className={`verse-modal-colors-item text-center fs-4 mb-1 ${
+                    chosenColor?.colorID === colorID ? activeClassName : ""
+                  }`}
                   style={{
                     backgroundColor: colorsList[colorID].colorCode,
                     color: getTextColor(colorsList[colorID].colorCode),
