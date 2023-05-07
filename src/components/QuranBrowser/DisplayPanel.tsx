@@ -7,6 +7,7 @@ import {
   memo,
   Fragment,
   MutableRefObject,
+  useState,
 } from "react";
 
 import { toast } from "react-toastify";
@@ -266,10 +267,13 @@ const ListSearchResults = ({
   dispatchQbAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
+  const [selectedVerse, setSelectedVerse] = useState("");
 
   const refVersesResult = useRef<refVersesResultType>({});
 
-  const refSelectedVerse = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    setSelectedVerse("");
+  }, [searchIndexes]);
 
   function handleRootClick(verse_key: string) {
     refVersesResult.current[verse_key].scrollIntoView({
@@ -277,13 +281,7 @@ const ListSearchResults = ({
       behavior: "smooth",
     });
 
-    if (refSelectedVerse.current) {
-      refSelectedVerse.current.classList.remove("verse-selected");
-    }
-
-    refVersesResult.current[verse_key].classList.add("verse-selected");
-
-    refSelectedVerse.current = refVersesResult.current[verse_key];
+    setSelectedVerse(verse_key);
   }
 
   const memoHandleRootClick = useCallback(handleRootClick, []);
@@ -314,7 +312,9 @@ const ListSearchResults = ({
             ref={(el) => {
               if (el !== null) refVersesResult.current[verse.key] = el;
             }}
-            className="border-bottom pt-1 pb-1"
+            className={`border-bottom pt-1 pb-1 ${
+              verse.key === selectedVerse ? "verse-selected" : ""
+            }`}
           >
             <SearchVerseComponent
               verse={verse}
