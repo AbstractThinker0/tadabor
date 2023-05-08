@@ -7,13 +7,13 @@ const AboutEnglish = () => {
     <>
       <div className="pt-4 card about-card" dir="ltr">
         <p className="text-center">
-          Check out the project{" "}
+          Check out the project's{" "}
           <a
             href="https://github.com/EnlightenCode/tadabor"
             target="_blank"
             rel="noreferrer"
           >
-            Github repo
+            Github repository
           </a>
         </p>
         <div className="card-body">
@@ -32,24 +32,12 @@ const AboutEnglish = () => {
             app and clearing your cache might erase the data you have saved.
           </p>
 
-          <h5>Future project</h5>
-          <p>
-            Once this project is complete (all features implemented), it will be
-            used as the basis for another project that aims to be a platform for
-            collaborative translation and reflection upon the Qur'an, the goal
-            being to achieve an accurate understanding of the true message of
-            the Qur'an By undoing all the semantic changes that have occurred
-            over the centuries, no deadline has been set yet, and it all depends
-            on God's will.
-          </p>
           <h5>Credits</h5>
-          <br />
           <ul>
             <li className="fw-bold">
               The creator of the universe for all his favors that if I tried to
               count I would never be able to number them
             </li>
-            <br />
             <li>
               <a
                 href="https://github.com/risan/quran-json"
@@ -88,6 +76,16 @@ const AboutEnglish = () => {
               )
             </li>
           </ul>
+          <h5>Future project</h5>
+          <p>
+            Once all features of this project are implemented, it will serve as
+            the foundation for another project that aims to create a platform
+            for collaborative translation and reflection upon the Quran. The
+            ultimate goal is to achieve an accurate understanding of the true
+            message of the Quran by undoing all the semantic changes that have
+            occurred over the centuries. There is currently no set deadline, and
+            it all depends on God's will.
+          </p>
         </div>
       </div>
 
@@ -124,21 +122,13 @@ const AboutArabic = () => {
             يتم تسجيلها في متصفحك وحذف سجل المتصفح قد يحذف أي بيانات قمت
             بتسجيلها هنا.
           </p>
-          <h5>المشروع المقبل</h5>
-          <p>
-            بمجرد اكتمال هذا المشروع الحالي، سيتم إستخدامه كأساس لمشروع آخر يهدف
-            إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
-            للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
-            التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
-            يعتمد على مشيئة الله.
-          </p>
+
           <h5>الشكر</h5>
-          <br />
+
           <ul>
             <li className="fw-bold">
               خالق الكون لنعمه التي إن حاولت أن أحصيها فلن أعدها
             </li>
-            <br />
             <li>
               <a
                 href="https://github.com/risan/quran-json"
@@ -175,6 +165,14 @@ const AboutArabic = () => {
               )
             </li>
           </ul>
+          <h5>المشروع المقبل</h5>
+          <p>
+            بمجرد اكتمال هذا المشروع الحالي، سيتم إستخدامه كأساس لمشروع آخر يهدف
+            إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
+            للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
+            التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
+            يعتمد على مشيئة الله.
+          </p>
         </div>
       </div>
 
