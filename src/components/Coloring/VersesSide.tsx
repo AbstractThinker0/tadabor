@@ -184,13 +184,11 @@ function VersesSide({
 
   const selectedColoredVerses = Object.fromEntries(filtered);
 
-  const getSelectedCount = Object.keys(selectedChapters).filter(
-    (chapterID) => selectedChapters[chapterID] === true
-  ).length;
-
   const chaptersScope = Object.keys(selectedChapters).filter(
     (chapterID) => selectedChapters[chapterID] === true
   );
+
+  const getSelectedCount = chaptersScope.length;
 
   return (
     <div className="verses-side">
