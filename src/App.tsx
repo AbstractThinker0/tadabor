@@ -7,6 +7,7 @@ import QuranBrowser from "./pages/QuranBrowser";
 import RootsBrowser from "./pages/RootsBrowser";
 import Translation from "./pages/Translation";
 import YourNotes from "./pages/YourNotes";
+import Tags from "./pages/Tags";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/notes" element={<YourNotes />} />
       <Route path="/coloring" element={<Coloring />} />
       <Route path="/translation" element={<Translation />} />
+      <Route path="/tags" element={<Tags />} />
       <Route path="/about" element={<About />} />
       <Route path="*" element={<QuranBrowser />} />
     </Routes>

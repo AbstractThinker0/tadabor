@@ -42,6 +42,16 @@ export interface IVerseColor {
   color_id: string;
 }
 
+export interface ITag {
+  id: string;
+  name: string;
+}
+
+export interface IVerseTags {
+  verse_key: string;
+  tags_ids: string[];
+}
+
 class tadaborDatabase extends Dexie {
   notes!: Dexie.Table<INote, string>;
   notes_dir!: Dexie.Table<INoteDir, string>;
@@ -50,6 +60,8 @@ class tadaborDatabase extends Dexie {
   translations!: Dexie.Table<ITranslation, string>;
   colors!: Dexie.Table<IColor, string>;
   verses_color!: Dexie.Table<IVerseColor, string>;
+  tags!: Dexie.Table<ITag, string>;
+  verses_tags!: Dexie.Table<IVerseTags, string>;
 
   constructor() {
     super("tadaborDatabase");
@@ -58,7 +70,7 @@ class tadaborDatabase extends Dexie {
     // Define tables and indexes
     // (Here's where the implicit table props are dynamically created)
     //
-    this.version(8).stores({
+    this.version(11).stores({
       notes: "id, text, date_created, date_modified",
       notes_dir: "id, dir",
       root_notes: "id, text, date_created, date_modified",
@@ -66,6 +78,8 @@ class tadaborDatabase extends Dexie {
       translations: "id, text, date_created, date_modified",
       colors: "id, name, code",
       verses_color: "verse_key, color_id",
+      tags: "id, name",
+      verses_tags: "verse_key, *tags_ids",
     });
   }
 }
@@ -120,5 +134,30 @@ export const dbFuncs = {
   },
   loadVersesColor: () => {
     return db.verses_color.toArray();
+  },
+  saveTag: (data: ITag) => {
+    return db.tags.put(data);
+  },
+  deleteTag: (id: string) => {
+    db.tags.delete(id);
+
+    db.verses_tags
+      .where("tags_ids")
+      .equals(id)
+      .modify((verseTag) => {
+        verseTag.tags_ids = verseTag.tags_ids.filter((tagID) => tagID !== id);
+      });
+  },
+  loadTags: () => {
+    return db.tags.toArray();
+  },
+  saveVerseTags: (data: IVerseTags) => {
+    return db.verses_tags.put(data);
+  },
+  deleteVerseTags: (verse_key: string) => {
+    return db.verses_tags.delete(verse_key);
+  },
+  loadVersesTags: () => {
+    return db.verses_tags.toArray();
   },
 };
