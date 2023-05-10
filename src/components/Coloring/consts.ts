@@ -1,6 +1,9 @@
 import {
   ActionsUnion,
   createActionPayload,
+  markedNotesType,
+  notesDirectionType,
+  notesType,
   selectedChaptersType,
   verseProps,
 } from "../../types";
@@ -83,18 +86,6 @@ export const clActions = {
 };
 
 export type clActionsProps = ActionsUnion<typeof clActions>;
-
-export interface notesType {
-  [key: string]: string;
-}
-
-export interface notesDirectionType {
-  [key: string]: string;
-}
-
-export interface markedNotesType {
-  [key: string]: boolean;
-}
 
 export enum VS_ACTIONS {
   SET_LOADING_STATE = "dispatchSetLoadingState",

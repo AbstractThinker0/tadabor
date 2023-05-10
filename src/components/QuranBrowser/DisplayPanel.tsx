@@ -23,15 +23,18 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "../../context/QuranContext";
 
-import { verseProps } from "../../types";
+import {
+  markedNotesType,
+  notesDirectionType,
+  notesType,
+  verseProps,
+} from "../../types";
 import {
   DP_ACTIONS,
   SEARCH_METHOD,
   SEARCH_SCOPE,
   dpActions,
   dpActionsProps,
-  markedNotesType,
-  notesType,
   qbActions,
   qbActionsProps,
   searchIndexProps,
@@ -155,7 +158,7 @@ const DisplayPanel = memo(
 
         if (clientLeft) return;
 
-        const extractNotesDir: notesType = {};
+        const extractNotesDir: notesDirectionType = {};
 
         userNotesDir.forEach((note) => {
           extractNotesDir[note.id] = note.dir;

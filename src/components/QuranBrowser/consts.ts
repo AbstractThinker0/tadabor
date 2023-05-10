@@ -5,6 +5,9 @@ import {
   verseProps,
   rootProps,
   ActionsUnion,
+  notesType,
+  markedNotesType,
+  notesDirectionType,
 } from "../../types";
 
 export interface searchIndexProps {
@@ -109,14 +112,6 @@ export const qbActions = {
 
 export type qbActionsProps = ActionsUnion<typeof qbActions>;
 
-export interface notesType {
-  [key: string]: string;
-}
-
-export interface markedNotesType {
-  [key: string]: boolean;
-}
-
 export enum DP_ACTIONS {
   CHANGE_NOTE = "dispatchChangeNote",
   CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
@@ -143,7 +138,7 @@ export const dpActions = {
     {
       extractNotes: notesType;
       markedNotes: markedNotesType;
-      extractNotesDir: notesType;
+      extractNotesDir: notesDirectionType;
     }
   >(DP_ACTIONS.DATA_LOADED),
   setScrollKey: createActionPayload<DP_ACTIONS.SET_SCROLL_KEY, string | null>(

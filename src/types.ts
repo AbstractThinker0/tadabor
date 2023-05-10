@@ -27,6 +27,18 @@ export interface selectedChaptersType {
   [key: string]: boolean;
 }
 
+export interface notesType {
+  [key: string]: string;
+}
+
+export interface notesDirectionType {
+  [key: string]: string;
+}
+
+export interface markedNotesType {
+  [key: string]: boolean;
+}
+
 // Bellow snippets are thanks to this article https://patrickdesjardins.com/blog/typescript-with-strong-typed-action-when-using-usereducer-of-react-hooks
 
 /**
