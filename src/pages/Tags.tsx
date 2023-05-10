@@ -1,23 +1,26 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { Dispatch, useEffect, useReducer, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 import tagsReducer from "../reducers/tagsReducer";
 import {
   tagProps,
   tagsActions,
+  tagsActionsProps,
   tagsProps,
   tagsStateProps,
   versesTagsProps,
 } from "../components/Tags/consts";
 import { selectedChaptersType, verseProps } from "../types";
-import AddTagModal from "../components/Tags/AddTagModal";
+
 import { dbFuncs } from "../util/db";
+
+import AddTagModal from "../components/Tags/AddTagModal";
 import LoadingSpinner from "../components/LoadingSpinner";
 import DeleteTagModal from "../components/Tags/DeleteTagModal";
 import VerseTagsModal from "../components/Tags/VerseTagsModal";
 
 function Tags() {
-  const { chapterNames, allQuranText } = useQuran();
-  const refChapter = useRef<HTMLDivElement | null>(null);
+  const { chapterNames } = useQuran();
+
   const [loadingState, setLoadingState] = useState(true);
 
   const initialSelectedChapters: selectedChaptersType = {};
@@ -37,36 +40,6 @@ function Tags() {
   };
 
   const [state, dispatchTagsAction] = useReducer(tagsReducer, initialState);
-
-  function onClickChapter(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) {
-    document.documentElement.scrollTop = 0;
-
-    dispatchTagsAction(tagsActions.setChapter(chapterID));
-
-    refChapter.current = event.currentTarget;
-  }
-
-  useEffect(() => {
-    const child = refChapter.current;
-    const parent = refChapter.current?.parentElement?.parentElement;
-
-    if (!child || !parent) return;
-
-    const parentOffsetTop = parent.offsetTop;
-
-    if (
-      parent.scrollTop + parentOffsetTop <
-        child.offsetTop - parent.clientHeight + child.clientHeight * 2.5 ||
-      parent.scrollTop + parentOffsetTop >
-        child.offsetTop - child.clientHeight * 2.5
-    ) {
-      parent.scrollTop =
-        child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
-    }
-  }, [state.currentChapter]);
 
   useEffect(() => {
     let clientLeft = false;
@@ -106,6 +79,141 @@ function Tags() {
     };
   }, []);
 
+  function addTag(tag: tagProps) {
+    dispatchTagsAction(tagsActions.addTag(tag));
+  }
+
+  function deleteTag(tagID: string) {
+    dispatchTagsAction(tagsActions.deleteTag(tagID));
+
+    dbFuncs.deleteTag(tagID);
+  }
+
+  function setCurrentVerse(verse: verseProps | null) {
+    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+  }
+
+  function setVerseTags(verseKey: string, tags: string[] | null) {
+    if (tags === null) {
+      dbFuncs.deleteVerseTags(verseKey);
+    } else {
+      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
+    }
+
+    dispatchTagsAction(tagsActions.setVerseTags({ verseKey, tags }));
+  }
+
+  const getTaggedVerses = (tagID: string) => {
+    let countTags = 0;
+    Object.keys(state.versesTags).forEach((verseKey: string) => {
+      state.versesTags[verseKey].forEach((verseTagID) => {
+        if (verseTagID === tagID) {
+          countTags++;
+        }
+      });
+    });
+    return countTags;
+  };
+
+  if (loadingState) return <LoadingSpinner />;
+
+  return (
+    <div className="tags">
+      <TagsSide
+        currentChapter={state.currentChapter}
+        selectedChapters={state.selectedChapters}
+        tags={state.tags}
+        dispatchTagsAction={dispatchTagsAction}
+      />
+      <AddTagModal addTag={addTag} />
+      <DeleteTagModal
+        deleteTag={deleteTag}
+        currentTag={state.currentTag}
+        versesCount={
+          state.currentTag ? getTaggedVerses(state.currentTag.tagID) : 0
+        }
+      />
+      <TagsDisplay
+        selectedTags={state.selectedTags}
+        selectedChapters={state.selectedChapters}
+        tags={state.tags}
+        versesTags={state.versesTags}
+        currentChapter={state.currentChapter}
+        dispatchTagsAction={dispatchTagsAction}
+      />
+      <VerseTagsModal
+        tags={state.tags}
+        currentVerse={state.currentVerse}
+        setCurrentVerse={setCurrentVerse}
+        setVerseTags={setVerseTags}
+        verseTags={
+          state.currentVerse
+            ? state.versesTags[state.currentVerse.key]
+              ? state.versesTags[state.currentVerse.key]
+              : null
+            : null
+        }
+      />
+    </div>
+  );
+}
+
+interface TagsSideProps {
+  currentChapter: number;
+  selectedChapters: selectedChaptersType;
+  tags: tagsProps;
+  dispatchTagsAction: Dispatch<tagsActionsProps>;
+}
+
+function TagsSide({
+  currentChapter,
+  selectedChapters,
+  tags,
+  dispatchTagsAction,
+}: TagsSideProps) {
+  const { chapterNames } = useQuran();
+  const refChapter = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const child = refChapter.current;
+    const parent = refChapter.current?.parentElement?.parentElement;
+
+    if (!child || !parent) return;
+
+    const parentOffsetTop = parent.offsetTop;
+
+    if (
+      parent.scrollTop + parentOffsetTop <
+        child.offsetTop - parent.clientHeight + child.clientHeight * 2.5 ||
+      parent.scrollTop + parentOffsetTop >
+        child.offsetTop - child.clientHeight * 2.5
+    ) {
+      parent.scrollTop =
+        child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
+    }
+  }, [currentChapter]);
+
+  function onClickChapter(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    chapterID: number
+  ) {
+    document.documentElement.scrollTop = 0;
+
+    dispatchTagsAction(tagsActions.setChapter(chapterID));
+
+    refChapter.current = event.currentTarget;
+  }
+
+  function onChangeSelectChapter(chapterID: number) {
+    dispatchTagsAction(tagsActions.toggleSelectChapter(chapterID));
+  }
+
+  function getSelectedCount() {
+    return Object.keys(selectedChapters).filter(
+      (chapterID) => selectedChapters[chapterID] === true
+    ).length;
+  }
+
   function onClickSelectAll() {
     const selectedChapters: selectedChaptersType = {};
 
@@ -126,20 +234,6 @@ function Tags() {
     dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
   }
 
-  function onChangeSelectChapter(chapterID: number) {
-    dispatchTagsAction(tagsActions.toggleSelectChapter(chapterID));
-  }
-
-  function getSelectedCount() {
-    return Object.keys(state.selectedChapters).filter(
-      (chapterID) => state.selectedChapters[chapterID] === true
-    ).length;
-  }
-
-  function addTag(tag: tagProps) {
-    dispatchTagsAction(tagsActions.addTag(tag));
-  }
-
   function onClickSelectTag(tag: tagProps) {
     dispatchTagsAction(tagsActions.selectTag(tag));
   }
@@ -148,230 +242,207 @@ function Tags() {
     dispatchTagsAction(tagsActions.setCurrentTag(tag));
   }
 
-  function deleteTag(tagID: string) {
-    dispatchTagsAction(tagsActions.deleteTag(tagID));
+  return (
+    <div className="tags-side">
+      <div className="tags-side-chapters">
+        {chapterNames.map((chapter) => (
+          <div
+            key={chapter.id}
+            className={`tags-side-chapters-item ${
+              currentChapter === chapter.id
+                ? "tags-side-chapters-item-selected"
+                : ""
+            }`}
+          >
+            <div
+              className={"tags-side-chapters-item-name"}
+              onClick={(event) => onClickChapter(event, chapter.id)}
+            >
+              {chapter.id}. {chapter.name}
+            </div>
+            <input
+              type="checkbox"
+              checked={
+                selectedChapters[chapter.id] !== undefined
+                  ? selectedChapters[chapter.id]
+                  : true
+              }
+              onChange={() => onChangeSelectChapter(chapter.id)}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="tags-side-chapters-buttons" dir="ltr">
+        <button
+          disabled={getSelectedCount() === 114}
+          onClick={onClickSelectAll}
+          className="btn btn-dark btn-sm"
+        >
+          Select all
+        </button>
+        <button
+          disabled={getSelectedCount() === 0}
+          onClick={onClickDeselectAll}
+          className="btn btn-dark btn-sm"
+        >
+          Deselect all
+        </button>
+      </div>
+      <div className="tags-side-list" dir="ltr">
+        <div className="fw-bold pb-1">Tags list:</div>
+        {Object.keys(tags).length > 0 && (
+          <div className="tags-side-list-items">
+            {Object.keys(tags).map((tagID) => (
+              <div className="tags-side-list-items-item" key={tagID}>
+                <div
+                  className="tags-side-list-items-item-text"
+                  onClick={() => onClickSelectTag(tags[tagID])}
+                >
+                  {tags[tagID].tagDisplay}
+                </div>
+                <div
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteTagModal"
+                  onClick={() => onClickDeleteTag(tags[tagID])}
+                >
+                  🗑️
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <button
+          data-bs-toggle="modal"
+          data-bs-target="#addTagModal"
+          className="btn btn-dark tags-side-list-btn"
+        >
+          Add tag
+        </button>
+      </div>
+    </div>
+  );
+}
 
-    dbFuncs.deleteTag(tagID);
-  }
+interface TagsDisplayProps {
+  selectedTags: tagsProps;
+  selectedChapters: selectedChaptersType;
+  tags: tagsProps;
+  versesTags: versesTagsProps;
+  currentChapter: number;
+  dispatchTagsAction: Dispatch<tagsActionsProps>;
+}
 
-  function onClickTagVerse(verse: verseProps) {
-    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
-  }
-
-  function setCurrentVerse(verse: verseProps | null) {
-    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
-  }
-
-  function setVerseTags(verseKey: string, tags: string[] | null) {
-    if (tags === null) {
-      dbFuncs.deleteVerseTags(verseKey);
-    } else {
-      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
-    }
-
-    dispatchTagsAction(tagsActions.setVerseTags({ verseKey, tags }));
-  }
+function TagsDisplay({
+  selectedTags,
+  selectedChapters,
+  tags,
+  versesTags,
+  currentChapter,
+  dispatchTagsAction,
+}: TagsDisplayProps) {
+  const { chapterNames, allQuranText } = useQuran();
 
   function onClickDeleteSelected(tagID: string) {
     dispatchTagsAction(tagsActions.deselectTag(tagID));
   }
 
-  const chaptersScope = Object.keys(state.selectedChapters).filter(
-    (chapterID) => state.selectedChapters[chapterID] === true
+  const chaptersScope = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
   );
 
-  const asArray = Object.entries(state.versesTags);
+  const asArray = Object.entries(versesTags);
 
   const filtered = asArray.filter(([key, value]) => {
     const info = key.split("-");
-    return state.selectedChapters[info[0]] === true;
+    return selectedChapters[info[0]] === true;
   });
 
   const selectedVerses = Object.fromEntries(filtered);
 
-  if (loadingState) return <LoadingSpinner />;
+  function onClickTagVerse(verse: verseProps) {
+    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+  }
 
   return (
-    <div className="tags">
-      <div className="tags-side">
-        <div className="tags-side-chapters">
-          {chapterNames.map((chapter) => (
-            <div
-              key={chapter.id}
-              className={`tags-side-chapters-item ${
-                state.currentChapter === chapter.id
-                  ? "tags-side-chapters-item-selected"
-                  : ""
-              }`}
-            >
-              <div
-                className={"tags-side-chapters-item-name"}
-                onClick={(event) => onClickChapter(event, chapter.id)}
-              >
-                {chapter.id}. {chapter.name}
-              </div>
-              <input
-                type="checkbox"
-                checked={
-                  state.selectedChapters[chapter.id] !== undefined
-                    ? state.selectedChapters[chapter.id]
-                    : true
-                }
-                onChange={() => onChangeSelectChapter(chapter.id)}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="tags-side-chapters-buttons" dir="ltr">
-          <button
-            disabled={getSelectedCount() === 114}
-            onClick={onClickSelectAll}
-            className="btn btn-dark btn-sm"
-          >
-            Select all
-          </button>
-          <button
-            disabled={getSelectedCount() === 0}
-            onClick={onClickDeselectAll}
-            className="btn btn-dark btn-sm"
-          >
-            Deselect all
-          </button>
-        </div>
-        <div className="tags-side-list" dir="ltr">
-          <div className="fw-bold pb-1">Tags list:</div>
-          {Object.keys(state.tags).length > 0 && (
-            <div className="tags-side-list-items">
-              {Object.keys(state.tags).map((tagID) => (
-                <div className="tags-side-list-items-item" key={tagID}>
+    <div className="tags-display">
+      {Object.keys(selectedTags).length > 0 && (
+        <>
+          <div className="tags-display-tags" dir="ltr">
+            <div className="fw-bold">Selected tags:</div>
+            <div className="tags-display-tags-list">
+              {Object.keys(selectedTags).map((tagID) => (
+                <div key={tagID} className="tags-display-tags-list-item">
+                  {selectedTags[tagID].tagDisplay}
                   <div
-                    className="tags-side-list-items-item-text"
-                    onClick={() => onClickSelectTag(state.tags[tagID])}
+                    onClick={() => onClickDeleteSelected(tagID)}
+                    className="tags-display-tags-list-item-close"
                   >
-                    {state.tags[tagID].tagDisplay}
-                  </div>
-                  <div
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteTagModal"
-                    onClick={() => onClickDeleteTag(state.tags[tagID])}
-                  >
-                    🗑️
+                    X
                   </div>
                 </div>
               ))}
             </div>
-          )}
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#addTagModal"
-            className="btn btn-dark tags-side-list-btn"
-          >
-            Add tag
-          </button>
-        </div>
-      </div>
-      <AddTagModal addTag={addTag} />
-      <DeleteTagModal
-        deleteTag={deleteTag}
-        currentTag={state.currentTag}
-        versesCount={0}
-      />
-      <div className="tags-display">
-        {Object.keys(state.selectedTags).length > 0 && (
-          <>
-            <div className="tags-display-tags" dir="ltr">
-              <div className="fw-bold">Selected tags:</div>
-              <div className="tags-display-tags-list">
-                {Object.keys(state.selectedTags).map((tagID) => (
-                  <div key={tagID} className="tags-display-tags-list-item">
-                    {state.selectedTags[tagID].tagDisplay}
-                    <div
-                      onClick={() => onClickDeleteSelected(tagID)}
-                      className="tags-display-tags-list-item-close"
-                    >
-                      X
-                    </div>
-                  </div>
-                ))}
-              </div>
+          </div>
+          <div className="tags-display-chapters" dir="ltr">
+            <div className="fw-bold">Selected chapters:</div>
+            {chaptersScope.length === 114 ? (
+              <div className="fw-bold">All chapters.</div>
+            ) : chaptersScope.length === 0 ? (
+              <div className="fw-bold">No chapters selected.</div>
+            ) : (
+              chaptersScope.map((chapterID) => (
+                <div className="tags-display-chapters-item" key={chapterID}>
+                  {chapterNames[Number(chapterID) - 1].name}
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
+      <div className="card tags-display-chapter" dir="rtl">
+        {Object.keys(selectedTags).length ? (
+          chaptersScope.length ? (
+            <SelectedVerses
+              selectedTags={selectedTags}
+              tags={tags}
+              versesTags={selectedVerses}
+            />
+          ) : (
+            <div className="text-center" dir="ltr">
+              You have to select at least one chapter.
             </div>
-            <div className="tags-display-chapters" dir="ltr">
-              <div className="fw-bold">Selected chapters:</div>
-              {chaptersScope.length === 114 ? (
-                <div className="fw-bold">All chapters.</div>
-              ) : chaptersScope.length === 0 ? (
-                <div className="fw-bold">No chapters selected.</div>
-              ) : (
-                chaptersScope.map((chapterID) => (
-                  <div className="tags-display-chapters-item" key={chapterID}>
-                    {chapterNames[Number(chapterID) - 1].name}
-                  </div>
-                ))
-              )}
+          )
+        ) : (
+          <>
+            <div className="card-header text-center fs-4 tags-display-chapter-title">
+              سورة {chapterNames[currentChapter - 1].name}
+            </div>
+            <div className="card-body tags-display-chapter-verses">
+              {allQuranText[currentChapter - 1].verses.map((verse) => (
+                <div
+                  key={verse.key}
+                  className="fs-4 tags-display-chapter-verses-item"
+                >
+                  {versesTags[verse.key] !== undefined && (
+                    <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+                  )}
+                  <span className="tags-display-chapter-verses-item-text fs-4">
+                    {verse.versetext} ({verse.verseid}){" "}
+                  </span>
+                  <button
+                    className="btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#verseTagsModal"
+                    onClick={() => onClickTagVerse(verse)}
+                  >
+                    🏷️
+                  </button>
+                </div>
+              ))}
             </div>
           </>
         )}
-        <div className="card tags-display-chapter" dir="rtl">
-          {Object.keys(state.selectedTags).length ? (
-            chaptersScope.length ? (
-              <SelectedVerses
-                selectedTags={state.selectedTags}
-                tags={state.tags}
-                versesTags={selectedVerses}
-              />
-            ) : (
-              <div className="text-center" dir="ltr">
-                You have to select at least one chapter.
-              </div>
-            )
-          ) : (
-            <>
-              <div className="card-header text-center fs-4 tags-display-chapter-title">
-                سورة {chapterNames[state.currentChapter - 1].name}
-              </div>
-              <div className="card-body tags-display-chapter-verses">
-                {allQuranText[state.currentChapter - 1].verses.map((verse) => (
-                  <div
-                    key={verse.key}
-                    className="fs-4 tags-display-chapter-verses-item"
-                  >
-                    {state.versesTags[verse.key] !== undefined && (
-                      <VerseTags
-                        versesTags={state.versesTags[verse.key]}
-                        tags={state.tags}
-                      />
-                    )}
-                    <span className="tags-display-chapter-verses-item-text fs-4">
-                      {verse.versetext} ({verse.verseid}){" "}
-                    </span>
-                    <button
-                      className="btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#verseTagsModal"
-                      onClick={() => onClickTagVerse(verse)}
-                    >
-                      🏷️
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
       </div>
-      <VerseTagsModal
-        tags={state.tags}
-        currentVerse={state.currentVerse}
-        setCurrentVerse={setCurrentVerse}
-        setVerseTags={setVerseTags}
-        verseTags={
-          state.currentVerse
-            ? state.versesTags[state.currentVerse.key]
-              ? state.versesTags[state.currentVerse.key]
-              : null
-            : null
-        }
-      />
     </div>
   );
 }
