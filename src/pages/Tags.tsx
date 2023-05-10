@@ -79,42 +79,6 @@ function Tags() {
     };
   }, []);
 
-  function addTag(tag: tagProps) {
-    dispatchTagsAction(tagsActions.addTag(tag));
-  }
-
-  function deleteTag(tagID: string) {
-    dispatchTagsAction(tagsActions.deleteTag(tagID));
-
-    dbFuncs.deleteTag(tagID);
-  }
-
-  function setCurrentVerse(verse: verseProps | null) {
-    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
-  }
-
-  function setVerseTags(verseKey: string, tags: string[] | null) {
-    if (tags === null) {
-      dbFuncs.deleteVerseTags(verseKey);
-    } else {
-      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
-    }
-
-    dispatchTagsAction(tagsActions.setVerseTags({ verseKey, tags }));
-  }
-
-  const getTaggedVerses = (tagID: string) => {
-    let countTags = 0;
-    Object.keys(state.versesTags).forEach((verseKey: string) => {
-      state.versesTags[verseKey].forEach((verseTagID) => {
-        if (verseTagID === tagID) {
-          countTags++;
-        }
-      });
-    });
-    return countTags;
-  };
-
   if (loadingState) return <LoadingSpinner />;
 
   return (
@@ -123,15 +87,9 @@ function Tags() {
         currentChapter={state.currentChapter}
         selectedChapters={state.selectedChapters}
         tags={state.tags}
-        dispatchTagsAction={dispatchTagsAction}
-      />
-      <AddTagModal addTag={addTag} />
-      <DeleteTagModal
-        deleteTag={deleteTag}
         currentTag={state.currentTag}
-        versesCount={
-          state.currentTag ? getTaggedVerses(state.currentTag.tagID) : 0
-        }
+        versesTags={state.versesTags}
+        dispatchTagsAction={dispatchTagsAction}
       />
       <TagsDisplay
         selectedTags={state.selectedTags}
@@ -139,20 +97,8 @@ function Tags() {
         tags={state.tags}
         versesTags={state.versesTags}
         currentChapter={state.currentChapter}
-        dispatchTagsAction={dispatchTagsAction}
-      />
-      <VerseTagsModal
-        tags={state.tags}
         currentVerse={state.currentVerse}
-        setCurrentVerse={setCurrentVerse}
-        setVerseTags={setVerseTags}
-        verseTags={
-          state.currentVerse
-            ? state.versesTags[state.currentVerse.key]
-              ? state.versesTags[state.currentVerse.key]
-              : null
-            : null
-        }
+        dispatchTagsAction={dispatchTagsAction}
       />
     </div>
   );
@@ -162,6 +108,8 @@ interface TagsSideProps {
   currentChapter: number;
   selectedChapters: selectedChaptersType;
   tags: tagsProps;
+  currentTag: tagProps | null;
+  versesTags: versesTagsProps;
   dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
@@ -169,6 +117,8 @@ function TagsSide({
   currentChapter,
   selectedChapters,
   tags,
+  currentTag,
+  versesTags,
   dispatchTagsAction,
 }: TagsSideProps) {
   const { chapterNames } = useQuran();
@@ -241,6 +191,28 @@ function TagsSide({
   function onClickDeleteTag(tag: tagProps) {
     dispatchTagsAction(tagsActions.setCurrentTag(tag));
   }
+
+  function addTag(tag: tagProps) {
+    dispatchTagsAction(tagsActions.addTag(tag));
+  }
+
+  function deleteTag(tagID: string) {
+    dispatchTagsAction(tagsActions.deleteTag(tagID));
+
+    dbFuncs.deleteTag(tagID);
+  }
+
+  const getTaggedVerses = (tagID: string) => {
+    let countTags = 0;
+    Object.keys(versesTags).forEach((verseKey: string) => {
+      versesTags[verseKey].forEach((verseTagID) => {
+        if (verseTagID === tagID) {
+          countTags++;
+        }
+      });
+    });
+    return countTags;
+  };
 
   return (
     <div className="tags-side">
@@ -319,6 +291,12 @@ function TagsSide({
           Add tag
         </button>
       </div>
+      <AddTagModal addTag={addTag} />
+      <DeleteTagModal
+        deleteTag={deleteTag}
+        currentTag={currentTag}
+        versesCount={currentTag ? getTaggedVerses(currentTag.tagID) : 0}
+      />
     </div>
   );
 }
@@ -329,6 +307,7 @@ interface TagsDisplayProps {
   tags: tagsProps;
   versesTags: versesTagsProps;
   currentChapter: number;
+  currentVerse: verseProps | null;
   dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
@@ -338,6 +317,7 @@ function TagsDisplay({
   tags,
   versesTags,
   currentChapter,
+  currentVerse,
   dispatchTagsAction,
 }: TagsDisplayProps) {
   const { chapterNames, allQuranText } = useQuran();
@@ -361,6 +341,20 @@ function TagsDisplay({
 
   function onClickTagVerse(verse: verseProps) {
     dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+  }
+
+  function setCurrentVerse(verse: verseProps | null) {
+    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+  }
+
+  function setVerseTags(verseKey: string, tags: string[] | null) {
+    if (tags === null) {
+      dbFuncs.deleteVerseTags(verseKey);
+    } else {
+      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
+    }
+
+    dispatchTagsAction(tagsActions.setVerseTags({ verseKey, tags }));
   }
 
   return (
@@ -443,6 +437,19 @@ function TagsDisplay({
           </>
         )}
       </div>
+      <VerseTagsModal
+        tags={tags}
+        currentVerse={currentVerse}
+        setCurrentVerse={setCurrentVerse}
+        setVerseTags={setVerseTags}
+        verseTags={
+          currentVerse
+            ? versesTags[currentVerse.key]
+              ? versesTags[currentVerse.key]
+              : null
+            : null
+        }
+      />
     </div>
   );
 }
