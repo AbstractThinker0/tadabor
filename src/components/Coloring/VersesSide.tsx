@@ -9,7 +9,7 @@ import {
   selectedChaptersType,
   verseProps,
 } from "../../types";
-import { dbFuncs, INote, INoteDir } from "../../util/db";
+import { dbFuncs } from "../../util/db";
 import VerseModal from "./VerseModal";
 import {
   VS_ACTIONS,
@@ -110,7 +110,7 @@ function VersesSide({
     fetchData();
 
     async function fetchData() {
-      const userNotes: INote[] = await dbFuncs.loadNotes();
+      const userNotes = await dbFuncs.loadNotes();
 
       if (clientLeft) return;
 
@@ -121,7 +121,7 @@ function VersesSide({
         markedNotes[note.id] = false;
       });
 
-      const userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
+      const userNotesDir = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
 

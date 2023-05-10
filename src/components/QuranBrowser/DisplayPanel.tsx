@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import { toast } from "react-toastify";
-import { INote, INoteDir, dbFuncs } from "../../util/db";
+import { dbFuncs } from "../../util/db";
 
 import LoadingSpinner from "../LoadingSpinner";
 import { IconCircleArrowDownFilled } from "@tabler/icons-react";
@@ -143,7 +143,7 @@ const DisplayPanel = memo(
       fetchData();
 
       async function fetchData() {
-        const userNotes: INote[] = await dbFuncs.loadNotes();
+        const userNotes = await dbFuncs.loadNotes();
 
         if (clientLeft) return;
 
@@ -154,7 +154,7 @@ const DisplayPanel = memo(
           markedNotes[note.id] = false;
         });
 
-        const userNotesDir: INoteDir[] = await dbFuncs.loadNotesDir();
+        const userNotesDir = await dbFuncs.loadNotesDir();
 
         if (clientLeft) return;
 
