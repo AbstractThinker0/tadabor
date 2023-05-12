@@ -1,6 +1,9 @@
 import {
   ActionsUnion,
   createActionPayload,
+  markedNotesType,
+  notesDirectionType,
+  notesType,
   selectedChaptersType,
   verseProps,
 } from "../../types";
@@ -26,6 +29,7 @@ export interface tagsStateProps {
   versesTags: versesTagsProps;
   currentVerse: verseProps | null;
   selectedTags: tagsProps;
+  scrollKey: string;
 }
 
 export enum TAGS_ACTIONS {
@@ -41,6 +45,8 @@ export enum TAGS_ACTIONS {
   SET_VERSES_TAGS = "dispatchSetVersesTags",
   SELECT_TAG = "dispatchSelectTag",
   DESELECT_TAG = "dispatchDeselectTag",
+  GOTO_CHAPTER = "dispatchGotoChapter",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
 }
 
 export const tagsActions = {
@@ -85,6 +91,44 @@ export const tagsActions = {
   deselectTag: createActionPayload<TAGS_ACTIONS.DESELECT_TAG, string>(
     TAGS_ACTIONS.DESELECT_TAG
   ),
+  gotoChapter: createActionPayload<TAGS_ACTIONS.GOTO_CHAPTER, string>(
+    TAGS_ACTIONS.GOTO_CHAPTER
+  ),
+  setScrollKey: createActionPayload<TAGS_ACTIONS.SET_SCROLL_KEY, string>(
+    TAGS_ACTIONS.SET_SCROLL_KEY
+  ),
 };
 
 export type tagsActionsProps = ActionsUnion<typeof tagsActions>;
+
+export enum DP_ACTIONS {
+  CHANGE_NOTE = "dispatchChangeNote",
+  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
+  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
+  DATA_LOADED = "dispatchDataLoaded",
+}
+
+export const dpActions = {
+  setNote: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE,
+    { name: string; value: string }
+  >(DP_ACTIONS.CHANGE_NOTE),
+  setNoteEditable: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE_EDITABLE,
+    { name: string; value: boolean }
+  >(DP_ACTIONS.CHANGE_NOTE_EDITABLE),
+  setNoteDir: createActionPayload<
+    DP_ACTIONS.CHANGE_NOTE_DIRECTION,
+    { name: string; value: string }
+  >(DP_ACTIONS.CHANGE_NOTE_DIRECTION),
+  dataLoaded: createActionPayload<
+    DP_ACTIONS.DATA_LOADED,
+    {
+      extractNotes: notesType;
+      markedNotes: markedNotesType;
+      extractNotesDir: notesDirectionType;
+    }
+  >(DP_ACTIONS.DATA_LOADED),
+};
+
+export type dpActionsProps = ActionsUnion<typeof dpActions>;

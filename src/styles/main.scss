@@ -453,6 +453,24 @@ main {
               overflow-x: hidden;
             }
           }
+
+          &-verse {
+            cursor: pointer;
+          }
+
+          &-highlighted {
+            background-color: #a5d9fc;
+          }
+
+          &-text {
+            &-btn {
+              cursor: pointer;
+
+              &:hover {
+                color: cornflowerblue;
+              }
+            }
+          }
         }
       }
     }

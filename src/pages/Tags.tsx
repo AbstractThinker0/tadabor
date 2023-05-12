@@ -35,6 +35,7 @@ function Tags() {
     versesTags: {},
     currentVerse: null,
     selectedTags: {},
+    scrollKey: "",
   };
 
   const [state, dispatchTagsAction] = useReducer(tagsReducer, initialState);
@@ -96,6 +97,7 @@ function Tags() {
         versesTags={state.versesTags}
         currentChapter={state.currentChapter}
         currentVerse={state.currentVerse}
+        scrollKey={state.scrollKey}
         dispatchTagsAction={dispatchTagsAction}
       />
     </div>

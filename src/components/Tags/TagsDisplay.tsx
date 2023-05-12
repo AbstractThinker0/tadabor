@@ -1,6 +1,22 @@
-import { Dispatch } from "react";
-import { selectedChaptersType, verseProps } from "../../types";
 import {
+  Dispatch,
+  memo,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react";
+import {
+  markedNotesType,
+  notesDirectionType,
+  notesType,
+  selectedChaptersType,
+  verseProps,
+} from "../../types";
+import {
+  DP_ACTIONS,
+  dpActions,
+  dpActionsProps,
   tagsActions,
   tagsActionsProps,
   tagsProps,
@@ -8,7 +24,60 @@ import {
 } from "./consts";
 import useQuran from "../../context/QuranContext";
 import { dbFuncs } from "../../util/db";
+import { toast } from "react-toastify";
 import VerseTagsModal from "./VerseTagsModal";
+import { TextForm } from "../TextForm";
+import { useTranslation } from "react-i18next";
+import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+
+interface stateProps {
+  loadingState: boolean;
+  myNotes: notesType;
+  editableNotes: markedNotesType;
+  areaDirection: notesDirectionType;
+}
+
+function reducer(state: stateProps, action: dpActionsProps): stateProps {
+  // ...
+  switch (action.type) {
+    case DP_ACTIONS.CHANGE_NOTE: {
+      return {
+        ...state,
+        myNotes: {
+          ...state.myNotes,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.CHANGE_NOTE_EDITABLE: {
+      return {
+        ...state,
+        editableNotes: {
+          ...state.editableNotes,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.CHANGE_NOTE_DIRECTION: {
+      return {
+        ...state,
+        areaDirection: {
+          ...state.areaDirection,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    }
+    case DP_ACTIONS.DATA_LOADED: {
+      return {
+        ...state,
+        myNotes: action.payload.extractNotes,
+        editableNotes: action.payload.markedNotes,
+        areaDirection: action.payload.extractNotesDir,
+        loadingState: false,
+      };
+    }
+  }
+}
 
 interface TagsDisplayProps {
   selectedTags: tagsProps;
@@ -17,6 +86,7 @@ interface TagsDisplayProps {
   versesTags: versesTagsProps;
   currentChapter: number;
   currentVerse: verseProps | null;
+  scrollKey: string;
   dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
@@ -27,9 +97,60 @@ function TagsDisplay({
   versesTags,
   currentChapter,
   currentVerse,
+  scrollKey,
   dispatchTagsAction,
 }: TagsDisplayProps) {
-  const { chapterNames, allQuranText } = useQuran();
+  const { chapterNames } = useQuran();
+
+  const initialState: stateProps = {
+    loadingState: true,
+    myNotes: {},
+    editableNotes: {},
+    areaDirection: {},
+  };
+
+  const [state, dispatchDpAction] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    let clientLeft = false;
+
+    fetchData();
+
+    async function fetchData() {
+      const userNotes = await dbFuncs.loadNotes();
+
+      if (clientLeft) return;
+
+      const markedNotes: markedNotesType = {};
+      const extractNotes: notesType = {};
+      userNotes.forEach((note) => {
+        extractNotes[note.id] = note.text;
+        markedNotes[note.id] = false;
+      });
+
+      const userNotesDir = await dbFuncs.loadNotesDir();
+
+      if (clientLeft) return;
+
+      const extractNotesDir: notesDirectionType = {};
+
+      userNotesDir.forEach((note) => {
+        extractNotesDir[note.id] = note.dir;
+      });
+
+      dispatchDpAction(
+        dpActions.dataLoaded({
+          extractNotes,
+          markedNotes,
+          extractNotesDir,
+        })
+      );
+    }
+
+    return () => {
+      clientLeft = true;
+    };
+  }, []);
 
   function onClickDeleteSelected(tagID: string) {
     dispatchTagsAction(tagsActions.deselectTag(tagID));
@@ -47,10 +168,6 @@ function TagsDisplay({
   });
 
   const selectedVerses = Object.fromEntries(filtered);
-
-  function onClickTagVerse(verse: verseProps) {
-    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
-  }
 
   function setCurrentVerse(verse: verseProps | null) {
     dispatchTagsAction(tagsActions.setCurrentVerse(verse));
@@ -109,6 +226,11 @@ function TagsDisplay({
               selectedTags={selectedTags}
               tags={tags}
               versesTags={selectedVerses}
+              editableNotes={state.editableNotes}
+              myNotes={state.myNotes}
+              areaDirection={state.areaDirection}
+              dispatchDpAction={dispatchDpAction}
+              dispatchTagsAction={dispatchTagsAction}
             />
           ) : (
             <div className="text-center" dir="ltr">
@@ -116,34 +238,17 @@ function TagsDisplay({
             </div>
           )
         ) : (
-          <>
-            <div className="card-header text-center fs-4 tags-display-chapter-title">
-              سورة {chapterNames[currentChapter - 1].name}
-            </div>
-            <div className="card-body tags-display-chapter-verses">
-              {allQuranText[currentChapter - 1].verses.map((verse) => (
-                <div
-                  key={verse.key}
-                  className="fs-4 tags-display-chapter-verses-item"
-                >
-                  {versesTags[verse.key] !== undefined && (
-                    <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-                  )}
-                  <span className="tags-display-chapter-verses-item-text fs-4">
-                    {verse.versetext} ({verse.verseid}){" "}
-                  </span>
-                  <button
-                    className="btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#verseTagsModal"
-                    onClick={() => onClickTagVerse(verse)}
-                  >
-                    🏷️
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
+          <ListVerses
+            currentChapter={currentChapter}
+            versesTags={versesTags}
+            tags={tags}
+            editableNotes={state.editableNotes}
+            myNotes={state.myNotes}
+            areaDirection={state.areaDirection}
+            scrollKey={scrollKey}
+            dispatchTagsAction={dispatchTagsAction}
+            dispatchDpAction={dispatchDpAction}
+          />
         )}
       </div>
       <VerseTagsModal
@@ -167,14 +272,24 @@ interface SelectedVersesProps {
   selectedTags: tagsProps;
   tags: tagsProps;
   versesTags: versesTagsProps;
+  editableNotes: markedNotesType;
+  myNotes: notesType;
+  areaDirection: notesType;
+  dispatchDpAction: Dispatch<dpActionsProps>;
+  dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
 function SelectedVerses({
   selectedTags,
   versesTags,
   tags,
+  myNotes,
+  editableNotes,
+  areaDirection,
+  dispatchDpAction,
+  dispatchTagsAction,
 }: SelectedVersesProps) {
-  const { allQuranText, chapterNames } = useQuran();
+  const { allQuranText } = useQuran();
 
   function getVerseByKey(key: string) {
     const info = key.split("-");
@@ -195,6 +310,11 @@ function SelectedVerses({
     else return Number(infoA[1]) - Number(infoB[1]);
   });
 
+  function handleClickVerse(verse: verseProps) {
+    dispatchTagsAction(tagsActions.gotoChapter(verse.suraid));
+    dispatchTagsAction(tagsActions.setScrollKey(verse.key));
+  }
+
   return (
     <div className="card-body">
       {sortedVerses.length ? (
@@ -204,13 +324,17 @@ function SelectedVerses({
             return (
               <div key={verseKey} className="tags-display-chapter-verses-item">
                 <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
-                <span className=" fs-4">
-                  {verse.versetext} (
-                  {chapterNames[Number(verse.suraid) - 1].name +
-                    ":" +
-                    verse.verseid}
-                  )
-                </span>
+                <SelectedVerseComponent
+                  verse={verse}
+                  handleClickVerse={handleClickVerse}
+                />
+                <InputTextForm
+                  verseKey={verse.key}
+                  verseNote={myNotes[verse.key] || ""}
+                  noteEditable={editableNotes[verse.key]}
+                  noteDirection={areaDirection[verse.key] || ""}
+                  dispatchDpAction={dispatchDpAction}
+                />
               </div>
             );
           })}
@@ -223,6 +347,174 @@ function SelectedVerses({
     </div>
   );
 }
+
+interface SelectedVerseComponentProps {
+  verse: verseProps;
+  handleClickVerse: (verse: verseProps) => void;
+}
+
+const SelectedVerseComponent = ({
+  verse,
+  handleClickVerse,
+}: SelectedVerseComponentProps) => {
+  const { chapterNames } = useQuran();
+
+  function onClickVerse(verse: verseProps) {
+    handleClickVerse(verse);
+  }
+
+  return (
+    <span className="fs-4">
+      {verse.versetext}{" "}
+      <span
+        onClick={() => onClickVerse(verse)}
+        className="tags-display-chapter-verses-item-verse"
+      >
+        ({chapterNames[Number(verse.suraid) - 1].name + ":" + verse.verseid})
+      </span>
+      <button
+        className="btn"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target={"#collapseExample" + verse.key}
+        aria-expanded="false"
+        aria-controls={"collapseExample" + verse.key}
+      >
+        <IconCircleArrowDownFilled />
+      </button>
+    </span>
+  );
+};
+
+interface ListVersesProps {
+  currentChapter: number;
+  versesTags: versesTagsProps;
+  tags: tagsProps;
+  scrollKey: string;
+  editableNotes: markedNotesType;
+  myNotes: notesType;
+  areaDirection: notesType;
+  dispatchTagsAction: Dispatch<tagsActionsProps>;
+  dispatchDpAction: Dispatch<dpActionsProps>;
+}
+
+const ListVerses = memo(
+  ({
+    currentChapter,
+    versesTags,
+    tags,
+    myNotes,
+    editableNotes,
+    scrollKey,
+    areaDirection,
+    dispatchTagsAction,
+    dispatchDpAction,
+  }: ListVersesProps) => {
+    const { allQuranText, chapterNames } = useQuran();
+
+    const listRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const verseToHighlight = scrollKey
+        ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
+        : "";
+
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, [scrollKey]);
+
+    return (
+      <>
+        <div className="card-header text-center fs-4 tags-display-chapter-title">
+          سورة {chapterNames[currentChapter - 1].name}
+        </div>
+        <div className="card-body tags-display-chapter-verses" ref={listRef}>
+          {allQuranText[currentChapter - 1].verses.map((verse) => (
+            <div
+              key={verse.key}
+              data-id={verse.key}
+              className={`tags-display-chapter-verses-item ${
+                scrollKey === verse.key
+                  ? "tags-display-chapter-verses-item-highlighted"
+                  : ""
+              }`}
+            >
+              {versesTags[verse.key] !== undefined && (
+                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+              )}
+              <ListVerseComponent
+                verse={verse}
+                dispatchTagsAction={dispatchTagsAction}
+              />
+              <InputTextForm
+                verseKey={verse.key}
+                verseNote={myNotes[verse.key] || ""}
+                noteEditable={editableNotes[verse.key]}
+                noteDirection={areaDirection[verse.key] || ""}
+                dispatchDpAction={dispatchDpAction}
+              />
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+);
+
+interface ListVerseComponentProps {
+  verse: verseProps;
+  dispatchTagsAction: Dispatch<tagsActionsProps>;
+}
+
+const ListVerseComponent = memo(
+  ({ verse, dispatchTagsAction }: ListVerseComponentProps) => {
+    function onClickTagVerse(verse: verseProps) {
+      dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+    }
+
+    function onClickVerse() {
+      dispatchTagsAction(tagsActions.setScrollKey(verse.key));
+    }
+
+    return (
+      <>
+        <span className={`tags-display-chapter-verses-item-text fs-4`}>
+          {verse.versetext}{" "}
+          <span
+            className="tags-display-chapter-verses-item-text-btn"
+            onClick={onClickVerse}
+          >
+            ({verse.verseid})
+          </span>{" "}
+        </span>
+        <button
+          className="btn"
+          data-bs-toggle="modal"
+          data-bs-target="#verseTagsModal"
+          onClick={() => onClickTagVerse(verse)}
+        >
+          🏷️
+        </button>
+        <button
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={"#collapseExample" + verse.key}
+          aria-expanded="false"
+          aria-controls={"collapseExample" + verse.key}
+        >
+          <IconCircleArrowDownFilled />
+        </button>
+      </>
+    );
+  }
+);
+
+ListVerseComponent.displayName = "ListVerseComponent";
 
 interface VerseTagsProps {
   versesTags: string[];
@@ -243,5 +535,96 @@ function VerseTags({ versesTags, tags }: VerseTagsProps) {
     </div>
   );
 }
+
+interface InputTextFormProps {
+  verseKey: string;
+  verseNote: string;
+  noteEditable: boolean;
+  noteDirection: string;
+  dispatchDpAction: Dispatch<dpActionsProps>;
+}
+
+const InputTextForm = memo(
+  ({
+    verseKey,
+    verseNote,
+    noteEditable,
+    noteDirection,
+    dispatchDpAction,
+  }: InputTextFormProps) => {
+    const { t } = useTranslation();
+
+    const handleNoteChange = useCallback(
+      (name: string, value: string) => {
+        dispatchDpAction(dpActions.setNote({ name, value }));
+      },
+      [dispatchDpAction]
+    );
+
+    const handleInputSubmit = useCallback(
+      (key: string, value: string) => {
+        dbFuncs
+          .saveNote({
+            id: key,
+            text: value,
+            date_created: Date.now(),
+            date_modified: Date.now(),
+          })
+          .then(function () {
+            toast.success(t("save_success") as string);
+          })
+          .catch(function () {
+            toast.success(t("save_failed") as string);
+          });
+
+        dispatchDpAction(
+          dpActions.setNoteEditable({ name: key, value: false })
+        );
+      },
+      [dispatchDpAction, t]
+    );
+
+    const handleSetDirection = useCallback(
+      (verse_key: string, dir: string) => {
+        dispatchDpAction(
+          dpActions.setNoteDir({
+            name: verse_key,
+            value: dir,
+          })
+        );
+
+        dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
+      },
+      [dispatchDpAction]
+    );
+
+    const handleEditClick = useCallback(
+      (inputKey: string) => {
+        dispatchDpAction(
+          dpActions.setNoteEditable({
+            name: inputKey,
+            value: true,
+          })
+        );
+      },
+      [dispatchDpAction]
+    );
+
+    return (
+      <TextForm
+        inputKey={verseKey}
+        inputValue={verseNote}
+        isEditable={noteEditable}
+        inputDirection={noteDirection}
+        handleInputChange={handleNoteChange}
+        handleEditClick={handleEditClick}
+        handleSetDirection={handleSetDirection}
+        handleInputSubmit={handleInputSubmit}
+      />
+    );
+  }
+);
+
+InputTextForm.displayName = "InputTextForm";
 
 export default TagsDisplay;

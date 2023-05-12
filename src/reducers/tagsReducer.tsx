@@ -11,7 +11,7 @@ function tagsReducer(
 ): tagsStateProps {
   switch (action.type) {
     case TAGS_ACTIONS.SET_CHAPTER: {
-      return { ...state, currentChapter: action.payload };
+      return { ...state, scrollKey: "", currentChapter: action.payload };
     }
     case TAGS_ACTIONS.SET_SELECTED_CHAPTERS: {
       return { ...state, selectedChapters: action.payload };
@@ -85,6 +85,7 @@ function tagsReducer(
     case TAGS_ACTIONS.SELECT_TAG: {
       return {
         ...state,
+        scrollKey: "",
         selectedTags: {
           ...state.selectedTags,
           [action.payload.tagID]: action.payload,
@@ -95,6 +96,17 @@ function tagsReducer(
       const selectedTags = { ...state.selectedTags };
       delete selectedTags[action.payload];
       return { ...state, selectedTags: selectedTags };
+    }
+    case TAGS_ACTIONS.GOTO_CHAPTER: {
+      return {
+        ...state,
+        selectedTags: {},
+        currentChapter: Number(action.payload),
+      };
+    }
+    case TAGS_ACTIONS.SET_SCROLL_KEY: {
+      const newKey = state.scrollKey === action.payload ? "" : action.payload;
+      return { ...state, scrollKey: newKey };
     }
   }
 }
