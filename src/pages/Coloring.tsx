@@ -25,6 +25,7 @@ interface stateProps {
   currentVerse: verseProps | null;
   currentColor: colorProps | null;
   selectedChapters: selectedChaptersType;
+  scrollKey: string;
 }
 
 function reducer(state: stateProps, action: clActionsProps): stateProps {
@@ -125,6 +126,13 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
       newSelectChapters[action.payload] = !newSelectChapters[action.payload];
       return { ...state, selectedChapters: newSelectChapters };
     }
+    case CL_ACTIONS.SET_SCROLL_KEY: {
+      const newKey = state.scrollKey === action.payload ? "" : action.payload;
+      return { ...state, scrollKey: newKey };
+    }
+    case CL_ACTIONS.GOTO_CHAPTER: {
+      return { ...state, selectedColors: {}, currentChapter: action.payload };
+    }
   }
 }
 
@@ -204,6 +212,7 @@ function Coloring() {
     currentVerse: null,
     currentColor: null,
     selectedChapters: initialSelectedChapters,
+    scrollKey: "",
   };
 
   const [state, dispatchClAction] = useReducer(reducer, initialState);
@@ -228,6 +237,7 @@ function Coloring() {
         colorsList={state.colorsList}
         currentVerse={state.currentVerse}
         selectedChapters={state.selectedChapters}
+        scrollKey={state.scrollKey}
         dispatchClAction={dispatchClAction}
       />
     </div>

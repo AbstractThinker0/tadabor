@@ -243,6 +243,10 @@ main {
           border: none;
         }
 
+        &-chapter {
+          cursor: pointer;
+        }
+
         &-note {
           font-size: initial;
           color: initial;

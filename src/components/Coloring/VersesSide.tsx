@@ -1,4 +1,4 @@
-import { useReducer, useCallback, useEffect, memo } from "react";
+import { useReducer, useCallback, useEffect, memo, useRef } from "react";
 
 import useQuran from "../../context/QuranContext";
 import { toast } from "react-toastify";
@@ -81,6 +81,7 @@ interface VersesSideProps {
   colorsList: coloredProps;
   currentVerse: verseProps | null;
   selectedChapters: selectedChaptersType;
+  scrollKey: string;
   dispatchClAction: (value: clActionsProps) => void;
 }
 
@@ -90,6 +91,7 @@ function VersesSide({
   currentChapter,
   colorsList,
   currentVerse,
+  scrollKey,
   dispatchClAction,
   selectedChapters,
 }: VersesSideProps) {
@@ -193,6 +195,23 @@ function VersesSide({
 
   const getSelectedCount = chaptersScope.length;
 
+  const refListVerse = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const verseToHighlight = scrollKey
+      ? refListVerse.current?.querySelector(`[data-id="${scrollKey}"]`)
+      : "";
+
+    if (verseToHighlight) {
+      setTimeout(() => {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+    }
+  }, [scrollKey]);
+
   return (
     <div className="verses-side">
       {Object.keys(selectedColors).length > 0 && (
@@ -254,6 +273,7 @@ function VersesSide({
               areaDirection={state.areaDirection}
               editableNotes={state.editableNotes}
               dispatchVsAction={dispatchVsAction}
+              dispatchClAction={dispatchClAction}
             />
           ) : (
             <div className="text-center" dir="ltr">
@@ -265,35 +285,40 @@ function VersesSide({
             <div className="card-title">
               سورة {chapterNames[currentChapter - 1].name}
             </div>
-            {allQuranText[currentChapter - 1].verses.map((verse) => (
-              <div
-                className="verse-item"
-                key={verse.key}
-                style={
-                  coloredVerses[verse.key]
-                    ? {
-                        backgroundColor: coloredVerses[verse.key].colorCode,
-                        color: getTextColor(coloredVerses[verse.key].colorCode),
-                      }
-                    : {}
-                }
-              >
-                <VerseComponent
-                  color={
-                    coloredVerses[verse.key] ? coloredVerses[verse.key] : null
+            <div ref={refListVerse}>
+              {allQuranText[currentChapter - 1].verses.map((verse) => (
+                <div
+                  className="verse-item"
+                  key={verse.key}
+                  data-id={verse.key}
+                  style={
+                    coloredVerses[verse.key]
+                      ? {
+                          backgroundColor: coloredVerses[verse.key].colorCode,
+                          color: getTextColor(
+                            coloredVerses[verse.key].colorCode
+                          ),
+                        }
+                      : {}
                   }
-                  verse={verse}
-                  onClickVerseColor={onClickVerseColor}
-                />
-                <InputTextForm
-                  verseKey={verse.key}
-                  verseNote={state.myNotes[verse.key] || ""}
-                  noteEditable={state.editableNotes[verse.key]}
-                  noteDirection={state.areaDirection[verse.key] || ""}
-                  dispatchVsAction={dispatchVsAction}
-                />
-              </div>
-            ))}
+                >
+                  <VerseComponent
+                    color={
+                      coloredVerses[verse.key] ? coloredVerses[verse.key] : null
+                    }
+                    verse={verse}
+                    onClickVerseColor={onClickVerseColor}
+                  />
+                  <InputTextForm
+                    verseKey={verse.key}
+                    verseNote={state.myNotes[verse.key] || ""}
+                    noteEditable={state.editableNotes[verse.key]}
+                    noteDirection={state.areaDirection[verse.key] || ""}
+                    dispatchVsAction={dispatchVsAction}
+                  />
+                </div>
+              ))}
+            </div>
           </>
         )}
         <VerseModal
@@ -363,6 +388,7 @@ interface SelectedVersesProps {
   editableNotes: markedNotesType;
   areaDirection: notesDirectionType;
   dispatchVsAction: (value: vsActionsProps) => void;
+  dispatchClAction: (value: clActionsProps) => void;
 }
 
 function SelectedVerses({
@@ -372,6 +398,7 @@ function SelectedVerses({
   editableNotes,
   areaDirection,
   dispatchVsAction,
+  dispatchClAction,
 }: SelectedVersesProps) {
   const { allQuranText, chapterNames } = useQuran();
 
@@ -383,6 +410,11 @@ function SelectedVerses({
   const selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
     Object.keys(selectedColors).includes(coloredVerses[verseKey].colorID)
   );
+
+  function onClickChapter(verse: verseProps) {
+    dispatchClAction(clActions.gotoChapter(Number(verse.suraid)));
+    dispatchClAction(clActions.setScrollKey(verse.key));
+  }
 
   return (
     <div>
@@ -407,11 +439,17 @@ function SelectedVerses({
                 }}
               >
                 <div>
-                  {verse.versetext} (
-                  {chapterNames[Number(verse.suraid) - 1].name +
-                    ":" +
-                    verse.verseid}
-                  )
+                  {verse.versetext}{" "}
+                  <span
+                    onClick={() => onClickChapter(verse)}
+                    className="verse-item-chapter"
+                  >
+                    (
+                    {chapterNames[Number(verse.suraid) - 1].name +
+                      ":" +
+                      verse.verseid}
+                    )
+                  </span>
                   <button
                     className="btn"
                     type="button"
