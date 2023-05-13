@@ -375,17 +375,20 @@ interface DerivationsComponentProps {
 
 const DerivationsComponent = memo(
   ({ searchIndexes, handleRootClick }: DerivationsComponentProps) => {
+    const refListRoots = useRef<HTMLSpanElement>(null);
     useEffect(() => {
+      if (!refListRoots.current) return;
+
       //init tooltip
       Array.from(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
       ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
     }, [searchIndexes]);
 
     return (
       <>
         <hr />
-        <span className="p-2">
+        <span ref={refListRoots} className="p-2">
           {searchIndexes.map((root: searchIndexProps, index: number) => (
             <span
               role="button"
