@@ -41,7 +41,12 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
         searchIndexes: [],
         selectChapter: Number(action.payload),
         selectedChapters: [action.payload],
+        scrollKey: "",
       };
+    }
+    case QB_ACTIONS.SET_SCROLL_KEY: {
+      const newKey = state.scrollKey === action.payload ? "" : action.payload;
+      return { ...state, scrollKey: newKey };
     }
   }
 }

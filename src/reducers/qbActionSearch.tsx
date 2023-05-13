@@ -61,6 +61,7 @@ export function qbSearchRoot(
     searchIndexes: [],
     searchingString: state.searchString,
     searchingMethod: state.searchMethod,
+    scrollKey: "",
   };
 
   if (onlySpaces(state.searchString)) {
@@ -254,6 +255,7 @@ export function qbSearchWord(
     searchingString: state.searchString,
     searchingMethod: state.searchMethod,
     searchingScope: state.searchScope,
+    scrollKey: "",
   };
 
   if (onlySpaces(state.searchString)) {

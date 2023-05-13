@@ -6,7 +6,6 @@ import {
   useCallback,
   memo,
   Fragment,
-  MutableRefObject,
   useState,
 } from "react";
 
@@ -41,16 +40,11 @@ import {
   searchResult,
 } from "./consts";
 
-interface refVersesResultType {
-  [key: string]: HTMLDivElement;
-}
-
 interface stateProps {
   loadingState: boolean;
   myNotes: notesType;
   editableNotes: markedNotesType;
   areaDirection: notesType;
-  scrollKey: null | string;
 }
 
 function reducer(state: stateProps, action: dpActionsProps): stateProps {
@@ -92,9 +86,6 @@ function reducer(state: stateProps, action: dpActionsProps): stateProps {
         loadingState: false,
       };
     }
-    case DP_ACTIONS.SET_SCROLL_KEY: {
-      return { ...state, scrollKey: action.payload };
-    }
   }
 }
 
@@ -108,6 +99,7 @@ interface DisplayPanelProps {
   searchingMethod: string;
   searchIndexes: searchIndexProps[];
   searchingScope: SEARCH_SCOPE;
+  scrollKey: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
@@ -122,6 +114,7 @@ const DisplayPanel = memo(
     searchingMethod,
     searchIndexes,
     searchingScope,
+    scrollKey,
     dispatchQbAction,
   }: DisplayPanelProps) => {
     // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
@@ -132,7 +125,6 @@ const DisplayPanel = memo(
       myNotes: {},
       editableNotes: {},
       areaDirection: {},
-      scrollKey: null,
     };
 
     const [state, dispatchDpAction] = useReducer(reducer, initialState);
@@ -178,16 +170,12 @@ const DisplayPanel = memo(
       };
     }, []);
 
-    const scrollRef = useRef(state.scrollKey);
-
+    // Reset scroll whenever we submit a new search or switch from one chapter to another
     useEffect(() => {
-      scrollRef.current = state.scrollKey;
-    }, [state.scrollKey]);
-
-    useEffect(() => {
-      if (refListVerses.current && scrollRef.current === null)
+      if (refListVerses.current) {
         refListVerses.current.scrollTop = 0;
-    }, [selectChapter, searchResult]);
+      }
+    }, [searchResult]);
 
     if (state.loadingState)
       return (
@@ -221,11 +209,12 @@ const DisplayPanel = memo(
           ) : (
             <ListVerses
               selectChapter={selectChapter}
-              scrollKey={state.scrollKey}
+              scrollKey={scrollKey}
               myNotes={state.myNotes}
               editableNotes={state.editableNotes}
               areaDirection={state.areaDirection}
               dispatchDpAction={dispatchDpAction}
+              dispatchQbAction={dispatchQbAction}
             />
           )}
         </div>
@@ -272,14 +261,20 @@ const ListSearchResults = ({
   const { chapterNames } = useQuran();
   const [selectedVerse, setSelectedVerse] = useState("");
 
-  const refVersesResult = useRef<refVersesResultType>({});
+  const refListVerses = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSelectedVerse("");
   }, [searchIndexes]);
 
   function handleRootClick(verse_key: string) {
-    refVersesResult.current[verse_key].scrollIntoView({
+    const verseToHighlight = refListVerses.current?.querySelector(
+      `[data-id="${verse_key}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
       block: "center",
       behavior: "smooth",
     });
@@ -308,13 +303,11 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <div className="card-body">
+      <div className="card-body" ref={refListVerses}>
         {versesArray.map((verse) => (
           <div
             key={verse.key}
-            ref={(el) => {
-              if (el !== null) refVersesResult.current[verse.key] = el;
-            }}
+            data-id={verse.key}
             className={`border-bottom pt-1 pb-1 ${
               verse.key === selectedVerse ? "verse-selected" : ""
             }`}
@@ -441,7 +434,6 @@ const SearchVerseComponent = memo(
           verse={verse}
           searchingScope={searchingScope}
           verseChapter={verseChapter}
-          dispatchDpAction={dispatchDpAction}
           dispatchQbAction={dispatchQbAction}
         />
         <InputTextForm
@@ -482,7 +474,6 @@ interface VerseContentComponentProps {
   verse: searchResult;
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
-  dispatchDpAction: Dispatch<dpActionsProps>;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
@@ -491,7 +482,6 @@ const VerseContentComponent = memo(
     verse,
     searchingScope,
     verseChapter,
-    dispatchDpAction,
     dispatchQbAction,
   }: VerseContentComponentProps) => {
     const verse_key = verse.key;
@@ -504,8 +494,8 @@ const VerseContentComponent = memo(
     }
 
     const handleVerseClick = (verse_key: string) => {
-      dispatchDpAction(dpActions.setScrollKey(verse_key));
       gotoChapter(verse.suraid);
+      dispatchQbAction(qbActions.setScrollKey(verse_key));
     };
 
     return (
@@ -582,15 +572,12 @@ ListTitle.displayName = "ListTitle";
 
 interface ListVersesProps {
   selectChapter: number;
-  scrollKey: string | null;
+  scrollKey: string;
   myNotes: notesType;
   editableNotes: markedNotesType;
   areaDirection: notesType;
   dispatchDpAction: Dispatch<dpActionsProps>;
-}
-
-interface versesRefType {
-  [key: string]: HTMLDivElement;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const ListVerses = ({
@@ -600,41 +587,51 @@ const ListVerses = ({
   scrollKey,
   areaDirection,
   dispatchDpAction,
+  dispatchQbAction,
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
 
   const chapterName = chapterNames[selectChapter - 1].name;
   const versesArray = allQuranText[selectChapter - 1].verses;
 
-  const selectedVerse = useRef<Element | null>(null);
-
-  const versesRef = useRef<versesRefType>({});
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const verseToHighlight = scrollKey ? versesRef.current[scrollKey] : null;
+    const verseToHighlight = scrollKey
+      ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
+      : "";
+
     if (verseToHighlight) {
-      verseToHighlight.scrollIntoView({ block: "center" });
-      verseToHighlight.classList.add("verse-selected");
-      selectedVerse.current = verseToHighlight;
-      dispatchDpAction(dpActions.setScrollKey(null));
+      setTimeout(() => {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
     }
-  }, [dispatchDpAction, scrollKey]);
+  }, [scrollKey]);
 
   return (
     <>
       <ListTitle chapterName={chapterName} />
-      <div className="card-body">
+      <div className="card-body" ref={listRef}>
         {versesArray.map((verse: verseProps) => (
-          <VerseComponent
+          <div
             key={verse.key}
-            verse={verse}
-            value={myNotes[verse.key] || ""}
-            isEditable={editableNotes[verse.key]}
-            noteDirection={areaDirection[verse.key] || ""}
-            selectedVerse={selectedVerse}
-            versesRef={versesRef}
-            dispatchDpAction={dispatchDpAction}
-          />
+            data-id={verse.key}
+            className={`border-bottom pt-1 pb-1 ${
+              scrollKey === verse.key ? "verse-selected" : ""
+            }`}
+          >
+            <VerseComponent
+              verse={verse}
+              value={myNotes[verse.key] || ""}
+              isEditable={editableNotes[verse.key]}
+              noteDirection={areaDirection[verse.key] || ""}
+              dispatchDpAction={dispatchDpAction}
+              dispatchQbAction={dispatchQbAction}
+            />
+          </div>
         ))}
       </div>
     </>
@@ -643,23 +640,13 @@ const ListVerses = ({
 
 ListVerses.displayName = "ListVerses";
 
-function hightlighVerse(verseElement: HTMLElement) {
-  verseElement.scrollIntoView({
-    behavior: "smooth",
-    block: "center",
-  });
-  verseElement.classList.add("verse-selected");
-}
-
 interface VerseComponentProps {
-  key: string;
   verse: verseProps;
   value: string;
   isEditable: boolean;
   noteDirection: string;
-  selectedVerse: MutableRefObject<Element | null>;
-  versesRef: MutableRefObject<versesRefType>;
   dispatchDpAction: Dispatch<dpActionsProps>;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseComponent = memo(
@@ -668,18 +655,12 @@ const VerseComponent = memo(
     value,
     isEditable,
     noteDirection,
-    selectedVerse,
-    versesRef,
+    dispatchQbAction,
     dispatchDpAction,
   }: VerseComponentProps) => {
     return (
-      <div
-        ref={(el) => {
-          if (el !== null) versesRef.current[verse.key] = el;
-        }}
-        className="border-bottom pt-1 pb-1"
-      >
-        <VerseTextComponent verse={verse} selectedVerse={selectedVerse} />
+      <>
+        <VerseTextComponent verse={verse} dispatchQbAction={dispatchQbAction} />
         <InputTextForm
           verseKey={verse.key}
           verseNote={value}
@@ -687,7 +668,7 @@ const VerseComponent = memo(
           noteDirection={noteDirection}
           dispatchDpAction={dispatchDpAction}
         />
-      </div>
+      </>
     );
   }
 );
@@ -696,29 +677,13 @@ VerseComponent.displayName = "VerseComponent";
 
 interface VerseTextComponentProps {
   verse: verseProps;
-  selectedVerse: MutableRefObject<Element | null>;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseTextComponent = memo(
-  ({ verse, selectedVerse }: VerseTextComponentProps) => {
-    function onClickVerse(
-      event: React.MouseEvent<HTMLSpanElement, MouseEvent>
-    ) {
-      const verseElement = event.currentTarget.parentElement?.parentElement;
-
-      if (!verseElement) return;
-
-      if (selectedVerse.current) {
-        selectedVerse.current.classList.remove("verse-selected");
-
-        if (selectedVerse.current === verseElement) {
-          selectedVerse.current = null;
-          return;
-        }
-      }
-
-      hightlighVerse(verseElement);
-      selectedVerse.current = verseElement;
+  ({ verse, dispatchQbAction }: VerseTextComponentProps) => {
+    function onClickVerse() {
+      dispatchQbAction(qbActions.setScrollKey(verse.key));
     }
     return (
       <span className="fs-4">

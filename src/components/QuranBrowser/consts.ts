@@ -45,6 +45,7 @@ export interface qbStateProps {
   searchIndexes: searchIndexProps[];
   searchScope: SEARCH_SCOPE;
   searchingScope: SEARCH_SCOPE;
+  scrollKey: string;
 }
 
 export enum QB_ACTIONS {
@@ -57,6 +58,7 @@ export enum QB_ACTIONS {
   SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
   SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
 }
 
 export enum SEARCH_SCOPE {
@@ -108,6 +110,9 @@ export const qbActions = {
   gotoChapter: createActionPayload<QB_ACTIONS.GOTO_CHAPTER, string>(
     QB_ACTIONS.GOTO_CHAPTER
   ),
+  setScrollKey: createActionPayload<QB_ACTIONS.SET_SCROLL_KEY, string>(
+    QB_ACTIONS.SET_SCROLL_KEY
+  ),
 };
 
 export type qbActionsProps = ActionsUnion<typeof qbActions>;
@@ -117,7 +122,6 @@ export enum DP_ACTIONS {
   CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
   CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
   DATA_LOADED = "dispatchDataLoaded",
-  SET_SCROLL_KEY = "dispatchSetScrollKey",
 }
 
 export const dpActions = {
@@ -141,9 +145,6 @@ export const dpActions = {
       extractNotesDir: notesDirectionType;
     }
   >(DP_ACTIONS.DATA_LOADED),
-  setScrollKey: createActionPayload<DP_ACTIONS.SET_SCROLL_KEY, string | null>(
-    DP_ACTIONS.SET_SCROLL_KEY
-  ),
 };
 
 export type dpActionsProps = ActionsUnion<typeof dpActions>;

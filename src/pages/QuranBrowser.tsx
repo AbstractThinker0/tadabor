@@ -27,6 +27,7 @@ function QuranBrowser() {
     searchIndexes: [],
     searchScope: SEARCH_SCOPE.ALL_CHAPTERS,
     searchingScope: SEARCH_SCOPE.ALL_CHAPTERS,
+    scrollKey: "",
   };
 
   const [state, dispatchQbAction] = useReducer(qbReducer, initialState);
@@ -54,6 +55,7 @@ function QuranBrowser() {
         selectChapter={state.selectChapter}
         searchingMethod={state.searchingMethod}
         searchIndexes={state.searchIndexes}
+        scrollKey={state.scrollKey}
         dispatchQbAction={dispatchQbAction}
       />
     </div>
