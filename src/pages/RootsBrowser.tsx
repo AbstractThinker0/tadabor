@@ -19,6 +19,7 @@ import useQuran from "../context/QuranContext";
 import { normalizeAlif } from "../util/util";
 
 import { TextForm } from "../components/TextForm";
+import { markedNotesType, notesDirectionType, notesType } from "../types";
 
 const arabicAlpha = [
   "ا",
@@ -130,25 +131,13 @@ interface RootsListComponentProps {
 }
 
 const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
-  interface notesType {
-    [key: string]: string;
-  }
-
-  interface notesDirType {
-    [key: string]: string; // "rtl" | "ltr";
-  }
-
-  interface markedNotesType {
-    [key: string]: boolean;
-  }
-
   const { t } = useTranslation();
   const { quranRoots } = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
   const [myNotes, setMyNotes] = useState<notesType>({});
   const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-  const [areaDirection, setAreaDirection] = useState<notesDirType>({});
+  const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
   const [itemsCount, setItemsCount] = useState(100);
 
   useEffect(() => {
@@ -173,7 +162,7 @@ const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
 
       if (clientLeft) return;
 
-      const extractNotesDir: notesDirType = {};
+      const extractNotesDir: notesDirectionType = {};
 
       userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;

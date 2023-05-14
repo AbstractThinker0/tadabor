@@ -7,25 +7,14 @@ import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
 import { FormComponent, TextComponent } from "../components/TextForm";
+import { markedNotesType, notesDirectionType, notesType } from "../types";
 
 function YourNotes() {
-  interface notesType {
-    [key: string]: string;
-  }
-
-  interface notesDirType {
-    [key: string]: string; // "rtl" | "ltr";
-  }
-
-  interface markedNotesType {
-    [key: string]: boolean;
-  }
-
   const [loadingState, setLoadingState] = useState(true);
   const { t } = useTranslation();
   const { chapterNames, allQuranText } = useQuran();
   const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-  const [areaDirection, setAreaDirection] = useState<notesDirType>({});
+  const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
   const [myNotes, setMyNotes] = useState<notesType>({});
 
   useEffect(() => {
@@ -47,7 +36,7 @@ function YourNotes() {
 
       if (clientLeft) return;
 
-      const extractNotesDir: notesDirType = {};
+      const extractNotesDir: notesDirectionType = {};
 
       userNotesDir.forEach((note) => {
         extractNotesDir[note.id] = note.dir;
