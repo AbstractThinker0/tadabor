@@ -17,7 +17,7 @@ import { IconCircleArrowDownFilled } from "@tabler/icons-react";
 
 import { TextForm } from "../TextForm";
 
-import * as bootstrap from "bootstrap";
+import { Tooltip } from "bootstrap";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "../../context/QuranContext";
@@ -382,7 +382,7 @@ const DerivationsComponent = memo(
       //init tooltip
       Array.from(
         refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).forEach((tooltipNode) => new bootstrap.Tooltip(tooltipNode));
+      ).forEach((tooltipNode) => new Tooltip(tooltipNode));
     }, [searchIndexes]);
 
     return (

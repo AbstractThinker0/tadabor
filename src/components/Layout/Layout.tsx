@@ -1,17 +1,19 @@
+import { PropsWithChildren, useEffect, useRef } from "react";
+
 import { useTranslation } from "react-i18next";
+
+// Import all of Bootstrap's JS
+import "bootstrap";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "../../context/QuranContext";
 import "../../styles/main.scss";
-import { ReactNode, useEffect, useRef } from "react";
+
 import Navbar from "./Navbar";
 import AlertMessage from "./AlertMessage";
 
-interface Props {
-  children?: ReactNode;
-}
-
-function Layout({ children }: Props) {
+function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLElement>(null);
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
