@@ -41,6 +41,7 @@ i18n
           save_success: "Successfuly saved the changes.",
           save_failed: "Failed to save the changes",
           roots_list: "Surahs list:",
+          no_notes: "You don't have any notes saved to be shown here.",
         },
       },
       ar: {
@@ -70,6 +71,7 @@ i18n
           save_success: "تم الحفظ بنجاح.",
           save_failed: "فشلت عملية الحفظ.",
           roots_list: "قائمة السور:",
+          no_notes: "ليس لديك أي كتابات لإظهارها هنا.",
         },
       },
     },

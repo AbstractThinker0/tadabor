@@ -110,34 +110,42 @@ function YourNotes() {
 
   return (
     <div className="yournotes p-2">
-      {Object.keys(myNotes).map((key) => (
-        <div key={key} className="card mb-3">
-          <div className="card-header" dir="rtl">
-            {convertKey(key)} <br /> {getVerse(key)}{" "}
-          </div>
-          {editableNotes[key] ? (
-            <FormComponent
-              inputValue={myNotes[key]}
-              inputKey={key}
-              inputDirection={areaDirection[key] || ""}
-              handleInputChange={handleNoteChange}
-              handleInputSubmit={handleNoteSave}
-              handleSetDirection={memoHandleSetDirection}
-              bodyClassname="card-body"
-              saveClassname="card-footer"
-            />
-          ) : (
-            <TextComponent
-              inputKey={key}
-              inputValue={myNotes[key]}
-              inputDirection={areaDirection[key] || ""}
-              handleEditButtonClick={memoHandleEditOnClick}
-              textClassname="card-body"
-              editClassname="card-footer"
-            />
-          )}
+      {Object.keys(myNotes).length ? (
+        <>
+          {Object.keys(myNotes).map((key) => (
+            <div key={key} className="card mb-3">
+              <div className="card-header" dir="rtl">
+                {convertKey(key)} <br /> {getVerse(key)}{" "}
+              </div>
+              {editableNotes[key] ? (
+                <FormComponent
+                  inputValue={myNotes[key]}
+                  inputKey={key}
+                  inputDirection={areaDirection[key] || ""}
+                  handleInputChange={handleNoteChange}
+                  handleInputSubmit={handleNoteSave}
+                  handleSetDirection={memoHandleSetDirection}
+                  bodyClassname="card-body"
+                  saveClassname="card-footer"
+                />
+              ) : (
+                <TextComponent
+                  inputKey={key}
+                  inputValue={myNotes[key]}
+                  inputDirection={areaDirection[key] || ""}
+                  handleEditButtonClick={memoHandleEditOnClick}
+                  textClassname="card-body"
+                  editClassname="card-footer"
+                />
+              )}
+            </div>
+          ))}
+        </>
+      ) : (
+        <div className="fs-4 text-center">
+          <div>{t("no_notes")}</div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
