@@ -1,0 +1,10 @@
+// Medium screen adjustments (Todo: Complete this unfinished feature )
+
+@media (max-width: 800px) {
+  .browser,
+  .translation {
+    flex-direction: column;
+    overflow: auto;
+    max-height: none;
+  }
+}

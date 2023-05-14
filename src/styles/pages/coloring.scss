@@ -1,0 +1,219 @@
+.coloring {
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+
+  .chapters-side {
+    max-width: 400px;
+    padding: 16px;
+
+    .chapter-block {
+      &-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: rgb(245, 244, 244);
+        border-bottom-left-radius: 0.275rem;
+        border-bottom-right-radius: 0.275rem;
+      }
+    }
+
+    .chapter-search {
+      width: 100%;
+      height: 30px;
+      border: none;
+      border: 1px solid rgb(201, 202, 204);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+
+      &:focus-visible {
+        outline: none;
+        border-color: rgba(76, 76, 167, 0.623);
+      }
+    }
+
+    .chapter-list {
+      border: 1px solid gainsboro;
+      max-height: 400px;
+      overflow-y: scroll;
+      scrollbar-width: 20px;
+      width: 100%;
+
+      &-item {
+        background-color: rgb(201, 202, 204);
+        cursor: pointer;
+        margin-bottom: 2px;
+        padding: 2px;
+        display: flex;
+
+        &-name {
+          flex-grow: 1;
+        }
+
+        &-selected {
+          background-color: rgba(76, 76, 167, 0.623);
+          color: black;
+        }
+      }
+    }
+
+    &-colors-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: rgb(245, 244, 244);
+      border-radius: 0.275rem;
+    }
+
+    &-colors {
+      overflow-y: auto;
+      max-height: 200px;
+
+      &-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: large;
+        cursor: pointer;
+
+        &-text {
+          overflow-wrap: break-word;
+          overflow-x: hidden;
+        }
+      }
+    }
+  }
+
+  .verses-side {
+    flex: 1;
+    width: 100%;
+    padding: 0.25rem;
+    display: flex;
+    flex-direction: column;
+
+    &-colors {
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      &-selected {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      &-chapters {
+        padding-top: 10px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+
+        &-item {
+          background-color: beige;
+          padding: 2px;
+          border-radius: 0.3rem;
+        }
+      }
+
+      &-item {
+        display: flex;
+        justify-content: space-between;
+        min-width: 120px;
+        padding-left: 5px;
+        padding-right: 5px;
+
+        &-text {
+          max-width: 500px;
+          overflow-y: hidden;
+          overflow-wrap: break-word;
+        }
+
+        &-close {
+          cursor: pointer;
+          padding-left: 3px;
+          padding-right: 3px;
+        }
+      }
+    }
+
+    .verse-list {
+      padding: 1.5rem;
+      min-height: max-content;
+      background-color: rgb(245, 244, 244);
+      overflow-y: scroll;
+      flex: 1;
+
+      .card-title {
+        text-align: center;
+        color: darkblue;
+        font-size: larger;
+      }
+
+      .verse-item {
+        border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+        padding-bottom: 4px;
+        padding-top: 4px;
+        padding-left: 4px;
+        padding-right: 4px;
+
+        .verse-btn {
+          background: none;
+          outline: none;
+          border: none;
+        }
+
+        &-chapter {
+          cursor: pointer;
+        }
+
+        &-note {
+          font-size: initial;
+          color: initial;
+        }
+      }
+    }
+
+    .verse-modal {
+      &-text {
+        background-color: rgb(245, 244, 244);
+        padding: 4px;
+        margin-bottom: 5px;
+      }
+
+      &-colors {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        &-item {
+          padding: 4px;
+          border: 5px solid white;
+          min-width: 150px;
+          cursor: pointer;
+
+          &-active {
+            border-image: linear-gradient(
+                to right,
+                grey 25%,
+                yellow 25%,
+                yellow 50%,
+                red 50%,
+                red 75%,
+                teal 75%
+              )
+              5;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-deletecolor {
+    &-label {
+      padding-left: 4px;
+      padding-right: 4px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      overflow-wrap: break-word;
+    }
+  }
+}

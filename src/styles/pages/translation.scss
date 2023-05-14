@@ -1,0 +1,17 @@
+.translation {
+  display: flex;
+  overflow: auto;
+  max-height: 100%;
+  height: 100%;
+
+  &-display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+    padding: 0.25rem;
+
+    &-card {
+      min-height: 100%;
+    }
+  }
+}
