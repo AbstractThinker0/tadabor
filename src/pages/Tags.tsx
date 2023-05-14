@@ -86,6 +86,7 @@ function Tags() {
         currentChapter={state.currentChapter}
         selectedChapters={state.selectedChapters}
         tags={state.tags}
+        selectedTags={state.selectedTags}
         currentTag={state.currentTag}
         versesTags={state.versesTags}
         dispatchTagsAction={dispatchTagsAction}

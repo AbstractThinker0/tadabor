@@ -16,6 +16,7 @@ interface TagsSideProps {
   currentChapter: number;
   selectedChapters: selectedChaptersType;
   tags: tagsProps;
+  selectedTags: tagsProps;
   currentTag: tagProps | null;
   versesTags: versesTagsProps;
   dispatchTagsAction: Dispatch<tagsActionsProps>;
@@ -25,6 +26,7 @@ function TagsSide({
   currentChapter,
   selectedChapters,
   tags,
+  selectedTags,
   currentTag,
   versesTags,
   dispatchTagsAction,
@@ -122,6 +124,8 @@ function TagsSide({
     return countTags;
   };
 
+  const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
+
   return (
     <div className="tags-side">
       <div className="tags-side-chapters">
@@ -173,7 +177,14 @@ function TagsSide({
         {Object.keys(tags).length > 0 && (
           <div className="tags-side-list-items">
             {Object.keys(tags).map((tagID) => (
-              <div className="tags-side-list-items-item" key={tagID}>
+              <div
+                className={`tags-side-list-items-item ${
+                  isTagSelected(tagID)
+                    ? "tags-side-list-items-item-selected"
+                    : ""
+                }`}
+                key={tagID}
+              >
                 <div
                   className="tags-side-list-items-item-text"
                   onClick={() => onClickSelectTag(tags[tagID])}
