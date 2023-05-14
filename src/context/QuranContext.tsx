@@ -5,14 +5,10 @@ import {
   useEffect,
   useContext,
   useRef,
-  ReactNode,
+  PropsWithChildren,
 } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { chapterProps, quranProps, rootProps, verseProps } from "../types";
-
-interface Props {
-  children?: ReactNode;
-}
 
 type QuranContent = {
   chapterNames: chapterProps[];
@@ -28,7 +24,7 @@ const QuranContext = createContext<QuranContent>({
   absoluteQuran: [],
 });
 
-export const QuranProvider = ({ children }: Props) => {
+export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const chapterNames = useRef<chapterProps[]>([]);
