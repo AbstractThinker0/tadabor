@@ -46,7 +46,7 @@ function tagsReducer(
       const newVersesTags = { ...state.versesTags };
 
       for (const verseKey in newVersesTags) {
-        let verseTags = newVersesTags[verseKey];
+        const verseTags = newVersesTags[verseKey];
         newVersesTags[verseKey] = verseTags.filter(
           (tag) => tag !== action.payload
         );
