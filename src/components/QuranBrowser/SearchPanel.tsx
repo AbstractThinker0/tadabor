@@ -12,6 +12,8 @@ import {
   searchResult,
 } from "./consts";
 
+import { IconSearch } from "@tabler/icons-react";
+
 interface SearchPanelProps {
   searchMethod: string;
   searchDiacritics: boolean;
@@ -208,7 +210,9 @@ const FormWordSearch = ({
 }: FormWordSearchProps) => {
   const { t } = useTranslation();
 
-  const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const searchStringHandle = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatchQbAction(qbActions.setSearchString(event.target.value));
   };
 
@@ -219,27 +223,27 @@ const FormWordSearch = ({
   }
 
   return (
-    <form
-      className="container p-0 mt-2"
-      role="search"
-      onSubmit={handleSearchSubmit}
-    >
+    <form className="p-0 mt-2" role="search" onSubmit={handleSearchSubmit}>
       <div className="row">
-        <div className="col">
-          <input
-            className="form-control"
-            type="search"
-            placeholder=""
-            value={searchString}
-            aria-label="Search"
-            onChange={searchStringHandle}
+        <div>
+          <textarea
             required
             dir="rtl"
+            className="form-control"
+            placeholder=""
+            aria-label="Search"
+            onChange={searchStringHandle}
+            id="exampleFormControlTextarea1"
+            rows={1}
+            value={searchString}
           />
         </div>
-        <div className="col">
-          <button className="btn btn-outline-success" type="submit">
-            {t("search_button")}
+        <div className="pt-1 ">
+          <button
+            className="btn btn-outline-success w-50 fw-bold"
+            type="submit"
+          >
+            <IconSearch size={15} stroke={3} /> {t("search_button")}
           </button>
         </div>
       </div>
