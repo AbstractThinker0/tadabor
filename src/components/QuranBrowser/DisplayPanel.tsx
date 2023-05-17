@@ -1,6 +1,5 @@
 import {
   Dispatch,
-  useReducer,
   useEffect,
   useRef,
   useCallback,
@@ -9,85 +8,24 @@ import {
   useState,
 } from "react";
 
-import { toast } from "react-toastify";
-import { dbFuncs } from "../../util/db";
-
-import LoadingSpinner from "../LoadingSpinner";
 import { IconCircleArrowDownFilled } from "@tabler/icons-react";
-
-import { TextForm } from "../TextForm";
 
 import { Tooltip } from "bootstrap";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "../../context/QuranContext";
 
+import { verseProps } from "../../types";
 import {
-  markedNotesType,
-  notesDirectionType,
-  notesType,
-  verseProps,
-} from "../../types";
-import {
-  DP_ACTIONS,
   SEARCH_METHOD,
   SEARCH_SCOPE,
-  dpActions,
-  dpActionsProps,
   qbActions,
   qbActionsProps,
   searchIndexProps,
   searchResult,
 } from "./consts";
 
-interface stateProps {
-  loadingState: boolean;
-  myNotes: notesType;
-  editableNotes: markedNotesType;
-  areaDirection: notesType;
-}
-
-function reducer(state: stateProps, action: dpActionsProps): stateProps {
-  // ...
-  switch (action.type) {
-    case DP_ACTIONS.CHANGE_NOTE: {
-      return {
-        ...state,
-        myNotes: {
-          ...state.myNotes,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case DP_ACTIONS.CHANGE_NOTE_EDITABLE: {
-      return {
-        ...state,
-        editableNotes: {
-          ...state.editableNotes,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case DP_ACTIONS.CHANGE_NOTE_DIRECTION: {
-      return {
-        ...state,
-        areaDirection: {
-          ...state.areaDirection,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case DP_ACTIONS.DATA_LOADED: {
-      return {
-        ...state,
-        myNotes: action.payload.extractNotes,
-        editableNotes: action.payload.markedNotes,
-        areaDirection: action.payload.extractNotesDir,
-        loadingState: false,
-      };
-    }
-  }
-}
+import NoteText from "../NoteText";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
@@ -120,71 +58,12 @@ const DisplayPanel = memo(
     // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
     const refListVerses = useRef<HTMLDivElement>(null);
 
-    const initialState: stateProps = {
-      loadingState: true,
-      myNotes: {},
-      editableNotes: {},
-      areaDirection: {},
-    };
-
-    const [state, dispatchDpAction] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-      let clientLeft = false;
-
-      fetchData();
-
-      async function fetchData() {
-        const userNotes = await dbFuncs.loadNotes();
-
-        if (clientLeft) return;
-
-        const markedNotes: markedNotesType = {};
-        const extractNotes: notesType = {};
-        userNotes.forEach((note) => {
-          extractNotes[note.id] = note.text;
-          markedNotes[note.id] = false;
-        });
-
-        const userNotesDir = await dbFuncs.loadNotesDir();
-
-        if (clientLeft) return;
-
-        const extractNotesDir: notesDirectionType = {};
-
-        userNotesDir.forEach((note) => {
-          extractNotesDir[note.id] = note.dir;
-        });
-
-        dispatchDpAction(
-          dpActions.dataLoaded({
-            extractNotes,
-            markedNotes,
-            extractNotesDir,
-          })
-        );
-      }
-
-      return () => {
-        clientLeft = true;
-      };
-    }, []);
-
     // Reset scroll whenever we submit a new search or switch from one chapter to another
     useEffect(() => {
       if (refListVerses.current) {
         refListVerses.current.scrollTop = 0;
       }
     }, [searchResult]);
-
-    if (state.loadingState)
-      return (
-        <div className="col h-75">
-          <div className="h-100">
-            <LoadingSpinner />
-          </div>
-        </div>
-      );
 
     return (
       <div className="browser-display" ref={refListVerses}>
@@ -200,20 +79,12 @@ const DisplayPanel = memo(
               searchMethod={searchingMethod}
               searchingChapters={searchingChapters}
               searchIndexes={searchIndexes}
-              editableNotes={state.editableNotes}
-              myNotes={state.myNotes}
-              areaDirection={state.areaDirection}
-              dispatchDpAction={dispatchDpAction}
               dispatchQbAction={dispatchQbAction}
             />
           ) : (
             <ListVerses
               selectChapter={selectChapter}
               scrollKey={scrollKey}
-              myNotes={state.myNotes}
-              editableNotes={state.editableNotes}
-              areaDirection={state.areaDirection}
-              dispatchDpAction={dispatchDpAction}
               dispatchQbAction={dispatchQbAction}
             />
           )}
@@ -235,10 +106,7 @@ interface ListSearchResultsProps {
   searchMethod: string;
   searchingChapters: string[];
   searchIndexes: searchIndexProps[];
-  editableNotes: markedNotesType;
-  myNotes: notesType;
-  areaDirection: notesType;
-  dispatchDpAction: Dispatch<dpActionsProps>;
+
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
@@ -249,13 +117,12 @@ const ListSearchResults = ({
   searchError,
   selectedRootError,
   searchMethod,
-  myNotes,
-  editableNotes,
+
   searchingChapters,
   searchIndexes,
-  areaDirection,
+
   searchingScope,
-  dispatchDpAction,
+
   dispatchQbAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
@@ -316,10 +183,6 @@ const ListSearchResults = ({
               verse={verse}
               searchingScope={searchingScope}
               verseChapter={chapterNames[Number(verse.suraid) - 1].name}
-              value={myNotes[verse.key] || ""}
-              isEditable={editableNotes[verse.key]}
-              noteDirection={areaDirection[verse.key] || ""}
-              dispatchDpAction={dispatchDpAction}
               dispatchQbAction={dispatchQbAction}
             />
           </div>
@@ -413,10 +276,6 @@ interface SearchVerseComponentProps {
   verse: searchResult;
   searchingScope: SEARCH_SCOPE;
   verseChapter: string;
-  value: string;
-  isEditable: boolean;
-  noteDirection: string;
-  dispatchDpAction: Dispatch<dpActionsProps>;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
@@ -425,10 +284,6 @@ const SearchVerseComponent = memo(
     verse,
     searchingScope,
     verseChapter,
-    value,
-    isEditable,
-    noteDirection,
-    dispatchDpAction,
     dispatchQbAction,
   }: SearchVerseComponentProps) => {
     return (
@@ -439,13 +294,7 @@ const SearchVerseComponent = memo(
           verseChapter={verseChapter}
           dispatchQbAction={dispatchQbAction}
         />
-        <InputTextForm
-          verseKey={verse.key}
-          verseNote={value}
-          noteEditable={isEditable}
-          noteDirection={noteDirection}
-          dispatchDpAction={dispatchDpAction}
-        />
+        <NoteText verseKey={verse.key} />
       </>
     );
   }
@@ -576,20 +425,14 @@ ListTitle.displayName = "ListTitle";
 interface ListVersesProps {
   selectChapter: number;
   scrollKey: string;
-  myNotes: notesType;
-  editableNotes: markedNotesType;
-  areaDirection: notesType;
-  dispatchDpAction: Dispatch<dpActionsProps>;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const ListVerses = ({
   selectChapter,
-  myNotes,
-  editableNotes,
+
   scrollKey,
-  areaDirection,
-  dispatchDpAction,
+
   dispatchQbAction,
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
@@ -626,14 +469,7 @@ const ListVerses = ({
               scrollKey === verse.key ? "verse-selected" : ""
             }`}
           >
-            <VerseComponent
-              verse={verse}
-              value={myNotes[verse.key] || ""}
-              isEditable={editableNotes[verse.key]}
-              noteDirection={areaDirection[verse.key] || ""}
-              dispatchDpAction={dispatchDpAction}
-              dispatchQbAction={dispatchQbAction}
-            />
+            <VerseComponent verse={verse} dispatchQbAction={dispatchQbAction} />
           </div>
         ))}
       </div>
@@ -645,32 +481,20 @@ ListVerses.displayName = "ListVerses";
 
 interface VerseComponentProps {
   verse: verseProps;
-  value: string;
-  isEditable: boolean;
-  noteDirection: string;
-  dispatchDpAction: Dispatch<dpActionsProps>;
+
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseComponent = memo(
   ({
     verse,
-    value,
-    isEditable,
-    noteDirection,
+
     dispatchQbAction,
-    dispatchDpAction,
   }: VerseComponentProps) => {
     return (
       <>
         <VerseTextComponent verse={verse} dispatchQbAction={dispatchQbAction} />
-        <InputTextForm
-          verseKey={verse.key}
-          verseNote={value}
-          noteEditable={isEditable}
-          noteDirection={noteDirection}
-          dispatchDpAction={dispatchDpAction}
-        />
+        <NoteText verseKey={verse.key} />
       </>
     );
   }
@@ -710,96 +534,5 @@ const VerseTextComponent = memo(
 );
 
 VerseTextComponent.displayName = "VerseTextComponent";
-
-interface InputTextFormProps {
-  verseKey: string;
-  verseNote: string;
-  noteEditable: boolean;
-  noteDirection: string;
-  dispatchDpAction: Dispatch<dpActionsProps>;
-}
-
-const InputTextForm = memo(
-  ({
-    verseKey,
-    verseNote,
-    noteEditable,
-    noteDirection,
-    dispatchDpAction,
-  }: InputTextFormProps) => {
-    const { t } = useTranslation();
-
-    const handleNoteChange = useCallback(
-      (name: string, value: string) => {
-        dispatchDpAction(dpActions.setNote({ name, value }));
-      },
-      [dispatchDpAction]
-    );
-
-    const handleInputSubmit = useCallback(
-      (key: string, value: string) => {
-        dbFuncs
-          .saveNote({
-            id: key,
-            text: value,
-            date_created: Date.now(),
-            date_modified: Date.now(),
-          })
-          .then(function () {
-            toast.success(t("save_success") as string);
-          })
-          .catch(function () {
-            toast.success(t("save_failed") as string);
-          });
-
-        dispatchDpAction(
-          dpActions.setNoteEditable({ name: key, value: false })
-        );
-      },
-      [dispatchDpAction, t]
-    );
-
-    const handleSetDirection = useCallback(
-      (verse_key: string, dir: string) => {
-        dispatchDpAction(
-          dpActions.setNoteDir({
-            name: verse_key,
-            value: dir,
-          })
-        );
-
-        dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
-      },
-      [dispatchDpAction]
-    );
-
-    const handleEditClick = useCallback(
-      (inputKey: string) => {
-        dispatchDpAction(
-          dpActions.setNoteEditable({
-            name: inputKey,
-            value: true,
-          })
-        );
-      },
-      [dispatchDpAction]
-    );
-
-    return (
-      <TextForm
-        inputKey={verseKey}
-        inputValue={verseNote}
-        isEditable={noteEditable}
-        inputDirection={noteDirection}
-        handleInputChange={handleNoteChange}
-        handleEditClick={handleEditClick}
-        handleSetDirection={handleSetDirection}
-        handleInputSubmit={handleInputSubmit}
-      />
-    );
-  }
-);
-
-InputTextForm.displayName = "InputTextForm";
 
 export default DisplayPanel;

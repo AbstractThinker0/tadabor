@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { useCallback, useState } from "react";
 
 import { dbFuncs } from "../util/db";
 
@@ -7,51 +6,43 @@ import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
 import { FormComponent, TextComponent } from "../components/TextForm";
-import { markedNotesType, notesDirectionType, notesType } from "../types";
+import { useAppDispatch, useAppSelector } from "../store";
+import { notesActions } from "../store/notesReducer";
+import { NoteProp } from "../types";
 
 function YourNotes() {
-  const [loadingState, setLoadingState] = useState(true);
   const { t } = useTranslation();
+  const myNotes = useAppSelector((state) => state.notes);
+
+  return (
+    <div className="yournotes p-2">
+      {Object.keys(myNotes).length ? (
+        <>
+          {Object.keys(myNotes).map((key) => (
+            <NoteComponent verseNote={myNotes[key]} verseKey={key} key={key} />
+          ))}
+        </>
+      ) : (
+        <div className="fs-4 text-center">
+          <div>{t("no_notes")}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface NoteComponentProps {
+  verseKey: string;
+  verseNote: NoteProp;
+}
+
+function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
   const { chapterNames, allQuranText } = useQuran();
-  const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-  const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
-  const [myNotes, setMyNotes] = useState<notesType>({});
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { text, dir } = verseNote;
 
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      const userNotes = await dbFuncs.loadNotes();
-
-      if (clientLeft) return;
-
-      const extractNotes: notesType = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-      });
-
-      const userNotesDir = await dbFuncs.loadNotesDir();
-
-      if (clientLeft) return;
-
-      const extractNotesDir: notesDirectionType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
-
-      setMyNotes(extractNotes);
-      setAreaDirection(extractNotesDir);
-
-      setLoadingState(false);
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
+  const [stateEditable, setStateEditable] = useState(text ? false : true);
 
   const convertKey = (key: string) => {
     const info = key.split("-");
@@ -63,88 +54,77 @@ function YourNotes() {
     return allQuranText[+info[0] - 1].verses[+info[1] - 1].versetext;
   };
 
-  function handleEditOnClick(inputKey: string) {
-    setEditableNotes((state) => {
-      return { ...state, [inputKey]: true };
-    });
-  }
+  const handleNoteChange = useCallback(
+    (name: string, value: string) => {
+      dispatch(notesActions.changeNote({ name, value }));
+    },
+    [dispatch]
+  );
 
-  const memoHandleEditOnClick = useCallback(handleEditOnClick, []);
+  const handleInputSubmit = useCallback(
+    (key: string, value: string) => {
+      dbFuncs
+        .saveNote({
+          id: key,
+          text: value,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
 
-  function handleNoteSave(noteKey: string, value: string) {
-    setEditableNotes((state) => {
-      return { ...state, [noteKey]: false };
-    });
+      setStateEditable(false);
+    },
+    [t]
+  );
 
-    dbFuncs
-      .saveNote({
-        id: noteKey,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function () {
-        toast.success(t("save_success") as string);
-      })
-      .catch(function () {
-        toast.success(t("save_failed") as string);
-      });
-  }
+  const handleSetDirection = useCallback(
+    (verse_key: string, dir: string) => {
+      dispatch(
+        notesActions.changeNoteDir({
+          name: verse_key,
+          value: dir,
+        })
+      );
 
-  function handleNoteChange(noteKey: string, value: string) {
-    setMyNotes((state) => {
-      return { ...state, [noteKey]: value };
-    });
-  }
+      dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
+    },
+    [dispatch]
+  );
 
-  function handleSetDirection(verse_key: string, dir: string) {
-    setAreaDirection((state) => {
-      return { ...state, [verse_key]: dir };
-    });
-    dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
-  }
-
-  const memoHandleSetDirection = useCallback(handleSetDirection, []);
-
-  if (loadingState) return <LoadingSpinner />;
+  const handleEditClick = useCallback((inputKey: string) => {
+    setStateEditable(true);
+  }, []);
 
   return (
-    <div className="yournotes p-2">
-      {Object.keys(myNotes).length ? (
-        <>
-          {Object.keys(myNotes).map((key) => (
-            <div key={key} className="card mb-3">
-              <div className="card-header" dir="rtl">
-                {convertKey(key)} <br /> {getVerse(key)}{" "}
-              </div>
-              {editableNotes[key] ? (
-                <FormComponent
-                  inputValue={myNotes[key]}
-                  inputKey={key}
-                  inputDirection={areaDirection[key] || ""}
-                  handleInputChange={handleNoteChange}
-                  handleInputSubmit={handleNoteSave}
-                  handleSetDirection={memoHandleSetDirection}
-                  bodyClassname="card-body"
-                  saveClassname="card-footer"
-                />
-              ) : (
-                <TextComponent
-                  inputKey={key}
-                  inputValue={myNotes[key]}
-                  inputDirection={areaDirection[key] || ""}
-                  handleEditButtonClick={memoHandleEditOnClick}
-                  textClassname="card-body"
-                  editClassname="card-footer"
-                />
-              )}
-            </div>
-          ))}
-        </>
+    <div className="card mb-3">
+      <div className="card-header" dir="rtl">
+        {convertKey(verseKey)} <br /> {getVerse(verseKey)}{" "}
+      </div>
+      {stateEditable ? (
+        <FormComponent
+          inputValue={text}
+          inputKey={verseKey}
+          inputDirection={dir}
+          handleInputChange={handleNoteChange}
+          handleInputSubmit={handleInputSubmit}
+          handleSetDirection={handleSetDirection}
+          bodyClassname="card-body"
+          saveClassname="card-footer"
+        />
       ) : (
-        <div className="fs-4 text-center">
-          <div>{t("no_notes")}</div>
-        </div>
+        <TextComponent
+          inputKey={verseKey}
+          inputValue={text}
+          inputDirection={dir}
+          handleEditButtonClick={handleEditClick}
+          textClassname="card-body"
+          editClassname="card-footer"
+        />
       )}
     </div>
   );

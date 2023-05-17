@@ -1,78 +1,14 @@
-import { useReducer, useCallback, useEffect, memo, useRef } from "react";
+import { useCallback, useEffect, memo, useRef } from "react";
 
 import useQuran from "../../context/QuranContext";
-import { toast } from "react-toastify";
-import {
-  markedNotesType,
-  notesDirectionType,
-  notesType,
-  selectedChaptersType,
-  verseProps,
-} from "../../types";
+import { selectedChaptersType, verseProps } from "../../types";
 import { dbFuncs } from "../../util/db";
 import VerseModal from "./VerseModal";
-import {
-  VS_ACTIONS,
-  clActions,
-  clActionsProps,
-  colorProps,
-  coloredProps,
-  vsActions,
-  vsActionsProps,
-} from "./consts";
+import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
-import { TextForm } from "../TextForm";
-import { useTranslation } from "react-i18next";
 import { IconCircleArrowDownFilled } from "@tabler/icons-react";
 
-interface stateProps {
-  loadingState: boolean;
-  myNotes: notesType;
-  editableNotes: markedNotesType;
-  areaDirection: notesDirectionType;
-}
-
-function reducer(state: stateProps, action: vsActionsProps): stateProps {
-  // ...
-  switch (action.type) {
-    case VS_ACTIONS.CHANGE_NOTE: {
-      return {
-        ...state,
-        myNotes: {
-          ...state.myNotes,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case VS_ACTIONS.CHANGE_NOTE_EDITABLE: {
-      return {
-        ...state,
-        editableNotes: {
-          ...state.editableNotes,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case VS_ACTIONS.CHANGE_NOTE_DIRECTION: {
-      return {
-        ...state,
-        areaDirection: {
-          ...state.areaDirection,
-          [action.payload.name]: action.payload.value,
-        },
-      };
-    }
-    case VS_ACTIONS.DATA_LOADED: {
-      return {
-        ...state,
-        myNotes: action.payload.extractNotes,
-        editableNotes: action.payload.markedNotes,
-        areaDirection: action.payload.extractNotesDir,
-        loadingState: false,
-      };
-    }
-  }
-}
+import NoteText from "../NoteText";
 
 interface VersesSideProps {
   selectedColors: coloredProps;
@@ -96,56 +32,6 @@ function VersesSide({
   selectedChapters,
 }: VersesSideProps) {
   const { chapterNames, allQuranText } = useQuran();
-
-  const initialState: stateProps = {
-    loadingState: true,
-    myNotes: {},
-    editableNotes: {},
-    areaDirection: {},
-  };
-
-  const [state, dispatchVsAction] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      const userNotes = await dbFuncs.loadNotes();
-
-      if (clientLeft) return;
-
-      const markedNotes: markedNotesType = {};
-      const extractNotes: notesType = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-        markedNotes[note.id] = false;
-      });
-
-      const userNotesDir = await dbFuncs.loadNotesDir();
-
-      if (clientLeft) return;
-
-      const extractNotesDir: notesType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
-
-      dispatchVsAction(
-        vsActions.dataLoaded({
-          extractNotes,
-          markedNotes,
-          extractNotesDir,
-        })
-      );
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
 
   function onClickDeleteSelected(colorID: string) {
     dispatchClAction(clActions.deselectColor(colorID));
@@ -269,10 +155,6 @@ function VersesSide({
             <SelectedVerses
               selectedColors={selectedColors}
               coloredVerses={selectedColoredVerses}
-              myNotes={state.myNotes}
-              areaDirection={state.areaDirection}
-              editableNotes={state.editableNotes}
-              dispatchVsAction={dispatchVsAction}
               dispatchClAction={dispatchClAction}
             />
           ) : (
@@ -309,13 +191,7 @@ function VersesSide({
                     verse={verse}
                     onClickVerseColor={onClickVerseColor}
                   />
-                  <InputTextForm
-                    verseKey={verse.key}
-                    verseNote={state.myNotes[verse.key] || ""}
-                    noteEditable={state.editableNotes[verse.key]}
-                    noteDirection={state.areaDirection[verse.key] || ""}
-                    dispatchVsAction={dispatchVsAction}
-                  />
+                  <NoteText verseKey={verse.key} className="verse-item-note" />
                 </div>
               ))}
             </div>
@@ -384,20 +260,14 @@ const VerseComponent = memo(
 interface SelectedVersesProps {
   coloredVerses: coloredProps;
   selectedColors: coloredProps;
-  myNotes: notesType;
-  editableNotes: markedNotesType;
-  areaDirection: notesDirectionType;
-  dispatchVsAction: (value: vsActionsProps) => void;
+
   dispatchClAction: (value: clActionsProps) => void;
 }
 
 function SelectedVerses({
   coloredVerses,
   selectedColors,
-  myNotes,
-  editableNotes,
-  areaDirection,
-  dispatchVsAction,
+
   dispatchClAction,
 }: SelectedVersesProps) {
   const { allQuranText, chapterNames } = useQuran();
@@ -465,13 +335,7 @@ function SelectedVerses({
                     <IconCircleArrowDownFilled />
                   </button>
                 </div>
-                <InputTextForm
-                  verseKey={verse.key}
-                  verseNote={myNotes[verse.key] || ""}
-                  noteEditable={editableNotes[verse.key]}
-                  noteDirection={areaDirection[verse.key] || ""}
-                  dispatchVsAction={dispatchVsAction}
-                />
+                <NoteText verseKey={verse.key} className="verse-item-note" />
               </div>
             );
           })
@@ -483,97 +347,5 @@ function SelectedVerses({
     </div>
   );
 }
-
-interface InputTextFormProps {
-  verseKey: string;
-  verseNote: string;
-  noteEditable: boolean;
-  noteDirection: string;
-  dispatchVsAction: (value: vsActionsProps) => void;
-}
-
-const InputTextForm = memo(
-  ({
-    verseKey,
-    verseNote,
-    noteEditable,
-    noteDirection,
-    dispatchVsAction,
-  }: InputTextFormProps) => {
-    const { t } = useTranslation();
-
-    const handleNoteChange = useCallback(
-      (name: string, value: string) => {
-        dispatchVsAction(vsActions.setNote({ name, value }));
-      },
-      [dispatchVsAction]
-    );
-
-    const handleInputSubmit = useCallback(
-      (key: string, value: string) => {
-        dbFuncs
-          .saveNote({
-            id: key,
-            text: value,
-            date_created: Date.now(),
-            date_modified: Date.now(),
-          })
-          .then(function () {
-            toast.success(t("save_success") as string);
-          })
-          .catch(function () {
-            toast.success(t("save_failed") as string);
-          });
-
-        dispatchVsAction(
-          vsActions.setNoteEditable({ name: key, value: false })
-        );
-      },
-      [dispatchVsAction, t]
-    );
-
-    const handleSetDirection = useCallback(
-      (verse_key: string, dir: string) => {
-        dispatchVsAction(
-          vsActions.setNoteDir({
-            name: verse_key,
-            value: dir,
-          })
-        );
-
-        dbFuncs.saveNoteDir({ id: verse_key, dir: dir });
-      },
-      [dispatchVsAction]
-    );
-
-    const handleEditClick = useCallback(
-      (inputKey: string) => {
-        dispatchVsAction(
-          vsActions.setNoteEditable({
-            name: inputKey,
-            value: true,
-          })
-        );
-      },
-      [dispatchVsAction]
-    );
-
-    return (
-      <TextForm
-        inputKey={verseKey}
-        inputValue={verseNote}
-        isEditable={noteEditable}
-        inputDirection={noteDirection}
-        handleInputChange={handleNoteChange}
-        handleEditClick={handleEditClick}
-        handleSetDirection={handleSetDirection}
-        handleInputSubmit={handleInputSubmit}
-        className="verse-item-note"
-      />
-    );
-  }
-);
-
-InputTextForm.displayName = "InputTextForm";
 
 export default VersesSide;

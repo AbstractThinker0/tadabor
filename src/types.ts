@@ -39,6 +39,15 @@ export interface markedNotesType {
   [key: string]: boolean;
 }
 
+export interface NoteProp {
+  text: string;
+  dir: string;
+}
+
+export interface UserNotesType {
+  [key: string]: NoteProp;
+}
+
 // Bellow snippets are thanks to this article https://patrickdesjardins.com/blog/typescript-with-strong-typed-action-when-using-usereducer-of-react-hooks
 
 /**

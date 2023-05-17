@@ -5,9 +5,6 @@ import {
   verseProps,
   rootProps,
   ActionsUnion,
-  notesType,
-  markedNotesType,
-  notesDirectionType,
 } from "../../types";
 
 export interface searchIndexProps {
@@ -116,35 +113,3 @@ export const qbActions = {
 };
 
 export type qbActionsProps = ActionsUnion<typeof qbActions>;
-
-export enum DP_ACTIONS {
-  CHANGE_NOTE = "dispatchChangeNote",
-  CHANGE_NOTE_EDITABLE = "dipsatchChangeNoteEditable",
-  CHANGE_NOTE_DIRECTION = "dispatchChangeNoteDirection",
-  DATA_LOADED = "dispatchDataLoaded",
-}
-
-export const dpActions = {
-  setNote: createActionPayload<
-    DP_ACTIONS.CHANGE_NOTE,
-    { name: string; value: string }
-  >(DP_ACTIONS.CHANGE_NOTE),
-  setNoteEditable: createActionPayload<
-    DP_ACTIONS.CHANGE_NOTE_EDITABLE,
-    { name: string; value: boolean }
-  >(DP_ACTIONS.CHANGE_NOTE_EDITABLE),
-  setNoteDir: createActionPayload<
-    DP_ACTIONS.CHANGE_NOTE_DIRECTION,
-    { name: string; value: string }
-  >(DP_ACTIONS.CHANGE_NOTE_DIRECTION),
-  dataLoaded: createActionPayload<
-    DP_ACTIONS.DATA_LOADED,
-    {
-      extractNotes: notesType;
-      markedNotes: markedNotesType;
-      extractNotesDir: notesDirectionType;
-    }
-  >(DP_ACTIONS.DATA_LOADED),
-};
-
-export type dpActionsProps = ActionsUnion<typeof dpActions>;
