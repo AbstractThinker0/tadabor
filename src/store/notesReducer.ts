@@ -22,22 +22,26 @@ export const notesSlice = createSlice({
   initialState,
   reducers: {
     changeNote: (state, action: PayloadAction<ChangeNotePayload>) => {
-      if (state.notes[action.payload.name]) {
-        state.notes[action.payload.name].text = action.payload.value;
+      const { name, value } = action.payload;
+
+      if (state.notes[name]) {
+        state.notes[name].text = value;
       } else {
-        state.notes[action.payload.name] = {
-          text: action.payload.value,
+        state.notes[name] = {
+          text: value,
           dir: "rtl",
         };
       }
     },
     changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
-      if (state.notes[action.payload.name]) {
-        state.notes[action.payload.name].dir = action.payload.value;
+      const { name, value } = action.payload;
+
+      if (state.notes[name]) {
+        state.notes[name].dir = value;
       } else {
-        state.notes[action.payload.name] = {
+        state.notes[name] = {
           text: "",
-          dir: action.payload.value,
+          dir: value,
         };
       }
     },
