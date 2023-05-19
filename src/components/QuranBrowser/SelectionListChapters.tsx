@@ -18,12 +18,15 @@ const SelectionListChapters = memo(
       setChapterSearch(event.target.value);
     };
 
-    function onFocusSelect(
-      event: React.FocusEvent<HTMLSelectElement, Element>
+    function onClickSelect(
+      event: React.MouseEvent<HTMLSelectElement, MouseEvent>
     ) {
       handleSelectionListChapters(
-        Array.from(event.target.selectedOptions, (option) => option.value),
-        event.target.value
+        Array.from(
+          event.currentTarget.selectedOptions,
+          (option) => option.value
+        ),
+        event.currentTarget.value
       );
     }
 
@@ -48,7 +51,7 @@ const SelectionListChapters = memo(
         <select
           className="form-select"
           size={7}
-          onFocus={onFocusSelect}
+          onClick={onClickSelect}
           onChange={onChangeSelect}
           aria-label="size 7 select example"
           value={selectedChapters}
