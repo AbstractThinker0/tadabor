@@ -1,6 +1,6 @@
 {
   "name": "tadabor",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
