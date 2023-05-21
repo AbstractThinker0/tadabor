@@ -46,16 +46,10 @@ const getDerivationsInVerse = (
 
 export function qbSearchRoot(
   state: qbStateProps,
-  payload: {
-    absoluteQuran: verseProps[];
-    chapterNames: chapterProps[];
-    quranRoots: rootProps[];
-  }
+  chapterNames: chapterProps[],
+  absoluteQuran: verseProps[],
+  quranRoots: rootProps[]
 ): qbStateProps {
-  const absoluteQuran: verseProps[] = payload.absoluteQuran;
-  const chapterNames: chapterProps[] = payload.chapterNames;
-  const quranRoots: rootProps[] = payload.quranRoots;
-
   // initial search state
   let newState: qbStateProps = {
     ...state,
@@ -237,14 +231,9 @@ const searchVerse = (
 
 export function qbSearchWord(
   state: qbStateProps,
-  payload: {
-    allQuranText: quranProps[];
-    chapterNames: chapterProps[];
-  }
+  chapterNames: chapterProps[],
+  allQuranText: quranProps[]
 ): qbStateProps {
-  const QuranText: quranProps[] = payload.allQuranText;
-  const chapterNames: chapterProps[] = payload.chapterNames;
-
   // initial search state
   let newState: qbStateProps = {
     ...state,
@@ -281,7 +270,7 @@ export function qbSearchWord(
   const matchVerses: searchResult[] = [];
 
   if (state.searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
-    QuranText.forEach((sura) => {
+    allQuranText.forEach((sura) => {
       sura.verses.forEach((verse) => {
         const result = searchVerse(
           verse,
@@ -298,7 +287,7 @@ export function qbSearchWord(
   } else {
     if (state.selectedChapters.length > 1) {
       state.selectedChapters.forEach((chapter) => {
-        QuranText[Number(chapter) - 1].verses.forEach((verse) => {
+        allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
           const result = searchVerse(
             verse,
             processedSearchString,
@@ -318,7 +307,7 @@ export function qbSearchWord(
         searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
       };
     } else {
-      QuranText[state.selectChapter - 1].verses.forEach((verse) => {
+      allQuranText[state.selectChapter - 1].verses.forEach((verse) => {
         const result = searchVerse(
           verse,
           processedSearchString,
