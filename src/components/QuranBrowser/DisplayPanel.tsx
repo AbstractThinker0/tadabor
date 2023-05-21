@@ -60,7 +60,6 @@ const DisplayPanel = memo(
           {searchResult.length || searchError || selectedRootError ? (
             <ListSearchResults
               versesArray={searchResult}
-              selectChapter={selectChapter}
               searchToken={searchingString.trim()}
               searchingScope={searchingScope}
               searchError={searchError}

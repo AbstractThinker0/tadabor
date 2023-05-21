@@ -23,7 +23,6 @@ import { IconCircleArrowDownFilled } from "@tabler/icons-react";
 
 interface ListSearchResultsProps {
   versesArray: searchResult[];
-  selectChapter: number;
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
   searchError: boolean;
@@ -36,17 +35,13 @@ interface ListSearchResultsProps {
 
 const ListSearchResults = ({
   versesArray,
-  selectChapter,
   searchToken,
   searchError,
   selectedRootError,
   searchMethod,
-
   searchingChapters,
   searchIndexes,
-
   searchingScope,
-
   dispatchQbAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
@@ -77,8 +72,6 @@ const ListSearchResults = ({
 
   const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
-  const chapterName = chapterNames[selectChapter - 1].name;
-
   return (
     <>
       <SearchTitle
@@ -86,7 +79,6 @@ const ListSearchResults = ({
         searchToken={searchToken}
         searchingScope={searchingScope}
         searchChapters={searchingChapters}
-        chapterName={chapterName}
       />
       {isRootSearch && (
         <DerivationsComponent
@@ -129,7 +121,6 @@ interface SearchTitleProps {
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
   searchChapters: string[];
-  chapterName: string;
 }
 
 const SearchTitle = memo(
@@ -138,18 +129,40 @@ const SearchTitle = memo(
     searchToken,
     searchingScope,
     searchChapters,
-    chapterName,
   }: SearchTitleProps) => {
-    const searchType = searchMethod === SEARCH_METHOD.ROOT ? "جذر" : "كلمة";
+    const { t } = useTranslation();
+
+    const searchType =
+      searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
+
+    const searchScopeText =
+      searchingScope === SEARCH_SCOPE.ALL_CHAPTERS
+        ? t("search_chapters_all")
+        : t("search_chapters");
+
+    const searchText = `${t(
+      "search_result"
+    )} ${searchType} "${searchToken}" ${searchScopeText}`;
+
+    const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
+      return (
+        <>
+          {searchChapters.map((chapterName, index) => (
+            <span className="browser-display-card-search-chapter" key={index}>
+              {chapterName}
+            </span>
+          ))}
+        </>
+      );
+    };
+
     return (
-      <h3 className="mb-2 text-info p-1">
-        نتائج البحث عن {searchType} "{searchToken}"
-        {searchingScope === SEARCH_SCOPE.ALL_CHAPTERS
-          ? " في كل السور"
-          : searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS
-          ? " في سور " + searchChapters.join(" و")
-          : " في سورة " + chapterName}
-      </h3>
+      <div className="browser-display-card-search" dir="auto">
+        <h3>{searchText}</h3>
+        {searchingScope !== SEARCH_SCOPE.ALL_CHAPTERS && (
+          <ChaptersList searchChapters={searchChapters} />
+        )}
+      </div>
     );
   }
 );
