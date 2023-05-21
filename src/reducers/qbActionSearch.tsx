@@ -52,6 +52,10 @@ export function qbSearchRoot(
     quranRoots: rootProps[];
   }
 ): qbStateProps {
+  const absoluteQuran: verseProps[] = payload.absoluteQuran;
+  const chapterNames: chapterProps[] = payload.chapterNames;
+  const quranRoots: rootProps[] = payload.quranRoots;
+
   // initial search state
   let newState: qbStateProps = {
     ...state,
@@ -61,16 +65,16 @@ export function qbSearchRoot(
     searchIndexes: [],
     searchingString: state.searchString,
     searchingMethod: state.searchMethod,
+    searchingChapters: Array.from(
+      state.selectedChapters,
+      (chapterID) => chapterNames[Number(chapterID) - 1].name
+    ),
     scrollKey: "",
   };
 
   if (onlySpaces(state.searchString)) {
     return { ...newState, selectedRootError: true };
   }
-
-  const absoluteQuran: verseProps[] = payload.absoluteQuran;
-  const chapterNames: chapterProps[] = payload.chapterNames;
-  const quranRoots: rootProps[] = payload.quranRoots;
 
   const rootTarget = quranRoots.find(
     (root) => root.name === state.searchString
@@ -109,17 +113,10 @@ export function qbSearchRoot(
   } else {
     // Get selected chapters
     if (state.selectedChapters.length > 1) {
-      const searchChapters: string[] = [];
-
-      state.selectedChapters.forEach((chapter) => {
-        searchChapters.push(chapterNames[Number(chapter) - 1].name);
-      });
-
       newState = {
         ...newState,
         searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
         searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-        searchingChapters: searchChapters,
       };
     } else {
       newState = {
@@ -245,6 +242,9 @@ export function qbSearchWord(
     chapterNames: chapterProps[];
   }
 ): qbStateProps {
+  const QuranText: quranProps[] = payload.allQuranText;
+  const chapterNames: chapterProps[] = payload.chapterNames;
+
   // initial search state
   let newState: qbStateProps = {
     ...state,
@@ -255,6 +255,10 @@ export function qbSearchWord(
     searchingString: state.searchString,
     searchingMethod: state.searchMethod,
     searchingScope: state.searchScope,
+    searchingChapters: Array.from(
+      state.selectedChapters,
+      (chapterID) => chapterNames[Number(chapterID) - 1].name
+    ),
     scrollKey: "",
   };
 
@@ -273,9 +277,6 @@ export function qbSearchWord(
 
   // Remove extra spaces. (Note: in the future reconsider this step)
   processedSearchString = processedSearchString.trim();
-
-  const QuranText: quranProps[] = payload.allQuranText;
-  const chapterNames: chapterProps[] = payload.chapterNames;
 
   const matchVerses: searchResult[] = [];
 
@@ -296,10 +297,7 @@ export function qbSearchWord(
     });
   } else {
     if (state.selectedChapters.length > 1) {
-      const searchChapters: string[] = [];
-
       state.selectedChapters.forEach((chapter) => {
-        searchChapters.push(chapterNames[Number(chapter) - 1].name);
         QuranText[Number(chapter) - 1].verses.forEach((verse) => {
           const result = searchVerse(
             verse,
@@ -318,7 +316,6 @@ export function qbSearchWord(
         ...newState,
         searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
         searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-        searchingChapters: searchChapters,
       };
     } else {
       QuranText[state.selectChapter - 1].verses.forEach((verse) => {
