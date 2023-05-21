@@ -111,17 +111,20 @@ const SearchPanel = memo(
           setCheckBoxState={setSearchDiacritics}
           labelText={t("search_diacritics")}
           isDisabled={isRootSearch}
+          inputID="CheckboxDiacritics"
         />
         <CheckboxComponent
           checkboxState={searchIdentical}
           setCheckBoxState={setSearchIdentical}
           labelText={t("search_identical")}
           isDisabled={isRootSearch}
+          inputID="CheckboxIdentical"
         />
         <CheckboxComponent
           checkboxState={searchAllQuran}
           setCheckBoxState={setSearchAllQuran}
           labelText={t("search_all_quran")}
+          inputID="CheckboxAllQuran"
         />
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
@@ -256,6 +259,7 @@ interface CheckBoxProps {
   setCheckBoxState: (status: boolean) => void;
   labelText: string;
   isDisabled?: boolean;
+  inputID?: string;
 }
 
 const CheckboxComponent = ({
@@ -263,6 +267,7 @@ const CheckboxComponent = ({
   setCheckBoxState,
   labelText,
   isDisabled = false,
+  inputID,
 }: CheckBoxProps) => {
   const { i18n } = useTranslation();
 
@@ -281,10 +286,10 @@ const CheckboxComponent = ({
         checked={checkboxState}
         onChange={handleChangeCheckboxState}
         value=""
-        id="flexCheckDefault"
+        id={inputID}
         disabled={isDisabled}
       />
-      <label className="form-check-label" htmlFor="flexCheckDefault">
+      <label className="form-check-label" htmlFor={inputID}>
         {labelText}
       </label>
     </div>
