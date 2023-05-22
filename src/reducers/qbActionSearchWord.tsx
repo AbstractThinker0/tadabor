@@ -12,6 +12,30 @@ import {
   splitArabicLetters,
 } from "../util/util";
 
+const getOriginalPart = (
+  versetext: string,
+  processedVerseText: string,
+  part: string
+) => {
+  const arrayText = splitArabicLetters(versetext);
+
+  return arrayText
+    .slice(
+      processedVerseText.indexOf(part),
+      processedVerseText.indexOf(part) + part.length
+    )
+    .join("");
+};
+
+/* Return the indexes of a search if there is a match
+  Result structure:
+  {
+    key,
+    suraid,
+    verseid,
+    verseParts: [{text, highlight}, {text, highlight}, ...]
+  }
+*/
 const getSearchIndexes = (
   processedVerseText: string,
   searchToken: string,
@@ -23,32 +47,19 @@ const getSearchIndexes = (
     ? verse.versetext.split(regex)
     : processedVerseText.split(regex);
 
-  const arrayText = splitArabicLetters(verse.versetext);
-  const verseParts: versePart[] = [];
-
-  parts.forEach((part) => {
-    const isMatch = part.includes(searchToken);
-
-    const originalPart = searchDiacritics
+  const verseParts: versePart[] = parts.map((part) => ({
+    text: searchDiacritics
       ? part
-      : arrayText
-          .slice(
-            processedVerseText.indexOf(part),
-            processedVerseText.indexOf(part) + part.length
-          )
-          .join("");
+      : getOriginalPart(verse.versetext, processedVerseText, part),
+    highlight: part.includes(searchToken),
+  }));
 
-    verseParts.push({ text: originalPart, highlight: isMatch });
-  });
-
-  const verseResult: searchResult = {
+  return {
     key: verse.key,
     suraid: verse.suraid,
     verseid: verse.verseid,
     verseParts,
   };
-
-  return verseResult;
 };
 
 const searchVerse = (
@@ -57,34 +68,20 @@ const searchVerse = (
   searchIdentical: boolean,
   searchDiacritics: boolean
 ) => {
-  let processedVerseText = "";
+  const processedVerseText = searchDiacritics
+    ? verse.versetext
+    : removeDiacritics(verse.versetext);
 
-  if (searchDiacritics) {
-    processedVerseText = verse.versetext;
-  } else {
-    processedVerseText = removeDiacritics(verse.versetext);
-  }
-
-  if (searchIdentical) {
-    if (findSubstring(searchToken, processedVerseText)) {
-      const verseResult = getSearchIndexes(
-        processedVerseText,
-        searchToken,
-        verse,
-        searchDiacritics
-      );
-      return verseResult;
-    }
-  } else {
-    if (processedVerseText.search(searchToken) !== -1) {
-      const verseResult = getSearchIndexes(
-        processedVerseText,
-        searchToken,
-        verse,
-        searchDiacritics
-      );
-      return verseResult;
-    }
+  if (
+    (searchIdentical && findSubstring(searchToken, processedVerseText)) ||
+    processedVerseText.search(searchToken) !== -1
+  ) {
+    return getSearchIndexes(
+      processedVerseText,
+      searchToken,
+      verse,
+      searchDiacritics
+    );
   }
   return false;
 };
@@ -103,9 +100,8 @@ export function qbSearchWord(
     searchDiacritics,
     searchIdentical,
   } = state;
-
   // initial search state
-  let newState: qbStateProps = {
+  const newState: qbStateProps = {
     ...state,
     searchError: false,
     selectedRootError: false,
@@ -114,8 +110,7 @@ export function qbSearchWord(
     searchingString: searchString,
     searchingMethod: searchMethod,
     searchingScope: searchScope,
-    searchingChapters: Array.from(
-      selectedChapters,
+    searchingChapters: selectedChapters.map(
       (chapterID) => chapterNames[Number(chapterID) - 1].name
     ),
     scrollKey: "",
@@ -125,21 +120,14 @@ export function qbSearchWord(
     return { ...newState, searchError: true };
   }
 
-  let processedSearchString = "";
-
-  // Do not remove diacritics if not required.
-  if (searchDiacritics) {
-    processedSearchString = searchString;
-  } else {
-    processedSearchString = removeDiacritics(searchString);
-  }
+  // (Note: in the future reconsider Removing the extra spaces with trim)
+  const processedSearchString = searchDiacritics
+    ? searchString
+    : removeDiacritics(searchString).trim();
 
   if (onlySpaces(processedSearchString)) {
     return { ...newState, searchError: true };
   }
-
-  // Remove extra spaces. (Note: in the future reconsider this step)
-  processedSearchString = processedSearchString.trim();
 
   const matchVerses: searchResult[] = [];
 
@@ -153,7 +141,7 @@ export function qbSearchWord(
           searchDiacritics
         );
 
-        if (result !== false) {
+        if (result) {
           matchVerses.push(result);
         }
       });
@@ -169,17 +157,14 @@ export function qbSearchWord(
             searchDiacritics
           );
 
-          if (result !== false) {
+          if (result) {
             matchVerses.push(result);
           }
         });
       });
 
-      newState = {
-        ...newState,
-        searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-        searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-      };
+      newState.searchScope = newState.searchingScope =
+        SEARCH_SCOPE.MULTIPLE_CHAPTERS;
     } else {
       allQuranText[selectChapter - 1].verses.forEach((verse) => {
         const result = searchVerse(
@@ -189,25 +174,22 @@ export function qbSearchWord(
           searchDiacritics
         );
 
-        if (result !== false) {
+        if (result) {
           matchVerses.push(result);
         }
       });
 
-      newState = {
-        ...newState,
-        searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-        searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-      };
+      newState.searchScope = newState.searchingScope =
+        SEARCH_SCOPE.SINGLE_CHAPTER;
     }
   }
 
   if (matchVerses.length === 0) {
     return { ...newState, searchError: true };
-  } else {
-    return {
-      ...newState,
-      searchResult: matchVerses,
-    };
   }
+
+  return {
+    ...newState,
+    searchResult: matchVerses,
+  };
 }
