@@ -106,7 +106,6 @@ export function qbSearchWord(
   const newState: qbStateProps = {
     ...state,
     searchError: false,
-    selectedRootError: false,
     searchResult: [],
     searchIndexes: [],
     searchingString: searchString,

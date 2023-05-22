@@ -48,7 +48,6 @@ export function qbSearchRoot(
   const newState: qbStateProps = {
     ...state,
     searchError: false,
-    selectedRootError: false,
     searchResult: [],
     searchIndexes: [],
     searchingString: searchString,
@@ -61,13 +60,13 @@ export function qbSearchRoot(
   };
 
   if (onlySpaces(searchString)) {
-    return { ...newState, selectedRootError: true };
+    return { ...newState, searchError: true };
   }
 
   const rootTarget = quranRoots.find((root) => root.name === searchString);
 
   if (rootTarget === undefined) {
-    return { ...newState, selectedRootError: true };
+    return { ...newState, searchError: true };
   }
 
   const occurencesArray = rootTarget.occurences;
@@ -124,7 +123,7 @@ export function qbSearchRoot(
   }
 
   if (matchVerses.length === 0) {
-    return { ...newState, selectedRootError: true };
+    return { ...newState, searchError: true };
   }
 
   return {

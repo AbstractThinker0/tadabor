@@ -20,7 +20,6 @@ interface DisplayPanelProps {
   searchingChapters: string[];
   searchResult: searchResult[];
   searchError: boolean;
-  selectedRootError: boolean;
   searchingString: string;
   selectChapter: number;
   searchingMethod: string;
@@ -35,7 +34,6 @@ const DisplayPanel = memo(
     searchingChapters,
     searchResult,
     searchError,
-    selectedRootError,
     searchingString,
     selectChapter,
     searchingMethod,
@@ -57,13 +55,12 @@ const DisplayPanel = memo(
     return (
       <div className="browser-display" ref={refListVerses}>
         <div className="card browser-display-card" dir="rtl">
-          {searchResult.length || searchError || selectedRootError ? (
+          {searchResult.length || searchError ? (
             <ListSearchResults
               versesArray={searchResult}
               searchToken={searchingString.trim()}
               searchingScope={searchingScope}
               searchError={searchError}
-              selectedRootError={selectedRootError}
               searchMethod={searchingMethod}
               searchingChapters={searchingChapters}
               searchIndexes={searchIndexes}

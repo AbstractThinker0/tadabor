@@ -36,7 +36,6 @@ export interface qbStateProps {
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchError: boolean;
-  selectedRootError: boolean;
   searchMethod: SEARCH_METHOD;
   searchingMethod: SEARCH_METHOD;
   searchIndexes: searchIndexProps[];

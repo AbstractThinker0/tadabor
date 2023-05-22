@@ -21,7 +21,6 @@ function QuranBrowser() {
     searchDiacritics: false,
     searchIdentical: false,
     searchError: false,
-    selectedRootError: false,
     searchMethod: SEARCH_METHOD.WORD,
     searchingMethod: SEARCH_METHOD.WORD,
     searchIndexes: [],
@@ -49,7 +48,6 @@ function QuranBrowser() {
         searchingChapters={state.searchingChapters}
         searchResult={state.searchResult}
         searchError={state.searchError}
-        selectedRootError={state.selectedRootError}
         searchingString={state.searchingString}
         searchingScope={state.searchingScope}
         selectChapter={state.selectChapter}

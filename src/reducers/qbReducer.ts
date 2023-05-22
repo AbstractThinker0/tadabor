@@ -39,7 +39,6 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
       return {
         ...state,
         searchError: false,
-        selectedRootError: false,
         searchResult: [],
         searchIndexes: [],
         selectChapter: Number(action.payload),

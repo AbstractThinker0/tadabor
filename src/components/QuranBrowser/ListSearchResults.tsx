@@ -26,7 +26,6 @@ interface ListSearchResultsProps {
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
   searchError: boolean;
-  selectedRootError: boolean;
   searchMethod: string;
   searchingChapters: string[];
   searchIndexes: searchIndexProps[];
@@ -37,7 +36,6 @@ const ListSearchResults = ({
   versesArray,
   searchToken,
   searchError,
-  selectedRootError,
   searchMethod,
   searchingChapters,
   searchIndexes,
@@ -103,12 +101,7 @@ const ListSearchResults = ({
             />
           </div>
         ))}
-        {(searchError || selectedRootError) && (
-          <SearchErrorsComponent
-            searchError={searchError}
-            selectedRootError={selectedRootError}
-          />
-        )}
+        {searchError && <SearchErrorsComponent searchMethod={searchMethod} />}
       </div>
     </>
   );
@@ -241,21 +234,20 @@ const SearchVerseComponent = memo(
 SearchVerseComponent.displayName = "SearchVerseComponent";
 
 interface SearchErrorsComponentProps {
-  searchError: boolean;
-  selectedRootError: boolean;
+  searchMethod: string;
 }
 
 const SearchErrorsComponent = ({
-  searchError,
-  selectedRootError,
+  searchMethod,
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
     <div dir="auto">
-      {searchError && <p className="mt-3 text-danger">{t("search_fail")}</p>}
-      {selectedRootError && (
-        <p className="mt-3 text-danger">{t("search_root_error")}</p>
-      )}
+      <p className="mt-3 text-danger">
+        {searchMethod === SEARCH_METHOD.WORD
+          ? t("search_fail")
+          : t("search_root_error")}
+      </p>
     </div>
   );
 };
