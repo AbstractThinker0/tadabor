@@ -251,12 +251,12 @@ const SearchErrorsComponent = ({
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
-    <>
+    <div dir="auto">
       {searchError && <p className="mt-3 text-danger">{t("search_fail")}</p>}
       {selectedRootError && (
         <p className="mt-3 text-danger">{t("search_root_error")}</p>
       )}
-    </>
+    </div>
   );
 };
 
