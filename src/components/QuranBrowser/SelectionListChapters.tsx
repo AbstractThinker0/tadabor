@@ -38,9 +38,9 @@ const SelectionListChapters = memo(
     }
 
     return (
-      <div className="container mt-2 mb-2 p-0">
+      <div className="container mt-2 mb-2 p-0 browser-search-chapter">
         <input
-          className="form-control"
+          className="form-control browser-search-chapter-input"
           type="search"
           value={chapterSearch}
           onChange={onChangeInput}
@@ -49,7 +49,7 @@ const SelectionListChapters = memo(
           dir="rtl"
         />
         <select
-          className="form-select"
+          className="form-select browser-search-chapter-list"
           size={7}
           onClick={onClickSelect}
           onChange={onChangeSelect}
@@ -58,7 +58,7 @@ const SelectionListChapters = memo(
           multiple
         >
           {chapterNames
-            .filter((chapter) => chapter.name.startsWith(chapterSearch))
+            .filter((chapter) => chapter.name.includes(chapterSearch))
             .map((chapter) => (
               <option key={chapter.id} value={chapter.id}>
                 {chapter.id}. {chapter.name}
