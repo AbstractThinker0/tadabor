@@ -74,7 +74,7 @@ const searchVerse = (
 
   if (
     (searchIdentical && findSubstring(searchToken, processedVerseText)) ||
-    processedVerseText.search(searchToken) !== -1
+    (!searchIdentical && processedVerseText.includes(searchToken))
   ) {
     return getSearchIndexes(
       processedVerseText,
