@@ -42,10 +42,9 @@ const getSearchIndexes = (
   verse: verseProps,
   searchDiacritics: boolean
 ) => {
+  // using RegExp here because we want to include the searchToken as a separate part in the resulting array.
   const regex = new RegExp(`(${searchToken})`);
-  const parts = searchDiacritics
-    ? verse.versetext.split(regex)
-    : processedVerseText.split(regex);
+  const parts = processedVerseText.split(regex);
 
   const verseParts: versePart[] = parts.map((part) => ({
     text: searchDiacritics
