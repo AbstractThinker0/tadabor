@@ -12,6 +12,9 @@ import {
   splitArabicLetters,
 } from "../util/util";
 
+/*
+  This function allows us to get a text that has diacritics based on a text that doesn't, we basically want the original string since we used a diacriticless string for our search
+*/
 const getOriginalPart = (
   versetext: string,
   processedVerseText: string,
