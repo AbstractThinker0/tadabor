@@ -45,7 +45,7 @@ export function qbSearchRoot(
 ): qbStateProps {
   const { searchString, searchMethod, searchScope, selectedChapters } = state;
   // initial search state
-  let newState: qbStateProps = {
+  const newState: qbStateProps = {
     ...state,
     searchError: false,
     selectedRootError: false,
@@ -95,22 +95,12 @@ export function qbSearchRoot(
       matchVerses.push(verseResult);
     });
 
-    newState = { ...newState, searchingScope: SEARCH_SCOPE.ALL_CHAPTERS };
+    newState.searchingScope = SEARCH_SCOPE.ALL_CHAPTERS;
   } else {
-    // Get selected chapters
-    if (selectedChapters.length > 1) {
-      newState = {
-        ...newState,
-        searchScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-        searchingScope: SEARCH_SCOPE.MULTIPLE_CHAPTERS,
-      };
-    } else {
-      newState = {
-        ...newState,
-        searchScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-        searchingScope: SEARCH_SCOPE.SINGLE_CHAPTER,
-      };
-    }
+    newState.searchScope = newState.searchingScope =
+      selectedChapters.length > 1
+        ? SEARCH_SCOPE.MULTIPLE_CHAPTERS
+        : SEARCH_SCOPE.SINGLE_CHAPTER;
 
     occurencesArray.forEach((item) => {
       const info = item.split(":");
@@ -135,11 +125,11 @@ export function qbSearchRoot(
 
   if (matchVerses.length === 0) {
     return { ...newState, selectedRootError: true };
-  } else {
-    return {
-      ...newState,
-      searchResult: matchVerses,
-      searchIndexes: derivations,
-    };
   }
+
+  return {
+    ...newState,
+    searchResult: matchVerses,
+    searchIndexes: derivations,
+  };
 }
