@@ -191,7 +191,7 @@ const DerivationsComponent = memo(
               data-bs-toggle="tooltip"
               data-bs-title={root.text}
             >
-              {index ? " -" : " "} {root.name}
+              {`${index ? " -" : " "} ${root.name}`}
             </span>
           ))}
         </span>
@@ -288,7 +288,7 @@ const VerseContentComponent = memo(
             className="p-0 border-0 bg-transparent"
             onClick={(e) => handleVerseClick(verse_key)}
           >
-            {verseChapter + ":" + verse.verseid}
+            {`${verseChapter}:${verse.verseid}`}
           </button>
         ) : (
           <button
