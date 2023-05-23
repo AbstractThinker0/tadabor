@@ -232,7 +232,7 @@ const FormWordSearch = ({
           <textarea
             required
             dir="rtl"
-            className="form-control"
+            className="form-control browser-search-field"
             placeholder=""
             aria-label="Search"
             onChange={searchStringHandle}

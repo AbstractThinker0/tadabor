@@ -6,7 +6,7 @@ import { dbFuncs } from "../../util/db";
 import VerseModal from "./VerseModal";
 import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 import NoteText from "../NoteText";
 
@@ -227,14 +227,6 @@ const VerseComponent = memo(
       <div>
         {verse.versetext} ({verse.verseid}){" "}
         <button
-          className="verse-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#verseModal"
-          onClick={(e) => onClickVerseColor(verse)}
-        >
-          🎨
-        </button>
-        <button
           className="btn"
           type="button"
           data-bs-toggle="collapse"
@@ -250,7 +242,15 @@ const VerseComponent = memo(
               : {}
           }
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
+        </button>
+        <button
+          className="verse-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#verseModal"
+          onClick={(e) => onClickVerseColor(verse)}
+        >
+          🎨
         </button>
       </div>
     );
@@ -332,7 +332,7 @@ function SelectedVerses({
                       color: getTextColor(coloredVerses[verseKey].colorCode),
                     }}
                   >
-                    <IconCircleArrowDownFilled />
+                    <IconSelect />
                   </button>
                 </div>
                 <NoteText verseKey={verse.key} className="verse-item-note" />

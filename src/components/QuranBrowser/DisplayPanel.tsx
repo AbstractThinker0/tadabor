@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useRef, memo } from "react";
 
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "../../context/QuranContext";
 
@@ -199,7 +199,7 @@ const VerseTextComponent = memo(
           aria-expanded="false"
           aria-controls={"collapseExample" + verse.key}
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
         </button>
       </span>
     );

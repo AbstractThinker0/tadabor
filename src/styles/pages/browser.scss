@@ -1,5 +1,5 @@
 .browser {
-  background-color: #f2f5f7;
+  background-color: var(--color-primary);
   display: flex;
   overflow: hidden;
   max-height: 100%;
@@ -10,15 +10,21 @@
 
     &-chapter {
       &-input {
+        background-color: var(--color-fifth);
         border-bottom: none;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
       }
 
       &-list {
+        background-color: var(--color-fifth);
         border-top-right-radius: 0;
         border-top-left-radius: 0;
       }
+    }
+
+    &-field {
+      background-color: var(--color-fifth);
     }
   }
 
@@ -29,7 +35,7 @@
     padding: 0.25rem;
 
     &-card {
-      background-color: #f2f5f7;
+      background-color: var(--color-primary);
       min-height: 100%;
 
       &-search {

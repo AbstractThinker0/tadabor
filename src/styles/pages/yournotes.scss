@@ -1,5 +1,11 @@
 .yournotes {
-  background-color: #f2f5f7;
+  background-color: var(--color-primary);
   overflow-y: scroll;
   flex: 1;
+
+  &-note {
+    &-text {
+      background-color: var(--color-fifth);
+    }
+  }
 }

@@ -122,7 +122,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
           inputValue={text}
           inputDirection={dir}
           handleEditButtonClick={handleEditClick}
-          textClassname="card-body"
+          textClassname="card-body yournotes-note-text"
           editClassname="card-footer"
         />
       )}

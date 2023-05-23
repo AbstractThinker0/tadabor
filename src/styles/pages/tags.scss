@@ -1,5 +1,5 @@
 .tags {
-  background-color: #f2f5f7;
+  background-color: var(--color-primary);
   display: flex;
   overflow: hidden;
   max-height: 100%;
@@ -135,7 +135,7 @@
 
     &-chapter {
       flex: 1;
-      background-color: #f2f5f7;
+      background-color: var(--color-primary);
 
       &-title {
         color: rgb(58, 174, 174);

@@ -9,7 +9,7 @@ import {
 import useQuran from "../../context/QuranContext";
 import { dbFuncs } from "../../util/db";
 import VerseTagsModal from "./VerseTagsModal";
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 import NoteText from "../NoteText";
 
@@ -242,7 +242,7 @@ const SelectedVerseComponent = ({
         aria-expanded="false"
         aria-controls={"collapseExample" + verse.key}
       >
-        <IconCircleArrowDownFilled />
+        <IconSelect />
       </button>
     </span>
   );
@@ -341,21 +341,21 @@ const ListVerseComponent = memo(
         </span>
         <button
           className="btn"
-          data-bs-toggle="modal"
-          data-bs-target="#verseTagsModal"
-          onClick={() => onClickTagVerse(verse)}
-        >
-          🏷️
-        </button>
-        <button
-          className="btn"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target={"#collapseExample" + verse.key}
           aria-expanded="false"
           aria-controls={"collapseExample" + verse.key}
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
+        </button>
+        <button
+          className="btn"
+          data-bs-toggle="modal"
+          data-bs-target="#verseTagsModal"
+          onClick={() => onClickTagVerse(verse)}
+        >
+          🏷️
         </button>
       </>
     );

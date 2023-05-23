@@ -270,7 +270,7 @@ const Versetext = ({
 
   return (
     <div className="p-2">
-      <div className="border p-1">
+      <div className="border p-1 translation-display-card-trans-text">
         <p dir="ltr">{inputValue}</p>
       </div>
       <div className="text-center">

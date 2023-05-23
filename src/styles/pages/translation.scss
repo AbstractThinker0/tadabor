@@ -1,5 +1,5 @@
 .translation {
-  background-color: #f2f5f7;
+  background-color: var(--color-primary);
   display: flex;
   overflow: auto;
   max-height: 100%;
@@ -12,8 +12,14 @@
     padding: 0.25rem;
 
     &-card {
-      background-color: #f2f5f7;
+      background-color: var(--color-primary);
       min-height: 100%;
+
+      &-trans {
+        &-text {
+          background-color: var(--color-fifth);
+        }
+      }
     }
   }
 }
