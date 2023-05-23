@@ -84,12 +84,12 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <div className="card-body" ref={refListVerses}>
+      <div className="card-body browser-display-card-list" ref={refListVerses}>
         {versesArray.map((verse) => (
           <div
             key={verse.key}
             data-id={verse.key}
-            className={`border-bottom pt-1 pb-1 ${
+            className={`border-bottom browser-display-card-list-item ${
               verse.key === selectedVerse ? "verse-selected" : ""
             }`}
           >
