@@ -50,11 +50,11 @@ const SelectionListChapters = ({
   }
 
   return (
-    <div className="col-sm-3 border-start justify-content-center">
-      <div className="container mt-2 w-75">
-        <h4 className="text-info">{t("roots_list")}</h4>
+    <div className="side col-sm-3 border-start justify-content-center">
+      <div className="side-chapters container mt-2 w-75">
+        <h4 className="side-chapters-title">{t("roots_list")}</h4>
         <input
-          className="form-control"
+          className="side-chapters-input form-control"
           type="search"
           value={chapterSearch}
           onChange={onChangeInput}
