@@ -1,10 +1,24 @@
 .inspector {
   .display {
     &-verses {
-      .accordion-button {
-        &::after {
-          margin-left: 0;
-          margin-right: auto;
+      &-item {
+        font-size: 1.5rem;
+        padding: 4px;
+        border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+
+        .accordion-button {
+          &::after {
+            margin-left: 0;
+            margin-right: auto;
+          }
+        }
+
+        &-roots {
+          &-item {
+            &-verse {
+              font-size: 1.2rem;
+            }
+          }
         }
       }
     }

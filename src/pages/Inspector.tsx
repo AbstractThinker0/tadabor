@@ -30,10 +30,11 @@ function Inspector() {
         <div className="card p-2">
           <div className="card-body display-verses">
             {chapterVerses.map((verse) => (
-              <div key={verse.key}>
+              <div className="display-verses-item" key={verse.key}>
                 <VerseWords
                   verseRank={verse.rank}
                   verseText={verse.versetext.split(" ")}
+                  verseID={verse.verseid}
                 />
               </div>
             ))}
@@ -47,9 +48,10 @@ function Inspector() {
 interface VerseWordsProps {
   verseRank: number;
   verseText: string[];
+  verseID: string;
 }
 
-const VerseWords = ({ verseText, verseRank }: VerseWordsProps) => {
+const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
   const { quranRoots } = useQuran();
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const refCollapsible = useRef<HTMLDivElement>(null);
@@ -100,12 +102,13 @@ const VerseWords = ({ verseText, verseRank }: VerseWordsProps) => {
 
   return (
     <>
-      <div className="display-verses-item">
+      <div className="">
         {verseText.map((word, index) => (
           <span key={index} onClick={() => onClickWord(index + 1)}>
             {word}{" "}
           </span>
-        ))}
+        ))}{" "}
+        {`(${verseID})`}
       </div>
       <div
         ref={refCollapsible}
@@ -113,7 +116,10 @@ const VerseWords = ({ verseText, verseRank }: VerseWordsProps) => {
         id={`collapseExample${verseRank}`}
       >
         <div className="card card-body">
-          <div className="accordion" id="accordionPanelsStayOpenExample">
+          <div
+            className="accordion display-verses-item-roots"
+            id="accordionPanelsStayOpenExample"
+          >
             {currentRoots.map((root) => (
               <div className="accordion-item" key={root.id}>
                 <h2 className="accordion-header">
@@ -134,7 +140,10 @@ const VerseWords = ({ verseText, verseRank }: VerseWordsProps) => {
                 >
                   <div className="accordion-body">
                     {root.occurences.map((occ, index) => (
-                      <div key={index}>
+                      <div
+                        key={index}
+                        className="display-verses-item-roots-item"
+                      >
                         <RootVerse occurence={occ} />
                       </div>
                     ))}
@@ -158,7 +167,11 @@ const RootVerse = ({ occurence }: RootVerseProps) => {
 
   const occData = occurence.split(":");
   const verse = absoluteQuran[Number(occData[0])];
-  return <>{verse.versetext}</>;
+  return (
+    <div className="display-verses-item-roots-item-verse">
+      {verse.versetext}
+    </div>
+  );
 };
 
 export default Inspector;
