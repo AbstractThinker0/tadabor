@@ -1,0 +1,12 @@
+.inspector {
+  .display {
+    &-verses {
+      .accordion-button {
+        &::after {
+          margin-left: 0;
+          margin-right: auto;
+        }
+      }
+    }
+  }
+}
