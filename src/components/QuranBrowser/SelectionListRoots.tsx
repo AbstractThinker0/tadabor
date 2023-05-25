@@ -23,11 +23,18 @@ const SelectionListRoots = memo(
       }
     }
 
-    const handleSelectRoot = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const rootId = event.currentTarget.value;
-      setStateSelect(rootId);
+    const onClickSelect = (event: React.MouseEvent<HTMLSelectElement>) => {
+      handleSelectRoot(event.currentTarget.value);
+    };
 
-      const selectedRoot = quranRoots[Number(rootId)];
+    const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      handleSelectRoot(event.currentTarget.value);
+    };
+
+    const handleSelectRoot = (rootID: string) => {
+      setStateSelect(rootID);
+
+      const selectedRoot = quranRoots[Number(rootID)];
 
       dispatchQbAction(qbActions.setSearchString(selectedRoot.name));
     };
@@ -49,7 +56,8 @@ const SelectionListRoots = memo(
         <select
           className="form-select"
           size={6}
-          onChange={handleSelectRoot}
+          onClick={onClickSelect}
+          onChange={onChangeSelect}
           aria-label="size 6 select"
           disabled={isDisabled}
           value={stateSelect}
