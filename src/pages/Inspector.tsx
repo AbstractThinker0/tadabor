@@ -26,11 +26,21 @@ function Inspector() {
     chapterVerses.push({ ...verse, rank: index });
   });
 
+  function handleSelectChapter(chapterID: string) {
+    setCurrentChapter(Number(chapterID));
+  }
+
   return (
     <div className="inspector">
+      <ChaptersList
+        selectedChapter={currentChapter}
+        handleSelectChapter={handleSelectChapter}
+      />
       <div className="p-2 display">
-        <h4 className="text-center">{chapterNames[currentChapter - 1].name}</h4>
         <div className="card p-2 display-verses">
+          <div className="card-header text-primary text-center fs-4">
+            سورة {chapterNames[currentChapter - 1].name}
+          </div>
           <div className="card-body">
             {chapterVerses.map((verse) => (
               <div className="display-verses-item" key={verse.key}>
@@ -48,6 +58,58 @@ function Inspector() {
     </div>
   );
 }
+
+interface ChaptersListProps {
+  selectedChapter: number;
+  handleSelectChapter: (chapterID: string) => void;
+}
+
+const ChaptersList = ({
+  selectedChapter,
+  handleSelectChapter,
+}: ChaptersListProps) => {
+  const { chapterNames } = useQuran();
+  const [chapterSearch, setChapterSearch] = useState("");
+
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChapterSearch(event.target.value);
+  };
+
+  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+    handleSelectChapter(event.target.value);
+  }
+
+  return (
+    <div className="side">
+      <div className="side-chapters">
+        <input
+          className="form-control side-chapters-input"
+          type="search"
+          value={chapterSearch}
+          onChange={onChangeInput}
+          placeholder=""
+          aria-label="Search"
+          dir="rtl"
+        />
+        <select
+          className="form-select side-chapters-list"
+          size={7}
+          onChange={onChangeSelect}
+          aria-label="size 7 select example"
+          value={selectedChapter}
+        >
+          {chapterNames
+            .filter((chapter) => chapter.name.includes(chapterSearch))
+            .map((chapter) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.id}. {chapter.name}
+              </option>
+            ))}
+        </select>
+      </div>
+    </div>
+  );
+};
 
 interface VerseWordsProps {
   verseRank: number;
