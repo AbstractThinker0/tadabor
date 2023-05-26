@@ -9,9 +9,10 @@ import { TextForm } from "./TextForm";
 interface NoteTextProps {
   verseKey: string;
   className?: string;
+  targetID?: string;
 }
 
-const NoteText = memo(({ verseKey, className }: NoteTextProps) => {
+const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const { t } = useTranslation();
   const currentNote = useAppSelector((state) => state.notes[verseKey]);
   const dispatch = useAppDispatch();
@@ -78,6 +79,7 @@ const NoteText = memo(({ verseKey, className }: NoteTextProps) => {
       handleSetDirection={handleSetDirection}
       handleInputSubmit={handleInputSubmit}
       className={className}
+      targetID={targetID}
     />
   );
 });
