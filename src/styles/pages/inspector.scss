@@ -10,17 +10,15 @@
     overflow-y: scroll;
     min-height: 100%;
 
-    .card {
-      background-color: var(--color-primary);
-    }
-
     &-verses {
+      background-color: var(--color-primary);
+
       &-item {
-        font-size: 1.5rem;
         padding: 4px;
         border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
 
         &-text {
+          font-size: 1.5rem;
           padding-bottom: 2px;
           &-word {
             cursor: pointer;
@@ -50,11 +48,17 @@
         }
 
         &-roots {
-          &-item {
-            &-verse {
-              font-size: 1.2rem;
+          &-verses {
+            max-height: 1000px;
+            overflow-y: scroll;
+
+            &-item {
               padding: 4px;
               border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+
+              &-text {
+                font-size: 1.2rem;
+              }
             }
           }
         }

@@ -29,8 +29,8 @@ function Inspector() {
     <div className="inspector">
       <div className="p-2 display">
         <h4 className="text-center">{chapterNames[currentChapter - 1].name}</h4>
-        <div className="card p-2">
-          <div className="card-body display-verses">
+        <div className="card p-2 display-verses">
+          <div className="card-body">
             {chapterVerses.map((verse) => (
               <div className="display-verses-item" key={verse.key}>
                 <VerseWords
@@ -181,6 +181,7 @@ interface RootOccurencesProps {
 
 const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
   const [isShown, setIsShown] = useState(false);
+  const [itemsCount, setItemsCount] = useState(20);
   const refCollapse = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -189,22 +190,33 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
       setIsShown(true);
     }
 
-    function onHideRoots(event: Event) {
+    function onHiddenRoots(event: Event) {
       setIsShown(false);
     }
 
     if (collapseElement !== null) {
-      collapseElement.addEventListener("shown.bs.collapse", onShowRoots);
-      collapseElement.addEventListener("hidden.bs.collapse", onHideRoots);
+      collapseElement.addEventListener("show.bs.collapse", onShowRoots);
+      collapseElement.addEventListener("hidden.bs.collapse", onHiddenRoots);
     }
 
     return () => {
       if (collapseElement !== null) {
-        collapseElement.removeEventListener("shown.bs.collapse", onShowRoots);
-        collapseElement.removeEventListener("hidden.bs.collapse", onHideRoots);
+        collapseElement.removeEventListener("show.bs.collapse", onShowRoots);
+        collapseElement.removeEventListener(
+          "hidden.bs.collapse",
+          onHiddenRoots
+        );
       }
     };
   }, []);
+
+  function onScrollOccs(event: React.UIEvent<HTMLDivElement>) {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+    if (scrollHeight - scrollTop <= clientHeight + 10) {
+      setItemsCount((state) => state + 10);
+    }
+  }
 
   return (
     <div
@@ -213,9 +225,12 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
       className="accordion-collapse collapse"
     >
       {isShown && (
-        <div className="accordion-body">
-          {rootOccs.map((occ, index) => (
-            <div key={index} className="display-verses-item-roots-item">
+        <div
+          className="accordion-body display-verses-item-roots-verses"
+          onScroll={onScrollOccs}
+        >
+          {rootOccs.slice(0, itemsCount).map((occ, index) => (
+            <div key={index} className="display-verses-item-roots-verses-item">
               <RootVerse occurence={occ} />
             </div>
           ))}
@@ -236,9 +251,9 @@ const RootVerse = ({ occurence }: RootVerseProps) => {
   const verse = absoluteQuran[Number(occData[0])];
   const verseChapter = chapterNames[Number(verse.suraid) - 1].name;
   return (
-    <div className="display-verses-item-roots-item-verse">
+    <>
       <div>
-        {`${verse.versetext} (${verseChapter}:${verse.verseid}) `}
+        <span className="display-verses-item-roots-verses-item-text">{`${verse.versetext} (${verseChapter}:${verse.verseid}) `}</span>
         <button
           className="btn"
           type="button"
@@ -251,7 +266,7 @@ const RootVerse = ({ occurence }: RootVerseProps) => {
         </button>
       </div>
       <NoteText verseKey={verse.key} targetID={`${verse.key}-`} />
-    </div>
+    </>
   );
 };
 
