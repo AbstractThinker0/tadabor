@@ -2,7 +2,7 @@
 
 This project is a web App that allows you to browse through the Quran and write your notes/reflections below the verses, everything will be saved in your browser.
 
-# For a desktop version check [tadabor-desktop](https://github.com/EnlightenCode/tadabor-desktop) repo.
+# For a desktop version check [github.com/EnlightenCode/tadabor-desktop](https://github.com/EnlightenCode/tadabor-desktop)
 
 ## Table of contents
 
@@ -38,8 +38,8 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
-- Tanzil project for the Quran text compilation ( Check the bottom of [quran-simple-plain.txt](https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt) )
-- Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation ( Check the bottom of [quran-root.txt](https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt) )
+- Tanzil project for the Quran text compilation
+- Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation
 
 ## Local use
 
