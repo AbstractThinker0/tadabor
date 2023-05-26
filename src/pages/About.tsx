@@ -49,31 +49,12 @@ const AboutEnglish = () => {
               project for the compilation of chapter names and their
               transliteration
             </li>
-            <li>
-              Credits Tanzil project for the Quran text compilation ( Check the
-              bottom of{" "}
-              <a
-                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
-                target="_blank"
-                rel="noreferrer"
-              >
-                quran-simple-plain.txt{" "}
-              </a>{" "}
-              )
-            </li>
+            <li>Credits Tanzil project for the Quran text compilation</li>
 
             <li>
               Computer Research Center of Islamic Sciences (noorsoft.org) and
               Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the
-              Quran roots compilation ( Check the bottom of{" "}
-              <a
-                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
-                target="_blank"
-                rel="noreferrer"
-              >
-                quran-root.txt
-              </a>{" "}
-              )
+              Quran roots compilation
             </li>
           </ul>
           <h5>Future project</h5>
@@ -139,30 +120,12 @@ const AboutArabic = () => {
               </a>{" "}
               لتجميع أسماء سور مع ترجمتها
             </li>
-            <li>
-              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر{" "}
-              <a
-                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
-                target="_blank"
-                rel="noreferrer"
-              >
-                quran-simple-plain.txt
-              </a>{" "}
-              )
-            </li>
+            <li>الشكر إلى Tanzil project لنص القرآن الإلكتروني</li>
 
             <li>
               الشكر إلى Computer Research Center of Islamic Sciences
               (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
-              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر{" "}
-              <a
-                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
-                target="_blank"
-                rel="noreferrer"
-              >
-                quran-root.txt
-              </a>{" "}
-              )
+              (zekr.org) لملف جذور القرآن الإلكتروني
             </li>
           </ul>
           <h5>المشروع المقبل</h5>
