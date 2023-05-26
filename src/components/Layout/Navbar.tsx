@@ -60,7 +60,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/inspector">
-                Inspector
+                {t("nav_inspector")}
               </Link>
             </li>
             <li className="nav-item">
