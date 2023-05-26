@@ -1,7 +1,16 @@
 {
   "name": "tadabor",
   "version": "0.3.1",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnlightenCode/tadabor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EnlightenCode/tadabor/issues"
+  },
+  "description": "A Quran web application",
+  "author": "EnlightenCode",
+  "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@tabler/icons-react": "^2.9.0",
