@@ -1,10 +1,46 @@
 .inspector {
+  background-color: var(--color-primary);
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+
   .display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+
+    .card {
+      background-color: var(--color-primary);
+    }
+
     &-verses {
       &-item {
         font-size: 1.5rem;
         padding: 4px;
         border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+
+        &-text {
+          padding-bottom: 2px;
+          &-word {
+            cursor: pointer;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            border-radius: 0.3rem;
+
+            &:hover {
+              background-color: rgb(255, 229, 197);
+            }
+
+            &-selected {
+              background-color: rgb(255, 212, 159);
+
+              &:hover {
+                background-color: rgb(255, 212, 159);
+              }
+            }
+          }
+        }
 
         .accordion-button {
           &::after {
@@ -17,6 +53,8 @@
           &-item {
             &-verse {
               font-size: 1.2rem;
+              padding: 4px;
+              border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
             }
           }
         }

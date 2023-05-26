@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 import { rootProps } from "../types";
 import { Collapse } from "bootstrap";
+import NoteText from "../components/NoteText";
+import { IconSelect } from "@tabler/icons-react";
 
 interface RankedVerseProps {
   key: string;
@@ -35,6 +37,7 @@ function Inspector() {
                   verseRank={verse.rank}
                   verseText={verse.versetext.split(" ")}
                   verseID={verse.verseid}
+                  verseKey={verse.key}
                 />
               </div>
             ))}
@@ -49,11 +52,18 @@ interface VerseWordsProps {
   verseRank: number;
   verseText: string[];
   verseID: string;
+  verseKey: string;
 }
 
-const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
+const VerseWords = ({
+  verseText,
+  verseRank,
+  verseID,
+  verseKey,
+}: VerseWordsProps) => {
   const { quranRoots } = useQuran();
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
+  const [selectedWord, setSelectedWord] = useState(-1);
   const refCollapsible = useRef<HTMLDivElement>(null);
   const refCollapse = useRef<Collapse>();
   const refCurrentWord = useRef<Number>();
@@ -69,8 +79,6 @@ const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
   // "119:2,10",
 
   function onClickWord(index: number) {
-    console.log(`${verseRank}:${index}`);
-
     const wordRoots = quranRoots.filter((root) =>
       root.occurences.find((occ) => {
         const rootData = occ.split(":");
@@ -85,8 +93,10 @@ const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
 
     setCurrentRoots(wordRoots);
 
-    if (wordRoots) {
-      console.log(wordRoots);
+    if (selectedWord === index - 1) {
+      setSelectedWord(-1);
+    } else {
+      setSelectedWord(index - 1);
     }
 
     if (refCollapse.current) {
@@ -102,14 +112,34 @@ const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
 
   return (
     <>
-      <div className="">
+      <div className="display-verses-item-text">
         {verseText.map((word, index) => (
-          <span key={index} onClick={() => onClickWord(index + 1)}>
-            {word}{" "}
-          </span>
+          <Fragment key={index}>
+            <span
+              onClick={() => onClickWord(index + 1)}
+              className={`display-verses-item-text-word ${
+                selectedWord === index
+                  ? "display-verses-item-text-word-selected"
+                  : ""
+              }`}
+            >
+              {word}
+            </span>{" "}
+          </Fragment>
         ))}{" "}
-        {`(${verseID})`}
+        {`(${verseID})`}{" "}
+        <button
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#collapseExample${verseKey}`}
+          aria-expanded="false"
+          aria-controls={`collapseExample${verseKey}`}
+        >
+          <IconSelect />
+        </button>
       </div>
+      <NoteText verseKey={verseKey} />
       <div
         ref={refCollapsible}
         className="collapse"
@@ -134,27 +164,64 @@ const VerseWords = ({ verseText, verseRank, verseID }: VerseWordsProps) => {
                     {root.name}
                   </button>
                 </h2>
-                <div
-                  id={`panelsStayOpen-${root.id}`}
-                  className="accordion-collapse collapse"
-                >
-                  <div className="accordion-body">
-                    {root.occurences.map((occ, index) => (
-                      <div
-                        key={index}
-                        className="display-verses-item-roots-item"
-                      >
-                        <RootVerse occurence={occ} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <RootOccurences rootID={root.id} rootOccs={root.occurences} />
               </div>
             ))}
           </div>
         </div>
       </div>
     </>
+  );
+};
+
+interface RootOccurencesProps {
+  rootID: number;
+  rootOccs: string[];
+}
+
+const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
+  const [isShown, setIsShown] = useState(false);
+  const refCollapse = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const collapseElement = refCollapse.current;
+    function onShowRoots(event: Event) {
+      setIsShown(true);
+    }
+
+    function onHideRoots(event: Event) {
+      setIsShown(false);
+    }
+
+    if (collapseElement !== null) {
+      collapseElement.addEventListener("shown.bs.collapse", onShowRoots);
+      collapseElement.addEventListener("hidden.bs.collapse", onHideRoots);
+    }
+
+    return () => {
+      if (collapseElement !== null) {
+        collapseElement.removeEventListener("shown.bs.collapse", onShowRoots);
+        collapseElement.removeEventListener("hidden.bs.collapse", onHideRoots);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={refCollapse}
+      id={`panelsStayOpen-${rootID}`}
+      className="accordion-collapse collapse"
+    >
+      {isShown && (
+        <div className="accordion-body">
+          {rootOccs.map((occ, index) => (
+            <div key={index} className="display-verses-item-roots-item">
+              <RootVerse occurence={occ} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -167,9 +234,23 @@ const RootVerse = ({ occurence }: RootVerseProps) => {
 
   const occData = occurence.split(":");
   const verse = absoluteQuran[Number(occData[0])];
+  const verseChapter = chapterNames[Number(verse.suraid) - 1].name;
   return (
     <div className="display-verses-item-roots-item-verse">
-      {verse.versetext}
+      <div>
+        {`${verse.versetext} (${verseChapter}:${verse.verseid}) `}
+        <button
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#collapseExample${verse.key}-`}
+          aria-expanded="false"
+          aria-controls={`collapseExample${verse.key}-`}
+        >
+          <IconSelect />
+        </button>
+      </div>
+      <NoteText verseKey={verse.key} targetID={`${verse.key}-`} />
     </div>
   );
 };
