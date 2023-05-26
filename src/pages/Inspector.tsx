@@ -4,6 +4,7 @@ import { rootProps } from "../types";
 import { Collapse } from "bootstrap";
 import NoteText from "../components/NoteText";
 import { IconSelect } from "@tabler/icons-react";
+import { splitByArray } from "../util/util";
 
 interface RankedVerseProps {
   key: string;
@@ -249,11 +250,30 @@ const RootVerse = ({ occurence }: RootVerseProps) => {
 
   const occData = occurence.split(":");
   const verse = absoluteQuran[Number(occData[0])];
+  const verseWords = verse.versetext.split(" ");
+  const wordIndexes = occData[1].split(",");
+  const derivationsArray = wordIndexes.map(
+    (index) => verseWords[Number(index) - 1]
+  );
+  const rootParts = splitByArray(verse.versetext, derivationsArray);
+
+  const verseParts = rootParts.filter(Boolean).map((part) => ({
+    text: part,
+    highlight: derivationsArray.includes(part),
+  }));
+
   const verseChapter = chapterNames[Number(verse.suraid) - 1].name;
   return (
     <>
       <div>
-        <span className="display-verses-item-roots-verses-item-text">{`${verse.versetext} (${verseChapter}:${verse.verseid}) `}</span>
+        <span className="display-verses-item-roots-verses-item-text">
+          {verseParts.map((part, i) => (
+            <Fragment key={i}>
+              {part.highlight ? <mark>{part.text}</mark> : part.text}
+            </Fragment>
+          ))}{" "}
+          {` (${verseChapter}:${verse.verseid}) `}
+        </span>
         <button
           className="btn"
           type="button"
