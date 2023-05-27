@@ -16,6 +16,7 @@ interface TextFormProps {
   handleEditClick: (key: string) => void;
   handleInputSubmit: (key: string, value: string) => void;
   className?: string;
+  targetID?: string;
 }
 
 const TextForm = ({
@@ -28,12 +29,15 @@ const TextForm = ({
   handleEditClick,
   handleInputSubmit,
   className,
+  targetID,
 }: TextFormProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const collapseElement = collapseRef.current;
     function onShownCollapse(event: Event) {
+      event.stopPropagation();
+
       if (collapseRef.current?.parentElement)
         collapseRef.current.parentElement.scrollIntoView({
           behavior: "smooth",
@@ -41,8 +45,13 @@ const TextForm = ({
         });
     }
 
+    function onHiddenCollapse(event: Event) {
+      event.stopPropagation();
+    }
+
     if (collapseElement !== null) {
       collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+      collapseElement.addEventListener("hidden.bs.collapse", onHiddenCollapse);
     }
 
     return () => {
@@ -51,6 +60,10 @@ const TextForm = ({
           "shown.bs.collapse",
           onShownCollapse
         );
+        collapseElement.removeEventListener(
+          "hidden.bs.collapse",
+          onHiddenCollapse
+        );
       }
     };
   }, []);
@@ -58,7 +71,7 @@ const TextForm = ({
   return (
     <div
       className={className ? className.concat(" collapse") : "collapse"}
-      id={"collapseExample" + inputKey}
+      id={`collapseExample${targetID ? targetID : inputKey}`}
       ref={collapseRef}
     >
       <div className="card border-primary">
