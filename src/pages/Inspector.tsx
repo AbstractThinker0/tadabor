@@ -41,7 +41,7 @@ function Inspector() {
           <div className="card-header text-primary text-center fs-4">
             سورة {chapterNames[currentChapter - 1].name}
           </div>
-          <div className="card-body">
+          <div className="card-body" dir="rtl">
             {chapterVerses.map((verse) => (
               <div className="display-verses-item" key={verse.key}>
                 <VerseWords
