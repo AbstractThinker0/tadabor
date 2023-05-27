@@ -15,16 +15,7 @@ interface RankedVerseProps {
 }
 
 function Inspector() {
-  const { chapterNames, absoluteQuran } = useQuran();
   const [currentChapter, setCurrentChapter] = useState(1);
-
-  const chapterVerses: RankedVerseProps[] = [];
-
-  absoluteQuran.forEach((verse, index) => {
-    if (verse.suraid !== currentChapter.toString()) return;
-
-    chapterVerses.push({ ...verse, rank: index });
-  });
 
   function handleSelectChapter(chapterID: string) {
     setCurrentChapter(Number(chapterID));
@@ -36,25 +27,7 @@ function Inspector() {
         selectedChapter={currentChapter}
         handleSelectChapter={handleSelectChapter}
       />
-      <div className="p-2 display">
-        <div className="card p-2 display-verses">
-          <div className="card-header text-primary text-center fs-4">
-            سورة {chapterNames[currentChapter - 1].name}
-          </div>
-          <div className="card-body" dir="rtl">
-            {chapterVerses.map((verse) => (
-              <div className="display-verses-item" key={verse.key}>
-                <VerseWords
-                  verseRank={verse.rank}
-                  verseText={verse.versetext.split(" ")}
-                  verseID={verse.verseid}
-                  verseKey={verse.key}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Display currentChapter={currentChapter} />
     </div>
   );
 }
@@ -106,6 +79,53 @@ const ChaptersList = ({
               </option>
             ))}
         </select>
+      </div>
+    </div>
+  );
+};
+
+interface DisplayProps {
+  currentChapter: number;
+}
+
+const Display = ({ currentChapter }: DisplayProps) => {
+  const { chapterNames, absoluteQuran } = useQuran();
+
+  const chapterVerses: RankedVerseProps[] = [];
+
+  absoluteQuran.forEach((verse, index) => {
+    if (verse.suraid !== currentChapter.toString()) return;
+
+    chapterVerses.push({ ...verse, rank: index });
+  });
+
+  const refDisplay = useRef<HTMLDivElement>(null);
+
+  // Reset scroll whenever we switch from one chapter to another
+  useEffect(() => {
+    if (refDisplay.current) {
+      refDisplay.current.scrollTop = 0;
+    }
+  }, [currentChapter]);
+
+  return (
+    <div className="p-2 display" ref={refDisplay}>
+      <div className="card p-2 display-verses">
+        <div className="card-header text-primary text-center fs-4">
+          سورة {chapterNames[currentChapter - 1].name}
+        </div>
+        <div className="card-body" dir="rtl">
+          {chapterVerses.map((verse) => (
+            <div className="display-verses-item" key={verse.key}>
+              <VerseWords
+                verseRank={verse.rank}
+                verseText={verse.versetext.split(" ")}
+                verseID={verse.verseid}
+                verseKey={verse.key}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
