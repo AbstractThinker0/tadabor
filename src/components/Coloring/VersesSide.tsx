@@ -84,9 +84,11 @@ function VersesSide({
   const refListVerse = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const verseToHighlight = scrollKey
-      ? refListVerse.current?.querySelector(`[data-id="${scrollKey}"]`)
-      : "";
+    if (!scrollKey || !refListVerse.current) return;
+
+    const verseToHighlight = refListVerse.current.querySelector(
+      `[data-id="${scrollKey}"]`
+    );
 
     if (verseToHighlight) {
       setTimeout(() => {
