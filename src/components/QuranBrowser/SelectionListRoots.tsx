@@ -11,33 +11,23 @@ interface SelectionListRootsProps {
 const SelectionListRoots = memo(
   ({ isDisabled, searchString, dispatchQbAction }: SelectionListRootsProps) => {
     const { quranRoots } = useQuran();
-
-    const [stateSelect, setStateSelect] = useState<string>();
     const [itemsCount, setItemsCount] = useState(100);
 
-    function handleScroll(event: React.UIEvent<HTMLSelectElement>) {
+    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
       const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
       // Reached the bottom, ( the +1 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-      if (scrollHeight - scrollTop <= clientHeight + 1) {
+      if (scrollHeight - scrollTop <= clientHeight + 10) {
         fetchMoreData();
       }
     }
 
-    const onClickSelect = (event: React.MouseEvent<HTMLSelectElement>) => {
-      handleSelectRoot(event.currentTarget.value);
-    };
-
-    const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      handleSelectRoot(event.currentTarget.value);
-    };
-
-    const handleSelectRoot = (rootID: string) => {
-      setStateSelect(rootID);
+    function onClickRoot(rootID: string) {
+      if (isDisabled) return;
 
       const selectedRoot = quranRoots[Number(rootID)];
 
       dispatchQbAction(qbActions.setSearchString(selectedRoot.name));
-    };
+    }
 
     const fetchMoreData = () => {
       setItemsCount((state) => state + 20);
@@ -53,22 +43,26 @@ const SelectionListRoots = memo(
 
     return (
       <div className="container mt-2 p-0">
-        <select
-          className="form-select"
-          size={6}
-          onClick={onClickSelect}
-          onChange={onChangeSelect}
-          aria-label="size 6 select"
-          disabled={isDisabled}
-          value={stateSelect}
+        <div
+          className={`browser-search-roots-list ${
+            isDisabled ? "browser-search-roots-list-disabled" : ""
+          }`}
           onScroll={handleScroll}
         >
           {filteredArray.slice(0, itemsCount).map((root, index: number) => (
-            <option key={index} value={root.id}>
+            <div
+              onClick={() => onClickRoot(root.id.toString())}
+              className={`browser-search-roots-list-item ${
+                searchString === root.name && !isDisabled
+                  ? "browser-search-roots-list-item-selected"
+                  : ""
+              }`}
+              key={index}
+            >
               {root.name}
-            </option>
+            </div>
           ))}
-        </select>
+        </div>
       </div>
     );
   },

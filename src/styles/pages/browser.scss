@@ -6,7 +6,9 @@
   height: 100%;
 
   &-search {
-    padding: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
 
     &-chapter {
       &-input {
@@ -25,6 +27,36 @@
 
     &-field {
       background-color: var(--color-fifth);
+    }
+
+    &-roots {
+      &-list {
+        border: 1px solid gainsboro;
+        max-height: 35vh;
+        min-height: 35vh;
+        overflow-y: scroll;
+        background-color: white;
+        padding: 2px;
+        border-radius: 0.35rem;
+        cursor: pointer;
+
+        &-item {
+          cursor: inherit;
+          padding-left: 14px;
+          padding-right: 14px;
+
+          &-selected {
+            color: white;
+            background-color: rgb(118, 118, 118);
+          }
+        }
+
+        &-disabled {
+          cursor: not-allowed;
+          color: gray;
+          background-color: #e9ecef;
+        }
+      }
     }
   }
 

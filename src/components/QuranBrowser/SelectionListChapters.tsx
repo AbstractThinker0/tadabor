@@ -38,7 +38,7 @@ const SelectionListChapters = memo(
     }
 
     return (
-      <div className="container mt-2 mb-2 p-0 browser-search-chapter">
+      <div className="container mb-2 p-0 browser-search-chapter">
         <input
           className="form-control browser-search-chapter-input"
           type="search"
