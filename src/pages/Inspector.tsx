@@ -1,10 +1,11 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useRef, useState } from "react";
 import useQuran from "../context/QuranContext";
 import { rootProps } from "../types";
-import { Collapse } from "bootstrap";
+import { Collapse, Tooltip } from "bootstrap";
 import NoteText from "../components/NoteText";
 import { IconSelect } from "@tabler/icons-react";
 import { splitByArray } from "../util/util";
+import { searchIndexProps } from "../components/QuranBrowser/consts";
 
 interface RankedVerseProps {
   key: string;
@@ -12,6 +13,18 @@ interface RankedVerseProps {
   verseid: string;
   versetext: string;
   rank: number;
+}
+
+interface versePartProps {
+  text: string;
+  highlight: boolean;
+}
+
+interface rootVerseProps {
+  verseParts: versePartProps[];
+  key: string;
+  suraid: string;
+  verseid: string;
 }
 
 function Inspector() {
@@ -266,6 +279,7 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
   const [isShown, setIsShown] = useState(false);
   const [itemsCount, setItemsCount] = useState(20);
   const refCollapse = useRef<HTMLDivElement>(null);
+  const [scrollKey, setScrollKey] = useState("");
 
   useEffect(() => {
     const collapseElement = refCollapse.current;
@@ -301,6 +315,71 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
     }
   }
 
+  const { chapterNames, absoluteQuran } = useQuran();
+
+  const derivations: searchIndexProps[] = [];
+
+  const rootVerses: rootVerseProps[] = [];
+
+  rootOccs.forEach((occ) => {
+    const occData = occ.split(":");
+    const verse = absoluteQuran[Number(occData[0])];
+    const wordIndexes = occData[1].split(",");
+    const verseWords = verse.versetext.split(" ");
+    const derivationsArray = wordIndexes.map(
+      (index) => verseWords[Number(index) - 1]
+    );
+    const chapterName = chapterNames[Number(verse.suraid) - 1].name;
+    const verseDerivations = derivationsArray.map((name, index) => ({
+      name,
+      key: verse.key,
+      text: `${chapterName}:${verse.verseid}`,
+      wordIndex: wordIndexes[index],
+    }));
+
+    derivations.push(...verseDerivations);
+
+    const rootParts = splitByArray(verse.versetext, derivationsArray);
+
+    const verseParts = rootParts.filter(Boolean).map((part) => ({
+      text: part,
+      highlight: derivationsArray.includes(part),
+    }));
+
+    rootVerses.push({
+      verseParts,
+      key: verse.key,
+      suraid: verse.suraid,
+      verseid: verse.verseid,
+    });
+  });
+
+  const slicedItems = rootVerses.slice(0, itemsCount);
+
+  function handleDerivationClick(verseKey: string, verseIndex: number) {
+    if (itemsCount < verseIndex + 20) {
+      setItemsCount(verseIndex + 20);
+    }
+    setScrollKey(verseKey);
+  }
+
+  useEffect(() => {
+    if (!scrollKey) return;
+
+    if (!refCollapse.current) return;
+
+    const verseToHighlight = refCollapse.current.querySelector(
+      `[data-id="${scrollKey}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [scrollKey]);
+
   return (
     <div
       ref={refCollapse}
@@ -312,9 +391,20 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
           className="accordion-body display-verses-item-roots-verses"
           onScroll={onScrollOccs}
         >
-          {rootOccs.slice(0, itemsCount).map((occ, index) => (
-            <div key={index} className="display-verses-item-roots-verses-item">
-              <RootVerse occurence={occ} />
+          <DerivationsComponent
+            searchIndexes={derivations}
+            handleDerivationClick={handleDerivationClick}
+          />
+          {slicedItems.map((rootVerse) => (
+            <div
+              key={rootVerse.key}
+              className={`display-verses-item-roots-verses-item ${
+                scrollKey === rootVerse.key
+                  ? "display-verses-item-roots-verses-item-selected"
+                  : ""
+              }`}
+            >
+              <RootVerse rootVerse={rootVerse} />
             </div>
           ))}
         </div>
@@ -323,51 +413,82 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
   );
 };
 
-interface RootVerseProps {
-  occurence: string;
+interface DerivationsComponentProps {
+  handleDerivationClick: (verseKey: string, verseIndex: number) => void;
+  searchIndexes: searchIndexProps[];
 }
 
-const RootVerse = ({ occurence }: RootVerseProps) => {
-  const { chapterNames, absoluteQuran } = useQuran();
+const DerivationsComponent = memo(
+  ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
+    const refListRoots = useRef<HTMLSpanElement>(null);
+    useEffect(() => {
+      if (!refListRoots.current) return;
 
-  const occData = occurence.split(":");
-  const verse = absoluteQuran[Number(occData[0])];
-  const verseWords = verse.versetext.split(" ");
-  const wordIndexes = occData[1].split(",");
-  const derivationsArray = wordIndexes.map(
-    (index) => verseWords[Number(index) - 1]
-  );
-  const rootParts = splitByArray(verse.versetext, derivationsArray);
+      //init tooltip
+      const tooltipArray = Array.from(
+        refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).map((tooltipNode) => new Tooltip(tooltipNode));
 
-  const verseParts = rootParts.filter(Boolean).map((part) => ({
-    text: part,
-    highlight: derivationsArray.includes(part),
-  }));
+      return () => {
+        tooltipArray.forEach((tooltip) => tooltip.dispose());
+      };
+    }, [searchIndexes]);
 
-  const verseChapter = chapterNames[Number(verse.suraid) - 1].name;
+    return (
+      <>
+        <hr />
+        <span ref={refListRoots} className="p-2">
+          {searchIndexes.map((root: searchIndexProps, index: number) => (
+            <span
+              role="button"
+              key={index}
+              onClick={(e) => handleDerivationClick(root.key, index)}
+              data-bs-toggle="tooltip"
+              data-bs-title={root.text}
+            >
+              {`${index ? " -" : " "} ${root.name}`}
+            </span>
+          ))}
+        </span>
+        <hr />
+      </>
+    );
+  }
+);
+
+DerivationsComponent.displayName = "DerivationsComponent";
+
+interface RootVerseProps {
+  rootVerse: rootVerseProps;
+}
+
+const RootVerse = ({ rootVerse }: RootVerseProps) => {
+  const { chapterNames } = useQuran();
+
+  const verseChapter = chapterNames[Number(rootVerse.suraid) - 1].name;
   return (
     <>
-      <div>
+      <div data-id={rootVerse.key}>
         <span className="display-verses-item-roots-verses-item-text">
-          {verseParts.map((part, i) => (
+          {rootVerse.verseParts.map((part, i) => (
             <Fragment key={i}>
               {part.highlight ? <mark>{part.text}</mark> : part.text}
             </Fragment>
           ))}{" "}
-          {` (${verseChapter}:${verse.verseid}) `}
+          {` (${verseChapter}:${rootVerse.verseid}) `}
         </span>
         <button
           className="btn"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target={`#collapseExample${verse.key}-`}
+          data-bs-target={`#collapseExample${rootVerse.key}child`}
           aria-expanded="false"
-          aria-controls={`collapseExample${verse.key}-`}
+          aria-controls={`collapseExample${rootVerse.key}child`}
         >
           <IconSelect />
         </button>
       </div>
-      <NoteText verseKey={verse.key} targetID={`${verse.key}-`} />
+      <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
     </>
   );
 };
