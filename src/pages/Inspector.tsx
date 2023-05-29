@@ -275,7 +275,7 @@ const VerseWords = ({
       })
     );
 
-    setCurrentRoots(wordRoots);
+    setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
     if (selectedWord === index - 1) {
       setSelectedWord(-1);
