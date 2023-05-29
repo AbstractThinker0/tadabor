@@ -39,6 +39,10 @@
         padding: 4px;
         border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
 
+        &-selected {
+          background-color: aliceblue;
+        }
+
         &-text {
           font-size: 1.5rem;
           padding-bottom: 2px;
@@ -84,6 +88,13 @@
 
               &-text {
                 font-size: 1.2rem;
+
+                &-chapter {
+                  cursor: pointer;
+                  &:hover {
+                    color: cornflowerblue;
+                  }
+                }
               }
             }
           }

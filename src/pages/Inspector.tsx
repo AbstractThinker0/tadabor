@@ -1,6 +1,14 @@
-import { Fragment, memo, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  memo,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import useQuran from "../context/QuranContext";
-import { rootProps } from "../types";
+import { ActionsUnion, createActionPayload, rootProps } from "../types";
 import { Collapse, Tooltip } from "bootstrap";
 import NoteText from "../components/NoteText";
 import { IconSelect } from "@tabler/icons-react";
@@ -27,20 +35,68 @@ interface rootVerseProps {
   verseid: string;
 }
 
+interface stateProps {
+  currentChapter: number;
+  scrollKey: string;
+}
+
+enum IS_ACTIONS {
+  SET_CHAPTER = "dispatchSetChapter",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
+  GOTO_CHAPTER = "dispatchGotoChapter",
+}
+
+const isActions = {
+  setChapter: createActionPayload<IS_ACTIONS.SET_CHAPTER, number>(
+    IS_ACTIONS.SET_CHAPTER
+  ),
+  setScrollKey: createActionPayload<IS_ACTIONS.SET_SCROLL_KEY, string>(
+    IS_ACTIONS.SET_SCROLL_KEY
+  ),
+  gotoChapter: createActionPayload<IS_ACTIONS.GOTO_CHAPTER, number>(
+    IS_ACTIONS.GOTO_CHAPTER
+  ),
+};
+
+type clActionsProps = ActionsUnion<typeof isActions>;
+
+function reducer(state: stateProps, action: clActionsProps): stateProps {
+  switch (action.type) {
+    case IS_ACTIONS.SET_CHAPTER: {
+      return { ...state, currentChapter: action.payload };
+    }
+    case IS_ACTIONS.SET_SCROLL_KEY: {
+      return { ...state, scrollKey: action.payload };
+    }
+    case IS_ACTIONS.GOTO_CHAPTER: {
+      return { ...state, scrollKey: "", currentChapter: action.payload };
+    }
+  }
+}
+
 function Inspector() {
-  const [currentChapter, setCurrentChapter] = useState(1);
+  const initialState: stateProps = {
+    currentChapter: 1,
+    scrollKey: "",
+  };
+
+  const [state, dispatchIsAction] = useReducer(reducer, initialState);
 
   function handleSelectChapter(chapterID: string) {
-    setCurrentChapter(Number(chapterID));
+    dispatchIsAction(isActions.setChapter(Number(chapterID)));
   }
 
   return (
     <div className="inspector">
       <ChaptersList
-        selectedChapter={currentChapter}
+        selectedChapter={state.currentChapter}
         handleSelectChapter={handleSelectChapter}
       />
-      <Display currentChapter={currentChapter} />
+      <Display
+        currentChapter={state.currentChapter}
+        dispatchIsAction={dispatchIsAction}
+        scrollKey={state.scrollKey}
+      />
     </div>
   );
 }
@@ -99,10 +155,17 @@ const ChaptersList = ({
 
 interface DisplayProps {
   currentChapter: number;
+  scrollKey: string;
+  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const Display = ({ currentChapter }: DisplayProps) => {
+const Display = ({
+  currentChapter,
+  scrollKey,
+  dispatchIsAction,
+}: DisplayProps) => {
   const { chapterNames, absoluteQuran } = useQuran();
+  const refDisplay = useRef<HTMLDivElement>(null);
 
   const chapterVerses: RankedVerseProps[] = [];
 
@@ -112,14 +175,32 @@ const Display = ({ currentChapter }: DisplayProps) => {
     chapterVerses.push({ ...verse, rank: index });
   });
 
-  const refDisplay = useRef<HTMLDivElement>(null);
+  // Reset scroll whenever we switch from one chapter to another
+  useEffect(() => {
+    if (!refDisplay.current) return;
+
+    refDisplay.current.scrollTop = 0;
+  }, [currentChapter]);
 
   // Reset scroll whenever we switch from one chapter to another
   useEffect(() => {
-    if (refDisplay.current) {
-      refDisplay.current.scrollTop = 0;
+    if (!refDisplay.current) return;
+
+    if (!scrollKey) return;
+
+    const verseToHighlight = refDisplay.current.querySelector(
+      `[data-id="${scrollKey}"]`
+    );
+
+    if (verseToHighlight) {
+      setTimeout(() => {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
     }
-  }, [currentChapter]);
+  }, [scrollKey, dispatchIsAction]);
 
   return (
     <div className="p-2 display" ref={refDisplay}>
@@ -129,12 +210,19 @@ const Display = ({ currentChapter }: DisplayProps) => {
         </div>
         <div className="card-body" dir="rtl">
           {chapterVerses.map((verse) => (
-            <div className="display-verses-item" key={verse.key}>
+            <div
+              className={`display-verses-item ${
+                scrollKey === verse.key ? "display-verses-item-selected" : ""
+              }`}
+              key={verse.key}
+              data-id={verse.key}
+            >
               <VerseWords
                 verseRank={verse.rank}
                 verseText={verse.versetext.split(" ")}
                 verseID={verse.verseid}
                 verseKey={verse.key}
+                dispatchIsAction={dispatchIsAction}
               />
             </div>
           ))}
@@ -149,6 +237,7 @@ interface VerseWordsProps {
   verseText: string[];
   verseID: string;
   verseKey: string;
+  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
 const VerseWords = ({
@@ -156,6 +245,7 @@ const VerseWords = ({
   verseRank,
   verseID,
   verseKey,
+  dispatchIsAction,
 }: VerseWordsProps) => {
   const { quranRoots } = useQuran();
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
@@ -171,8 +261,6 @@ const VerseWords = ({
       });
     }
   }, []);
-
-  // "119:2,10",
 
   function onClickWord(index: number) {
     const wordRoots = quranRoots.filter((root) =>
@@ -260,7 +348,11 @@ const VerseWords = ({
                     {root.name}
                   </button>
                 </h2>
-                <RootOccurences rootID={root.id} rootOccs={root.occurences} />
+                <RootOccurences
+                  rootID={root.id}
+                  rootOccs={root.occurences}
+                  dispatchIsAction={dispatchIsAction}
+                />
               </div>
             ))}
           </div>
@@ -273,9 +365,14 @@ const VerseWords = ({
 interface RootOccurencesProps {
   rootID: number;
   rootOccs: string[];
+  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
+const RootOccurences = ({
+  rootID,
+  rootOccs,
+  dispatchIsAction,
+}: RootOccurencesProps) => {
   const [isShown, setIsShown] = useState(false);
   const [itemsCount, setItemsCount] = useState(20);
   const refCollapse = useRef<HTMLDivElement>(null);
@@ -369,7 +466,7 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
     if (!refCollapse.current) return;
 
     const verseToHighlight = refCollapse.current.querySelector(
-      `[data-id="${scrollKey}"]`
+      `[data-child-id="${scrollKey}"]`
     );
 
     if (!verseToHighlight) return;
@@ -405,7 +502,10 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
                     : ""
                 }`}
               >
-                <RootVerse rootVerse={rootVerse} />
+                <RootVerse
+                  rootVerse={rootVerse}
+                  dispatchIsAction={dispatchIsAction}
+                />
               </div>
             ))}
           </div>
@@ -461,22 +561,32 @@ DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
   rootVerse: rootVerseProps;
+  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const RootVerse = ({ rootVerse }: RootVerseProps) => {
+const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
   const { chapterNames } = useQuran();
 
   const verseChapter = chapterNames[Number(rootVerse.suraid) - 1].name;
+
+  function onClickVerseChapter() {
+    dispatchIsAction(isActions.gotoChapter(Number(rootVerse.suraid)));
+    dispatchIsAction(isActions.setScrollKey(rootVerse.key));
+  }
+
   return (
     <>
-      <div data-id={rootVerse.key}>
+      <div data-child-id={rootVerse.key}>
         <span className="display-verses-item-roots-verses-item-text">
           {rootVerse.verseParts.map((part, i) => (
             <Fragment key={i}>
               {part.highlight ? <mark>{part.text}</mark> : part.text}
             </Fragment>
           ))}{" "}
-          {` (${verseChapter}:${rootVerse.verseid}) `}
+          <span
+            onClick={onClickVerseChapter}
+            className="display-verses-item-roots-verses-item-text-chapter"
+          >{`(${verseChapter}:${rootVerse.verseid})`}</span>{" "}
         </span>
         <button
           className="btn"
