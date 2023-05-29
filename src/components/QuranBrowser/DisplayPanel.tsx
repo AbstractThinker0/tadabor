@@ -116,9 +116,11 @@ const ListVerses = ({
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const verseToHighlight = scrollKey
-      ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
-      : "";
+    if (!scrollKey || !listRef.current) return;
+
+    const verseToHighlight = listRef.current.querySelector(
+      `[data-id="${scrollKey}"]`
+    );
 
     if (verseToHighlight) {
       setTimeout(() => {
