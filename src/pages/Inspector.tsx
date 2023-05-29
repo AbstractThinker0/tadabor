@@ -388,25 +388,27 @@ const RootOccurences = ({ rootID, rootOccs }: RootOccurencesProps) => {
     >
       {isShown && (
         <div
-          className="accordion-body display-verses-item-roots-verses"
+          className="accordion-body p-0 display-verses-item-roots-verses"
           onScroll={onScrollOccs}
         >
           <DerivationsComponent
             searchIndexes={derivations}
             handleDerivationClick={handleDerivationClick}
           />
-          {slicedItems.map((rootVerse) => (
-            <div
-              key={rootVerse.key}
-              className={`display-verses-item-roots-verses-item ${
-                scrollKey === rootVerse.key
-                  ? "display-verses-item-roots-verses-item-selected"
-                  : ""
-              }`}
-            >
-              <RootVerse rootVerse={rootVerse} />
-            </div>
-          ))}
+          <div className="p-3">
+            {slicedItems.map((rootVerse) => (
+              <div
+                key={rootVerse.key}
+                className={`display-verses-item-roots-verses-item ${
+                  scrollKey === rootVerse.key
+                    ? "display-verses-item-roots-verses-item-selected"
+                    : ""
+                }`}
+              >
+                <RootVerse rootVerse={rootVerse} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -435,9 +437,8 @@ const DerivationsComponent = memo(
     }, [searchIndexes]);
 
     return (
-      <>
-        <hr />
-        <span ref={refListRoots} className="p-2">
+      <div className="p-2">
+        <span ref={refListRoots} className="">
           {searchIndexes.map((root: searchIndexProps, index: number) => (
             <span
               role="button"
@@ -451,7 +452,7 @@ const DerivationsComponent = memo(
           ))}
         </span>
         <hr />
-      </>
+      </div>
     );
   }
 );
