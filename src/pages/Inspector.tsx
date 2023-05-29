@@ -252,7 +252,7 @@ const VerseWords = ({
   const [selectedWord, setSelectedWord] = useState(-1);
   const refCollapsible = useRef<HTMLDivElement>(null);
   const refCollapse = useRef<Collapse>();
-  const refCurrentWord = useRef<Number>();
+  const refCurrentWord = useRef<number>();
 
   useEffect(() => {
     if (refCollapsible.current) {
