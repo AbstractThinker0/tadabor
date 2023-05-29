@@ -19,7 +19,7 @@ import useQuran from "../../context/QuranContext";
 import { Tooltip } from "bootstrap";
 import NoteText from "../NoteText";
 import { useTranslation } from "react-i18next";
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 interface ListSearchResultsProps {
   versesArray: searchResult[];
@@ -187,7 +187,7 @@ const DerivationsComponent = memo(
             <span
               role="button"
               key={index}
-              onClick={(e) => handleRootClick(root.key)}
+              onClick={() => handleRootClick(root.key)}
               data-bs-toggle="tooltip"
               data-bs-title={root.text}
             >
@@ -286,14 +286,14 @@ const VerseContentComponent = memo(
         {isLinkable ? (
           <button
             className="p-0 border-0 bg-transparent"
-            onClick={(e) => handleVerseClick(verse_key)}
+            onClick={() => handleVerseClick(verse_key)}
           >
             {`${verseChapter}:${verse.verseid}`}
           </button>
         ) : (
           <button
             className="p-0 border-0 bg-transparent"
-            onClick={(e) => handleVerseClick(verse_key)}
+            onClick={() => handleVerseClick(verse_key)}
           >
             {verse.verseid}
           </button>
@@ -307,7 +307,7 @@ const VerseContentComponent = memo(
           aria-expanded="false"
           aria-controls={"collapseExample" + verse_key}
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
         </button>
       </span>
     );
