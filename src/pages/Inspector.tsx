@@ -182,13 +182,41 @@ const Display = ({
     refDisplay.current.scrollTop = 0;
   }, [currentChapter]);
 
+  return (
+    <div className="p-2 display" ref={refDisplay}>
+      <div className="card p-2 display-verses">
+        <div className="card-header text-primary text-center fs-4">
+          سورة {chapterNames[currentChapter - 1].name}
+        </div>
+        <ListVerses
+          chapterVerses={chapterVerses}
+          scrollKey={scrollKey}
+          dispatchIsAction={dispatchIsAction}
+        />
+      </div>
+    </div>
+  );
+};
+
+interface ListVersesProps {
+  chapterVerses: RankedVerseProps[];
+  scrollKey: string;
+  dispatchIsAction: Dispatch<clActionsProps>;
+}
+
+const ListVerses = ({
+  chapterVerses,
+  scrollKey,
+  dispatchIsAction,
+}: ListVersesProps) => {
+  const refList = useRef<HTMLDivElement>(null);
   // Reset scroll whenever we switch from one chapter to another
   useEffect(() => {
-    if (!refDisplay.current) return;
+    if (!refList.current) return;
 
     if (!scrollKey) return;
 
-    const verseToHighlight = refDisplay.current.querySelector(
+    const verseToHighlight = refList.current.querySelector(
       `[data-id="${scrollKey}"]`
     );
 
@@ -203,31 +231,24 @@ const Display = ({
   }, [scrollKey, dispatchIsAction]);
 
   return (
-    <div className="p-2 display" ref={refDisplay}>
-      <div className="card p-2 display-verses">
-        <div className="card-header text-primary text-center fs-4">
-          سورة {chapterNames[currentChapter - 1].name}
+    <div ref={refList} className="card-body" dir="rtl">
+      {chapterVerses.map((verse) => (
+        <div
+          className={`display-verses-item ${
+            scrollKey === verse.key ? "display-verses-item-selected" : ""
+          }`}
+          key={verse.key}
+          data-id={verse.key}
+        >
+          <VerseWords
+            verseRank={verse.rank}
+            verseText={verse.versetext.split(" ")}
+            verseID={verse.verseid}
+            verseKey={verse.key}
+            dispatchIsAction={dispatchIsAction}
+          />
         </div>
-        <div className="card-body" dir="rtl">
-          {chapterVerses.map((verse) => (
-            <div
-              className={`display-verses-item ${
-                scrollKey === verse.key ? "display-verses-item-selected" : ""
-              }`}
-              key={verse.key}
-              data-id={verse.key}
-            >
-              <VerseWords
-                verseRank={verse.rank}
-                verseText={verse.versetext.split(" ")}
-                verseID={verse.verseid}
-                verseKey={verse.key}
-                dispatchIsAction={dispatchIsAction}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
   );
 };
