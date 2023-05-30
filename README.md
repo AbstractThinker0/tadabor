@@ -8,6 +8,7 @@ This project is a web App that allows you to browse through the Quran and write 
 
 - [How to use](#How-to-use)
 - [Contributing](#Contributing)
+- [Disclaimer](#Disclaimer)
 - [Known bugs](#Known-bugs)
 - [TODO List](#TODO-List)
 - [Credits](#Credits)
@@ -22,9 +23,13 @@ Simply go to [tadabor.surge.sh](http://tadabor.surge.sh/) and check Quran Browse
 
 You are welcome to do a PR or open an issue for requesting new features or reporting a bug.
 
+## Disclaimer
+
+The app is in beta, which means you may encounter occasional bugs. We strongly recommend keeping a backup of any data you save while using the app. Your data is stored locally on your machine and is never transmitted or stored on a remote database. However, it's always a good practice to have a backup. Please be aware that the accuracy of the Quran roots/stems list has not been verified, and the completeness of search results based on sentences/roots has not been extensively tested.
+
 ## Known bugs
 
-- ~~When loading the website for the first time it might take time to load and sometimes you might need to do multiple refreshes.~~ (Fixed in [fc87012](https://github.com/EnlightenCode/tadabor/commit/c0ba1c32c53fbf83fd4b60827df7744e5ad2a43a) ?)
+- None.
 
 ## TODO List
 

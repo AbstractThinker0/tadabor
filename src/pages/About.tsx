@@ -31,7 +31,17 @@ const AboutEnglish = () => {
             press the save button, all the data will be saved on your browser
             app and clearing your cache might erase the data you have saved.
           </p>
-
+          <h5>Disclaimer</h5>
+          <p>
+            The app is in beta, which means you may encounter occasional bugs.
+            We strongly recommend keeping a backup of any data you save while
+            using the app. Your data is stored locally on your machine and is
+            never transmitted or stored on a remote database. However, it's
+            always a good practice to have a backup. Please be aware that the
+            accuracy of the Quran roots/stems list has not been verified, and
+            the completeness of search results based on sentences/roots has not
+            been extensively tested.
+          </p>
           <h5>Credits</h5>
           <ul>
             <li className="fw-bold">
@@ -49,7 +59,7 @@ const AboutEnglish = () => {
               project for the compilation of chapter names and their
               transliteration
             </li>
-            <li>Credits Tanzil project for the Quran text compilation</li>
+            <li>Tanzil project for the Quran text compilation</li>
 
             <li>
               Computer Research Center of Islamic Sciences (noorsoft.org) and
@@ -103,7 +113,15 @@ const AboutArabic = () => {
             يتم تسجيلها في متصفحك وحذف سجل المتصفح قد يحذف أي بيانات قمت
             بتسجيلها هنا.
           </p>
-
+          <h5>إخلاء مسؤولية</h5>
+          <p>
+            التطبيق في مرحلة تجريبية، مما يعني أنه قد تواجه أحيانًا بعض الأخطاء.
+            نوصي بشدة بأن تقوم بعمل نسخ احتياطية لأي بيانات تقوم بحفظها أثناء
+            استخدام التطبيق. تُخزن البيانات على جهازك ولا تُرسل أو تُخزن على
+            قاعدة بيانات خارجيّة. ومع ذلك، فإن وجود نسخة احتياطية دائمًا أمر
+            جيد. يُرجى ملاحظة أن دقة قائمة جذور/أوزان القرآن لم تتم التحقق منها،
+            ولم يتم اختبار كمالية نتائج البحث بناءً على الجمل/الجذور بشكل مكثف.
+          </p>
           <h5>الشكر</h5>
 
           <ul>
@@ -118,14 +136,14 @@ const AboutArabic = () => {
               >
                 quran-json
               </a>{" "}
-              لتجميع أسماء سور مع ترجمتها
+              لتجميع أسماء السور مع ترجمتها
             </li>
-            <li>الشكر إلى Tanzil project لنص القرآن الإلكتروني</li>
+            <li>Tanzil project لنص القرآن الإلكتروني</li>
 
             <li>
-              الشكر إلى Computer Research Center of Islamic Sciences
-              (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
-              (zekr.org) لملف جذور القرآن الإلكتروني
+              Computer Research Center of Islamic Sciences (noorsoft.org) و
+              Tanzil Project (tanzil.info) و Zekr Project (zekr.org) لملف جذور
+              القرآن الإلكتروني
             </li>
           </ul>
           <h5>المشروع المقبل</h5>
