@@ -54,7 +54,7 @@
     ]
   },
   "devDependencies": {
-    "typescript": "^4.8.4",
+    "typescript": "^5.0.4",
     "sass": "^1.55.0",
     "@types/bootstrap": "^5.2.6",
     "@types/jest": "^29.2.1",
