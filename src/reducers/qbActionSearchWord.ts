@@ -1,5 +1,4 @@
 import {
-  SEARCH_SCOPE,
   qbStateProps,
   searchResult,
   versePart,
@@ -96,7 +95,6 @@ export function qbSearchWord(
   const {
     searchString,
     searchMethod,
-    searchScope,
     selectChapter,
     selectedChapters,
     searchDiacritics,
@@ -110,7 +108,6 @@ export function qbSearchWord(
     searchIndexes: [],
     searchingString: searchString,
     searchingMethod: searchMethod,
-    searchingScope: searchScope,
     searchingChapters: selectedChapters.map(
       (chapterID) => chapterNames[Number(chapterID) - 1].name
     ),
@@ -132,7 +129,7 @@ export function qbSearchWord(
 
   const matchVerses: searchResult[] = [];
 
-  if (searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+  if (selectedChapters.length === 114) {
     allQuranText.forEach((sura) => {
       sura.verses.forEach((verse) => {
         const result = searchVerse(
@@ -163,9 +160,6 @@ export function qbSearchWord(
           }
         });
       });
-
-      newState.searchScope = newState.searchingScope =
-        SEARCH_SCOPE.MULTIPLE_CHAPTERS;
     } else {
       allQuranText[selectChapter - 1].verses.forEach((verse) => {
         const result = searchVerse(
@@ -179,9 +173,6 @@ export function qbSearchWord(
           matchVerses.push(result);
         }
       });
-
-      newState.searchScope = newState.searchingScope =
-        SEARCH_SCOPE.SINGLE_CHAPTER;
     }
   }
 

@@ -6,7 +6,6 @@ import useQuran from "../../context/QuranContext";
 
 import { verseProps } from "../../types";
 import {
-  SEARCH_SCOPE,
   qbActions,
   qbActionsProps,
   searchIndexProps,
@@ -24,7 +23,6 @@ interface DisplayPanelProps {
   selectChapter: number;
   searchingMethod: string;
   searchIndexes: searchIndexProps[];
-  searchingScope: SEARCH_SCOPE;
   scrollKey: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
@@ -38,7 +36,6 @@ const DisplayPanel = memo(
     selectChapter,
     searchingMethod,
     searchIndexes,
-    searchingScope,
     scrollKey,
     dispatchQbAction,
   }: DisplayPanelProps) => {
@@ -59,7 +56,6 @@ const DisplayPanel = memo(
             <ListSearchResults
               versesArray={searchResult}
               searchToken={searchingString.trim()}
-              searchingScope={searchingScope}
               searchError={searchError}
               searchMethod={searchingMethod}
               searchingChapters={searchingChapters}

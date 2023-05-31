@@ -9,7 +9,7 @@ import { qbSearchWord } from "./qbActionSearchWord";
 function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
   // ...
   switch (action.type) {
-    case QB_ACTIONS.SET_CHAPTERS: {
+    case QB_ACTIONS.SET_SELECTED_CHAPTERS: {
       return { ...state, selectedChapters: action.payload };
     }
     case QB_ACTIONS.SET_SEARCH_STRING: {
@@ -23,9 +23,6 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
     }
     case QB_ACTIONS.SET_SEARCH_METHOD: {
       return { ...state, searchMethod: action.payload };
-    }
-    case QB_ACTIONS.SET_SEARCH_SCOPE: {
-      return { ...state, searchScope: action.payload };
     }
     case QB_ACTIONS.SEARCH_ROOT_SUBMIT: {
       const { chapterNames, absoluteQuran, quranRoots } = action.payload;
@@ -42,7 +39,6 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
         searchResult: [],
         searchIndexes: [],
         selectChapter: Number(action.payload),
-        selectedChapters: [action.payload],
         scrollKey: "",
       };
     }

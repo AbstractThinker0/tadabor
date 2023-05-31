@@ -57,7 +57,7 @@ const SelectionListRoots = memo(
                   ? "browser-search-roots-list-item-selected"
                   : ""
               }`}
-              key={index}
+              key={root.id}
             >
               {root.name}
             </div>

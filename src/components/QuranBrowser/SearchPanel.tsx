@@ -6,7 +6,6 @@ import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
 import {
   SEARCH_METHOD,
-  SEARCH_SCOPE,
   qbActions,
   qbActionsProps,
   searchResult,
@@ -15,25 +14,23 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 
 interface SearchPanelProps {
+  currentChapter: number;
   searchMethod: string;
   searchDiacritics: boolean;
   searchIdentical: boolean;
-  searchAllQuran: boolean;
   searchString: string;
   searchResult: searchResult[];
-  selectedChapters: string[];
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SearchPanel = memo(
   ({
+    currentChapter,
     searchMethod,
     searchDiacritics,
     searchIdentical,
-    searchAllQuran,
     searchString,
     searchResult,
-    selectedChapters,
     dispatchQbAction,
   }: SearchPanelProps) => {
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
@@ -41,16 +38,6 @@ const SearchPanel = memo(
     const { t } = useTranslation();
 
     const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
-
-    function setSearchAllQuran(status: boolean) {
-      dispatchQbAction(
-        qbActions.setSearchScope(
-          status === true
-            ? SEARCH_SCOPE.ALL_CHAPTERS
-            : SEARCH_SCOPE.MULTIPLE_CHAPTERS
-        )
-      );
-    }
 
     function setSearchDiacritics(status: boolean) {
       dispatchQbAction(qbActions.setSearchDiacritics(status));
@@ -83,24 +70,20 @@ const SearchPanel = memo(
       }
     }
 
-    function handleSelectionListChapters(
-      selectedOptions: string[],
-      selectedChapter: string
-    ) {
-      if (!selectedChapter) return;
+    const handleCurrentChapter = (chapterID: number) => {
+      dispatchQbAction(qbActions.gotoChapter(chapterID.toString()));
+    };
 
-      if (selectedOptions.length === 1) {
-        dispatchQbAction(qbActions.gotoChapter(selectedChapter));
-      } else {
-        dispatchQbAction(qbActions.setChapters(selectedOptions));
-      }
-    }
+    const handleSelectedChapters = (selectedChapters: string[]) => {
+      dispatchQbAction(qbActions.setSelectedChapters(selectedChapters));
+    };
 
     return (
       <div className="browser-search">
         <SelectionListChapters
-          handleSelectionListChapters={handleSelectionListChapters}
-          selectedChapters={selectedChapters}
+          handleSelectedChapters={handleSelectedChapters}
+          handleCurrentChapter={handleCurrentChapter}
+          currentChapter={currentChapter}
         />
         <RadioSearchMethod
           searchMethod={searchMethod}
@@ -119,12 +102,6 @@ const SearchPanel = memo(
           labelText={t("search_identical")}
           isDisabled={isRootSearch}
           inputID="CheckboxIdentical"
-        />
-        <CheckboxComponent
-          checkboxState={searchAllQuran}
-          setCheckBoxState={setSearchAllQuran}
-          labelText={t("search_all_quran")}
-          inputID="CheckboxAllQuran"
         />
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
@@ -307,7 +284,7 @@ const SearchSuccessComponent = ({
   return (
     <>
       {searchResult.length > 0 && (
-        <p className="mt-3 text-success">
+        <p className="mt-3 fw-bold text-success">
           {t("search_count") + " " + searchResult.length}{" "}
         </p>
       )}

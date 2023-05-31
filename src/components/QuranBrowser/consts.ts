@@ -39,28 +39,19 @@ export interface qbStateProps {
   searchMethod: SEARCH_METHOD;
   searchingMethod: SEARCH_METHOD;
   searchIndexes: searchIndexProps[];
-  searchScope: SEARCH_SCOPE;
-  searchingScope: SEARCH_SCOPE;
   scrollKey: string;
 }
 
 export enum QB_ACTIONS {
-  SET_CHAPTERS = "dispatchSetChapters",
+  SET_SELECTED_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
   SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
-  SET_SEARCH_SCOPE = "dispatchSetSearchScope",
   SET_SEARCH_METHOD = "dispatchSetsearchMethod",
   SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
   SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
   GOTO_CHAPTER = "dispatchGotoChapter",
   SET_SCROLL_KEY = "dispatchSetScrollKey",
-}
-
-export enum SEARCH_SCOPE {
-  ALL_CHAPTERS = "searchAllChapters",
-  MULTIPLE_CHAPTERS = "searchMultipleChapters",
-  SINGLE_CHAPTER = "searchSingleChapter",
 }
 
 export enum SEARCH_METHOD {
@@ -69,9 +60,10 @@ export enum SEARCH_METHOD {
 }
 
 export const qbActions = {
-  setChapters: createActionPayload<QB_ACTIONS.SET_CHAPTERS, string[]>(
-    QB_ACTIONS.SET_CHAPTERS
-  ),
+  setSelectedChapters: createActionPayload<
+    QB_ACTIONS.SET_SELECTED_CHAPTERS,
+    string[]
+  >(QB_ACTIONS.SET_SELECTED_CHAPTERS),
   setSearchString: createActionPayload<QB_ACTIONS.SET_SEARCH_STRING, string>(
     QB_ACTIONS.SET_SEARCH_STRING
   ),
@@ -83,10 +75,6 @@ export const qbActions = {
     QB_ACTIONS.SET_SEARCH_IDENTICAL,
     boolean
   >(QB_ACTIONS.SET_SEARCH_IDENTICAL),
-  setSearchScope: createActionPayload<
-    QB_ACTIONS.SET_SEARCH_SCOPE,
-    SEARCH_SCOPE
-  >(QB_ACTIONS.SET_SEARCH_SCOPE),
   setSearchMethod: createActionPayload<
     QB_ACTIONS.SET_SEARCH_METHOD,
     SEARCH_METHOD

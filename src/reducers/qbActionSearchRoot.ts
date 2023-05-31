@@ -1,5 +1,4 @@
 import {
-  SEARCH_SCOPE,
   qbStateProps,
   searchIndexProps,
   searchResult,
@@ -43,7 +42,7 @@ export function qbSearchRoot(
   absoluteQuran: verseProps[],
   quranRoots: rootProps[]
 ): qbStateProps {
-  const { searchString, searchMethod, searchScope, selectedChapters } = state;
+  const { searchString, searchMethod, selectedChapters } = state;
   // initial search state
   const newState: qbStateProps = {
     ...state,
@@ -52,8 +51,7 @@ export function qbSearchRoot(
     searchIndexes: [],
     searchingString: searchString,
     searchingMethod: searchMethod,
-    searchingChapters: Array.from(
-      selectedChapters,
+    searchingChapters: selectedChapters.map(
       (chapterID) => chapterNames[Number(chapterID) - 1].name
     ),
     scrollKey: "",
@@ -74,7 +72,7 @@ export function qbSearchRoot(
   const matchVerses: searchResult[] = [];
   const derivations: searchIndexProps[] = [];
 
-  if (searchScope === SEARCH_SCOPE.ALL_CHAPTERS) {
+  if (selectedChapters.length === 114) {
     // occurences array have the verserank1:derivativeIndex1,derivativeIndex2...etc format
     occurencesArray.forEach((item) => {
       const info = item.split(":");
@@ -93,14 +91,7 @@ export function qbSearchRoot(
       derivations.push(...verseDerivations);
       matchVerses.push(verseResult);
     });
-
-    newState.searchingScope = SEARCH_SCOPE.ALL_CHAPTERS;
   } else {
-    newState.searchScope = newState.searchingScope =
-      selectedChapters.length > 1
-        ? SEARCH_SCOPE.MULTIPLE_CHAPTERS
-        : SEARCH_SCOPE.SINGLE_CHAPTER;
-
     occurencesArray.forEach((item) => {
       const info = item.split(":");
       const currentVerse = absoluteQuran[Number(info[0])];

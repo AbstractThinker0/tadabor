@@ -20,8 +20,46 @@
 
       &-list {
         background-color: var(--color-fifth);
+        border: 1px solid gainsboro;
+        max-height: 25vh;
+        min-height: 25vh;
+        overflow-y: scroll;
+        background-color: white;
+        padding: 2px;
+        border-radius: 0.35rem;
         border-top-right-radius: 0;
         border-top-left-radius: 0;
+
+        &-item {
+          padding-left: 14px;
+          padding-right: 14px;
+          cursor: pointer;
+          display: flex;
+
+          &-name {
+            flex-grow: 1;
+            cursor: pointer;
+          }
+
+          &-selected {
+            color: white;
+            background-color: rgb(118, 118, 118);
+          }
+        }
+      }
+
+      &-footer {
+        background-color: rgb(231, 230, 230);
+        &-buttons {
+          display: flex;
+
+          justify-content: center;
+          gap: 1rem;
+          padding: 0.5rem;
+
+          border-bottom-left-radius: 0.3rem;
+          border-bottom-right-radius: 0.3rem;
+        }
       }
     }
 
@@ -32,8 +70,8 @@
     &-roots {
       &-list {
         border: 1px solid gainsboro;
-        max-height: 35vh;
-        min-height: 35vh;
+        max-height: 25vh;
+        min-height: 25vh;
         overflow-y: scroll;
         background-color: white;
         padding: 2px;

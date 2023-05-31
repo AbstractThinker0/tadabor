@@ -9,7 +9,6 @@ import {
 } from "react";
 import {
   SEARCH_METHOD,
-  SEARCH_SCOPE,
   qbActions,
   qbActionsProps,
   searchIndexProps,
@@ -24,7 +23,6 @@ import { IconSelect } from "@tabler/icons-react";
 interface ListSearchResultsProps {
   versesArray: searchResult[];
   searchToken: string;
-  searchingScope: SEARCH_SCOPE;
   searchError: boolean;
   searchMethod: string;
   searchingChapters: string[];
@@ -39,10 +37,10 @@ const ListSearchResults = ({
   searchMethod,
   searchingChapters,
   searchIndexes,
-  searchingScope,
   dispatchQbAction,
 }: ListSearchResultsProps) => {
   const { chapterNames } = useQuran();
+  const { t } = useTranslation();
   const [selectedVerse, setSelectedVerse] = useState("");
 
   const refListVerses = useRef<HTMLDivElement>(null);
@@ -70,12 +68,19 @@ const ListSearchResults = ({
 
   const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
+  if (searchingChapters.length === 0) {
+    return (
+      <h3 className="p-1" dir="auto">
+        {t("select_notice")}
+      </h3>
+    );
+  }
+
   return (
     <>
       <SearchTitle
         searchMethod={searchMethod}
         searchToken={searchToken}
-        searchingScope={searchingScope}
         searchChapters={searchingChapters}
       />
       {isRootSearch && (
@@ -95,7 +100,6 @@ const ListSearchResults = ({
           >
             <SearchVerseComponent
               verse={verse}
-              searchingScope={searchingScope}
               verseChapter={chapterNames[Number(verse.suraid) - 1].name}
               dispatchQbAction={dispatchQbAction}
             />
@@ -112,24 +116,18 @@ ListSearchResults.displayName = "ListSearchResults";
 interface SearchTitleProps {
   searchMethod: string;
   searchToken: string;
-  searchingScope: SEARCH_SCOPE;
   searchChapters: string[];
 }
 
 const SearchTitle = memo(
-  ({
-    searchMethod,
-    searchToken,
-    searchingScope,
-    searchChapters,
-  }: SearchTitleProps) => {
+  ({ searchMethod, searchToken, searchChapters }: SearchTitleProps) => {
     const { t } = useTranslation();
 
     const searchType =
       searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
 
     const searchScopeText =
-      searchingScope === SEARCH_SCOPE.ALL_CHAPTERS
+      searchChapters.length === 114
         ? t("search_chapters_all")
         : t("search_chapters");
 
@@ -152,7 +150,7 @@ const SearchTitle = memo(
     return (
       <div className="browser-display-card-search" dir="auto">
         <h3>{searchText}</h3>
-        {searchingScope !== SEARCH_SCOPE.ALL_CHAPTERS && (
+        {searchChapters.length !== 114 && (
           <ChaptersList searchChapters={searchChapters} />
         )}
       </div>
@@ -205,23 +203,16 @@ DerivationsComponent.displayName = "DerivationsComponent";
 
 interface SearchVerseComponentProps {
   verse: searchResult;
-  searchingScope: SEARCH_SCOPE;
   verseChapter: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SearchVerseComponent = memo(
-  ({
-    verse,
-    searchingScope,
-    verseChapter,
-    dispatchQbAction,
-  }: SearchVerseComponentProps) => {
+  ({ verse, verseChapter, dispatchQbAction }: SearchVerseComponentProps) => {
     return (
       <>
         <VerseContentComponent
           verse={verse}
-          searchingScope={searchingScope}
           verseChapter={verseChapter}
           dispatchQbAction={dispatchQbAction}
         />
@@ -254,22 +245,13 @@ const SearchErrorsComponent = ({
 
 interface VerseContentComponentProps {
   verse: searchResult;
-  searchingScope: SEARCH_SCOPE;
   verseChapter: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseContentComponent = memo(
-  ({
-    verse,
-    searchingScope,
-    verseChapter,
-    dispatchQbAction,
-  }: VerseContentComponentProps) => {
+  ({ verse, verseChapter, dispatchQbAction }: VerseContentComponentProps) => {
     const verse_key = verse.key;
-    const isLinkable =
-      searchingScope === SEARCH_SCOPE.ALL_CHAPTERS ||
-      searchingScope === SEARCH_SCOPE.MULTIPLE_CHAPTERS;
 
     function gotoChapter(chapter: string) {
       dispatchQbAction(qbActions.gotoChapter(chapter));
@@ -283,21 +265,12 @@ const VerseContentComponent = memo(
     return (
       <span className="fs-4">
         <HighlightedText verse={verse} /> (
-        {isLinkable ? (
-          <button
-            className="p-0 border-0 bg-transparent"
-            onClick={() => handleVerseClick(verse_key)}
-          >
-            {`${verseChapter}:${verse.verseid}`}
-          </button>
-        ) : (
-          <button
-            className="p-0 border-0 bg-transparent"
-            onClick={() => handleVerseClick(verse_key)}
-          >
-            {verse.verseid}
-          </button>
-        )}
+        <button
+          className="p-0 border-0 bg-transparent"
+          onClick={() => handleVerseClick(verse_key)}
+        >
+          {`${verseChapter}:${verse.verseid}`}
+        </button>
         )
         <button
           className="btn"
