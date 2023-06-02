@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -28,18 +28,23 @@ const TextForm = ({
   isEditable,
   handleEditClick,
   handleInputSubmit,
-  className,
+  className = "",
   targetID,
 }: TextFormProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const collapseElement = collapseRef.current;
+
+    if (!collapseElement) return;
+
     function onShownCollapse(event: Event) {
       event.stopPropagation();
 
-      if (collapseRef.current?.parentElement)
-        collapseRef.current.parentElement.scrollIntoView({
+      if (!collapseElement) return;
+
+      if (collapseElement.parentElement)
+        collapseElement.parentElement.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
         });
@@ -49,28 +54,31 @@ const TextForm = ({
       event.stopPropagation();
     }
 
-    if (collapseElement !== null) {
-      collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
-      collapseElement.addEventListener("hidden.bs.collapse", onHiddenCollapse);
-    }
+    collapseElement.addEventListener("shown.bs.collapse", onShownCollapse);
+    collapseElement.addEventListener("hidden.bs.collapse", onHiddenCollapse);
 
     return () => {
-      if (collapseElement !== null) {
-        collapseElement.removeEventListener(
-          "shown.bs.collapse",
-          onShownCollapse
-        );
-        collapseElement.removeEventListener(
-          "hidden.bs.collapse",
-          onHiddenCollapse
-        );
-      }
+      collapseElement.removeEventListener("shown.bs.collapse", onShownCollapse);
+      collapseElement.removeEventListener(
+        "hidden.bs.collapse",
+        onHiddenCollapse
+      );
     };
   }, []);
 
+  const handleEditButtonClick = (key: string) => {
+    handleEditClick(key);
+
+    if (collapseRef.current)
+      collapseRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+  };
+
   return (
     <div
-      className={className ? className.concat(" collapse") : "collapse"}
+      className={`collapse ${className}`}
       id={`collapseExample${targetID ? targetID : inputKey}`}
       ref={collapseRef}
     >
@@ -79,7 +87,7 @@ const TextForm = ({
           {isEditable === false ? (
             <TextComponent
               inputValue={inputValue}
-              handleEditButtonClick={handleEditClick}
+              handleEditButtonClick={handleEditButtonClick}
               inputKey={inputKey}
               inputDirection={inputDirection}
               textClassname="p-2 border border-1 border-success rounded"
@@ -168,7 +176,7 @@ const TextEditButton = ({
   }
 
   return (
-    <div className={"text-center ".concat(className)}>
+    <div className={`text-center ${className}`}>
       <button
         name={inputKey}
         onClick={onClickEditButton}
@@ -239,21 +247,14 @@ const FormComponent = ({
   bodyClassname = "",
   saveClassname = "",
 }: FormComponentProps) => {
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (formRef.current !== null)
-      formRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, []);
-
   function onSubmitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     handleInputSubmit(inputKey, inputValue);
   }
 
   return (
-    <form ref={formRef} name={inputKey} onSubmit={onSubmitForm}>
-      <div className={"form-group ".concat(bodyClassname)}>
+    <form name={inputKey} onSubmit={onSubmitForm}>
+      <div className={`form-group ${bodyClassname}`}>
         <TextareaToolbar
           inputKey={inputKey}
           handleSetDirection={handleSetDirection}
@@ -274,7 +275,7 @@ const FormSaveButton = ({ className = "" }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={"text-center ".concat(className)}>
+    <div className={`text-center ${className}`}>
       <input
         type="submit"
         value={t("text_save")}
@@ -282,6 +283,28 @@ const FormSaveButton = ({ className = "" }) => {
       />
     </div>
   );
+};
+
+const HIDDEN_TEXTAREA_STYLE = {
+  "min-height": "0",
+  "max-height": "none",
+  height: "0",
+  visibility: "hidden",
+  overflow: "hidden",
+  position: "absolute",
+  "z-index": "-1000",
+  top: "0",
+  right: "0",
+} as const;
+
+const forceHiddenStyles = (node: HTMLElement) => {
+  Object.keys(HIDDEN_TEXTAREA_STYLE).forEach((key) => {
+    node.style.setProperty(
+      key,
+      HIDDEN_TEXTAREA_STYLE[key as keyof typeof HIDDEN_TEXTAREA_STYLE],
+      "important"
+    );
+  });
 };
 
 interface TextAreaProps {
@@ -297,18 +320,42 @@ const TextAreaComponent = ({
   inputDirection,
   handleInputChange,
 }: TextAreaProps) => {
-  const minRows = 4;
-  const extraRows = 3;
-  const [rows, setRows] = useState(minRows);
+  const refTextarea = useRef<HTMLTextAreaElement>(null);
+  const refHidden = useRef<HTMLTextAreaElement>();
+
+  const minSize = 100;
+  const extraSize = 10;
+
+  // Desc: create a hidden clone to use it for height calculations to apply a smooth resize on the original element
+  // TODO: an optimization is to create a global element to handle all height calculations instead of creating a dedicated clone for every textarea element
+  useEffect(() => {
+    if (!refTextarea.current) return;
+    if (!refHidden.current) {
+      refHidden.current =
+        refTextarea.current.cloneNode() as HTMLTextAreaElement;
+      refHidden.current.setAttribute("tabindex", "-1");
+      refHidden.current.setAttribute("aria-hidden", "true");
+      forceHiddenStyles(refHidden.current);
+      if (refTextarea.current.parentElement)
+        refTextarea.current.parentElement.appendChild(refHidden.current);
+    }
+  }, []);
 
   useEffect(() => {
-    const rowlen = inputValue.split("\n").length;
+    const elementTextarea = refTextarea.current;
+    const hiddenElement = refHidden.current;
 
-    if (rowlen >= minRows) {
-      setRows(rowlen + extraRows);
-    } else {
-      setRows(minRows);
-    }
+    if (!elementTextarea || !hiddenElement) return;
+
+    // Give the hidden element our input and apply a height to update scrollHeight to match content height
+    hiddenElement.value = inputValue;
+    hiddenElement.style.height = "auto";
+
+    // We want to make sure that our element auto-resize to match the height of it's content
+    elementTextarea.style.height =
+      (hiddenElement.scrollHeight < minSize
+        ? minSize
+        : hiddenElement.scrollHeight + extraSize) + "px";
   }, [inputValue]);
 
   function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -317,13 +364,13 @@ const TextAreaComponent = ({
 
   return (
     <textarea
+      ref={refTextarea}
       className="form-control  mb-2"
       id="textInput"
       placeholder="أدخل كتاباتك"
       name={inputKey}
       value={inputValue}
       onChange={onChangeInput}
-      rows={rows}
       dir={inputDirection}
       required
     />
