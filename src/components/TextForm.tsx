@@ -285,6 +285,8 @@ const FormSaveButton = ({ className = "" }) => {
   );
 };
 
+// snippet below  is from https://github.com/Andarist/react-textarea-autosize
+
 const HIDDEN_TEXTAREA_STYLE = {
   "min-height": "0",
   "max-height": "none",
