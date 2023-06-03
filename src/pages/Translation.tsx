@@ -1,10 +1,19 @@
-import React, { useState, useEffect, useCallback, memo } from "react";
+import {
+  useState,
+  useCallback,
+  memo,
+  Fragment,
+  useRef,
+  useEffect,
+} from "react";
 import useQuran from "../context/QuranContext";
 
 import { dbFuncs } from "../util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { TextAreaComponent } from "../components/TextForm";
+import { selectTranslation, useAppDispatch, useAppSelector } from "../store";
+import { translationsActions } from "../store/translationsReducer";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
@@ -50,15 +59,15 @@ const SelectionListChapters = ({
   }
 
   return (
-    <div className="side col-sm-3 border-start justify-content-center">
-      <div className="side-chapters container mt-2 w-75">
+    <div className="side border-start justify-content-center">
+      <div className="side-chapters container mt-2">
         <h4 className="side-chapters-title">{t("roots_list")}</h4>
         <input
           className="side-chapters-input form-control"
           type="search"
           value={chapterSearch}
           onChange={onChangeInput}
-          placeholder=""
+          placeholder={chapterNames[selectChapter - 1].name}
           aria-label="Search"
           dir="rtl"
         />
@@ -88,95 +97,19 @@ interface DisplayPanelProps {
 }
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
-  interface translationsType {
-    [key: string]: string;
-  }
-
-  interface markedTranslationsType {
-    [key: string]: boolean;
-  }
-
   const { allQuranText, chapterNames } = useQuran();
-  const { t } = useTranslation();
-  const [loadingState, setLoadingState] = useState(true);
-  const [versesTranslation, setVersesTranslation] = useState<translationsType>(
-    {}
-  );
-  const [editableTranslations, setEditableTranslations] =
-    useState<markedTranslationsType>({});
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      const userTranslations = await dbFuncs.loadTranslations();
-
-      if (clientLeft) return;
-
-      const extractTranslations: translationsType = {};
-      const markedTranslations: markedTranslationsType = {};
-      userTranslations.forEach((trans) => {
-        extractTranslations[trans.id] = trans.text;
-        markedTranslations[trans.id] = false;
-      });
-
-      setVersesTranslation(extractTranslations);
-      setEditableTranslations(markedTranslations);
-
-      setLoadingState(false);
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
+  const refDisplay = useRef<HTMLDivElement>(null);
 
   const displayVerses = allQuranText[selectChapter - 1].verses;
 
-  const handleInputChange = (inputKey: string, value: string) => {
-    setVersesTranslation((state) => {
-      return { ...state, [inputKey]: value };
-    });
-  };
+  useEffect(() => {
+    if (!refDisplay.current) return;
 
-  const memoHandleInputChange = useCallback(handleInputChange, []);
-
-  const handleEditClick = (inputKey: string) => {
-    setEditableTranslations((state) => {
-      return { ...state, [inputKey]: true };
-    });
-  };
-
-  const memoHandleEditClick = useCallback(handleEditClick, []);
-
-  function handleInputSubmit(inputKey: string, inputValue: string) {
-    setEditableTranslations((state) => {
-      return { ...state, [inputKey]: false };
-    });
-
-    dbFuncs
-      .saveTranslation({
-        id: inputKey,
-        text: inputValue,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function () {
-        toast.success(t("save_success") as string);
-      })
-      .catch(function () {
-        toast.success(t("save_failed") as string);
-      });
-  }
-
-  const memoHandleInputSubmit = useCallback(handleInputSubmit, [t]);
-
-  if (loadingState) return <LoadingSpinner />;
+    refDisplay.current.scrollTop = 0;
+  }, [selectChapter]);
 
   return (
-    <div className="translation-display">
+    <div ref={refDisplay} className="translation-display">
       <div className="card translation-display-card">
         <div className="card-header">
           <h2 className="pb-2 text-primary text-center">
@@ -186,17 +119,12 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
         <div className="card-body p-1">
           {displayVerses.map((verse) => {
             return (
-              <VerseComponent
-                key={verse.key}
-                isEditable={editableTranslations[verse.key]}
-                verse_key={verse.key}
-                verse_text={verse.versetext}
-                verse_id={verse.verseid}
-                verse_trans={versesTranslation[verse.key]}
-                handleEditClick={memoHandleEditClick}
-                handleInputChange={memoHandleInputChange}
-                handleInputSubmit={memoHandleInputSubmit}
-              />
+              <Fragment key={verse.key}>
+                <p className="fs-4 mb-0" dir="rtl">
+                  {verse.versetext} ({verse.verseid})
+                </p>
+                <TransComponent verse_key={verse.key} />
+              </Fragment>
             );
           })}
         </div>
@@ -205,56 +133,82 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   );
 };
 
-interface VerseComponentProps {
-  isEditable: boolean;
+interface TransComponentProps {
   verse_key: string;
-  verse_text: string;
-  verse_id: string;
-  verse_trans: string;
-  handleInputChange: (inputKey: string, value: string) => void;
-  handleEditClick: (inputKey: string) => void;
-  handleInputSubmit: (inputKey: string, inputValue: string) => void;
 }
 
-const VerseComponent = memo(
-  ({
-    isEditable,
-    verse_key,
-    verse_text,
-    verse_id,
-    verse_trans,
-    handleEditClick,
-    handleInputChange,
-    handleInputSubmit,
-  }: VerseComponentProps) => {
-    return (
-      <>
-        <p className="fs-4 mb-0" dir="rtl">
-          {verse_text} ({verse_id})
-        </p>
-        {isEditable === false ? (
-          <Versetext
-            inputKey={verse_key}
-            inputValue={verse_trans}
-            handleEditClick={handleEditClick}
-          />
-        ) : (
-          <Versearea
-            inputKey={verse_key}
-            inputValue={verse_trans}
-            handleInputChange={handleInputChange}
-            handleInputSubmit={handleInputSubmit}
-          />
-        )}
-      </>
-    );
-  }
-);
+const TransComponent = memo(({ verse_key }: TransComponentProps) => {
+  const { t } = useTranslation();
+
+  const dispatch = useAppDispatch();
+
+  const verse_trans = useAppSelector(selectTranslation(verse_key));
+
+  const [stateEditable, setStateEditable] = useState(
+    verse_trans ? false : true
+  );
+
+  const handleEditClick = useCallback(() => {
+    setStateEditable(true);
+  }, []);
+
+  const handleInputSubmit = useCallback(
+    (inputKey: string, inputValue: string) => {
+      setStateEditable(false);
+
+      dbFuncs
+        .saveTranslation({
+          id: inputKey,
+          text: inputValue,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
+    },
+    [t]
+  );
+
+  const handleInputChange = useCallback(
+    (inputKey: string, value: string) => {
+      dispatch(
+        translationsActions.changeTranslation({
+          name: inputKey,
+          value: value,
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  return (
+    <>
+      {stateEditable === false ? (
+        <Versetext
+          inputKey={verse_key}
+          inputValue={verse_trans}
+          handleEditClick={handleEditClick}
+        />
+      ) : (
+        <Versearea
+          inputKey={verse_key}
+          inputValue={verse_trans}
+          handleInputChange={handleInputChange}
+          handleInputSubmit={handleInputSubmit}
+        />
+      )}
+    </>
+  );
+});
 
 interface VersetextProps {
   inputValue: string;
   inputKey: string;
-  handleEditClick: (inputKey: string) => void;
+  handleEditClick: () => void;
 }
 
 const Versetext = ({
@@ -264,14 +218,16 @@ const Versetext = ({
 }: VersetextProps) => {
   const { t } = useTranslation();
 
-  function onClickEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    handleEditClick(inputKey);
+  function onClickEdit() {
+    handleEditClick();
   }
 
   return (
     <div className="p-2">
       <div className="border p-1 translation-display-card-trans-text">
-        <p dir="ltr">{inputValue}</p>
+        <p style={{ whiteSpace: "pre-wrap" }} dir="ltr">
+          {inputValue}
+        </p>
       </div>
       <div className="text-center">
         <button
@@ -301,23 +257,17 @@ const Versearea = ({
 }: VerseareaProps) => {
   const { t } = useTranslation();
 
-  function onChangeTextarea(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    handleInputChange(inputKey, event.target.value);
-  }
-
-  function onClickSave(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function onClickSave() {
     handleInputSubmit(inputKey, inputValue);
   }
 
   return (
     <div className="p-2" dir="ltr">
-      <textarea
-        className="form-control"
-        id="textInput"
-        name={inputKey}
-        value={inputValue}
-        onChange={onChangeTextarea}
-        required
+      <TextAreaComponent
+        inputKey={inputKey}
+        inputValue={inputValue}
+        placeholder="Enter your text."
+        handleInputChange={handleInputChange}
       />
       <div className="text-center">
         <button
