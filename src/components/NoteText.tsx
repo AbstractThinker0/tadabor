@@ -1,6 +1,6 @@
 import { memo, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../store";
+import { selectNote, useAppDispatch, useAppSelector } from "../store";
 import { notesActions } from "../store/notesReducer";
 import { dbFuncs } from "../util/db";
 import { toast } from "react-toastify";
@@ -14,7 +14,7 @@ interface NoteTextProps {
 
 const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const { t } = useTranslation();
-  const currentNote = useAppSelector((state) => state.notes[verseKey]);
+  const currentNote = useAppSelector(selectNote(verseKey));
   const dispatch = useAppDispatch();
 
   const handleNoteChange = useCallback(
