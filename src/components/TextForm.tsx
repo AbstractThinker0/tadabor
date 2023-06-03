@@ -312,16 +312,20 @@ const forceHiddenStyles = (node: HTMLElement) => {
 interface TextAreaProps {
   inputKey: string;
   inputValue: string;
-  inputDirection: string;
+  inputDirection?: string;
   handleInputChange: (key: string, value: string) => void;
+  placeholder?: string;
 }
 
 const TextAreaComponent = ({
   inputKey,
   inputValue,
-  inputDirection,
+  inputDirection = "",
+  placeholder,
   handleInputChange,
 }: TextAreaProps) => {
+  const { t } = useTranslation();
+
   const refTextarea = useRef<HTMLTextAreaElement>(null);
   const refHidden = useRef<HTMLTextAreaElement>();
 
@@ -367,9 +371,9 @@ const TextAreaComponent = ({
   return (
     <textarea
       ref={refTextarea}
-      className="form-control  mb-2"
+      className="form-control mb-2"
       id="textInput"
-      placeholder="أدخل كتاباتك"
+      placeholder={placeholder ? placeholder : t("text_form")}
       name={inputKey}
       value={inputValue}
       onChange={onChangeInput}
@@ -379,4 +383,4 @@ const TextAreaComponent = ({
   );
 };
 
-export { TextForm, FormComponent, TextComponent };
+export { TextForm, FormComponent, TextComponent, TextAreaComponent };
