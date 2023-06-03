@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 import useQuran from "../context/QuranContext";
 import { useTranslation } from "react-i18next";
 import { FormComponent, TextComponent } from "../components/TextForm";
-import { useAppDispatch, useAppSelector } from "../store";
+import { getAllNotes, useAppDispatch, useAppSelector } from "../store";
 import { notesActions } from "../store/notesReducer";
 import { NoteProp } from "../types";
 
 function YourNotes() {
   const { t } = useTranslation();
-  const myNotes = useAppSelector((state) => state.notes);
+  const myNotes = useAppSelector(getAllNotes());
 
   return (
     <div className="yournotes p-2">
