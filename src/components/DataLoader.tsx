@@ -1,8 +1,9 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { dbFuncs } from "../util/db";
 import { useAppDispatch } from "../store";
-import { UserNotesType, notesDirectionType } from "../types";
+import { UserNotesType, notesDirectionType, translationsType } from "../types";
 import { notesActions } from "../store/notesReducer";
+import { translationsActions } from "../store/translationsReducer";
 import LoadingSpinner from "./LoadingSpinner";
 
 function DataLoader({ children }: PropsWithChildren) {
@@ -36,6 +37,19 @@ function DataLoader({ children }: PropsWithChildren) {
       });
 
       dispatch(notesActions.notesLoaded(fetchedNotes));
+
+      const userTranslations = await dbFuncs.loadTranslations();
+
+      if (clientLeft) return;
+
+      const extractTranslations: translationsType = {};
+
+      userTranslations.forEach((trans) => {
+        extractTranslations[trans.id] = trans.text;
+      });
+
+      dispatch(translationsActions.translationsLoaded(extractTranslations));
+
       setIsLoading(false);
     }
 
