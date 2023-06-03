@@ -174,10 +174,10 @@ const TransComponent = memo(({ verse_key }: TransComponentProps) => {
   );
 
   const handleInputChange = useCallback(
-    (inputKey: string, value: string) => {
+    (key: string, value: string) => {
       dispatch(
         translationsActions.changeTranslation({
-          name: inputKey,
+          name: key,
           value: value,
         })
       );
@@ -245,7 +245,7 @@ const Versetext = ({
 interface VerseareaProps {
   inputKey: string;
   inputValue: string;
-  handleInputChange: (inputKey: string, value: string) => void;
+  handleInputChange: (key: string, value: string) => void;
   handleInputSubmit: (inputKey: string, inputValue: string) => void;
 }
 
