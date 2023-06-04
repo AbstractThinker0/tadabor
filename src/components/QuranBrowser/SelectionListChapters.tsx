@@ -88,8 +88,7 @@ const SelectionListChapters = memo(
     const getSelectedCount = selectedChapters.length;
 
     const onlyCurrentSelected =
-      selectedChapters.length === 1 &&
-      Number(selectedChapters[0]) === currentChapter;
+      getSelectedCount === 1 && Number(selectedChapters[0]) === currentChapter;
 
     return (
       <div className="container mb-2 p-0 browser-search-chapter">
