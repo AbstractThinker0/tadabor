@@ -27,6 +27,7 @@ i18n
           nav_translation: "Translation",
           nav_tags: "Tags",
           nav_inspector: "Inspector",
+          nav_comparator: "Comparator",
           search_method: "Search method: ",
           search_root: "Root",
           search_word: "Word",
@@ -55,6 +56,7 @@ i18n
           search_scope: "Search scope",
           select_notice:
             "You have to select at least one chapter to initiate a search.",
+          text_form: "Enter your text",
         },
       },
       ar: {
@@ -70,6 +72,7 @@ i18n
           nav_translation: "الترجمة",
           nav_tags: "العناوين",
           nav_inspector: "المتفحِص",
+          nav_comparator: "المقارن",
           search_method: "طريقة البحث: ",
           search_root: "جذر",
           search_word: "كلمة",
@@ -97,6 +100,7 @@ i18n
           current_chapter: "السورة الحالية",
           search_scope: "نطاق البحث",
           select_notice: "يجب عليك اختيار سورة واحد على الأقل لبدء البحث.",
+          text_form: "أدخل كتاباتك",
         },
       },
     },

@@ -11,6 +11,18 @@ export type verseProps = {
   versetext: string;
 };
 
+export interface RankedVerseProps {
+  key: string;
+  suraid: string;
+  verseid: string;
+  versetext: string;
+  rank: number;
+}
+
+export interface translationsProps {
+  [key: string]: verseProps[];
+}
+
 export interface quranProps {
   id: number;
   verses: verseProps[];

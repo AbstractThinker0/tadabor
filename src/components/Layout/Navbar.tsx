@@ -64,6 +64,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/comparator">
+                {t("nav_comparator")}
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/about">
                 {t("nav_about")}
               </Link>
