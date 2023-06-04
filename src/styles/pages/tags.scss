@@ -7,10 +7,14 @@
 
   &-side {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 
     &-chapters {
+      display: flex;
+      flex-direction: column;
       border: 1px solid gainsboro;
-      max-height: 40vh;
+      max-height: 40%;
       min-width: 200px;
       overflow-y: scroll;
       background-color: white;
@@ -45,6 +49,10 @@
     }
 
     &-list {
+      display: flex;
+      flex-direction: column;
+      min-height: 40%;
+      max-height: 50%;
       margin-top: 1rem;
       padding: 16px;
       background-color: rgba(0, 0, 0, 0.03);
@@ -56,7 +64,6 @@
         gap: 5px;
         max-width: 300px;
         cursor: pointer;
-        max-height: 300px;
         overflow-y: auto;
 
         &-item {
@@ -80,6 +87,7 @@
 
       &-btn {
         margin-top: 10px;
+        width: 100px;
       }
     }
   }

@@ -42,7 +42,7 @@ const SelectionListRoots = memo(
     );
 
     return (
-      <div className="container mt-2 p-0">
+      <div className="container browser-search-roots mt-2 p-0">
         <div
           className={`browser-search-roots-list ${
             isDisabled ? "browser-search-roots-list-disabled" : ""

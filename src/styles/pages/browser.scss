@@ -9,8 +9,15 @@
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
+    display: flex;
+    flex-direction: column;
 
     &-chapter {
+      display: flex;
+      flex-direction: column;
+      min-height: 35%;
+      max-height: 35%;
+
       &-input {
         background-color: var(--color-fifth);
         border-bottom: none;
@@ -19,10 +26,9 @@
       }
 
       &-list {
+        flex-grow: 1;
         background-color: var(--color-fifth);
         border: 1px solid gainsboro;
-        max-height: 25vh;
-        min-height: 25vh;
         overflow-y: scroll;
         background-color: white;
         padding: 2px;
@@ -68,10 +74,16 @@
     }
 
     &-roots {
+      flex-grow: 1;
+      margin-bottom: 10px;
+      min-height: 20%;
+      max-height: 35%;
+      display: flex;
+      flex-direction: column;
+
       &-list {
+        min-height: 100%;
         border: 1px solid gainsboro;
-        max-height: 25vh;
-        min-height: 25vh;
         overflow-y: scroll;
         background-color: white;
         padding: 2px;

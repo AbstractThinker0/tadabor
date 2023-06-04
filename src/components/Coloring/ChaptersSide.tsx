@@ -138,29 +138,29 @@ function ChaptersSide({
   }
 
   return (
-    <div className="chapters-side">
-      <div className="chapter-block">
+    <div className="side">
+      <div className="side-chapters">
         <input
-          className="chapter-search"
+          className="side-chapters-search"
           type="text"
           placeholder={chapterNames[currentChapter - 1].name}
           value={chapterToken}
           onChange={onChangeChapterToken}
         />
-        <div className="chapter-list">
+        <div className="side-chapters-list">
           {chapterNames
             .filter((chapter) => chapter.name.includes(chapterToken))
             .map((chapter) => (
               <div
                 key={chapter.id}
-                className={`chapter-list-item ${
+                className={`side-chapters-list-item ${
                   currentChapter === chapter.id
-                    ? "chapter-list-item-selected"
+                    ? "side-chapters-list-item-selected"
                     : ""
                 }`}
               >
                 <div
-                  className="chapter-list-item-name"
+                  className="side-chapters-list-item-name"
                   onClick={(event) => onClickChapter(event, chapter.id)}
                 >
                   {chapter.name}
@@ -178,7 +178,7 @@ function ChaptersSide({
               </div>
             ))}
         </div>
-        <div className="chapter-block-buttons" dir="ltr">
+        <div className="side-chapters-buttons" dir="ltr">
           <button
             disabled={getSelectedCount() === 114}
             onClick={onClickSelectAll}
@@ -195,16 +195,16 @@ function ChaptersSide({
           </button>
         </div>
       </div>
-      <div className="chapters-side-colors-block">
+      <div className="side-colors">
         <div className="text-center" dir="ltr">
           Colors list:
         </div>
         {Object.keys(colorsList).length > 0 && (
-          <div className="chapters-side-colors" dir="ltr">
+          <div className="side-colors-list" dir="ltr">
             {Object.keys(colorsList).map((colorID) => (
               <div
                 key={colorsList[colorID].colorID}
-                className="chapters-side-colors-item text-center rounded mb-1"
+                className="side-colors-list-item text-center rounded mb-1"
                 style={{
                   backgroundColor: colorsList[colorID].colorCode,
                   color: getTextColor(colorsList[colorID].colorCode),
@@ -217,7 +217,7 @@ function ChaptersSide({
                   🗑️
                 </div>
                 <div
-                  className="flex-grow-1 chapters-side-colors-item-text"
+                  className="flex-grow-1 side-colors-list-item-text"
                   onClick={() => onClickSelectColor(colorsList[colorID])}
                 >
                   {colorsList[colorID].colorDisplay}
