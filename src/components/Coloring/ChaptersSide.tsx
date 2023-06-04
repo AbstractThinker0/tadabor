@@ -7,6 +7,7 @@ import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
 import { dbFuncs } from "../../util/db";
 import { selectedChaptersType } from "../../types";
+import { useTranslation } from "react-i18next";
 
 interface ChaptersSideProps {
   currentChapter: number;
@@ -28,6 +29,7 @@ function ChaptersSide({
   dispatchClAction,
 }: ChaptersSideProps) {
   const { chapterNames } = useQuran();
+  const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
 
   function onClickChapter(
@@ -128,14 +130,20 @@ function ChaptersSide({
       selectedChapters[chapter.id] = false;
     });
 
+    selectedChapters[currentChapter] = true;
+
     dispatchClAction(clActions.setSelectedChapters(selectedChapters));
   }
 
-  function getSelectedCount() {
-    return Object.keys(selectedChapters).filter(
-      (chapterID) => selectedChapters[chapterID] === true
-    ).length;
-  }
+  const currentSelectedChapters = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
+  );
+
+  const getSelectedCount = currentSelectedChapters.length;
+
+  const onlyCurrentSelected =
+    getSelectedCount === 1 &&
+    Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
     <div className="side">
@@ -180,18 +188,18 @@ function ChaptersSide({
         </div>
         <div className="side-chapters-buttons" dir="ltr">
           <button
-            disabled={getSelectedCount() === 114}
+            disabled={getSelectedCount === 114}
             onClick={onClickSelectAll}
             className="btn btn-dark btn-sm"
           >
-            Select all
+            {t("all_chapters")}
           </button>
           <button
-            disabled={getSelectedCount() === 0}
+            disabled={onlyCurrentSelected}
             onClick={onClickDeselectAll}
             className="btn btn-dark btn-sm"
           >
-            Deselect all
+            {t("current_chapter")}
           </button>
         </div>
       </div>
