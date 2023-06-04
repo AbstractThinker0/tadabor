@@ -11,6 +11,7 @@ import {
 } from "./consts";
 import useQuran from "../../context/QuranContext";
 import { dbFuncs } from "../../util/db";
+import { useTranslation } from "react-i18next";
 
 interface TagsSideProps {
   currentChapter: number;
@@ -32,6 +33,7 @@ function TagsSide({
   dispatchTagsAction,
 }: TagsSideProps) {
   const { chapterNames } = useQuran();
+  const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -68,11 +70,15 @@ function TagsSide({
     dispatchTagsAction(tagsActions.toggleSelectChapter(chapterID));
   }
 
-  function getSelectedCount() {
-    return Object.keys(selectedChapters).filter(
-      (chapterID) => selectedChapters[chapterID] === true
-    ).length;
-  }
+  const currentSelectedChapters = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
+  );
+
+  const getSelectedCount = currentSelectedChapters.length;
+
+  const onlyCurrentSelected =
+    getSelectedCount === 1 &&
+    Number(currentSelectedChapters[0]) === currentChapter;
 
   function onClickSelectAll() {
     const selectedChapters: selectedChaptersType = {};
@@ -90,6 +96,8 @@ function TagsSide({
     chapterNames.forEach((chapter) => {
       selectedChapters[chapter.id] = false;
     });
+
+    selectedChapters[currentChapter] = true;
 
     dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
   }
@@ -158,18 +166,18 @@ function TagsSide({
       </div>
       <div className="tags-side-chapters-buttons" dir="ltr">
         <button
-          disabled={getSelectedCount() === 114}
+          disabled={getSelectedCount === 114}
           onClick={onClickSelectAll}
           className="btn btn-dark btn-sm"
         >
-          Select all
+          {t("all_chapters")}
         </button>
         <button
-          disabled={getSelectedCount() === 0}
+          disabled={onlyCurrentSelected}
           onClick={onClickDeselectAll}
           className="btn btn-dark btn-sm"
         >
-          Deselect all
+          {t("current_chapter")}
         </button>
       </div>
       <div className="tags-side-list" dir="ltr">
