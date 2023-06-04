@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import NoteText from "../NoteText";
 import { IconSelect } from "@tabler/icons-react";
@@ -53,6 +53,7 @@ const Display = ({
 
   return (
     <div className="card display">
+      <TransAlert />
       <div className="card-header text-center text-primary fs-4">
         سورة {chapterNames[Number(currentChapter) - 1].name}
       </div>
@@ -101,6 +102,44 @@ const Display = ({
         ))}
       </div>
     </div>
+  );
+};
+
+const TransAlert = () => {
+  const localStorageTransKey = "transNotified";
+
+  const [transNotified, setTransNotified] = useState(
+    localStorage.getItem(localStorageTransKey) !== null
+  );
+
+  function onClickCloseAlert() {
+    localStorage.setItem(localStorageTransKey, "true");
+    setTransNotified(true);
+  }
+
+  return (
+    <>
+      {!transNotified && (
+        <div
+          className="alert alert-info alert-dismissible fade show"
+          role="alert"
+        >
+          <strong>Note:</strong> Translations may not always fully capture the
+          original meaning of the text. They are sincere attempts by their
+          authors to comprehend the text based on their abilities and knowledge.
+          Additionally, the accuracy of the translated version is inevitably
+          influenced by semantic changes made to the original text prior to
+          translation.
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+            onClick={onClickCloseAlert}
+          ></button>
+        </div>
+      )}
+    </>
   );
 };
 
