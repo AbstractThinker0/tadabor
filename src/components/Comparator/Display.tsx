@@ -123,6 +123,7 @@ const TransAlert = () => {
         <div
           className="alert alert-info alert-dismissible fade show"
           role="alert"
+          dir="auto"
         >
           <strong>Note:</strong> Translations may not always fully capture the
           original meaning of the text. They are sincere attempts by their
