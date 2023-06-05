@@ -10,6 +10,15 @@ import {
 import LoadingSpinner from "../components/LoadingSpinner";
 import { chapterProps, quranProps, rootProps, verseProps } from "../types";
 
+// An axios instance that fetches data and cache it for long duration
+const fetchJsonPerm = axios.create({
+  baseURL: "/res",
+  headers: {
+    "Content-Type": "application/json",
+    "Cache-Control": `max-age=31536000, immutable`,
+  },
+});
+
 type QuranContent = {
   chapterNames: chapterProps[];
   allQuranText: quranProps[];
@@ -35,16 +44,9 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     let clientLeft = false;
 
-    fetchData();
-
     async function fetchData() {
       try {
-        let response = await axios.get("/res/chapters.json", {
-          headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": `max-age=31536000, immutable`,
-          },
-        });
+        let response = await fetchJsonPerm.get("/chapters.json");
 
         if (clientLeft) return;
 
@@ -52,12 +54,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
           chapterNames.current = response.data;
         }
 
-        response = await axios.get("/res/quran_v2.json", {
-          headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": `max-age=31536000, immutable`,
-          },
-        });
+        response = await fetchJsonPerm.get("/quran_v2.json");
 
         if (clientLeft) return;
 
@@ -73,37 +70,12 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
           });
         }
 
-        response = await axios.get("/res/quran-root.txt", {
-          headers: {
-            "Content-Type": "text/plain",
-            "Cache-Control": `max-age=31536000, immutable`,
-          },
-        });
+        response = await fetchJsonPerm.get("/quranRoots.json");
 
         if (clientLeft) return;
 
         if (!quranRoots.current.length) {
-          let index = 0;
-          const arrayOfLines = response.data.split("\n");
-
-          arrayOfLines.forEach((line: string) => {
-            if (line[0] === "#" || line[0] === "\r") {
-              return;
-            }
-
-            const lineArgs = line.split(/[\r\n\t]+/g);
-
-            const occurences = lineArgs[2].split(";");
-
-            quranRoots.current.push({
-              id: index,
-              name: lineArgs[0],
-              count: lineArgs[1],
-              occurences: occurences,
-            });
-
-            index++;
-          });
+          quranRoots.current = response.data;
         }
       } catch (error) {
         fetchData();
@@ -112,6 +84,8 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
       setIsLoading(false);
     }
+
+    fetchData();
 
     return () => {
       clientLeft = true;
