@@ -160,3 +160,20 @@
     background-color: bisque;
   }
 }
+
+@media (max-width: 800px) {
+  .browser {
+    &-search {
+      
+      &-chapter {
+        min-height: 35vh;
+        max-height: 35vh;
+      }
+
+      &-roots {
+        min-height: 20vh;
+        max-height: 35vh;
+      }
+    }
+  }
+}
