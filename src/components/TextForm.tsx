@@ -278,7 +278,7 @@ const FormSaveButton = ({ className = "" }) => {
     <div className={`text-center ${className}`}>
       <input
         type="submit"
-        value={t("text_save")}
+        value={t("text_save") as string}
         className="btn btn-success btn-sm"
       />
     </div>
@@ -373,7 +373,7 @@ const TextAreaComponent = ({
       ref={refTextarea}
       className="form-control mb-2"
       id="textInput"
-      placeholder={placeholder ? placeholder : t("text_form")}
+      placeholder={placeholder ? placeholder : (t("text_form") as string)}
       name={inputKey}
       value={inputValue}
       onChange={onChangeInput}
