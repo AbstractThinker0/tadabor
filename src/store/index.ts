@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import notesReducer from "./notesReducer";
 import translationsReducer from "./translationsReducer";
+import dataReducer from "./dataReducer";
 
 const store = configureStore({
   reducer: {
     notes: notesReducer,
     translations: translationsReducer,
+    data: dataReducer,
   },
 });
 

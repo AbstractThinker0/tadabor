@@ -1,67 +1,32 @@
 import { useEffect, useState } from "react";
-import { RankedVerseProps, verseProps } from "../types";
-import axios from "axios";
+import { RankedVerseProps, translationsProps } from "../types";
 import useQuran from "../context/QuranContext";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 import Display from "../components/Comparator/Display";
 import Menu from "../components/Comparator/Menu";
-
-// An axios instance that fetches data and cache it for long duration
-const fetchJsonPerm = axios.create({
-  baseURL: "/res",
-  headers: {
-    "Content-Type": "application/json",
-    "Cache-Control": `max-age=31536000, immutable`,
-  },
-});
-
-interface transListProps {
-  [key: string]: { url: string };
-}
-
-const transList: transListProps = {
-  "Muhammad Asad": { url: "/trans/Muhammad Asad.json" },
-  "The Monotheist Group": { url: "/trans/The Monotheist Group.json" },
-};
+import { useAppDispatch, useAppSelector } from "../store";
+import { fetchAllData } from "../store/dataReducer";
 
 function Comparator() {
   const { absoluteQuran } = useQuran();
-  const [stateLoading, setStateLoading] = useState(true);
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
+  const { loading, data, complete, error } = useAppSelector(
+    (state) => state.data
+  );
+  const dispatch = useAppDispatch();
 
-  interface translationsProps {
-    [key: string]: verseProps[];
-  }
-
-  const [stateTrans, setStateTrans] = useState<translationsProps>({});
+  const [stateTrans, setStateTrans] = useState<translationsProps>(data);
 
   useEffect(() => {
-    let clientLeft = false;
-
-    async function fetchData() {
-      const transData: translationsProps = {};
-
-      for (const key of Object.keys(transList)) {
-        const response = await fetchJsonPerm.get(transList[key].url);
-
-        transData[key] = response.data;
-      }
-
-      if (clientLeft) return;
-
-      setStateTrans(transData);
-
-      setStateLoading(false);
+    console.log(loading, data, complete);
+    if (complete) {
+      setStateTrans(data);
+    } else if (!loading) {
+      dispatch(fetchAllData());
     }
-
-    fetchData();
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
+  }, [loading, complete, dispatch, data]);
 
   const chapterVerses: RankedVerseProps[] = [];
 
@@ -79,7 +44,14 @@ function Comparator() {
     setCurrentChapter(chapterID);
   };
 
-  if (stateLoading) return <LoadingSpinner />;
+  if (error)
+    return (
+      <div dir="auto" className="text-center">
+        Failed to load translations, try reloading the page.
+      </div>
+    );
+
+  if (!complete) return <LoadingSpinner />;
 
   return (
     <div className="comparator">
