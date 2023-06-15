@@ -266,7 +266,7 @@ const VerseContentComponent = memo(
       <span className="fs-4">
         <HighlightedText verse={verse} /> (
         <button
-          className="p-0 border-0 bg-transparent"
+          className="p-0 border-0 bg-transparent btn-verse"
           onClick={() => handleVerseClick(verse_key)}
         >
           {`${verseChapter}:${verse.verseid}`}
