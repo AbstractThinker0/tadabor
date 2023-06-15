@@ -20,7 +20,6 @@ function Comparator() {
   const [stateTrans, setStateTrans] = useState<translationsProps>(data);
 
   useEffect(() => {
-    console.log(loading, data, complete);
     if (complete) {
       setStateTrans(data);
     } else if (!loading) {
