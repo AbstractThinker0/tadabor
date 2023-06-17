@@ -59,6 +59,9 @@ const validArabicLetters = [
   "ي",
   "ى",
   "ة",
+  "ء",
+  "ؤ",
+  "ئ",
 ];
 
 function removeInvalidCharacters(input: string, validChars: string[]): string {
