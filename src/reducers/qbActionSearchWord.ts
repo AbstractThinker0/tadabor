@@ -17,14 +17,15 @@ import {
 const getOriginalPart = (
   versetext: string,
   processedVerseText: string,
-  part: string
+  part: string,
+  traversedLength: number
 ) => {
   const arrayText = splitArabicLetters(versetext);
 
   return arrayText
     .slice(
-      processedVerseText.indexOf(part),
-      processedVerseText.indexOf(part) + part.length
+      processedVerseText.indexOf(part, traversedLength),
+      processedVerseText.indexOf(part, traversedLength) + part.length
     )
     .join("");
 };
@@ -47,13 +48,24 @@ const getSearchIndexes = (
   // using RegExp here because we want to include the searchToken as a separate part in the resulting array.
   const regex = new RegExp(`(${searchToken})`);
   const parts = processedVerseText.split(regex);
+  let traversedLength = 0;
+  const verseParts: versePart[] = parts.map((part) => {
+    const currentPart: versePart = {
+      text: searchDiacritics
+        ? part
+        : getOriginalPart(
+            verse.versetext,
+            processedVerseText,
+            part,
+            traversedLength
+          ),
+      highlight: part.includes(searchToken),
+    };
 
-  const verseParts: versePart[] = parts.map((part) => ({
-    text: searchDiacritics
-      ? part
-      : getOriginalPart(verse.versetext, processedVerseText, part),
-    highlight: part.includes(searchToken),
-  }));
+    traversedLength += part.length;
+
+    return currentPart;
+  });
 
   return {
     key: verse.key,
