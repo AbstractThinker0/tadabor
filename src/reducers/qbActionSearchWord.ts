@@ -47,7 +47,7 @@ const getSearchIndexes = (
 ) => {
   // using RegExp here because we want to include the searchToken as a separate part in the resulting array.
   const regex = new RegExp(`(${searchToken})`);
-  const parts = processedVerseText.split(regex);
+  const parts = processedVerseText.split(regex).filter((part) => part !== "");
   let traversedLength = 0;
   const verseParts: versePart[] = parts.map((part) => {
     const currentPart: versePart = {
