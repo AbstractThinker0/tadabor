@@ -6,11 +6,6 @@ import useQuran from "../../context/QuranContext";
 import UserTranslation from "./UserTranslation";
 import { RankedVerseProps, translationsProps } from "../../types";
 
-function htmlDecode(input: string) {
-  const doc = new DOMParser().parseFromString(input, "text/html");
-  return doc.documentElement.textContent;
-}
-
 interface DisplayProps {
   currentChapter: string;
   currentVerse: string;
@@ -93,7 +88,7 @@ const Display = ({
               <div className="py-2" key={trans} dir="ltr">
                 <div className="text-secondary">{trans}</div>
                 <div>
-                  {htmlDecode(transVerses[trans][verse.rank].versetext)}
+                  {transVerses[trans][verse.rank].versetext}
                 </div>
               </div>
             ))}

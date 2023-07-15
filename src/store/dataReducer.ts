@@ -16,7 +16,7 @@ interface transListProps {
 }
 
 const transList: transListProps = {
-  "Muhammad Asad": { url: "/trans/Muhammad Asad.json" },
+  "Muhammad Asad": { url: "/trans/Muhammad Asad v2.json" },
   "The Monotheist Group": { url: "/trans/The Monotheist Group.json" },
 };
 
