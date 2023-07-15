@@ -1,8 +1,5 @@
 export function normalizeAlif(token: string) {
-  token = token.replace(/(ٱ)/g, "ا");
-  token = token.replace(/(آ)/g, "ا");
-  token = token.replace(/(إ)/g, "ا");
-  return token;
+  return token.replace(/(آ|إ|أ)/g, "ا");
 }
 
 export function onlySpaces(str: string) {
