@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import useQuran from "../../context/QuranContext";
 import { selectedChaptersType } from "../../types";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,34 @@ const SelectionListChapters = memo(
       });
 
       return initialSelectionChapters;
+    });
+
+    const refChaptersList = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const parent = refChaptersList.current;
+
+      if (!parent) return;
+
+      const selectedChapter = parent.querySelector(
+        `[data-id="${currentChapter}"]`
+      ) as HTMLDivElement;
+
+      if (!selectedChapter) return;
+
+      const parentOffsetTop = parent.offsetTop;
+
+      if (
+        parent.scrollTop + parentOffsetTop <
+          selectedChapter.offsetTop -
+            parent.clientHeight +
+            selectedChapter.clientHeight * 1.5 ||
+        parent.scrollTop + parentOffsetTop >
+          selectedChapter.offsetTop - selectedChapter.clientHeight * 1.5
+      ) {
+        parent.scrollTop =
+          selectedChapter.offsetTop - parentOffsetTop - parent.clientHeight / 2;
+      }
     });
 
     const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,12 +129,13 @@ const SelectionListChapters = memo(
           aria-label="Search"
           dir="rtl"
         />
-        <div className="browser-search-chapter-list">
+        <div className="browser-search-chapter-list" ref={refChaptersList}>
           {chapterNames
             .filter((chapter) => chapter.name.includes(chapterSearch))
             .map((chapter) => (
               <div
                 key={chapter.id}
+                data-id={chapter.id}
                 className={`browser-search-chapter-list-item ${
                   currentChapter === chapter.id
                     ? "browser-search-chapter-list-item-selected"
