@@ -5,6 +5,7 @@ import {
   verseProps,
   rootProps,
   ActionsUnion,
+  IMatch,
 } from "../../types";
 
 export interface searchIndexProps {
@@ -23,7 +24,7 @@ export interface searchResult {
   key: string;
   suraid: string;
   verseid: string;
-  verseParts: versePart[];
+  verseParts: IMatch[];
 }
 
 export interface qbStateProps {

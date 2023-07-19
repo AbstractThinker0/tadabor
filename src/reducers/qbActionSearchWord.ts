@@ -1,79 +1,6 @@
-import {
-  qbStateProps,
-  searchResult,
-  versePart,
-} from "../components/QuranBrowser/consts";
+import { qbStateProps, searchResult } from "../components/QuranBrowser/consts";
 import { chapterProps, quranProps, verseProps } from "../types";
-import {
-  findSubstring,
-  onlySpaces,
-  removeDiacritics,
-  splitArabicLetters,
-} from "../util/util";
-
-/*
-  This function allows us to get a text that has diacritics based on a text that doesn't, we basically want the original string since we used a diacriticless string for our search
-*/
-const getOriginalPart = (
-  versetext: string,
-  processedVerseText: string,
-  part: string,
-  traversedLength: number
-) => {
-  const arrayText = splitArabicLetters(versetext);
-
-  return arrayText
-    .slice(
-      processedVerseText.indexOf(part, traversedLength),
-      processedVerseText.indexOf(part, traversedLength) + part.length
-    )
-    .join("");
-};
-
-/* Return the indexes of a search if there is a match
-  Result structure:
-  {
-    key,
-    suraid,
-    verseid,
-    verseParts: [{text, highlight}, {text, highlight}, ...]
-  }
-*/
-const getSearchIndexes = (
-  processedVerseText: string,
-  searchToken: string,
-  verse: verseProps,
-  searchDiacritics: boolean
-) => {
-  // using RegExp here because we want to include the searchToken as a separate part in the resulting array.
-  const regex = new RegExp(`(${searchToken})`);
-  const parts = processedVerseText.split(regex).filter((part) => part !== "");
-  let traversedLength = 0;
-  const verseParts: versePart[] = parts.map((part) => {
-    const currentPart: versePart = {
-      text: searchDiacritics
-        ? part
-        : getOriginalPart(
-            verse.versetext,
-            processedVerseText,
-            part,
-            traversedLength
-          ),
-      highlight: part.includes(searchToken),
-    };
-
-    traversedLength += part.length;
-
-    return currentPart;
-  });
-
-  return {
-    key: verse.key,
-    suraid: verse.suraid,
-    verseid: verse.verseid,
-    verseParts,
-  };
-};
+import { getMatches, onlySpaces } from "../util/util";
 
 const searchVerse = (
   verse: verseProps,
@@ -81,21 +8,20 @@ const searchVerse = (
   searchIdentical: boolean,
   searchDiacritics: boolean
 ) => {
-  const processedVerseText = searchDiacritics
-    ? verse.versetext
-    : removeDiacritics(verse.versetext);
+  const result = getMatches(verse.versetext, searchToken, {
+    ignoreDiacritics: !searchDiacritics,
+    matchIdentical: searchIdentical,
+  });
 
-  if (
-    (searchIdentical && findSubstring(searchToken, processedVerseText)) ||
-    (!searchIdentical && processedVerseText.includes(searchToken))
-  ) {
-    return getSearchIndexes(
-      processedVerseText,
-      searchToken,
-      verse,
-      searchDiacritics
-    );
+  if (result) {
+    return {
+      key: verse.key,
+      suraid: verse.suraid,
+      verseid: verse.verseid,
+      verseParts: result,
+    };
   }
+
   return false;
 };
 
@@ -130,12 +56,7 @@ export function qbSearchWord(
     return { ...newState, searchError: true };
   }
 
-  // (Note: in the future reconsider Removing the extra spaces with trim)
-  const processedSearchString = searchDiacritics
-    ? searchString
-    : removeDiacritics(searchString).trim();
-
-  if (onlySpaces(processedSearchString)) {
+  if (onlySpaces(searchString)) {
     return { ...newState, searchError: true };
   }
 
@@ -146,7 +67,7 @@ export function qbSearchWord(
       sura.verses.forEach((verse) => {
         const result = searchVerse(
           verse,
-          processedSearchString,
+          searchString,
           searchIdentical,
           searchDiacritics
         );
@@ -162,7 +83,7 @@ export function qbSearchWord(
         allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
           const result = searchVerse(
             verse,
-            processedSearchString,
+            searchString,
             searchIdentical,
             searchDiacritics
           );
@@ -176,7 +97,7 @@ export function qbSearchWord(
       allQuranText[selectChapter - 1].verses.forEach((verse) => {
         const result = searchVerse(
           verse,
-          processedSearchString,
+          searchString,
           searchIdentical,
           searchDiacritics
         );

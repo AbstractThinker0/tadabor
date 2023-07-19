@@ -299,7 +299,7 @@ const HighlightedText = ({ verse }: HighlightedTextProps) => {
   return (
     <>
       {verseParts.map((part, i) => {
-        const isHighlighted = part.highlight;
+        const isHighlighted = part.isMatch;
 
         return (
           <Fragment key={i}>

@@ -21,7 +21,7 @@ const getDerivationsInVerse = (
 
   const verseParts = rootParts.filter(Boolean).map((part) => ({
     text: part,
-    highlight: derivationsArray.includes(part),
+    isMatch: derivationsArray.includes(part),
   }));
 
   const verseDerivations = derivationsArray.map((name, index) => ({
