@@ -8,17 +8,6 @@ export function onlySpaces(str: string) {
   return str.trim().length === 0;
 }
 
-/**
- * Checks if a word or sentence is present in a string, and is bounded by whitespace characters.
- * @param term - The word or sentence to search for.
- * @param str - The string to search in.
- * @returns `true` if the term is found and bounded by whitespace characters, `false` otherwise.
- */
-export function findSubstring(term: string, str: string): boolean {
-  const regex = new RegExp(`(^|\\s)${term}(\\s|$)`, "u");
-  return regex.test(str);
-}
-
 export function splitByArray(text: string, separators: string[]) {
   const regex = new RegExp(`(${separators.join("|")})`);
   return text.split(regex).filter(Boolean);
@@ -63,22 +52,15 @@ const validArabicLetters = [
   "ئ",
 ];
 
-function removeInvalidCharacters(input: string, validChars: string[]): string {
-  return input
-    .split("")
-    .filter((char) => validChars.includes(char) || onlySpaces(char))
-    .join("");
-}
-
 export function removeDiacritics(input: string): string {
-  return removeInvalidCharacters(input, validArabicLetters);
+  return input.replace(/[\u064B-\u0652]/g, "");
 }
 
 function isValidArabicLetter(char: string) {
   return validArabicLetters.includes(char);
 }
 
-export function splitArabicLetters(arabicText: string) {
+function splitArabicLetters(arabicText: string) {
   const result = [];
 
   for (const char of arabicText) {
@@ -121,16 +103,14 @@ interface IMatchOptions {
 
 export function getMatches(
   text: string,
-  token: string,
+  searchToken: string,
   matchOptions: IMatchOptions
 ) {
-  if (!token.trim() || !text.trim()) {
+  if (!searchToken.trim() || !text.trim()) {
     return false;
   }
 
   const { ignoreDiacritics = false, matchIdentical = false } = matchOptions; // Destructure options with default values
-
-  const normalizedToken = ignoreDiacritics ? removeDiacritics(token) : token;
 
   const normalizedText = ignoreDiacritics ? removeDiacritics(text) : text;
 
@@ -138,8 +118,8 @@ export function getMatches(
 
   // Check whether we can find any matches
   const isTokenFound = matchIdentical
-    ? identicalRegex(normalizedToken).test(normalizedText)
-    : normalizedText.includes(normalizedToken);
+    ? identicalRegex(searchToken).test(normalizedText)
+    : normalizedText.includes(searchToken);
 
   if (!isTokenFound) {
     return false;
@@ -147,8 +127,8 @@ export function getMatches(
 
   // using RegExp with () here because we want to include the searchToken as a separate part in the resulting array.
   const regex = matchIdentical
-    ? identicalRegex(normalizedToken)
-    : new RegExp(`(${escapeRegex(normalizedToken)})`);
+    ? identicalRegex(searchToken)
+    : new RegExp(`(${escapeRegex(searchToken)})`);
 
   const parts = normalizedText.split(regex).filter((part) => part !== "");
 
@@ -173,7 +153,7 @@ export function getMatches(
 
     const currentPart: IMatch = {
       text: partText,
-      isMatch: part === normalizedToken,
+      isMatch: part === searchToken,
     };
 
     return currentPart;

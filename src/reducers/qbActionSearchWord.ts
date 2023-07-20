@@ -1,6 +1,6 @@
 import { qbStateProps, searchResult } from "../components/QuranBrowser/consts";
 import { chapterProps, quranProps, verseProps } from "../types";
-import { getMatches, onlySpaces } from "../util/util";
+import { getMatches, onlySpaces, removeDiacritics } from "../util/util";
 
 const searchVerse = (
   verse: verseProps,
@@ -56,7 +56,11 @@ export function qbSearchWord(
     return { ...newState, searchError: true };
   }
 
-  if (onlySpaces(searchString)) {
+  const normalizedToken = searchDiacritics
+    ? searchString
+    : removeDiacritics(searchString);
+
+  if (onlySpaces(normalizedToken)) {
     return { ...newState, searchError: true };
   }
 
@@ -67,7 +71,7 @@ export function qbSearchWord(
       sura.verses.forEach((verse) => {
         const result = searchVerse(
           verse,
-          searchString,
+          normalizedToken,
           searchIdentical,
           searchDiacritics
         );
@@ -83,7 +87,7 @@ export function qbSearchWord(
         allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
           const result = searchVerse(
             verse,
-            searchString,
+            normalizedToken,
             searchIdentical,
             searchDiacritics
           );
@@ -97,7 +101,7 @@ export function qbSearchWord(
       allQuranText[selectChapter - 1].verses.forEach((verse) => {
         const result = searchVerse(
           verse,
-          searchString,
+          normalizedToken,
           searchIdentical,
           searchDiacritics
         );

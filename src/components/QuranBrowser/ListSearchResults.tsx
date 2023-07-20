@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useTransition,
 } from "react";
 import {
   SEARCH_METHOD,
@@ -19,6 +20,7 @@ import { Tooltip } from "bootstrap";
 import NoteText from "../NoteText";
 import { useTranslation } from "react-i18next";
 import { IconSelect } from "@tabler/icons-react";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface ListSearchResultsProps {
   versesArray: searchResult[];
@@ -43,7 +45,17 @@ const ListSearchResults = ({
   const { t } = useTranslation();
   const [selectedVerse, setSelectedVerse] = useState("");
 
+  const [isPending, startTransition] = useTransition();
+
+  const [stateVerses, setStateVerse] = useState(versesArray);
+
   const refListVerses = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    startTransition(() => {
+      setStateVerse(versesArray);
+    });
+  }, [versesArray]);
 
   useEffect(() => {
     setSelectedVerse("");
@@ -90,21 +102,25 @@ const ListSearchResults = ({
         />
       )}
       <div className="card-body browser-display-card-list" ref={refListVerses}>
-        {versesArray.map((verse) => (
-          <div
-            key={verse.key}
-            data-id={verse.key}
-            className={`border-bottom browser-display-card-list-item ${
-              verse.key === selectedVerse ? "verse-selected" : ""
-            }`}
-          >
-            <SearchVerseComponent
-              verse={verse}
-              verseChapter={chapterNames[Number(verse.suraid) - 1].name}
-              dispatchQbAction={dispatchQbAction}
-            />
-          </div>
-        ))}
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse) => (
+            <div
+              key={verse.key}
+              data-id={verse.key}
+              className={`border-bottom browser-display-card-list-item ${
+                verse.key === selectedVerse ? "verse-selected" : ""
+              }`}
+            >
+              <SearchVerseComponent
+                verse={verse}
+                verseChapter={chapterNames[Number(verse.suraid) - 1].name}
+                dispatchQbAction={dispatchQbAction}
+              />
+            </div>
+          ))
+        )}
         {searchError && <SearchErrorsComponent searchMethod={searchMethod} />}
       </div>
     </>

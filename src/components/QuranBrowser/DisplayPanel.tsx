@@ -1,4 +1,11 @@
-import { Dispatch, useEffect, useRef, memo } from "react";
+import {
+  Dispatch,
+  useEffect,
+  useRef,
+  memo,
+  useState,
+  useTransition,
+} from "react";
 
 import { IconSelect } from "@tabler/icons-react";
 
@@ -14,6 +21,7 @@ import {
 
 import ListSearchResults from "./ListSearchResults";
 import NoteText from "../NoteText";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
@@ -106,8 +114,19 @@ const ListVerses = ({
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
 
+  const [stateVerses, setStateVerse] = useState(
+    allQuranText[selectChapter - 1].verses
+  );
+
+  const [isPending, startTransition] = useTransition();
+
   const chapterName = chapterNames[selectChapter - 1].name;
-  const versesArray = allQuranText[selectChapter - 1].verses;
+
+  useEffect(() => {
+    startTransition(() => {
+      setStateVerse(allQuranText[selectChapter - 1].verses);
+    });
+  }, [selectChapter, allQuranText]);
 
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -132,17 +151,24 @@ const ListVerses = ({
     <>
       <ListTitle chapterName={chapterName} />
       <div className="card-body browser-display-card-list" ref={listRef}>
-        {versesArray.map((verse: verseProps) => (
-          <div
-            key={verse.key}
-            data-id={verse.key}
-            className={`border-bottom browser-display-card-list-item ${
-              scrollKey === verse.key ? "verse-selected" : ""
-            }`}
-          >
-            <VerseComponent verse={verse} dispatchQbAction={dispatchQbAction} />
-          </div>
-        ))}
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse: verseProps) => (
+            <div
+              key={verse.key}
+              data-id={verse.key}
+              className={`border-bottom browser-display-card-list-item ${
+                scrollKey === verse.key ? "verse-selected" : ""
+              }`}
+            >
+              <VerseComponent
+                verse={verse}
+                dispatchQbAction={dispatchQbAction}
+              />
+            </div>
+          ))
+        )}
       </div>
     </>
   );
