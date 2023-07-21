@@ -53,7 +53,7 @@ const validArabicLetters = [
 ];
 
 export function removeDiacritics(input: string): string {
-  return input.replace(/[\u064B-\u0652]/g, "");
+  return input.replace(/[\u064B-\u0652\u0670\u0640]/g, "");
 }
 
 function isValidArabicLetter(char: string) {
@@ -114,8 +114,6 @@ export function getMatches(
 
   const normalizedText = ignoreDiacritics ? removeDiacritics(text) : text;
 
-  const skeletonText = removeDiacritics(text);
-
   // Check whether we can find any matches
   const isTokenFound = matchIdentical
     ? identicalRegex(searchToken).test(normalizedText)
@@ -139,7 +137,10 @@ export function getMatches(
   const getOriginalPart = (part: string) => {
     const skeletonPart = removeDiacritics(part);
 
-    const indexOfPart = skeletonText.indexOf(skeletonPart, traversedLength[0]);
+    const indexOfPart = normalizedText.indexOf(
+      skeletonPart,
+      traversedLength[0]
+    );
 
     traversedLength[0] += skeletonPart.length;
 
