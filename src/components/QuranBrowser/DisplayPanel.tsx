@@ -145,7 +145,7 @@ const ListVerses = ({
         });
       });
     }
-  }, [scrollKey]);
+  });
 
   return (
     <>
