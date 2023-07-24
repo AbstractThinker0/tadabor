@@ -117,8 +117,8 @@ export interface ActionsWithoutPayload<TypeAction> {
  */
 interface ActionCreatorsMapObject {
   [key: string]: (
-    ...args: any[]
-  ) => ActionsWithPayload<any, any> | ActionsWithoutPayload<any>;
+    ...args: never[]
+  ) => ActionsWithPayload<unknown, unknown> | ActionsWithoutPayload<unknown>;
 }
 
 /**
