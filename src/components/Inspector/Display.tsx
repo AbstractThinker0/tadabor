@@ -61,7 +61,7 @@ const Display = ({
 
   return (
     <div className="p-2 display" ref={refDisplay}>
-      <div className="card p-2 display-verses">
+      <div className="card display-verses">
         <div className="card-header text-primary text-center fs-4">
           سورة {chapterNames[currentChapter - 1].name}
         </div>
