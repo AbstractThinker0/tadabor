@@ -11,13 +11,8 @@ import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "../../context/QuranContext";
 
-import { verseProps } from "../../types";
-import {
-  qbActions,
-  qbActionsProps,
-  searchIndexProps,
-  searchResult,
-} from "./consts";
+import { searchIndexProps, verseProps } from "../../types";
+import { qbActions, qbActionsProps, searchResult } from "./consts";
 
 import ListSearchResults from "./ListSearchResults";
 import NoteText from "../NoteText";
