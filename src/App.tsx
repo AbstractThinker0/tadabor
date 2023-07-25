@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import { lazy, Suspense } from "react";
+import { lazy, PropsWithChildren, Suspense } from "react";
 
 const About = lazy(() => import("./pages/About"));
 const Coloring = lazy(() => import("./pages/Coloring"));
@@ -14,87 +14,91 @@ const Comparator = lazy(() => import("./pages/Comparator"));
 
 import LoadingSpinner from "./components/LoadingSpinner";
 
+const Suspenser = ({ children }: PropsWithChildren) => {
+  return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;
+};
+
 function App() {
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <QuranBrowser />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/roots"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <RootsBrowser />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/notes"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <YourNotes />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/coloring"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <Coloring />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/translation"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <Translation />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/tags"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <Tags />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/inspector"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <Inspector />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/comparator"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <Comparator />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="/about"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <About />
-          </Suspense>
+          </Suspenser>
         }
       />
       <Route
         path="*"
         element={
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspenser>
             <QuranBrowser />
-          </Suspense>
+          </Suspenser>
         }
       />
     </Routes>
