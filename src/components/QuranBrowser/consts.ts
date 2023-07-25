@@ -6,14 +6,8 @@ import {
   rootProps,
   ActionsUnion,
   IMatch,
+  searchIndexProps,
 } from "../../types";
-
-export interface searchIndexProps {
-  name: string;
-  key: string;
-  text: string;
-  wordIndex: string;
-}
 
 export interface versePart {
   text: string;

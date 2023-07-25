@@ -12,7 +12,6 @@ import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
-  searchIndexProps,
   searchResult,
 } from "./consts";
 import useQuran from "../../context/QuranContext";
@@ -21,6 +20,7 @@ import NoteText from "../NoteText";
 import { useTranslation } from "react-i18next";
 import { IconSelect } from "@tabler/icons-react";
 import LoadingSpinner from "../LoadingSpinner";
+import { searchIndexProps } from "../../types";
 
 interface ListSearchResultsProps {
   versesArray: searchResult[];

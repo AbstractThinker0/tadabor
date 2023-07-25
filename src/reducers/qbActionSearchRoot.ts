@@ -1,9 +1,10 @@
+import { qbStateProps, searchResult } from "../components/QuranBrowser/consts";
 import {
-  qbStateProps,
+  chapterProps,
+  rootProps,
+  verseProps,
   searchIndexProps,
-  searchResult,
-} from "../components/QuranBrowser/consts";
-import { chapterProps, rootProps, verseProps } from "../types";
+} from "../types";
 import { onlySpaces, splitByArray } from "../util/util";
 
 const getDerivationsInVerse = (
