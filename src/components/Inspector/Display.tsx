@@ -7,16 +7,8 @@ import { IconSelect } from "@tabler/icons-react";
 import useQuran from "../../context/QuranContext";
 import { splitByArray } from "../../util/util";
 import NoteText from "../NoteText";
-import { rootProps, searchIndexProps } from "../../types";
+import { RankedVerseProps, rootProps, searchIndexProps } from "../../types";
 import { clActionsProps, isActions } from "./consts";
-
-interface RankedVerseProps {
-  key: string;
-  suraid: string;
-  verseid: string;
-  versetext: string;
-  rank: number;
-}
 
 interface versePartProps {
   text: string;
