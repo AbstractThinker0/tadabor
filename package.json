@@ -24,7 +24,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@tabler/icons-react": "^2.22.0",
     "axios": "^1.4.0",
-    "bootstrap": "^5.3.0",
+    "bootstrap": "^5.3.1",
     "dexie": "^3.2.4",
     "i18next": "^23.0.1",
     "i18next-browser-languagedetector": "^7.0.2",
