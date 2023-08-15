@@ -109,7 +109,7 @@ const ListVerses = ({
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
 
-  const [stateVerses, setStateVerse] = useState(
+  const [stateVerses, setStateVerses] = useState(
     allQuranText[selectChapter - 1].verses
   );
 
@@ -119,7 +119,7 @@ const ListVerses = ({
 
   useEffect(() => {
     startTransition(() => {
-      setStateVerse(allQuranText[selectChapter - 1].verses);
+      setStateVerses(allQuranText[selectChapter - 1].verses);
     });
   }, [selectChapter, allQuranText]);
 

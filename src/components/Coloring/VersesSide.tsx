@@ -68,7 +68,7 @@ function VersesSide({
 
   const asArray = Object.entries(coloredVerses);
 
-  const filtered = asArray.filter(([key, value]) => {
+  const filtered = asArray.filter(([key]) => {
     const info = key.split("-");
     return selectedChapters[info[0]] === true;
   });
@@ -125,7 +125,7 @@ function VersesSide({
                 </div>
                 <div
                   className="verses-side-colors-item-close"
-                  onClick={(e) => onClickDeleteSelected(colorID)}
+                  onClick={() => onClickDeleteSelected(colorID)}
                 >
                   X
                 </div>
@@ -250,7 +250,7 @@ const VerseComponent = memo(
           className="verse-btn"
           data-bs-toggle="modal"
           data-bs-target="#verseModal"
-          onClick={(e) => onClickVerseColor(verse)}
+          onClick={() => onClickVerseColor(verse)}
         >
           🎨
         </button>
