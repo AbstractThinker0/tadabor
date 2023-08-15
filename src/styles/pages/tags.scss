@@ -13,24 +13,44 @@
     &-chapters {
       display: flex;
       flex-direction: column;
-      border: 1px solid gainsboro;
       max-height: 40%;
-      min-width: 200px;
-      overflow-y: scroll;
-      background-color: white;
 
-      &-item {
-        display: flex;
-        padding: 5px;
+      &-search {
+        width: 100%;
+        border: 1px solid rgb(201, 202, 204);
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        padding-left: 5px;
+        padding-right: 5px;
 
-        &-name {
-          flex-grow: 1;
-          cursor: pointer;
+        &:focus-visible {
+          outline: none;
+          border-color: rgba(76, 76, 167, 0.623);
         }
+      }
 
-        &-selected {
-          background-color: rgba(76, 76, 167, 0.623);
-          color: black;
+      &-list {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid gainsboro;
+
+        min-width: 200px;
+        overflow-y: scroll;
+        background-color: white;
+
+        &-item {
+          display: flex;
+          padding: 5px;
+
+          &-name {
+            flex-grow: 1;
+            cursor: pointer;
+          }
+
+          &-selected {
+            background-color: rgba(76, 76, 167, 0.623);
+            color: black;
+          }
         }
       }
 

@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useRef } from "react";
+import { Dispatch, useEffect, useRef, useState } from "react";
 import { selectedChaptersType } from "../../types";
 import AddTagModal from "./AddTagModal";
 import DeleteTagModal from "./DeleteTagModal";
@@ -35,6 +35,7 @@ function TagsSide({
   const { chapterNames } = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
+  const [chapterToken, setChapterToken] = useState("");
 
   useEffect(() => {
     const child = refChapter.current;
@@ -62,6 +63,7 @@ function TagsSide({
     document.documentElement.scrollTop = 0;
 
     dispatchTagsAction(tagsActions.setChapter(chapterID));
+    setChapterToken("");
 
     refChapter.current = event.currentTarget;
   }
@@ -134,35 +136,51 @@ function TagsSide({
 
   const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
 
+  const onChangeChapterToken = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //
+    setChapterToken(e.target.value);
+  };
+
   return (
     <div className="tags-side">
       <div className="tags-side-chapters">
-        {chapterNames.map((chapter) => (
-          <div
-            key={chapter.id}
-            className={`tags-side-chapters-item ${
-              currentChapter === chapter.id
-                ? "tags-side-chapters-item-selected"
-                : ""
-            }`}
-          >
-            <div
-              className={"tags-side-chapters-item-name"}
-              onClick={(event) => onClickChapter(event, chapter.id)}
-            >
-              {chapter.id}. {chapter.name}
-            </div>
-            <input
-              type="checkbox"
-              checked={
-                selectedChapters[chapter.id] !== undefined
-                  ? selectedChapters[chapter.id]
-                  : true
-              }
-              onChange={() => onChangeSelectChapter(chapter.id)}
-            />
-          </div>
-        ))}
+        <input
+          className="tags-side-chapters-search"
+          type="text"
+          placeholder={chapterNames[currentChapter - 1].name}
+          value={chapterToken}
+          onChange={onChangeChapterToken}
+        />
+        <div className="tags-side-chapters-list">
+          {chapterNames
+            .filter((chapter) => chapter.name.includes(chapterToken))
+            .map((chapter) => (
+              <div
+                key={chapter.id}
+                className={`tags-side-chapters-list-item ${
+                  currentChapter === chapter.id
+                    ? "tags-side-chapters-list-item-selected"
+                    : ""
+                }`}
+              >
+                <div
+                  className={"tags-side-chapters-list-item-name"}
+                  onClick={(event) => onClickChapter(event, chapter.id)}
+                >
+                  {chapter.id}. {chapter.name}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={
+                    selectedChapters[chapter.id] !== undefined
+                      ? selectedChapters[chapter.id]
+                      : true
+                  }
+                  onChange={() => onChangeSelectChapter(chapter.id)}
+                />
+              </div>
+            ))}
+        </div>
       </div>
       <div className="tags-side-chapters-buttons" dir="ltr">
         <button
