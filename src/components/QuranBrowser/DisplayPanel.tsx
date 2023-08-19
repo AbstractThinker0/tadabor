@@ -140,7 +140,7 @@ const ListVerses = ({
         });
       });
     }
-  });
+  }, [scrollKey, isPending]);
 
   return (
     <>

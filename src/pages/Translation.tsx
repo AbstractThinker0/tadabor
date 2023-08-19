@@ -5,6 +5,7 @@ import {
   Fragment,
   useRef,
   useEffect,
+  useTransition,
 } from "react";
 import useQuran from "../context/QuranContext";
 
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { TextAreaComponent } from "../components/TextForm";
 import { selectTranslation, useAppDispatch, useAppSelector } from "../store";
 import { translationsActions } from "../store/translationsReducer";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
@@ -100,13 +102,21 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const { allQuranText, chapterNames } = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
-  const displayVerses = allQuranText[selectChapter - 1].verses;
+  const [stateVerses, setStateVerses] = useState(
+    allQuranText[selectChapter - 1].verses
+  );
+
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (!refDisplay.current) return;
 
+    startTransition(() => {
+      setStateVerses(allQuranText[selectChapter - 1].verses);
+    });
+
     refDisplay.current.scrollTop = 0;
-  }, [selectChapter]);
+  }, [selectChapter, allQuranText]);
 
   return (
     <div ref={refDisplay} className="translation-display">
@@ -117,16 +127,20 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           </h2>
         </div>
         <div className="card-body p-1">
-          {displayVerses.map((verse) => {
-            return (
-              <Fragment key={verse.key}>
-                <p className="fs-4 mb-0" dir="rtl">
-                  {verse.versetext} ({verse.verseid})
-                </p>
-                <TransComponent verse_key={verse.key} />
-              </Fragment>
-            );
-          })}
+          {isPending ? (
+            <LoadingSpinner />
+          ) : (
+            stateVerses.map((verse) => {
+              return (
+                <Fragment key={verse.key}>
+                  <p className="fs-4 mb-0" dir="rtl">
+                    {verse.versetext} ({verse.verseid})
+                  </p>
+                  <TransComponent verse_key={verse.key} />
+                </Fragment>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
@@ -273,7 +287,7 @@ const Versearea = ({
         <button
           name={inputKey}
           onClick={onClickSave}
-          className="mt-2 btn btn-primary btn-sm"
+          className="mt-2 btn btn-success btn-sm"
         >
           {t("text_save")}
         </button>

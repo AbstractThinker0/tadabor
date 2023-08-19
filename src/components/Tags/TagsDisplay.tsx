@@ -1,4 +1,11 @@
-import { Dispatch, memo, useEffect, useRef } from "react";
+import {
+  Dispatch,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { selectedChaptersType, verseProps } from "../../types";
 import {
   tagsActions,
@@ -12,6 +19,7 @@ import VerseTagsModal from "./VerseTagsModal";
 import { IconSelect } from "@tabler/icons-react";
 
 import NoteText from "../NoteText";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface TagsDisplayProps {
   selectedTags: tagsProps;
@@ -46,7 +54,7 @@ function TagsDisplay({
 
   const asArray = Object.entries(versesTags);
 
-  const filtered = asArray.filter(([key, value]) => {
+  const filtered = asArray.filter(([key]) => {
     const info = key.split("-");
     return selectedChapters[info[0]] === true;
   });
@@ -266,6 +274,12 @@ const ListVerses = memo(
   }: ListVersesProps) => {
     const { allQuranText, chapterNames } = useQuran();
 
+    const [stateVerses, setStateVerses] = useState(
+      allQuranText[currentChapter - 1].verses
+    );
+
+    const [isPending, startTransition] = useTransition();
+
     const listRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -279,7 +293,14 @@ const ListVerses = memo(
           block: "center",
         });
       }
-    }, [scrollKey]);
+    }, [scrollKey, isPending]);
+
+    useEffect(() => {
+      //
+      startTransition(() => {
+        setStateVerses(allQuranText[currentChapter - 1].verses);
+      });
+    }, [allQuranText, currentChapter]);
 
     return (
       <>
@@ -287,26 +308,30 @@ const ListVerses = memo(
           سورة {chapterNames[currentChapter - 1].name}
         </div>
         <div className="card-body tags-display-chapter-verses" ref={listRef}>
-          {allQuranText[currentChapter - 1].verses.map((verse) => (
-            <div
-              key={verse.key}
-              data-id={verse.key}
-              className={`tags-display-chapter-verses-item ${
-                scrollKey === verse.key
-                  ? "tags-display-chapter-verses-item-highlighted"
-                  : ""
-              }`}
-            >
-              {versesTags[verse.key] !== undefined && (
-                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-              )}
-              <ListVerseComponent
-                verse={verse}
-                dispatchTagsAction={dispatchTagsAction}
-              />
-              <NoteText verseKey={verse.key} />
-            </div>
-          ))}
+          {isPending ? (
+            <LoadingSpinner />
+          ) : (
+            stateVerses.map((verse) => (
+              <div
+                key={verse.key}
+                data-id={verse.key}
+                className={`tags-display-chapter-verses-item ${
+                  scrollKey === verse.key
+                    ? "tags-display-chapter-verses-item-highlighted"
+                    : ""
+                }`}
+              >
+                {versesTags[verse.key] !== undefined && (
+                  <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+                )}
+                <ListVerseComponent
+                  verse={verse}
+                  dispatchTagsAction={dispatchTagsAction}
+                />
+                <NoteText verseKey={verse.key} />
+              </div>
+            ))
+          )}
         </div>
       </>
     );

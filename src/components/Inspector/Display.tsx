@@ -1,4 +1,12 @@
-import { Dispatch, Fragment, memo, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 
 import { Collapse, Tooltip } from "bootstrap";
 
@@ -9,6 +17,7 @@ import { splitByArray } from "../../util/util";
 import NoteText from "../NoteText";
 import { RankedVerseProps, rootProps, searchIndexProps } from "../../types";
 import { clActionsProps, isActions } from "./consts";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface versePartProps {
   text: string;
@@ -33,16 +42,8 @@ const Display = ({
   scrollKey,
   dispatchIsAction,
 }: DisplayProps) => {
-  const { chapterNames, absoluteQuran } = useQuran();
+  const { chapterNames } = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
-
-  const chapterVerses: RankedVerseProps[] = [];
-
-  absoluteQuran.forEach((verse, index) => {
-    if (verse.suraid !== currentChapter.toString()) return;
-
-    chapterVerses.push({ ...verse, rank: index });
-  });
 
   // Reset scroll whenever we switch from one chapter to another
   useEffect(() => {
@@ -58,7 +59,7 @@ const Display = ({
           سورة {chapterNames[currentChapter - 1].name}
         </div>
         <ListVerses
-          chapterVerses={chapterVerses}
+          currentChapter={currentChapter}
           scrollKey={scrollKey}
           dispatchIsAction={dispatchIsAction}
         />
@@ -68,17 +69,50 @@ const Display = ({
 };
 
 interface ListVersesProps {
-  chapterVerses: RankedVerseProps[];
+  currentChapter: number;
   scrollKey: string;
   dispatchIsAction: Dispatch<clActionsProps>;
 }
 
 const ListVerses = ({
-  chapterVerses,
+  currentChapter,
   scrollKey,
   dispatchIsAction,
 }: ListVersesProps) => {
+  const { absoluteQuran } = useQuran();
+
+  const [stateVerses, setStateVerses] = useState(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter.toString()) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    return chapterVerses;
+  });
+
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter.toString()) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    startTransition(() => {
+      setStateVerses(chapterVerses);
+    });
+  }, [absoluteQuran, currentChapter]);
+
   const refList = useRef<HTMLDivElement>(null);
+
   // Reset scroll whenever we switch from one chapter to another
   useEffect(() => {
     if (!refList.current) return;
@@ -97,27 +131,31 @@ const ListVerses = ({
         });
       });
     }
-  }, [scrollKey, dispatchIsAction]);
+  }, [scrollKey, isPending]);
 
   return (
     <div ref={refList} className="card-body" dir="rtl">
-      {chapterVerses.map((verse) => (
-        <div
-          className={`display-verses-item ${
-            scrollKey === verse.key ? "display-verses-item-selected" : ""
-          }`}
-          key={verse.key}
-          data-id={verse.key}
-        >
-          <VerseWords
-            verseRank={verse.rank}
-            verseText={verse.versetext.split(" ")}
-            verseID={verse.verseid}
-            verseKey={verse.key}
-            dispatchIsAction={dispatchIsAction}
-          />
-        </div>
-      ))}
+      {isPending ? (
+        <LoadingSpinner />
+      ) : (
+        stateVerses.map((verse) => (
+          <div
+            className={`display-verses-item ${
+              scrollKey === verse.key ? "display-verses-item-selected" : ""
+            }`}
+            key={verse.key}
+            data-id={verse.key}
+          >
+            <VerseWords
+              verseRank={verse.rank}
+              verseText={verse.versetext.split(" ")}
+              verseID={verse.verseid}
+              verseKey={verse.key}
+              dispatchIsAction={dispatchIsAction}
+            />
+          </div>
+        ))
+      )}
     </div>
   );
 };

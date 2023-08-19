@@ -18,6 +18,31 @@ function Comparator() {
   const dispatch = useAppDispatch();
 
   const [stateTrans, setStateTrans] = useState<translationsProps>(data);
+  const [chapterVerses, setChapterVerses] = useState(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    return chapterVerses;
+  });
+
+  useEffect(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    setChapterVerses(chapterVerses);
+  }, [currentChapter, absoluteQuran]);
 
   useEffect(() => {
     if (complete) {
@@ -26,14 +51,6 @@ function Comparator() {
       dispatch(fetchAllData());
     }
   }, [loading, complete, dispatch, data]);
-
-  const chapterVerses: RankedVerseProps[] = [];
-
-  absoluteQuran.forEach((verse, index) => {
-    if (verse.suraid !== currentChapter) return;
-
-    chapterVerses.push({ ...verse, rank: index });
-  });
 
   const selectVerse = (verseKey: string) => {
     setCurrentVerse(verseKey);

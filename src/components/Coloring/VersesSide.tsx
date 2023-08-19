@@ -1,4 +1,11 @@
-import { useCallback, useEffect, memo, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  memo,
+  useRef,
+  useTransition,
+  useState,
+} from "react";
 
 import useQuran from "../../context/QuranContext";
 import { selectedChaptersType, verseProps } from "../../types";
@@ -9,6 +16,7 @@ import { getTextColor } from "./util";
 import { IconSelect } from "@tabler/icons-react";
 
 import NoteText from "../NoteText";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface VersesSideProps {
   selectedColors: coloredProps;
@@ -32,6 +40,12 @@ function VersesSide({
   selectedChapters,
 }: VersesSideProps) {
   const { chapterNames, allQuranText } = useQuran();
+
+  const [stateVerses, setStateVerses] = useState(
+    allQuranText[currentChapter - 1].verses
+  );
+
+  const [isPending, startTransition] = useTransition();
 
   function onClickDeleteSelected(colorID: string) {
     dispatchClAction(clActions.deselectColor(colorID));
@@ -98,7 +112,14 @@ function VersesSide({
         });
       });
     }
-  }, [scrollKey]);
+  }, [scrollKey, isPending]);
+
+  useEffect(() => {
+    //
+    startTransition(() => {
+      setStateVerses(allQuranText[currentChapter - 1].verses);
+    });
+  }, [allQuranText, currentChapter]);
 
   return (
     <div className="verses-side">
@@ -170,32 +191,41 @@ function VersesSide({
               سورة {chapterNames[currentChapter - 1].name}
             </div>
             <div ref={refListVerse}>
-              {allQuranText[currentChapter - 1].verses.map((verse) => (
-                <div
-                  className="verse-item"
-                  key={verse.key}
-                  data-id={verse.key}
-                  style={
-                    coloredVerses[verse.key]
-                      ? {
-                          backgroundColor: coloredVerses[verse.key].colorCode,
-                          color: getTextColor(
-                            coloredVerses[verse.key].colorCode
-                          ),
-                        }
-                      : {}
-                  }
-                >
-                  <VerseComponent
-                    color={
-                      coloredVerses[verse.key] ? coloredVerses[verse.key] : null
+              {isPending ? (
+                <LoadingSpinner />
+              ) : (
+                stateVerses.map((verse) => (
+                  <div
+                    className="verse-item"
+                    key={verse.key}
+                    data-id={verse.key}
+                    style={
+                      coloredVerses[verse.key]
+                        ? {
+                            backgroundColor: coloredVerses[verse.key].colorCode,
+                            color: getTextColor(
+                              coloredVerses[verse.key].colorCode
+                            ),
+                          }
+                        : {}
                     }
-                    verse={verse}
-                    onClickVerseColor={onClickVerseColor}
-                  />
-                  <NoteText verseKey={verse.key} className="verse-item-note" />
-                </div>
-              ))}
+                  >
+                    <VerseComponent
+                      color={
+                        coloredVerses[verse.key]
+                          ? coloredVerses[verse.key]
+                          : null
+                      }
+                      verse={verse}
+                      onClickVerseColor={onClickVerseColor}
+                    />
+                    <NoteText
+                      verseKey={verse.key}
+                      className="verse-item-note"
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </>
         )}

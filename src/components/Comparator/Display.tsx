@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import NoteText from "../NoteText";
 import { IconSelect } from "@tabler/icons-react";
 import useQuran from "../../context/QuranContext";
 import UserTranslation from "./UserTranslation";
 import { RankedVerseProps, translationsProps } from "../../types";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface DisplayProps {
   currentChapter: string;
@@ -21,6 +22,16 @@ const Display = ({
   transVerses,
   handleSelectVerse,
 }: DisplayProps) => {
+  const [stateVerses, setStateVerses] = useState(chapterVerses);
+
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    startTransition(() => {
+      setStateVerses(chapterVerses);
+    });
+  }, [chapterVerses]);
+
   const { chapterNames } = useQuran();
   const refListVerses = useRef<HTMLDivElement>(null);
 
@@ -53,48 +64,50 @@ const Display = ({
         سورة {chapterNames[Number(currentChapter) - 1].name}
       </div>
       <div className="card-body verses" ref={refListVerses}>
-        {chapterVerses.map((verse) => (
-          <div
-            className={`verses-item ${
-              currentVerse === verse.key ? "verses-item-selected" : ""
-            }`}
-            key={verse.key}
-          >
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse) => (
             <div
-              dir="rtl"
-              className=" py-2 border-top border-bottom fs-5"
-              data-id={verse.key}
+              className={`verses-item ${
+                currentVerse === verse.key ? "verses-item-selected" : ""
+              }`}
+              key={verse.key}
             >
-              {verse.versetext}{" "}
-              <span
-                onClick={() => onClickVerse(verse.key)}
-                className="verses-item-number"
+              <div
+                dir="rtl"
+                className=" py-2 border-top border-bottom fs-5"
+                data-id={verse.key}
               >
-                ({verse.verseid})
-              </span>{" "}
-              <button
-                className="btn"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target={`#collapseExample${verse.key}`}
-                aria-expanded="false"
-                aria-controls={`collapseExample${verse.key}`}
-              >
-                <IconSelect />
-              </button>
-            </div>
-            <NoteText verseKey={verse.key} />
-            {Object.keys(transVerses).map((trans) => (
-              <div className="py-2" key={trans} dir="ltr">
-                <div className="text-secondary">{trans}</div>
-                <div>
-                  {transVerses[trans][verse.rank].versetext}
-                </div>
+                {verse.versetext}{" "}
+                <span
+                  onClick={() => onClickVerse(verse.key)}
+                  className="verses-item-number"
+                >
+                  ({verse.verseid})
+                </span>{" "}
+                <button
+                  className="btn"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#collapseExample${verse.key}`}
+                  aria-expanded="false"
+                  aria-controls={`collapseExample${verse.key}`}
+                >
+                  <IconSelect />
+                </button>
               </div>
-            ))}
-            <UserTranslation verseKey={verse.key} />
-          </div>
-        ))}
+              <NoteText verseKey={verse.key} />
+              {Object.keys(transVerses).map((trans) => (
+                <div className="py-2" key={trans} dir="ltr">
+                  <div className="text-secondary">{trans}</div>
+                  <div>{transVerses[trans][verse.rank].versetext}</div>
+                </div>
+              ))}
+              <UserTranslation verseKey={verse.key} />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
