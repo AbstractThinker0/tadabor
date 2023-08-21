@@ -89,6 +89,7 @@
         display: flex;
         flex-direction: column;
         overflow-y: auto;
+        font-family: initial;
 
         &-item {
           display: flex;
@@ -231,6 +232,7 @@
 
   .modal-deletecolor {
     &-label {
+      font-family: initial;
       padding-left: 4px;
       padding-right: 4px;
       padding-top: 4px;
