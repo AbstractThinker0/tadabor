@@ -279,7 +279,7 @@ const VerseContentComponent = memo(
     };
 
     return (
-      <span className="fs-4">
+      <span className="fs-3">
         <HighlightedText verse={verse} /> (
         <button
           className="p-0 border-0 bg-transparent btn-verse"

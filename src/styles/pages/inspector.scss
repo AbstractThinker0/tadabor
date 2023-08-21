@@ -19,7 +19,8 @@
       }
 
       &-list {
-        background-color: var(--color-fifth);
+        //background-color: var(--color-fifth);
+        background-color: var(--color-primary);
         border-top-right-radius: 0;
         border-top-left-radius: 0;
       }
@@ -32,7 +33,8 @@
     min-height: 100%;
 
     &-verses {
-      background-color: var(--color-primary);
+      //background-color: var(--color-primary);
+      background-color: #f7fafc;
       min-height: 100%;
 
       &-item {

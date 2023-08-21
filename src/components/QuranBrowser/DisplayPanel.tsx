@@ -200,7 +200,7 @@ const VerseTextComponent = memo(
       dispatchQbAction(qbActions.setScrollKey(verse.key));
     }
     return (
-      <div className="fs-4">
+      <div className="fs-3">
         <span>{verse.versetext} </span>
         <span className="btn-verse" onClick={onClickVerse}>
           {`(${verse.verseid})`}

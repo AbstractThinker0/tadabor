@@ -234,7 +234,7 @@ const SelectedVerseComponent = ({
   }
 
   return (
-    <span className="fs-4">
+    <span className="fs-3">
       {verse.versetext}{" "}
       <span
         onClick={() => onClickVerse(verse)}
@@ -304,7 +304,7 @@ const ListVerses = memo(
 
     return (
       <>
-        <div className="card-header text-center fs-4 tags-display-chapter-title">
+        <div className="card-header text-center fs-3 tags-display-chapter-title">
           سورة {chapterNames[currentChapter - 1].name}
         </div>
         <div className="card-body tags-display-chapter-verses" ref={listRef}>
@@ -355,7 +355,7 @@ const ListVerseComponent = memo(
 
     return (
       <>
-        <span className={`tags-display-chapter-verses-item-text fs-4`}>
+        <span className={`tags-display-chapter-verses-item-text fs-3`}>
           {verse.versetext}{" "}
           <span
             className="tags-display-chapter-verses-item-text-btn"
@@ -396,7 +396,7 @@ interface VerseTagsProps {
 
 function VerseTags({ versesTags, tags }: VerseTagsProps) {
   return (
-    <div className="fs-6 tags-display-chapter-verses-item-tags">
+    <div className="fs-5 tags-display-chapter-verses-item-tags">
       {versesTags.map((tagID) => (
         <span
           className="tags-display-chapter-verses-item-tags-item"

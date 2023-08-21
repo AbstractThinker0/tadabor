@@ -49,7 +49,7 @@ const SelectionListRoots = memo(
           }`}
           onScroll={handleScroll}
         >
-          {filteredArray.slice(0, itemsCount).map((root, index: number) => (
+          {filteredArray.slice(0, itemsCount).map((root) => (
             <div
               onClick={() => onClickRoot(root.id.toString())}
               className={`browser-search-roots-list-item ${

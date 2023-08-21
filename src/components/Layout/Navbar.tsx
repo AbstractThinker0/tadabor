@@ -9,7 +9,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
-          {t("nav_brand")}
+          📖{t("nav_brand")}
         </a>
         <button
           className="navbar-toggler"

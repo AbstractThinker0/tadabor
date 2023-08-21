@@ -297,7 +297,7 @@ const RootComponent = memo(
     handleSetDirection,
   }: RootComponentProps) => {
     return (
-      <div className="border">
+      <div className="roots-list-item border">
         <RootButton root_name={root_name} root_id={root_id} />
         <TextForm
           inputKey={root_id}
@@ -328,7 +328,7 @@ const RootButton = memo(({ root_name, root_id }: RootButtonProps) => {
         data-bs-target={"#collapseExample" + root_id}
         aria-expanded="false"
         aria-controls={"collapseExample" + root_id}
-        className="btn"
+        className="btn fs-4"
         value={root_id}
       >
         {root_name}

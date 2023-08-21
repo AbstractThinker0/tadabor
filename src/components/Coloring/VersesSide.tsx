@@ -196,7 +196,7 @@ function VersesSide({
               ) : (
                 stateVerses.map((verse) => (
                   <div
-                    className="verse-item"
+                    className="verse-item fs-3"
                     key={verse.key}
                     data-id={verse.key}
                     style={
@@ -333,7 +333,7 @@ function SelectedVerses({
             const verse = getVerseByKey(verseKey);
             return (
               <div
-                className="verse-item"
+                className="verse-item fs-3"
                 key={verseKey}
                 style={{
                   backgroundColor: coloredVerses[verseKey].colorCode,

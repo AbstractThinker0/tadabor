@@ -133,7 +133,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
             stateVerses.map((verse) => {
               return (
                 <Fragment key={verse.key}>
-                  <p className="fs-4 mb-0" dir="rtl">
+                  <p className="fs-3 mb-0" dir="rtl">
                     {verse.versetext} ({verse.verseid})
                   </p>
                   <TransComponent verse_key={verse.key} />

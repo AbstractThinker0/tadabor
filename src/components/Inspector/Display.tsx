@@ -55,7 +55,7 @@ const Display = ({
   return (
     <div className="p-2 display" ref={refDisplay}>
       <div className="card display-verses">
-        <div className="card-header text-primary text-center fs-4">
+        <div className="card-header text-primary text-center fs-3">
           سورة {chapterNames[currentChapter - 1].name}
         </div>
         <ListVerses
@@ -224,7 +224,7 @@ const VerseWords = ({
 
   return (
     <>
-      <div className="display-verses-item-text">
+      <div className="display-verses-item-text fs-3">
         {verseText.map((word, index) => (
           <Fragment key={index}>
             <span
@@ -505,7 +505,7 @@ const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
   return (
     <>
       <div data-child-id={rootVerse.key}>
-        <span className="display-verses-item-roots-verses-item-text">
+        <span className="display-verses-item-roots-verses-item-text fs-4">
           {rootVerse.verseParts.map((part, i) => (
             <Fragment key={i}>
               {part.highlight ? <mark>{part.text}</mark> : part.text}

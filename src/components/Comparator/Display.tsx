@@ -60,7 +60,7 @@ const Display = ({
   return (
     <div className="card display">
       <TransAlert />
-      <div className="card-header text-center text-primary fs-4">
+      <div className="card-header text-center text-primary fs-3">
         سورة {chapterNames[Number(currentChapter) - 1].name}
       </div>
       <div className="card-body verses" ref={refListVerses}>
@@ -76,7 +76,7 @@ const Display = ({
             >
               <div
                 dir="rtl"
-                className=" py-2 border-top border-bottom fs-5"
+                className=" py-2 border-top border-bottom fs-3"
                 data-id={verse.key}
               >
                 {verse.versetext}{" "}

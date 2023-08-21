@@ -36,7 +36,7 @@
 
         min-width: 200px;
         overflow-y: scroll;
-        background-color: white;
+        //background-color: white;
 
         &-item {
           display: flex;
@@ -163,7 +163,8 @@
 
     &-chapter {
       flex: 1;
-      background-color: var(--color-primary);
+      //background-color: var(--color-primary);
+      background-color: #f7fafc;
 
       &-title {
         color: rgb(58, 174, 174);

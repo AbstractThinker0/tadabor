@@ -102,7 +102,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
 
   return (
     <div className="card mb-3">
-      <div className="card-header" dir="rtl">
+      <div className="card-header fs-3" dir="rtl">
         {convertKey(verseKey)} <br /> {getVerse(verseKey)}{" "}
       </div>
       {stateEditable ? (
