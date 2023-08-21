@@ -3,12 +3,14 @@
 
 @import "./variables.scss";
 
+@import url("https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@500&display=swap");
+
 main {
   display: flex;
   flex-direction: column;
   height: 100vh;
 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Scheherazade New", serif;
   font-size: larger;
 }
 
