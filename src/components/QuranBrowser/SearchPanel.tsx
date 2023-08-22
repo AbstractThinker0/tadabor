@@ -284,9 +284,9 @@ const SearchSuccessComponent = ({
   return (
     <>
       {searchResult.length > 0 && (
-        <p className="mt-3 fw-bold text-success">
+        <div className="fw-bold text-success">
           {t("search_count") + " " + searchResult.length}{" "}
-        </p>
+        </div>
       )}
     </>
   );
