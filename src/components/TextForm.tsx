@@ -171,7 +171,7 @@ const TextEditButton = ({
 }: TextEditButtonProps) => {
   const { t } = useTranslation();
 
-  function onClickEditButton(event: React.MouseEvent<HTMLButtonElement>) {
+  function onClickEditButton() {
     handleEditButtonClick(inputKey);
   }
 
@@ -371,7 +371,7 @@ const TextAreaComponent = ({
   return (
     <textarea
       ref={refTextarea}
-      className="form-control mb-2"
+      className="form-control mb-2 fs-5"
       id="textInput"
       placeholder={placeholder ? placeholder : (t("text_form") as string)}
       name={inputKey}
