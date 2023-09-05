@@ -3,13 +3,13 @@
   "version": "0.6.6",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EnlightenCode/tadabor.git"
+    "url": "https://github.com/AbstractThinker0/tadabor.git"
   },
   "bugs": {
-    "url": "https://github.com/EnlightenCode/tadabor/issues"
+    "url": "https://github.com/AbstractThinker0/tadabor/issues"
   },
   "description": "A Quran web application",
-  "author": "EnlightenCode",
+  "author": "AbstractThinker0",
   "license": "MIT",
   "scripts": {
     "start": "vite",

@@ -7,7 +7,7 @@ const AboutEnglish = () => {
         <p className="text-center">
           Check out the project's{" "}
           <a
-            href="https://github.com/EnlightenCode/tadabor"
+            href="https://github.com/AbstractThinker0/tadabor"
             target="_blank"
             rel="noreferrer"
           >
@@ -15,7 +15,7 @@ const AboutEnglish = () => {
           </a>
         </p>
         <div className="card-body">
-          <h5>Intro</h5>
+          <h5>Intro:</h5>
           <p>
             This project is a web App that allows you to browse through the
             Quran and write your notes/reflections below the verses, everything
@@ -29,7 +29,7 @@ const AboutEnglish = () => {
             press the save button, all the data will be saved on your browser
             app and clearing your cache might erase the data you have saved.
           </p>
-          <h5>Disclaimer</h5>
+          <h5>Disclaimer:</h5>
           <p>
             The app is in beta, which means you may encounter occasional bugs.
             We strongly recommend keeping a backup of any data you save while
@@ -40,7 +40,7 @@ const AboutEnglish = () => {
             the completeness of search results based on sentences/roots has not
             been extensively tested.
           </p>
-          <h5>Credits</h5>
+          <h5>Credits:</h5>
           <ul>
             <li className="fw-bold">
               The creator of the universe for all his favors that if I tried to
@@ -65,7 +65,7 @@ const AboutEnglish = () => {
               Quran roots compilation
             </li>
           </ul>
-          <h5>Future project</h5>
+          <h5>Future project:</h5>
           <p>
             Once all features of this project are implemented, it will serve as
             the foundation for another project that aims to create a platform
@@ -90,7 +90,7 @@ const AboutArabic = () => {
         <p className="text-center">
           إطلع على موقع البرنامج في{" "}
           <a
-            href="https://github.com/EnlightenCode/tadabor"
+            href="https://github.com/AbstractThinker0/tadabor"
             target="_blank"
             rel="noreferrer"
           >
