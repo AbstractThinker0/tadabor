@@ -13,9 +13,9 @@ main {
   font-family: "Scheherazade New", serif;
   font-size: larger;
   line-height: normal;
-}
 
-@import "./layout.scss";
+  @import "./layout.scss";
+}
 
 @import "./pages/browser.scss";
 

@@ -1,8 +1,53 @@
-.navbar {
-  .navbar-brand {
+nav {
+  background-color: rgb(33, 37, 41);
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .nav-brand {
     padding-left: 0.8rem;
     padding-right: 0.8rem;
     font-size: x-large;
     color: moccasin;
+    text-decoration: none;
+  }
+
+  .nav-list {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+
+    &-start {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      &-item {
+        a {
+          text-decoration: none;
+          padding-left: 0.1rem;
+          padding-right: 0.1rem;
+          color: rgb(190, 190, 190);
+        }
+
+        a.active {
+          color: black;
+          background-color: var(--color-primary);
+          border-radius: 0.3rem;
+        }
+      }
+    }
+
+    &-end {
+      display: flex;
+      align-items: center;
+    }
   }
 }
