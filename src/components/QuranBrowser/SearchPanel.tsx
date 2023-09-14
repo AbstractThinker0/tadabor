@@ -204,7 +204,7 @@ const FormWordSearch = ({
 
   return (
     <form className="p-0 mt-2" role="search" onSubmit={handleSearchSubmit}>
-      <div className="row">
+      <div className="">
         <div>
           <textarea
             required
