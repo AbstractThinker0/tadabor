@@ -8,10 +8,6 @@ const Navbar = () => {
   return (
     <nav>
       <div className="nav-list">
-        <a className="nav-brand" href="/">
-          📖{t("nav_brand")}
-        </a>
-
         <div className="nav-list-start">
           <NavItem to="/" label={t("nav_browser")} />
           <NavItem to="/roots" label={t("nav_roots")} />
