@@ -9,11 +9,6 @@ import {
   searchIndexProps,
 } from "../../types";
 
-export interface versePart {
-  text: string;
-  highlight: boolean;
-}
-
 export interface searchResult {
   key: string;
   suraid: string;
