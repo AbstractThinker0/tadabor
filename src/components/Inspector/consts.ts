@@ -1,5 +1,17 @@
 import { ActionsUnion, createActionPayload } from "../../types";
 
+export interface versePartProps {
+  text: string;
+  highlight: boolean;
+}
+
+export interface rootVerseProps {
+  verseParts: versePartProps[];
+  key: string;
+  suraid: string;
+  verseid: string;
+}
+
 export enum IS_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
   SET_SCROLL_KEY = "dispatchSetScrollKey",
