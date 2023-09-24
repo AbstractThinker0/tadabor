@@ -34,18 +34,7 @@ const ListVerses = ({
 }: ListVersesProps) => {
   const { absoluteQuran } = useQuran();
 
-  const [stateVerses, setStateVerses] = useState(() => {
-    //
-    const chapterVerses: RankedVerseProps[] = [];
-
-    absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter.toString()) return;
-
-      chapterVerses.push({ ...verse, rank: index });
-    });
-
-    return chapterVerses;
-  });
+  const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 

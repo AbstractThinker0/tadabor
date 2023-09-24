@@ -47,7 +47,7 @@ const ListSearchResults = ({
 
   const [isPending, startTransition] = useTransition();
 
-  const [stateVerses, setStateVerse] = useState(versesArray);
+  const [stateVerses, setStateVerse] = useState<searchResult[]>([]);
 
   const refListVerses = useRef<HTMLDivElement>(null);
 

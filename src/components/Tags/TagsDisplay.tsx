@@ -274,9 +274,7 @@ const ListVerses = memo(
   }: ListVersesProps) => {
     const { allQuranText, chapterNames } = useQuran();
 
-    const [stateVerses, setStateVerses] = useState(
-      allQuranText[currentChapter - 1].verses
-    );
+    const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
     const [isPending, startTransition] = useTransition();
 

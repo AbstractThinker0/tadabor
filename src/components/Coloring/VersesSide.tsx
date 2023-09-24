@@ -41,9 +41,7 @@ function VersesSide({
 }: VersesSideProps) {
   const { chapterNames, allQuranText } = useQuran();
 
-  const [stateVerses, setStateVerses] = useState(
-    allQuranText[currentChapter - 1].verses
-  );
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 

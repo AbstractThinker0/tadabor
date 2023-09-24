@@ -102,16 +102,12 @@ interface ListVersesProps {
 
 const ListVerses = ({
   selectChapter,
-
   scrollKey,
-
   dispatchQbAction,
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
 
-  const [stateVerses, setStateVerses] = useState(
-    allQuranText[selectChapter - 1].verses
-  );
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 

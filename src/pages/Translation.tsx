@@ -16,6 +16,7 @@ import { TextAreaComponent } from "../components/TextForm";
 import { selectTranslation, useAppDispatch, useAppSelector } from "../store";
 import { translationsActions } from "../store/translationsReducer";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { verseProps } from "../types";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
@@ -102,9 +103,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const { allQuranText, chapterNames } = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
-  const [stateVerses, setStateVerses] = useState(
-    allQuranText[selectChapter - 1].verses
-  );
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 

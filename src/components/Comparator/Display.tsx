@@ -22,7 +22,7 @@ const Display = ({
   transVerses,
   handleSelectVerse,
 }: DisplayProps) => {
-  const [stateVerses, setStateVerses] = useState(chapterVerses);
+  const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
