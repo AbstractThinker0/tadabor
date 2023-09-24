@@ -59,7 +59,10 @@
       }
 
       &-footer {
+        display: flex;
+        align-items: center;
         background-color: rgb(231, 230, 230);
+
         &-buttons {
           display: flex;
 
