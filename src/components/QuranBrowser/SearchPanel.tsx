@@ -85,24 +85,26 @@ const SearchPanel = memo(
           handleCurrentChapter={handleCurrentChapter}
           currentChapter={currentChapter}
         />
-        <RadioSearchMethod
-          searchMethod={searchMethod}
-          setSearchMethod={setSearchMethod}
-        />
-        <CheckboxComponent
-          checkboxState={searchDiacritics}
-          setCheckBoxState={setSearchDiacritics}
-          labelText={t("search_diacritics")}
-          isDisabled={isRootSearch}
-          inputID="CheckboxDiacritics"
-        />
-        <CheckboxComponent
-          checkboxState={searchIdentical}
-          setCheckBoxState={setSearchIdentical}
-          labelText={t("search_identical")}
-          isDisabled={isRootSearch}
-          inputID="CheckboxIdentical"
-        />
+        <div className="browser-search-options">
+          <RadioSearchMethod
+            searchMethod={searchMethod}
+            setSearchMethod={setSearchMethod}
+          />
+          <CheckboxComponent
+            checkboxState={searchDiacritics}
+            setCheckBoxState={setSearchDiacritics}
+            labelText={t("search_diacritics")}
+            isDisabled={isRootSearch}
+            inputID="CheckboxDiacritics"
+          />
+          <CheckboxComponent
+            checkboxState={searchIdentical}
+            setCheckBoxState={setSearchIdentical}
+            labelText={t("search_identical")}
+            isDisabled={isRootSearch}
+            inputID="CheckboxIdentical"
+          />
+        </div>
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
           searchString={searchString}
@@ -135,8 +137,8 @@ const RadioSearchMethod = ({
     setSearchMethod(event.target.value as SEARCH_METHOD);
   };
   return (
-    <div>
-      {t("search_method")}
+    <div className="browser-search-options-method">
+      <span className="fw-bold">{t("search_method")}</span>
       <div
         className={`form-check form-check-inline ${
           i18n.resolvedLanguage === "ar" && "form-check-reverse"
@@ -203,7 +205,7 @@ const FormWordSearch = ({
   }
 
   return (
-    <form className="p-0 mt-2" role="search" onSubmit={handleSearchSubmit}>
+    <form className="p-0" role="search" onSubmit={handleSearchSubmit}>
       <div className="">
         <div>
           <textarea
@@ -253,7 +255,7 @@ const CheckboxComponent = ({
   };
   return (
     <div
-      className={`form-check mt-2  ${
+      className={`form-check  ${
         i18n.resolvedLanguage === "ar" && "form-check-reverse"
       }`}
     >

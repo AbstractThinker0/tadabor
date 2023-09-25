@@ -49,9 +49,9 @@ const SelectionListChapters = memo(
         parent.scrollTop + parentOffsetTop <
           selectedChapter.offsetTop -
             parent.clientHeight +
-            selectedChapter.clientHeight * 1.5 ||
+            selectedChapter.clientHeight * 1.7 ||
         parent.scrollTop + parentOffsetTop >
-          selectedChapter.offsetTop - selectedChapter.clientHeight * 1.5
+          selectedChapter.offsetTop - selectedChapter.clientHeight * 1.1
       ) {
         parent.scrollTop =
           selectedChapter.offsetTop - parentOffsetTop - parent.clientHeight / 2;
@@ -119,7 +119,7 @@ const SelectionListChapters = memo(
       getSelectedCount === 1 && Number(selectedChapters[0]) === currentChapter;
 
     return (
-      <div className="container mb-2 p-0 browser-search-chapter">
+      <div className="container p-0 browser-search-chapter">
         <input
           className="form-control browser-search-chapter-input"
           type="search"

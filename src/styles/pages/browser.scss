@@ -59,20 +59,42 @@
       }
 
       &-footer {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 0.8vh;
+        padding-bottom: 0.8vh;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         background-color: rgb(231, 230, 230);
 
         &-buttons {
           display: flex;
-
           justify-content: center;
-          gap: 1rem;
-          padding: 0.5rem;
+          gap: 3px;
 
           border-bottom-left-radius: 0.3rem;
           border-bottom-right-radius: 0.3rem;
         }
+      }
+    }
+
+    &-options {
+      padding-inline-start: 6px;
+
+      &-method {
+        display: flex;
+        flex-wrap: wrap;
+
+        .form-check {
+          display: inline-flex;
+        }
+      }
+
+      .form-check {
+        display: flex;
+        gap: 5px;
+        align-items: center;
       }
     }
 

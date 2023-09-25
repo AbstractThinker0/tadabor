@@ -71,7 +71,7 @@ i18n
           nav_coloring: "تلوين",
           nav_translation: "الترجمة",
           nav_tags: "العناوين",
-          nav_inspector: "المتفحِص",
+          nav_inspector: "المتفحِّص",
           nav_comparator: "المقارن",
           search_method: "طريقة البحث: ",
           search_root: "جذر",
