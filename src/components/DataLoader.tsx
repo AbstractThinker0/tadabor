@@ -1,10 +1,10 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { dbFuncs } from "../util/db";
-import { useAppDispatch } from "../store";
-import { UserNotesType, notesDirectionType, translationsType } from "../types";
-import { notesActions } from "../store/notesReducer";
-import { translationsActions } from "../store/translationsReducer";
-import LoadingSpinner from "./LoadingSpinner";
+import { dbFuncs } from "@/util/db";
+import { useAppDispatch } from "@/store/index";
+import { UserNotesType, notesDirectionType, translationsType } from "@/types";
+import { notesActions } from "@/store/notesReducer";
+import { translationsActions } from "@/store/translationsReducer";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function DataLoader({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
