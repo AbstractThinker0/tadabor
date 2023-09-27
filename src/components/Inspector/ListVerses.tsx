@@ -8,18 +8,23 @@ import {
   useTransition,
 } from "react";
 
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-import useQuran from "../../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
 import { Collapse, Tooltip } from "bootstrap";
 
 import { IconSelect } from "@tabler/icons-react";
 
-import { splitByArray } from "../../util/util";
-import NoteText from "../NoteText";
-import { RankedVerseProps, rootProps, searchIndexProps } from "../../types";
-import { clActionsProps, isActions, rootVerseProps } from "./consts";
+import { splitByArray } from "@/util/util";
+import NoteText from "@/components/NoteText";
+import {
+  RankedVerseProps,
+  rootProps,
+  rootVerseProps,
+  searchIndexProps,
+} from "@/types";
+import { clActionsProps, isActions } from "@/components/Inspector/consts";
 
 interface ListVersesProps {
   currentChapter: number;

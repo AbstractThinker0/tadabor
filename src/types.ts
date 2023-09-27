@@ -76,6 +76,18 @@ export interface searchIndexProps {
   wordIndex: string;
 }
 
+interface versePartProps {
+  text: string;
+  highlight: boolean;
+}
+
+export interface rootVerseProps {
+  verseParts: versePartProps[];
+  key: string;
+  suraid: string;
+  verseid: string;
+}
+
 // Bellow snippets are thanks to this article https://patrickdesjardins.com/blog/typescript-with-strong-typed-action-when-using-usereducer-of-react-hooks
 
 /**
