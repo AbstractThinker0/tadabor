@@ -12,6 +12,48 @@
     &-item {
       padding-left: 5px;
       padding-right: 5px;
+
+      &-title {
+        display: flex;
+        justify-content: center;
+
+        &-pc {
+          width: 40%;
+          min-width: 30%;
+          opacity: 0;
+          user-select: none;
+        }
+
+        &-text {
+          display: flex;
+          justify-content: center;
+          width: 3.5rem;
+        }
+
+        &-btns {
+          width: 40%;
+          min-width: 30%;
+
+          &-derivations {
+            border: 2px solid black;
+          }
+        }
+      }
+
+      &-verses {
+        background-color: rgb(247, 250, 252);
+        max-height: 60vh;
+        overflow-y: scroll;
+
+        &-item {
+          padding: 4px;
+          border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+
+          &-selected {
+            background-color: beige;
+          }
+        }
+      }
     }
   }
 }

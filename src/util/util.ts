@@ -162,3 +162,24 @@ export function getMatches(
 
   return matchParts;
 }
+
+export function hasAllLetters(str: string, token: string) {
+  const tokenMap = new Map();
+  const strMap = new Map();
+
+  for (const char of token) {
+    tokenMap.set(char, (tokenMap.get(char) || 0) + 1);
+  }
+
+  for (const char of str) {
+    strMap.set(char, (strMap.get(char) || 0) + 1);
+  }
+
+  for (const [char, count] of tokenMap) {
+    if (!strMap.has(char) || strMap.get(char) < count) {
+      return false;
+    }
+  }
+
+  return true;
+}

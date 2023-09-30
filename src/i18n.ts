@@ -57,6 +57,9 @@ i18n
           select_notice:
             "You have to select at least one chapter to initiate a search.",
           text_form: "Enter your text",
+          search_options: "Search options: ",
+          derivations: "Derivations",
+          search_inclusive: "Inclusive",
         },
       },
       ar: {
@@ -101,6 +104,9 @@ i18n
           search_scope: "نطاق البحث",
           select_notice: "يجب عليك اختيار سورة واحد على الأقل لبدء البحث.",
           text_form: "أدخل كتاباتك",
+          search_options: "خيارات البحث: ",
+          derivations: "الإشتقاقات",
+          search_inclusive: "شامل",
         },
       },
     },

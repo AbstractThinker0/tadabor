@@ -5,21 +5,32 @@ import {
   memo,
   useCallback,
   useEffect,
-  useMemo,
+  useRef,
   useState,
+  useTransition,
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { dbFuncs } from "../util/db";
+import { dbFuncs } from "@/util/db";
 
 import { toast } from "react-toastify";
 
-import LoadingSpinner from "../components/LoadingSpinner";
-import useQuran from "../context/QuranContext";
-import { normalizeAlif } from "../util/util";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import useQuran from "@/context/QuranContext";
+import { hasAllLetters, normalizeAlif, splitByArray } from "@/util/util";
 
-import { TextForm } from "../components/TextForm";
-import { markedNotesType, notesDirectionType, notesType } from "../types";
+import { TextForm } from "@/components/TextForm";
+import {
+  markedNotesType,
+  notesDirectionType,
+  notesType,
+  rootProps,
+  rootVerseProps,
+  searchIndexProps,
+} from "@/types";
+import { IconSelect } from "@tabler/icons-react";
+import { Tooltip } from "bootstrap";
+import NoteText from "@/components/NoteText";
 
 const arabicAlpha = [
   "ا",
@@ -55,28 +66,40 @@ const arabicAlpha = [
 
 function RootsBrowser() {
   const [searchString, setSearchString] = useState("");
+  const [searchInclusive, setSearchInclusive] = useState(false);
 
   return (
     <div className="roots">
       <FormWordSearch
         searchString={searchString}
+        searchInclusive={searchInclusive}
         setSearchString={setSearchString}
+        setSearchInclusive={setSearchInclusive}
       />
 
-      <RootsListComponent searchString={searchString} />
+      <RootsListComponent
+        searchString={searchString}
+        searchInclusive={searchInclusive}
+      />
     </div>
   );
 }
 
 interface FormWordSearchProps {
   searchString: string;
+  searchInclusive: boolean;
   setSearchString: Dispatch<SetStateAction<string>>;
+  setSearchInclusive: Dispatch<SetStateAction<boolean>>;
 }
 
 const FormWordSearch = ({
   searchString,
+  searchInclusive,
   setSearchString,
+  setSearchInclusive,
 }: FormWordSearchProps) => {
+  const { i18n, t } = useTranslation();
+
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
   };
@@ -85,10 +108,14 @@ const FormWordSearch = ({
     setSearchString(letter);
   };
 
+  const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInclusive(event.target.checked);
+  };
+
   return (
     <div className="container p-3">
-      <div className="row justify-content-center">
-        <div className="col-sm-2">
+      <div className="d-flex align-items-center flex-column">
+        <div className="w-25">
           <input
             className="form-control"
             type="search"
@@ -99,6 +126,26 @@ const FormWordSearch = ({
             required
             dir="rtl"
           />
+          <div className="d-flex gap-1 align-self-start">
+            <span className="fw-bold">{t("search_options")}</span>{" "}
+            <div
+              className={`form-check   ${
+                i18n.resolvedLanguage === "ar" && "form-check-reverse"
+              }`}
+            >
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={searchInclusive}
+                onChange={handleChangeCheckbox}
+                value=""
+                id="CheckInc"
+              />
+              <label className="form-check-label" htmlFor="CheckInc">
+                {t("search_inclusive")}
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <div className="row pt-1" dir="rtl">
@@ -127,152 +174,170 @@ const FormWordSearch = ({
 };
 
 interface RootsListComponentProps {
+  searchInclusive: boolean;
   searchString: string;
 }
 
-const RootsListComponent = memo(({ searchString }: RootsListComponentProps) => {
-  const { t } = useTranslation();
-  const { quranRoots } = useQuran();
-  const [loadingState, setLoadingState] = useState(true);
+const RootsListComponent = memo(
+  ({ searchString, searchInclusive }: RootsListComponentProps) => {
+    const { t } = useTranslation();
+    const { quranRoots } = useQuran();
+    const [loadingState, setLoadingState] = useState(true);
 
-  const [myNotes, setMyNotes] = useState<notesType>({});
-  const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-  const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
-  const [itemsCount, setItemsCount] = useState(100);
+    const [myNotes, setMyNotes] = useState<notesType>({});
+    const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
+    const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
+    const [itemsCount, setItemsCount] = useState(80);
 
-  useEffect(() => {
-    let clientLeft = false;
+    const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
-    fetchData();
+    const [isPending, startTransition] = useTransition();
 
-    async function fetchData() {
-      const userNotes = await dbFuncs.loadRootNotes();
+    useEffect(() => {
+      let clientLeft = false;
 
-      if (clientLeft) return;
+      fetchData();
 
-      const markedNotes: markedNotesType = {};
+      async function fetchData() {
+        const userNotes = await dbFuncs.loadRootNotes();
 
-      const extractNotes: notesType = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-        markedNotes[note.id] = false;
+        if (clientLeft) return;
+
+        const markedNotes: markedNotesType = {};
+
+        const extractNotes: notesType = {};
+        userNotes.forEach((note) => {
+          extractNotes[note.id] = note.text;
+          markedNotes[note.id] = false;
+        });
+
+        const userNotesDir = await dbFuncs.loadRootNotesDir();
+
+        if (clientLeft) return;
+
+        const extractNotesDir: notesDirectionType = {};
+
+        userNotesDir.forEach((note) => {
+          extractNotesDir[note.id] = note.dir;
+        });
+
+        setMyNotes(extractNotes);
+        setEditableNotes(markedNotes);
+        setAreaDirection(extractNotesDir);
+
+        setLoadingState(false);
+      }
+
+      return () => {
+        clientLeft = true;
+      };
+    }, []);
+
+    const memoHandleNoteChange = useCallback(handleNoteChange, []);
+
+    function handleNoteChange(name: string, value: string) {
+      setMyNotes((state) => {
+        return { ...state, [name]: value };
       });
-
-      const userNotesDir = await dbFuncs.loadRootNotesDir();
-
-      if (clientLeft) return;
-
-      const extractNotesDir: notesDirectionType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
-
-      setMyNotes(extractNotes);
-      setEditableNotes(markedNotes);
-      setAreaDirection(extractNotesDir);
-
-      setLoadingState(false);
     }
 
-    return () => {
-      clientLeft = true;
+    function handleNoteSubmit(key: string, value: string) {
+      setEditableNotes((state) => {
+        return { ...state, [key]: false };
+      });
+
+      dbFuncs
+        .saveRootNote({
+          id: key,
+          text: value,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
+    }
+
+    const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
+
+    const memoHandleEditClick = useCallback(handleEditClick, []);
+
+    function handleEditClick(rootID: string) {
+      setEditableNotes((state) => {
+        return { ...state, [rootID]: true };
+      });
+    }
+
+    function handleSetDirection(root_id: string, dir: string) {
+      setAreaDirection((state) => {
+        return { ...state, [root_id]: dir };
+      });
+      dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
+    }
+
+    const memoHandleSetDirection = useCallback(handleSetDirection, []);
+
+    useEffect(() => {
+      startTransition(() => {
+        setStateRoots(
+          quranRoots.filter(
+            (root) =>
+              normalizeAlif(root.name).startsWith(searchString) ||
+              root.name.startsWith(searchString) ||
+              !searchString ||
+              (searchInclusive && hasAllLetters(root.name, searchString))
+          )
+        );
+      });
+    }, [searchString, searchInclusive]);
+
+    const fetchMoreData = () => {
+      setItemsCount((state) => state + 15);
     };
-  }, []);
 
-  const memoHandleNoteChange = useCallback(handleNoteChange, []);
-
-  function handleNoteChange(name: string, value: string) {
-    setMyNotes((state) => {
-      return { ...state, [name]: value };
-    });
-  }
-
-  function handleNoteSubmit(key: string, value: string) {
-    setEditableNotes((state) => {
-      return { ...state, [key]: false };
-    });
-
-    dbFuncs
-      .saveRootNote({
-        id: key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function () {
-        toast.success(t("save_success") as string);
-      })
-      .catch(function () {
-        toast.success(t("save_failed") as string);
-      });
-  }
-
-  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
-
-  const memoHandleEditClick = useCallback(handleEditClick, []);
-
-  function handleEditClick(rootID: string) {
-    setEditableNotes((state) => {
-      return { ...state, [rootID]: true };
-    });
-  }
-
-  function handleSetDirection(root_id: string, dir: string) {
-    setAreaDirection((state) => {
-      return { ...state, [root_id]: dir };
-    });
-    dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
-  }
-
-  const memoHandleSetDirection = useCallback(handleSetDirection, []);
-
-  const filteredArray = useMemo(
-    () =>
-      quranRoots.filter(
-        (root) =>
-          normalizeAlif(root.name).startsWith(searchString) ||
-          root.name.startsWith(searchString) ||
-          !searchString
-      ),
-    [quranRoots, searchString]
-  );
-
-  const fetchMoreData = () => {
-    setItemsCount((state) => state + 20);
-  };
-
-  function handleScroll(event: React.UIEvent<HTMLDivElement>) {
-    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-    if (scrollHeight - scrollTop <= clientHeight + 10) {
-      fetchMoreData();
+    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+      const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+      // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+      if (scrollHeight - scrollTop <= clientHeight + 10) {
+        fetchMoreData();
+      }
     }
+
+    if (loadingState) return <LoadingSpinner />;
+
+    return (
+      <div className="roots-list" onScroll={handleScroll}>
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateRoots
+            .slice(0, itemsCount)
+            .map((root) => (
+              <RootComponent
+                key={root.id}
+                root_occurences={root.occurences}
+                root_name={root.name}
+                root_id={root.id.toString()}
+                value={myNotes[root.id] || ""}
+                noteDirection={areaDirection[root.id] || ""}
+                isEditable={editableNotes[root.id]}
+                handleEditClick={memoHandleEditClick}
+                handleNoteSubmit={memoHandleNoteSubmit}
+                handleNoteChange={memoHandleNoteChange}
+                handleSetDirection={memoHandleSetDirection}
+              />
+            ))
+        )}
+      </div>
+    );
   }
-
-  if (loadingState) return <LoadingSpinner />;
-
-  return (
-    <div className="roots-list" onScroll={handleScroll}>
-      {filteredArray.slice(0, itemsCount).map((root) => (
-        <RootComponent
-          key={root.id}
-          root_name={root.name}
-          root_id={root.id.toString()}
-          value={myNotes[root.id] || ""}
-          noteDirection={areaDirection[root.id] || ""}
-          isEditable={editableNotes[root.id]}
-          handleEditClick={memoHandleEditClick}
-          handleNoteSubmit={memoHandleNoteSubmit}
-          handleNoteChange={memoHandleNoteChange}
-          handleSetDirection={memoHandleSetDirection}
-        />
-      ))}
-    </div>
-  );
-});
+);
 
 interface RootComponentProps {
+  root_occurences: string[];
   root_name: string;
   root_id: string;
   noteDirection: string;
@@ -286,6 +351,7 @@ interface RootComponentProps {
 
 const RootComponent = memo(
   ({
+    root_occurences,
     root_name,
     root_id,
     value,
@@ -296,9 +362,28 @@ const RootComponent = memo(
     noteDirection,
     handleSetDirection,
   }: RootComponentProps) => {
+    const { t } = useTranslation();
+
     return (
       <div className="roots-list-item border">
-        <RootButton root_name={root_name} root_id={root_id} />
+        <div className="roots-list-item-title fs-4">
+          <div className="roots-list-item-title-pc">placeholder</div>
+          <div className="roots-list-item-title-text">{root_name}</div>
+          <div className="roots-list-item-title-btns">
+            <RootButton root_id={root_id} />
+            <button
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target={"#collapseOccs" + root_id}
+              aria-expanded="false"
+              aria-controls={"collapseOccs" + root_id}
+              className="btn roots-list-item-title-btns-derivations"
+              value={root_id}
+            >
+              {t("derivations")}
+            </button>
+          </div>
+        </div>
         <TextForm
           inputKey={root_id}
           inputValue={value}
@@ -309,32 +394,248 @@ const RootComponent = memo(
           handleInputSubmit={handleNoteSubmit}
           handleEditClick={handleEditClick}
         />
+        <RootOccurences root_id={root_id} root_occurences={root_occurences} />
       </div>
     );
   }
 );
 
 interface RootButtonProps {
-  root_name: string;
   root_id: string;
 }
 
-const RootButton = memo(({ root_name, root_id }: RootButtonProps) => {
+const RootButton = memo(({ root_id }: RootButtonProps) => {
   return (
-    <div className="text-center">
-      <button
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target={"#collapseExample" + root_id}
-        aria-expanded="false"
-        aria-controls={"collapseExample" + root_id}
-        className="btn fs-4"
-        value={root_id}
-      >
-        {root_name}
-      </button>
-    </div>
+    <button
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target={"#collapseExample" + root_id}
+      aria-expanded="false"
+      aria-controls={"collapseExample" + root_id}
+      className="btn "
+      value={root_id}
+    >
+      <IconSelect />
+    </button>
   );
 });
+
+interface RootOccurencesProps {
+  root_occurences: string[];
+  root_id: string;
+}
+
+const RootOccurences = ({ root_occurences, root_id }: RootOccurencesProps) => {
+  const { chapterNames, absoluteQuran } = useQuran();
+  const [isShown, setIsShown] = useState(false);
+  const [itemsCount, setItemsCount] = useState(20);
+  const refCollapse = useRef<HTMLDivElement>(null);
+  const [scrollKey, setScrollKey] = useState("");
+
+  useEffect(() => {
+    const collapseElement = refCollapse.current;
+    function onShowRoots() {
+      setIsShown(true);
+    }
+
+    function onHiddenRoots() {
+      setIsShown(false);
+    }
+
+    if (collapseElement !== null) {
+      collapseElement.addEventListener("show.bs.collapse", onShowRoots);
+      collapseElement.addEventListener("hidden.bs.collapse", onHiddenRoots);
+    }
+
+    return () => {
+      if (collapseElement !== null) {
+        collapseElement.removeEventListener("show.bs.collapse", onShowRoots);
+        collapseElement.removeEventListener(
+          "hidden.bs.collapse",
+          onHiddenRoots
+        );
+      }
+    };
+  }, []);
+
+  function onScrollOccs(event: React.UIEvent<HTMLDivElement>) {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+    if (scrollHeight - scrollTop <= clientHeight + 10) {
+      setItemsCount((state) => state + 10);
+    }
+  }
+
+  const derivations: searchIndexProps[] = [];
+
+  const rootVerses: rootVerseProps[] = [];
+
+  root_occurences.forEach((occ) => {
+    const occData = occ.split(":");
+    const verse = absoluteQuran[Number(occData[0])];
+    const wordIndexes = occData[1].split(",");
+    const verseWords = verse.versetext.split(" ");
+    const derivationsArray = wordIndexes.map(
+      (index) => verseWords[Number(index) - 1]
+    );
+    const chapterName = chapterNames[Number(verse.suraid) - 1].name;
+    const verseDerivations = derivationsArray.map((name, index) => ({
+      name,
+      key: verse.key,
+      text: `${chapterName}:${verse.verseid}`,
+      wordIndex: wordIndexes[index],
+    }));
+
+    derivations.push(...verseDerivations);
+
+    const rootParts = splitByArray(verse.versetext, derivationsArray);
+
+    const verseParts = rootParts.filter(Boolean).map((part) => ({
+      text: part,
+      highlight: derivationsArray.includes(part),
+    }));
+
+    rootVerses.push({
+      verseParts,
+      key: verse.key,
+      suraid: verse.suraid,
+      verseid: verse.verseid,
+    });
+  });
+
+  const slicedItems = rootVerses.slice(0, itemsCount);
+
+  function handleDerivationClick(verseKey: string, verseIndex: number) {
+    if (itemsCount < verseIndex + 20) {
+      setItemsCount(verseIndex + 20);
+    }
+    setScrollKey(verseKey);
+  }
+
+  useEffect(() => {
+    if (!scrollKey) return;
+
+    if (!refCollapse.current) return;
+
+    const verseToHighlight = refCollapse.current.querySelector(
+      `[data-child-id="${scrollKey}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [scrollKey]);
+
+  return (
+    <div ref={refCollapse} className="collapse" id={`collapseOccs${root_id}`}>
+      {isShown && (
+        <div
+          className="roots-list-item-verses p-3"
+          onScroll={onScrollOccs}
+          dir="rtl"
+        >
+          <DerivationsComponent
+            searchIndexes={derivations}
+            handleDerivationClick={handleDerivationClick}
+          />
+          {slicedItems.map((verse) => (
+            <div
+              key={verse.key}
+              className={`roots-list-item-verses-item ${
+                scrollKey === verse.key
+                  ? "roots-list-item-verses-item-selected"
+                  : ""
+              }`}
+              data-child-id={verse.key}
+            >
+              <RootVerse rootVerse={verse} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+interface DerivationsComponentProps {
+  handleDerivationClick: (verseKey: string, verseIndex: number) => void;
+  searchIndexes: searchIndexProps[];
+}
+
+const DerivationsComponent = memo(
+  ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
+    const refListRoots = useRef<HTMLSpanElement>(null);
+    useEffect(() => {
+      if (!refListRoots.current) return;
+
+      //init tooltip
+      const tooltipArray = Array.from(
+        refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
+      ).map((tooltipNode) => new Tooltip(tooltipNode));
+
+      return () => {
+        tooltipArray.forEach((tooltip) => tooltip.dispose());
+      };
+    }, [searchIndexes]);
+
+    return (
+      <div className="p-2">
+        <span ref={refListRoots} className="">
+          {searchIndexes.map((root: searchIndexProps, index: number) => (
+            <span
+              role="button"
+              key={index}
+              onClick={() => handleDerivationClick(root.key, index)}
+              data-bs-toggle="tooltip"
+              data-bs-title={root.text}
+            >
+              {`${index ? " -" : " "} ${root.name}`}
+            </span>
+          ))}
+        </span>
+        <hr />
+      </div>
+    );
+  }
+);
+
+DerivationsComponent.displayName = "DerivationsComponent";
+
+interface RootVerseProps {
+  rootVerse: rootVerseProps;
+}
+
+const RootVerse = ({ rootVerse }: RootVerseProps) => {
+  const { chapterNames } = useQuran();
+
+  const verseChapter = chapterNames[Number(rootVerse.suraid) - 1].name;
+
+  return (
+    <>
+      <span>
+        {rootVerse.verseParts.map((part, i) => (
+          <Fragment key={i}>
+            {part.highlight ? <mark>{part.text}</mark> : part.text}
+          </Fragment>
+        ))}{" "}
+        <span className="roots-list-item-verses-item-text-chapter">{`(${verseChapter}:${rootVerse.verseid})`}</span>
+        <button
+          className="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#collapseExample${rootVerse.key}child`}
+          aria-expanded="false"
+          aria-controls={`collapseExample${rootVerse.key}child`}
+        >
+          <IconSelect />
+        </button>
+      </span>
+      <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
+    </>
+  );
+};
 
 export default RootsBrowser;
