@@ -70,7 +70,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
           });
         }
 
-        response = await fetchJsonPerm.get("/quranRoots.json");
+        response = await fetchJsonPerm.get("/quranRoots-0.0.7.json");
 
         if (clientLeft) return;
 
