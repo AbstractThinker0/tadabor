@@ -5,16 +5,9 @@ import {
   verseProps,
   rootProps,
   ActionsUnion,
-  IMatch,
+  verseMatchResult,
   searchIndexProps,
-} from "../../types";
-
-export interface searchResult {
-  key: string;
-  suraid: string;
-  verseid: string;
-  verseParts: IMatch[];
-}
+} from "@/types";
 
 export interface qbStateProps {
   selectChapter: number;
@@ -22,7 +15,7 @@ export interface qbStateProps {
   searchString: string;
   searchingString: string;
   searchingChapters: string[];
-  searchResult: searchResult[];
+  searchResult: verseMatchResult[];
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchError: boolean;

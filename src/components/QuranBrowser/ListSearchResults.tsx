@@ -12,18 +12,17 @@ import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
-  searchResult,
-} from "./consts";
-import useQuran from "../../context/QuranContext";
+} from "@/components/QuranBrowser/consts";
+import useQuran from "@/context/QuranContext";
 import { Tooltip } from "bootstrap";
-import NoteText from "../NoteText";
+import NoteText from "@/components/NoteText";
 import { useTranslation } from "react-i18next";
 import { IconSelect } from "@tabler/icons-react";
-import LoadingSpinner from "../LoadingSpinner";
-import { searchIndexProps } from "../../types";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { searchIndexProps, verseMatchResult } from "@/types";
 
 interface ListSearchResultsProps {
-  versesArray: searchResult[];
+  versesArray: verseMatchResult[];
   searchToken: string;
   searchError: boolean;
   searchMethod: string;
@@ -47,7 +46,7 @@ const ListSearchResults = ({
 
   const [isPending, startTransition] = useTransition();
 
-  const [stateVerses, setStateVerse] = useState<searchResult[]>([]);
+  const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
 
   const refListVerses = useRef<HTMLDivElement>(null);
 
@@ -218,7 +217,7 @@ const DerivationsComponent = memo(
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface SearchVerseComponentProps {
-  verse: searchResult;
+  verse: verseMatchResult;
   verseChapter: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
@@ -260,7 +259,7 @@ const SearchErrorsComponent = ({
 };
 
 interface VerseContentComponentProps {
-  verse: searchResult;
+  verse: verseMatchResult;
   verseChapter: string;
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
@@ -306,7 +305,7 @@ const VerseContentComponent = memo(
 VerseContentComponent.displayName = "VerseContentComponent";
 
 interface HighlightedTextProps {
-  verse: searchResult;
+  verse: verseMatchResult;
 }
 
 const HighlightedText = ({ verse }: HighlightedTextProps) => {
@@ -319,7 +318,7 @@ const HighlightedText = ({ verse }: HighlightedTextProps) => {
 
         return (
           <Fragment key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}
+            {isHighlighted ? <mark>{part.text}</mark> : part.text}{" "}
           </Fragment>
         );
       })}

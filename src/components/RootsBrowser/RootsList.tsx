@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
 import useQuran from "@/context/QuranContext";
-import { hasAllLetters, normalizeAlif, splitByArray } from "@/util/util";
+import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
 
 import { TextForm } from "@/components/TextForm";
 import {
@@ -24,7 +24,7 @@ import {
   notesDirectionType,
   notesType,
   rootProps,
-  rootVerseProps,
+  verseMatchResult,
   searchIndexProps,
 } from "@/types";
 import { IconSelect } from "@tabler/icons-react";
@@ -324,32 +324,25 @@ const RootOccurences = ({ root_occurences, root_id }: RootOccurencesProps) => {
 
   const derivations: searchIndexProps[] = [];
 
-  const rootVerses: rootVerseProps[] = [];
+  const rootVerses: verseMatchResult[] = [];
 
   root_occurences.forEach((occ) => {
     const occData = occ.split(":");
     const verse = absoluteQuran[Number(occData[0])];
     const wordIndexes = occData[1].split(",");
     const verseWords = verse.versetext.split(" ");
-    const derivationsArray = wordIndexes.map(
-      (index) => verseWords[Number(index) - 1]
-    );
+
     const chapterName = chapterNames[Number(verse.suraid) - 1].name;
-    const verseDerivations = derivationsArray.map((name, index) => ({
-      name,
+    const verseDerivations = wordIndexes.map((wordIndex) => ({
+      name: verseWords[Number(wordIndex) - 1],
       key: verse.key,
       text: `${chapterName}:${verse.verseid}`,
-      wordIndex: wordIndexes[index],
+      wordIndex,
     }));
 
     derivations.push(...verseDerivations);
 
-    const rootParts = splitByArray(verse.versetext, derivationsArray);
-
-    const verseParts = rootParts.filter(Boolean).map((part) => ({
-      text: part,
-      highlight: derivationsArray.includes(part),
-    }));
+    const verseParts = getRootMatches(verseWords, wordIndexes);
 
     rootVerses.push({
       verseParts,
@@ -461,7 +454,7 @@ const DerivationsComponent = memo(
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
-  rootVerse: rootVerseProps;
+  rootVerse: verseMatchResult;
 }
 
 const RootVerse = ({ rootVerse }: RootVerseProps) => {
@@ -474,9 +467,9 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
       <span>
         {rootVerse.verseParts.map((part, i) => (
           <Fragment key={i}>
-            {part.highlight ? <mark>{part.text}</mark> : part.text}
+            {part.isMatch ? <mark>{part.text}</mark> : part.text}{" "}
           </Fragment>
-        ))}{" "}
+        ))}
         <span className="roots-list-item-verses-item-text-chapter">{`(${verseChapter}:${rootVerse.verseid})`}</span>
         <button
           className="btn"

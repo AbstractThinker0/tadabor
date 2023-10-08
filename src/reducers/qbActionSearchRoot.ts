@@ -1,11 +1,12 @@
-import { qbStateProps, searchResult } from "../components/QuranBrowser/consts";
+import { qbStateProps } from "@/components/QuranBrowser/consts";
 import {
   chapterProps,
   rootProps,
   verseProps,
   searchIndexProps,
-} from "../types";
-import { onlySpaces, splitByArray } from "../util/util";
+  verseMatchResult,
+} from "@/types";
+import { onlySpaces, getRootMatches } from "@/util/util";
 
 const getDerivationsInVerse = (
   wordIndexes: string[],
@@ -14,22 +15,14 @@ const getDerivationsInVerse = (
 ) => {
   const { versetext, key, suraid, verseid } = verse;
   const verseWords = versetext.split(" ");
-  const derivationsArray = wordIndexes.map(
-    (index) => verseWords[Number(index) - 1]
-  );
 
-  const rootParts = splitByArray(versetext, derivationsArray);
+  const verseParts = getRootMatches(verseWords, wordIndexes);
 
-  const verseParts = rootParts.filter(Boolean).map((part) => ({
-    text: part,
-    isMatch: derivationsArray.includes(part),
-  }));
-
-  const verseDerivations = derivationsArray.map((name, index) => ({
-    name,
+  const verseDerivations = wordIndexes.map((wordIndex) => ({
+    name: verseWords[Number(wordIndex) - 1],
     key,
     text: `${chapterName}:${verseid}`,
-    wordIndex: wordIndexes[index],
+    wordIndex,
   }));
 
   const verseResult = { key, suraid, verseid, verseParts };
@@ -70,7 +63,7 @@ export function qbSearchRoot(
 
   const occurencesArray = rootTarget.occurences;
 
-  const matchVerses: searchResult[] = [];
+  const matchVerses: verseMatchResult[] = [];
   const derivations: searchIndexProps[] = [];
 
   if (selectedChapters.length === 114) {

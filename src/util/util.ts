@@ -1,4 +1,4 @@
-import { IMatch } from "../types";
+import { IMatch } from "@/types";
 
 export function normalizeAlif(token: string) {
   return token.replace(/(آ|إ|أ)/g, "ا");
@@ -6,11 +6,6 @@ export function normalizeAlif(token: string) {
 
 export function onlySpaces(str: string) {
   return str.trim().length === 0;
-}
-
-export function splitByArray(text: string, separators: string[]) {
-  const regex = new RegExp(`(${separators.join("|")})`);
-  return text.split(regex).filter(Boolean);
 }
 
 const validArabicLetters = [
@@ -182,4 +177,27 @@ export function hasAllLetters(str: string, token: string) {
   }
 
   return true;
+}
+
+export function getRootMatches(verseWords: string[], wordIndexes: string[]) {
+  const verseParts = <IMatch[]>[];
+  let segment = "";
+
+  for (let i = 0; i < verseWords.length; i++) {
+    if (wordIndexes.includes((i + 1).toString())) {
+      if (segment) {
+        verseParts.push({ text: segment, isMatch: false });
+        segment = "";
+      }
+      verseParts.push({ text: verseWords[i], isMatch: true });
+    } else {
+      segment = segment.concat(`${verseWords[i]} `);
+    }
+  }
+
+  if (segment) {
+    verseParts.push({ text: segment, isMatch: false });
+  }
+
+  return verseParts;
 }

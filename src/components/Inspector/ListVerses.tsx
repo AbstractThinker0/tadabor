@@ -16,12 +16,12 @@ import { Collapse, Tooltip } from "bootstrap";
 
 import { IconSelect } from "@tabler/icons-react";
 
-import { splitByArray } from "@/util/util";
+import { getRootMatches } from "@/util/util";
 import NoteText from "@/components/NoteText";
 import {
   RankedVerseProps,
   rootProps,
-  rootVerseProps,
+  verseMatchResult,
   searchIndexProps,
 } from "@/types";
 import { clActionsProps, isActions } from "@/components/Inspector/consts";
@@ -293,32 +293,26 @@ const RootOccurences = ({
 
   const derivations: searchIndexProps[] = [];
 
-  const rootVerses: rootVerseProps[] = [];
+  const rootVerses: verseMatchResult[] = [];
 
   rootOccs.forEach((occ) => {
     const occData = occ.split(":");
     const verse = absoluteQuran[Number(occData[0])];
     const wordIndexes = occData[1].split(",");
     const verseWords = verse.versetext.split(" ");
-    const derivationsArray = wordIndexes.map(
-      (index) => verseWords[Number(index) - 1]
-    );
+
     const chapterName = chapterNames[Number(verse.suraid) - 1].name;
-    const verseDerivations = derivationsArray.map((name, index) => ({
-      name,
+
+    const verseDerivations = wordIndexes.map((wordIndex) => ({
+      name: verseWords[Number(wordIndex) - 1],
       key: verse.key,
       text: `${chapterName}:${verse.verseid}`,
-      wordIndex: wordIndexes[index],
+      wordIndex,
     }));
 
     derivations.push(...verseDerivations);
 
-    const rootParts = splitByArray(verse.versetext, derivationsArray);
-
-    const verseParts = rootParts.filter(Boolean).map((part) => ({
-      text: part,
-      highlight: derivationsArray.includes(part),
-    }));
+    const verseParts = getRootMatches(verseWords, wordIndexes);
 
     rootVerses.push({
       verseParts,
@@ -437,7 +431,7 @@ const DerivationsComponent = memo(
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
-  rootVerse: rootVerseProps;
+  rootVerse: verseMatchResult;
   dispatchIsAction: Dispatch<clActionsProps>;
 }
 
@@ -457,9 +451,9 @@ const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
         <span className="display-verses-item-roots-verses-item-text fs-4">
           {rootVerse.verseParts.map((part, i) => (
             <Fragment key={i}>
-              {part.highlight ? <mark>{part.text}</mark> : part.text}
+              {part.isMatch ? <mark>{part.text}</mark> : part.text}{" "}
             </Fragment>
-          ))}{" "}
+          ))}
           <span
             onClick={onClickVerseChapter}
             className="display-verses-item-roots-verses-item-text-chapter"
