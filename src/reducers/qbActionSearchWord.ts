@@ -1,6 +1,11 @@
-import { qbStateProps, searchResult } from "../components/QuranBrowser/consts";
-import { chapterProps, quranProps, verseProps } from "../types";
-import { getMatches, onlySpaces, removeDiacritics } from "../util/util";
+import { qbStateProps } from "@/components/QuranBrowser/consts";
+import {
+  chapterProps,
+  quranProps,
+  verseMatchResult,
+  verseProps,
+} from "@/types";
+import { getMatches, onlySpaces, removeDiacritics } from "@/util/util";
 
 const searchVerse = (
   verse: verseProps,
@@ -64,7 +69,7 @@ export function qbSearchWord(
     return { ...newState, searchError: true };
   }
 
-  const matchVerses: searchResult[] = [];
+  const matchVerses: verseMatchResult[] = [];
 
   if (selectedChapters.length === 114) {
     allQuranText.forEach((sura) => {

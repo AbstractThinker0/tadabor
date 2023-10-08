@@ -9,18 +9,18 @@ import {
 
 import { IconSelect } from "@tabler/icons-react";
 
-import useQuran from "../../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
-import { searchIndexProps, verseProps } from "../../types";
-import { qbActions, qbActionsProps, searchResult } from "./consts";
+import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
+import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
 
-import ListSearchResults from "./ListSearchResults";
-import NoteText from "../NoteText";
-import LoadingSpinner from "../LoadingSpinner";
+import ListSearchResults from "@/components/QuranBrowser/ListSearchResults";
+import NoteText from "@/components/NoteText";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
-  searchResult: searchResult[];
+  searchResult: verseMatchResult[];
   searchError: boolean;
   searchingString: string;
   selectChapter: number;

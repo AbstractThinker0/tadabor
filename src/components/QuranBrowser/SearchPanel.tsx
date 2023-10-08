@@ -1,15 +1,16 @@
 import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
-import useQuran from "../../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
-import SelectionListChapters from "./SelectionListChapters";
-import SelectionListRoots from "./SelectionListRoots";
+import SelectionListChapters from "@/components/QuranBrowser/SelectionListChapters";
+import SelectionListRoots from "@/components/QuranBrowser/SelectionListRoots";
+
+import { verseMatchResult } from "@/types";
 import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
-  searchResult,
-} from "./consts";
+} from "@/components/QuranBrowser/consts";
 
 import { IconSearch } from "@tabler/icons-react";
 
@@ -19,7 +20,7 @@ interface SearchPanelProps {
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchString: string;
-  searchResult: searchResult[];
+  searchResult: verseMatchResult[];
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
@@ -276,7 +277,7 @@ const CheckboxComponent = ({
 };
 
 interface SearchSuccessComponentProps {
-  searchResult: searchResult[];
+  searchResult: verseMatchResult[];
 }
 
 const SearchSuccessComponent = ({
