@@ -82,6 +82,7 @@ const RootsList = ({
           root={root}
           isSelected={searchString === root.name && !isDisabled}
           handleRootSelect={handleRootSelect}
+          key={root.id}
         />
       ))}
     </div>
@@ -105,7 +106,6 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
       className={`browser-search-roots-list-item ${
         isSelected ? "browser-search-roots-list-item-selected" : ""
       }`}
-      key={root.id}
     >
       {root.name}
     </div>
