@@ -318,7 +318,7 @@ const HighlightedText = ({ verse }: HighlightedTextProps) => {
 
         return (
           <Fragment key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}{" "}
+            {isHighlighted ? <mark>{part.text}</mark> : part.text}
           </Fragment>
         );
       })}
