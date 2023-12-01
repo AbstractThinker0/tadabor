@@ -7,6 +7,8 @@ import {
 } from "@/types";
 import { getMatches, onlySpaces, removeDiacritics } from "@/util/util";
 
+const TOTAL_CHAPTERS_COUNT = 114;
+
 const searchVerse = (
   verse: verseProps,
   searchToken: string,
@@ -57,21 +59,24 @@ export function qbSearchWord(
     scrollKey: "",
   };
 
+  // If an empty search token don't initiate a search
   if (onlySpaces(searchString)) {
     return { ...newState, searchError: true };
   }
 
+  // Check if we are search with diacrtics or they should be stripped off
   const normalizedToken = searchDiacritics
     ? searchString
     : removeDiacritics(searchString);
 
+  // If the token only had diacrtics this will return true
   if (onlySpaces(normalizedToken)) {
     return { ...newState, searchError: true };
   }
 
   const matchVerses: verseMatchResult[] = [];
 
-  if (selectedChapters.length === 114) {
+  if (selectedChapters.length === TOTAL_CHAPTERS_COUNT) {
     allQuranText.forEach((sura) => {
       sura.verses.forEach((verse) => {
         const result = searchVerse(
