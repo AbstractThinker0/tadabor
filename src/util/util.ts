@@ -184,14 +184,19 @@ export function getRootMatches(verseWords: string[], wordIndexes: string[]) {
   let segment = "";
 
   for (let i = 0; i < verseWords.length; i++) {
+    // this word index is a root derivative
     if (wordIndexes.includes((i + 1).toString())) {
+      // If he have built a segment of non-matches push it
       if (segment) {
         verseParts.push({ text: segment, isMatch: false });
         segment = "";
       }
+
+      // push the actual match
       verseParts.push({ text: verseWords[i], isMatch: true });
     } else {
-      segment = segment.concat(`${verseWords[i]} `);
+      // keep a space around the added words, The browser will get rid of any extra spaces ( TODO: Actually verify this behavior is consistent among different browsers other than the chromium based ones )
+      segment = segment.concat(` ${verseWords[i]} `);
     }
   }
 
