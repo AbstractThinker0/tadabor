@@ -178,6 +178,7 @@ const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
               root_occurences={root.occurences}
               root_name={root.name}
               root_id={root.id.toString()}
+              root_count={root.count}
               value={myNotes[root.id] || ""}
               noteDirection={areaDirection[root.id] || ""}
               isEditable={editableNotes[root.id]}
@@ -196,6 +197,7 @@ interface RootComponentProps {
   root_occurences: string[];
   root_name: string;
   root_id: string;
+  root_count: string;
   noteDirection: string;
   value: string;
   handleSetDirection: (verse_key: string, dir: string) => void;
@@ -210,6 +212,7 @@ const RootComponent = memo(
     root_occurences,
     root_name,
     root_id,
+    root_count,
     value,
     handleNoteChange,
     handleNoteSubmit,
@@ -236,7 +239,7 @@ const RootComponent = memo(
               className="btn roots-list-item-title-btns-derivations"
               value={root_id}
             >
-              {t("derivations")}
+              {t("derivations")} ({root_count})
             </button>
           </div>
         </div>

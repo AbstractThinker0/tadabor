@@ -222,7 +222,7 @@ const VerseWords = ({
                     aria-expanded="false"
                     aria-controls={`panelsStayOpen-${root.id}`}
                   >
-                    {root.name}
+                    {root.name} ({root.count})
                   </button>
                 </h2>
                 <RootOccurences
