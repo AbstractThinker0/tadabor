@@ -19,17 +19,12 @@ import useQuran from "@/context/QuranContext";
 import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
 
 import { TextForm } from "@/components/TextForm";
-import {
-  markedNotesType,
-  notesDirectionType,
-  notesType,
-  rootProps,
-  verseMatchResult,
-  searchIndexProps,
-} from "@/types";
+import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { IconSelect } from "@tabler/icons-react";
 import { Tooltip } from "bootstrap";
 import NoteText from "@/components/NoteText";
+import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
+import { rootNotesActions } from "@/store/rootNotesReducer";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -37,105 +32,13 @@ interface RootsListProps {
 }
 
 const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
-  const { t } = useTranslation();
   const { quranRoots } = useQuran();
-  const [loadingState, setLoadingState] = useState(true);
 
-  const [myNotes, setMyNotes] = useState<notesType>({});
-  const [editableNotes, setEditableNotes] = useState<markedNotesType>({});
-  const [areaDirection, setAreaDirection] = useState<notesDirectionType>({});
   const [itemsCount, setItemsCount] = useState(80);
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    fetchData();
-
-    async function fetchData() {
-      const userNotes = await dbFuncs.loadRootNotes();
-
-      if (clientLeft) return;
-
-      const markedNotes: markedNotesType = {};
-
-      const extractNotes: notesType = {};
-      userNotes.forEach((note) => {
-        extractNotes[note.id] = note.text;
-        markedNotes[note.id] = false;
-      });
-
-      const userNotesDir = await dbFuncs.loadRootNotesDir();
-
-      if (clientLeft) return;
-
-      const extractNotesDir: notesDirectionType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
-
-      setMyNotes(extractNotes);
-      setEditableNotes(markedNotes);
-      setAreaDirection(extractNotesDir);
-
-      setLoadingState(false);
-    }
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
-
-  const memoHandleNoteChange = useCallback(handleNoteChange, []);
-
-  function handleNoteChange(name: string, value: string) {
-    setMyNotes((state) => {
-      return { ...state, [name]: value };
-    });
-  }
-
-  function handleNoteSubmit(key: string, value: string) {
-    setEditableNotes((state) => {
-      return { ...state, [key]: false };
-    });
-
-    dbFuncs
-      .saveRootNote({
-        id: key,
-        text: value,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
-      .then(function () {
-        toast.success(t("save_success") as string);
-      })
-      .catch(function () {
-        toast.success(t("save_failed") as string);
-      });
-  }
-
-  const memoHandleNoteSubmit = useCallback(handleNoteSubmit, [t]);
-
-  const memoHandleEditClick = useCallback(handleEditClick, []);
-
-  function handleEditClick(rootID: string) {
-    setEditableNotes((state) => {
-      return { ...state, [rootID]: true };
-    });
-  }
-
-  function handleSetDirection(root_id: string, dir: string) {
-    setAreaDirection((state) => {
-      return { ...state, [root_id]: dir };
-    });
-    dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
-  }
-
-  const memoHandleSetDirection = useCallback(handleSetDirection, []);
 
   useEffect(() => {
     startTransition(() => {
@@ -163,8 +66,6 @@ const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
     }
   }
 
-  if (loadingState) return <LoadingSpinner />;
-
   return (
     <div className="roots-list" onScroll={handleScroll}>
       {isPending ? (
@@ -179,13 +80,6 @@ const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
               root_name={root.name}
               root_id={root.id.toString()}
               root_count={root.count}
-              value={myNotes[root.id] || ""}
-              noteDirection={areaDirection[root.id] || ""}
-              isEditable={editableNotes[root.id]}
-              handleEditClick={memoHandleEditClick}
-              handleNoteSubmit={memoHandleNoteSubmit}
-              handleNoteChange={memoHandleNoteChange}
-              handleSetDirection={memoHandleSetDirection}
             />
           ))
       )}
@@ -198,30 +92,55 @@ interface RootComponentProps {
   root_name: string;
   root_id: string;
   root_count: string;
-  noteDirection: string;
-  value: string;
-  handleSetDirection: (verse_key: string, dir: string) => void;
-  handleNoteChange: (key: string, value: string) => void;
-  isEditable: boolean;
-  handleEditClick: (key: string) => void;
-  handleNoteSubmit: (key: string, value: string) => void;
 }
 
 const RootComponent = memo(
-  ({
-    root_occurences,
-    root_name,
-    root_id,
-    root_count,
-    value,
-    handleNoteChange,
-    handleNoteSubmit,
-    handleEditClick,
-    isEditable,
-    noteDirection,
-    handleSetDirection,
-  }: RootComponentProps) => {
+  ({ root_occurences, root_name, root_id, root_count }: RootComponentProps) => {
+    const currentNote = useAppSelector(selecRootNote(root_id));
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
+
+    const handleNoteSubmit = useCallback((key: string, value: string) => {
+      dbFuncs
+        .saveRootNote({
+          id: key,
+          text: value,
+          date_created: Date.now(),
+          date_modified: Date.now(),
+        })
+        .then(function () {
+          toast.success(t("save_success") as string);
+        })
+        .catch(function () {
+          toast.success(t("save_failed") as string);
+        });
+
+      setStateEditable(false);
+    }, []);
+
+    const handleSetDirection = useCallback((root_id: string, dir: string) => {
+      dispatch(
+        rootNotesActions.changeRootNoteDir({
+          name: root_id,
+          value: dir,
+        })
+      );
+
+      dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
+    }, []);
+
+    const handleNoteChange = useCallback((name: string, value: string) => {
+      dispatch(rootNotesActions.changeRootNote({ name, value }));
+    }, []);
+
+    const handleEditClick = useCallback((inputKey: string) => {
+      setStateEditable(true);
+    }, []);
+
+    const noteText = currentNote ? currentNote.text : "";
+    const inputDirection = currentNote ? currentNote.dir : "";
+
+    const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
     return (
       <div className="roots-list-item border">
@@ -245,9 +164,9 @@ const RootComponent = memo(
         </div>
         <TextForm
           inputKey={root_id}
-          inputValue={value}
-          isEditable={isEditable}
-          inputDirection={noteDirection}
+          inputValue={noteText}
+          isEditable={stateEditable}
+          inputDirection={inputDirection}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleNoteSubmit}

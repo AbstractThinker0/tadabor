@@ -5,6 +5,7 @@ import { UserNotesType, notesDirectionType, translationsType } from "@/types";
 import { notesActions } from "@/store/notesReducer";
 import { translationsActions } from "@/store/translationsReducer";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { rootNotesActions } from "@/store/rootNotesReducer";
 
 function DataLoader({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +50,28 @@ function DataLoader({ children }: PropsWithChildren) {
       });
 
       dispatch(translationsActions.translationsLoaded(extractTranslations));
+
+      const userRootNotes = await dbFuncs.loadRootNotes();
+      const userRootNotesDir = await dbFuncs.loadRootNotesDir();
+
+      if (clientLeft) return;
+
+      const extractRootNotesDir: notesDirectionType = {};
+
+      userRootNotesDir.forEach((note) => {
+        extractRootNotesDir[note.id] = note.dir;
+      });
+
+      const fetchedRootNotes: UserNotesType = {};
+
+      userRootNotes.forEach((note) => {
+        fetchedRootNotes[note.id] = {
+          text: note.text,
+          dir: extractRootNotesDir[note.id],
+        };
+      });
+
+      dispatch(rootNotesActions.rootNotesLoaded(fetchedRootNotes));
 
       setIsLoading(false);
     }
