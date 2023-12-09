@@ -23,11 +23,11 @@ const AboutEnglish = () => {
           </p>
           <h5>How to use</h5>
           <p>
-            Simply go to tadabor.surge.sh and check Quran Browser on the home
-            page, you can click the button next to any verse to open a form
-            where you can enter your text, once you are done writing you can
-            press the save button, all the data will be saved on your browser
-            app and clearing your cache might erase the data you have saved.
+            Simply go to Quran Browser on the home page, you can click the
+            button next to any verse to open a form where you can enter your
+            text, once you are done writing you can press the save button, all
+            the data will be saved on your browser app and clearing your cache
+            might erase the data you have saved.
           </p>
           <h5>Disclaimer:</h5>
           <p>
@@ -105,11 +105,10 @@ const AboutArabic = () => {
           </p>
           <h5>كيفية الإستخدام</h5>
           <p>
-            اذهب الى tadabor.surge.sh ثم قم بتجربة متصفح القرآن في الصفحة
-            الرئيسية، يمكنك الضغط على الزر المحاذي لأي آية حتى تظهر لك خانة
-            الكتابة، وحين تنتهي من الكتابة يمكنك الضغط على زر الحفظ، كل البيانات
-            يتم تسجيلها في متصفحك وحذف سجل المتصفح قد يحذف أي بيانات قمت
-            بتسجيلها هنا.
+            اذهب الى متصفح القرآن في الصفحة الرئيسية، يمكنك الضغط على الزر
+            المحاذي لأي آية حتى تظهر لك خانة الكتابة، وحين تنتهي من الكتابة
+            يمكنك الضغط على زر الحفظ، كل البيانات يتم تسجيلها في متصفحك وحذف سجل
+            المتصفح قد يحذف أي بيانات قمت بتسجيلها هنا.
           </p>
           <h5>إخلاء مسؤولية</h5>
           <p>
