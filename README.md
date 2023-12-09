@@ -1,4 +1,4 @@
-# Tadabor: Quran web App [tadabor.surge.sh](http://tadabor.surge.sh/)
+# Tadabor: Quran web App
 
 This project is a web App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in your browser.
 
@@ -17,7 +17,7 @@ This project is a web App that allows you to browse the Quran and write your not
 
 ## How to use
 
-Simply go to [tadabor.surge.sh](http://tadabor.surge.sh/) and check Quran Browser on the home page, you can click the button next to any verse to open a form where you can enter your text, once you are done writing you can press the save button, all the data will be saved on your browser app and clearing your cache might erase the data you have saved.
+Simply go to Quran Browser on the home page, you can click the button next to any verse to open a form where you can enter your text, and once you are done writing you can press the save button, all the data will be saved on your browser app and clearing your cache might erase the data you have saved.
 
 ## Contributing
 
@@ -35,7 +35,7 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc.). (Partially implemented)
 - Add a settings menu that allows the users to choose font size/colors... etc.
-- Add unit tests or similar to make sure that everything works as expected.
+- Add unit tests or similar to ensure everything works as expected.
 - Revamp the interface for a better user experience (Also implement a Dark theme switch).
 - Document code and improve readability when possible.
 - Document all the features and how they can be used.
@@ -45,7 +45,7 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
 - Tanzil project for the Quran text compilation
-- Computer Research Center of Islamic Sciences (noorsoft.org), Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation
+- Computer Research Center of Islamic Sciences (noorsoft.org), Tanzil Project (tanzil.info), and Zekr Project (zekr.org) for the Quran roots compilation
 
 ## Local use
 
@@ -54,7 +54,7 @@ Prerequisites:
 - Node.js
 - npm
 
-Once you have satisfied the prerequisites, you can install and start the application. Clone the app, and from its directory run:
+Once you have satisfied the prerequisites, you can install and start the application. Clone the repository and from its directory run:
 
 1. `npm install`
 2. `npm start`
