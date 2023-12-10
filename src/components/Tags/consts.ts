@@ -1,9 +1,5 @@
-import {
-  ActionsUnion,
-  createActionPayload,
-  selectedChaptersType,
-  verseProps,
-} from "../../types";
+import { selectedChaptersType, verseProps } from "@/types";
+import { ActionsUnion, createActionPayload } from "@/types/useReduser";
 
 export interface tagProps {
   tagID: string;

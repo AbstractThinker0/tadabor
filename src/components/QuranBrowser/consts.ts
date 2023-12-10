@@ -1,13 +1,12 @@
 import {
-  createActionPayload,
   quranProps,
   chapterProps,
   verseProps,
   rootProps,
-  ActionsUnion,
   verseMatchResult,
   searchIndexProps,
 } from "@/types";
+import { ActionsUnion, createActionPayload } from "@/types/useReduser";
 
 export interface qbStateProps {
   selectChapter: number;

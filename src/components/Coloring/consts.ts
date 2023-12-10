@@ -1,9 +1,5 @@
-import {
-  ActionsUnion,
-  createActionPayload,
-  selectedChaptersType,
-  verseProps,
-} from "../../types";
+import { selectedChaptersType, verseProps } from "@/types";
+import { createActionPayload, ActionsUnion } from "@/types/useReduser";
 
 export interface colorProps {
   colorID: string;

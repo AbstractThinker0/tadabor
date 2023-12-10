@@ -1,4 +1,4 @@
-import { ActionsUnion, createActionPayload } from "../../types";
+import { ActionsUnion, createActionPayload } from "@/types/useReduser";
 
 export enum IS_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
