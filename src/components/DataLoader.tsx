@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { dbFuncs } from "@/util/db";
 import { useAppDispatch } from "@/store/index";
-import { UserNotesType, notesDirectionType, translationsType } from "@/types";
+import { UserNotesType, translationsType } from "@/types";
 import { notesActions } from "@/store/notesReducer";
 import { translationsActions } from "@/store/translationsReducer";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -18,22 +18,15 @@ function DataLoader({ children }: PropsWithChildren) {
 
     async function fetchData() {
       const userNotes = await dbFuncs.loadNotes();
-      const userNotesDir = await dbFuncs.loadNotesDir();
 
       if (clientLeft) return;
-
-      const extractNotesDir: notesDirectionType = {};
-
-      userNotesDir.forEach((note) => {
-        extractNotesDir[note.id] = note.dir;
-      });
 
       const fetchedNotes: UserNotesType = {};
 
       userNotes.forEach((note) => {
         fetchedNotes[note.id] = {
           text: note.text,
-          dir: extractNotesDir[note.id],
+          dir: note.dir,
         };
       });
 
@@ -52,22 +45,15 @@ function DataLoader({ children }: PropsWithChildren) {
       dispatch(translationsActions.translationsLoaded(extractTranslations));
 
       const userRootNotes = await dbFuncs.loadRootNotes();
-      const userRootNotesDir = await dbFuncs.loadRootNotesDir();
 
       if (clientLeft) return;
-
-      const extractRootNotesDir: notesDirectionType = {};
-
-      userRootNotesDir.forEach((note) => {
-        extractRootNotesDir[note.id] = note.dir;
-      });
 
       const fetchedRootNotes: UserNotesType = {};
 
       userRootNotes.forEach((note) => {
         fetchedRootNotes[note.id] = {
           text: note.text,
-          dir: extractRootNotesDir[note.id],
+          dir: note.dir,
         };
       });
 

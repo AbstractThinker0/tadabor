@@ -100,23 +100,26 @@ const RootComponent = memo(
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const handleNoteSubmit = useCallback((key: string, value: string) => {
-      dbFuncs
-        .saveRootNote({
-          id: key,
-          text: value,
-          date_created: Date.now(),
-          date_modified: Date.now(),
-        })
-        .then(function () {
-          toast.success(t("save_success") as string);
-        })
-        .catch(function () {
-          toast.success(t("save_failed") as string);
-        });
+    const noteText = currentNote ? currentNote.text : "";
+    const inputDirection = currentNote ? currentNote.dir : "";
 
-      setStateEditable(false);
-    }, []);
+    const [stateEditable, setStateEditable] = useState(noteText ? false : true);
+
+    const handleNoteSubmit = useCallback(
+      (key: string, value: string) => {
+        dbFuncs
+          .saveRootNote(key, value, inputDirection || "")
+          .then(function () {
+            toast.success(t("save_success") as string);
+          })
+          .catch(function () {
+            toast.success(t("save_failed") as string);
+          });
+
+        setStateEditable(false);
+      },
+      [inputDirection]
+    );
 
     const handleSetDirection = useCallback((root_id: string, dir: string) => {
       dispatch(
@@ -125,8 +128,6 @@ const RootComponent = memo(
           value: dir,
         })
       );
-
-      dbFuncs.saveRootNoteDir({ id: root_id, dir: dir });
     }, []);
 
     const handleNoteChange = useCallback((name: string, value: string) => {
@@ -136,11 +137,6 @@ const RootComponent = memo(
     const handleEditClick = useCallback((inputKey: string) => {
       setStateEditable(true);
     }, []);
-
-    const noteText = currentNote ? currentNote.text : "";
-    const inputDirection = currentNote ? currentNote.dir : "";
-
-    const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
     return (
       <div className="roots-list-item border">
@@ -166,7 +162,7 @@ const RootComponent = memo(
           inputKey={root_id}
           inputValue={noteText}
           isEditable={stateEditable}
-          inputDirection={inputDirection}
+          inputDirection={inputDirection || ""}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleNoteSubmit}

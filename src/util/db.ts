@@ -3,25 +3,17 @@ import Dexie from "dexie";
 export interface INote {
   id: string;
   text: string;
-  date_created: number;
-  date_modified: number;
-}
-
-export interface INoteDir {
-  id: string;
-  dir: string;
+  dir?: string;
+  date_created?: number;
+  date_modified?: number;
 }
 
 export interface IRootNote {
   id: string;
   text: string;
-  date_created: number;
-  date_modified: number;
-}
-
-export interface IRootNoteDir {
-  id: string;
-  dir: string;
+  dir?: string;
+  date_created?: number;
+  date_modified?: number;
 }
 
 export interface ITranslation {
@@ -54,9 +46,7 @@ export interface IVerseTags {
 
 class tadaborDatabase extends Dexie {
   notes!: Dexie.Table<INote, string>;
-  notes_dir!: Dexie.Table<INoteDir, string>;
   root_notes!: Dexie.Table<IRootNote, string>;
-  root_notes_dir!: Dexie.Table<IRootNoteDir, string>;
   translations!: Dexie.Table<ITranslation, string>;
   colors!: Dexie.Table<IColor, string>;
   verses_color!: Dexie.Table<IVerseColor, string>;
@@ -81,35 +71,85 @@ class tadaborDatabase extends Dexie {
       tags: "id, name",
       verses_tags: "verse_key, *tags_ids",
     });
+
+    this.version(15).stores({
+      notes: "id, text, dir, date_created, date_modified",
+      root_notes: "id, text, dir, date_created, date_modified",
+      translations: "id, text, date_created, date_modified",
+      colors: "id, name, code",
+      verses_color: "verse_key, color_id",
+      tags: "id, name",
+      verses_tags: "verse_key, *tags_ids",
+    });
   }
 }
 
 const db = new tadaborDatabase();
 
 export const dbFuncs = {
-  saveNote: (data: INote) => {
-    return db.notes.put(data);
+  saveNote: (id: string, text: string, dir: string) => {
+    return new Promise((resolve, reject) => {
+      db.notes
+        .update(id, { text, dir, date_modified: Date.now() })
+        .then((updated) => {
+          if (!updated) {
+            db.notes
+              .add({
+                id,
+                text,
+                dir,
+                date_modified: Date.now(),
+                date_created: Date.now(),
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
   },
   loadNotes: () => {
     return db.notes.toArray();
   },
-  saveNoteDir: (data: INoteDir) => {
-    return db.notes_dir.put(data);
-  },
-  loadNotesDir: () => {
-    return db.notes_dir.toArray();
-  },
-  saveRootNote: (data: IRootNote) => {
-    return db.root_notes.put(data);
+  saveRootNote: (id: string, text: string, dir: string) => {
+    return new Promise((resolve, reject) => {
+      db.root_notes
+        .update(id, { text, dir, date_modified: Date.now() })
+        .then((updated) => {
+          if (!updated) {
+            db.root_notes
+              .add({
+                id,
+                text,
+                dir,
+                date_modified: Date.now(),
+                date_created: Date.now(),
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
   },
   loadRootNotes: () => {
     return db.root_notes.toArray();
-  },
-  saveRootNoteDir: (data: IRootNoteDir) => {
-    return db.root_notes_dir.put(data);
-  },
-  loadRootNotesDir: () => {
-    return db.root_notes_dir.toArray();
   },
   loadTranslations: () => {
     return db.translations.toArray();

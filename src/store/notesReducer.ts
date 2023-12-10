@@ -25,7 +25,7 @@ export const notesSlice = createSlice({
       } else {
         state[name] = {
           text: value,
-          dir: "rtl",
+          dir: "",
         };
       }
     },

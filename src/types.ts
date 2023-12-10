@@ -43,17 +43,13 @@ export interface notesType {
   [key: string]: string;
 }
 
-export interface notesDirectionType {
-  [key: string]: string;
-}
-
 export interface markedNotesType {
   [key: string]: boolean;
 }
 
 export interface NoteProp {
   text: string;
-  dir: string;
+  dir?: string;
 }
 
 export interface UserNotesType {
