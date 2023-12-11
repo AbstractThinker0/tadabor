@@ -60,6 +60,8 @@ i18n
           search_options: "Search options: ",
           derivations: "Derivations",
           search_inclusive: "Inclusive",
+          notes_verses: "Verses notes",
+          notes_roots: "Roots notes",
         },
       },
       ar: {
@@ -107,6 +109,8 @@ i18n
           search_options: "خيارات البحث: ",
           derivations: "الإشتقاقات",
           search_inclusive: "شامل",
+          notes_verses: "آيات",
+          notes_roots: "جذور",
         },
       },
     },
