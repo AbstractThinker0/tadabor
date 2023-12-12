@@ -6,14 +6,14 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import Display from "../components/Comparator/Display";
 import Menu from "../components/Comparator/Menu";
 import { useAppDispatch, useAppSelector } from "../store";
-import { fetchAllData } from "../store/dataReducer";
+import { fetchAllTranslations } from "../store/slices/translations";
 
 function Comparator() {
   const { absoluteQuran } = useQuran();
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
   const { loading, data, complete, error } = useAppSelector(
-    (state) => state.data
+    (state) => state.translations
   );
   const dispatch = useAppDispatch();
 
@@ -48,7 +48,7 @@ function Comparator() {
     if (complete) {
       setStateTrans(data);
     } else if (!loading) {
-      dispatch(fetchAllData());
+      dispatch(fetchAllTranslations());
     }
   }, [loading, complete, dispatch, data]);
 

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { selectNote, useAppDispatch, useAppSelector } from "@/store";
-import { notesActions } from "@/store/notesReducer";
+import { verseNotesActions } from "@/store/slices/verseNotes";
 import { dbFuncs } from "@/util/db";
 
 import { TextForm } from "@/components/TextForm";
@@ -26,7 +26,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
 
   const handleNoteChange = useCallback(
     (name: string, value: string) => {
-      dispatch(notesActions.changeNote({ name, value }));
+      dispatch(verseNotesActions.changeNote({ name, value }));
     },
     [dispatch]
   );
@@ -50,7 +50,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const handleSetDirection = useCallback(
     (verse_key: string, dir: string) => {
       dispatch(
-        notesActions.changeNoteDir({
+        verseNotesActions.changeNoteDir({
           name: verse_key,
           value: dir,
         })

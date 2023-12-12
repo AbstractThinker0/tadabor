@@ -7,16 +7,16 @@ import {
   useEffect,
   useTransition,
 } from "react";
-import useQuran from "../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
-import { dbFuncs } from "../util/db";
+import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { TextAreaComponent } from "../components/TextForm";
-import { selectTranslation, useAppDispatch, useAppSelector } from "../store";
-import { translationsActions } from "../store/translationsReducer";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { verseProps } from "../types";
+import { TextAreaComponent } from "@/components/TextForm";
+import { selectTranslation, useAppDispatch, useAppSelector } from "@/store";
+import { transNotesActions } from "@/store/slices/transNotes";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { verseProps } from "@/types";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
@@ -189,7 +189,7 @@ const TransComponent = memo(({ verse_key }: TransComponentProps) => {
   const handleInputChange = useCallback(
     (key: string, value: string) => {
       dispatch(
-        translationsActions.changeTranslation({
+        transNotesActions.changeTranslation({
           name: key,
           value: value,
         })

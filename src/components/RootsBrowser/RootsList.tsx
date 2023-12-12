@@ -24,7 +24,7 @@ import { IconSelect } from "@tabler/icons-react";
 import { Tooltip } from "bootstrap";
 import NoteText from "@/components/NoteText";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
-import { rootNotesActions } from "@/store/rootNotesReducer";
+import { rootNotesActions } from "@/store/slices/rootNotes";
 
 interface RootsListProps {
   searchInclusive: boolean;

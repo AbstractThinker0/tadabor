@@ -5,7 +5,7 @@ import { NoteProp } from "@/types";
 import { useCallback, useState } from "react";
 import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";
-import { rootNotesActions } from "@/store/rootNotesReducer";
+import { rootNotesActions } from "@/store/slices/rootNotes";
 import { FormComponent, TextComponent } from "@/components/TextForm";
 
 const RootNotes = () => {

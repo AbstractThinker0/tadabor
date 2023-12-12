@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import useQuran from "@/context/QuranContext";
 import { useAppDispatch, getAllNotes, useAppSelector } from "@/store";
-import { notesActions } from "@/store/notesReducer";
+import { verseNotesActions } from "@/store/slices/verseNotes";
 import { NoteProp } from "@/types";
 import { dbFuncs } from "@/util/db";
 
@@ -56,7 +56,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
 
   const handleNoteChange = useCallback(
     (name: string, value: string) => {
-      dispatch(notesActions.changeNote({ name, value }));
+      dispatch(verseNotesActions.changeNote({ name, value }));
     },
     [dispatch]
   );
@@ -80,7 +80,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
   const handleSetDirection = useCallback(
     (verse_key: string, dir: string) => {
       dispatch(
-        notesActions.changeNoteDir({
+        verseNotesActions.changeNoteDir({
           name: verse_key,
           value: dir,
         })

@@ -39,14 +39,6 @@ export interface selectedChaptersType {
   [key: string]: boolean;
 }
 
-export interface notesType {
-  [key: string]: string;
-}
-
-export interface markedNotesType {
-  [key: string]: boolean;
-}
-
 export interface NoteProp {
   text: string;
   dir?: string;
@@ -56,7 +48,7 @@ export interface UserNotesType {
   [key: string]: NoteProp;
 }
 
-export interface translationsType {
+export interface TransNotesType {
   [key: string]: string;
 }
 

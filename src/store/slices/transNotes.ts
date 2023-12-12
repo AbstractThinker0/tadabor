@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { translationsType } from "../types";
+import { TransNotesType } from "@/types";
 
 interface ChangeTranslationPayload {
   name: string;
   value: string;
 }
 
-const initialState: translationsType = {};
+const initialState: TransNotesType = {};
 
-export const translationsSlice = createSlice({
-  name: "translations",
+const transNotesSlice = createSlice({
+  name: "transNotes",
   initialState,
   reducers: {
     changeTranslation: (
@@ -20,12 +20,12 @@ export const translationsSlice = createSlice({
 
       state[name] = value;
     },
-    translationsLoaded: (state, action: PayloadAction<translationsType>) => {
+    translationsLoaded: (state, action: PayloadAction<TransNotesType>) => {
       return action.payload;
     },
   },
 });
 
-export const translationsActions = translationsSlice.actions;
+export const transNotesActions = transNotesSlice.actions;
 
-export default translationsSlice.reducer;
+export default transNotesSlice.reducer;

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserNotesType } from "../types";
+import { UserNotesType } from "@/types";
 
 interface ChangeNotePayload {
   name: string;
@@ -13,11 +13,11 @@ interface ChangeNoteDirPayload {
 
 const initialState: UserNotesType = {};
 
-export const notesSlice = createSlice({
-  name: "notes",
+const rootNotesSlice = createSlice({
+  name: "rootNotes",
   initialState,
   reducers: {
-    changeNote: (state, action: PayloadAction<ChangeNotePayload>) => {
+    changeRootNote: (state, action: PayloadAction<ChangeNotePayload>) => {
       const { name, value } = action.payload;
 
       if (state[name]) {
@@ -29,7 +29,7 @@ export const notesSlice = createSlice({
         };
       }
     },
-    changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
+    changeRootNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
       const { name, value } = action.payload;
 
       if (state[name]) {
@@ -41,12 +41,12 @@ export const notesSlice = createSlice({
         };
       }
     },
-    notesLoaded: (state, action: PayloadAction<UserNotesType>) => {
+    rootNotesLoaded: (state, action: PayloadAction<UserNotesType>) => {
       return action.payload;
     },
   },
 });
 
-export const notesActions = notesSlice.actions;
+export const rootNotesActions = rootNotesSlice.actions;
 
-export default notesSlice.reducer;
+export default rootNotesSlice.reducer;

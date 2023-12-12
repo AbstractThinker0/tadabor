@@ -1,11 +1,13 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { dbFuncs } from "@/util/db";
 import { useAppDispatch } from "@/store/index";
-import { UserNotesType, translationsType } from "@/types";
-import { notesActions } from "@/store/notesReducer";
-import { translationsActions } from "@/store/translationsReducer";
+import { UserNotesType, TransNotesType } from "@/types";
+
+import { verseNotesActions } from "@/store/slices/verseNotes";
+import { transNotesActions } from "@/store/slices/transNotes";
+import { rootNotesActions } from "@/store/slices/rootNotes";
+
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { rootNotesActions } from "@/store/rootNotesReducer";
 
 function DataLoader({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,19 +32,19 @@ function DataLoader({ children }: PropsWithChildren) {
         };
       });
 
-      dispatch(notesActions.notesLoaded(fetchedNotes));
+      dispatch(verseNotesActions.notesLoaded(fetchedNotes));
 
       const userTranslations = await dbFuncs.loadTranslations();
 
       if (clientLeft) return;
 
-      const extractTranslations: translationsType = {};
+      const extractTranslations: TransNotesType = {};
 
       userTranslations.forEach((trans) => {
         extractTranslations[trans.id] = trans.text;
       });
 
-      dispatch(translationsActions.translationsLoaded(extractTranslations));
+      dispatch(transNotesActions.translationsLoaded(extractTranslations));
 
       const userRootNotes = await dbFuncs.loadRootNotes();
 

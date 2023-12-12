@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import notesReducer from "./notesReducer";
-import translationsReducer from "./translationsReducer";
-import dataReducer from "./dataReducer";
-import rootNotesReducer from "./rootNotesReducer";
+import verseNotesReducer from "./slices/verseNotes";
+import transNotesReducer from "./slices/transNotes";
+import translationsReducer from "./slices/translations";
+import rootNotesReducer from "./slices/rootNotes";
 
 const store = configureStore({
   reducer: {
-    notes: notesReducer,
+    verseNotes: verseNotesReducer,
+    transNotes: transNotesReducer,
     translations: translationsReducer,
-    data: dataReducer,
     rootNotes: rootNotesReducer,
   },
 });
@@ -21,15 +21,15 @@ export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook t
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const selectNote = (key: string) => {
-  return (state: RootState) => state.notes[key];
+  return (state: RootState) => state.verseNotes[key];
 };
 
 export const getAllNotes = () => {
-  return (state: RootState) => state.notes;
+  return (state: RootState) => state.verseNotes;
 };
 
 export const selectTranslation = (key: string) => {
-  return (state: RootState) => state.translations[key];
+  return (state: RootState) => state.transNotes[key];
 };
 
 export const selecRootNote = (key: string) => {

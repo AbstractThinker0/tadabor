@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TextAreaComponent } from "../TextForm";
-
-import { selectTranslation, useAppDispatch, useAppSelector } from "../../store";
-import { translationsActions } from "../../store/translationsReducer";
-import { dbFuncs } from "../../util/db";
 import { toast } from "react-toastify";
+
+import { selectTranslation, useAppDispatch, useAppSelector } from "@/store";
+import { transNotesActions } from "@/store/slices/transNotes";
+import { dbFuncs } from "@/util/db";
+
+import { TextAreaComponent } from "@/components/TextForm";
 
 interface UserTranslationProps {
   verseKey: string;
@@ -23,7 +24,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
 
   const handleInputChange = (key: string, value: string) => {
     dispatch(
-      translationsActions.changeTranslation({
+      transNotesActions.changeTranslation({
         name: key,
         value: value,
       })

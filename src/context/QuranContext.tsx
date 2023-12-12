@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   createContext,
   useState,
@@ -7,17 +6,9 @@ import {
   useRef,
   PropsWithChildren,
 } from "react";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { chapterProps, quranProps, rootProps, verseProps } from "../types";
-
-// An axios instance that fetches data and cache it for long duration
-const fetchJsonPerm = axios.create({
-  baseURL: "/res",
-  headers: {
-    "Content-Type": "application/json",
-    "Cache-Control": `max-age=31536000, immutable`,
-  },
-});
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { chapterProps, quranProps, rootProps, verseProps } from "@/types";
+import fetchJsonPerm from "@/util/fetchJsonPerm";
 
 type QuranContent = {
   chapterNames: chapterProps[];
