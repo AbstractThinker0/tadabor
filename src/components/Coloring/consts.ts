@@ -1,5 +1,5 @@
 import { selectedChaptersType, verseProps } from "@/types";
-import { createActionPayload, ActionsUnion } from "@/types/useReduser";
+import { createActionPayload, ActionsUnion } from "@/types/useReducer";
 
 export interface colorProps {
   colorID: string;
