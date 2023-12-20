@@ -190,6 +190,9 @@ export function getRootMatches(verseWords: string[], wordIndexes: string[]) {
       if (segment) {
         verseParts.push({ text: segment, isMatch: false });
         segment = "";
+      } else if (verseParts.length) {
+        // Two consecutive roots, so add a space so they don't collide
+        verseParts.push({ text: " ", isMatch: false });
       }
 
       // push the actual match
