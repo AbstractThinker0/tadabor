@@ -1,4 +1,4 @@
-import { IMatch } from "@/types";
+import { IMatch, verseProps } from "@/types";
 
 export function normalizeAlif(token: string) {
   return token.replace(/(آ|إ|أ)/g, "ا");
@@ -209,3 +209,48 @@ export function getRootMatches(verseWords: string[], wordIndexes: string[]) {
 
   return verseParts;
 }
+
+export const getDerivationsInVerse = (
+  wordIndexes: string[],
+  verse: verseProps,
+  chapterName: string
+) => {
+  const { versetext, key, suraid, verseid } = verse;
+  const verseWords = versetext.split(" ");
+
+  const verseParts = getRootMatches(verseWords, wordIndexes);
+
+  const verseDerivations = wordIndexes.map((wordIndex) => ({
+    name: verseWords[Number(wordIndex) - 1],
+    key,
+    text: `${chapterName}:${verseid}`,
+    wordIndex,
+  }));
+
+  const verseResult = { key, suraid, verseid, verseParts };
+
+  return { verseDerivations, verseResult };
+};
+
+export const searchVerse = (
+  verse: verseProps,
+  searchToken: string,
+  searchIdentical: boolean,
+  searchDiacritics: boolean
+) => {
+  const result = getMatches(verse.versetext, searchToken, {
+    ignoreDiacritics: !searchDiacritics,
+    matchIdentical: searchIdentical,
+  });
+
+  if (result) {
+    return {
+      key: verse.key,
+      suraid: verse.suraid,
+      verseid: verse.verseid,
+      verseParts: result,
+    };
+  }
+
+  return false;
+};

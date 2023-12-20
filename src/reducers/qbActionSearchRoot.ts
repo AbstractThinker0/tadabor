@@ -6,29 +6,7 @@ import {
   searchIndexProps,
   verseMatchResult,
 } from "@/types";
-import { onlySpaces, getRootMatches } from "@/util/util";
-
-const getDerivationsInVerse = (
-  wordIndexes: string[],
-  verse: verseProps,
-  chapterName: string
-) => {
-  const { versetext, key, suraid, verseid } = verse;
-  const verseWords = versetext.split(" ");
-
-  const verseParts = getRootMatches(verseWords, wordIndexes);
-
-  const verseDerivations = wordIndexes.map((wordIndex) => ({
-    name: verseWords[Number(wordIndex) - 1],
-    key,
-    text: `${chapterName}:${verseid}`,
-    wordIndex,
-  }));
-
-  const verseResult = { key, suraid, verseid, verseParts };
-
-  return { verseDerivations, verseResult };
-};
+import { onlySpaces, getDerivationsInVerse } from "@/util/util";
 
 export function qbSearchRoot(
   state: qbStateProps,

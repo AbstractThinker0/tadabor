@@ -1,42 +1,15 @@
 import { qbStateProps } from "@/components/QuranBrowser/consts";
-import {
-  chapterProps,
-  quranProps,
-  verseMatchResult,
-  verseProps,
-} from "@/types";
-import { getMatches, onlySpaces, removeDiacritics } from "@/util/util";
+import { chapterProps, quranProps, verseMatchResult } from "@/types";
+import { searchVerse, onlySpaces, removeDiacritics } from "@/util/util";
 
 const TOTAL_CHAPTERS_COUNT = 114;
-
-const searchVerse = (
-  verse: verseProps,
-  searchToken: string,
-  searchIdentical: boolean,
-  searchDiacritics: boolean
-) => {
-  const result = getMatches(verse.versetext, searchToken, {
-    ignoreDiacritics: !searchDiacritics,
-    matchIdentical: searchIdentical,
-  });
-
-  if (result) {
-    return {
-      key: verse.key,
-      suraid: verse.suraid,
-      verseid: verse.verseid,
-      verseParts: result,
-    };
-  }
-
-  return false;
-};
 
 export function qbSearchWord(
   state: qbStateProps,
   chapterNames: chapterProps[],
   allQuranText: quranProps[]
 ): qbStateProps {
+  // Destruct current state
   const {
     searchString,
     searchMethod,
@@ -45,6 +18,7 @@ export function qbSearchWord(
     searchDiacritics,
     searchIdentical,
   } = state;
+
   // initial search state
   const newState: qbStateProps = {
     ...state,
