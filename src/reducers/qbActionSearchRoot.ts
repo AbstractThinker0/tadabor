@@ -14,6 +14,7 @@ export function qbSearchRoot(
   absoluteQuran: verseProps[],
   quranRoots: rootProps[]
 ): qbStateProps {
+  // Deconstruct current state
   const { searchString, searchMethod, selectedChapters } = state;
   // initial search state
   const newState: qbStateProps = {
@@ -44,26 +45,7 @@ export function qbSearchRoot(
   const matchVerses: verseMatchResult[] = [];
   const derivations: searchIndexProps[] = [];
 
-  if (selectedChapters.length === 114) {
-    // occurences array have the verserank1:derivativeIndex1,derivativeIndex2...etc format
-    occurencesArray.forEach((item) => {
-      const info = item.split(":");
-      const currentVerse = absoluteQuran[Number(info[0])];
-
-      const chapterName = chapterNames[Number(currentVerse.suraid) - 1].name;
-
-      const wordIndexes = info[1].split(",");
-
-      const { verseDerivations, verseResult } = getDerivationsInVerse(
-        wordIndexes,
-        currentVerse,
-        chapterName
-      );
-
-      derivations.push(...verseDerivations);
-      matchVerses.push(verseResult);
-    });
-  } else {
+  if (selectedChapters.length) {
     occurencesArray.forEach((item) => {
       const info = item.split(":");
       const currentVerse = absoluteQuran[Number(info[0])];

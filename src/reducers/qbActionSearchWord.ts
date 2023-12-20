@@ -7,7 +7,7 @@ export function qbSearchWord(
   chapterNames: chapterProps[],
   allQuranText: quranProps[]
 ): qbStateProps {
-  // Destruct current state
+  // Deconstruct current state
   const {
     searchString,
     searchMethod,
