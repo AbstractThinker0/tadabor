@@ -2,8 +2,6 @@ import { qbStateProps } from "@/components/QuranBrowser/consts";
 import { chapterProps, quranProps, verseMatchResult } from "@/types";
 import { searchVerse, onlySpaces, removeDiacritics } from "@/util/util";
 
-const TOTAL_CHAPTERS_COUNT = 114;
-
 export function qbSearchWord(
   state: qbStateProps,
   chapterNames: chapterProps[],
@@ -13,7 +11,6 @@ export function qbSearchWord(
   const {
     searchString,
     searchMethod,
-    selectChapter,
     selectedChapters,
     searchDiacritics,
     searchIdentical,
@@ -50,52 +47,20 @@ export function qbSearchWord(
 
   const matchVerses: verseMatchResult[] = [];
 
-  if (selectedChapters.length === TOTAL_CHAPTERS_COUNT) {
-    allQuranText.forEach((sura) => {
-      sura.verses.forEach((verse) => {
-        const result = searchVerse(
-          verse,
-          normalizedToken,
-          searchIdentical,
-          searchDiacritics
-        );
+  selectedChapters.forEach((chapter) => {
+    allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
+      const result = searchVerse(
+        verse,
+        normalizedToken,
+        searchIdentical,
+        searchDiacritics
+      );
 
-        if (result) {
-          matchVerses.push(result);
-        }
-      });
+      if (result) {
+        matchVerses.push(result);
+      }
     });
-  } else {
-    if (selectedChapters.length > 1) {
-      selectedChapters.forEach((chapter) => {
-        allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
-          const result = searchVerse(
-            verse,
-            normalizedToken,
-            searchIdentical,
-            searchDiacritics
-          );
-
-          if (result) {
-            matchVerses.push(result);
-          }
-        });
-      });
-    } else {
-      allQuranText[selectChapter - 1].verses.forEach((verse) => {
-        const result = searchVerse(
-          verse,
-          normalizedToken,
-          searchIdentical,
-          searchDiacritics
-        );
-
-        if (result) {
-          matchVerses.push(result);
-        }
-      });
-    }
-  }
+  });
 
   if (matchVerses.length === 0) {
     return { ...newState, searchError: true };
