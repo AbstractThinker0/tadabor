@@ -1,0 +1,85 @@
+.searcher {
+  background-color: var(--color-primary);
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+  gap: 10px;
+
+  &-side {
+    padding: 1rem;
+
+    &-roots {
+      overflow-y: scroll;
+      background-color: var(--color-primary);
+      padding: 2px;
+      min-height: 15%;
+      max-height: 25%;
+      border: 1px solid gainsboro;
+      border-radius: 0.35rem;
+
+      cursor: pointer;
+
+      &-item {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+
+        &-selected {
+          background-color: gray;
+        }
+      }
+    }
+  }
+
+  &-display {
+    flex: 1;
+    border: 1px solid gray;
+    border-radius: 0.75rem;
+    margin: 5px;
+    padding: 5px;
+    background-color: #f7fafc;
+    overflow-y: scroll;
+
+    &-roots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 10px;
+
+      &-item {
+        background-color: #0ee485;
+        border-radius: 0.75rem;
+
+        min-width: 2rem;
+        display: flex;
+        justify-content: center;
+
+        &-text {
+          display: flex;
+          justify-content: center;
+          min-width: 2rem;
+          padding-left: 4px;
+          padding-right: 4px;
+        }
+
+        &-delete {
+          display: flex;
+          justify-content: center;
+          min-width: 1.5rem;
+          border-inline-start: 1px solid #dee2e6;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &-verses {
+      &-item {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #dee2e6;
+      }
+    }
+  }
+}

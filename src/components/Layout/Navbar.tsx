@@ -17,6 +17,7 @@ const Navbar = () => {
           <NavItem to="/tags" label={t("nav_tags")} />
           <NavItem to="/inspector" label={t("nav_inspector")} />
           <NavItem to="/comparator" label={t("nav_comparator")} />
+          <NavItem to="/searcher" label={t("nav_searcher")} />
           <NavItem to="/about" label={t("nav_about")} />
         </div>
         <div className="nav-list-end">

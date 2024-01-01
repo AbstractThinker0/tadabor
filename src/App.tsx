@@ -11,6 +11,7 @@ const YourNotes = lazy(() => import("./pages/YourNotes"));
 const Tags = lazy(() => import("./pages/Tags"));
 const Inspector = lazy(() => import("./pages/Inspector"));
 const Comparator = lazy(() => import("./pages/Comparator"));
+const Searcher = lazy(() => import("./pages/Searcher"));
 
 import LoadingSpinner from "./components/LoadingSpinner";
 
@@ -82,6 +83,14 @@ function App() {
         element={
           <Suspenser>
             <Comparator />
+          </Suspenser>
+        }
+      />
+      <Route
+        path="/searcher"
+        element={
+          <Suspenser>
+            <Searcher />
           </Suspenser>
         }
       />
