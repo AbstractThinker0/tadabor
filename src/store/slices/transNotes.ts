@@ -1,12 +1,47 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TransNotesType } from "@/types";
+import { dbFuncs } from "@/util/db";
 
 interface ChangeTranslationPayload {
   name: string;
   value: string;
 }
 
-const initialState: TransNotesType = {};
+interface TransNotesState {
+  data: TransNotesType;
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
+}
+
+const initialState: TransNotesState = {
+  data: {},
+  loading: true,
+  complete: false,
+  error: false,
+};
+
+export const fetchTransNotes = createAsyncThunk<
+  false | TransNotesType,
+  void,
+  { state: { transNotes: TransNotesState } }
+>("transNotes/fetchTransNotes", async (_, { getState }) => {
+  const { complete } = getState().transNotes;
+
+  if (complete) {
+    return false;
+  }
+
+  const dbData = await dbFuncs.loadTranslations();
+
+  const notesData: TransNotesType = {};
+
+  dbData.forEach((note) => {
+    notesData[note.id] = note.text;
+  });
+
+  return notesData;
+});
 
 const transNotesSlice = createSlice({
   name: "transNotes",
@@ -18,11 +53,22 @@ const transNotesSlice = createSlice({
     ) => {
       const { name, value } = action.payload;
 
-      state[name] = value;
+      state.data[name] = value;
     },
-    translationsLoaded: (state, action: PayloadAction<TransNotesType>) => {
-      return action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTransNotes.fulfilled, (state, action) => {
+        state.loading = false;
+        state.complete = true;
+        if (action.payload) state.data = action.payload;
+      })
+      .addCase(fetchTransNotes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchTransNotes.rejected, (state) => {
+        state.error = true;
+      });
   },
 });
 

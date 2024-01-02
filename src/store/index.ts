@@ -23,23 +23,30 @@ export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook t
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const selectNote = (key: string) => {
-  return (state: RootState) => state.verseNotes[key];
+  return (state: RootState) => state.verseNotes.data[key];
 };
 
 export const getAllNotes = () => {
-  return (state: RootState) => state.verseNotes;
+  return (state: RootState) => state.verseNotes.data;
 };
 
 export const selectTranslation = (key: string) => {
-  return (state: RootState) => state.transNotes[key];
+  return (state: RootState) => state.transNotes.data[key];
 };
 
 export const selecRootNote = (key: string) => {
-  return (state: RootState) => state.rootNotes[key];
+  return (state: RootState) => state.rootNotes.data[key];
 };
 
 export const getAllRootNotes = () => {
-  return (state: RootState) => state.rootNotes;
+  return (state: RootState) => state.rootNotes.data;
+};
+
+export const isDataLoading = () => {
+  return (state: RootState) =>
+    state.rootNotes.loading &&
+    state.transNotes.loading &&
+    state.verseNotes.loading;
 };
 
 export default store;

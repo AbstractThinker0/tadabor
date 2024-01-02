@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserNotesType } from "@/types";
+import { dbFuncs } from "@/util/db";
 
 interface ChangeNotePayload {
   name: string;
@@ -11,7 +12,44 @@ interface ChangeNoteDirPayload {
   value: string;
 }
 
-const initialState: UserNotesType = {};
+interface RootNotesType {
+  data: UserNotesType;
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
+}
+
+const initialState: RootNotesType = {
+  data: {},
+  loading: true,
+  complete: false,
+  error: false,
+};
+
+export const fetchRootNotes = createAsyncThunk<
+  false | UserNotesType,
+  void,
+  { state: { rootNotes: RootNotesType } }
+>("rootNotes/fetchRootNotes", async (_, { getState }) => {
+  const { complete } = getState().rootNotes;
+
+  if (complete) {
+    return false;
+  }
+
+  const dbData = await dbFuncs.loadRootNotes();
+
+  const notesData: UserNotesType = {};
+
+  dbData.forEach((note) => {
+    notesData[note.id] = {
+      text: note.text,
+      dir: note.dir,
+    };
+  });
+
+  return notesData;
+});
 
 const rootNotesSlice = createSlice({
   name: "rootNotes",
@@ -20,10 +58,10 @@ const rootNotesSlice = createSlice({
     changeRootNote: (state, action: PayloadAction<ChangeNotePayload>) => {
       const { name, value } = action.payload;
 
-      if (state[name]) {
-        state[name].text = value;
+      if (state.data[name]) {
+        state.data[name].text = value;
       } else {
-        state[name] = {
+        state.data[name] = {
           text: value,
           dir: "",
         };
@@ -32,18 +70,29 @@ const rootNotesSlice = createSlice({
     changeRootNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
       const { name, value } = action.payload;
 
-      if (state[name]) {
-        state[name].dir = value;
+      if (state.data[name]) {
+        state.data[name].dir = value;
       } else {
-        state[name] = {
+        state.data[name] = {
           text: "",
           dir: value,
         };
       }
     },
-    rootNotesLoaded: (state, action: PayloadAction<UserNotesType>) => {
-      return action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchRootNotes.fulfilled, (state, action) => {
+        state.loading = false;
+        state.complete = true;
+        if (action.payload) state.data = action.payload;
+      })
+      .addCase(fetchRootNotes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchRootNotes.rejected, (state) => {
+        state.error = true;
+      });
   },
 });
 

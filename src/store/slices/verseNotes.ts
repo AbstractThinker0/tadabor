@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserNotesType } from "@/types";
+import { dbFuncs } from "@/util/db";
 
 interface ChangeNotePayload {
   name: string;
@@ -11,7 +12,43 @@ interface ChangeNoteDirPayload {
   value: string;
 }
 
-const initialState: UserNotesType = {};
+interface VerseNotesType {
+  data: UserNotesType;
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
+}
+
+const initialState: VerseNotesType = {
+  data: {},
+  loading: true,
+  complete: false,
+  error: false,
+};
+
+export const fetchVerseNotes = createAsyncThunk<
+  false | UserNotesType,
+  void,
+  { state: { verseNotes: VerseNotesType } }
+>("verseNotes/fetchVerseNotes", async (_, { getState }) => {
+  const { complete } = getState().verseNotes;
+  if (complete) {
+    return false;
+  }
+
+  const dbData = await dbFuncs.loadNotes();
+
+  const notesData: UserNotesType = {};
+
+  dbData.forEach((note) => {
+    notesData[note.id] = {
+      text: note.text,
+      dir: note.dir,
+    };
+  });
+
+  return notesData;
+});
 
 const verseNotesSlice = createSlice({
   name: "verseNotes",
@@ -20,10 +57,10 @@ const verseNotesSlice = createSlice({
     changeNote: (state, action: PayloadAction<ChangeNotePayload>) => {
       const { name, value } = action.payload;
 
-      if (state[name]) {
-        state[name].text = value;
+      if (state.data[name]) {
+        state.data[name].text = value;
       } else {
-        state[name] = {
+        state.data[name] = {
           text: value,
           dir: "",
         };
@@ -32,18 +69,29 @@ const verseNotesSlice = createSlice({
     changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
       const { name, value } = action.payload;
 
-      if (state[name]) {
-        state[name].dir = value;
+      if (state.data[name]) {
+        state.data[name].dir = value;
       } else {
-        state[name] = {
+        state.data[name] = {
           text: "",
           dir: value,
         };
       }
     },
-    notesLoaded: (state, action: PayloadAction<UserNotesType>) => {
-      return action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchVerseNotes.fulfilled, (state, action) => {
+        state.loading = false;
+        state.complete = true;
+        if (action.payload) state.data = action.payload;
+      })
+      .addCase(fetchVerseNotes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchVerseNotes.rejected, (state) => {
+        state.error = true;
+      });
   },
 });
 
