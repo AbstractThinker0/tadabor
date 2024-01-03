@@ -131,7 +131,7 @@ const RootComponent = memo(
       dispatch(rootNotesActions.changeRootNote({ name, value }));
     }, []);
 
-    const handleEditClick = useCallback((inputKey: string) => {
+    const handleEditClick = useCallback(() => {
       setStateEditable(true);
     }, []);
 

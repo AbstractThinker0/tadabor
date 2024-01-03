@@ -59,7 +59,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
     [dispatch]
   );
 
-  const handleEditClick = useCallback((inputKey: string) => {
+  const handleEditClick = useCallback(() => {
     setStateEditable(true);
   }, []);
 

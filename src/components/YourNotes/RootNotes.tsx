@@ -84,7 +84,7 @@ function NoteComponent({ rootID, rootNote }: NoteComponentProps) {
     [dispatch]
   );
 
-  const handleEditClick = useCallback((inputKey: string) => {
+  const handleEditClick = useCallback(() => {
     setStateEditable(true);
   }, []);
 

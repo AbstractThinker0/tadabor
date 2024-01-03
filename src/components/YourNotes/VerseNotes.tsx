@@ -79,7 +79,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
     [dispatch]
   );
 
-  const handleEditClick = useCallback((inputKey: string) => {
+  const handleEditClick = useCallback(() => {
     setStateEditable(true);
   }, []);
 

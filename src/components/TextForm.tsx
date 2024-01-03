@@ -13,7 +13,7 @@ interface TextFormProps {
   handleSetDirection: (verse_key: string, dir: string) => void;
   handleInputChange: (key: string, value: string) => void;
   isEditable: boolean;
-  handleEditClick: (key: string) => void;
+  handleEditClick: () => void;
   handleInputSubmit: (key: string, value: string) => void;
   className?: string;
   targetID?: string;
@@ -66,8 +66,8 @@ const TextForm = ({
     };
   }, []);
 
-  const handleEditButtonClick = (key: string) => {
-    handleEditClick(key);
+  const handleEditButtonClick = () => {
+    handleEditClick();
 
     if (collapseRef.current)
       collapseRef.current.scrollIntoView({
@@ -111,7 +111,7 @@ interface TextComponentProps {
   inputKey: string;
   inputValue: string;
   inputDirection: string;
-  handleEditButtonClick: (key: string) => void;
+  handleEditButtonClick: () => void;
   textClassname?: string;
   editClassname?: string;
 }
