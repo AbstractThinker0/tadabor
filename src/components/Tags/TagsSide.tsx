@@ -1,7 +1,10 @@
 import { Dispatch, useEffect, useRef, useState } from "react";
-import { selectedChaptersType } from "../../types";
-import AddTagModal from "./AddTagModal";
-import DeleteTagModal from "./DeleteTagModal";
+import { useTranslation } from "react-i18next";
+
+import { selectedChaptersType } from "@/types";
+import useQuran from "@/context/QuranContext";
+import { dbFuncs } from "@/util/db";
+
 import {
   tagProps,
   tagsActions,
@@ -9,9 +12,8 @@ import {
   tagsProps,
   versesTagsProps,
 } from "./consts";
-import useQuran from "../../context/QuranContext";
-import { dbFuncs } from "../../util/db";
-import { useTranslation } from "react-i18next";
+import AddTagModal from "./AddTagModal";
+import DeleteTagModal from "./DeleteTagModal";
 
 interface TagsSideProps {
   currentChapter: number;
@@ -32,7 +34,7 @@ function TagsSide({
   versesTags,
   dispatchTagsAction,
 }: TagsSideProps) {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
   const [chapterToken, setChapterToken] = useState("");
@@ -85,7 +87,7 @@ function TagsSide({
   function onClickSelectAll() {
     const selectedChapters: selectedChaptersType = {};
 
-    chapterNames.forEach((chapter) => {
+    quranService.chapterNames.forEach((chapter) => {
       selectedChapters[chapter.id] = true;
     });
 
@@ -95,7 +97,7 @@ function TagsSide({
   function onClickDeselectAll() {
     const selectedChapters: selectedChaptersType = {};
 
-    chapterNames.forEach((chapter) => {
+    quranService.chapterNames.forEach((chapter) => {
       selectedChapters[chapter.id] = false;
     });
 
@@ -147,12 +149,12 @@ function TagsSide({
         <input
           className="tags-side-chapters-search"
           type="text"
-          placeholder={chapterNames[currentChapter - 1].name}
+          placeholder={quranService.getChapterName(currentChapter)}
           value={chapterToken}
           onChange={onChangeChapterToken}
         />
         <div className="tags-side-chapters-list">
-          {chapterNames
+          {quranService.chapterNames
             .filter((chapter) => chapter.name.includes(chapterToken))
             .map((chapter) => (
               <div

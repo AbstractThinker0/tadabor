@@ -39,7 +39,7 @@ interface RootsListProps {
 }
 
 const RootsList = ({ searchString }: RootsListProps) => {
-  const { quranRoots } = useQuran();
+  const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
 
@@ -52,7 +52,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
   useEffect(() => {
     startTransition(() => {
       setStateRoots(
-        quranRoots.filter(
+        quranService.quranRoots.filter(
           (root) =>
             normalizeAlif(root.name).startsWith(searchString) ||
             root.name.startsWith(searchString) ||

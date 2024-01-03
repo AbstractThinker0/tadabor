@@ -37,22 +37,12 @@ interface NoteComponentProps {
 }
 
 function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
-  const { chapterNames, allQuranText } = useQuran();
+  const quranService = useQuran();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { text, dir } = verseNote;
 
   const [stateEditable, setStateEditable] = useState(text ? false : true);
-
-  const convertKey = (key: string) => {
-    const info = key.split("-");
-    return chapterNames[+info[0] - 1].name + ":" + info[1];
-  };
-
-  const getVerse = (key: string) => {
-    const info = key.split("-");
-    return allQuranText[+info[0] - 1].verses[+info[1] - 1].versetext;
-  };
 
   const handleNoteChange = useCallback(
     (name: string, value: string) => {
@@ -96,7 +86,8 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
   return (
     <div className="card mb-3">
       <div className="card-header fs-3" dir="rtl">
-        ({convertKey(verseKey)}) <br /> {getVerse(verseKey)}{" "}
+        ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
+        {quranService.getVerseTextByKey(verseKey)}{" "}
       </div>
       {stateEditable ? (
         <FormComponent

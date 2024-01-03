@@ -6,17 +6,18 @@ import {
   useTransition,
   useState,
 } from "react";
+import { IconSelect } from "@tabler/icons-react";
 
-import useQuran from "../../context/QuranContext";
-import { selectedChaptersType, verseProps } from "../../types";
-import { dbFuncs } from "../../util/db";
+import useQuran from "@/context/QuranContext";
+import { selectedChaptersType, verseProps } from "@/types";
+import { dbFuncs } from "@/util/db";
+
+import NoteText from "@/components/NoteText";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 import VerseModal from "./VerseModal";
 import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
-import { IconSelect } from "@tabler/icons-react";
-
-import NoteText from "../NoteText";
-import LoadingSpinner from "../LoadingSpinner";
 
 interface VersesSideProps {
   selectedColors: coloredProps;
@@ -39,7 +40,7 @@ function VersesSide({
   dispatchClAction,
   selectedChapters,
 }: VersesSideProps) {
-  const { chapterNames, allQuranText } = useQuran();
+  const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
@@ -115,9 +116,9 @@ function VersesSide({
   useEffect(() => {
     //
     startTransition(() => {
-      setStateVerses(allQuranText[currentChapter - 1].verses);
+      setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [allQuranText, currentChapter]);
+  }, [currentChapter]);
 
   return (
     <div className="verses-side">
@@ -163,7 +164,7 @@ function VersesSide({
                   key={chapterID}
                   className="verses-side-colors-chapters-item"
                 >
-                  {chapterNames[Number(chapterID) - 1].name}
+                  {quranService.getChapterName(chapterID)}
                 </div>
               ))
             )}
@@ -186,7 +187,7 @@ function VersesSide({
         ) : (
           <>
             <div className="card-title">
-              سورة {chapterNames[currentChapter - 1].name}
+              سورة {quranService.getChapterName(currentChapter)}
             </div>
             <div ref={refListVerse}>
               {isPending ? (
@@ -300,12 +301,7 @@ function SelectedVerses({
 
   dispatchClAction,
 }: SelectedVersesProps) {
-  const { allQuranText, chapterNames } = useQuran();
-
-  function getVerseByKey(key: string) {
-    const info = key.split("-");
-    return allQuranText[Number(info[0]) - 1].verses[Number(info[1]) - 1];
-  }
+  const quranService = useQuran();
 
   const selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
     Object.keys(selectedColors).includes(coloredVerses[verseKey].colorID)
@@ -328,7 +324,7 @@ function SelectedVerses({
             else return Number(infoA[1]) - Number(infoB[1]);
           })
           .map((verseKey) => {
-            const verse = getVerseByKey(verseKey);
+            const verse = quranService.getVerseByKey(verseKey);
             return (
               <div
                 className="verse-item fs-3"
@@ -345,7 +341,7 @@ function SelectedVerses({
                     className="verse-item-chapter"
                   >
                     (
-                    {chapterNames[Number(verse.suraid) - 1].name +
+                    {quranService.getChapterName(verse.suraid) +
                       ":" +
                       verse.verseid}
                     )

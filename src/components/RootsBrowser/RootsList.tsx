@@ -7,24 +7,21 @@ import {
   useState,
   useTransition,
 } from "react";
-
 import { useTranslation } from "react-i18next";
-
-import { dbFuncs } from "@/util/db";
-
 import { toast } from "react-toastify";
-
-import LoadingSpinner from "@/components/LoadingSpinner";
-import useQuran from "@/context/QuranContext";
-import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
-
-import { TextForm } from "@/components/TextForm";
-import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { IconSelect } from "@tabler/icons-react";
 import { Tooltip } from "bootstrap";
-import NoteText from "@/components/NoteText";
+
+import { dbFuncs } from "@/util/db";
+import useQuran from "@/context/QuranContext";
+import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
+import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/rootNotes";
+
+import { TextForm } from "@/components/TextForm";
+import NoteText from "@/components/NoteText";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -32,7 +29,7 @@ interface RootsListProps {
 }
 
 const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
-  const { quranRoots } = useQuran();
+  const quranService = useQuran();
 
   const [itemsCount, setItemsCount] = useState(80);
 
@@ -43,7 +40,7 @@ const RootsList = memo(({ searchString, searchInclusive }: RootsListProps) => {
   useEffect(() => {
     startTransition(() => {
       setStateRoots(
-        quranRoots.filter(
+        quranService.quranRoots.filter(
           (root) =>
             normalizeAlif(root.name).startsWith(searchString) ||
             root.name.startsWith(searchString) ||
@@ -200,7 +197,7 @@ interface RootOccurencesProps {
 }
 
 const RootOccurences = ({ root_occurences, root_id }: RootOccurencesProps) => {
-  const { chapterNames, absoluteQuran } = useQuran();
+  const quranService = useQuran();
   const [isShown, setIsShown] = useState(false);
   const [itemsCount, setItemsCount] = useState(20);
   const refCollapse = useRef<HTMLDivElement>(null);
@@ -246,11 +243,11 @@ const RootOccurences = ({ root_occurences, root_id }: RootOccurencesProps) => {
 
   root_occurences.forEach((occ) => {
     const occData = occ.split(":");
-    const verse = absoluteQuran[Number(occData[0])];
+    const verse = quranService.getVerseByRank(occData[0]);
     const wordIndexes = occData[1].split(",");
     const verseWords = verse.versetext.split(" ");
 
-    const chapterName = chapterNames[Number(verse.suraid) - 1].name;
+    const chapterName = quranService.getChapterName(verse.suraid);
     const verseDerivations = wordIndexes.map((wordIndex) => ({
       name: verseWords[Number(wordIndex) - 1],
       key: verse.key,
@@ -376,9 +373,9 @@ interface RootVerseProps {
 }
 
 const RootVerse = ({ rootVerse }: RootVerseProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
-  const verseChapter = chapterNames[Number(rootVerse.suraid) - 1].name;
+  const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
   return (
     <>

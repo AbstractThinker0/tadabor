@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-import useQuran from "../../context/QuranContext";
-import { verseProps } from "../../types";
+import useQuran from "@/context/QuranContext";
+import { verseProps } from "@/types";
+
 import { tagsProps } from "./consts";
 
 interface VerseTagModalProps {
@@ -19,7 +20,7 @@ function VerseTagsModal({
   setCurrentVerse,
   setVerseTags,
 }: VerseTagModalProps) {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
   const [chosenTags, setChosenTags] = useState(() =>
@@ -99,7 +100,7 @@ function VerseTagsModal({
             <div className="modal-versetags-title text-center fs-4">
               (
               {currentVerse
-                ? chapterNames[Number(currentVerse.suraid) - 1].name +
+                ? quranService.getChapterName(currentVerse.suraid) +
                   ":" +
                   currentVerse.verseid
                 : ""}

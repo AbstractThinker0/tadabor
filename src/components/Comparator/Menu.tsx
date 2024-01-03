@@ -1,5 +1,5 @@
-import useQuran from "../../context/QuranContext";
-import { RankedVerseProps } from "../../types";
+import useQuran from "@/context/QuranContext";
+import { RankedVerseProps } from "@/types";
 
 interface MenuProps {
   chapterVerses: RankedVerseProps[];
@@ -12,7 +12,7 @@ const Menu = ({
   handleSetChapter,
   handleSelectVerse,
 }: MenuProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   const onChangeChapter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     handleSetChapter(event.target.value);
@@ -36,7 +36,7 @@ const Menu = ({
     <div className="menu sticky-top">
       <div className="menu-chapters">
         <select className="form-select" onChange={onChangeChapter}>
-          {chapterNames.map((chapter) => (
+          {quranService.chapterNames.map((chapter) => (
             <option key={chapter.id} value={chapter.id}>
               {chapter.id}. {chapter.name}
             </option>

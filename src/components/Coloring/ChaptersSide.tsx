@@ -1,13 +1,14 @@
 import { useEffect, useRef, Dispatch } from "react";
-import useQuran from "../../context/QuranContext";
+import { useTranslation } from "react-i18next";
+
+import useQuran from "@/context/QuranContext";
 import AddColorModal from "./AddColorModal";
 import DeleteColorModal from "./DeleteColorModal";
 import EditColorsModal from "./EditColorsModal";
 import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
-import { dbFuncs } from "../../util/db";
-import { selectedChaptersType } from "../../types";
-import { useTranslation } from "react-i18next";
+import { dbFuncs } from "@/util/db";
+import { selectedChaptersType } from "@/types";
 
 interface ChaptersSideProps {
   currentChapter: number;
@@ -28,7 +29,7 @@ function ChaptersSide({
   selectedChapters,
   dispatchClAction,
 }: ChaptersSideProps) {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
 
@@ -116,7 +117,7 @@ function ChaptersSide({
   function onClickSelectAll() {
     const selectedChapters: selectedChaptersType = {};
 
-    chapterNames.forEach((chapter) => {
+    quranService.chapterNames.forEach((chapter) => {
       selectedChapters[chapter.id] = true;
     });
 
@@ -126,7 +127,7 @@ function ChaptersSide({
   function onClickDeselectAll() {
     const selectedChapters: selectedChaptersType = {};
 
-    chapterNames.forEach((chapter) => {
+    quranService.chapterNames.forEach((chapter) => {
       selectedChapters[chapter.id] = false;
     });
 
@@ -151,12 +152,12 @@ function ChaptersSide({
         <input
           className="side-chapters-search"
           type="text"
-          placeholder={chapterNames[currentChapter - 1].name}
+          placeholder={quranService.getChapterName(currentChapter)}
           value={chapterToken}
           onChange={onChangeChapterToken}
         />
         <div className="side-chapters-list">
-          {chapterNames
+          {quranService.chapterNames
             .filter((chapter) => chapter.name.includes(chapterToken))
             .map((chapter) => (
               <div

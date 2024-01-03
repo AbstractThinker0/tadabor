@@ -1,18 +1,18 @@
 import { useReducer } from "react";
 
-import SearchPanel from "@/components/QuranBrowser/SearchPanel";
-import DisplayPanel from "@/components/QuranBrowser/DisplayPanel";
-
-import { qbStateProps, SEARCH_METHOD } from "@/components/QuranBrowser/consts";
 import qbReducer from "@/reducers/qbReducer";
 import useQuran from "@/context/QuranContext";
 
+import { qbStateProps, SEARCH_METHOD } from "@/components/QuranBrowser/consts";
+import SearchPanel from "@/components/QuranBrowser/SearchPanel";
+import DisplayPanel from "@/components/QuranBrowser/DisplayPanel";
+
 function QuranBrowser() {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   const initialState: qbStateProps = {
     selectChapter: 1,
-    selectedChapters: Array.from(chapterNames, (chapter) =>
+    selectedChapters: Array.from(quranService.chapterNames, (chapter) =>
       chapter.id.toString()
     ),
     searchString: "",

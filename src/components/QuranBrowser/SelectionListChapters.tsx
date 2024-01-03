@@ -1,7 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
-import useQuran from "../../context/QuranContext";
-import { selectedChaptersType } from "../../types";
 import { useTranslation } from "react-i18next";
+
+import useQuran from "@/context/QuranContext";
+import { selectedChaptersType } from "@/types";
 
 interface SelectionListChaptersProps {
   currentChapter: number;
@@ -15,7 +16,7 @@ const SelectionListChapters = memo(
     handleSelectedChapters,
     handleCurrentChapter,
   }: SelectionListChaptersProps) => {
-    const { chapterNames } = useQuran();
+    const quranService = useQuran();
     const { t } = useTranslation();
 
     const [chapterSearch, setChapterSearch] = useState("");
@@ -23,7 +24,7 @@ const SelectionListChapters = memo(
     const [selectionChapters, setSelectionChapters] = useState(() => {
       const initialSelectionChapters: selectedChaptersType = {};
 
-      chapterNames.forEach((chapter) => {
+      quranService.chapterNames.forEach((chapter) => {
         initialSelectionChapters[chapter.id] = true;
       });
 
@@ -69,21 +70,23 @@ const SelectionListChapters = memo(
     const onClickSelectAll = () => {
       const newSelectionChapters: selectedChaptersType = {};
 
-      chapterNames.forEach((chapter) => {
+      quranService.chapterNames.forEach((chapter) => {
         newSelectionChapters[chapter.id] = true;
       });
 
       setSelectionChapters(newSelectionChapters);
 
       handleSelectedChapters(
-        Array.from(chapterNames, (chapter) => chapter.id.toString())
+        Array.from(quranService.chapterNames, (chapter) =>
+          chapter.id.toString()
+        )
       );
     };
 
     const onClickDeselectAll = () => {
       const newSelectionChapters: selectedChaptersType = {};
 
-      chapterNames.forEach((chapter) => {
+      quranService.chapterNames.forEach((chapter) => {
         newSelectionChapters[chapter.id] = false;
       });
 
@@ -125,12 +128,12 @@ const SelectionListChapters = memo(
           type="search"
           value={chapterSearch}
           onChange={onChangeInput}
-          placeholder={chapterNames[currentChapter - 1].name}
+          placeholder={quranService.getChapterName(currentChapter)}
           aria-label="Search"
           dir="rtl"
         />
         <div className="browser-search-chapter-list" ref={refChaptersList}>
-          {chapterNames
+          {quranService.chapterNames
             .filter((chapter) => chapter.name.includes(chapterSearch))
             .map((chapter) => (
               <div

@@ -6,20 +6,22 @@ import {
   useState,
   useTransition,
 } from "react";
-import { selectedChaptersType, verseProps } from "../../types";
+import { IconSelect } from "@tabler/icons-react";
+
+import { selectedChaptersType, verseProps } from "@/types";
+import useQuran from "@/context/QuranContext";
+import { dbFuncs } from "@/util/db";
+
+import NoteText from "@/components/NoteText";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 import {
   tagsActions,
   tagsActionsProps,
   tagsProps,
   versesTagsProps,
 } from "./consts";
-import useQuran from "../../context/QuranContext";
-import { dbFuncs } from "../../util/db";
 import VerseTagsModal from "./VerseTagsModal";
-import { IconSelect } from "@tabler/icons-react";
-
-import NoteText from "../NoteText";
-import LoadingSpinner from "../LoadingSpinner";
 
 interface TagsDisplayProps {
   selectedTags: tagsProps;
@@ -42,7 +44,7 @@ function TagsDisplay({
   scrollKey,
   dispatchTagsAction,
 }: TagsDisplayProps) {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   function onClickDeleteSelected(tagID: string) {
     dispatchTagsAction(tagsActions.deselectTag(tagID));
@@ -104,7 +106,7 @@ function TagsDisplay({
             ) : (
               chaptersScope.map((chapterID) => (
                 <div className="tags-display-chapters-item" key={chapterID}>
-                  {chapterNames[Number(chapterID) - 1].name}
+                  {quranService.getChapterName(chapterID)}
                 </div>
               ))
             )}
@@ -165,12 +167,7 @@ function SelectedVerses({
   tags,
   dispatchTagsAction,
 }: SelectedVersesProps) {
-  const { allQuranText } = useQuran();
-
-  function getVerseByKey(key: string) {
-    const info = key.split("-");
-    return allQuranText[Number(info[0]) - 1].verses[Number(info[1]) - 1];
-  }
+  const quranService = useQuran();
 
   const selectedVerses = Object.keys(versesTags).filter((verseKey) =>
     Object.keys(selectedTags).some((tagID) =>
@@ -196,7 +193,7 @@ function SelectedVerses({
       {sortedVerses.length ? (
         <>
           {sortedVerses.map((verseKey) => {
-            const verse = getVerseByKey(verseKey);
+            const verse = quranService.getVerseByKey(verseKey);
             return (
               <div key={verseKey} className="tags-display-chapter-verses-item">
                 <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
@@ -227,7 +224,7 @@ const SelectedVerseComponent = ({
   verse,
   handleClickVerse,
 }: SelectedVerseComponentProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   function onClickVerse(verse: verseProps) {
     handleClickVerse(verse);
@@ -240,7 +237,7 @@ const SelectedVerseComponent = ({
         onClick={() => onClickVerse(verse)}
         className="tags-display-chapter-verses-item-verse"
       >
-        ({chapterNames[Number(verse.suraid) - 1].name + ":" + verse.verseid})
+        ({quranService.getChapterName(verse.suraid) + ":" + verse.verseid})
       </span>
       <button
         className="btn"
@@ -272,7 +269,7 @@ const ListVerses = memo(
     scrollKey,
     dispatchTagsAction,
   }: ListVersesProps) => {
-    const { allQuranText, chapterNames } = useQuran();
+    const quranService = useQuran();
 
     const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
@@ -296,14 +293,14 @@ const ListVerses = memo(
     useEffect(() => {
       //
       startTransition(() => {
-        setStateVerses(allQuranText[currentChapter - 1].verses);
+        setStateVerses(quranService.getVerses(currentChapter));
       });
-    }, [allQuranText, currentChapter]);
+    }, [currentChapter]);
 
     return (
       <>
         <div className="card-header text-center fs-3 tags-display-chapter-title">
-          سورة {chapterNames[currentChapter - 1].name}
+          سورة {quranService.getChapterName(currentChapter)}
         </div>
         <div className="card-body tags-display-chapter-verses" ref={listRef}>
           {isPending ? (

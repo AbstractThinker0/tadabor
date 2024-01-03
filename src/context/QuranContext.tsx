@@ -3,34 +3,19 @@ import {
   useState,
   useEffect,
   useContext,
-  useRef,
   PropsWithChildren,
+  useRef,
 } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { chapterProps, quranProps, rootProps, verseProps } from "@/types";
 import fetchJsonPerm from "@/util/fetchJsonPerm";
 
-type QuranContent = {
-  chapterNames: chapterProps[];
-  allQuranText: quranProps[];
-  quranRoots: rootProps[];
-  absoluteQuran: verseProps[];
-};
+import quranClass from "@/util/quranService";
 
-const QuranContext = createContext<QuranContent>({
-  chapterNames: [],
-  allQuranText: [],
-  quranRoots: [],
-  absoluteQuran: [],
-});
+const QuranContext = createContext<quranClass | null>(null);
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
-
-  const chapterNames = useRef<chapterProps[]>([]);
-  const allQuranText = useRef<quranProps[]>([]);
-  const quranRoots = useRef<rootProps[]>([]);
-  const absoluteQuran = useRef<verseProps[]>([]);
+  const quranInstance = useRef(new quranClass());
 
   useEffect(() => {
     let clientLeft = false;
@@ -41,33 +26,19 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
         if (clientLeft) return;
 
-        if (!chapterNames.current.length) {
-          chapterNames.current = response.data;
-        }
+        quranInstance.current.setChapters(response.data);
 
         response = await fetchJsonPerm.get("/quran_v2.json");
 
         if (clientLeft) return;
 
-        if (!allQuranText.current.length) {
-          allQuranText.current = response.data;
-        }
-
-        if (!absoluteQuran.current.length) {
-          allQuranText.current.forEach((sura) => {
-            sura.verses.forEach((verse) => {
-              absoluteQuran.current.push(verse);
-            });
-          });
-        }
+        quranInstance.current.setQuran(response.data);
 
         response = await fetchJsonPerm.get("/quranRoots-0.0.7.json");
 
         if (clientLeft) return;
 
-        if (!quranRoots.current.length) {
-          quranRoots.current = response.data;
-        }
+        quranInstance.current.setRoots(response.data);
       } catch (error) {
         fetchData();
         return;
@@ -88,19 +59,20 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <QuranContext.Provider
-      value={{
-        allQuranText: allQuranText.current,
-        chapterNames: chapterNames.current,
-        quranRoots: quranRoots.current,
-        absoluteQuran: absoluteQuran.current,
-      }}
-    >
+    <QuranContext.Provider value={quranInstance.current}>
       {children}
     </QuranContext.Provider>
   );
 };
 
-const useQuran = () => useContext(QuranContext);
+const useQuran = () => {
+  const quranInstance = useContext(QuranContext);
+
+  if (!quranInstance) {
+    throw new Error("useQuran must be used within a QuranProvider");
+  }
+
+  return quranInstance;
+};
 
 export default useQuran;

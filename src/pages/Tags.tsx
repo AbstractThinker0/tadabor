@@ -1,29 +1,29 @@
 import { useEffect, useReducer, useState } from "react";
-import useQuran from "../context/QuranContext";
-import tagsReducer from "../reducers/tagsReducer";
+
+import useQuran from "@/context/QuranContext";
+import tagsReducer from "@/reducers/tagsReducer";
+import { selectedChaptersType } from "@/types";
+import { dbFuncs } from "@/util/db";
+
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 import {
   tagsActions,
   tagsProps,
   tagsStateProps,
   versesTagsProps,
-} from "../components/Tags/consts";
-import { selectedChaptersType } from "../types";
-
-import { dbFuncs } from "../util/db";
-
-import LoadingSpinner from "../components/LoadingSpinner";
-
-import TagsSide from "../components/Tags/TagsSide";
-import TagsDisplay from "../components/Tags/TagsDisplay";
+} from "@/components/Tags/consts";
+import TagsSide from "@/components/Tags/TagsSide";
+import TagsDisplay from "@/components/Tags/TagsDisplay";
 
 function Tags() {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   const [loadingState, setLoadingState] = useState(true);
 
   const initialSelectedChapters: selectedChaptersType = {};
 
-  chapterNames.forEach((chapter) => {
+  quranService.chapterNames.forEach((chapter) => {
     initialSelectedChapters[chapter.id] = true;
   });
 

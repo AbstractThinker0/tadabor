@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useTransition } from "react";
-
-import NoteText from "../NoteText";
 import { IconSelect } from "@tabler/icons-react";
-import useQuran from "../../context/QuranContext";
+
+import useQuran from "@/context/QuranContext";
+import { RankedVerseProps, translationsProps } from "@/types";
+
+import NoteText from "@/components/NoteText";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 import UserTranslation from "./UserTranslation";
-import { RankedVerseProps, translationsProps } from "../../types";
-import LoadingSpinner from "../LoadingSpinner";
 
 interface DisplayProps {
   currentChapter: string;
@@ -32,7 +34,7 @@ const Display = ({
     });
   }, [chapterVerses]);
 
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const refListVerses = useRef<HTMLDivElement>(null);
 
   const onClickVerse = (verseKey: string) => {
@@ -61,7 +63,7 @@ const Display = ({
     <div className="card display">
       <TransAlert />
       <div className="card-header text-center text-primary fs-3">
-        سورة {chapterNames[Number(currentChapter) - 1].name}
+        سورة {quranService.getChapterName(currentChapter)}
       </div>
       <div className="card-body verses" ref={refListVerses}>
         {isPending ? (

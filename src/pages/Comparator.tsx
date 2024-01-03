@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { RankedVerseProps, translationsProps } from "../types";
-import useQuran from "../context/QuranContext";
 
-import LoadingSpinner from "../components/LoadingSpinner";
-import Display from "../components/Comparator/Display";
-import Menu from "../components/Comparator/Menu";
-import { useAppDispatch, useAppSelector } from "../store";
-import { fetchAllTranslations } from "../store/slices/translations";
+import { RankedVerseProps, translationsProps } from "@/types";
+import useQuran from "@/context/QuranContext";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchAllTranslations } from "@/store/slices/translations";
+
+import LoadingSpinner from "@/components/LoadingSpinner";
+import Display from "@/components/Comparator/Display";
+import Menu from "@/components/Comparator/Menu";
 
 function Comparator() {
-  const { absoluteQuran } = useQuran();
+  const quranService = useQuran();
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
   const { loading, data, complete, error } = useAppSelector(
@@ -22,7 +23,7 @@ function Comparator() {
     //
     const chapterVerses: RankedVerseProps[] = [];
 
-    absoluteQuran.forEach((verse, index) => {
+    quranService.absoluteQuran.forEach((verse, index) => {
       if (verse.suraid !== currentChapter) return;
 
       chapterVerses.push({ ...verse, rank: index });
@@ -35,14 +36,14 @@ function Comparator() {
     //
     const chapterVerses: RankedVerseProps[] = [];
 
-    absoluteQuran.forEach((verse, index) => {
+    quranService.absoluteQuran.forEach((verse, index) => {
       if (verse.suraid !== currentChapter) return;
 
       chapterVerses.push({ ...verse, rank: index });
     });
 
     setChapterVerses(chapterVerses);
-  }, [currentChapter, absoluteQuran]);
+  }, [currentChapter]);
 
   useEffect(() => {
     if (complete) {

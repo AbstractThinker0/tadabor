@@ -61,7 +61,7 @@ const RootItem = ({ root_name, root_id }: RootItemProps) => {
 
 const VersesList = () => {
   const { search_roots } = useAppSelector((state) => state.searcherPage);
-  const { quranRoots, absoluteQuran, chapterNames } = useQuran();
+  const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseMatchResult[]>([]);
 
@@ -83,7 +83,9 @@ const VersesList = () => {
     const versesObject: versesObjectType = {};
 
     rootsArray.forEach((root_id) => {
-      const rootTarget = quranRoots.find((root) => root.id === Number(root_id));
+      const rootTarget = quranService.quranRoots.find(
+        (root) => root.id === Number(root_id)
+      );
 
       if (!rootTarget) return;
 
@@ -91,9 +93,9 @@ const VersesList = () => {
         const info = item.split(":");
 
         // between 0 .. 6235
-        const verseRank = Number(info[0]);
+        const verseRank = info[0];
 
-        const currentVerse = absoluteQuran[verseRank];
+        const currentVerse = quranService.getVerseByRank(verseRank);
 
         const wordIndexes = info[1].split(",");
 
@@ -115,7 +117,7 @@ const VersesList = () => {
 
     Object.keys(versesObject).forEach((verseKey) => {
       const currentVerse = versesObject[verseKey].verse;
-      const chapterName = chapterNames[Number(currentVerse.suraid) - 1].name;
+      const chapterName = quranService.getChapterName(currentVerse.suraid);
 
       const { verseResult } = getDerivationsInVerse(
         versesObject[verseKey].wordIndexes,
@@ -158,7 +160,7 @@ interface VerseComponentProps {
 }
 
 const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
   return (
     <div>
@@ -171,7 +173,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
           </span>
         );
       })}
-      {`(${chapterNames[Number(verseMatch.suraid) - 1].name}:${
+      {`(${quranService.getChapterName(verseMatch.suraid)}:${
         verseMatch.verseid
       })`}
       <button

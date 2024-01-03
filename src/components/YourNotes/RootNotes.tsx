@@ -1,11 +1,13 @@
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
 import { getAllRootNotes, useAppDispatch, useAppSelector } from "@/store";
 import useQuran from "@/context/QuranContext";
 import { NoteProp } from "@/types";
-import { useCallback, useState } from "react";
 import { dbFuncs } from "@/util/db";
-import { toast } from "react-toastify";
 import { rootNotesActions } from "@/store/slices/rootNotes";
+
 import { FormComponent, TextComponent } from "@/components/TextForm";
 
 const RootNotes = () => {
@@ -35,7 +37,7 @@ interface NoteComponentProps {
 }
 
 function NoteComponent({ rootID, rootNote }: NoteComponentProps) {
-  const { quranRoots } = useQuran();
+  const quranService = useQuran();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { text, dir } = rootNote;
@@ -43,7 +45,7 @@ function NoteComponent({ rootID, rootNote }: NoteComponentProps) {
   const [stateEditable, setStateEditable] = useState(text ? false : true);
 
   const getRootByID = (key: string) => {
-    const root = quranRoots.find((root) => root.id === +key);
+    const root = quranService.quranRoots.find((root) => root.id === +key);
     return root;
   };
 

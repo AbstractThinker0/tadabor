@@ -8,18 +8,22 @@ import {
   useState,
   useTransition,
 } from "react";
+import { IconSelect } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+import { Tooltip } from "bootstrap";
+
+import useQuran from "@/context/QuranContext";
+
+import { searchIndexProps, verseMatchResult } from "@/types";
+
+import LoadingSpinner from "@/components/LoadingSpinner";
+import NoteText from "@/components/NoteText";
+
 import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
 } from "@/components/QuranBrowser/consts";
-import useQuran from "@/context/QuranContext";
-import { Tooltip } from "bootstrap";
-import NoteText from "@/components/NoteText";
-import { useTranslation } from "react-i18next";
-import { IconSelect } from "@tabler/icons-react";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { searchIndexProps, verseMatchResult } from "@/types";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -40,7 +44,7 @@ const ListSearchResults = ({
   searchIndexes,
   dispatchQbAction,
 }: ListSearchResultsProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const { t } = useTranslation();
   const [selectedVerse, setSelectedVerse] = useState("");
 
@@ -114,7 +118,7 @@ const ListSearchResults = ({
             >
               <SearchVerseComponent
                 verse={verse}
-                verseChapter={chapterNames[Number(verse.suraid) - 1].name}
+                verseChapter={quranService.getChapterName(verse.suraid)}
                 dispatchQbAction={dispatchQbAction}
               />
             </div>

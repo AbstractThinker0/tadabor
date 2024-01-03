@@ -7,16 +7,17 @@ import {
   useEffect,
   useTransition,
 } from "react";
-import useQuran from "@/context/QuranContext";
-
-import { dbFuncs } from "@/util/db";
-import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { TextAreaComponent } from "@/components/TextForm";
+import { toast } from "react-toastify";
+
+import useQuran from "@/context/QuranContext";
+import { dbFuncs } from "@/util/db";
 import { selectTranslation, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { verseProps } from "@/types";
+
+import { TextAreaComponent } from "@/components/TextForm";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
@@ -46,7 +47,7 @@ const SelectionListChapters = ({
   selectChapter,
 }: SelectionListChaptersProps) => {
   const { t } = useTranslation();
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const [chapterSearch, setChapterSearch] = useState("");
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +71,7 @@ const SelectionListChapters = ({
           type="search"
           value={chapterSearch}
           onChange={onChangeInput}
-          placeholder={chapterNames[selectChapter - 1].name}
+          placeholder={quranService.getChapterName(selectChapter)}
           aria-label="Search"
           dir="rtl"
         />
@@ -82,7 +83,7 @@ const SelectionListChapters = ({
           onFocus={onFocusSelect}
           value={selectChapter}
         >
-          {chapterNames
+          {quranService.chapterNames
             .filter((chapter) => chapter.name.startsWith(chapterSearch))
             .map((chapter) => (
               <option key={chapter.id} value={chapter.id}>
@@ -100,7 +101,7 @@ interface DisplayPanelProps {
 }
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
-  const { allQuranText, chapterNames } = useQuran();
+  const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -111,18 +112,18 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     if (!refDisplay.current) return;
 
     startTransition(() => {
-      setStateVerses(allQuranText[selectChapter - 1].verses);
+      setStateVerses(quranService.getVerses(selectChapter));
     });
 
     refDisplay.current.scrollTop = 0;
-  }, [selectChapter, allQuranText]);
+  }, [selectChapter]);
 
   return (
     <div ref={refDisplay} className="translation-display">
       <div className="card translation-display-card">
         <div className="card-header">
           <h2 className="pb-2 text-primary text-center">
-            {chapterNames[selectChapter - 1].name}
+            {quranService.getChapterName(selectChapter)}
           </h2>
         </div>
         <div className="card-body p-1">

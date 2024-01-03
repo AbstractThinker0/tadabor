@@ -34,8 +34,7 @@ const SearchPanel = memo(
     searchResult,
     dispatchQbAction,
   }: SearchPanelProps) => {
-    const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
-      useQuran();
+    const quranService = useQuran();
     const { t } = useTranslation();
 
     const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
@@ -56,16 +55,16 @@ const SearchPanel = memo(
       if (isRootSearch) {
         dispatchQbAction(
           qbActions.submitRootSearch({
-            absoluteQuran,
-            chapterNames,
-            quranRoots,
+            absoluteQuran: quranService.absoluteQuran,
+            chapterNames: quranService.chapterNames,
+            quranRoots: quranService.quranRoots,
           })
         );
       } else {
         dispatchQbAction(
           qbActions.submitWordSearch({
-            allQuranText,
-            chapterNames,
+            allQuranText: quranService.allQuranText,
+            chapterNames: quranService.chapterNames,
           })
         );
       }

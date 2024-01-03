@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useQuran from "../../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
 interface ChaptersListProps {
   selectedChapter: number;
@@ -10,7 +10,7 @@ const ChaptersList = ({
   selectedChapter,
   handleSelectChapter,
 }: ChaptersListProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const [chapterSearch, setChapterSearch] = useState("");
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ const ChaptersList = ({
           aria-label="size 7 select example"
           value={selectedChapter}
         >
-          {chapterNames
+          {quranService.chapterNames
             .filter((chapter) => chapter.name.includes(chapterSearch))
             .map((chapter) => (
               <option key={chapter.id} value={chapter.id}>

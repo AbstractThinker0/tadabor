@@ -7,24 +7,21 @@ import {
   useState,
   useTransition,
 } from "react";
-
-import LoadingSpinner from "@/components/LoadingSpinner";
-
-import useQuran from "@/context/QuranContext";
-
+import { IconSelect } from "@tabler/icons-react";
 import { Collapse, Tooltip } from "bootstrap";
 
-import { IconSelect } from "@tabler/icons-react";
-
+import useQuran from "@/context/QuranContext";
 import { getRootMatches } from "@/util/util";
-import NoteText from "@/components/NoteText";
 import {
   RankedVerseProps,
   rootProps,
   verseMatchResult,
   searchIndexProps,
 } from "@/types";
+
 import { clActionsProps, isActions } from "@/components/Inspector/consts";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import NoteText from "@/components/NoteText";
 
 interface ListVersesProps {
   currentChapter: number;
@@ -37,7 +34,7 @@ const ListVerses = ({
   scrollKey,
   dispatchIsAction,
 }: ListVersesProps) => {
-  const { absoluteQuran } = useQuran();
+  const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
 
@@ -47,7 +44,7 @@ const ListVerses = ({
     //
     const chapterVerses: RankedVerseProps[] = [];
 
-    absoluteQuran.forEach((verse, index) => {
+    quranService.absoluteQuran.forEach((verse, index) => {
       if (verse.suraid !== currentChapter.toString()) return;
 
       chapterVerses.push({ ...verse, rank: index });
@@ -56,7 +53,7 @@ const ListVerses = ({
     startTransition(() => {
       setStateVerses(chapterVerses);
     });
-  }, [absoluteQuran, currentChapter]);
+  }, [currentChapter]);
 
   const refList = useRef<HTMLDivElement>(null);
 
@@ -124,7 +121,7 @@ const VerseWords = ({
   verseKey,
   dispatchIsAction,
 }: VerseWordsProps) => {
-  const { quranRoots } = useQuran();
+  const quranService = useQuran();
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const [selectedWord, setSelectedWord] = useState(-1);
   const refCollapsible = useRef<HTMLDivElement>(null);
@@ -140,7 +137,7 @@ const VerseWords = ({
   }, []);
 
   function onClickWord(index: number) {
-    const wordRoots = quranRoots.filter((root) =>
+    const wordRoots = quranService.quranRoots.filter((root) =>
       root.occurences.find((occ) => {
         const rootData = occ.split(":");
 
@@ -289,7 +286,7 @@ const RootOccurences = ({
     }
   }
 
-  const { chapterNames, absoluteQuran } = useQuran();
+  const quranService = useQuran();
 
   const derivations: searchIndexProps[] = [];
 
@@ -297,11 +294,11 @@ const RootOccurences = ({
 
   rootOccs.forEach((occ) => {
     const occData = occ.split(":");
-    const verse = absoluteQuran[Number(occData[0])];
+    const verse = quranService.getVerseByRank(occData[0]);
     const wordIndexes = occData[1].split(",");
     const verseWords = verse.versetext.split(" ");
 
-    const chapterName = chapterNames[Number(verse.suraid) - 1].name;
+    const chapterName = quranService.getChapterName(verse.suraid);
 
     const verseDerivations = wordIndexes.map((wordIndex) => ({
       name: verseWords[Number(wordIndex) - 1],
@@ -436,9 +433,9 @@ interface RootVerseProps {
 }
 
 const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
 
-  const verseChapter = chapterNames[Number(rootVerse.suraid) - 1].name;
+  const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
   function onClickVerseChapter() {
     dispatchIsAction(isActions.gotoChapter(Number(rootVerse.suraid)));

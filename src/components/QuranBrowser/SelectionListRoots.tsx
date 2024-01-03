@@ -1,7 +1,9 @@
 import { memo, useMemo, useState, Dispatch } from "react";
 import useQuran from "@/context/QuranContext";
-import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
+
 import { rootProps } from "@/types";
+
+import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
 
 interface SelectionListRootsProps {
   isDisabled: boolean;
@@ -45,7 +47,7 @@ const RootsList = ({
   searchString,
   dispatchQbAction,
 }: RootsListProps) => {
-  const { quranRoots } = useQuran();
+  const quranService = useQuran();
   const [itemsCount, setItemsCount] = useState(50);
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -58,7 +60,7 @@ const RootsList = ({
 
   const filteredArray = useMemo(
     () =>
-      quranRoots.filter(
+      quranService.quranRoots.filter(
         (root) => root.name.startsWith(searchString) || isDisabled
       ),
     [searchString, isDisabled]

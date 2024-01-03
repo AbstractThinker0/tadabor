@@ -1,9 +1,8 @@
 import { Dispatch, useEffect, useRef } from "react";
 
-import useQuran from "../../context/QuranContext";
+import useQuran from "@/context/QuranContext";
 
 import { clActionsProps } from "./consts";
-
 import ListVerses from "./ListVerses";
 
 interface DisplayProps {
@@ -17,7 +16,7 @@ const Display = ({
   scrollKey,
   dispatchIsAction,
 }: DisplayProps) => {
-  const { chapterNames } = useQuran();
+  const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
   // Reset scroll whenever we switch from one chapter to another
@@ -31,7 +30,7 @@ const Display = ({
     <div className="p-2 display" ref={refDisplay}>
       <div className="card display-verses">
         <div className="card-header text-primary text-center fs-3">
-          سورة {chapterNames[currentChapter - 1].name}
+          سورة {quranService.getChapterName(currentChapter)}
         </div>
         <ListVerses
           currentChapter={currentChapter}

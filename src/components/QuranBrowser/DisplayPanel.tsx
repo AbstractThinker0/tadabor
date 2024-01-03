@@ -105,19 +105,19 @@ const ListVerses = ({
   scrollKey,
   dispatchQbAction,
 }: ListVersesProps) => {
-  const { chapterNames, allQuranText } = useQuran();
+  const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
-  const chapterName = chapterNames[selectChapter - 1].name;
+  const chapterName = quranService.getChapterName(selectChapter);
 
   useEffect(() => {
     startTransition(() => {
-      setStateVerses(allQuranText[selectChapter - 1].verses);
+      setStateVerses(quranService.getVerses(selectChapter));
     });
-  }, [selectChapter, allQuranText]);
+  }, [selectChapter]);
 
   const listRef = useRef<HTMLDivElement>(null);
 
