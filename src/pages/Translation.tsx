@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 import useQuran from "@/context/QuranContext";
 import { dbFuncs } from "@/util/db";
-import { selectTranslation, useAppDispatch, useAppSelector } from "@/store";
+import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
 import { verseProps } from "@/types";
 
@@ -156,7 +156,7 @@ const TransComponent = memo(({ verse_key }: TransComponentProps) => {
 
   const dispatch = useAppDispatch();
 
-  const verse_trans = useAppSelector(selectTranslation(verse_key));
+  const verse_trans = useAppSelector(selectTransNote(verse_key));
 
   const [stateEditable, setStateEditable] = useState(
     verse_trans ? false : true

@@ -14,6 +14,7 @@ interface ChangeNoteDirPayload {
 
 interface RootNotesType {
   data: UserNotesType;
+  dataKeys: string[];
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -21,6 +22,7 @@ interface RootNotesType {
 
 const initialState: RootNotesType = {
   data: {},
+  dataKeys: [],
   loading: true,
   complete: false,
   error: false,
@@ -65,6 +67,8 @@ const rootNotesSlice = createSlice({
           text: value,
           dir: "",
         };
+
+        state.dataKeys.push(name);
       }
     },
     changeRootNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
@@ -77,6 +81,8 @@ const rootNotesSlice = createSlice({
           text: "",
           dir: value,
         };
+
+        state.dataKeys.push(name);
       }
     },
   },
@@ -85,7 +91,10 @@ const rootNotesSlice = createSlice({
       .addCase(fetchRootNotes.fulfilled, (state, action) => {
         state.loading = false;
         state.complete = true;
-        if (action.payload) state.data = action.payload;
+        if (action.payload) {
+          state.data = action.payload;
+          state.dataKeys = Object.keys(action.payload);
+        }
       })
       .addCase(fetchRootNotes.pending, (state) => {
         state.loading = true;

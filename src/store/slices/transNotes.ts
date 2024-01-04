@@ -9,6 +9,7 @@ interface ChangeTranslationPayload {
 
 interface TransNotesState {
   data: TransNotesType;
+  dataKeys: string[];
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -16,6 +17,7 @@ interface TransNotesState {
 
 const initialState: TransNotesState = {
   data: {},
+  dataKeys: [],
   loading: true,
   complete: false,
   error: false,
@@ -54,6 +56,10 @@ const transNotesSlice = createSlice({
       const { name, value } = action.payload;
 
       state.data[name] = value;
+
+      if (!state.dataKeys.includes(name)) {
+        state.dataKeys.push(name);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -61,7 +67,10 @@ const transNotesSlice = createSlice({
       .addCase(fetchTransNotes.fulfilled, (state, action) => {
         state.loading = false;
         state.complete = true;
-        if (action.payload) state.data = action.payload;
+        if (action.payload) {
+          state.data = action.payload;
+          state.dataKeys = Object.keys(action.payload);
+        }
       })
       .addCase(fetchTransNotes.pending, (state) => {
         state.loading = true;

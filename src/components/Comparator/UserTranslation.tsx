@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { selectTranslation, useAppDispatch, useAppSelector } from "@/store";
+import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
 import { dbFuncs } from "@/util/db";
 
@@ -14,7 +14,7 @@ interface UserTranslationProps {
 
 const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const { t } = useTranslation();
-  const verseTrans = useAppSelector(selectTranslation(verseKey));
+  const verseTrans = useAppSelector(selectTransNote(verseKey));
   const [stateEditable, setStateEditable] = useState(false);
   const dispatch = useAppDispatch();
 

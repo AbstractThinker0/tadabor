@@ -22,24 +22,24 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook that can be reused to resolve types
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+export const getAllNotesKeys = (state: RootState) => state.verseNotes.dataKeys;
+
 export const selectNote = (key: string) => {
   return (state: RootState) => state.verseNotes.data[key];
 };
 
-export const getAllNotes = () => {
-  return (state: RootState) => state.verseNotes.data;
-};
+export const getAllTransNotesKeys = (state: RootState) =>
+  state.transNotes.dataKeys;
 
-export const selectTranslation = (key: string) => {
+export const selectTransNote = (key: string) => {
   return (state: RootState) => state.transNotes.data[key];
 };
 
+export const getAllRootNotesKeys = (state: RootState) =>
+  state.rootNotes.dataKeys;
+
 export const selecRootNote = (key: string) => {
   return (state: RootState) => state.rootNotes.data[key];
-};
-
-export const getAllRootNotes = () => {
-  return (state: RootState) => state.rootNotes.data;
 };
 
 export const isDataLoading = () => {

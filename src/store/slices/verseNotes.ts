@@ -14,6 +14,7 @@ interface ChangeNoteDirPayload {
 
 interface VerseNotesType {
   data: UserNotesType;
+  dataKeys: string[];
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -21,6 +22,7 @@ interface VerseNotesType {
 
 const initialState: VerseNotesType = {
   data: {},
+  dataKeys: [],
   loading: true,
   complete: false,
   error: false,
@@ -64,6 +66,8 @@ const verseNotesSlice = createSlice({
           text: value,
           dir: "",
         };
+
+        state.dataKeys.push(name);
       }
     },
     changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
@@ -76,6 +80,8 @@ const verseNotesSlice = createSlice({
           text: "",
           dir: value,
         };
+
+        state.dataKeys.push(name);
       }
     },
   },
@@ -84,7 +90,10 @@ const verseNotesSlice = createSlice({
       .addCase(fetchVerseNotes.fulfilled, (state, action) => {
         state.loading = false;
         state.complete = true;
-        if (action.payload) state.data = action.payload;
+        if (action.payload) {
+          state.data = action.payload;
+          state.dataKeys = Object.keys(action.payload);
+        }
       })
       .addCase(fetchVerseNotes.pending, (state) => {
         state.loading = true;

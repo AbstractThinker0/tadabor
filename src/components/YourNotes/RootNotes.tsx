@@ -2,24 +2,28 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { getAllRootNotes, useAppDispatch, useAppSelector } from "@/store";
+import {
+  getAllRootNotesKeys,
+  selecRootNote,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store";
 import useQuran from "@/context/QuranContext";
-import { NoteProp } from "@/types";
 import { dbFuncs } from "@/util/db";
 import { rootNotesActions } from "@/store/slices/rootNotes";
 
 import { FormComponent, TextComponent } from "@/components/TextForm";
 
 const RootNotes = () => {
-  const myNotes = useAppSelector(getAllRootNotes());
+  const myNotes = useAppSelector(getAllRootNotesKeys);
   const { t } = useTranslation();
 
   return (
     <>
-      {Object.keys(myNotes).length ? (
+      {myNotes.length ? (
         <>
-          {Object.keys(myNotes).map((key) => (
-            <NoteComponent rootNote={myNotes[key]} rootID={key} key={key} />
+          {myNotes.map((key) => (
+            <NoteComponent rootID={key} key={key} />
           ))}
         </>
       ) : (
@@ -33,13 +37,15 @@ const RootNotes = () => {
 
 interface NoteComponentProps {
   rootID: string;
-  rootNote: NoteProp;
 }
 
-function NoteComponent({ rootID, rootNote }: NoteComponentProps) {
+function NoteComponent({ rootID }: NoteComponentProps) {
   const quranService = useQuran();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+
+  const rootNote = useAppSelector(selecRootNote(rootID));
+
   const { text, dir } = rootNote;
 
   const [stateEditable, setStateEditable] = useState(text ? false : true);
