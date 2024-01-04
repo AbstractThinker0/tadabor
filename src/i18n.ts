@@ -63,6 +63,7 @@ i18n
           search_inclusive: "Inclusive",
           notes_verses: "Verses notes",
           notes_roots: "Roots notes",
+          notes_trans: "Translation",
         },
       },
       ar: {
@@ -113,6 +114,7 @@ i18n
           search_inclusive: "شامل",
           notes_verses: "آيات",
           notes_roots: "جذور",
+          notes_trans: "ترجمة",
         },
       },
     },
