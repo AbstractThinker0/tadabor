@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef } from "react";
+import { FormEvent, memo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -10,26 +10,26 @@ interface TextFormProps {
   inputKey: string;
   inputValue: string;
   inputDirection: string;
-  handleSetDirection: (verse_key: string, dir: string) => void;
-  handleInputChange: (key: string, value: string) => void;
   isEditable: boolean;
-  handleEditClick: () => void;
-  handleInputSubmit: (key: string, value: string) => void;
   className?: string;
   targetID?: string;
+  handleSetDirection: (verse_key: string, dir: string) => void;
+  handleInputChange: (key: string, value: string) => void;
+  handleEditClick: () => void;
+  handleInputSubmit: (key: string, value: string) => void;
 }
 
 const TextForm = ({
   inputKey,
   inputValue,
   inputDirection,
-  handleSetDirection,
-  handleInputChange,
   isEditable,
-  handleEditClick,
-  handleInputSubmit,
   className = "",
   targetID,
+  handleSetDirection,
+  handleInputChange,
+  handleEditClick,
+  handleInputSubmit,
 }: TextFormProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
@@ -111,18 +111,18 @@ interface TextComponentProps {
   inputKey: string;
   inputValue: string;
   inputDirection: string;
-  handleEditButtonClick: () => void;
   textClassname?: string;
   editClassname?: string;
+  handleEditButtonClick: () => void;
 }
 
 const TextComponent = ({
   inputValue,
   inputKey,
   inputDirection,
-  handleEditButtonClick,
   textClassname = "",
   editClassname = "",
+  handleEditButtonClick,
 }: TextComponentProps) => {
   return (
     <>
@@ -160,20 +160,20 @@ const TextContainer = ({
 
 interface TextEditButtonProps {
   inputKey: string;
-  handleEditButtonClick: (key: string) => void;
   className?: string;
+  handleEditButtonClick: (key: string) => void;
 }
 
 const TextEditButton = ({
   inputKey,
-  handleEditButtonClick,
   className = "",
+  handleEditButtonClick,
 }: TextEditButtonProps) => {
   const { t } = useTranslation();
 
-  function onClickEditButton() {
+  const onClickEditButton = () => {
     handleEditButtonClick(inputKey);
-  }
+  };
 
   return (
     <div className={`text-center ${className}`}>
@@ -193,21 +193,20 @@ interface TextareaToolbarProps {
   handleSetDirection: (key: string, direction: string) => void;
 }
 
-const TextareaToolbar = ({
-  inputKey,
-  handleSetDirection,
-}: TextareaToolbarProps) => {
-  return (
-    <div dir="ltr" className="text-center">
-      <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
-        <IconTextDirectionLtr />
-      </ToolbarOption>
-      <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
-        <IconTextDirectionRtl />
-      </ToolbarOption>
-    </div>
-  );
-};
+const TextareaToolbar = memo(
+  ({ inputKey, handleSetDirection }: TextareaToolbarProps) => {
+    return (
+      <div dir="ltr" className="text-center">
+        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
+          <IconTextDirectionLtr />
+        </ToolbarOption>
+        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
+          <IconTextDirectionRtl />
+        </ToolbarOption>
+      </div>
+    );
+  }
+);
 
 interface ToolbarOptionProps {
   handleClick: () => void;
@@ -215,9 +214,9 @@ interface ToolbarOptionProps {
 }
 
 function ToolbarOption(props: ToolbarOptionProps) {
-  function onClickButton() {
+  const onClickButton = () => {
     props.handleClick();
-  }
+  };
 
   return (
     <button type="button" className="btn btn-sm" onClick={onClickButton}>
@@ -230,27 +229,27 @@ interface FormComponentProps {
   inputKey: string;
   inputValue: string;
   inputDirection: string;
+  bodyClassname?: string;
+  saveClassname?: string;
   handleSetDirection: (key: string, direction: string) => void;
   handleInputSubmit: (key: string, value: string) => void;
   handleInputChange: (key: string, value: string) => void;
-  bodyClassname?: string;
-  saveClassname?: string;
 }
 
 const FormComponent = ({
   inputKey,
   inputValue,
   inputDirection,
+  bodyClassname = "",
+  saveClassname = "",
   handleSetDirection,
   handleInputSubmit,
   handleInputChange,
-  bodyClassname = "",
-  saveClassname = "",
 }: FormComponentProps) => {
-  function onSubmitForm(event: FormEvent<HTMLFormElement>) {
+  const onSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleInputSubmit(inputKey, inputValue);
-  }
+  };
 
   return (
     <form name={inputKey} onSubmit={onSubmitForm}>
@@ -278,7 +277,7 @@ const FormSaveButton = ({ className = "" }) => {
     <div className={`text-center ${className}`}>
       <input
         type="submit"
-        value={t("text_save") as string}
+        value={t("text_save")}
         className="btn btn-success btn-sm"
       />
     </div>
@@ -309,12 +308,14 @@ const forceHiddenStyles = (node: HTMLElement) => {
   });
 };
 
+// snippet above  is from https://github.com/Andarist/react-textarea-autosize
+
 interface TextAreaProps {
   inputKey: string;
   inputValue: string;
   inputDirection?: string;
-  handleInputChange: (key: string, value: string) => void;
   placeholder?: string;
+  handleInputChange: (key: string, value: string) => void;
 }
 
 const TextAreaComponent = ({
@@ -364,16 +365,16 @@ const TextAreaComponent = ({
         : hiddenElement.scrollHeight + extraSize) + "px";
   }, [inputValue]);
 
-  function onChangeInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+  const onChangeInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     handleInputChange(inputKey, event.target.value);
-  }
+  };
 
   return (
     <textarea
       ref={refTextarea}
       className="form-control mb-2 fs-5"
       id="textInput"
-      placeholder={placeholder ? placeholder : (t("text_form") as string)}
+      placeholder={placeholder ? placeholder : t("text_form")}
       name={inputKey}
       value={inputValue}
       onChange={onChangeInput}
