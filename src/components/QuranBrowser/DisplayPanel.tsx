@@ -9,7 +9,7 @@ import {
 
 import { IconSelect } from "@tabler/icons-react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";

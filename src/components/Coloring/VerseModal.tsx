@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { verseProps } from "@/types";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import { colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 interface ChaptersListProps {
   selectedChapter: number;

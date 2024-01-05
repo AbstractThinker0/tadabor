@@ -3,7 +3,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/searcherPage";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { rootProps } from "@/types";
 import { hasAllLetters, normalizeAlif } from "@/util/util";
 import LoadingSpinner from "@/components/LoadingSpinner";

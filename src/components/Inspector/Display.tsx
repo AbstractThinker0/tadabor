@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useRef } from "react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import { clActionsProps } from "./consts";
 import ListVerses from "./ListVerses";

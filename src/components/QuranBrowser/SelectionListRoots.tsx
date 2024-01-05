@@ -1,5 +1,5 @@
 import { memo, useMemo, useState, Dispatch } from "react";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import { rootProps } from "@/types";
 

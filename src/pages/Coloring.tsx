@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from "react";
 
 import { selectedChaptersType, verseProps } from "@/types";
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
 

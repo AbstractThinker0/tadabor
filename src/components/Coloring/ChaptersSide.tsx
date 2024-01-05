@@ -1,7 +1,7 @@
 import { useEffect, useRef, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import AddColorModal from "./AddColorModal";
 import DeleteColorModal from "./DeleteColorModal";
 import EditColorsModal from "./EditColorsModal";

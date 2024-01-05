@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import {
   useAppDispatch,
   getAllNotesKeys,

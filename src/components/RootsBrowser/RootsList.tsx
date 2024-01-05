@@ -13,7 +13,7 @@ import { IconSelect } from "@tabler/icons-react";
 import { Tooltip } from "bootstrap";
 
 import { dbFuncs } from "@/util/db";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
 import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";

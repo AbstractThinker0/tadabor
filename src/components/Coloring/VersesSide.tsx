@@ -8,7 +8,7 @@ import {
 } from "react";
 import { IconSelect } from "@tabler/icons-react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { selectedChaptersType, verseProps } from "@/types";
 import { dbFuncs } from "@/util/db";
 

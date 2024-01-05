@@ -7,8 +7,8 @@ import "bootstrap";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { QuranProvider } from "../../context/QuranContext";
-import "../../styles/main.scss";
+import { QuranProvider } from "@/context/QuranProvider";
+import "@/styles/main.scss";
 
 import Navbar from "./Navbar";
 import AlertMessage from "./AlertMessage";

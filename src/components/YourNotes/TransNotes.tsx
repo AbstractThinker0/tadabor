@@ -6,7 +6,7 @@ import {
   selectTransNote,
   getAllTransNotesKeys,
 } from "@/store";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { memo, useCallback, useState } from "react";
 import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";

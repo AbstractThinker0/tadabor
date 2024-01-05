@@ -1,17 +1,17 @@
 import {
-  createContext,
   useState,
   useEffect,
-  useContext,
   PropsWithChildren,
   useRef,
+  createContext,
 } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import fetchJsonPerm from "@/util/fetchJsonPerm";
 
+import fetchJsonPerm from "@/util/fetchJsonPerm";
 import quranClass from "@/util/quranService";
 
-const QuranContext = createContext<quranClass | null>(null);
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+export const QuranContext = createContext<quranClass | null>(null);
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -64,15 +64,3 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
     </QuranContext.Provider>
   );
 };
-
-const useQuran = () => {
-  const quranInstance = useContext(QuranContext);
-
-  if (!quranInstance) {
-    throw new Error("useQuran must be used within a QuranProvider");
-  }
-
-  return quranInstance;
-};
-
-export default useQuran;

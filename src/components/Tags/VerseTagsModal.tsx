@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { verseProps } from "@/types";
 
 import { tagsProps } from "./consts";

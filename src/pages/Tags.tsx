@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from "react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import tagsReducer from "@/reducers/tagsReducer";
 import { selectedChaptersType } from "@/types";
 import { dbFuncs } from "@/util/db";

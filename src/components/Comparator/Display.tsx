@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { IconSelect } from "@tabler/icons-react";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { RankedVerseProps, translationsProps } from "@/types";
 
 import NoteText from "@/components/NoteText";

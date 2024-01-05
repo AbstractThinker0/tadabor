@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { RankedVerseProps, translationsProps } from "@/types";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchAllTranslations } from "@/store/slices/translations";
 

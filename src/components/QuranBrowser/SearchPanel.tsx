@@ -1,6 +1,6 @@
 import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import SelectionListChapters from "@/components/QuranBrowser/SelectionListChapters";
 import SelectionListRoots from "@/components/QuranBrowser/SelectionListRoots";

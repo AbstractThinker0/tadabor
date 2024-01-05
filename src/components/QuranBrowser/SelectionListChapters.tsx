@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { selectedChaptersType } from "@/types";
 
 interface SelectionListChaptersProps {

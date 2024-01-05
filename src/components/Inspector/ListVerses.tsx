@@ -10,7 +10,7 @@ import {
 import { IconSelect } from "@tabler/icons-react";
 import { Collapse, Tooltip } from "bootstrap";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { getRootMatches } from "@/util/util";
 import {
   RankedVerseProps,

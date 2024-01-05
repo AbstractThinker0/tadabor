@@ -2,7 +2,7 @@ import { Dispatch, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { selectedChaptersType } from "@/types";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 
 import {

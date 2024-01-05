@@ -4,7 +4,7 @@ import { IconSelect } from "@tabler/icons-react";
 import { verseMatchResult, verseProps } from "@/types";
 import { getDerivationsInVerse } from "@/util/util";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/searcherPage";
 

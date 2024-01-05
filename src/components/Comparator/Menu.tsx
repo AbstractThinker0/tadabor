@@ -1,4 +1,4 @@
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { RankedVerseProps } from "@/types";
 
 interface MenuProps {

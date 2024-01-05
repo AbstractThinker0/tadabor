@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";

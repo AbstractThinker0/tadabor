@@ -12,7 +12,7 @@ import { IconSelect } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "bootstrap";
 
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
 

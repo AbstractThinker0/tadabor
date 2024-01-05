@@ -8,7 +8,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "@/store";
-import useQuran from "@/context/QuranContext";
+import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { rootNotesActions } from "@/store/slices/rootNotes";
 
