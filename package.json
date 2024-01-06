@@ -21,7 +21,7 @@
     "lin_deploy": "npm run build && mv build/index.html build/200.html && surge build tadabor.surge.sh"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.0.1",
     "@tabler/icons-react": "^2.22.0",
     "axios": "^1.6.0",
     "bootstrap": "^5.3.2",
