@@ -83,9 +83,7 @@ const VersesList = () => {
     const versesObject: versesObjectType = {};
 
     rootsArray.forEach((root_id) => {
-      const rootTarget = quranService.quranRoots.find(
-        (root) => root.id === Number(root_id)
-      );
+      const rootTarget = quranService.getRootByID(root_id);
 
       if (!rootTarget) return;
 

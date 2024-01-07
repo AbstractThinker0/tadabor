@@ -51,6 +51,20 @@ class quranClass {
     const info = key.split("-");
     return this.getChapterName(info[0]) + ":" + info[1];
   }
+
+  getRootByID = (rootID: string | number) => {
+    const root = this.quranRoots.find((root) => root.id === Number(rootID));
+    return root;
+  };
+
+  getRootNameByID = (rootID: string | number) => {
+    return this.getRootByID(rootID)?.name;
+  };
+
+  getRootByName = (rootName: string) => {
+    const root = this.quranRoots.find((root) => root.name === rootName);
+    return root;
+  };
 }
 
 export default quranClass;
