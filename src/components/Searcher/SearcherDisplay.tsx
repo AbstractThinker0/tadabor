@@ -17,7 +17,7 @@ const SearcherDisplay = () => {
   const rootsArray = Object.keys(search_roots);
 
   return (
-    <div className="searcher-display">
+    <div className="searcher-display" dir="rtl">
       <div className="searcher-display-roots">
         {rootsArray.map((root_id) => (
           <RootItem
