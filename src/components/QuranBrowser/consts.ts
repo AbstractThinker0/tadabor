@@ -1,12 +1,6 @@
-import {
-  quranProps,
-  chapterProps,
-  verseProps,
-  rootProps,
-  verseMatchResult,
-  searchIndexProps,
-} from "@/types";
+import { verseMatchResult, searchIndexProps } from "@/types";
 import { ActionsUnion, createActionPayload } from "@/types/useReducer";
+import quranClass from "@/util/quranService";
 
 export interface qbStateProps {
   selectChapter: number;
@@ -63,15 +57,11 @@ export const qbActions = {
   >(QB_ACTIONS.SET_SEARCH_METHOD),
   submitWordSearch: createActionPayload<
     QB_ACTIONS.SEARCH_WORD_SUBMIT,
-    { allQuranText: quranProps[]; chapterNames: chapterProps[] }
+    quranClass
   >(QB_ACTIONS.SEARCH_WORD_SUBMIT),
   submitRootSearch: createActionPayload<
     QB_ACTIONS.SEARCH_ROOT_SUBMIT,
-    {
-      absoluteQuran: verseProps[];
-      chapterNames: chapterProps[];
-      quranRoots: rootProps[];
-    }
+    quranClass
   >(QB_ACTIONS.SEARCH_ROOT_SUBMIT),
   gotoChapter: createActionPayload<QB_ACTIONS.GOTO_CHAPTER, string>(
     QB_ACTIONS.GOTO_CHAPTER

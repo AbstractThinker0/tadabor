@@ -1,11 +1,11 @@
 import { qbStateProps } from "@/components/QuranBrowser/consts";
-import { chapterProps, quranProps, verseMatchResult } from "@/types";
+import { verseMatchResult } from "@/types";
+import quranClass from "@/util/quranService";
 import { searchVerse, onlySpaces, removeDiacritics } from "@/util/util";
 
 export function qbSearchWord(
   state: qbStateProps,
-  chapterNames: chapterProps[],
-  allQuranText: quranProps[]
+  quranService: quranClass
 ): qbStateProps {
   // Deconstruct current state
   const {
@@ -24,8 +24,8 @@ export function qbSearchWord(
     searchIndexes: [],
     searchingString: searchString,
     searchingMethod: searchMethod,
-    searchingChapters: selectedChapters.map(
-      (chapterID) => chapterNames[Number(chapterID) - 1].name
+    searchingChapters: selectedChapters.map((chapterID) =>
+      quranService.getChapterName(chapterID)
     ),
     scrollKey: "",
   };
@@ -48,7 +48,7 @@ export function qbSearchWord(
   const matchVerses: verseMatchResult[] = [];
 
   selectedChapters.forEach((chapter) => {
-    allQuranText[Number(chapter) - 1].verses.forEach((verse) => {
+    quranService.getVerses(chapter).forEach((verse) => {
       const result = searchVerse(
         verse,
         normalizedToken,

@@ -25,12 +25,10 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
       return { ...state, searchMethod: action.payload };
     }
     case QB_ACTIONS.SEARCH_ROOT_SUBMIT: {
-      const { chapterNames, absoluteQuran, quranRoots } = action.payload;
-      return qbSearchRoot(state, chapterNames, absoluteQuran, quranRoots);
+      return qbSearchRoot(state, action.payload);
     }
     case QB_ACTIONS.SEARCH_WORD_SUBMIT: {
-      const { chapterNames, allQuranText } = action.payload;
-      return qbSearchWord(state, chapterNames, allQuranText);
+      return qbSearchWord(state, action.payload);
     }
     case QB_ACTIONS.GOTO_CHAPTER: {
       return {

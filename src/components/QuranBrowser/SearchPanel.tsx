@@ -53,20 +53,9 @@ const SearchPanel = memo(
 
     function onSearchSubmit() {
       if (isRootSearch) {
-        dispatchQbAction(
-          qbActions.submitRootSearch({
-            absoluteQuran: quranService.absoluteQuran,
-            chapterNames: quranService.chapterNames,
-            quranRoots: quranService.quranRoots,
-          })
-        );
+        dispatchQbAction(qbActions.submitRootSearch(quranService));
       } else {
-        dispatchQbAction(
-          qbActions.submitWordSearch({
-            allQuranText: quranService.allQuranText,
-            chapterNames: quranService.chapterNames,
-          })
-        );
+        dispatchQbAction(qbActions.submitWordSearch(quranService));
       }
     }
 

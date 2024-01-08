@@ -1,18 +1,11 @@
 import { qbStateProps } from "@/components/QuranBrowser/consts";
-import {
-  chapterProps,
-  rootProps,
-  verseProps,
-  searchIndexProps,
-  verseMatchResult,
-} from "@/types";
+import { searchIndexProps, verseMatchResult } from "@/types";
+import quranClass from "@/util/quranService";
 import { onlySpaces, getDerivationsInVerse } from "@/util/util";
 
 export function qbSearchRoot(
   state: qbStateProps,
-  chapterNames: chapterProps[],
-  absoluteQuran: verseProps[],
-  quranRoots: rootProps[]
+  quranService: quranClass
 ): qbStateProps {
   // Deconstruct current state
   const { searchString, searchMethod, selectedChapters } = state;
@@ -24,8 +17,8 @@ export function qbSearchRoot(
     searchIndexes: [],
     searchingString: searchString,
     searchingMethod: searchMethod,
-    searchingChapters: selectedChapters.map(
-      (chapterID) => chapterNames[Number(chapterID) - 1].name
+    searchingChapters: selectedChapters.map((chapterID) =>
+      quranService.getChapterName(chapterID)
     ),
     scrollKey: "",
   };
@@ -34,7 +27,7 @@ export function qbSearchRoot(
     return { ...newState, searchError: true };
   }
 
-  const rootTarget = quranRoots.find((root) => root.name === searchString);
+  const rootTarget = quranService.getRootByName(searchString);
 
   if (rootTarget === undefined) {
     return { ...newState, searchError: true };
@@ -48,12 +41,12 @@ export function qbSearchRoot(
   if (selectedChapters.length) {
     occurencesArray.forEach((item) => {
       const info = item.split(":");
-      const currentVerse = absoluteQuran[Number(info[0])];
+      const currentVerse = quranService.getVerseByRank(info[0]);
 
       if (selectedChapters.includes(currentVerse.suraid)) {
         const wordIndexes = info[1].split(",");
 
-        const chapterName = chapterNames[Number(currentVerse.suraid) - 1].name;
+        const chapterName = quranService.getChapterName(currentVerse.suraid);
 
         const { verseDerivations, verseResult } = getDerivationsInVerse(
           wordIndexes,
