@@ -154,8 +154,33 @@ export const dbFuncs = {
   loadTranslations: () => {
     return db.translations.toArray();
   },
-  saveTranslation: (data: ITranslation) => {
-    return db.translations.put(data);
+  saveTranslation: (id: string, text: string) => {
+    return new Promise((resolve, reject) => {
+      db.translations
+        .update(id, { text, date_modified: Date.now() })
+        .then((updated) => {
+          if (!updated) {
+            db.translations
+              .add({
+                id,
+                text,
+                date_modified: Date.now(),
+                date_created: Date.now(),
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
   },
   saveColor: (data: IColor) => {
     return db.colors.put(data);

@@ -35,12 +35,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
     setStateEditable(false);
 
     dbFuncs
-      .saveTranslation({
-        id: verseKey,
-        text: verseTrans,
-        date_created: Date.now(),
-        date_modified: Date.now(),
-      })
+      .saveTranslation(verseKey, verseTrans)
       .then(function () {
         toast.success(t("save_success") as string);
       })

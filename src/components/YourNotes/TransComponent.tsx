@@ -52,12 +52,7 @@ const TransBody = memo(({ verse_key }: TransBodyProps) => {
       setStateEditable(false);
 
       dbFuncs
-        .saveTranslation({
-          id: inputKey,
-          text: inputValue,
-          date_created: Date.now(),
-          date_modified: Date.now(),
-        })
+        .saveTranslation(inputKey, inputValue)
         .then(function () {
           toast.success(t("save_success") as string);
         })
