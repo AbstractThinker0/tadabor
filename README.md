@@ -34,11 +34,7 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 ## TODO List
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc.). (Partially implemented)
-- Add a settings menu that allows the users to choose font size/colors... etc.
-- Add unit tests or similar to ensure everything works as expected.
-- Revamp the interface for a better user experience (Also implement a Dark theme switch).
-- Document code and improve readability when possible.
-- Document all the features and how they can be used.
+- Improve the interface for a better user experience.
 
 ## Credits
 
