@@ -6,7 +6,7 @@ import {
   createContext,
 } from "react";
 
-import fetchJsonPerm from "@/util/fetchJsonPerm";
+import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 import quranClass from "@/util/quranService";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -22,23 +22,23 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
     async function fetchData() {
       try {
-        let response = await fetchJsonPerm.get("/chapters.json");
+        let response = await fetchChapters();
 
         if (clientLeft) return;
 
-        quranInstance.current.setChapters(response.data);
+        quranInstance.current.setChapters(response);
 
-        response = await fetchJsonPerm.get("/quran_v2.json");
-
-        if (clientLeft) return;
-
-        quranInstance.current.setQuran(response.data);
-
-        response = await fetchJsonPerm.get("/quranRoots-0.0.7.json");
+        response = await fetchQuran();
 
         if (clientLeft) return;
 
-        quranInstance.current.setRoots(response.data);
+        quranInstance.current.setQuran(response);
+
+        response = await fetchRoots();
+
+        if (clientLeft) return;
+
+        quranInstance.current.setRoots(response);
       } catch (error) {
         fetchData();
         return;
