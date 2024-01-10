@@ -15,46 +15,18 @@ function YourNotes() {
         role="tablist"
       >
         <li className="nav-item" role="presentation">
-          <button
-            className="nav-link active"
-            id="verses-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#verses-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="verses-tab-pane"
-            aria-selected="true"
-          >
-            {t("notes_verses")}
-          </button>
+          <TabButton
+            text={t("notes_verses")}
+            identifier="verses"
+            extraClass="active"
+            ariaSelected={true}
+          />
         </li>
         <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="roots-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#roots-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="roots-tab-pane"
-            aria-selected="false"
-          >
-            {t("notes_roots")}
-          </button>
+          <TabButton text={t("notes_roots")} identifier="roots" />
         </li>
         <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="trans-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#trans-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="trans-tab-pane"
-            aria-selected="false"
-          >
-            {t("notes_trans")}
-          </button>
+          <TabButton text={t("notes_trans")} identifier="trans" />
         </li>
       </ul>
       <div className="tab-content" id="myTabContent">
@@ -89,5 +61,34 @@ function YourNotes() {
     </div>
   );
 }
+
+interface TabButtonProps {
+  text: string;
+  identifier: string;
+  extraClass?: string;
+  ariaSelected?: boolean;
+}
+
+const TabButton = ({
+  text,
+  identifier,
+  extraClass = "",
+  ariaSelected,
+}: TabButtonProps) => {
+  return (
+    <button
+      className={"nav-link ".concat(extraClass)}
+      id={`${identifier}-tab`}
+      data-bs-toggle="tab"
+      data-bs-target={`#${identifier}-tab-pane`}
+      type="button"
+      role="tab"
+      aria-controls={`${identifier}-tab-pane`}
+      aria-selected={ariaSelected}
+    >
+      {text}
+    </button>
+  );
+};
 
 export default YourNotes;
