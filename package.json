@@ -23,7 +23,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@tabler/icons-react": "^2.22.0",
-    "axios": "^1.6.0",
+    "axios": "^1.6.3",
     "bootstrap": "^5.3.2",
     "dexie": "^3.2.4",
     "i18next": "^23.0.1",
