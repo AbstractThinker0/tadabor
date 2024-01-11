@@ -1,12 +1,12 @@
 import { useReducer } from "react";
 
-import ChaptersList from "../components/Inspector/ChaptersList";
-import Display from "../components/Inspector/Display";
+import ChaptersList from "@/components/Inspector/ChaptersList";
+import Display from "@/components/Inspector/Display";
 import {
   IS_ACTIONS,
   clActionsProps,
   isActions,
-} from "../components/Inspector/consts";
+} from "@/components/Inspector/consts";
 
 interface stateProps {
   currentChapter: number;
