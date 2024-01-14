@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, useTransition } from "react";
-import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "@/context/useQuran";
 import { RankedVerseProps, translationsProps } from "@/types";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -88,16 +88,7 @@ const Display = ({
                 >
                   ({verse.verseid})
                 </span>{" "}
-                <button
-                  className="btn"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#collapseExample${verse.key}`}
-                  aria-expanded="false"
-                  aria-controls={`collapseExample${verse.key}`}
-                >
-                  <IconSelect />
-                </button>
+                <ExpandButton identifier={verse.key} />
               </div>
               <NoteText verseKey={verse.key} />
               {Object.keys(transVerses).map((trans) => (

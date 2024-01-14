@@ -6,12 +6,12 @@ import {
   useState,
   useTransition,
 } from "react";
-import { IconSelect } from "@tabler/icons-react";
 
 import { selectedChaptersType, verseProps } from "@/types";
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -239,16 +239,7 @@ const SelectedVerseComponent = ({
       >
         ({quranService.getChapterName(verse.suraid) + ":" + verse.verseid})
       </span>
-      <button
-        className="btn"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target={"#collapseExample" + verse.key}
-        aria-expanded="false"
-        aria-controls={"collapseExample" + verse.key}
-      >
-        <IconSelect />
-      </button>
+      <ExpandButton identifier={verse.key} />
     </span>
   );
 };
@@ -359,16 +350,7 @@ const ListVerseComponent = memo(
             ({verse.verseid})
           </span>{" "}
         </span>
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={"#collapseExample" + verse.key}
-          aria-expanded="false"
-          aria-controls={"collapseExample" + verse.key}
-        >
-          <IconSelect />
-        </button>
+        <ExpandButton identifier={verse.key} />
         <button
           className="btn"
           data-bs-toggle="modal"

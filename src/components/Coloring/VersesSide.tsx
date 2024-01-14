@@ -6,12 +6,12 @@ import {
   useTransition,
   useState,
 } from "react";
-import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "@/context/useQuran";
 import { selectedChaptersType, verseProps } from "@/types";
 import { dbFuncs } from "@/util/db";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -257,13 +257,8 @@ const VerseComponent = memo(
     return (
       <div>
         {verse.versetext} ({verse.verseid}){" "}
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={"#collapseExample" + verse.key}
-          aria-expanded="false"
-          aria-controls={"collapseExample" + verse.key}
+        <ExpandButton
+          identifier={verse.key}
           style={
             color
               ? {
@@ -272,9 +267,7 @@ const VerseComponent = memo(
                 }
               : {}
           }
-        >
-          <IconSelect />
-        </button>
+        />
         <button
           className="verse-btn"
           data-bs-toggle="modal"
@@ -346,20 +339,13 @@ function SelectedVerses({
                       verse.verseid}
                     )
                   </span>
-                  <button
-                    className="btn"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target={"#collapseExample" + verse.key}
-                    aria-expanded="false"
-                    aria-controls={"collapseExample" + verse.key}
+                  <ExpandButton
+                    identifier={verse.key}
                     style={{
                       backgroundColor: coloredVerses[verseKey].colorCode,
                       color: getTextColor(coloredVerses[verseKey].colorCode),
                     }}
-                  >
-                    <IconSelect />
-                  </button>
+                  />
                 </div>
                 <NoteText verseKey={verse.key} className="verse-item-note" />
               </div>

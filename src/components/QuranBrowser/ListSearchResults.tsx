@@ -8,7 +8,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import { IconSelect } from "@tabler/icons-react";
+
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "bootstrap";
 
@@ -16,6 +16,7 @@ import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import NoteText from "@/components/NoteText";
 
@@ -291,16 +292,7 @@ const VerseContentComponent = memo(
           {`${verseChapter}:${verse.verseid}`}
         </button>
         )
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={"#collapseExample" + verse_key}
-          aria-expanded="false"
-          aria-controls={"collapseExample" + verse_key}
-        >
-          <IconSelect />
-        </button>
+        <ExpandButton identifier={verse_key} />
       </span>
     );
   }

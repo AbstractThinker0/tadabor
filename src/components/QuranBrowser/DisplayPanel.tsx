@@ -7,16 +7,16 @@ import {
   useTransition,
 } from "react";
 
-import { IconSelect } from "@tabler/icons-react";
-
 import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
-import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
 
-import ListSearchResults from "@/components/QuranBrowser/ListSearchResults";
+import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
+import ListSearchResults from "@/components/QuranBrowser/ListSearchResults";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
@@ -201,16 +201,7 @@ const VerseTextComponent = memo(
         <span className="btn-verse" onClick={onClickVerse}>
           {`(${verse.verseid})`}
         </span>
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={"#collapseExample" + verse.key}
-          aria-expanded="false"
-          aria-controls={"collapseExample" + verse.key}
-        >
-          <IconSelect />
-        </button>
+        <ExpandButton identifier={verse.key} />
       </div>
     );
   }

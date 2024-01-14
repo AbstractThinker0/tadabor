@@ -1,5 +1,4 @@
 import { useEffect, useState, useTransition } from "react";
-import { IconSelect } from "@tabler/icons-react";
 
 import { verseMatchResult, verseProps } from "@/types";
 import { getDerivationsInVerse } from "@/util/util";
@@ -8,6 +7,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/searcherPage";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -174,16 +174,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
       {`(${quranService.getChapterName(verseMatch.suraid)}:${
         verseMatch.verseid
       })`}
-      <button
-        className="btn"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target={"#collapseExample" + verseMatch.key}
-        aria-expanded="false"
-        aria-controls={"collapseExample" + verseMatch.key}
-      >
-        <IconSelect />
-      </button>
+      <ExpandButton identifier={verseMatch.key} />
     </div>
   );
 };

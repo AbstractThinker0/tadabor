@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { IconSelect } from "@tabler/icons-react";
+
 import { Tooltip } from "bootstrap";
 
 import { dbFuncs } from "@/util/db";
@@ -19,6 +19,7 @@ import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/rootNotes";
 
+import { ExpandButton } from "@/components/Generic/Buttons";
 import { TextForm } from "@/components/TextForm";
 import NoteText from "@/components/NoteText";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -141,7 +142,7 @@ const RootComponent = memo(
           <div className="roots-list-item-title-pc">placeholder</div>
           <div className="roots-list-item-title-text">{root_name}</div>
           <div className="roots-list-item-title-btns">
-            <RootButton root_id={root_id} />
+            <ExpandButton identifier={root_id} value={root_id} />
             <button
               type="button"
               data-bs-toggle="collapse"
@@ -170,26 +171,6 @@ const RootComponent = memo(
     );
   }
 );
-
-interface RootButtonProps {
-  root_id: string;
-}
-
-const RootButton = memo(({ root_id }: RootButtonProps) => {
-  return (
-    <button
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target={"#collapseExample" + root_id}
-      aria-expanded="false"
-      aria-controls={"collapseExample" + root_id}
-      className="btn "
-      value={root_id}
-    >
-      <IconSelect />
-    </button>
-  );
-});
 
 interface RootOccurencesProps {
   root_occurences: string[];
@@ -386,16 +367,7 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
           </Fragment>
         ))}
         <span className="roots-list-item-verses-item-text-chapter">{`(${verseChapter}:${rootVerse.verseid})`}</span>
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={`#collapseExample${rootVerse.key}child`}
-          aria-expanded="false"
-          aria-controls={`collapseExample${rootVerse.key}child`}
-        >
-          <IconSelect />
-        </button>
+        <ExpandButton identifier={`${rootVerse.key}child`} />
       </span>
       <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
     </>

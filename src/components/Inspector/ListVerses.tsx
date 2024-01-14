@@ -7,7 +7,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import { IconSelect } from "@tabler/icons-react";
+
 import { Collapse, Tooltip } from "bootstrap";
 
 import useQuran from "@/context/useQuran";
@@ -19,9 +19,11 @@ import {
   searchIndexProps,
 } from "@/types";
 
-import { clActionsProps, isActions } from "@/components/Inspector/consts";
+import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import NoteText from "@/components/NoteText";
+
+import { clActionsProps, isActions } from "@/components/Inspector/consts";
 
 interface ListVersesProps {
   currentChapter: number;
@@ -185,17 +187,7 @@ const VerseWords = ({
             </span>{" "}
           </Fragment>
         ))}{" "}
-        {`(${verseID})`}{" "}
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={`#collapseExample${verseKey}`}
-          aria-expanded="false"
-          aria-controls={`collapseExample${verseKey}`}
-        >
-          <IconSelect />
-        </button>
+        {`(${verseID})`} <ExpandButton identifier={verseKey} />
       </div>
       <NoteText verseKey={verseKey} />
       <div
@@ -456,16 +448,7 @@ const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
             className="display-verses-item-roots-verses-item-text-chapter"
           >{`(${verseChapter}:${rootVerse.verseid})`}</span>{" "}
         </span>
-        <button
-          className="btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={`#collapseExample${rootVerse.key}child`}
-          aria-expanded="false"
-          aria-controls={`collapseExample${rootVerse.key}child`}
-        >
-          <IconSelect />
-        </button>
+        <ExpandButton identifier={`${rootVerse.key}child`} />
       </div>
       <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
     </>
