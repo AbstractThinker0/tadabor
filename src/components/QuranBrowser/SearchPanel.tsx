@@ -12,7 +12,7 @@ import {
   qbActionsProps,
 } from "@/components/QuranBrowser/consts";
 
-import { IconSearch } from "@tabler/icons-react";
+import { SearchButton } from "@/components/Generic/Buttons";
 
 interface SearchPanelProps {
   currentChapter: number;
@@ -210,12 +210,7 @@ const FormWordSearch = ({
           />
         </div>
         <div className="pt-1 ">
-          <button
-            className="btn btn-outline-success w-50 fw-bold"
-            type="submit"
-          >
-            <IconSearch size={15} stroke={3} /> {t("search_button")}
-          </button>
+          <SearchButton description={t("search_button")} />
         </div>
       </div>
     </form>

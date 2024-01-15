@@ -1,4 +1,4 @@
-import { IconSelect } from "@tabler/icons-react";
+import { IconSearch, IconSelect } from "@tabler/icons-react";
 import { CSSProperties } from "react";
 
 interface ExpandButtonProps {
@@ -30,4 +30,16 @@ const ExpandButton = ({
   );
 };
 
-export { ExpandButton };
+interface SearchButtonProps {
+  description: string;
+}
+
+const SearchButton = ({ description }: SearchButtonProps) => {
+  return (
+    <button className="btn btn-outline-success w-50 fw-bold" type="submit">
+      <IconSearch size={15} stroke={3} /> {description}
+    </button>
+  );
+};
+
+export { ExpandButton, SearchButton };
