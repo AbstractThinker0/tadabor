@@ -1,10 +1,7 @@
-import { FormEvent, memo, useEffect, useRef } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  IconTextDirectionLtr,
-  IconTextDirectionRtl,
-} from "@tabler/icons-react";
+import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 
 interface TextFormProps {
   inputKey: string;
@@ -187,43 +184,6 @@ const TextEditButton = ({
     </div>
   );
 };
-
-interface TextareaToolbarProps {
-  inputKey: string;
-  handleSetDirection: (key: string, direction: string) => void;
-}
-
-const TextareaToolbar = memo(
-  ({ inputKey, handleSetDirection }: TextareaToolbarProps) => {
-    return (
-      <div dir="ltr" className="text-center">
-        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
-          <IconTextDirectionLtr />
-        </ToolbarOption>
-        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
-          <IconTextDirectionRtl />
-        </ToolbarOption>
-      </div>
-    );
-  }
-);
-
-interface ToolbarOptionProps {
-  handleClick: () => void;
-  children: JSX.Element;
-}
-
-function ToolbarOption(props: ToolbarOptionProps) {
-  const onClickButton = () => {
-    props.handleClick();
-  };
-
-  return (
-    <button type="button" className="btn btn-sm" onClick={onClickButton}>
-      {props.children}
-    </button>
-  );
-}
 
 interface FormComponentProps {
   inputKey: string;
