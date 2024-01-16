@@ -1,9 +1,6 @@
 import { memo } from "react";
 
-import {
-  IconTextDirectionLtr,
-  IconTextDirectionRtl,
-} from "@tabler/icons-react";
+import { IconTextDirectionLtr, IconTextDirectionRtl } from "./Icons";
 
 interface TextareaToolbarProps {
   inputKey: string;

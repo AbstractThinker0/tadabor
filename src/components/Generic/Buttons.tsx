@@ -1,5 +1,5 @@
-import { IconSearch, IconSelect } from "@tabler/icons-react";
 import { CSSProperties } from "react";
+import { IconSearch, IconSelect } from "./Icons";
 
 interface ExpandButtonProps {
   identifier: string;
