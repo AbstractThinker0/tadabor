@@ -57,7 +57,7 @@ const TransBody = memo(({ verse_key }: TransBodyProps) => {
           toast.success(t("save_success") as string);
         })
         .catch(function () {
-          toast.success(t("save_failed") as string);
+          toast.error(t("save_failed") as string);
         });
     },
     [t]
