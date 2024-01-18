@@ -28,6 +28,60 @@ const TextForm = ({
   handleEditClick,
   handleInputSubmit,
 }: TextFormProps) => {
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const handleEditButtonClick = () => {
+    handleEditClick();
+
+    if (formRef.current)
+      formRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+  };
+
+  return (
+    <TextCollapsible
+      className={className}
+      targetID={targetID ? targetID : inputKey}
+    >
+      <div className="card border-primary" ref={formRef}>
+        <div className="card-body">
+          {isEditable === false ? (
+            <TextComponent
+              inputValue={inputValue}
+              handleEditButtonClick={handleEditButtonClick}
+              inputKey={inputKey}
+              inputDirection={inputDirection}
+              textClassname="p-2 border border-1 border-success rounded"
+            />
+          ) : (
+            <FormComponent
+              inputKey={inputKey}
+              inputValue={inputValue}
+              inputDirection={inputDirection}
+              handleSetDirection={handleSetDirection}
+              handleInputSubmit={handleInputSubmit}
+              handleInputChange={handleInputChange}
+            />
+          )}
+        </div>
+      </div>
+    </TextCollapsible>
+  );
+};
+
+interface TextCollapsibleProps {
+  className?: string;
+  targetID: string;
+  children: JSX.Element;
+}
+
+const TextCollapsible = ({
+  className = "",
+  targetID,
+  children,
+}: TextCollapsibleProps) => {
   const collapseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,47 +117,17 @@ const TextForm = ({
     };
   }, []);
 
-  const handleEditButtonClick = () => {
-    handleEditClick();
-
-    if (collapseRef.current)
-      collapseRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-  };
-
   return (
     <div
       className={`collapse ${className}`}
-      id={`collapseExample${targetID ? targetID : inputKey}`}
+      id={`collapseExample${targetID}`}
       ref={collapseRef}
     >
-      <div className="card border-primary">
-        <div className="card-body">
-          {isEditable === false ? (
-            <TextComponent
-              inputValue={inputValue}
-              handleEditButtonClick={handleEditButtonClick}
-              inputKey={inputKey}
-              inputDirection={inputDirection}
-              textClassname="p-2 border border-1 border-success rounded"
-            />
-          ) : (
-            <FormComponent
-              inputKey={inputKey}
-              inputValue={inputValue}
-              inputDirection={inputDirection}
-              handleSetDirection={handleSetDirection}
-              handleInputSubmit={handleInputSubmit}
-              handleInputChange={handleInputChange}
-            />
-          )}
-        </div>
-      </div>
+      {children}
     </div>
   );
 };
+
 interface TextComponentProps {
   inputKey: string;
   inputValue: string;
