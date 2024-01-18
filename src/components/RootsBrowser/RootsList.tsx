@@ -98,7 +98,8 @@ const RootComponent = memo(
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const { text: noteText, dir: inputDirection = "" } = currentNote;
+    const noteText = currentNote?.text || "";
+    const inputDirection = currentNote?.dir || "";
 
     const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
