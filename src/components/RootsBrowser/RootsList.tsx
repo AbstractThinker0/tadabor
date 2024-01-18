@@ -98,15 +98,14 @@ const RootComponent = memo(
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const noteText = currentNote ? currentNote.text : "";
-    const inputDirection = currentNote ? currentNote.dir : "";
+    const { text: noteText, dir: inputDirection = "" } = currentNote;
 
     const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
     const handleNoteSubmit = useCallback(
       (key: string, value: string) => {
         dbFuncs
-          .saveRootNote(key, value, inputDirection || "")
+          .saveRootNote(key, value, inputDirection)
           .then(function () {
             toast.success(t("save_success"));
           })
@@ -160,7 +159,7 @@ const RootComponent = memo(
           inputKey={root_id}
           inputValue={noteText}
           isEditable={stateEditable}
-          inputDirection={inputDirection || ""}
+          inputDirection={inputDirection}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleNoteSubmit}

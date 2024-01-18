@@ -19,8 +19,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const currentNote = useAppSelector(selectNote(verseKey));
   const dispatch = useAppDispatch();
 
-  const noteText = currentNote ? currentNote.text : "";
-  const inputDirection = currentNote ? currentNote.dir : "";
+  const { text: noteText, dir: inputDirection = "" } = currentNote;
 
   const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
@@ -34,7 +33,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const handleInputSubmit = useCallback(
     (key: string, value: string) => {
       dbFuncs
-        .saveNote(key, value, inputDirection || "")
+        .saveNote(key, value, inputDirection)
         .then(function () {
           toast.success(t("save_success"));
         })
@@ -68,7 +67,7 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
       inputKey={verseKey}
       inputValue={noteText}
       isEditable={stateEditable}
-      inputDirection={inputDirection || ""}
+      inputDirection={inputDirection}
       handleInputChange={handleNoteChange}
       handleEditClick={handleEditClick}
       handleSetDirection={handleSetDirection}

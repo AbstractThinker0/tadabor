@@ -20,7 +20,7 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
 
   const verseNote = useAppSelector(selectNote(verseKey));
 
-  const { text, dir } = verseNote;
+  const { text, dir = "" } = verseNote;
 
   const [stateEditable, setStateEditable] = useState(text ? false : true);
 
@@ -34,7 +34,7 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
   const handleInputSubmit = useCallback(
     (key: string, value: string) => {
       dbFuncs
-        .saveNote(key, value, dir || "")
+        .saveNote(key, value, dir)
         .then(function () {
           toast.success(t("save_success"));
         })
@@ -73,7 +73,7 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
         <FormComponent
           inputValue={text}
           inputKey={verseKey}
-          inputDirection={dir || ""}
+          inputDirection={dir}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleInputSubmit}
           handleSetDirection={handleSetDirection}
@@ -84,7 +84,7 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
         <TextComponent
           inputKey={verseKey}
           inputValue={text}
-          inputDirection={dir || ""}
+          inputDirection={dir}
           handleEditButtonClick={handleEditClick}
           textClassname="card-body yournotes-note-text"
           editClassname="card-footer"
