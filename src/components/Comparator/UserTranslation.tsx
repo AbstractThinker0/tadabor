@@ -37,10 +37,10 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
     dbFuncs
       .saveTranslation(verseKey, verseTrans)
       .then(function () {
-        toast.success(t("save_success") as string);
+        toast.success(t("save_success"));
       })
       .catch(function () {
-        toast.error(t("save_failed") as string);
+        toast.error(t("save_failed"));
       });
   };
 

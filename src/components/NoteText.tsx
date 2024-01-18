@@ -36,10 +36,10 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
       dbFuncs
         .saveNote(key, value, inputDirection || "")
         .then(function () {
-          toast.success(t("save_success") as string);
+          toast.success(t("save_success"));
         })
         .catch(function () {
-          toast.error(t("save_failed") as string);
+          toast.error(t("save_failed"));
         });
 
       setStateEditable(false);
