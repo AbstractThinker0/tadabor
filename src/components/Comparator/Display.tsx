@@ -5,7 +5,7 @@ import { RankedVerseProps, translationsProps } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "./UserTranslation";
 

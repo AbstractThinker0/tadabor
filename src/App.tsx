@@ -2,18 +2,18 @@ import { Routes, Route } from "react-router-dom";
 
 import { lazy, PropsWithChildren, Suspense } from "react";
 
-const About = lazy(() => import("./pages/About"));
-const Coloring = lazy(() => import("./pages/Coloring"));
-const QuranBrowser = lazy(() => import("./pages/QuranBrowser"));
-const RootsBrowser = lazy(() => import("./pages/RootsBrowser"));
-const Translation = lazy(() => import("./pages/Translation"));
-const YourNotes = lazy(() => import("./pages/YourNotes"));
-const Tags = lazy(() => import("./pages/Tags"));
-const Inspector = lazy(() => import("./pages/Inspector"));
-const Comparator = lazy(() => import("./pages/Comparator"));
-const Searcher = lazy(() => import("./pages/Searcher"));
+const About = lazy(() => import("@/pages/About"));
+const Coloring = lazy(() => import("@/pages/Coloring"));
+const QuranBrowser = lazy(() => import("@/pages/QuranBrowser"));
+const RootsBrowser = lazy(() => import("@/pages/RootsBrowser"));
+const Translation = lazy(() => import("@/pages/Translation"));
+const YourNotes = lazy(() => import("@/pages/YourNotes"));
+const Tags = lazy(() => import("@/pages/Tags"));
+const Inspector = lazy(() => import("@/pages/Inspector"));
+const Comparator = lazy(() => import("@/pages/Comparator"));
+const Searcher = lazy(() => import("@/pages/Searcher"));
 
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const Suspenser = ({ children }: PropsWithChildren) => {
   return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;

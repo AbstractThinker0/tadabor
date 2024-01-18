@@ -5,7 +5,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchAllTranslations } from "@/store/slices/translations";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Comparator/Display";
 import Menu from "@/components/Comparator/Menu";
 

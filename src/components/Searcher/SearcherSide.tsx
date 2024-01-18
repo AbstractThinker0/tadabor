@@ -6,7 +6,7 @@ import { searcherPageActions } from "@/store/slices/searcherPage";
 import useQuran from "@/context/useQuran";
 import { rootProps } from "@/types";
 import { hasAllLetters, normalizeAlif } from "@/util/util";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");

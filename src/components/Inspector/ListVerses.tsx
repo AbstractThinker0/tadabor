@@ -20,7 +20,7 @@ import {
 } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import NoteText from "@/components/NoteText";
 
 import { clActionsProps, isActions } from "@/components/Inspector/consts";

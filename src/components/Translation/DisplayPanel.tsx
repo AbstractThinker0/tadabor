@@ -3,7 +3,7 @@ import { useRef, useState, useTransition, useEffect, Fragment } from "react";
 import useQuran from "@/context/useQuran";
 import { verseProps } from "@/types";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import TransComponent from "./TransComponent";
 
 interface DisplayPanelProps {

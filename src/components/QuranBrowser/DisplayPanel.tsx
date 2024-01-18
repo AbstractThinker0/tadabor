@@ -13,7 +13,7 @@ import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
 import ListSearchResults from "@/components/QuranBrowser/ListSearchResults";

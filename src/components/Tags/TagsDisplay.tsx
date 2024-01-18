@@ -13,7 +13,7 @@ import { dbFuncs } from "@/util/db";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import {
   tagsActions,

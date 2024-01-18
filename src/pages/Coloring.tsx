@@ -4,7 +4,7 @@ import { selectedChaptersType, verseProps } from "@/types";
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import {
   CL_ACTIONS,

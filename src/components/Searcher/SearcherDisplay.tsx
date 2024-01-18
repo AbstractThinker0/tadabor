@@ -9,7 +9,7 @@ import { searcherPageActions } from "@/store/slices/searcherPage";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/NoteText";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherDisplay = () => {
   const { search_roots } = useAppSelector((state) => state.searcherPage);

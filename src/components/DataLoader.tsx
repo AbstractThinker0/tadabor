@@ -5,7 +5,7 @@ import { fetchVerseNotes } from "@/store/slices/verseNotes";
 import { fetchTransNotes } from "@/store/slices/transNotes";
 import { fetchRootNotes } from "@/store/slices/rootNotes";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 function DataLoader({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch();
