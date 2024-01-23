@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { getAllNotesKeys, useAppSelector } from "@/store";
 import { dbFuncs } from "@/util/db";
+import { downloadNotesFile } from "@/util/util";
+
 import VerseComponent from "./VerseComponent";
 
 const VerseNotes = () => {
@@ -34,16 +36,7 @@ const NotesList = ({ notesKeys }: NotesListProps) => {
 
     setLoadingNotes(true);
     dbFuncs.loadNotes().then((allNotes) => {
-      const blob = new Blob([JSON.stringify(allNotes)], {
-        type: "application/json;charset=utf-8",
-      });
-      const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = "notesBackup.json";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      URL.revokeObjectURL(downloadLink.href);
-      document.body.removeChild(downloadLink);
+      downloadNotesFile(allNotes, "notesBackup");
       setLoadingNotes(false);
     });
   };

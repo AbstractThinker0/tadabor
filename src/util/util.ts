@@ -254,3 +254,16 @@ export const searchVerse = (
 
   return false;
 };
+
+export const downloadNotesFile = (data: any, filename: string) => {
+  const blob = new Blob([JSON.stringify(data)], {
+    type: "application/json;charset=utf-8",
+  });
+  const downloadLink = document.createElement("a");
+  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.download = `${filename}.json`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  URL.revokeObjectURL(downloadLink.href);
+  document.body.removeChild(downloadLink);
+};
