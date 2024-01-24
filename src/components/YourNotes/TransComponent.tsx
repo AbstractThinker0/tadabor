@@ -8,7 +8,7 @@ import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";
 import { transNotesActions } from "@/store/slices/transNotes";
-import { TextAreaComponent } from "@/components/TextForm";
+import { TextAreaComponent } from "@/components/Generic/TextForm";
 
 interface TransComponentProps {
   verseKey: string;

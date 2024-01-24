@@ -9,7 +9,7 @@ import { rootNotesActions } from "@/store/slices/rootNotes";
 
 import { dbFuncs } from "@/util/db";
 
-import { FormComponent, TextComponent } from "@/components/TextForm";
+import { FormComponent, TextComponent } from "@/components/Generic/TextForm";
 
 interface RootComponentProps {
   rootID: string;

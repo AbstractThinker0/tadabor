@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/TextForm";
+import { TextAreaComponent } from "@/components/Generic/TextForm";
 
 interface TransComponentProps {
   verse_key: string;

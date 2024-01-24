@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector, selectNote } from "@/store";
 import { verseNotesActions } from "@/store/slices/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { FormComponent, TextComponent } from "@/components/TextForm";
+import { FormComponent, TextComponent } from "@/components/Generic/TextForm";
 
 interface VerseComponentProps {
   verseKey: string;

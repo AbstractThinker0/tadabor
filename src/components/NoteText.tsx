@@ -6,7 +6,7 @@ import { selectNote, useAppDispatch, useAppSelector } from "@/store";
 import { verseNotesActions } from "@/store/slices/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextForm } from "@/components/TextForm";
+import { TextForm } from "@/components/Generic/TextForm";
 
 interface NoteTextProps {
   verseKey: string;
