@@ -16,9 +16,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "win_deploy": "npm run build && move build\\index.html build\\200.html && surge build tadabor.surge.sh",
-    "lin_deploy": "npm run build && mv build/index.html build/200.html && surge build tadabor.surge.sh"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
