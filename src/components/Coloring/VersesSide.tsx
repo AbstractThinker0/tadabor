@@ -12,7 +12,7 @@ import { selectedChaptersType, verseProps } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseModal from "./VerseModal";

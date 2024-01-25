@@ -12,7 +12,7 @@ import useQuran from "@/context/useQuran";
 import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";

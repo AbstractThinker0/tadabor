@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/searcherPage";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherDisplay = () => {

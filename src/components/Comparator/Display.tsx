@@ -4,7 +4,7 @@ import useQuran from "@/context/useQuran";
 import { RankedVerseProps, translationsProps } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "./UserTranslation";

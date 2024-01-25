@@ -21,7 +21,7 @@ import {
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 
 import { clActionsProps, isActions } from "@/components/Inspector/consts";
 

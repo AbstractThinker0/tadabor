@@ -18,7 +18,7 @@ import { searchIndexProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import NoteText from "@/components/NoteText";
+import NoteText from "@/components/Custom/NoteText";
 
 import {
   SEARCH_METHOD,
