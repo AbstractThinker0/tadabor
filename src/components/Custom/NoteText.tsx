@@ -19,7 +19,8 @@ const NoteText = memo(({ verseKey, className, targetID }: NoteTextProps) => {
   const currentNote = useAppSelector(selectNote(verseKey));
   const dispatch = useAppDispatch();
 
-  const { text: noteText, dir: inputDirection = "" } = currentNote;
+  const noteText = currentNote?.text || "";
+  const inputDirection = currentNote?.dir || "";
 
   const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
