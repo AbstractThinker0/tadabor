@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import "./i18n";
+import "@/i18n";
 
 import store from "@/store";
-import App from "./App";
+import App from "@/App";
 
 import Layout from "@/components/Layout/Layout";
 import DataLoader from "@/components/Custom/DataLoader";
