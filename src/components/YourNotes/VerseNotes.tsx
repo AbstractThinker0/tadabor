@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import useQuran from "@/context/useQuran";
 import { getAllNotesKeys, useAppSelector } from "@/store";
 import { dbFuncs } from "@/util/db";
 import { downloadNotesFile } from "@/util/util";
@@ -30,13 +31,26 @@ interface NotesListProps {
 
 const NotesList = ({ notesKeys }: NotesListProps) => {
   const [loadingNotes, setLoadingNotes] = useState(false);
+  const quranService = useQuran();
 
   const notesBackup = () => {
     if (loadingNotes) return;
 
     setLoadingNotes(true);
     dbFuncs.loadNotes().then((allNotes) => {
-      downloadNotesFile(allNotes, "notesBackup");
+      const backupData: {
+        verse: string;
+        id: string;
+        text: string;
+        dir?: string | undefined;
+        date_created?: number | undefined;
+        date_modified?: number | undefined;
+      }[] = [];
+      allNotes.forEach((note) => {
+        const noteVerse = quranService.getVerseByKey(note.id);
+        backupData.push({ ...note, verse: noteVerse.versetext });
+      });
+      downloadNotesFile(backupData, "notesBackup");
       setLoadingNotes(false);
     });
   };
