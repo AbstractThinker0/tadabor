@@ -42,13 +42,14 @@ const NotesList = ({ notesKeys }: NotesListProps) => {
         verse: string;
         id: string;
         text: string;
-        dir?: string | undefined;
-        date_created?: number | undefined;
-        date_modified?: number | undefined;
       }[] = [];
       allNotes.forEach((note) => {
         const noteVerse = quranService.getVerseByKey(note.id);
-        backupData.push({ ...note, verse: noteVerse.versetext });
+        backupData.push({
+          id: note.id,
+          text: note.text,
+          verse: noteVerse.versetext,
+        });
       });
       downloadNotesFile(backupData, "notesBackup");
       setLoadingNotes(false);
