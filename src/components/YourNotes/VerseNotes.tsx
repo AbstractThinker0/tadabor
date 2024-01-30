@@ -58,7 +58,14 @@ const NotesList = ({ notesKeys }: NotesListProps) => {
 
   return (
     <>
-      <div className="text-center p-2">
+      <div className="backup text-center p-2" dir="ltr">
+        <div>
+          <div>Output format:</div>
+          <label className="form-check-label pe-1" htmlFor="jsonInput">
+            JSON
+          </label>
+          <input className="" id="jsonInput" type="radio" defaultChecked />
+        </div>
         <button className="btn btn-success" onClick={notesBackup}>
           Download notes
         </button>

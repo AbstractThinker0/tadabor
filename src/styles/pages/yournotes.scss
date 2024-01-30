@@ -9,4 +9,11 @@
       background-color: var(--color-fifth);
     }
   }
+
+  .backup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
 }
