@@ -19,7 +19,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.1.0",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.2",
     "dexie": "^3.2.4",
