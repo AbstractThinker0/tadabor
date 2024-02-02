@@ -64,6 +64,7 @@ i18n
           notes_verses: "Verses notes",
           notes_roots: "Roots notes",
           notes_trans: "Translation",
+          searcher_search: "Search",
         },
       },
       ar: {
@@ -115,6 +116,7 @@ i18n
           notes_verses: "آيات",
           notes_roots: "جذور",
           notes_trans: "ترجمة",
+          searcher_search: "بحث",
         },
       },
     },
