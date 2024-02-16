@@ -159,6 +159,11 @@ interface VerseComponentProps {
 
 const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
   const quranService = useQuran();
+  const dispatch = useAppDispatch();
+
+  const onClickVerse = () => {
+    dispatch(searcherPageActions.setVerseTab(verseMatch.key));
+  };
 
   return (
     <div>
@@ -171,9 +176,12 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
           </span>
         );
       })}
-      {`(${quranService.getChapterName(verseMatch.suraid)}:${
+      <span
+        className="searcher-display-verses-item-suffix"
+        onClick={onClickVerse}
+      >{`(${quranService.getChapterName(verseMatch.suraid)}:${
         verseMatch.verseid
-      })`}
+      })`}</span>
       <ExpandButton identifier={verseMatch.key} />
     </div>
   );

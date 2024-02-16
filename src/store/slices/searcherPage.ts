@@ -16,9 +16,10 @@ interface RootsObject {
 
 interface SearcherPageState {
   search_roots: RootsObject;
+  verse_tab: string;
 }
 
-const initialState: SearcherPageState = { search_roots: {} };
+const initialState: SearcherPageState = { search_roots: {}, verse_tab: "" };
 
 const searcherPageSlice = createSlice({
   name: "searcherPage",
@@ -31,6 +32,10 @@ const searcherPageSlice = createSlice({
     deleteRoot: (state, action: PayloadAction<DeleteRootPayload>) => {
       const { root_id } = action.payload;
       delete state.search_roots[root_id];
+    },
+    setVerseTab: (state, action: PayloadAction<string>) => {
+      //
+      state.verse_tab = action.payload;
     },
   },
 });
