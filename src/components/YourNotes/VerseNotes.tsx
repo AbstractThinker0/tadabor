@@ -4,18 +4,18 @@ import { useTranslation } from "react-i18next";
 import useQuran from "@/context/useQuran";
 import { getAllNotesKeys, useAppSelector } from "@/store";
 import { dbFuncs } from "@/util/db";
-import { downloadNotesFile } from "@/util/util";
+import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import VerseComponent from "./VerseComponent";
 
 const VerseNotes = () => {
-  const myNotes = useAppSelector(getAllNotesKeys);
+  const notesKeys = useAppSelector(getAllNotesKeys);
   const { t } = useTranslation();
 
   return (
     <>
-      {myNotes.length ? (
-        <NotesList notesKeys={myNotes} />
+      {notesKeys.length ? (
+        <NotesList notesKeys={notesKeys} />
       ) : (
         <div className="fs-4 text-center">
           <div>{t("no_notes")}</div>
@@ -30,50 +30,90 @@ interface NotesListProps {
 }
 
 const NotesList = ({ notesKeys }: NotesListProps) => {
+  return (
+    <>
+      <BackupComponent />
+      {notesKeys.map((key) => (
+        <VerseComponent verseKey={key} key={key} />
+      ))}
+    </>
+  );
+};
+
+const BackupComponent = () => {
   const [loadingNotes, setLoadingNotes] = useState(false);
+  const [currentFormat, setFormat] = useState("1");
   const quranService = useQuran();
 
   const notesBackup = () => {
     if (loadingNotes) return;
 
     setLoadingNotes(true);
+
     dbFuncs.loadNotes().then((allNotes) => {
-      const backupData: {
-        verse: string;
-        id: string;
-        text: string;
-      }[] = [];
-      allNotes.forEach((note) => {
-        const noteVerse = quranService.getVerseByKey(note.id);
-        backupData.push({
-          id: note.id,
-          text: note.text,
-          verse: noteVerse.versetext,
+      if (currentFormat === "1") {
+        let backupHTML = ``;
+
+        allNotes.forEach((note) => {
+          const noteVerse = quranService.getVerseByKey(note.id);
+
+          const verseData = htmlNote(
+            quranService.convertKeyToSuffix(note.id),
+            noteVerse.versetext,
+            note.text,
+            note.dir
+          );
+
+          backupHTML = backupHTML.concat(verseData);
         });
-      });
-      downloadNotesFile(backupData, "notesBackup");
+
+        downloadHtmlFile(backupHTML, "verseNotesBackup");
+      } else {
+        const backupData: {
+          verse: string;
+          id: string;
+          text: string;
+        }[] = [];
+
+        allNotes.forEach((note) => {
+          const noteVerse = quranService.getVerseByKey(note.id);
+
+          backupData.push({
+            id: note.id,
+            verse: noteVerse.versetext,
+            text: note.text,
+          });
+        });
+
+        downloadNotesFile(backupData, "verseNotesBackup");
+      }
+
       setLoadingNotes(false);
     });
   };
 
+  function onChangeFormat(event: React.ChangeEvent<HTMLSelectElement>) {
+    setFormat(event.target.value);
+  }
+
   return (
-    <>
-      <div className="backup text-center p-2" dir="ltr">
-        <div>
-          <div>Output format:</div>
-          <label className="form-check-label pe-1" htmlFor="jsonInput">
-            JSON
-          </label>
-          <input className="" id="jsonInput" type="radio" defaultChecked />
-        </div>
-        <button className="btn btn-success" onClick={notesBackup}>
-          Download notes
-        </button>
+    <div className="backup text-center p-2" dir="ltr">
+      <div>Output format:</div>
+      <div>
+        <select
+          value={currentFormat}
+          onChange={onChangeFormat}
+          className="form-select"
+          aria-label="Default select example"
+        >
+          <option value="1">HTML</option>
+          <option value="2">JSON</option>
+        </select>
       </div>
-      {notesKeys.map((key) => (
-        <VerseComponent verseKey={key} key={key} />
-      ))}
-    </>
+      <button className="btn btn-success" onClick={notesBackup}>
+        Download notes
+      </button>
+    </div>
   );
 };
 
