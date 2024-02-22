@@ -11,8 +11,8 @@ const Navbar = () => {
         <div className="nav-list-start">
           <NavItem to="/" label={t("nav_browser")} />
           <NavItem to="/roots" label={t("nav_roots")} />
-          <NavItem to="/notes" label={t("nav_notes")} />
           <NavItem to="/translation" label={t("nav_translation")} />
+          <NavItem to="/notes" label={t("nav_notes")} />
           <NavItem to="/coloring" label={t("nav_coloring")} />
           <NavItem to="/tags" label={t("nav_tags")} />
           <NavItem to="/inspector" label={t("nav_inspector")} />
