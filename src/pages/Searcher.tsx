@@ -115,7 +115,7 @@ const QuranTab = ({ verseKey }: QuranTabProps) => {
 
   return (
     <TabPanel identifier={"verse"}>
-      <div className="searcher-chapter" ref={refListVerses}>
+      <div className="searcher-chapter" ref={refListVerses} dir="rtl">
         <div className="text-center fs-3 text-primary">سورة {chapterName}</div>
         {isPending ? (
           <LoadingSpinner />
