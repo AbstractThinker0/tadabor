@@ -63,7 +63,7 @@ const Searcher2 = () => {
           />
         </div>
       </div>
-      <div className="searcher2-list " onScroll={handleScroll}>
+      <div className="searcher2-list " dir="rtl" onScroll={handleScroll}>
         {isPending ? (
           <LoadingSpinner />
         ) : (
