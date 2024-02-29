@@ -7,14 +7,25 @@
   height: 100%;
   flex-direction: column;
 
-  &-list {
-    padding: 2rem;
-    overflow-y: auto;
+  &-display {
+    margin: 0.5rem;
+    overflow: hidden;
+    max-height: 100%;
+    height: 100%;
+    border: 1px solid gray;
+    border-radius: 1rem;
 
-    &-verse {
-      font-size: larger;
-      padding-top: 4px;
-      padding-bottom: 4px;
+    &-list {
+      max-height: 100%;
+      height: 100%;
+      padding: 1rem;
+      overflow-y: auto;
+
+      &-verse {
+        font-size: larger;
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
     }
   }
 
