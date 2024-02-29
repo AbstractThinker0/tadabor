@@ -1,16 +1,78 @@
-import { Fragment, useEffect, useState, useTransition } from "react";
+import { Fragment, useEffect, useState, useTransition, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
 import { searchVerse } from "@/util/util";
 
+import { verseProps } from "@/types";
+
 import NoteText from "@/components/Custom/NoteText";
 
+import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const Searcher2 = () => {
+  const refVerseButton = useRef<HTMLButtonElement>(null);
+
+  const { t } = useTranslation();
+  const [verseTab, setVerseTab] = useState("");
+
+  const handleVerseTab = (verseKey: string) => {
+    setVerseTab(verseKey);
+  };
+
+  useEffect(() => {
+    //
+    if (!verseTab) return;
+
+    if (!refVerseButton.current) return;
+
+    refVerseButton.current.click();
+  }, [verseTab]);
+
+  return (
+    <div className="searcher2">
+      <ul className="nav nav-tabs" id="myTab" role="tablist">
+        <TabButton
+          text={t("searcher_search")}
+          identifier="search"
+          extraClass="active"
+          ariaSelected={true}
+        />
+        {verseTab && (
+          <li className="nav-item" role="presentation">
+            <button
+              className="nav-link "
+              id={`verse-tab`}
+              data-bs-toggle="tab"
+              data-bs-target={`#verse-tab-pane`}
+              type="button"
+              role="tab"
+              aria-controls={`verse-tab-pane`}
+              ref={refVerseButton}
+            >
+              {verseTab}
+            </button>
+          </li>
+        )}
+      </ul>
+      <div className="tab-content" id="myTabContent">
+        <TabPanel identifier="search" extraClass="show active">
+          <Searcher2Tab handleVerseTab={handleVerseTab} />
+        </TabPanel>
+        {verseTab ? <QuranTab verseKey={verseTab} /> : ""}
+      </div>
+    </div>
+  );
+};
+
+interface Searcher2TabProps {
+  handleVerseTab: (verseKey: string) => void;
+}
+
+const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
   const quranService = useQuran();
   const [searchString, setSearchString] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -71,8 +133,12 @@ const Searcher2 = () => {
     });
   }, [searchString, searchIdentical, searchDiacritics]);
 
+  const onClickVerse = (verseKey: string) => {
+    handleVerseTab(verseKey);
+  };
+
   return (
-    <div className="searcher2">
+    <div className="searcher2-searchpanel">
       <div className="d-flex align-items-center flex-column">
         <div>
           <input
@@ -124,9 +190,9 @@ const Searcher2 = () => {
           </div>
         </div>
       </div>
-      <div className="searcher2-display">
+      <div className="searcher2-searchpanel-display">
         <div
-          className="searcher2-display-list "
+          className="searcher2-searchpanel-display-list "
           dir="rtl"
           onScroll={handleScroll}
         >
@@ -135,12 +201,15 @@ const Searcher2 = () => {
           ) : (
             stateVerses.slice(0, itemsCount).map((verseMatch) => (
               <div
-                className="searcher2-display-list-verse border-bottom"
+                className="searcher2-searchpanel-display-list-verse border-bottom"
                 key={verseMatch.key}
               >
                 <div>
                   <HighlightedText verse={verseMatch} />
-                  <span>{` (${quranService.getChapterName(verseMatch.suraid)}:${
+                  <span
+                    className="searcher2-searchpanel-display-list-verse-suffix"
+                    onClick={() => onClickVerse(verseMatch.key)}
+                  >{` (${quranService.getChapterName(verseMatch.suraid)}:${
                     verseMatch.verseid
                   })`}</span>
                   <ExpandButton identifier={verseMatch.key} />
@@ -174,6 +243,87 @@ const HighlightedText = ({ verse }: HighlightedTextProps) => {
         );
       })}
     </>
+  );
+};
+
+interface QuranTabProps {
+  verseKey: string;
+}
+
+const QuranTab = ({ verseKey }: QuranTabProps) => {
+  const quranService = useQuran();
+  const verseInfo = verseKey.split("-");
+
+  const chapterName = quranService.getChapterName(verseInfo[0]);
+  const refListVerses = useRef<HTMLDivElement>(null);
+  const [highlightedKey, setHighlightedKey] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+
+  useEffect(() => {
+    startTransition(() => {
+      setStateVerses(quranService.getVerses(verseInfo[0]));
+    });
+  }, [verseKey]);
+
+  useEffect(() => {
+    if (!refListVerses.current) return;
+
+    const verseToHighlight = refListVerses.current.querySelector(
+      `[data-id="${verseKey}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    setHighlightedKey(verseKey);
+  }, [verseKey, isPending]);
+
+  const onClickVerseSuffix = (key: string) => {
+    if (highlightedKey === key) {
+      setHighlightedKey("");
+    } else {
+      setHighlightedKey(key);
+    }
+  };
+
+  return (
+    <TabPanel identifier={"verse"}>
+      <div className="searcher-chapter" ref={refListVerses} dir="rtl">
+        <div className="text-center fs-3 text-primary">سورة {chapterName}</div>
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse) => (
+            <div
+              key={verse.key}
+              className={`searcher-chapter-verse ${
+                highlightedKey === verse.key
+                  ? "searcher-chapter-verse-highlight"
+                  : ""
+              }`}
+              data-id={verse.key}
+            >
+              <div>
+                {verse.versetext}{" "}
+                <span
+                  className="searcher-chapter-verse-suffix"
+                  onClick={() => onClickVerseSuffix(verse.key)}
+                >
+                  ({verse.verseid})
+                </span>{" "}
+                <ExpandButton identifier={verse.key} />
+              </div>
+              <NoteText verseKey={verse.key} />
+            </div>
+          ))
+        )}
+      </div>
+    </TabPanel>
   );
 };
 
