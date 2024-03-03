@@ -17,9 +17,11 @@ const Searcher2 = () => {
 
   const { t } = useTranslation();
   const [verseTab, setVerseTab] = useState("");
+  const [dummyCounter, setDummyCounter] = useState(0);
 
   const handleVerseTab = (verseKey: string) => {
     setVerseTab(verseKey);
+    setDummyCounter((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Searcher2 = () => {
     if (!refVerseButton.current) return;
 
     refVerseButton.current.click();
-  }, [verseTab]);
+  }, [verseTab, dummyCounter]);
 
   return (
     <div className="searcher2">
@@ -61,7 +63,11 @@ const Searcher2 = () => {
         <TabPanel identifier="search" extraClass="show active">
           <Searcher2Tab handleVerseTab={handleVerseTab} />
         </TabPanel>
-        {verseTab ? <QuranTab verseKey={verseTab} /> : ""}
+        {verseTab ? (
+          <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
