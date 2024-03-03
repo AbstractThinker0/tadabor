@@ -7,10 +7,7 @@ This project is a web App that allows you to browse the Quran and write your not
 ## Table of contents
 
 - [How to use](#How-to-use)
-- [Contributing](#Contributing)
 - [Disclaimer](#Disclaimer)
-- [Known bugs](#Known-bugs)
-- [TODO List](#TODO-List)
 - [Credits](#Credits)
 - [Local use](#Local-use)
 - [Future project](#Future-project)
@@ -19,22 +16,9 @@ This project is a web App that allows you to browse the Quran and write your not
 
 Simply go to Quran Browser on the home page, you can click the button next to any verse to open a form where you can enter your text, and once you are done writing you can press the save button, all the data will be saved on your browser app and clearing your cache might erase the data you have saved.
 
-## Contributing
-
-You are welcome to do a PR or open an issue for requesting new features or reporting a bug.
-
 ## Disclaimer
 
 The app is in beta, which means you may encounter occasional bugs. We strongly recommend keeping a backup of any data you save while using the app. Your data is stored locally on your machine and is never transmitted or stored on a remote database. However, it's always a good practice to have a backup. Please be aware that the accuracy of the Quran roots/stems list has not been verified, and the completeness of search results based on sentences/roots has not been extensively tested.
-
-## Known bugs
-
-- None.
-
-## TODO List
-
-- Add more searching methods (Tashkeel, multiple Surahs search... etc.). (Partially implemented)
-- Improve the interface for a better user experience.
 
 ## Credits
 
