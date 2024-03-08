@@ -107,7 +107,9 @@ export function getMatches(
 
   const { ignoreDiacritics = false, matchIdentical = false } = matchOptions; // Destructure options with default values
 
-  const normalizedText = ignoreDiacritics ? removeDiacritics(text) : text;
+  const normalizedText = ignoreDiacritics
+    ? normalizeAlif(removeDiacritics(text))
+    : text;
 
   // Check whether we can find any matches
   const isTokenFound = matchIdentical
