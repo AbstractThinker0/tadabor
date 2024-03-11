@@ -1,7 +1,12 @@
 import { qbStateProps } from "@/components/QuranBrowser/consts";
 import { verseMatchResult } from "@/types";
 import quranClass from "@/util/quranService";
-import { searchVerse, onlySpaces, removeDiacritics } from "@/util/util";
+import {
+  searchVerse,
+  onlySpaces,
+  removeDiacritics,
+  normalizeAlif,
+} from "@/util/util";
 
 export function qbSearchWord(
   state: qbStateProps,
@@ -30,17 +35,12 @@ export function qbSearchWord(
     scrollKey: "",
   };
 
-  // If an empty search token don't initiate a search
-  if (onlySpaces(searchString)) {
-    return { ...newState, searchError: true };
-  }
-
   // Check if we are search with diacrtics or they should be stripped off
   const normalizedToken = searchDiacritics
     ? searchString
-    : removeDiacritics(searchString);
+    : normalizeAlif(removeDiacritics(searchString));
 
-  // If the token only had diacrtics this will return true
+  // If an empty search token don't initiate a search
   if (onlySpaces(normalizedToken)) {
     return { ...newState, searchError: true };
   }
