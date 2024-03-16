@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 
-import ChaptersList from "@/components/Inspector/ChaptersList";
+import ChaptersList from "@/components/Custom/ChaptersList";
 import Display from "@/components/Inspector/Display";
 import {
   IS_ACTIONS,
@@ -35,16 +35,21 @@ function Inspector() {
 
   const [state, dispatchIsAction] = useReducer(reducer, initialState);
 
-  function handleSelectChapter(chapterID: string) {
-    dispatchIsAction(isActions.setChapter(Number(chapterID)));
+  function handleSelectChapter(chapterID: number) {
+    dispatchIsAction(isActions.setChapter(chapterID));
   }
 
   return (
     <div className="inspector">
-      <ChaptersList
-        selectedChapter={state.currentChapter}
-        handleSelectChapter={handleSelectChapter}
-      />
+      <div className="side">
+        <ChaptersList
+          selectChapter={state.currentChapter}
+          handleChapterChange={handleSelectChapter}
+          mainClass="side-chapters"
+          inputClass="side-chapters-input"
+          selectClass="side-chapters-list"
+        />
+      </div>
       <Display
         currentChapter={state.currentChapter}
         dispatchIsAction={dispatchIsAction}

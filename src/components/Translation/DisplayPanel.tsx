@@ -4,7 +4,8 @@ import useQuran from "@/context/useQuran";
 import { verseProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import TransComponent from "./TransComponent";
+
+import TransComponent from "@/components/Translation/TransComponent";
 
 interface DisplayPanelProps {
   selectChapter: number;
