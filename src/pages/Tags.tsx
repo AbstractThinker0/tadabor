@@ -1,12 +1,13 @@
 import { useEffect, useReducer, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import tagsReducer from "@/reducers/tagsReducer";
+
 import { selectedChaptersType } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
+import tagsReducer from "@/components/Tags/tagsReducer";
 import {
   tagsActions,
   tagsProps,

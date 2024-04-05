@@ -1,8 +1,8 @@
 import { useReducer } from "react";
 
-import qbReducer from "@/reducers/qbReducer";
 import useQuran from "@/context/useQuran";
 
+import qbReducer from "@/components/QuranBrowser/qbReducer";
 import { qbStateProps, SEARCH_METHOD } from "@/components/QuranBrowser/consts";
 import SearchPanel from "@/components/QuranBrowser/SearchPanel";
 import DisplayPanel from "@/components/QuranBrowser/DisplayPanel";

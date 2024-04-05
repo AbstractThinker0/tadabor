@@ -3,7 +3,7 @@ import {
   tagProps,
   tagsActionsProps,
   tagsStateProps,
-} from "../components/Tags/consts";
+} from "@/components/Tags/consts";
 
 function tagsReducer(
   state: tagsStateProps,
