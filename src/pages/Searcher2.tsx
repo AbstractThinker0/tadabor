@@ -64,16 +64,36 @@ const Searcher2 = () => {
           </li>
         )}
       </ul>
-      <div className="tab-content" id="myTabContent">
-        <TabPanel identifier="search" extraClass="show active">
-          <Searcher2Tab handleVerseTab={handleVerseTab} />
-        </TabPanel>
-        {verseTab ? (
-          <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
-        ) : (
-          ""
-        )}
-      </div>
+      <TabContent
+        verseTab={verseTab}
+        dummyCounter={dummyCounter}
+        handleVerseTab={handleVerseTab}
+      />
+    </div>
+  );
+};
+
+interface TabContentProps {
+  verseTab: string;
+  dummyCounter: number;
+  handleVerseTab: (verseKey: string) => void;
+}
+
+const TabContent = ({
+  verseTab,
+  dummyCounter,
+  handleVerseTab,
+}: TabContentProps) => {
+  return (
+    <div className="tab-content" id="myTabContent">
+      <TabPanel identifier="search" extraClass="show active">
+        <Searcher2Tab handleVerseTab={handleVerseTab} />
+      </TabPanel>
+      {verseTab ? (
+        <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
