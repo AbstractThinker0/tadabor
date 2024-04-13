@@ -51,19 +51,30 @@ const Searcher = () => {
           </li>
         )}
       </ul>
-      <div className="tab-content" id="myTabContent">
-        <TabPanel identifier="search" extraClass="show active">
-          <div className="searcher-search">
-            <SearcherSide />
-            <SearcherDisplay />
-          </div>
-        </TabPanel>
-        {verse_tab ? (
-          <QuranTab verseKey={verse_tab} dummyProp={press_dummy} />
-        ) : (
-          ""
-        )}
-      </div>
+      <TabContent verse_tab={verse_tab} press_dummy={press_dummy} />
+    </div>
+  );
+};
+
+interface TabContentProps {
+  verse_tab: string;
+  press_dummy: number;
+}
+
+const TabContent = ({ verse_tab, press_dummy }: TabContentProps) => {
+  return (
+    <div className="tab-content" id="myTabContent">
+      <TabPanel identifier="search" extraClass="show active">
+        <div className="searcher-search">
+          <SearcherSide />
+          <SearcherDisplay />
+        </div>
+      </TabPanel>
+      {verse_tab ? (
+        <QuranTab verseKey={verse_tab} dummyProp={press_dummy} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
