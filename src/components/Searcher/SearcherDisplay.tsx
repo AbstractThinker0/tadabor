@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/searcherPage";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+
 import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -167,15 +169,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
 
   return (
     <div>
-      {verseMatch.verseParts.map((part, i) => {
-        const isHighlighted = part.isMatch;
-
-        return (
-          <span key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}{" "}
-          </span>
-        );
-      })}
+      <VerseHighlightMatches verse={verseMatch} />{" "}
       <span
         className="searcher-display-verses-item-suffix"
         onClick={onClickVerse}

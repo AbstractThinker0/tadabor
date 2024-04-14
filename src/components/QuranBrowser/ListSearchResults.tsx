@@ -1,6 +1,5 @@
 import {
   Dispatch,
-  Fragment,
   memo,
   useCallback,
   useEffect,
@@ -18,6 +17,8 @@ import { searchIndexProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+
 import NoteText from "@/components/Custom/NoteText";
 
 import {
@@ -284,7 +285,7 @@ const VerseContentComponent = memo(
 
     return (
       <span className="fs-3">
-        <HighlightedText verse={verse} /> (
+        <VerseHighlightMatches verse={verse} /> (
         <button
           className="p-0 border-0 bg-transparent btn-verse"
           onClick={() => handleVerseClick(verse_key)}
@@ -299,27 +300,5 @@ const VerseContentComponent = memo(
 );
 
 VerseContentComponent.displayName = "VerseContentComponent";
-
-interface HighlightedTextProps {
-  verse: verseMatchResult;
-}
-
-const HighlightedText = ({ verse }: HighlightedTextProps) => {
-  const verseParts = verse.verseParts;
-
-  return (
-    <>
-      {verseParts.map((part, i) => {
-        const isHighlighted = part.isMatch;
-
-        return (
-          <Fragment key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}
-          </Fragment>
-        );
-      })}
-    </>
-  );
-};
 
 export default ListSearchResults;

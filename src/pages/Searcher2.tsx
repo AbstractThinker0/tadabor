@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useTransition, useRef } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
@@ -19,6 +19,7 @@ import QuranTab from "@/components/Custom/QuranTab";
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 const Searcher2 = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
@@ -258,7 +259,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
                 key={verseMatch.key}
               >
                 <div>
-                  <HighlightedText verse={verseMatch} />
+                  <VerseHighlightMatches verse={verseMatch} />
                   <span
                     className="searcher2-searchpanel-display-list-verse-suffix"
                     onClick={() => onClickVerse(verseMatch.key)}
@@ -274,28 +275,6 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
         </div>
       </div>
     </div>
-  );
-};
-
-interface HighlightedTextProps {
-  verse: verseMatchResult;
-}
-
-const HighlightedText = ({ verse }: HighlightedTextProps) => {
-  const verseParts = verse.verseParts;
-
-  return (
-    <>
-      {verseParts.map((part, i) => {
-        const isHighlighted = part.isMatch;
-
-        return (
-          <Fragment key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}
-          </Fragment>
-        );
-      })}
-    </>
   );
 };
 

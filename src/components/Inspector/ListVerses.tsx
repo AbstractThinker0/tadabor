@@ -21,6 +21,8 @@ import {
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+
 import NoteText from "@/components/Custom/NoteText";
 
 import { clActionsProps, isActions } from "@/components/Inspector/consts";
@@ -438,11 +440,7 @@ const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
     <>
       <div data-child-id={rootVerse.key}>
         <span className="display-verses-item-roots-verses-item-text fs-4">
-          {rootVerse.verseParts.map((part, i) => (
-            <Fragment key={i}>
-              {part.isMatch ? <mark>{part.text}</mark> : part.text}{" "}
-            </Fragment>
-          ))}
+          <VerseHighlightMatches verse={rootVerse} />{" "}
           <span
             onClick={onClickVerseChapter}
             className="display-verses-item-roots-verses-item-text-chapter"

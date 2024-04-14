@@ -1,5 +1,4 @@
 import {
-  Fragment,
   memo,
   useCallback,
   useEffect,
@@ -21,6 +20,8 @@ import { rootNotesActions } from "@/store/slices/rootNotes";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import { TextForm } from "@/components/Generic/TextForm";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+
 import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -361,11 +362,7 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
   return (
     <>
       <span>
-        {rootVerse.verseParts.map((part, i) => (
-          <Fragment key={i}>
-            {part.isMatch ? <mark>{part.text}</mark> : part.text}{" "}
-          </Fragment>
-        ))}
+        <VerseHighlightMatches verse={rootVerse} />{" "}
         <span className="roots-list-item-verses-item-text-chapter">{`(${verseChapter}:${rootVerse.verseid})`}</span>
         <ExpandButton identifier={`${rootVerse.key}child`} />
       </span>
