@@ -2,8 +2,15 @@ import { useEffect, useState } from "react";
 
 import { RankedVerseProps, translationsProps } from "@/types";
 import useQuran from "@/context/useQuran";
-import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  isVerseNotesLoading,
+  isTransNotesLoading,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store";
 import { fetchAllTranslations } from "@/store/slices/translations";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchTransNotes } from "@/store/slices/transNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Comparator/Display";
@@ -16,6 +23,8 @@ function Comparator() {
   const { loading, data, complete, error } = useAppSelector(
     (state) => state.translations
   );
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+  const isTNotesLoading = useAppSelector(isTransNotesLoading());
   const dispatch = useAppDispatch();
 
   const [stateTrans, setStateTrans] = useState<translationsProps>(data);
@@ -31,6 +40,11 @@ function Comparator() {
 
     return chapterVerses;
   });
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+    dispatch(fetchTransNotes());
+  }, []);
 
   useEffect(() => {
     //
@@ -77,13 +91,17 @@ function Comparator() {
         handleSelectVerse={selectVerse}
         handleSetChapter={setChapter}
       />
-      <Display
-        currentChapter={currentChapter}
-        currentVerse={currentVerse}
-        chapterVerses={chapterVerses}
-        transVerses={stateTrans}
-        handleSelectVerse={selectVerse}
-      />
+      {isVNotesLoading || isTNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Display
+          currentChapter={currentChapter}
+          currentVerse={currentVerse}
+          chapterVerses={chapterVerses}
+          transVerses={stateTrans}
+          handleSelectVerse={selectVerse}
+        />
+      )}
     </div>
   );
 }

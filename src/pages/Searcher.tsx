@@ -1,16 +1,22 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "@/store";
+
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 
 import QuranTab from "@/components/Custom/QuranTab";
+
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import SearcherDisplay from "@/components/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Searcher/SearcherSide";
 
 const Searcher = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const refVerseButton = useRef<HTMLButtonElement>(null);
   const { verse_tab, press_dummy } = useAppSelector(
@@ -24,6 +30,10 @@ const Searcher = () => {
 
     refVerseButton.current.click();
   }, [verse_tab, press_dummy]);
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
 
   return (
     <div className="searcher">
@@ -51,7 +61,11 @@ const Searcher = () => {
           </li>
         )}
       </ul>
-      <TabContent verse_tab={verse_tab} press_dummy={press_dummy} />
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <TabContent verse_tab={verse_tab} press_dummy={press_dummy} />
+      )}
     </div>
   );
 };

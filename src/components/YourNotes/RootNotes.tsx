@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getAllRootNotesKeys, useAppSelector } from "@/store";
+import {
+  isRootNotesLoading,
+  useAppDispatch,
+  getAllRootNotesKeys,
+  useAppSelector,
+} from "@/store";
+
+import { fetchRootNotes } from "@/store/slices/rootNotes";
+
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
 import RootComponent from "./RootComponent";
 
 const RootNotes = () => {
+  const dispatch = useAppDispatch();
+  const isRNotesLoading = useAppSelector(isRootNotesLoading());
+
+  useEffect(() => {
+    dispatch(fetchRootNotes());
+  }, []);
+
+  return <>{isRNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+};
+
+const NotesList = () => {
   const myNotes = useAppSelector(getAllRootNotesKeys);
   const { t } = useTranslation();
 

@@ -1,6 +1,9 @@
 import { Fragment, useEffect, useState, useTransition, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
+
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
 import {
@@ -23,6 +26,8 @@ const Searcher2 = () => {
   const { t } = useTranslation();
   const [verseTab, setVerseTab] = useState("");
   const [dummyCounter, setDummyCounter] = useState(0);
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const handleVerseTab = (verseKey: string) => {
     setVerseTab(verseKey);
@@ -37,6 +42,10 @@ const Searcher2 = () => {
 
     refVerseButton.current.click();
   }, [verseTab, dummyCounter]);
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
 
   return (
     <div className="searcher2">
@@ -64,11 +73,15 @@ const Searcher2 = () => {
           </li>
         )}
       </ul>
-      <TabContent
-        verseTab={verseTab}
-        dummyCounter={dummyCounter}
-        handleVerseTab={handleVerseTab}
-      />
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <TabContent
+          verseTab={verseTab}
+          dummyCounter={dummyCounter}
+          handleVerseTab={handleVerseTab}
+        />
+      )}
     </div>
   );
 };

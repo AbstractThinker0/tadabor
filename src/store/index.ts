@@ -49,4 +49,16 @@ export const isDataLoading = () => {
     state.verseNotes.loading;
 };
 
+export const isRootNotesLoading = () => {
+  return (state: RootState) => state.rootNotes.loading;
+};
+
+export const isTransNotesLoading = () => {
+  return (state: RootState) => state.transNotes.loading;
+};
+
+export const isVerseNotesLoading = () => {
+  return (state: RootState) => state.verseNotes.loading;
+};
+
 export default store;

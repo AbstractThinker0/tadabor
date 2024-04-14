@@ -9,7 +9,6 @@ import store from "@/store";
 import App from "@/App";
 
 import Layout from "@/components/Layout/Layout";
-import DataLoader from "@/components/Custom/DataLoader";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,9 +18,7 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <Layout>
-          <DataLoader>
-            <App />
-          </DataLoader>
+          <App />
         </Layout>
       </BrowserRouter>
     </Provider>

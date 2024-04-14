@@ -1,41 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
-import { getAllNotesKeys, useAppSelector } from "@/store";
+import {
+  isVerseNotesLoading,
+  useAppDispatch,
+  getAllNotesKeys,
+  useAppSelector,
+} from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
+
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseComponent from "./VerseComponent";
 
 const VerseNotes = () => {
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
+
+  return <>{isVNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+};
+
+const NotesList = () => {
   const notesKeys = useAppSelector(getAllNotesKeys);
   const { t } = useTranslation();
 
   return (
     <>
       {notesKeys.length ? (
-        <NotesList notesKeys={notesKeys} />
+        <>
+          <BackupComponent />
+          {notesKeys.map((key) => (
+            <VerseComponent verseKey={key} key={key} />
+          ))}
+        </>
       ) : (
         <div className="fs-4 text-center">
           <div>{t("no_notes")}</div>
         </div>
       )}
-    </>
-  );
-};
-
-interface NotesListProps {
-  notesKeys: string[];
-}
-
-const NotesList = ({ notesKeys }: NotesListProps) => {
-  return (
-    <>
-      <BackupComponent />
-      {notesKeys.map((key) => (
-        <VerseComponent verseKey={key} key={key} />
-      ))}
     </>
   );
 };

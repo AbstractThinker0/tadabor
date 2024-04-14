@@ -4,6 +4,9 @@ import { selectedChaptersType, verseProps } from "@/types";
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
 
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import {
@@ -140,7 +143,12 @@ function Coloring() {
   const quranService = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
   useEffect(() => {
+    dispatch(fetchVerseNotes());
+
     async function fetchData() {
       const savedColors: IColor[] = await dbFuncs.loadColors();
 
@@ -230,16 +238,20 @@ function Coloring() {
         selectedChapters={state.selectedChapters}
         dispatchClAction={dispatchClAction}
       />
-      <VersesSide
-        selectedColors={state.selectedColors}
-        coloredVerses={state.coloredVerses}
-        currentChapter={state.currentChapter}
-        colorsList={state.colorsList}
-        currentVerse={state.currentVerse}
-        selectedChapters={state.selectedChapters}
-        scrollKey={state.scrollKey}
-        dispatchClAction={dispatchClAction}
-      />
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <VersesSide
+          selectedColors={state.selectedColors}
+          coloredVerses={state.coloredVerses}
+          currentChapter={state.currentChapter}
+          colorsList={state.colorsList}
+          currentVerse={state.currentVerse}
+          selectedChapters={state.selectedChapters}
+          scrollKey={state.scrollKey}
+          dispatchClAction={dispatchClAction}
+        />
+      )}
     </div>
   );
 }

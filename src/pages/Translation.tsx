@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchTransNotes } from "@/store/slices/transNotes";
+
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Translation/DisplayPanel";
@@ -7,6 +12,13 @@ import DisplayPanel from "@/components/Translation/DisplayPanel";
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
   const { t } = useTranslation();
+
+  const dispatch = useAppDispatch();
+  const isTNotesLoading = useAppSelector(isTransNotesLoading());
+
+  useEffect(() => {
+    dispatch(fetchTransNotes());
+  }, []);
 
   const handleChapterChange = (chapter: number) => {
     setSelectChapter(chapter);
@@ -23,7 +35,11 @@ const Translation = () => {
           inputClass="side-chapters-input"
         />
       </div>
-      <DisplayPanel selectChapter={selectChapter} />
+      {isTNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <DisplayPanel selectChapter={selectChapter} />
+      )}
     </div>
   );
 };

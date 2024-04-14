@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import {
+  isRootNotesLoading,
+  isVerseNotesLoading,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store";
+import { fetchRootNotes } from "@/store/slices/rootNotes";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
 
 import SearchForm from "@/components/RootsBrowser/SearchForm";
 import RootsList from "@/components/RootsBrowser/RootsList";
 
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
 function RootsBrowser() {
+  const dispatch = useAppDispatch();
+  const isRNotesLoading = useAppSelector(isRootNotesLoading());
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
   const [searchString, setSearchString] = useState("");
   const [searchInclusive, setSearchInclusive] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchRootNotes());
+    dispatch(fetchVerseNotes());
+  }, []);
 
   return (
     <div className="roots">
@@ -16,10 +36,14 @@ function RootsBrowser() {
         setSearchInclusive={setSearchInclusive}
       />
 
-      <RootsList
-        searchString={searchString}
-        searchInclusive={searchInclusive}
-      />
+      {isRNotesLoading || isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <RootsList
+          searchString={searchString}
+          searchInclusive={searchInclusive}
+        />
+      )}
     </div>
   );
 }

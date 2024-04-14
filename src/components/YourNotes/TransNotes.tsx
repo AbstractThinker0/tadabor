@@ -1,14 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppSelector, getAllTransNotesKeys } from "@/store";
+import {
+  isTransNotesLoading,
+  useAppDispatch,
+  useAppSelector,
+  getAllTransNotesKeys,
+} from "@/store";
+import { fetchTransNotes } from "@/store/slices/transNotes";
+
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
 import TransComponent from "./TransComponent";
 
 const TransNotes = () => {
+  const dispatch = useAppDispatch();
+  const isTNotesLoading = useAppSelector(isTransNotesLoading());
+
+  useEffect(() => {
+    dispatch(fetchTransNotes());
+  }, []);
+
+  return <>{isTNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+};
+
+const NotesList = () => {
   const notesKeys = useAppSelector(getAllTransNotesKeys);
   const { t } = useTranslation();
 

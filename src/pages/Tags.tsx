@@ -2,6 +2,9 @@ import { useEffect, useReducer, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
+
 import { selectedChaptersType } from "@/types";
 import { dbFuncs } from "@/util/db";
 
@@ -21,6 +24,9 @@ function Tags() {
   const quranService = useQuran();
 
   const [loadingState, setLoadingState] = useState(true);
+
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const initialSelectedChapters: selectedChaptersType = {};
 
@@ -73,6 +79,7 @@ function Tags() {
     }
 
     fetchData();
+    dispatch(fetchVerseNotes());
 
     return () => {
       clientLeft = true;
@@ -92,16 +99,20 @@ function Tags() {
         versesTags={state.versesTags}
         dispatchTagsAction={dispatchTagsAction}
       />
-      <TagsDisplay
-        selectedTags={state.selectedTags}
-        selectedChapters={state.selectedChapters}
-        tags={state.tags}
-        versesTags={state.versesTags}
-        currentChapter={state.currentChapter}
-        currentVerse={state.currentVerse}
-        scrollKey={state.scrollKey}
-        dispatchTagsAction={dispatchTagsAction}
-      />
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <TagsDisplay
+          selectedTags={state.selectedTags}
+          selectedChapters={state.selectedChapters}
+          tags={state.tags}
+          versesTags={state.versesTags}
+          currentChapter={state.currentChapter}
+          currentVerse={state.currentVerse}
+          scrollKey={state.scrollKey}
+          dispatchTagsAction={dispatchTagsAction}
+        />
+      )}
     </div>
   );
 }

@@ -1,4 +1,7 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
+
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import Display from "@/components/Inspector/Display";
@@ -7,6 +10,7 @@ import {
   clActionsProps,
   isActions,
 } from "@/components/Inspector/consts";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 interface stateProps {
   currentChapter: number;
@@ -28,6 +32,9 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
 }
 
 function Inspector() {
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
   const initialState: stateProps = {
     currentChapter: 1,
     scrollKey: "",
@@ -38,6 +45,10 @@ function Inspector() {
   function handleSelectChapter(chapterID: number) {
     dispatchIsAction(isActions.setChapter(chapterID));
   }
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
 
   return (
     <div className="inspector">
@@ -50,11 +61,15 @@ function Inspector() {
           selectClass="side-chapters-list"
         />
       </div>
-      <Display
-        currentChapter={state.currentChapter}
-        dispatchIsAction={dispatchIsAction}
-        scrollKey={state.scrollKey}
-      />
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Display
+          currentChapter={state.currentChapter}
+          dispatchIsAction={dispatchIsAction}
+          scrollKey={state.scrollKey}
+        />
+      )}
     </div>
   );
 }

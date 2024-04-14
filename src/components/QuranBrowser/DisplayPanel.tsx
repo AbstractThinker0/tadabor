@@ -9,6 +9,9 @@ import {
 
 import useQuran from "@/context/useQuran";
 
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
+
 import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
@@ -42,6 +45,9 @@ const DisplayPanel = memo(
     scrollKey,
     dispatchQbAction,
   }: DisplayPanelProps) => {
+    const dispatch = useAppDispatch();
+    const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
     // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
     const refListVerses = useRef<HTMLDivElement>(null);
 
@@ -52,27 +58,35 @@ const DisplayPanel = memo(
       }
     }, [searchResult]);
 
+    useEffect(() => {
+      dispatch(fetchVerseNotes());
+    }, []);
+
     return (
       <div className="browser-display" ref={refListVerses}>
-        <div className="card browser-display-card" dir="rtl">
-          {searchResult.length || searchError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              searchToken={searchingString.trim()}
-              searchError={searchError}
-              searchMethod={searchingMethod}
-              searchingChapters={searchingChapters}
-              searchIndexes={searchIndexes}
-              dispatchQbAction={dispatchQbAction}
-            />
-          ) : (
-            <ListVerses
-              selectChapter={selectChapter}
-              scrollKey={scrollKey}
-              dispatchQbAction={dispatchQbAction}
-            />
-          )}
-        </div>
+        {isVNotesLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="card browser-display-card" dir="rtl">
+            {searchResult.length || searchError ? (
+              <ListSearchResults
+                versesArray={searchResult}
+                searchToken={searchingString.trim()}
+                searchError={searchError}
+                searchMethod={searchingMethod}
+                searchingChapters={searchingChapters}
+                searchIndexes={searchIndexes}
+                dispatchQbAction={dispatchQbAction}
+              />
+            ) : (
+              <ListVerses
+                selectChapter={selectChapter}
+                scrollKey={scrollKey}
+                dispatchQbAction={dispatchQbAction}
+              />
+            )}
+          </div>
+        )}
       </div>
     );
   }
