@@ -1,6 +1,13 @@
 import { useRef, useState } from "react";
-import { dbFuncs } from "../../util/db";
+import { dbFuncs } from "@/util/db";
 import { tagProps } from "./consts";
+
+import {
+  ModalBody,
+  ModalContainer,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/Generic/Modal";
 
 interface AddTagModalProps {
   addTag: (tag: tagProps) => void;
@@ -37,58 +44,33 @@ const AddTagModal = ({ addTag }: AddTagModalProps) => {
   }
 
   return (
-    <div
-      className="modal fade"
-      id="addTagModal"
-      tabIndex={-1}
-      aria-labelledby="addTagModalLabel"
-      aria-hidden="true"
-      dir="ltr"
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h1 className="modal-title fs-5" id="addTagModalLabel">
-              Add a new tag
-            </h1>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="pb-1">
-              <label className="w-25">Display name: </label>
-              <input
-                type="text"
-                placeholder="display name"
-                value={tagName}
-                onChange={onChangeName}
-              />
-            </div>
-          </div>
-          <div className="modal-footer justify-content-center">
-            <button
-              ref={refCloseButton}
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={onClickSave}
-            >
-              Save changes
-            </button>
-          </div>
+    <ModalContainer identifier="addTagModal">
+      <ModalHeader identifier="addTagModal" title="Add a new tag" />
+      <ModalBody>
+        <div className="pb-1">
+          <label className="w-25">Display name: </label>
+          <input
+            type="text"
+            placeholder="display name"
+            value={tagName}
+            onChange={onChangeName}
+          />
         </div>
-      </div>
-    </div>
+      </ModalBody>
+      <ModalFooter>
+        <button
+          ref={refCloseButton}
+          type="button"
+          className="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button type="button" className="btn btn-primary" onClick={onClickSave}>
+          Save changes
+        </button>
+      </ModalFooter>
+    </ModalContainer>
   );
 };
 

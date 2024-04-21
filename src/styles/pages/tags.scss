@@ -219,15 +219,13 @@
     }
   }
 
-  .modal-deletetag {
-    &-label {
-      background-color: #ffffbf;
-      padding-left: 4px;
-      padding-right: 4px;
-      padding-top: 4px;
-      padding-bottom: 4px;
-      overflow-wrap: break-word;
-    }
+  .modal-deletetag-label {
+    background-color: #ffffbf;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    overflow-wrap: break-word;
   }
 
   .modal-versetags {

@@ -5,6 +5,13 @@ import { verseProps } from "@/types";
 
 import { tagsProps } from "./consts";
 
+import {
+  ModalBody,
+  ModalContainer,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/Generic/Modal";
+
 interface VerseTagModalProps {
   tags: tagsProps;
   currentVerse: verseProps | null;
@@ -74,77 +81,57 @@ function VerseTagsModal({
   }
 
   return (
-    <div
-      ref={refVerseModal}
-      className="modal-versetags modal fade"
-      id="verseTagsModal"
-      tabIndex={-1}
-      aria-labelledby="verseTagsModalLabel"
-      aria-hidden="true"
-      dir="ltr"
+    <ModalContainer
+      identifier="verseTagsModal"
+      extraClass="modal-versetags"
+      dialogClass="modal-lg"
     >
-      <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h1 className="modal-title fs-5" id="verseTagsModalLabel">
-              Choose verse tags
-            </h1>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="modal-versetags-title text-center fs-4">
-              (
-              {currentVerse
-                ? quranService.getChapterName(currentVerse.suraid) +
-                  ":" +
-                  currentVerse.verseid
-                : ""}
-              )
-            </div>
-            <div className="modal-versetags-text text-center rounded fs-4">
-              {currentVerse?.versetext}
-            </div>
-            <div className="modal-versetags-items">
-              {Object.keys(tags).map((tagID) => (
-                <div
-                  onClick={() => onClickTag(tagID)}
-                  className={`modal-versetags-items-item text-center fs-4 mb-1 ${
-                    canFindTag(tagID)
-                      ? "modal-versetags-items-item-selected"
-                      : ""
-                  }`}
-                  key={tagID}
-                >
-                  {tags[tagID].tagDisplay}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="modal-footer justify-content-center">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-dismiss="modal"
-              onClick={onClickSave}
-            >
-              Save changes
-            </button>
-          </div>
+      <ModalHeader identifier="verseTagsModal" title="Choose verse tags" />
+      <ModalBody>
+        <div className="modal-versetags-title text-center fs-4">
+          (
+          {currentVerse
+            ? quranService.getChapterName(currentVerse.suraid) +
+              ":" +
+              currentVerse.verseid
+            : ""}
+          )
         </div>
-      </div>
-    </div>
+        <div className="modal-versetags-text text-center rounded fs-4">
+          {currentVerse?.versetext}
+        </div>
+        <div className="modal-versetags-items">
+          {Object.keys(tags).map((tagID) => (
+            <div
+              onClick={() => onClickTag(tagID)}
+              className={`modal-versetags-items-item text-center fs-4 mb-1 ${
+                canFindTag(tagID) ? "modal-versetags-items-item-selected" : ""
+              }`}
+              key={tagID}
+            >
+              {tags[tagID].tagDisplay}
+            </div>
+          ))}
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-bs-dismiss="modal"
+          onClick={onClickSave}
+        >
+          Save changes
+        </button>
+      </ModalFooter>
+    </ModalContainer>
   );
 }
 

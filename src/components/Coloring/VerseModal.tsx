@@ -6,6 +6,13 @@ import useQuran from "@/context/useQuran";
 import { colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
 
+import {
+  ModalBody,
+  ModalContainer,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/Generic/Modal";
+
 const activeClassName = "verse-modal-colors-item-active";
 
 interface VerseModalProps {
@@ -67,89 +74,71 @@ const VerseModal = ({
   }
 
   return (
-    <div
-      ref={refVerseModal}
-      className="verse-modal modal fade"
-      id="verseModal"
-      tabIndex={-1}
-      aria-labelledby="verseModalLabel"
-      aria-hidden="true"
-      dir="ltr"
+    <ModalContainer
+      identifier="verseModal"
+      extraClass="verse-modal"
+      dialogClass="modal-lg"
     >
-      <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h1 className="modal-title fs-5" id="verseModalLabel">
-              Choose verse color
-            </h1>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="verse-modal-title text-center">
-              (
-              {currentVerse
-                ? quranService.getChapterName(currentVerse.suraid) +
-                  ":" +
-                  currentVerse.verseid
-                : ""}
-              )
-            </div>
-            <div
-              className="verse-modal-text text-center rounded"
-              style={
-                chosenColor
-                  ? {
-                      backgroundColor: chosenColor.colorCode,
-                      color: getTextColor(chosenColor.colorCode),
-                    }
-                  : {}
-              }
-            >
-              {currentVerse?.versetext}
-            </div>
-            <div className="verse-modal-colors">
-              {Object.keys(colorsList).map((colorID) => (
-                <div
-                  onClick={(event) => onClickColor(event, colorsList[colorID])}
-                  key={colorID}
-                  className={`verse-modal-colors-item text-center fs-4 mb-1 ${
-                    chosenColor?.colorID === colorID ? activeClassName : ""
-                  }`}
-                  style={{
-                    backgroundColor: colorsList[colorID].colorCode,
-                    color: getTextColor(colorsList[colorID].colorCode),
-                  }}
-                >
-                  {colorsList[colorID].colorDisplay}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="modal-footer justify-content-center">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-dismiss="modal"
-              onClick={onClickSave}
-            >
-              Save changes
-            </button>
-          </div>
+      <ModalHeader identifier="verseModal" title="Choose verse color" />
+      <ModalBody>
+        <div className="verse-modal-title text-center">
+          (
+          {currentVerse
+            ? quranService.getChapterName(currentVerse.suraid) +
+              ":" +
+              currentVerse.verseid
+            : ""}
+          )
         </div>
-      </div>
-    </div>
+        <div
+          className="verse-modal-text text-center rounded"
+          style={
+            chosenColor
+              ? {
+                  backgroundColor: chosenColor.colorCode,
+                  color: getTextColor(chosenColor.colorCode),
+                }
+              : {}
+          }
+        >
+          {currentVerse?.versetext}
+        </div>
+        <div className="verse-modal-colors">
+          {Object.keys(colorsList).map((colorID) => (
+            <div
+              onClick={(event) => onClickColor(event, colorsList[colorID])}
+              key={colorID}
+              className={`verse-modal-colors-item text-center fs-4 mb-1 ${
+                chosenColor?.colorID === colorID ? activeClassName : ""
+              }`}
+              style={{
+                backgroundColor: colorsList[colorID].colorCode,
+                color: getTextColor(colorsList[colorID].colorCode),
+              }}
+            >
+              {colorsList[colorID].colorDisplay}
+            </div>
+          ))}
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-bs-dismiss="modal"
+          onClick={onClickSave}
+        >
+          Save changes
+        </button>
+      </ModalFooter>
+    </ModalContainer>
   );
 };
 
