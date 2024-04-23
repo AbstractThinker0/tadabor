@@ -85,6 +85,7 @@ function VerseTagsModal({
       identifier="verseTagsModal"
       extraClass="modal-versetags"
       dialogClass="modal-lg"
+      refModal={refVerseModal}
     >
       <ModalHeader identifier="verseTagsModal" title="Choose verse tags" />
       <ModalBody>

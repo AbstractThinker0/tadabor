@@ -3,6 +3,7 @@ interface ModalContainerProps {
   children?: React.ReactNode | undefined;
   extraClass?: string;
   dialogClass?: string;
+  refModal?: React.RefObject<HTMLDivElement>;
 }
 
 const ModalContainer = ({
@@ -10,6 +11,7 @@ const ModalContainer = ({
   identifier,
   extraClass = "",
   dialogClass = "",
+  refModal,
 }: ModalContainerProps) => {
   return (
     <div
@@ -19,6 +21,7 @@ const ModalContainer = ({
       aria-labelledby={`${identifier}Label`}
       aria-hidden="true"
       dir="ltr"
+      ref={refModal}
     >
       <div
         className={"modal-dialog modal-dialog-centered ".concat(dialogClass)}

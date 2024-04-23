@@ -78,6 +78,7 @@ const VerseModal = ({
       identifier="verseModal"
       extraClass="verse-modal"
       dialogClass="modal-lg"
+      refModal={refVerseModal}
     >
       <ModalHeader identifier="verseModal" title="Choose verse color" />
       <ModalBody>
