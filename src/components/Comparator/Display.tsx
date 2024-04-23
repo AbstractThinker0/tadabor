@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
+import { useAppSelector } from "@/store";
 import { RankedVerseProps, translationsProps } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "./UserTranslation";
@@ -24,6 +26,8 @@ const Display = ({
   transVerses,
   handleSelectVerse,
 }: DisplayProps) => {
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+
   const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
@@ -78,23 +82,27 @@ const Display = ({
             >
               <div
                 dir="rtl"
-                className=" py-2 border-top border-bottom fs-3"
+                className=" py-2 border-top border-bottom"
                 data-id={verse.key}
               >
-                {verse.versetext}{" "}
-                <span
-                  onClick={() => onClickVerse(verse.key)}
-                  className="verses-item-number"
-                >
-                  ({verse.verseid})
-                </span>{" "}
+                <VerseContainer>
+                  {verse.versetext}{" "}
+                  <span
+                    onClick={() => onClickVerse(verse.key)}
+                    className="verses-item-number"
+                  >
+                    ({verse.verseid})
+                  </span>{" "}
+                </VerseContainer>
                 <ExpandButton identifier={verse.key} />
               </div>
               <NoteText verseKey={verse.key} />
               {Object.keys(transVerses).map((trans) => (
                 <div className="py-2" key={trans} dir="ltr">
                   <div className="text-secondary">{trans}</div>
-                  <div>{transVerses[trans][verse.rank].versetext}</div>
+                  <div style={{ fontSize: `${notesFS}rem` }}>
+                    {transVerses[trans][verse.rank].versetext}
+                  </div>
                 </div>
               ))}
               <UserTranslation verseKey={verse.key} />

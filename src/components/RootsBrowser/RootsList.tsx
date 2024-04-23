@@ -19,10 +19,11 @@ import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/rootNotes";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import { TextForm } from "@/components/Generic/TextForm";
+import { TextForm } from "@/components/Custom/TextForm";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 interface RootsListProps {
@@ -361,11 +362,11 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
 
   return (
     <>
-      <span>
+      <VerseContainer>
         <VerseHighlightMatches verse={rootVerse} />{" "}
         <span className="roots-list-item-verses-item-text-chapter">{`(${verseChapter}:${rootVerse.verseid})`}</span>
         <ExpandButton identifier={`${rootVerse.key}child`} />
-      </span>
+      </VerseContainer>
       <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
     </>
   );

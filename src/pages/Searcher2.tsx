@@ -15,6 +15,7 @@ import {
 
 import NoteText from "@/components/Custom/NoteText";
 import QuranTab from "@/components/Custom/QuranTab";
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
@@ -258,7 +259,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
                 className="searcher2-searchpanel-display-list-verse border-bottom"
                 key={verseMatch.key}
               >
-                <div>
+                <VerseContainer>
                   <VerseHighlightMatches verse={verseMatch} />
                   <span
                     className="searcher2-searchpanel-display-list-verse-suffix"
@@ -267,7 +268,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
                     verseMatch.verseid
                   })`}</span>
                   <ExpandButton identifier={verseMatch.key} />
-                </div>
+                </VerseContainer>
                 <NoteText verseKey={verseMatch.key} />
               </div>
             ))

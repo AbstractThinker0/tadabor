@@ -13,6 +13,7 @@ import { dbFuncs } from "@/util/db";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import {
@@ -231,16 +232,18 @@ const SelectedVerseComponent = ({
   }
 
   return (
-    <span className="fs-3">
-      {verse.versetext}{" "}
-      <span
-        onClick={() => onClickVerse(verse)}
-        className="tags-display-chapter-verses-item-verse"
-      >
-        ({quranService.getChapterName(verse.suraid) + ":" + verse.verseid})
-      </span>
+    <>
+      <VerseContainer>
+        {verse.versetext}{" "}
+        <span
+          onClick={() => onClickVerse(verse)}
+          className="tags-display-chapter-verses-item-verse"
+        >
+          ({quranService.getChapterName(verse.suraid) + ":" + verse.verseid})
+        </span>
+      </VerseContainer>
       <ExpandButton identifier={verse.key} />
-    </span>
+    </>
   );
 };
 
@@ -341,7 +344,7 @@ const ListVerseComponent = memo(
 
     return (
       <>
-        <span className={`tags-display-chapter-verses-item-text fs-3`}>
+        <VerseContainer extraClass="tags-display-chapter-verses-item-text">
           {verse.versetext}{" "}
           <span
             className="tags-display-chapter-verses-item-text-btn"
@@ -349,7 +352,7 @@ const ListVerseComponent = memo(
           >
             ({verse.verseid})
           </span>{" "}
-        </span>
+        </VerseContainer>
         <ExpandButton identifier={verse.key} />
         <button
           className="btn"

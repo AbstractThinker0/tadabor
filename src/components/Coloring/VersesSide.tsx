@@ -13,6 +13,7 @@ import { dbFuncs } from "@/util/db";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseModal from "./VerseModal";
@@ -195,7 +196,7 @@ function VersesSide({
               ) : (
                 stateVerses.map((verse) => (
                   <div
-                    className="verse-item fs-3"
+                    className="verse-item"
                     key={verse.key}
                     data-id={verse.key}
                     style={
@@ -255,8 +256,10 @@ interface VerseComponentProps {
 const VerseComponent = memo(
   ({ verse, onClickVerseColor, color }: VerseComponentProps) => {
     return (
-      <div>
-        {verse.versetext} ({verse.verseid}){" "}
+      <>
+        <VerseContainer>
+          {verse.versetext} ({verse.verseid}){" "}
+        </VerseContainer>
         <ExpandButton
           identifier={verse.key}
           style={
@@ -276,7 +279,7 @@ const VerseComponent = memo(
         >
           🎨
         </button>
-      </div>
+      </>
     );
   }
 );
@@ -320,25 +323,27 @@ function SelectedVerses({
             const verse = quranService.getVerseByKey(verseKey);
             return (
               <div
-                className="verse-item fs-3"
+                className="verse-item"
                 key={verseKey}
                 style={{
                   backgroundColor: coloredVerses[verseKey].colorCode,
                   color: getTextColor(coloredVerses[verseKey].colorCode),
                 }}
               >
-                <div>
-                  {verse.versetext}{" "}
-                  <span
-                    onClick={() => onClickChapter(verse)}
-                    className="verse-item-chapter"
-                  >
-                    (
-                    {quranService.getChapterName(verse.suraid) +
-                      ":" +
-                      verse.verseid}
-                    )
-                  </span>
+                <>
+                  <VerseContainer>
+                    {verse.versetext}{" "}
+                    <span
+                      onClick={() => onClickChapter(verse)}
+                      className="verse-item-chapter"
+                    >
+                      (
+                      {quranService.getChapterName(verse.suraid) +
+                        ":" +
+                        verse.verseid}
+                      )
+                    </span>
+                  </VerseContainer>
                   <ExpandButton
                     identifier={verse.key}
                     style={{
@@ -346,7 +351,7 @@ function SelectedVerses({
                       color: getTextColor(coloredVerses[verseKey].colorCode),
                     }}
                   />
-                </div>
+                </>
                 <NoteText verseKey={verse.key} className="verse-item-note" />
               </div>
             );

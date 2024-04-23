@@ -12,6 +12,7 @@ import "@/styles/main.scss";
 
 import Navbar from "./Navbar";
 import AlertMessage from "./AlertMessage";
+import SettingsModal from "./SettingsModal";
 
 function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLElement>(null);
@@ -29,6 +30,7 @@ function Layout({ children }: PropsWithChildren) {
       <Navbar />
       <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
+      <SettingsModal />
       <ToastContainer
         position={`${isRtl ? "top-left" : "top-right"}`}
         rtl={isRtl}

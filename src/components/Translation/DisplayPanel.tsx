@@ -5,6 +5,8 @@ import { verseProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
+import VerseContainer from "@/components/Custom/VerseContainer";
+
 import TransComponent from "@/components/Translation/TransComponent";
 
 interface DisplayPanelProps {
@@ -44,9 +46,11 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
             stateVerses.map((verse) => {
               return (
                 <Fragment key={verse.key}>
-                  <p className="fs-3 mb-0" dir="rtl">
-                    {verse.versetext} ({verse.verseid})
-                  </p>
+                  <div dir="rtl">
+                    <VerseContainer>
+                      {verse.versetext} ({verse.verseid})
+                    </VerseContainer>
+                  </div>
                   <TransComponent verse_key={verse.key} />
                 </Fragment>
               );

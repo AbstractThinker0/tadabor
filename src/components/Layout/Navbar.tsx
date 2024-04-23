@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LanguageButton from "./LanguageButton";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -22,7 +21,7 @@ const Navbar = () => {
           <NavItem to="/about" label={t("nav_about")} />
         </div>
         <div className="nav-list-end">
-          <LanguageButton />
+          <SettingsButton />
         </div>
       </div>
     </nav>
@@ -39,6 +38,18 @@ const NavItem = ({ label, to }: NavItemProps) => {
     <div className="nav-list-start-item">
       <NavLink to={to}>{label}</NavLink>
     </div>
+  );
+};
+
+const SettingsButton = () => {
+  return (
+    <span
+      className="nav-settings-button"
+      data-bs-toggle="modal"
+      data-bs-target="#settingsModal"
+    >
+      ⚙️
+    </span>
   );
 };
 

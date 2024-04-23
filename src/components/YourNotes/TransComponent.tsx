@@ -8,7 +8,10 @@ import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";
 import { transNotesActions } from "@/store/slices/transNotes";
-import { TextAreaComponent } from "@/components/Generic/TextForm";
+
+import VerseContainer from "@/components/Custom/VerseContainer";
+
+import { TextAreaComponent } from "@/components/Custom/TextForm";
 
 interface TransComponentProps {
   verseKey: string;
@@ -19,9 +22,11 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
 
   return (
     <div className="card mb-3">
-      <div className="card-header fs-3" dir="rtl">
-        ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
-        {quranService.getVerseTextByKey(verseKey)}{" "}
+      <div className="card-header" dir="rtl">
+        <VerseContainer>
+          ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
+          {quranService.getVerseTextByKey(verseKey)}{" "}
+        </VerseContainer>
       </div>
       <TransBody verse_key={verseKey} />
     </div>
@@ -107,6 +112,7 @@ const Versetext = ({
   handleEditClick,
 }: VersetextProps) => {
   const { t } = useTranslation();
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   function onClickEdit() {
     handleEditClick();
@@ -115,7 +121,10 @@ const Versetext = ({
   return (
     <div className="p-2">
       <div className="border p-1 translation-display-card-trans-text">
-        <p style={{ whiteSpace: "pre-wrap" }} dir="ltr">
+        <p
+          style={{ whiteSpace: "pre-wrap", fontSize: `${notesFS}rem` }}
+          dir="ltr"
+        >
           {inputValue}
         </p>
       </div>

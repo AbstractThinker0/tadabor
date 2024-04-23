@@ -16,6 +16,7 @@ import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
@@ -210,13 +211,13 @@ const VerseTextComponent = memo(
       dispatchQbAction(qbActions.setScrollKey(verse.key));
     }
     return (
-      <div className="fs-3">
-        <span>{verse.versetext} </span>
+      <VerseContainer>
+        {verse.versetext}{" "}
         <span className="btn-verse" onClick={onClickVerse}>
           {`(${verse.verseid})`}
         </span>
         <ExpandButton identifier={verse.key} />
-      </div>
+      </VerseContainer>
     );
   }
 );

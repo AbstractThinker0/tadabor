@@ -20,6 +20,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 import {
   SEARCH_METHOD,
@@ -284,17 +285,19 @@ const VerseContentComponent = memo(
     };
 
     return (
-      <span className="fs-3">
-        <VerseHighlightMatches verse={verse} /> (
-        <button
-          className="p-0 border-0 bg-transparent btn-verse"
-          onClick={() => handleVerseClick(verse_key)}
-        >
-          {`${verseChapter}:${verse.verseid}`}
-        </button>
-        )
+      <>
+        <VerseContainer>
+          <VerseHighlightMatches verse={verse} /> (
+          <button
+            className="p-0 border-0 bg-transparent btn-verse"
+            onClick={() => handleVerseClick(verse_key)}
+          >
+            {`${verseChapter}:${verse.verseid}`}
+          </button>
+          )
+        </VerseContainer>
         <ExpandButton identifier={verse_key} />
-      </span>
+      </>
     );
   }
 );

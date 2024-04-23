@@ -6,7 +6,7 @@ import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/Generic/TextForm";
+import { TextAreaComponent } from "@/components/Custom/TextForm";
 
 interface UserTranslationProps {
   verseKey: string;
@@ -15,6 +15,7 @@ interface UserTranslationProps {
 const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const { t } = useTranslation();
   const verseTrans = useAppSelector(selectTransNote(verseKey));
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
   const [stateEditable, setStateEditable] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -63,7 +64,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
         <div style={{ whiteSpace: "pre-wrap" }}>
           {verseTrans ? (
             <>
-              <div>{verseTrans}</div>
+              <div style={{ fontSize: `${notesFS}rem` }}>{verseTrans}</div>
               <button
                 onClick={onClickAdd}
                 className="btn btn-primary btn-sm mt-1"

@@ -24,6 +24,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { clActionsProps, isActions } from "@/components/Inspector/consts";
 
@@ -174,7 +175,7 @@ const VerseWords = ({
 
   return (
     <>
-      <div className="display-verses-item-text fs-3">
+      <VerseContainer extraClass="display-verses-item-text">
         {verseText.map((word, index) => (
           <Fragment key={index}>
             <span
@@ -190,7 +191,7 @@ const VerseWords = ({
           </Fragment>
         ))}{" "}
         {`(${verseID})`} <ExpandButton identifier={verseKey} />
-      </div>
+      </VerseContainer>
       <NoteText verseKey={verseKey} />
       <div
         ref={refCollapsible}
@@ -439,13 +440,13 @@ const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
   return (
     <>
       <div data-child-id={rootVerse.key}>
-        <span className="display-verses-item-roots-verses-item-text fs-4">
+        <VerseContainer extraClass="display-verses-item-roots-verses-item-text">
           <VerseHighlightMatches verse={rootVerse} />{" "}
           <span
             onClick={onClickVerseChapter}
             className="display-verses-item-roots-verses-item-text-chapter"
           >{`(${verseChapter}:${rootVerse.verseid})`}</span>{" "}
-        </span>
+        </VerseContainer>
         <ExpandButton identifier={`${rootVerse.key}child`} />
       </div>
       <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />

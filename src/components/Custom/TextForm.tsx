@@ -1,6 +1,8 @@
 import { FormEvent, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useAppSelector } from "@/store";
+
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 
 interface TextFormProps {
@@ -172,9 +174,13 @@ const TextContainer = ({
   inputValue,
   className = "",
 }: TextContainerProps) => {
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+
   return (
     <div className={className} dir={inputDirection}>
-      <p style={{ whiteSpace: "pre-wrap" }}>{inputValue}</p>
+      <p style={{ whiteSpace: "pre-wrap", fontSize: `${notesFS}rem` }}>
+        {inputValue}
+      </p>
     </div>
   );
 };
@@ -310,6 +316,7 @@ const TextAreaComponent = ({
   handleInputChange,
 }: TextAreaProps) => {
   const { t } = useTranslation();
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   const refTextarea = useRef<HTMLTextAreaElement>(null);
   const refHidden = useRef<HTMLTextAreaElement>();
@@ -356,7 +363,8 @@ const TextAreaComponent = ({
   return (
     <textarea
       ref={refTextarea}
-      className="form-control mb-2 fs-5"
+      className="form-control mb-2"
+      style={{ fontSize: `${notesFS}rem` }}
       id="textInput"
       placeholder={placeholder ? placeholder : t("text_form")}
       name={inputKey}

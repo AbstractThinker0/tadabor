@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/Generic/TextForm";
+import { TextAreaComponent } from "@/components/Custom/TextForm";
 
 interface TransComponentProps {
   verse_key: string;
@@ -87,6 +87,7 @@ const Versetext = ({
   handleEditClick,
 }: VersetextProps) => {
   const { t } = useTranslation();
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   function onClickEdit() {
     handleEditClick();
@@ -95,7 +96,10 @@ const Versetext = ({
   return (
     <div className="p-2">
       <div className="border p-1 translation-display-card-trans-text">
-        <p style={{ whiteSpace: "pre-wrap" }} dir="ltr">
+        <p
+          style={{ whiteSpace: "pre-wrap", fontSize: `${notesFS}rem` }}
+          dir="ltr"
+        >
           {inputValue}
         </p>
       </div>

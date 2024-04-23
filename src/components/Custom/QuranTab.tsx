@@ -9,6 +9,7 @@ import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface QuranTabProps {
   verseKey: string;
@@ -73,7 +74,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
               }`}
               data-id={verse.key}
             >
-              <div>
+              <VerseContainer>
                 {verse.versetext}{" "}
                 <span
                   className="searcher-chapter-verse-suffix"
@@ -82,7 +83,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
                   ({verse.verseid})
                 </span>{" "}
                 <ExpandButton identifier={verse.key} />
-              </div>
+              </VerseContainer>
               <NoteText verseKey={verse.key} />
             </div>
           ))

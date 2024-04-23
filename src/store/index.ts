@@ -6,6 +6,7 @@ import transNotesReducer from "./slices/transNotes";
 import translationsReducer from "./slices/translations";
 import rootNotesReducer from "./slices/rootNotes";
 import searcherPageReducer from "./slices/searcherPage";
+import settingsReducer from "./slices/settings";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     translations: translationsReducer,
     rootNotes: rootNotesReducer,
     searcherPage: searcherPageReducer,
+    settings: settingsReducer,
   },
 });
 

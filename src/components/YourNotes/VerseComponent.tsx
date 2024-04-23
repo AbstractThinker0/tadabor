@@ -7,7 +7,9 @@ import { useAppDispatch, useAppSelector, selectNote } from "@/store";
 import { verseNotesActions } from "@/store/slices/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { FormComponent, TextComponent } from "@/components/Generic/TextForm";
+import VerseContainer from "@/components/Custom/VerseContainer";
+
+import { FormComponent, TextComponent } from "@/components/Custom/TextForm";
 
 interface VerseComponentProps {
   verseKey: string;
@@ -65,9 +67,11 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
 
   return (
     <div className="card mb-3">
-      <div className="card-header fs-3" dir="rtl">
-        ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
-        {quranService.getVerseTextByKey(verseKey)}{" "}
+      <div className="card-header" dir="rtl">
+        <VerseContainer>
+          ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
+          {quranService.getVerseTextByKey(verseKey)}{" "}
+        </VerseContainer>
       </div>
       {stateEditable ? (
         <FormComponent

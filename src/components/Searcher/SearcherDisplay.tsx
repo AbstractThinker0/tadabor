@@ -11,6 +11,7 @@ import { ExpandButton } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import NoteText from "@/components/Custom/NoteText";
+import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherDisplay = () => {
@@ -168,7 +169,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
   };
 
   return (
-    <div>
+    <VerseContainer>
       <VerseHighlightMatches verse={verseMatch} />{" "}
       <span
         className="searcher-display-verses-item-suffix"
@@ -177,7 +178,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
         verseMatch.verseid
       })`}</span>
       <ExpandButton identifier={verseMatch.key} />
-    </div>
+    </VerseContainer>
   );
 };
 
