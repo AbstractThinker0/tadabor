@@ -210,9 +210,9 @@ const VerseWords = ({
                     className="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target={`#panelsStayOpen-${root.id}`}
+                    data-bs-target={`#panelsStayOpen-${verseRank}-${root.id}`}
                     aria-expanded="false"
-                    aria-controls={`panelsStayOpen-${root.id}`}
+                    aria-controls={`panelsStayOpen-${verseRank}-${root.id}`}
                   >
                     {root.name} ({root.count})
                   </button>
@@ -220,6 +220,7 @@ const VerseWords = ({
                 <RootOccurences
                   rootID={root.id}
                   rootOccs={root.occurences}
+                  verseRank={verseRank}
                   dispatchIsAction={dispatchIsAction}
                 />
               </div>
@@ -234,12 +235,14 @@ const VerseWords = ({
 interface RootOccurencesProps {
   rootID: number;
   rootOccs: string[];
+  verseRank: number;
   dispatchIsAction: Dispatch<clActionsProps>;
 }
 
 const RootOccurences = ({
   rootID,
   rootOccs,
+  verseRank,
   dispatchIsAction,
 }: RootOccurencesProps) => {
   const [isShown, setIsShown] = useState(false);
@@ -343,7 +346,7 @@ const RootOccurences = ({
   return (
     <div
       ref={refCollapse}
-      id={`panelsStayOpen-${rootID}`}
+      id={`panelsStayOpen-${verseRank}-${rootID}`}
       className="accordion-collapse collapse"
     >
       {isShown && (
