@@ -62,7 +62,7 @@ const SearchForm = ({
   };
 
   return (
-    <div className="container p-3">
+    <div className="container p-1">
       <div className="d-flex align-items-center flex-column">
         <div className="">
           <input
