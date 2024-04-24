@@ -1,8 +1,28 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    async function storagePersist() {
+      if (
+        !navigator.storage ||
+        !navigator.storage.persisted ||
+        !navigator.storage.persist
+      )
+        return;
+
+      const isPersisted = await navigator.storage.persisted();
+
+      if (!isPersisted) {
+        navigator.storage.persist();
+      }
+    }
+
+    storagePersist();
+  }, []);
 
   return (
     <nav>
