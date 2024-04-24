@@ -18,7 +18,11 @@ Simply go to Quran Browser on the home page, you can click the button next to an
 
 ## Disclaimer
 
-The app is in beta, which means you may encounter occasional bugs. We strongly recommend keeping a backup of any data you save while using the app. Your data is stored locally on your machine and is never transmitted or stored on a remote database. However, it's always a good practice to have a backup. Please be aware that the accuracy of the Quran roots/stems list has not been verified, and the completeness of search results based on sentences/roots has not been extensively tested.
+The app is in beta, which means you may encounter occasional bugs.
+We strongly recommend keeping a backup of any data you save while
+using the app. Please be aware that the accuracy of the Quran roots
+list has not been verified, and the completeness of search
+results based on sentences or roots has not been extensively tested.
 
 ## Credits
 
@@ -43,4 +47,4 @@ usually, the domain to access the app will be http://localhost:3000/
 
 ## Future project:
 
-Once all features of this project are implemented, it will serve as the foundation for another project that aims to create a platform for collaborative translation and reflection upon the Quran. The ultimate goal is to achieve an accurate understanding of the true message of the Quran by undoing all the semantic changes that have occurred over the centuries. There is currently no set deadline, and it all depends on God's will.
+Once all features of this project are implemented, it will serve as the foundation for another project that aims to create a platform for collaborative translation and reflection upon the Quran. The ultimate goal is to achieve an accurate understanding of the true message of the Quran by undoing all the semantic changes that have occurred over the centuries.
