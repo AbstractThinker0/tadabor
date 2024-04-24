@@ -6,7 +6,10 @@
   height: 100%;
 
   &-side {
-    padding: 20px;
+    padding-top: 10px;
+    padding-inline-start: 10px;
+    padding-inline-end: 5px;
+
     display: flex;
     flex-direction: column;
 
@@ -126,7 +129,7 @@
       display: flex;
       gap: 0.5rem;
       align-items: center;
-      padding-bottom: 5px;
+      padding-bottom: 2px;
 
       &-list {
         display: flex;
@@ -249,6 +252,7 @@
         padding-top: 4px;
         padding-bottom: 4px;
         overflow-wrap: break-word;
+        word-break: break-word;
         border-radius: 0.3rem;
 
         &-selected {

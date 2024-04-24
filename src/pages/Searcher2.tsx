@@ -197,7 +197,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
       <div className="d-flex align-items-center flex-column">
         <div>
           <input
-            className="form-control"
+            className="searcher2-searchpanel-input form-control"
             type="search"
             placeholder=""
             value={searchString}

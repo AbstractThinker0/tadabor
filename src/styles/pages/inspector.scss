@@ -6,11 +6,11 @@
   height: 100%;
 
   .side {
-    &-chapters {
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-top: 5px;
+    padding-inline-start: 10px;
+    padding-inline-end: 5px;
+    padding-top: 5px;
 
+    &-chapters {
       &-input {
         background-color: var(--color-fifth);
         border-bottom: none;

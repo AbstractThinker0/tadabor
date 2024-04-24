@@ -26,6 +26,10 @@
     height: 100%;
     flex-direction: column;
 
+    &-input {
+      height: 2rem;
+    }
+
     &-display {
       margin: 0.5rem;
       overflow: hidden;
