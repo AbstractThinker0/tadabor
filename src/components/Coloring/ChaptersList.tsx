@@ -1,4 +1,4 @@
-import { useEffect, useRef, Dispatch } from "react";
+import { useEffect, useRef, Dispatch, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
@@ -8,23 +8,22 @@ import { selectedChaptersType } from "@/types";
 
 interface ChapterListProps {
   currentChapter: number;
-  chapterToken: string;
   selectedChapters: selectedChaptersType;
   dispatchClAction: Dispatch<clActionsProps>;
 }
 
 const ChaptersList = ({
-  chapterToken,
   currentChapter,
   selectedChapters,
   dispatchClAction,
 }: ChapterListProps) => {
+  const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
-    dispatchClAction(clActions.setChapterToken(event.target.value));
+    setChapterToken(event.target.value);
   }
 
   function onClickChapter(
@@ -32,7 +31,7 @@ const ChaptersList = ({
     chapterID: number
   ) {
     dispatchClAction(clActions.setChapter(chapterID));
-    dispatchClAction(clActions.setChapterToken(""));
+    setChapterToken("");
 
     document.documentElement.scrollTop = 0;
 

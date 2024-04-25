@@ -11,7 +11,6 @@ import { selectedChaptersType } from "@/types";
 
 interface ChaptersSideProps {
   currentChapter: number;
-  chapterToken: string;
   colorsList: coloredProps;
   currentColor: colorProps | null;
   coloredVerses: coloredProps;
@@ -21,7 +20,6 @@ interface ChaptersSideProps {
 
 function ChaptersSide({
   currentChapter,
-  chapterToken,
   colorsList,
   currentColor,
   coloredVerses,
@@ -73,7 +71,6 @@ function ChaptersSide({
   return (
     <div className="side">
       <ChaptersList
-        chapterToken={chapterToken}
         currentChapter={currentChapter}
         selectedChapters={selectedChapters}
         dispatchClAction={dispatchClAction}

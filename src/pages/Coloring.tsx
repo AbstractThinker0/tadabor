@@ -21,7 +21,6 @@ import ChaptersSide from "@/components/Coloring/ChaptersSide";
 
 interface stateProps {
   currentChapter: number;
-  chapterToken: string;
   colorsList: coloredProps;
   selectedColors: coloredProps;
   coloredVerses: coloredProps;
@@ -35,9 +34,6 @@ function reducer(state: stateProps, action: clActionsProps): stateProps {
   switch (action.type) {
     case CL_ACTIONS.SET_CHAPTER: {
       return { ...state, currentChapter: action.payload };
-    }
-    case CL_ACTIONS.SET_CHAPTER_TOKEN: {
-      return { ...state, chapterToken: action.payload };
     }
     case CL_ACTIONS.SET_COLORS_LIST: {
       return { ...state, colorsList: action.payload };
@@ -213,7 +209,6 @@ function Coloring() {
 
   const initialState: stateProps = {
     currentChapter: 1,
-    chapterToken: "",
     colorsList: {},
     selectedColors: {},
     coloredVerses: {},
@@ -230,7 +225,6 @@ function Coloring() {
   return (
     <div className="coloring">
       <ChaptersSide
-        chapterToken={state.chapterToken}
         currentChapter={state.currentChapter}
         colorsList={state.colorsList}
         currentColor={state.currentColor}
