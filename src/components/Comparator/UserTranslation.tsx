@@ -60,29 +60,19 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
             Save
           </button>
         </>
-      ) : (
+      ) : verseTrans ? (
         <div style={{ whiteSpace: "pre-wrap" }}>
-          {verseTrans ? (
-            <>
-              <div style={{ fontSize: `${notesFS}rem` }}>{verseTrans}</div>
-              <button
-                onClick={onClickAdd}
-                className="btn btn-primary btn-sm mt-1"
-              >
-                Edit
-              </button>
-            </>
-          ) : (
-            <>
-              <div>Empty.</div>
-              <button
-                onClick={onClickAdd}
-                className="btn btn-success btn-sm mt-1"
-              >
-                Add
-              </button>
-            </>
-          )}
+          <div style={{ fontSize: `${notesFS}rem` }}>{verseTrans}</div>
+          <button onClick={onClickAdd} className="btn btn-primary btn-sm mt-1">
+            Edit
+          </button>
+        </div>
+      ) : (
+        <div>
+          <div>Empty.</div>
+          <button onClick={onClickAdd} className="btn btn-success btn-sm mt-1">
+            Add
+          </button>
         </div>
       )}
     </div>
