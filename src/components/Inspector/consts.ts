@@ -1,5 +1,10 @@
 import { ActionsUnion, createActionPayload } from "@/types/useReducer";
 
+export interface stateProps {
+  currentChapter: number;
+  scrollKey: string;
+}
+
 export enum IS_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
   SET_SCROLL_KEY = "dispatchSetScrollKey",

@@ -5,31 +5,9 @@ import { fetchVerseNotes } from "@/store/slices/verseNotes";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import Display from "@/components/Inspector/Display";
-import {
-  IS_ACTIONS,
-  clActionsProps,
-  isActions,
-} from "@/components/Inspector/consts";
+import isReducer from "@/components/Inspector/isReducer";
+import { stateProps, isActions } from "@/components/Inspector/consts";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-
-interface stateProps {
-  currentChapter: number;
-  scrollKey: string;
-}
-
-function reducer(state: stateProps, action: clActionsProps): stateProps {
-  switch (action.type) {
-    case IS_ACTIONS.SET_CHAPTER: {
-      return { ...state, currentChapter: action.payload };
-    }
-    case IS_ACTIONS.SET_SCROLL_KEY: {
-      return { ...state, scrollKey: action.payload };
-    }
-    case IS_ACTIONS.GOTO_CHAPTER: {
-      return { ...state, scrollKey: "", currentChapter: action.payload };
-    }
-  }
-}
 
 function Inspector() {
   const dispatch = useAppDispatch();
@@ -40,7 +18,7 @@ function Inspector() {
     scrollKey: "",
   };
 
-  const [state, dispatchIsAction] = useReducer(reducer, initialState);
+  const [state, dispatchIsAction] = useReducer(isReducer, initialState);
 
   function handleSelectChapter(chapterID: number) {
     dispatchIsAction(isActions.setChapter(chapterID));
