@@ -1,6 +1,17 @@
 import { selectedChaptersType, verseProps } from "@/types";
 import { createActionPayload, ActionsUnion } from "@/types/useReducer";
 
+export interface stateProps {
+  currentChapter: number;
+  colorsList: coloredProps;
+  selectedColors: coloredProps;
+  coloredVerses: coloredProps;
+  currentVerse: verseProps | null;
+  currentColor: colorProps | null;
+  selectedChapters: selectedChaptersType;
+  scrollKey: string;
+}
+
 export interface colorProps {
   colorID: string;
   colorCode: string;
