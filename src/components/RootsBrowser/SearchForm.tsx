@@ -2,6 +2,8 @@ import { Dispatch, Fragment, SetStateAction } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { rootProps } from "@/types";
+
 const arabicAlpha = [
   "ا",
   "ب",
@@ -39,6 +41,7 @@ interface SearchFormProps {
   searchInclusive: boolean;
   setSearchString: Dispatch<SetStateAction<string>>;
   setSearchInclusive: Dispatch<SetStateAction<boolean>>;
+  stateRoots: rootProps[];
 }
 
 const SearchForm = ({
@@ -46,15 +49,12 @@ const SearchForm = ({
   searchInclusive,
   setSearchString,
   setSearchInclusive,
+  stateRoots,
 }: SearchFormProps) => {
   const { i18n, t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
-  };
-
-  const onLetterClick = (letter: string) => {
-    setSearchString(letter);
   };
 
   const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,16 +65,19 @@ const SearchForm = ({
     <div className="container p-1">
       <div className="d-flex align-items-center flex-column">
         <div className="">
-          <input
-            className="form-control"
-            type="search"
-            placeholder=""
-            value={searchString}
-            aria-label="Search"
-            onChange={searchStringHandle}
-            required
-            dir="rtl"
-          />
+          <div className="d-flex gap-1">
+            <input
+              className="form-control"
+              type="search"
+              placeholder=""
+              value={searchString}
+              aria-label="Search"
+              onChange={searchStringHandle}
+              required
+              dir="rtl"
+            />
+            <span>({stateRoots.length})</span>
+          </div>
           <div className="d-flex gap-1 align-self-start">
             <span className="fw-bold">{t("search_options")}</span>{" "}
             <div
@@ -97,26 +100,40 @@ const SearchForm = ({
           </div>
         </div>
       </div>
-      <div className="row pt-1" dir="rtl">
-        <div className="container text-center">
-          {arabicAlpha.map((letter, index) => (
-            <Fragment key={index}>
+      <AlphabetsComponent setSearchString={setSearchString} />
+    </div>
+  );
+};
+
+interface AlphabetsComponentProps {
+  setSearchString: (value: SetStateAction<string>) => void;
+}
+
+const AlphabetsComponent = ({ setSearchString }: AlphabetsComponentProps) => {
+  const onLetterClick = (letter: string) => {
+    setSearchString(letter);
+  };
+
+  return (
+    <div className="row pt-1" dir="rtl">
+      <div className="container text-center">
+        {arabicAlpha.map((letter, index) => (
+          <Fragment key={index}>
+            <span
+              role="button"
+              className="text-primary"
+              onClick={() => onLetterClick(letter)}
+            >
+              {" "}
+              {letter}{" "}
+            </span>
+            {index < arabicAlpha.length - 1 && (
               <span
-                role="button"
-                className="text-primary"
-                onClick={() => onLetterClick(letter)}
-              >
-                {" "}
-                {letter}{" "}
-              </span>
-              {index < arabicAlpha.length - 1 && (
-                <span
-                  style={{ borderLeft: "1px solid grey", margin: "0 7.5px" }}
-                ></span>
-              )}
-            </Fragment>
-          ))}
-        </div>
+                style={{ borderLeft: "1px solid grey", margin: "0 7.5px" }}
+              ></span>
+            )}
+          </Fragment>
+        ))}
       </div>
     </div>
   );

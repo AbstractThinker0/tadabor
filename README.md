@@ -2,8 +2,6 @@
 
 This project is a web App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in your browser.
 
-# For a desktop version check [github.com/AbstractThinker0/tadabor-desktop](https://github.com/AbstractThinker0/tadabor-desktop)
-
 ## Table of contents
 
 - [How to use](#How-to-use)

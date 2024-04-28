@@ -13,6 +13,8 @@ import { fetchVerseNotes } from "@/store/slices/verseNotes";
 import SearchForm from "@/components/RootsBrowser/SearchForm";
 import RootsList from "@/components/RootsBrowser/RootsList";
 
+import { rootProps } from "@/types";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import QuranTab from "@/components/Custom/QuranTab";
@@ -109,11 +111,16 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
 
   const [searchString, setSearchString] = useState("");
   const [searchInclusive, setSearchInclusive] = useState(false);
+  const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
   useEffect(() => {
     dispatch(fetchRootNotes());
     dispatch(fetchVerseNotes());
   }, []);
+
+  const handleRoots = (roots: rootProps[]) => {
+    setStateRoots(roots);
+  };
 
   return (
     <div className="roots-panel">
@@ -122,6 +129,7 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
         searchInclusive={searchInclusive}
         setSearchString={setSearchString}
         setSearchInclusive={setSearchInclusive}
+        stateRoots={stateRoots}
       />
 
       {isRNotesLoading || isVNotesLoading ? (
@@ -131,6 +139,8 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
           searchString={searchString}
           searchInclusive={searchInclusive}
           handleVerseTab={handleVerseTab}
+          stateRoots={stateRoots}
+          handleRoots={handleRoots}
         />
       )}
     </div>

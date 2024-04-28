@@ -30,28 +30,39 @@ interface RootsListProps {
   searchInclusive: boolean;
   searchString: string;
   handleVerseTab: (verseKey: string) => void;
+  stateRoots: rootProps[];
+  handleRoots: (roots: rootProps[]) => void;
 }
 
 const RootsList = memo(
-  ({ searchString, searchInclusive, handleVerseTab }: RootsListProps) => {
+  ({
+    searchString,
+    searchInclusive,
+    handleVerseTab,
+    stateRoots,
+    handleRoots,
+  }: RootsListProps) => {
     const quranService = useQuran();
 
     const [itemsCount, setItemsCount] = useState(80);
-
-    const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
       startTransition(() => {
-        setStateRoots(
-          quranService.quranRoots.filter(
-            (root) =>
-              normalizeAlif(root.name).startsWith(searchString) ||
-              root.name.startsWith(searchString) ||
+        const normalizedToken = normalizeAlif(searchString, true);
+
+        handleRoots(
+          quranService.quranRoots.filter((root) => {
+            const normalizedRoot = normalizeAlif(root.name, true);
+
+            return (
+              normalizedRoot.startsWith(normalizedToken) ||
               !searchString ||
-              (searchInclusive && hasAllLetters(root.name, searchString))
-          )
+              (searchInclusive &&
+                hasAllLetters(normalizedRoot, normalizedToken))
+            );
+          })
         );
       });
     }, [searchString, searchInclusive]);

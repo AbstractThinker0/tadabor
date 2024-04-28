@@ -1,6 +1,10 @@
 import { IMatch, verseProps } from "@/types";
 
-export function normalizeAlif(token: string) {
+export function normalizeAlif(token: string, includeHamza = false) {
+  if (includeHamza) {
+    return token.replace(/(آ|إ|أ|ء)/g, "ا");
+  }
+
   return token.replace(/(آ|إ|أ)/g, "ا");
 }
 
