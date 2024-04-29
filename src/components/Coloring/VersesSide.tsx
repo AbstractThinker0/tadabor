@@ -93,8 +93,6 @@ function VersesSide({
     (chapterID) => selectedChapters[chapterID] === true
   );
 
-  const getSelectedCount = chaptersScope.length;
-
   const refListVerse = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -123,58 +121,60 @@ function VersesSide({
 
   return (
     <div className="verses-side">
-      {Object.keys(selectedColors).length > 0 && (
-        <div className="verses-side-colors" dir="ltr">
-          <div className="verses-side-colors-selected">
-            <div className="fw-bold">Selected colors:</div>
-            {Object.keys(selectedColors).map((colorID) => (
-              <div
-                key={colorID}
-                className="verses-side-colors-item text-center rounded"
-                style={
-                  selectedColors[colorID]
-                    ? {
-                        backgroundColor: selectedColors[colorID].colorCode,
-                        color: getTextColor(selectedColors[colorID].colorCode),
-                      }
-                    : {}
-                }
-              >
-                <div></div>
-                <div className="verses-side-colors-item-text">
-                  {selectedColors[colorID].colorDisplay}
-                </div>
+      <div className="card verse-list" dir="rtl">
+        {Object.keys(selectedColors).length > 0 && (
+          <div className="verses-side-colors" dir="ltr">
+            <div className="verses-side-colors-selected">
+              <div className="fw-bold">Selected colors:</div>
+              {Object.keys(selectedColors).map((colorID) => (
                 <div
-                  className="verses-side-colors-item-close"
-                  onClick={() => onClickDeleteSelected(colorID)}
+                  key={colorID}
+                  className="verses-side-colors-item text-center rounded"
+                  style={
+                    selectedColors[colorID]
+                      ? {
+                          backgroundColor: selectedColors[colorID].colorCode,
+                          color: getTextColor(
+                            selectedColors[colorID].colorCode
+                          ),
+                        }
+                      : {}
+                  }
                 >
-                  X
+                  <div></div>
+                  <div className="verses-side-colors-item-text">
+                    {selectedColors[colorID].colorDisplay}
+                  </div>
+                  <div
+                    className="verses-side-colors-item-close"
+                    onClick={() => onClickDeleteSelected(colorID)}
+                  >
+                    X
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="verses-side-colors-chapters">
+              <div className="fw-bold">Selected chapters:</div>
+              {chaptersScope.length === 114 ? (
+                <div className="fw-bold">All chapters.</div>
+              ) : chaptersScope.length === 0 ? (
+                <div className="fw-bold">No chapters selected.</div>
+              ) : (
+                chaptersScope.map((chapterID) => (
+                  <div
+                    key={chapterID}
+                    className="verses-side-colors-chapters-item"
+                  >
+                    {quranService.getChapterName(chapterID)}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-          <div className="verses-side-colors-chapters">
-            <div className="fw-bold">Selected chapters:</div>
-            {chaptersScope.length === 114 ? (
-              <div className="fw-bold">All chapters.</div>
-            ) : chaptersScope.length === 0 ? (
-              <div className="fw-bold">No chapters selected.</div>
-            ) : (
-              chaptersScope.map((chapterID) => (
-                <div
-                  key={chapterID}
-                  className="verses-side-colors-chapters-item"
-                >
-                  {quranService.getChapterName(chapterID)}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-      <div className="card verse-list fs-4" dir="rtl">
+        )}
         {Object.keys(selectedColors).length ? (
-          getSelectedCount ? (
+          chaptersScope.length ? (
             <SelectedVerses
               selectedColors={selectedColors}
               coloredVerses={selectedColoredVerses}
@@ -185,49 +185,15 @@ function VersesSide({
               You have to select at least one chapter.
             </div>
           )
+        ) : isPending ? (
+          <LoadingSpinner />
         ) : (
-          <>
-            <div className="card-title">
-              سورة {quranService.getChapterName(currentChapter)}
-            </div>
-            <div ref={refListVerse}>
-              {isPending ? (
-                <LoadingSpinner />
-              ) : (
-                stateVerses.map((verse) => (
-                  <div
-                    className="verse-item"
-                    key={verse.key}
-                    data-id={verse.key}
-                    style={
-                      coloredVerses[verse.key]
-                        ? {
-                            backgroundColor: coloredVerses[verse.key].colorCode,
-                            color: getTextColor(
-                              coloredVerses[verse.key].colorCode
-                            ),
-                          }
-                        : {}
-                    }
-                  >
-                    <VerseComponent
-                      color={
-                        coloredVerses[verse.key]
-                          ? coloredVerses[verse.key]
-                          : null
-                      }
-                      verse={verse}
-                      onClickVerseColor={onClickVerseColor}
-                    />
-                    <NoteText
-                      verseKey={verse.key}
-                      className="verse-item-note"
-                    />
-                  </div>
-                ))
-              )}
-            </div>
-          </>
+          <VersesList
+            currentChapter={currentChapter}
+            stateVerses={stateVerses}
+            coloredVerses={coloredVerses}
+            onClickVerseColor={onClickVerseColor}
+          />
         )}
         <VerseModal
           colorsList={colorsList}
@@ -364,5 +330,54 @@ function SelectedVerses({
     </div>
   );
 }
+
+interface VersesListProps {
+  currentChapter: number;
+  refListVerse?: React.RefObject<HTMLDivElement>;
+  stateVerses: verseProps[];
+  coloredVerses: coloredProps;
+  onClickVerseColor: (verse: verseProps) => void;
+}
+
+const VersesList = ({
+  currentChapter,
+  refListVerse,
+  stateVerses,
+  coloredVerses,
+  onClickVerseColor,
+}: VersesListProps) => {
+  const quranService = useQuran();
+  return (
+    <>
+      <div className="card-title">
+        سورة {quranService.getChapterName(currentChapter)}
+      </div>
+      <div ref={refListVerse}>
+        {stateVerses.map((verse) => (
+          <div
+            className="verse-item"
+            key={verse.key}
+            data-id={verse.key}
+            style={
+              coloredVerses[verse.key]
+                ? {
+                    backgroundColor: coloredVerses[verse.key].colorCode,
+                    color: getTextColor(coloredVerses[verse.key].colorCode),
+                  }
+                : {}
+            }
+          >
+            <VerseComponent
+              color={coloredVerses[verse.key] ? coloredVerses[verse.key] : null}
+              verse={verse}
+              onClickVerseColor={onClickVerseColor}
+            />
+            <NoteText verseKey={verse.key} className="verse-item-note" />
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
 export default VersesSide;
