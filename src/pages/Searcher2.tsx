@@ -158,7 +158,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
 
         const quranText = quranService.absoluteQuran;
 
-        // Check if we are search with diacrtics or they should be stripped off
+        // Check if we search with diacritics or they should be stripped off
         const normalizedToken = searchDiacritics
           ? searchString
           : normalizeAlif(removeDiacritics(searchString));
@@ -195,7 +195,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
   return (
     <div className="searcher2-searchpanel">
       <div className="d-flex align-items-center flex-column">
-        <div>
+        <div className="d-flex gap-1 align-items-center">
           <input
             className="searcher2-searchpanel-input form-control"
             type="search"
@@ -206,6 +206,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
             required
             dir="rtl"
           />
+          <span>({stateVerses.length})</span>
         </div>
         <div className="d-flex gap-1">
           <span className="fw-bold">{t("search_options")}</span>
