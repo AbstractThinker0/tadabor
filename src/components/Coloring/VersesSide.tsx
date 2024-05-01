@@ -122,69 +122,69 @@ function VersesSide({
   return (
     <div className="verses-side">
       <div className="card verse-list" dir="rtl">
-        {Object.keys(selectedColors).length > 0 && (
-          <div className="verses-side-colors" dir="ltr">
-            <div className="verses-side-colors-selected">
-              <div className="fw-bold">Selected colors:</div>
-              {Object.keys(selectedColors).map((colorID) => (
-                <div
-                  key={colorID}
-                  className="verses-side-colors-item text-center rounded"
-                  style={
-                    selectedColors[colorID]
-                      ? {
-                          backgroundColor: selectedColors[colorID].colorCode,
-                          color: getTextColor(
-                            selectedColors[colorID].colorCode
-                          ),
-                        }
-                      : {}
-                  }
-                >
-                  <div></div>
-                  <div className="verses-side-colors-item-text">
-                    {selectedColors[colorID].colorDisplay}
-                  </div>
-                  <div
-                    className="verses-side-colors-item-close"
-                    onClick={() => onClickDeleteSelected(colorID)}
-                  >
-                    X
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="verses-side-colors-chapters">
-              <div className="fw-bold">Selected chapters:</div>
-              {chaptersScope.length === 114 ? (
-                <div className="fw-bold">All chapters.</div>
-              ) : chaptersScope.length === 0 ? (
-                <div className="fw-bold">No chapters selected.</div>
-              ) : (
-                chaptersScope.map((chapterID) => (
-                  <div
-                    key={chapterID}
-                    className="verses-side-colors-chapters-item"
-                  >
-                    {quranService.getChapterName(chapterID)}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
         {Object.keys(selectedColors).length ? (
-          chaptersScope.length ? (
-            <SelectedVerses
-              selectedColors={selectedColors}
-              coloredVerses={selectedColoredVerses}
-              dispatchClAction={dispatchClAction}
-            />
-          ) : (
-            <div className="text-center" dir="ltr">
-              You have to select at least one chapter.
+          <>
+            <div className="verses-side-colors" dir="ltr">
+              <div className="verses-side-colors-selected">
+                <div className="fw-bold">Selected colors:</div>
+                {Object.keys(selectedColors).map((colorID) => (
+                  <div
+                    key={colorID}
+                    className="verses-side-colors-item text-center rounded"
+                    style={
+                      selectedColors[colorID]
+                        ? {
+                            backgroundColor: selectedColors[colorID].colorCode,
+                            color: getTextColor(
+                              selectedColors[colorID].colorCode
+                            ),
+                          }
+                        : {}
+                    }
+                  >
+                    <div></div>
+                    <div className="verses-side-colors-item-text">
+                      {selectedColors[colorID].colorDisplay}
+                    </div>
+                    <div
+                      className="verses-side-colors-item-close"
+                      onClick={() => onClickDeleteSelected(colorID)}
+                    >
+                      X
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="verses-side-colors-chapters">
+                <div className="fw-bold">Selected chapters:</div>
+                {chaptersScope.length === 114 ? (
+                  <div className="fw-bold">All chapters.</div>
+                ) : chaptersScope.length === 0 ? (
+                  <div className="fw-bold">No chapters selected.</div>
+                ) : (
+                  chaptersScope.map((chapterID) => (
+                    <div
+                      key={chapterID}
+                      className="verses-side-colors-chapters-item"
+                    >
+                      {quranService.getChapterName(chapterID)}
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
-          )
+            {chaptersScope.length ? (
+              <SelectedVerses
+                selectedColors={selectedColors}
+                coloredVerses={selectedColoredVerses}
+                dispatchClAction={dispatchClAction}
+              />
+            ) : (
+              <div className="text-center" dir="ltr">
+                You have to select at least one chapter.
+              </div>
+            )}
+          </>
         ) : isPending ? (
           <LoadingSpinner />
         ) : (
