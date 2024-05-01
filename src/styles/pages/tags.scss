@@ -125,6 +125,13 @@
     display: flex;
     flex-direction: column;
 
+    .tags-display-header {
+      padding-top: 2px;
+      padding-inline-start: 2px;
+      padding-inline-end: 2px;
+      padding-bottom: 5px;
+    }
+
     &-tags {
       display: flex;
       gap: 0.5rem;
@@ -156,7 +163,6 @@
       display: flex;
       gap: 5px;
       flex-wrap: wrap;
-      padding-bottom: 5px;
 
       &-item {
         background-color: beige;

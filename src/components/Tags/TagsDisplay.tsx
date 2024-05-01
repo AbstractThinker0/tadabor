@@ -80,41 +80,41 @@ function TagsDisplay({
 
   return (
     <div className="tags-display">
-      {Object.keys(selectedTags).length > 0 && (
-        <>
-          <div className="tags-display-tags" dir="ltr">
-            <div className="fw-bold">Selected tags:</div>
-            <div className="tags-display-tags-list">
-              {Object.keys(selectedTags).map((tagID) => (
-                <div key={tagID} className="tags-display-tags-list-item">
-                  {selectedTags[tagID].tagDisplay}
-                  <div
-                    onClick={() => onClickDeleteSelected(tagID)}
-                    className="tags-display-tags-list-item-close"
-                  >
-                    X
+      <div className="card tags-display-chapter" dir="rtl">
+        {Object.keys(selectedTags).length > 0 && (
+          <div className="tags-display-header">
+            <div className="tags-display-tags" dir="ltr">
+              <div className="fw-bold">Selected tags:</div>
+              <div className="tags-display-tags-list">
+                {Object.keys(selectedTags).map((tagID) => (
+                  <div key={tagID} className="tags-display-tags-list-item">
+                    {selectedTags[tagID].tagDisplay}
+                    <div
+                      onClick={() => onClickDeleteSelected(tagID)}
+                      className="tags-display-tags-list-item-close"
+                    >
+                      X
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="tags-display-chapters" dir="ltr">
+              <div className="fw-bold">Selected chapters:</div>
+              {chaptersScope.length === 114 ? (
+                <div className="fw-bold">All chapters.</div>
+              ) : chaptersScope.length === 0 ? (
+                <div className="fw-bold">No chapters selected.</div>
+              ) : (
+                chaptersScope.map((chapterID) => (
+                  <div className="tags-display-chapters-item" key={chapterID}>
+                    {quranService.getChapterName(chapterID)}
+                  </div>
+                ))
+              )}
             </div>
           </div>
-          <div className="tags-display-chapters" dir="ltr">
-            <div className="fw-bold">Selected chapters:</div>
-            {chaptersScope.length === 114 ? (
-              <div className="fw-bold">All chapters.</div>
-            ) : chaptersScope.length === 0 ? (
-              <div className="fw-bold">No chapters selected.</div>
-            ) : (
-              chaptersScope.map((chapterID) => (
-                <div className="tags-display-chapters-item" key={chapterID}>
-                  {quranService.getChapterName(chapterID)}
-                </div>
-              ))
-            )}
-          </div>
-        </>
-      )}
-      <div className="card tags-display-chapter" dir="rtl">
+        )}
         {Object.keys(selectedTags).length ? (
           chaptersScope.length ? (
             <SelectedVerses
