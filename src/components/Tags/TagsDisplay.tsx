@@ -81,53 +81,53 @@ function TagsDisplay({
   return (
     <div className="tags-display">
       <div className="card tags-display-chapter" dir="rtl">
-        {Object.keys(selectedTags).length > 0 && (
-          <div className="tags-display-header">
-            <div className="tags-display-tags" dir="ltr">
-              <div className="fw-bold">Selected tags:</div>
-              <div className="tags-display-tags-list">
-                {Object.keys(selectedTags).map((tagID) => (
-                  <div key={tagID} className="tags-display-tags-list-item">
-                    {selectedTags[tagID].tagDisplay}
-                    <div
-                      onClick={() => onClickDeleteSelected(tagID)}
-                      className="tags-display-tags-list-item-close"
-                    >
-                      X
+        {Object.keys(selectedTags).length ? (
+          <>
+            <div className="tags-display-header">
+              <div className="tags-display-tags" dir="ltr">
+                <div className="fw-bold">Selected tags:</div>
+                <div className="tags-display-tags-list">
+                  {Object.keys(selectedTags).map((tagID) => (
+                    <div key={tagID} className="tags-display-tags-list-item">
+                      {selectedTags[tagID].tagDisplay}
+                      <div
+                        onClick={() => onClickDeleteSelected(tagID)}
+                        className="tags-display-tags-list-item-close"
+                      >
+                        X
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              <div className="tags-display-chapters" dir="ltr">
+                <div className="fw-bold">Selected chapters:</div>
+                {chaptersScope.length === 114 ? (
+                  <div className="fw-bold">All chapters.</div>
+                ) : chaptersScope.length === 0 ? (
+                  <div className="fw-bold">No chapters selected.</div>
+                ) : (
+                  chaptersScope.map((chapterID) => (
+                    <div className="tags-display-chapters-item" key={chapterID}>
+                      {quranService.getChapterName(chapterID)}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-            <div className="tags-display-chapters" dir="ltr">
-              <div className="fw-bold">Selected chapters:</div>
-              {chaptersScope.length === 114 ? (
-                <div className="fw-bold">All chapters.</div>
-              ) : chaptersScope.length === 0 ? (
-                <div className="fw-bold">No chapters selected.</div>
-              ) : (
-                chaptersScope.map((chapterID) => (
-                  <div className="tags-display-chapters-item" key={chapterID}>
-                    {quranService.getChapterName(chapterID)}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
-        {Object.keys(selectedTags).length ? (
-          chaptersScope.length ? (
-            <SelectedVerses
-              selectedTags={selectedTags}
-              tags={tags}
-              versesTags={selectedVerses}
-              dispatchTagsAction={dispatchTagsAction}
-            />
-          ) : (
-            <div className="text-center" dir="ltr">
-              You have to select at least one chapter.
-            </div>
-          )
+            {chaptersScope.length ? (
+              <SelectedVerses
+                selectedTags={selectedTags}
+                tags={tags}
+                versesTags={selectedVerses}
+                dispatchTagsAction={dispatchTagsAction}
+              />
+            ) : (
+              <div className="text-center" dir="ltr">
+                You have to select at least one chapter.
+              </div>
+            )}
+          </>
         ) : (
           <ListVerses
             currentChapter={currentChapter}
