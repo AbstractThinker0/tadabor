@@ -72,44 +72,12 @@ function TagsSide({
         selectedChapters={selectedChapters}
         dispatchTagsAction={dispatchTagsAction}
       />
-      <div className="tags-side-list" dir="ltr">
-        <div className="fw-bold pb-1">Tags list:</div>
-        {Object.keys(tags).length > 0 && (
-          <div className="tags-side-list-items">
-            {Object.keys(tags).map((tagID) => (
-              <div
-                className={`tags-side-list-items-item ${
-                  isTagSelected(tagID)
-                    ? "tags-side-list-items-item-selected"
-                    : ""
-                }`}
-                key={tagID}
-              >
-                <div
-                  className="tags-side-list-items-item-text"
-                  onClick={() => onClickSelectTag(tags[tagID])}
-                >
-                  {tags[tagID].tagDisplay}
-                </div>
-                <div
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteTagModal"
-                  onClick={() => onClickDeleteTag(tags[tagID])}
-                >
-                  🗑️
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <button
-          data-bs-toggle="modal"
-          data-bs-target="#addTagModal"
-          className="btn btn-dark tags-side-list-btn"
-        >
-          Add tag
-        </button>
-      </div>
+      <SideList
+        tags={tags}
+        isTagSelected={isTagSelected}
+        onClickSelectTag={onClickSelectTag}
+        onClickDeleteTag={onClickDeleteTag}
+      />
       <AddTagModal addTag={addTag} />
       <DeleteTagModal
         deleteTag={deleteTag}
@@ -119,5 +87,58 @@ function TagsSide({
     </div>
   );
 }
+
+interface SideListProps {
+  tags: tagsProps;
+  isTagSelected: (tagID: string) => boolean;
+  onClickSelectTag(tag: tagProps): void;
+  onClickDeleteTag(tag: tagProps): void;
+}
+
+const SideList = ({
+  tags,
+  isTagSelected,
+  onClickSelectTag,
+  onClickDeleteTag,
+}: SideListProps) => {
+  return (
+    <div className="tags-side-list" dir="ltr">
+      <div className="fw-bold pb-1">Tags list:</div>
+      {Object.keys(tags).length > 0 && (
+        <div className="tags-side-list-items">
+          {Object.keys(tags).map((tagID) => (
+            <div
+              className={`tags-side-list-items-item ${
+                isTagSelected(tagID) ? "tags-side-list-items-item-selected" : ""
+              }`}
+              key={tagID}
+            >
+              <div
+                className="tags-side-list-items-item-text"
+                onClick={() => onClickSelectTag(tags[tagID])}
+              >
+                {tags[tagID].tagDisplay}
+              </div>
+              <div
+                data-bs-toggle="modal"
+                data-bs-target="#deleteTagModal"
+                onClick={() => onClickDeleteTag(tags[tagID])}
+              >
+                🗑️
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <button
+        data-bs-toggle="modal"
+        data-bs-target="#addTagModal"
+        className="btn btn-dark tags-side-list-btn"
+      >
+        Add tag
+      </button>
+    </div>
+  );
+};
 
 export default TagsSide;
