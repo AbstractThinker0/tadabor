@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
-import { searcherPageActions } from "@/store/slices/searcherPage";
+import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import useQuran from "@/context/useQuran";
 import { rootProps } from "@/types";

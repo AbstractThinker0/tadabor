@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 

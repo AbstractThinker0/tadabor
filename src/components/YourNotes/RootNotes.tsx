@@ -8,7 +8,7 @@ import {
   useAppSelector,
 } from "@/store";
 
-import { fetchRootNotes } from "@/store/slices/rootNotes";
+import { fetchRootNotes } from "@/store/slices/global/rootNotes";
 
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";

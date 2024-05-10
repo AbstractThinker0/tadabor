@@ -7,7 +7,7 @@ import useQuran from "@/context/useQuran";
 
 import { dbFuncs } from "@/util/db";
 import { toast } from "react-toastify";
-import { transNotesActions } from "@/store/slices/transNotes";
+import { transNotesActions } from "@/store/slices/global/transNotes";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 

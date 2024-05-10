@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import useQuran from "@/context/useQuran";
 
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
-import { rootNotesActions } from "@/store/slices/rootNotes";
+import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import { dbFuncs } from "@/util/db";
 

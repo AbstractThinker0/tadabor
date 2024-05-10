@@ -5,7 +5,7 @@ import { getDerivationsInVerse } from "@/util/util";
 
 import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { searcherPageActions } from "@/store/slices/searcherPage";
+import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";

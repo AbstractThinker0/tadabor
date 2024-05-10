@@ -7,7 +7,7 @@ import {
   useAppSelector,
   getAllTransNotesKeys,
 } from "@/store";
-import { fetchTransNotes } from "@/store/slices/transNotes";
+import { fetchTransNotes } from "@/store/slices/global/transNotes";
 
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";

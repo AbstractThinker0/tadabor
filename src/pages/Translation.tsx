@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchTransNotes } from "@/store/slices/transNotes";
+import { fetchTransNotes } from "@/store/slices/global/transNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

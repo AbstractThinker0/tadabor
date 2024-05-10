@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import Display from "@/components/Inspector/Display";

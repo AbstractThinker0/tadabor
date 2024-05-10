@@ -16,7 +16,7 @@ import useQuran from "@/context/useQuran";
 import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
 import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
-import { rootNotesActions } from "@/store/slices/rootNotes";
+import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import { TextForm } from "@/components/Custom/TextForm";

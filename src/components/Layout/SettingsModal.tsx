@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
-import { settingsActions } from "@/store/slices/settings";
+import { settingsActions } from "@/store/slices/global/settings";
 
 import {
   ModalBody,

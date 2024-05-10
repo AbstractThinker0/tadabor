@@ -8,7 +8,7 @@ import {
   getAllNotesKeys,
   useAppSelector,
 } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 

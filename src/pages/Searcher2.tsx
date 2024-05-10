@@ -2,7 +2,7 @@ import { useEffect, useState, useTransition, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";

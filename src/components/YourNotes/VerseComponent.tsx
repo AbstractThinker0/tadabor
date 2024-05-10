@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector, selectNote } from "@/store";
-import { verseNotesActions } from "@/store/slices/verseNotes";
+import { verseNotesActions } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";

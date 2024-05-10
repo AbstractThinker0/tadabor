@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { selectNote, useAppDispatch, useAppSelector } from "@/store";
-import { verseNotesActions } from "@/store/slices/verseNotes";
+import { verseNotesActions } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 
 import { TextForm } from "@/components/Custom/TextForm";

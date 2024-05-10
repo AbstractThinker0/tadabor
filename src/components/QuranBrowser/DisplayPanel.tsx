@@ -10,7 +10,7 @@ import {
 import useQuran from "@/context/useQuran";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
 

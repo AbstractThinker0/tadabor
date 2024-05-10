@@ -7,8 +7,8 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "@/store";
-import { fetchRootNotes } from "@/store/slices/rootNotes";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
+import { fetchRootNotes } from "@/store/slices/global/rootNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import SearchForm from "@/components/RootsBrowser/SearchForm";
 import RootsList from "@/components/RootsBrowser/RootsList";

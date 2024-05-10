@@ -8,9 +8,9 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "@/store";
-import { fetchAllTranslations } from "@/store/slices/translations";
-import { fetchVerseNotes } from "@/store/slices/verseNotes";
-import { fetchTransNotes } from "@/store/slices/transNotes";
+import { fetchAllTranslations } from "@/store/slices/global/translations";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { fetchTransNotes } from "@/store/slices/global/transNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Comparator/Display";
