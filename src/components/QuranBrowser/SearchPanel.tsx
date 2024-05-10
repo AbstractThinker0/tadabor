@@ -14,11 +14,14 @@ import {
 
 import { SearchButton } from "@/components/Generic/Buttons";
 
+import Checkbox from "@/components/Custom/Checkbox";
+
 interface SearchPanelProps {
   currentChapter: number;
   searchMethod: string;
   searchDiacritics: boolean;
   searchIdentical: boolean;
+  searchStart: boolean;
   searchString: string;
   searchResult: verseMatchResult[];
   dispatchQbAction: Dispatch<qbActionsProps>;
@@ -30,6 +33,7 @@ const SearchPanel = memo(
     searchMethod,
     searchDiacritics,
     searchIdentical,
+    searchStart,
     searchString,
     searchResult,
     dispatchQbAction,
@@ -45,6 +49,10 @@ const SearchPanel = memo(
 
     function setSearchIdentical(status: boolean) {
       dispatchQbAction(qbActions.setSearchIdentical(status));
+    }
+
+    function setSearchStart(status: boolean) {
+      dispatchQbAction(qbActions.setSearchStart(status));
     }
 
     function setSearchMethod(method: SEARCH_METHOD) {
@@ -79,20 +87,31 @@ const SearchPanel = memo(
             searchMethod={searchMethod}
             setSearchMethod={setSearchMethod}
           />
-          <CheckboxComponent
-            checkboxState={searchDiacritics}
-            setCheckBoxState={setSearchDiacritics}
-            labelText={t("search_diacritics")}
-            isDisabled={isRootSearch}
-            inputID="CheckboxDiacritics"
-          />
-          <CheckboxComponent
-            checkboxState={searchIdentical}
-            setCheckBoxState={setSearchIdentical}
-            labelText={t("search_identical")}
-            isDisabled={isRootSearch}
-            inputID="CheckboxIdentical"
-          />
+          <div className="browser-search-options-checks">
+            <Checkbox
+              checkboxState={searchDiacritics}
+              handleChangeCheckbox={setSearchDiacritics}
+              labelText={t("search_diacritics")}
+              isDisabled={isRootSearch}
+              inputID="CheckboxDiacritics"
+            />
+            <div className="d-flex">
+              <Checkbox
+                checkboxState={searchIdentical}
+                handleChangeCheckbox={setSearchIdentical}
+                labelText={t("search_identical")}
+                isDisabled={isRootSearch}
+                inputID="CheckboxIdentical"
+              />
+              <Checkbox
+                checkboxState={searchStart}
+                handleChangeCheckbox={setSearchStart}
+                labelText={t("search_start")}
+                isDisabled={isRootSearch}
+                inputID="CheckboxStart"
+              />
+            </div>
+          </div>
         </div>
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
@@ -127,42 +146,46 @@ const RadioSearchMethod = ({
   };
   return (
     <div className="browser-search-options-method">
-      <span className="fw-bold">{t("search_method")}</span>
-      <div
-        className={`form-check form-check-inline ${
-          i18n.resolvedLanguage === "ar" && "form-check-reverse"
-        }`}
-      >
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio1"
-          value={SEARCH_METHOD.ROOT}
-          checked={searchMethod === SEARCH_METHOD.ROOT}
-          onChange={handleSearchMethod}
-        />
-        <label className="form-check-label" htmlFor="inlineRadio1">
-          {t("search_root")}
-        </label>
-      </div>
-      <div
-        className={`form-check form-check-inline ${
-          i18n.resolvedLanguage === "ar" && "form-check-reverse"
-        }`}
-      >
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio2"
-          value={SEARCH_METHOD.WORD}
-          checked={searchMethod === SEARCH_METHOD.WORD}
-          onChange={handleSearchMethod}
-        />
-        <label className="form-check-label" htmlFor="inlineRadio2">
-          {t("search_word")}
-        </label>
+      <span className="browser-search-options-method-text fw-bold">
+        {t("search_method")}
+      </span>
+      <div className="d-flex">
+        <div
+          className={`form-check ${
+            i18n.resolvedLanguage === "ar" && "form-check-reverse"
+          }`}
+        >
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            id="inlineRadio1"
+            value={SEARCH_METHOD.ROOT}
+            checked={searchMethod === SEARCH_METHOD.ROOT}
+            onChange={handleSearchMethod}
+          />
+          <label className="form-check-label" htmlFor="inlineRadio1">
+            {t("search_root")}
+          </label>
+        </div>
+        <div
+          className={`form-check  ${
+            i18n.resolvedLanguage === "ar" && "form-check-reverse"
+          }`}
+        >
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            id="inlineRadio2"
+            value={SEARCH_METHOD.WORD}
+            checked={searchMethod === SEARCH_METHOD.WORD}
+            onChange={handleSearchMethod}
+          />
+          <label className="form-check-label" htmlFor="inlineRadio2">
+            {t("search_word")}
+          </label>
+        </div>
       </div>
     </div>
   );
@@ -214,48 +237,6 @@ const FormWordSearch = ({
         </div>
       </div>
     </form>
-  );
-};
-
-interface CheckBoxProps {
-  checkboxState: boolean;
-  setCheckBoxState: (status: boolean) => void;
-  labelText: string;
-  isDisabled?: boolean;
-  inputID?: string;
-}
-
-const CheckboxComponent = ({
-  checkboxState,
-  setCheckBoxState,
-  labelText,
-  isDisabled = false,
-  inputID,
-}: CheckBoxProps) => {
-  const { i18n } = useTranslation();
-
-  const handleChangeCheckboxState = () => {
-    setCheckBoxState(!checkboxState);
-  };
-  return (
-    <div
-      className={`form-check  ${
-        i18n.resolvedLanguage === "ar" && "form-check-reverse"
-      }`}
-    >
-      <input
-        className="form-check-input"
-        type="checkbox"
-        checked={checkboxState}
-        onChange={handleChangeCheckboxState}
-        value=""
-        id={inputID}
-        disabled={isDisabled}
-      />
-      <label className="form-check-label" htmlFor={inputID}>
-        {labelText}
-      </label>
-    </div>
   );
 };
 

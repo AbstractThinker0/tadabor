@@ -11,6 +11,7 @@ export interface qbStateProps {
   searchResult: verseMatchResult[];
   searchDiacritics: boolean;
   searchIdentical: boolean;
+  searchStart: boolean;
   searchError: boolean;
   searchMethod: SEARCH_METHOD;
   searchingMethod: SEARCH_METHOD;
@@ -23,6 +24,7 @@ export enum QB_ACTIONS {
   SET_SEARCH_STRING = "dispatchSetSearchString",
   SET_SEARCH_DIACRITICS = "dispatchSetSearchDiacritics",
   SET_SEARCH_IDENTICAL = "dispatchSetSearchIdentical",
+  SET_SEARCH_START = "dispatchSetSearchStart",
   SET_SEARCH_METHOD = "dispatchSetsearchMethod",
   SEARCH_WORD_SUBMIT = "dispatchSetSearchWordSubmit",
   SEARCH_ROOT_SUBMIT = "dispatchSetSearchRootSubmit",
@@ -51,6 +53,9 @@ export const qbActions = {
     QB_ACTIONS.SET_SEARCH_IDENTICAL,
     boolean
   >(QB_ACTIONS.SET_SEARCH_IDENTICAL),
+  setSearchStart: createActionPayload<QB_ACTIONS.SET_SEARCH_START, boolean>(
+    QB_ACTIONS.SET_SEARCH_START
+  ),
   setSearchMethod: createActionPayload<
     QB_ACTIONS.SET_SEARCH_METHOD,
     SEARCH_METHOD

@@ -30,6 +30,13 @@
       height: 2rem;
     }
 
+    .form-check {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding-inline-end: 10px;
+    }
+
     &-display {
       margin: 0.5rem;
       overflow: hidden;

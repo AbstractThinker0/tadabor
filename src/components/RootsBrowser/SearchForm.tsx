@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { rootProps } from "@/types";
 
+import Checkbox from "@/components/Custom/Checkbox";
+
 const arabicAlpha = [
   "ا",
   "ب",
@@ -51,14 +53,14 @@ const SearchForm = ({
   setSearchInclusive,
   stateRoots,
 }: SearchFormProps) => {
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
   };
 
-  const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInclusive(event.target.checked);
+  const handleChangeCheckbox = (status: boolean) => {
+    setSearchInclusive(status);
   };
 
   return (
@@ -80,23 +82,12 @@ const SearchForm = ({
           </div>
           <div className="d-flex gap-1 align-self-start">
             <span className="fw-bold">{t("search_options")}</span>{" "}
-            <div
-              className={`form-check   ${
-                i18n.resolvedLanguage === "ar" && "form-check-reverse"
-              }`}
-            >
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={searchInclusive}
-                onChange={handleChangeCheckbox}
-                value=""
-                id="CheckInc"
-              />
-              <label className="form-check-label" htmlFor="CheckInc">
-                {t("search_inclusive")}
-              </label>
-            </div>
+            <Checkbox
+              checkboxState={searchInclusive}
+              handleChangeCheckbox={handleChangeCheckbox}
+              labelText={t("search_inclusive")}
+              inputID="CheckInc"
+            />
           </div>
         </div>
       </div>

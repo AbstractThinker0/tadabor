@@ -19,6 +19,7 @@ export function qbSearchWord(
     selectedChapters,
     searchDiacritics,
     searchIdentical,
+    searchStart,
   } = state;
 
   // initial search state
@@ -53,7 +54,8 @@ export function qbSearchWord(
         verse,
         normalizedToken,
         searchIdentical,
-        searchDiacritics
+        searchDiacritics,
+        searchStart
       );
 
       if (result) {

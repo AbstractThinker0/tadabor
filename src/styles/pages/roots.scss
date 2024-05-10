@@ -25,6 +25,13 @@
     height: 100%;
     flex-direction: column;
 
+    .form-check {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding-inline-end: 10px;
+    }
+
     &-list {
       max-height: 100%;
       height: 100%;

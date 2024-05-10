@@ -19,7 +19,10 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
       return { ...state, searchDiacritics: action.payload };
     }
     case QB_ACTIONS.SET_SEARCH_IDENTICAL: {
-      return { ...state, searchIdentical: action.payload };
+      return { ...state, searchIdentical: action.payload, searchStart: false };
+    }
+    case QB_ACTIONS.SET_SEARCH_START: {
+      return { ...state, searchStart: action.payload, searchIdentical: false };
     }
     case QB_ACTIONS.SET_SEARCH_METHOD: {
       return { ...state, searchMethod: action.payload };

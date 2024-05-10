@@ -95,9 +95,22 @@ function identicalRegex(term: string): RegExp {
   return new RegExp(regexPattern);
 }
 
+/**
+ * Creates a regular expression that matches the provided term started by whitespace characters or start.
+ * @param term - The term to match.
+ * @returns A regular expression that matches the term started by whitespace characters or start.
+ */
+function startRegex(term: string): RegExp {
+  const startBoundary = term.charAt(0) === " " ? "" : "(?<=^|\\s)";
+  const regexPattern = `(${startBoundary}${escapeRegex(term)})`;
+
+  return new RegExp(regexPattern);
+}
+
 interface IMatchOptions {
   ignoreDiacritics?: boolean;
   matchIdentical?: boolean;
+  startOnly?: boolean;
 }
 
 export function getMatches(
@@ -109,7 +122,7 @@ export function getMatches(
     return false;
   }
 
-  const { ignoreDiacritics = false, matchIdentical = false } = matchOptions; // Destructure options with default values
+  const { ignoreDiacritics = false, matchIdentical = false, startOnly = false } = matchOptions; // Destructure options with default values
 
   const normalizedText = ignoreDiacritics
     ? normalizeAlif(removeDiacritics(text))
@@ -118,7 +131,7 @@ export function getMatches(
   // Check whether we can find any matches
   const isTokenFound = matchIdentical
     ? identicalRegex(searchToken).test(normalizedText)
-    : normalizedText.includes(searchToken);
+    : startOnly ? startRegex(searchToken).test(normalizedText) : normalizedText.includes(searchToken);
 
   if (!isTokenFound) {
     return false;
@@ -127,7 +140,7 @@ export function getMatches(
   // using RegExp with () here because we want to include the searchToken as a separate part in the resulting array.
   const regex = matchIdentical
     ? identicalRegex(searchToken)
-    : new RegExp(`(${escapeRegex(searchToken)})`);
+    : startOnly ? startRegex(searchToken) : new RegExp(`(${escapeRegex(searchToken)})`);
 
   const parts = normalizedText.split(regex).filter((part) => part !== "");
 
@@ -242,11 +255,13 @@ export const searchVerse = (
   verse: verseProps,
   searchToken: string,
   searchIdentical: boolean,
-  searchDiacritics: boolean
+  searchDiacritics: boolean,
+  searchStart = false
 ) => {
   const result = getMatches(verse.versetext, searchToken, {
     ignoreDiacritics: !searchDiacritics,
     matchIdentical: searchIdentical,
+    startOnly: searchStart
   });
 
   if (result) {

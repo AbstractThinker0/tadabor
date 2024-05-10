@@ -21,6 +21,7 @@ function QuranBrowser() {
     searchResult: [],
     searchDiacritics: false,
     searchIdentical: false,
+    searchStart: false,
     searchError: false,
     searchMethod: SEARCH_METHOD.WORD,
     searchingMethod: SEARCH_METHOD.WORD,
@@ -38,6 +39,7 @@ function QuranBrowser() {
         searchString={state.searchString}
         searchDiacritics={state.searchDiacritics}
         searchIdentical={state.searchIdentical}
+        searchStart={state.searchStart}
         searchMethod={state.searchMethod}
         dispatchQbAction={dispatchQbAction}
       />

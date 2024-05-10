@@ -82,19 +82,29 @@
     &-options {
       padding-inline-start: 6px;
 
+      .form-check {
+        gap: 5px;
+        align-items: center;
+        padding-inline-end: 10px;
+      }
+
       &-method {
         display: flex;
         flex-wrap: wrap;
+
+        &-text {
+          padding-inline-end: 5px;
+        }
 
         .form-check {
           display: inline-flex;
         }
       }
 
-      .form-check {
-        display: flex;
-        gap: 5px;
-        align-items: center;
+      &-checks {
+        .form-check {
+          display: flex;
+        }
       }
     }
 
@@ -150,7 +160,6 @@
     padding: 0.25rem;
 
     &-card {
-      //background-color: var(--color-primary);
       //background-color: #f8fafc;
       background-color: #f7fafc;
       min-height: 100%;

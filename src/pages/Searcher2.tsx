@@ -16,6 +16,7 @@ import {
 import NoteText from "@/components/Custom/NoteText";
 import QuranTab from "@/components/Custom/QuranTab";
 import VerseContainer from "@/components/Custom/VerseContainer";
+import Checkbox from "@/components/Custom/Checkbox";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
@@ -125,7 +126,8 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
   const [itemsCount, setItemsCount] = useState(80);
   const [searchIdentical, setSearchIdentical] = useState(false);
   const [searchDiacritics, setSearchDiacritics] = useState(false);
-  const { i18n, t } = useTranslation();
+  const [searchStart, setSearchStart] = useState(false);
+  const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(event.target.value);
@@ -139,16 +141,18 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
     }
   }
 
-  const onChangeSearchIdentical = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchIdentical(event.target.checked);
+  const handleCheckboxDiacritics = (status: boolean) => {
+    setSearchDiacritics(status);
   };
 
-  const onChangeSearchDiacritics = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchDiacritics(event.target.checked);
+  const handleCheckboxIdentical = (status: boolean) => {
+    setSearchIdentical(status);
+    setSearchStart(false);
+  };
+
+  const handleCheckboxStart = (status: boolean) => {
+    setSearchStart(status);
+    setSearchIdentical(false);
   };
 
   useEffect(() => {
@@ -173,7 +177,8 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
             verse,
             normalizedToken,
             searchIdentical,
-            searchDiacritics
+            searchDiacritics,
+            searchStart
           );
 
           if (result) {
@@ -186,7 +191,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
 
       setStateVerses(getSearchResult());
     });
-  }, [searchString, searchIdentical, searchDiacritics]);
+  }, [searchString, searchIdentical, searchDiacritics, searchStart]);
 
   const onClickVerse = (verseKey: string) => {
     handleVerseTab(verseKey);
@@ -210,40 +215,24 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
         </div>
         <div className="d-flex gap-1">
           <span className="fw-bold">{t("search_options")}</span>
-          <div
-            className={`form-check   ${
-              i18n.resolvedLanguage === "ar" && "form-check-reverse"
-            }`}
-          >
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={searchIdentical}
-              onChange={onChangeSearchIdentical}
-              value=""
-              id="CheckIdentical"
-            />
-            <label className="form-check-label" htmlFor="CheckIdentical">
-              {t("search_identical")}
-            </label>
-          </div>
-          <div
-            className={`form-check   ${
-              i18n.resolvedLanguage === "ar" && "form-check-reverse"
-            }`}
-          >
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={searchDiacritics}
-              onChange={onChangeSearchDiacritics}
-              value=""
-              id="CheckDiacritics"
-            />
-            <label className="form-check-label" htmlFor="CheckDiacritics">
-              {t("search_diacritics")}
-            </label>
-          </div>
+          <Checkbox
+            checkboxState={searchDiacritics}
+            handleChangeCheckbox={handleCheckboxDiacritics}
+            labelText={t("search_diacritics")}
+            inputID="CheckDiacritics"
+          />
+          <Checkbox
+            checkboxState={searchIdentical}
+            handleChangeCheckbox={handleCheckboxIdentical}
+            labelText={t("search_identical")}
+            inputID="CheckIdentical"
+          />
+          <Checkbox
+            checkboxState={searchStart}
+            handleChangeCheckbox={handleCheckboxStart}
+            labelText={t("search_start")}
+            inputID="CheckStart"
+          />
         </div>
       </div>
       <div className="searcher2-searchpanel-display">
