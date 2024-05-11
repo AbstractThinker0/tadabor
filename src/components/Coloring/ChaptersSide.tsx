@@ -68,6 +68,14 @@ function ChaptersSide({
     dispatchClAction(clActions.setColoredVerses(newColoredVerses));
   }
 
+  const getColoredVerses = (colorID: string | undefined) => {
+    if (!colorID) return 0;
+
+    return Object.keys(coloredVerses).filter((verseKey) => {
+      return coloredVerses[verseKey]?.colorID === colorID;
+    }).length;
+  };
+
   return (
     <div className="side">
       <ChaptersList
@@ -100,7 +108,8 @@ function ChaptersSide({
                   className="flex-grow-1 side-colors-list-item-text"
                   onClick={() => onClickSelectColor(colorsList[colorID])}
                 >
-                  {colorsList[colorID].colorDisplay}
+                  {colorsList[colorID].colorDisplay} (
+                  {getColoredVerses(colorID)})
                 </div>
                 <div
                   data-bs-toggle="modal"
@@ -116,11 +125,7 @@ function ChaptersSide({
         <DeleteColorModal
           currentColor={currentColor}
           deleteColor={deleteColor}
-          versesCount={
-            Object.keys(coloredVerses).filter((verseKey) => {
-              return coloredVerses[verseKey]?.colorID === currentColor?.colorID;
-            }).length
-          }
+          versesCount={getColoredVerses(currentColor?.colorID)}
         />
         <div className="text-center d-flex gap-2" dir="ltr">
           <button
