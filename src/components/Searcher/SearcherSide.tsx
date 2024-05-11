@@ -117,7 +117,7 @@ const RootItem = ({ root, isSelected }: RootItemProps) => {
       className={"searcher-side-roots-item ".concat(itemClass)}
       onClick={() => onClickRoot(root)}
     >
-      {root.name}
+      {root.name} ({root.count})
     </div>
   );
 };
