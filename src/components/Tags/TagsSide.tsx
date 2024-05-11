@@ -77,6 +77,7 @@ function TagsSide({
         isTagSelected={isTagSelected}
         onClickSelectTag={onClickSelectTag}
         onClickDeleteTag={onClickDeleteTag}
+        getTaggedVerses={getTaggedVerses}
       />
       <AddTagModal addTag={addTag} />
       <DeleteTagModal
@@ -93,6 +94,7 @@ interface SideListProps {
   isTagSelected: (tagID: string) => boolean;
   onClickSelectTag(tag: tagProps): void;
   onClickDeleteTag(tag: tagProps): void;
+  getTaggedVerses: (tagID: string) => number;
 }
 
 const SideList = ({
@@ -100,6 +102,7 @@ const SideList = ({
   isTagSelected,
   onClickSelectTag,
   onClickDeleteTag,
+  getTaggedVerses,
 }: SideListProps) => {
   return (
     <div className="tags-side-list" dir="ltr">
@@ -117,7 +120,7 @@ const SideList = ({
                 className="tags-side-list-items-item-text"
                 onClick={() => onClickSelectTag(tags[tagID])}
               >
-                {tags[tagID].tagDisplay}
+                {tags[tagID].tagDisplay} ({getTaggedVerses(tagID)})
               </div>
               <div
                 data-bs-toggle="modal"
