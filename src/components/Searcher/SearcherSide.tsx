@@ -1,5 +1,5 @@
 import { useEffect, useState, useTransition } from "react";
-
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
@@ -30,6 +30,20 @@ const SearcherSide = () => {
         />
       </div>
       <RootsList searchString={searchToken} />
+      <CountVerses />
+    </div>
+  );
+};
+
+const CountVerses = () => {
+  const { t } = useTranslation();
+  const { verses_count } = useAppSelector((state) => state.searcherPage);
+
+  if (!verses_count) return <></>;
+
+  return (
+    <div className="fw-bold text-success">
+      {t("search_count") + " " + verses_count}{" "}
     </div>
   );
 };

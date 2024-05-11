@@ -66,6 +66,7 @@ const VersesList = () => {
   const { search_roots } = useAppSelector((state) => state.searcherPage);
   const quranService = useQuran();
 
+  const dispatch = useAppDispatch();
   const [stateVerses, setStateVerses] = useState<verseMatchResult[]>([]);
 
   const [isPending, startTransition] = useTransition();
@@ -130,15 +131,16 @@ const VersesList = () => {
     });
 
     startTransition(() => {
-      setStateVerses(
-        matchVerses.sort((verseA, verseB) => {
-          const infoA = verseA.key.split("-");
-          const infoB = verseB.key.split("-");
-          if (Number(infoA[0]) !== Number(infoB[0]))
-            return Number(infoA[0]) - Number(infoB[0]);
-          else return Number(infoA[1]) - Number(infoB[1]);
-        })
-      );
+      const sortedVerses = matchVerses.sort((verseA, verseB) => {
+        const infoA = verseA.key.split("-");
+        const infoB = verseB.key.split("-");
+        if (Number(infoA[0]) !== Number(infoB[0]))
+          return Number(infoA[0]) - Number(infoB[0]);
+        else return Number(infoA[1]) - Number(infoB[1]);
+      });
+
+      setStateVerses(sortedVerses);
+      dispatch(searcherPageActions.setVersesCount(sortedVerses.length));
     });
   }, [search_roots]);
 

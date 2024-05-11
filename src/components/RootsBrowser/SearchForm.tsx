@@ -64,7 +64,7 @@ const SearchForm = ({
   };
 
   return (
-    <div className="container p-1">
+    <div className="p-1">
       <div className="d-flex align-items-center flex-column">
         <div className="">
           <div className="d-flex gap-1">
@@ -107,7 +107,7 @@ const AlphabetsComponent = ({ setSearchString }: AlphabetsComponentProps) => {
 
   return (
     <div className="row pt-1" dir="rtl">
-      <div className="container text-center">
+      <div className="text-center">
         {arabicAlpha.map((letter, index) => (
           <Fragment key={index}>
             <span

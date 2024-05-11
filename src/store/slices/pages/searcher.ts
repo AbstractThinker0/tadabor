@@ -18,12 +18,14 @@ interface SearcherPageState {
   search_roots: RootsObject;
   verse_tab: string;
   press_dummy: number;
+  verses_count: number;
 }
 
 const initialState: SearcherPageState = {
   search_roots: {},
   verse_tab: "",
   press_dummy: 0,
+  verses_count: 0,
 };
 
 const searcherPageSlice = createSlice({
@@ -42,6 +44,10 @@ const searcherPageSlice = createSlice({
       //
       state.verse_tab = action.payload;
       state.press_dummy = state.press_dummy + 1;
+    },
+    setVersesCount: (state, action: PayloadAction<number>) => {
+      //
+      state.verses_count = action.payload;
     },
   },
 });
