@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+
+import { useAppDispatch, useAppSelector } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
+
+import { dbFuncs } from "@/util/db";
+
 import { coloredProps } from "./consts";
 import { getTextColor } from "./util";
 
@@ -9,26 +15,28 @@ import {
   ModalHeader,
 } from "@/components/Generic/Modal";
 
-interface EditColorsModalProps {
-  colorsList: coloredProps;
-  setColorsList: (colorsList: coloredProps) => void;
-}
+const EditColorsModal = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
+  const dispatch = useAppDispatch();
 
-function EditColorsModal({ colorsList, setColorsList }: EditColorsModalProps) {
-  const [listColors, setListColors] = useState({ ...colorsList });
+  const [listColors, setListColors] = useState({ ...coloringState.colorsList });
   const [currentColor, setCurrentColor] = useState(
-    Object.keys(colorsList).length
-      ? colorsList[Object.keys(colorsList)[0]].colorID
+    Object.keys(coloringState.colorsList).length
+      ? coloringState.colorsList[Object.keys(coloringState.colorsList)[0]]
+          .colorID
       : undefined
   );
 
   useEffect(() => {
-    setListColors({ ...colorsList });
+    setListColors({ ...coloringState.colorsList });
 
-    if (Object.keys(colorsList)[0]) {
-      setCurrentColor(colorsList[Object.keys(colorsList)[0]].colorID);
+    if (Object.keys(coloringState.colorsList)[0]) {
+      setCurrentColor(
+        coloringState.colorsList[Object.keys(coloringState.colorsList)[0]]
+          .colorID
+      );
     }
-  }, [colorsList]);
+  }, [coloringState.colorsList]);
 
   function onChangeColor(event: React.ChangeEvent<HTMLSelectElement>) {
     setCurrentColor(event.target.value);
@@ -46,7 +54,23 @@ function EditColorsModal({ colorsList, setColorsList }: EditColorsModalProps) {
   }
 
   function onClickSave() {
-    setColorsList(listColors);
+    dispatch(coloringPageActions.setColorsList(listColors));
+
+    Object.keys(listColors).forEach((colorID) => {
+      dbFuncs.saveColor({
+        id: listColors[colorID].colorID,
+        name: listColors[colorID].colorDisplay,
+        code: listColors[colorID].colorCode,
+      });
+    });
+
+    const newColoredVerses: coloredProps = {};
+    Object.keys(coloringState.coloredVerses).forEach((verseKey) => {
+      newColoredVerses[verseKey] =
+        listColors[coloringState.coloredVerses[verseKey].colorID];
+    });
+
+    dispatch(coloringPageActions.setColoredVerses(newColoredVerses));
   }
 
   return (
@@ -116,6 +140,6 @@ function EditColorsModal({ colorsList, setColorsList }: EditColorsModalProps) {
       </ModalFooter>
     </ModalContainer>
   );
-}
+};
 
 export default EditColorsModal;

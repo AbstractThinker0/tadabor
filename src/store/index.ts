@@ -5,8 +5,11 @@ import verseNotesReducer from "@/store/slices/global/verseNotes";
 import transNotesReducer from "@/store/slices/global/transNotes";
 import translationsReducer from "@/store/slices/global/translations";
 import rootNotesReducer from "@/store/slices/global/rootNotes";
-import searcherPageReducer from "@/store/slices/pages/searcher";
+
 import settingsReducer from "@/store/slices/global/settings";
+
+import searcherPageReducer from "@/store/slices/pages/searcher";
+import coloringPageReducer from "@/store/slices/pages/coloring";
 
 const store = configureStore({
   reducer: {
@@ -14,8 +17,11 @@ const store = configureStore({
     transNotes: transNotesReducer,
     translations: translationsReducer,
     rootNotes: rootNotesReducer,
-    searcherPage: searcherPageReducer,
+
     settings: settingsReducer,
+
+    searcherPage: searcherPageReducer,
+    coloringPage: coloringPageReducer,
   },
 });
 

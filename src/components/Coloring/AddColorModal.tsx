@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { colorProps } from "./consts";
-
+import { useAppDispatch } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
 import { dbFuncs } from "@/util/db";
 
 import {
@@ -10,11 +11,8 @@ import {
   ModalHeader,
 } from "@/components/Generic/Modal";
 
-interface ColorModalProps {
-  addColor: (color: colorProps) => void;
-}
-
-const AddColorModal = ({ addColor }: ColorModalProps) => {
+const AddColorModal = () => {
+  const dispatch = useAppDispatch();
   const refCloseButton = useRef<HTMLButtonElement>(null);
   const [colorName, setColorName] = useState("");
   const [colorCode, setColorCode] = useState("#000000");
@@ -39,7 +37,7 @@ const AddColorModal = ({ addColor }: ColorModalProps) => {
       colorDisplay: colorName,
     };
 
-    addColor(newColor);
+    dispatch(coloringPageActions.addColor(newColor));
 
     dbFuncs.saveColor({
       id: newColor.colorID,

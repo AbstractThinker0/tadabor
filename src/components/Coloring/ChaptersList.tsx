@@ -1,22 +1,16 @@
-import { useEffect, useRef, Dispatch, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { clActions, clActionsProps } from "./consts";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
+
 import { selectedChaptersType } from "@/types";
 
-interface ChapterListProps {
-  currentChapter: number;
-  selectedChapters: selectedChaptersType;
-  dispatchClAction: Dispatch<clActionsProps>;
-}
-
-const ChaptersList = ({
-  currentChapter,
-  selectedChapters,
-  dispatchClAction,
-}: ChapterListProps) => {
+const ChaptersList = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
+  const dispatch = useAppDispatch();
   const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
   const { t } = useTranslation();
@@ -30,7 +24,7 @@ const ChaptersList = ({
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     chapterID: number
   ) {
-    dispatchClAction(clActions.setChapter(chapterID));
+    dispatch(coloringPageActions.setChapter(chapterID));
     setChapterToken("");
 
     document.documentElement.scrollTop = 0;
@@ -55,10 +49,10 @@ const ChaptersList = ({
       parent.scrollTop =
         child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
     }
-  }, [currentChapter]);
+  }, [coloringState.currentChapter]);
 
   function onChangeSelectChapter(chapterID: number) {
-    dispatchClAction(clActions.toggleSelectChapter(chapterID));
+    dispatch(coloringPageActions.toggleSelectChapter(chapterID));
   }
 
   function onClickSelectAll() {
@@ -68,7 +62,7 @@ const ChaptersList = ({
       selectedChapters[chapter.id] = true;
     });
 
-    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
+    dispatch(coloringPageActions.setSelectedChapters(selectedChapters));
   }
 
   function onClickDeselectAll() {
@@ -78,27 +72,27 @@ const ChaptersList = ({
       selectedChapters[chapter.id] = false;
     });
 
-    selectedChapters[currentChapter] = true;
+    selectedChapters[coloringState.currentChapter] = true;
 
-    dispatchClAction(clActions.setSelectedChapters(selectedChapters));
+    dispatch(coloringPageActions.setSelectedChapters(selectedChapters));
   }
 
-  const currentSelectedChapters = Object.keys(selectedChapters).filter(
-    (chapterID) => selectedChapters[chapterID] === true
-  );
+  const currentSelectedChapters = Object.keys(
+    coloringState.selectedChapters
+  ).filter((chapterID) => coloringState.selectedChapters[chapterID] === true);
 
   const getSelectedCount = currentSelectedChapters.length;
 
   const onlyCurrentSelected =
     getSelectedCount === 1 &&
-    Number(currentSelectedChapters[0]) === currentChapter;
+    Number(currentSelectedChapters[0]) === coloringState.currentChapter;
 
   return (
     <div className="side-chapters">
       <input
         className="side-chapters-search"
         type="text"
-        placeholder={quranService.getChapterName(currentChapter)}
+        placeholder={quranService.getChapterName(coloringState.currentChapter)}
         value={chapterToken}
         onChange={onChangeChapterToken}
       />
@@ -109,7 +103,7 @@ const ChaptersList = ({
             <div
               key={chapter.id}
               className={`side-chapters-list-item ${
-                currentChapter === chapter.id
+                coloringState.currentChapter === chapter.id
                   ? "side-chapters-list-item-selected"
                   : ""
               }`}
@@ -124,8 +118,8 @@ const ChaptersList = ({
               <input
                 type="checkbox"
                 checked={
-                  selectedChapters[chapter.id] !== undefined
-                    ? selectedChapters[chapter.id]
+                  coloringState.selectedChapters[chapter.id] !== undefined
+                    ? coloringState.selectedChapters[chapter.id]
                     : true
                 }
                 onChange={() => onChangeSelectChapter(chapter.id)}

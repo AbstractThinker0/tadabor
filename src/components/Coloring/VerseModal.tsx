@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
+import { useAppDispatch } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
+
 import { verseProps } from "@/types";
 import useQuran from "@/context/useQuran";
 
@@ -19,7 +22,6 @@ interface VerseModalProps {
   colorsList: coloredProps;
   currentVerse: verseProps | null;
   setVerseColor: (verseKey: string, color: colorProps | null) => void;
-  setCurrentVerse: (verse: verseProps | null) => void;
   verseColor: colorProps | null;
 }
 
@@ -28,8 +30,8 @@ const VerseModal = ({
   currentVerse,
   setVerseColor,
   verseColor,
-  setCurrentVerse,
 }: VerseModalProps) => {
+  const dispatch = useAppDispatch();
   const quranService = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
@@ -43,22 +45,24 @@ const VerseModal = ({
     const modelElement = refVerseModal.current;
     if (modelElement === null) return;
 
-    function onModalHide() {
+    function onModalHidden() {
       setChosenColor(null);
-      setCurrentVerse(null);
+      dispatch(coloringPageActions.setCurrentVerse(null));
     }
 
-    modelElement.addEventListener("hide.bs.modal", onModalHide);
+    modelElement.addEventListener("hidden.bs.modal", onModalHidden);
 
     return () => {
       if (modelElement) {
-        modelElement.removeEventListener("hide.bs.modal", onModalHide);
+        modelElement.removeEventListener("hidden.bs.modal", onModalHidden);
       }
     };
-  }, [setCurrentVerse]);
+  }, []);
 
   function onClickSave() {
-    if (currentVerse?.key) setVerseColor(currentVerse.key, chosenColor);
+    if (currentVerse?.key) {
+      setVerseColor(currentVerse.key, chosenColor);
+    }
   }
 
   function onClickColor(
