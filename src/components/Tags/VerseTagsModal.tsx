@@ -42,16 +42,16 @@ function VerseTagsModal({
     const modelElement = refVerseModal.current;
     if (modelElement === null) return;
 
-    function onModalHide() {
+    function onModalHidden() {
       setChosenTags([]);
       setCurrentVerse(null);
     }
 
-    modelElement.addEventListener("hide.bs.modal", onModalHide);
+    modelElement.addEventListener("hidden.bs.modal", onModalHidden);
 
     return () => {
       if (modelElement) {
-        modelElement.removeEventListener("hide.bs.modal", onModalHide);
+        modelElement.removeEventListener("hidden.bs.modal", onModalHidden);
       }
     };
   }, [setCurrentVerse]);
