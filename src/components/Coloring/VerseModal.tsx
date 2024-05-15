@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import { verseProps } from "@/types";
+import { dbFuncs } from "@/util/db";
+
 import useQuran from "@/context/useQuran";
 
-import { colorProps, coloredProps } from "./consts";
+import { colorProps } from "./consts";
 import { getTextColor } from "./util";
 
 import {
@@ -18,28 +19,33 @@ import {
 
 const activeClassName = "verse-modal-colors-item-active";
 
-interface VerseModalProps {
-  colorsList: coloredProps;
-  currentVerse: verseProps | null;
-  setVerseColor: (verseKey: string, color: colorProps | null) => void;
-  verseColor: colorProps | null;
-}
-
-const VerseModal = ({
-  colorsList,
-  currentVerse,
-  setVerseColor,
-  verseColor,
-}: VerseModalProps) => {
+const VerseModal = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
   const dispatch = useAppDispatch();
   const quranService = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
-  const [chosenColor, setChosenColor] = useState(verseColor);
+  const currentVerseKey = coloringState.currentVerse?.key;
+
+  const [chosenColor, setChosenColor] = useState(
+    currentVerseKey && coloringState.coloredVerses[currentVerseKey]
+      ? coloringState.coloredVerses[currentVerseKey]
+      : null
+  );
 
   useEffect(() => {
-    setChosenColor(verseColor);
-  }, [verseColor]);
+    if (!currentVerseKey) {
+      setChosenColor(null);
+      return;
+    }
+
+    if (!coloringState.coloredVerses[currentVerseKey]) {
+      setChosenColor(null);
+      return;
+    }
+
+    setChosenColor(coloringState.coloredVerses[currentVerseKey]);
+  }, [coloringState.currentVerse]);
 
   useEffect(() => {
     const modelElement = refVerseModal.current;
@@ -59,9 +65,27 @@ const VerseModal = ({
     };
   }, []);
 
+  function setVerseColor(verseKey: string, color: colorProps | null) {
+    if (color === null) {
+      dbFuncs.deleteVerseColor(verseKey);
+    } else {
+      dbFuncs.saveVerseColor({
+        verse_key: verseKey,
+        color_id: color.colorID,
+      });
+    }
+
+    dispatch(
+      coloringPageActions.setVerseColor({
+        verseKey: verseKey,
+        color: color,
+      })
+    );
+  }
+
   function onClickSave() {
-    if (currentVerse?.key) {
-      setVerseColor(currentVerse.key, chosenColor);
+    if (coloringState.currentVerse?.key) {
+      setVerseColor(coloringState.currentVerse.key, chosenColor);
     }
   }
 
@@ -88,10 +112,10 @@ const VerseModal = ({
       <ModalBody>
         <div className="verse-modal-title text-center">
           (
-          {currentVerse
-            ? quranService.getChapterName(currentVerse.suraid) +
-              ":" +
-              currentVerse.verseid
+          {coloringState.currentVerse
+            ? `${quranService.getChapterName(
+                coloringState.currentVerse.suraid
+              )}:${coloringState.currentVerse.verseid}`
             : ""}
           )
         </div>
@@ -106,22 +130,26 @@ const VerseModal = ({
               : {}
           }
         >
-          {currentVerse?.versetext}
+          {coloringState.currentVerse?.versetext}
         </div>
         <div className="verse-modal-colors">
-          {Object.keys(colorsList).map((colorID) => (
+          {Object.keys(coloringState.colorsList).map((colorID) => (
             <div
-              onClick={(event) => onClickColor(event, colorsList[colorID])}
+              onClick={(event) =>
+                onClickColor(event, coloringState.colorsList[colorID])
+              }
               key={colorID}
               className={`verse-modal-colors-item text-center fs-4 mb-1 ${
                 chosenColor?.colorID === colorID ? activeClassName : ""
               }`}
               style={{
-                backgroundColor: colorsList[colorID].colorCode,
-                color: getTextColor(colorsList[colorID].colorCode),
+                backgroundColor: coloringState.colorsList[colorID].colorCode,
+                color: getTextColor(
+                  coloringState.colorsList[colorID].colorCode
+                ),
               }}
             >
-              {colorsList[colorID].colorDisplay}
+              {coloringState.colorsList[colorID].colorDisplay}
             </div>
           ))}
         </div>
