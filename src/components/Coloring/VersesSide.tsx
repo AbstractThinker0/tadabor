@@ -209,6 +209,7 @@ function SelectedVerses({
 
 const VersesList = () => {
   const coloringState = useAppSelector((state) => state.coloringPage);
+  const dispatch = useAppDispatch();
 
   const quranService = useQuran();
 
@@ -231,6 +232,8 @@ const VersesList = () => {
           behavior: "smooth",
           block: "center",
         });
+
+        dispatch(coloringPageActions.setScrollKey(""));
       }
     });
   }, [coloringState.scrollKey, isPending]);
