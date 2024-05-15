@@ -10,6 +10,7 @@ import settingsReducer from "@/store/slices/global/settings";
 
 import searcherPageReducer from "@/store/slices/pages/searcher";
 import coloringPageReducer from "@/store/slices/pages/coloring";
+import tagsPageReducer from "@/store/slices/pages/tags";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
 
     searcherPage: searcherPageReducer,
     coloringPage: coloringPageReducer,
+    tagsPage: tagsPageReducer,
   },
 });
 

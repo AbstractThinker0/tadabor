@@ -1,52 +1,39 @@
-import { Dispatch } from "react";
+import { useAppDispatch, useAppSelector } from "@/store";
 
-import { selectedChaptersType } from "@/types";
+import { tagsPageActions } from "@/store/slices/pages/tags";
+
 import { dbFuncs } from "@/util/db";
 
-import {
-  tagProps,
-  tagsActions,
-  tagsActionsProps,
-  tagsProps,
-  versesTagsProps,
-} from "./consts";
+import { tagProps, tagsProps } from "./consts";
 import AddTagModal from "./AddTagModal";
 import DeleteTagModal from "./DeleteTagModal";
 import ChaptersList from "./ChaptersList";
 
-interface TagsSideProps {
-  currentChapter: number;
-  selectedChapters: selectedChaptersType;
-  tags: tagsProps;
-  selectedTags: tagsProps;
-  currentTag: tagProps | null;
-  versesTags: versesTagsProps;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
-}
+function TagsSide() {
+  const dispatch = useAppDispatch();
+  const {
+    currentChapter,
+    selectedChapters,
+    tags,
+    selectedTags,
+    currentTag,
+    versesTags,
+  } = useAppSelector((state) => state.tagsPage);
 
-function TagsSide({
-  currentChapter,
-  selectedChapters,
-  tags,
-  selectedTags,
-  currentTag,
-  versesTags,
-  dispatchTagsAction,
-}: TagsSideProps) {
   function onClickSelectTag(tag: tagProps) {
-    dispatchTagsAction(tagsActions.selectTag(tag));
+    dispatch(tagsPageActions.selectTag(tag));
   }
 
   function onClickDeleteTag(tag: tagProps) {
-    dispatchTagsAction(tagsActions.setCurrentTag(tag));
+    dispatch(tagsPageActions.setCurrentTag(tag));
   }
 
   function addTag(tag: tagProps) {
-    dispatchTagsAction(tagsActions.addTag(tag));
+    dispatch(tagsPageActions.addTag(tag));
   }
 
   function deleteTag(tagID: string) {
-    dispatchTagsAction(tagsActions.deleteTag(tagID));
+    dispatch(tagsPageActions.deleteTag(tagID));
 
     dbFuncs.deleteTag(tagID);
   }
@@ -70,7 +57,6 @@ function TagsSide({
       <ChaptersList
         currentChapter={currentChapter}
         selectedChapters={selectedChapters}
-        dispatchTagsAction={dispatchTagsAction}
       />
       <SideList
         tags={tags}

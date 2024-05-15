@@ -1,22 +1,22 @@
-import { Dispatch, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { useAppDispatch } from "@/store";
+import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { selectedChaptersType } from "@/types";
 import useQuran from "@/context/useQuran";
 
-import { tagsActions, tagsActionsProps } from "./consts";
-
 interface ChaptersListProps {
   currentChapter: number;
   selectedChapters: selectedChaptersType;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
 const ChaptersList = ({
   currentChapter,
   selectedChapters,
-  dispatchTagsAction,
 }: ChaptersListProps) => {
+  const dispatch = useAppDispatch();
   const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
@@ -47,14 +47,14 @@ const ChaptersList = ({
   ) {
     document.documentElement.scrollTop = 0;
 
-    dispatchTagsAction(tagsActions.setChapter(chapterID));
+    dispatch(tagsPageActions.setChapter(chapterID));
     setChapterToken("");
 
     refChapter.current = event.currentTarget;
   }
 
   function onChangeSelectChapter(chapterID: number) {
-    dispatchTagsAction(tagsActions.toggleSelectChapter(chapterID));
+    dispatch(tagsPageActions.toggleSelectChapter(chapterID));
   }
 
   const currentSelectedChapters = Object.keys(selectedChapters).filter(
@@ -74,7 +74,7 @@ const ChaptersList = ({
       selectedChapters[chapter.id] = true;
     });
 
-    dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
+    dispatch(tagsPageActions.setSelectedChapters(selectedChapters));
   }
 
   function onClickDeselectAll() {
@@ -86,7 +86,7 @@ const ChaptersList = ({
 
     selectedChapters[currentChapter] = true;
 
-    dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
+    dispatch(tagsPageActions.setSelectedChapters(selectedChapters));
   }
 
   const onChangeChapterToken = (e: React.ChangeEvent<HTMLInputElement>) => {

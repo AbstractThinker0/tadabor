@@ -1,22 +1,17 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { selectedChaptersType } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import tagsReducer from "@/components/Tags/tagsReducer";
-import {
-  tagsActions,
-  tagsProps,
-  tagsStateProps,
-  versesTagsProps,
-} from "@/components/Tags/consts";
+import { tagsProps, versesTagsProps } from "@/components/Tags/consts";
 import TagsSide from "@/components/Tags/TagsSide";
 import TagsDisplay from "@/components/Tags/TagsDisplay";
 
@@ -24,31 +19,23 @@ function Tags() {
   const quranService = useQuran();
 
   const [loadingState, setLoadingState] = useState(true);
-
+  const tagsState = useAppSelector((state) => state.tagsPage);
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const initialSelectedChapters: selectedChaptersType = {};
-
-  quranService.chapterNames.forEach((chapter) => {
-    initialSelectedChapters[chapter.id] = true;
-  });
-
-  const initialState: tagsStateProps = {
-    currentChapter: 1,
-    selectedChapters: initialSelectedChapters,
-    tags: {},
-    currentTag: null,
-    versesTags: {},
-    currentVerse: null,
-    selectedTags: {},
-    scrollKey: "",
-  };
-
-  const [state, dispatchTagsAction] = useReducer(tagsReducer, initialState);
-
   useEffect(() => {
     let clientLeft = false;
+
+    // Check if we need to set default selected chapters
+    if (!Object.keys(tagsState.selectedChapters).length) {
+      const initialSelectedChapters: selectedChaptersType = {};
+
+      quranService.chapterNames.forEach((chapter) => {
+        initialSelectedChapters[chapter.id] = true;
+      });
+
+      dispatch(tagsPageActions.setSelectedChapters(initialSelectedChapters));
+    }
 
     async function fetchData() {
       const savedTags = await dbFuncs.loadTags();
@@ -61,7 +48,7 @@ function Tags() {
         initialTags[tag.id] = { tagDisplay: tag.name, tagID: tag.id };
       });
 
-      dispatchTagsAction(tagsActions.setTags(initialTags));
+      dispatch(tagsPageActions.setTags(initialTags));
 
       const versesTags = await dbFuncs.loadVersesTags();
 
@@ -73,7 +60,7 @@ function Tags() {
         initialVersesTags[verseTag.verse_key] = verseTag.tags_ids;
       });
 
-      dispatchTagsAction(tagsActions.setVersesTags(initialVersesTags));
+      dispatch(tagsPageActions.setVersesTags(initialVersesTags));
 
       setLoadingState(false);
     }
@@ -90,29 +77,8 @@ function Tags() {
 
   return (
     <div className="tags">
-      <TagsSide
-        currentChapter={state.currentChapter}
-        selectedChapters={state.selectedChapters}
-        tags={state.tags}
-        selectedTags={state.selectedTags}
-        currentTag={state.currentTag}
-        versesTags={state.versesTags}
-        dispatchTagsAction={dispatchTagsAction}
-      />
-      {isVNotesLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <TagsDisplay
-          selectedTags={state.selectedTags}
-          selectedChapters={state.selectedChapters}
-          tags={state.tags}
-          versesTags={state.versesTags}
-          currentChapter={state.currentChapter}
-          currentVerse={state.currentVerse}
-          scrollKey={state.scrollKey}
-          dispatchTagsAction={dispatchTagsAction}
-        />
-      )}
+      <TagsSide />
+      {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}
     </div>
   );
 }
