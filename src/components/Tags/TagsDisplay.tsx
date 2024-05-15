@@ -145,7 +145,6 @@ function SelectedVerses({
   versesTags,
   tags,
 }: SelectedVersesProps) {
-  const dispatch = useAppDispatch();
   const quranService = useQuran();
 
   const selectedVerses = Object.keys(versesTags).filter((verseKey) =>
@@ -162,11 +161,6 @@ function SelectedVerses({
     else return Number(infoA[1]) - Number(infoB[1]);
   });
 
-  function handleClickVerse(verse: verseProps) {
-    dispatch(tagsPageActions.gotoChapter(verse.suraid));
-    dispatch(tagsPageActions.setScrollKey(verse.key));
-  }
-
   return (
     <div className="card-body">
       {sortedVerses.length ? (
@@ -176,10 +170,7 @@ function SelectedVerses({
             return (
               <div key={verseKey} className="tags-display-chapter-verses-item">
                 <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
-                <SelectedVerseComponent
-                  verse={verse}
-                  handleClickVerse={handleClickVerse}
-                />
+                <SelectedVerseComponent verse={verse} />
                 <NoteText verseKey={verse.key} />
               </div>
             );
@@ -196,17 +187,19 @@ function SelectedVerses({
 
 interface SelectedVerseComponentProps {
   verse: verseProps;
-  handleClickVerse: (verse: verseProps) => void;
 }
 
-const SelectedVerseComponent = ({
-  verse,
-  handleClickVerse,
-}: SelectedVerseComponentProps) => {
+const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
+  const dispatch = useAppDispatch();
   const quranService = useQuran();
 
   function onClickVerse(verse: verseProps) {
-    handleClickVerse(verse);
+    dispatch(tagsPageActions.gotoChapter(verse.suraid));
+    dispatch(tagsPageActions.setScrollKey(verse.key));
+  }
+
+  function onClickTagVerse(verse: verseProps) {
+    dispatch(tagsPageActions.setCurrentVerse(verse));
   }
 
   return (
@@ -221,6 +214,14 @@ const SelectedVerseComponent = ({
         </span>
       </VerseContainer>
       <ExpandButton identifier={verse.key} />
+      <button
+        className="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#verseTagsModal"
+        onClick={() => onClickTagVerse(verse)}
+      >
+        🏷️
+      </button>
     </>
   );
 };
