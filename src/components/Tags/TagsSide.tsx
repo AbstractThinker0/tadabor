@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store";
 
 import { tagsPageActions } from "@/store/slices/pages/tags";
@@ -65,6 +66,7 @@ function TagsSide() {
         onClickDeleteTag={onClickDeleteTag}
         getTaggedVerses={getTaggedVerses}
       />
+      <VersesCount />
       <AddTagModal addTag={addTag} />
       <DeleteTagModal
         deleteTag={deleteTag}
@@ -127,6 +129,39 @@ const SideList = ({
         Add tag
       </button>
     </div>
+  );
+};
+
+const VersesCount = () => {
+  const { t } = useTranslation();
+  const tagsState = useAppSelector((state) => state.tagsPage);
+
+  const getSelectedVerses = () => {
+    const asArray = Object.entries(tagsState.versesTags);
+
+    const filtered = asArray.filter(([key, tags]) => {
+      const info = key.split("-");
+      return (
+        tagsState.selectedChapters[info[0]] === true &&
+        tags.some((tagID) =>
+          Object.keys(tagsState.selectedTags).includes(tagID)
+        )
+      );
+    });
+
+    return filtered.length;
+  };
+
+  const selectedCount = getSelectedVerses();
+
+  if (!Object.keys(tagsState.selectedTags).length) return <></>;
+
+  return (
+    <>
+      <div className="fw-bold text-success">
+        {`${t("search_count")} ${selectedCount}`}
+      </div>
+    </>
   );
 };
 

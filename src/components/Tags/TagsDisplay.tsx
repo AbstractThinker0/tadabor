@@ -36,14 +36,16 @@ function TagsDisplay() {
     (chapterID) => selectedChapters[chapterID] === true
   );
 
-  const asArray = Object.entries(versesTags);
+  const getSelectedVerses = () => {
+    const asArray = Object.entries(versesTags);
 
-  const filtered = asArray.filter(([key]) => {
-    const info = key.split("-");
-    return selectedChapters[info[0]] === true;
-  });
+    const filtered = asArray.filter(([key]) => {
+      const info = key.split("-");
+      return selectedChapters[info[0]] === true;
+    });
 
-  const selectedVerses = Object.fromEntries(filtered);
+    return Object.fromEntries(filtered);
+  };
 
   function setCurrentVerse(verse: verseProps | null) {
     dispatch(tagsPageActions.setCurrentVerse(verse));
@@ -100,7 +102,7 @@ function TagsDisplay() {
               <SelectedVerses
                 selectedTags={selectedTags}
                 tags={tags}
-                versesTags={selectedVerses}
+                versesTags={getSelectedVerses()}
               />
             ) : (
               <div className="text-center" dir="ltr">
