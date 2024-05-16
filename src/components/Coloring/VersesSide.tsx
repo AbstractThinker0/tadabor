@@ -45,14 +45,16 @@ const SelectedContainter = () => {
     (chapterID) => coloringState.selectedChapters[chapterID] === true
   );
 
-  const asArray = Object.entries(coloringState.coloredVerses);
+  const getSelectedColoredVerses = () => {
+    const asArray = Object.entries(coloringState.coloredVerses);
 
-  const filtered = asArray.filter(([key]) => {
-    const info = key.split("-");
-    return coloringState.selectedChapters[info[0]] === true;
-  });
+    const filtered = asArray.filter(([key]) => {
+      const info = key.split("-");
+      return coloringState.selectedChapters[info[0]] === true;
+    });
 
-  const selectedColoredVerses = Object.fromEntries(filtered);
+    return Object.fromEntries(filtered);
+  };
 
   return (
     <>
@@ -106,7 +108,7 @@ const SelectedContainter = () => {
       {chaptersScope.length ? (
         <SelectedVerses
           selectedColors={coloringState.selectedColors}
-          coloredVerses={selectedColoredVerses}
+          coloredVerses={getSelectedColoredVerses()}
         />
       ) : (
         <div className="text-center" dir="ltr">
