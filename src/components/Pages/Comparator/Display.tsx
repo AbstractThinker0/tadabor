@@ -9,7 +9,7 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import UserTranslation from "./UserTranslation";
+import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
 
 interface DisplayProps {
   currentChapter: string;

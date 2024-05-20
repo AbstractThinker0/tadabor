@@ -13,8 +13,8 @@ import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import Display from "@/components/Comparator/Display";
-import Menu from "@/components/Comparator/Menu";
+import Display from "@/components/Pages/Comparator/Display";
+import Menu from "@/components/Pages/Comparator/Menu";
 
 function Comparator() {
   const quranService = useQuran();
