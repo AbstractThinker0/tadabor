@@ -26,7 +26,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import { clActionsProps, isActions } from "@/components/Inspector/consts";
+import { clActionsProps, isActions } from "@/components/Pages/Inspector/consts";
 
 interface ListVersesProps {
   currentChapter: number;

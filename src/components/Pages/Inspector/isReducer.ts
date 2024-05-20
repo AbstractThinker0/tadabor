@@ -2,7 +2,7 @@ import {
   IS_ACTIONS,
   clActionsProps,
   stateProps,
-} from "@/components/Inspector/consts";
+} from "@/components/Pages/Inspector/consts";
 
 function isReducer(state: stateProps, action: clActionsProps): stateProps {
   switch (action.type) {

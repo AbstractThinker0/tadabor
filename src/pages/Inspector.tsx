@@ -4,10 +4,12 @@ import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
-import Display from "@/components/Inspector/Display";
-import isReducer from "@/components/Inspector/isReducer";
-import { stateProps, isActions } from "@/components/Inspector/consts";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
+import Display from "@/components/Pages/Inspector/Display";
+import isReducer from "@/components/Pages/Inspector/isReducer";
+import { stateProps, isActions } from "@/components/Pages/Inspector/consts";
 
 function Inspector() {
   const dispatch = useAppDispatch();

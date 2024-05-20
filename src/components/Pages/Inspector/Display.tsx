@@ -2,8 +2,8 @@ import { Dispatch, useEffect, useRef } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { clActionsProps } from "./consts";
-import ListVerses from "./ListVerses";
+import { clActionsProps } from "@/components/Pages/Inspector/consts";
+import ListVerses from "@/components/Pages/Inspector/ListVerses";
 
 interface DisplayProps {
   currentChapter: number;
