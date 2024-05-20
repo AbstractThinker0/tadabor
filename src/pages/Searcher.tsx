@@ -10,8 +10,8 @@ import QuranTab from "@/components/Custom/QuranTab";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import SearcherDisplay from "@/components/Searcher/SearcherDisplay";
-import SearcherSide from "@/components/Searcher/SearcherSide";
+import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
+import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
 
 const Searcher = () => {
   const { t } = useTranslation();
