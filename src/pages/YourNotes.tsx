@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 
-import RootNotes from "@/components/YourNotes/RootNotes";
-import VerseNotes from "@/components/YourNotes/VerseNotes";
-import TransNotes from "@/components/YourNotes/TransNotes";
+import RootNotes from "@/components/Pages/YourNotes/RootNotes";
+import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
+import TransNotes from "@/components/Pages/YourNotes/TransNotes";
 
 function YourNotes() {
   const { t } = useTranslation();

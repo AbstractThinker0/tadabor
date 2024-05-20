@@ -16,7 +16,7 @@ import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import RootComponent from "./RootComponent";
+import RootComponent from "@/components/Pages/YourNotes/RootComponent";
 
 const RootNotes = () => {
   const dispatch = useAppDispatch();

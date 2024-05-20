@@ -1,34 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import useQuran from "@/context/useQuran";
 import {
-  isVerseNotesLoading,
+  isTransNotesLoading,
   useAppDispatch,
-  getAllNotesKeys,
   useAppSelector,
+  getAllTransNotesKeys,
 } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { fetchTransNotes } from "@/store/slices/global/transNotes";
+
+import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import VerseComponent from "./VerseComponent";
+import TransComponent from "@/components/Pages/YourNotes/TransComponent";
 
-const VerseNotes = () => {
+const TransNotes = () => {
   const dispatch = useAppDispatch();
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+  const isTNotesLoading = useAppSelector(isTransNotesLoading());
 
   useEffect(() => {
-    dispatch(fetchVerseNotes());
+    dispatch(fetchTransNotes());
   }, []);
 
-  return <>{isVNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+  return <>{isTNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
 };
 
 const NotesList = () => {
-  const notesKeys = useAppSelector(getAllNotesKeys);
+  const notesKeys = useAppSelector(getAllTransNotesKeys);
   const { t } = useTranslation();
 
   return (
@@ -37,7 +38,7 @@ const NotesList = () => {
         <>
           <BackupComponent />
           {notesKeys.map((key) => (
-            <VerseComponent verseKey={key} key={key} />
+            <TransComponent verseKey={key} key={key} />
           ))}
         </>
       ) : (
@@ -59,7 +60,7 @@ const BackupComponent = () => {
 
     setLoadingNotes(true);
 
-    dbFuncs.loadNotes().then((allNotes) => {
+    dbFuncs.loadTranslations().then((allNotes) => {
       if (currentFormat === "1") {
         let backupHTML = ``;
 
@@ -70,13 +71,13 @@ const BackupComponent = () => {
             quranService.convertKeyToSuffix(note.id),
             noteVerse.versetext,
             note.text,
-            note.dir
+            "ltr"
           );
 
           backupHTML = backupHTML.concat(verseData);
         });
 
-        downloadHtmlFile(backupHTML, "verseNotesBackup");
+        downloadHtmlFile(backupHTML, "translationBackup");
       } else {
         const backupData: {
           verse: string;
@@ -94,7 +95,7 @@ const BackupComponent = () => {
           });
         });
 
-        downloadNotesFile(backupData, "verseNotesBackup");
+        downloadNotesFile(backupData, "translationBackup");
       }
 
       setLoadingNotes(false);
@@ -126,4 +127,4 @@ const BackupComponent = () => {
   );
 };
 
-export default VerseNotes;
+export default TransNotes;

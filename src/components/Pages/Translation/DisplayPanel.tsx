@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import TransComponent from "@/components/Translation/TransComponent";
+import TransComponent from "@/components/Pages/Translation/TransComponent";
 
 interface DisplayPanelProps {
   selectChapter: number;

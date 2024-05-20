@@ -7,7 +7,7 @@ import { fetchTransNotes } from "@/store/slices/global/transNotes";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
-import DisplayPanel from "@/components/Translation/DisplayPanel";
+import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
 const Translation = () => {
   const [selectChapter, setSelectChapter] = useState(1);
