@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import { getTextColor } from "./util";
+import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { colorProps } from "./consts";
+import { colorProps } from "@/components/Pages/Coloring/consts";
 
 const ColorsList = () => {
   const coloringState = useAppSelector((state) => state.coloringPage);

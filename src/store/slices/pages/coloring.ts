@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { selectedChaptersType, verseProps } from "@/types";
-import { coloredProps, colorProps } from "@/components/Coloring/consts";
+import { coloredProps, colorProps } from "@/components/Pages/Coloring/consts";
 
 export interface stateProps {
   currentChapter: number;

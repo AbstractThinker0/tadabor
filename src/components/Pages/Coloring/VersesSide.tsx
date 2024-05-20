@@ -11,9 +11,9 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import VerseModal from "./VerseModal";
-import { colorProps, coloredProps } from "./consts";
-import { getTextColor } from "./util";
+import VerseModal from "@/components/Pages/Coloring/VerseModal";
+import { colorProps, coloredProps } from "@/components/Pages/Coloring/consts";
+import { getTextColor } from "@/components/Pages/Coloring/util";
 
 const VersesSide = () => {
   const coloringState = useAppSelector((state) => state.coloringPage);

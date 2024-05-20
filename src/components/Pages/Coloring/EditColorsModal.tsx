@@ -5,8 +5,8 @@ import { coloringPageActions } from "@/store/slices/pages/coloring";
 
 import { dbFuncs } from "@/util/db";
 
-import { coloredProps } from "./consts";
-import { getTextColor } from "./util";
+import { coloredProps } from "@/components/Pages/Coloring/consts";
+import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
   ModalBody,

@@ -11,9 +11,9 @@ import { coloringPageActions } from "@/store/slices/pages/coloring";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { coloredProps } from "@/components/Coloring/consts";
-import VersesSide from "@/components/Coloring/VersesSide";
-import ChaptersSide from "@/components/Coloring/ChaptersSide";
+import { coloredProps } from "@/components/Pages/Coloring/consts";
+import VersesSide from "@/components/Pages/Coloring/VersesSide";
+import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
 
 function Coloring() {
   const quranService = useQuran();

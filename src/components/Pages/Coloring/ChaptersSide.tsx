@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/store";
 
-import ChaptersList from "./ChaptersList";
-import AddColorModal from "./AddColorModal";
-import DeleteColorModal from "./DeleteColorModal";
-import EditColorsModal from "./EditColorsModal";
-import ColorsList from "./ColorsList";
+import ChaptersList from "@/components/Pages/Coloring/ChaptersList";
+import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
+import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
+import EditColorsModal from "@/components/Pages/Coloring/EditColorsModal";
+import ColorsList from "@/components/Pages/Coloring/ColorsList";
 
 const ChaptersSide = () => {
   return (

@@ -7,8 +7,8 @@ import { dbFuncs } from "@/util/db";
 
 import useQuran from "@/context/useQuran";
 
-import { colorProps } from "./consts";
-import { getTextColor } from "./util";
+import { colorProps } from "@/components/Pages/Coloring/consts";
+import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
   ModalBody,
