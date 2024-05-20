@@ -10,8 +10,8 @@ import {
 import { fetchRootNotes } from "@/store/slices/global/rootNotes";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
-import SearchForm from "@/components/RootsBrowser/SearchForm";
-import RootsList from "@/components/RootsBrowser/RootsList";
+import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
+import RootsList from "@/components/Pages/RootsBrowser/RootsList";
 
 import { rootProps } from "@/types";
 
