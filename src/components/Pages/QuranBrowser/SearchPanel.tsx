@@ -2,15 +2,15 @@ import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran from "@/context/useQuran";
 
-import SelectionListChapters from "@/components/QuranBrowser/SelectionListChapters";
-import SelectionListRoots from "@/components/QuranBrowser/SelectionListRoots";
+import SelectionListChapters from "@/components/Pages/QuranBrowser/SelectionListChapters";
+import SelectionListRoots from "@/components/Pages/QuranBrowser/SelectionListRoots";
 
 import { verseMatchResult } from "@/types";
 import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
-} from "@/components/QuranBrowser/consts";
+} from "@/components/Pages/QuranBrowser/consts";
 
 import { SearchButton } from "@/components/Generic/Buttons";
 

@@ -3,7 +3,10 @@ import useQuran from "@/context/useQuran";
 
 import { rootProps } from "@/types";
 
-import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
+import {
+  qbActions,
+  qbActionsProps,
+} from "@/components/Pages/QuranBrowser/consts";
 
 interface SelectionListRootsProps {
   isDisabled: boolean;

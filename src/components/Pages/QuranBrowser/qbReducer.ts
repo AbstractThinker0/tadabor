@@ -2,9 +2,9 @@ import {
   QB_ACTIONS,
   qbStateProps,
   qbActionsProps,
-} from "@/components/QuranBrowser/consts";
-import { qbSearchRoot } from "@/components/QuranBrowser/qbActionSearchRoot";
-import { qbSearchWord } from "@/components/QuranBrowser/qbActionSearchWord";
+} from "@/components/Pages/QuranBrowser/consts";
+import { qbSearchRoot } from "@/components/Pages/QuranBrowser/qbActionSearchRoot";
+import { qbSearchWord } from "@/components/Pages/QuranBrowser/qbActionSearchWord";
 
 function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
   // ...

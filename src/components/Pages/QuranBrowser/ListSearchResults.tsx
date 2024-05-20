@@ -26,7 +26,7 @@ import {
   SEARCH_METHOD,
   qbActions,
   qbActionsProps,
-} from "@/components/QuranBrowser/consts";
+} from "@/components/Pages/QuranBrowser/consts";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];

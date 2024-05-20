@@ -1,4 +1,4 @@
-import { qbStateProps } from "@/components/QuranBrowser/consts";
+import { qbStateProps } from "@/components/Pages/QuranBrowser/consts";
 import { verseMatchResult } from "@/types";
 import quranClass from "@/util/quranService";
 import {

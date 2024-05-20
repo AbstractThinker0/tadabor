@@ -2,10 +2,13 @@ import { useReducer } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import qbReducer from "@/components/QuranBrowser/qbReducer";
-import { qbStateProps, SEARCH_METHOD } from "@/components/QuranBrowser/consts";
-import SearchPanel from "@/components/QuranBrowser/SearchPanel";
-import DisplayPanel from "@/components/QuranBrowser/DisplayPanel";
+import qbReducer from "@/components/Pages/QuranBrowser/qbReducer";
+import {
+  qbStateProps,
+  SEARCH_METHOD,
+} from "@/components/Pages/QuranBrowser/consts";
+import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
+import DisplayPanel from "@/components/Pages/QuranBrowser/DisplayPanel";
 
 function QuranBrowser() {
   const quranService = useQuran();

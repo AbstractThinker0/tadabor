@@ -19,8 +19,11 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { qbActions, qbActionsProps } from "@/components/QuranBrowser/consts";
-import ListSearchResults from "@/components/QuranBrowser/ListSearchResults";
+import {
+  qbActions,
+  qbActionsProps,
+} from "@/components/Pages/QuranBrowser/consts";
+import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 
 interface DisplayPanelProps {
   searchingChapters: string[];
