@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import useQuran from "@/context/useQuran";
 import { verseProps } from "@/types";
 
-import { tagsProps } from "./consts";
+import { tagsProps } from "@/components/Pages/Tags/consts";
 
 import {
   ModalBody,

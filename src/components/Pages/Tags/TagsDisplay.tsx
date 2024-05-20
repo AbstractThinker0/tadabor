@@ -12,8 +12,8 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { tagsProps, versesTagsProps } from "./consts";
-import VerseTagsModal from "./VerseTagsModal";
+import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 
 function TagsDisplay() {
   const quranService = useQuran();

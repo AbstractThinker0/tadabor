@@ -11,9 +11,9 @@ import { dbFuncs } from "@/util/db";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { tagsProps, versesTagsProps } from "@/components/Tags/consts";
-import TagsSide from "@/components/Tags/TagsSide";
-import TagsDisplay from "@/components/Tags/TagsDisplay";
+import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import TagsSide from "@/components/Pages/Tags/TagsSide";
+import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
 function Tags() {
   const quranService = useQuran();

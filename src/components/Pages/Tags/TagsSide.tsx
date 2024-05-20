@@ -5,10 +5,10 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { dbFuncs } from "@/util/db";
 
-import { tagProps, tagsProps } from "./consts";
-import AddTagModal from "./AddTagModal";
-import DeleteTagModal from "./DeleteTagModal";
-import ChaptersList from "./ChaptersList";
+import { tagProps, tagsProps } from "@/components/Pages/Tags/consts";
+import AddTagModal from "@/components/Pages/Tags/AddTagModal";
+import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
+import ChaptersList from "@/components/Pages/Tags/ChaptersList";
 
 function TagsSide() {
   const dispatch = useAppDispatch();

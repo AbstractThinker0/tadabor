@@ -1,4 +1,4 @@
-import { tagProps } from "./consts";
+import { tagProps } from "@/components/Pages/Tags/consts";
 
 import {
   ModalBody,

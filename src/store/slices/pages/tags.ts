@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { selectedChaptersType, verseProps } from "@/types";
-import { tagProps, tagsProps, versesTagsProps } from "@/components/Tags/consts";
+import {
+  tagProps,
+  tagsProps,
+  versesTagsProps,
+} from "@/components/Pages/Tags/consts";
 
 interface tagsStateProps {
   currentChapter: number;
