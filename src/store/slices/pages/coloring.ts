@@ -14,6 +14,16 @@ export interface stateProps {
   scrollKey: string;
 }
 
+const initialSelectedChapters = (() => {
+  const obj: selectedChaptersType = {};
+
+  for (let i = 1; i <= 114; i++) {
+    obj[i.toString()] = true;
+  }
+
+  return obj;
+})();
+
 const initialState: stateProps = {
   currentChapter: 1,
   colorsList: {},
@@ -21,7 +31,7 @@ const initialState: stateProps = {
   coloredVerses: {},
   currentVerse: null,
   currentColor: null,
-  selectedChapters: {},
+  selectedChapters: initialSelectedChapters,
   scrollKey: "",
 };
 

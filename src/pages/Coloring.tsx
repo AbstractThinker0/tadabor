@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { selectedChaptersType } from "@/types";
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
-import useQuran from "@/context/useQuran";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
@@ -16,7 +14,6 @@ import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
 
 function Coloring() {
-  const quranService = useQuran();
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();
@@ -25,19 +22,6 @@ function Coloring() {
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
-
-    // Check if we need to set default selected chapters
-    if (!Object.keys(coloringState.selectedChapters).length) {
-      const initialSelectedChapters: selectedChaptersType = {};
-
-      quranService.chapterNames.forEach((chapter) => {
-        initialSelectedChapters[chapter.id] = true;
-      });
-
-      dispatch(
-        coloringPageActions.setSelectedChapters(initialSelectedChapters)
-      );
-    }
 
     async function fetchSavedColors() {
       // Check if we already fetched colors
