@@ -1,133 +1,120 @@
-import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
+
+import { useAppDispatch, useAppSelector } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+
 import useQuran from "@/context/useQuran";
 
 import SelectionListChapters from "@/components/Pages/QuranBrowser/SelectionListChapters";
 import SelectionListRoots from "@/components/Pages/QuranBrowser/SelectionListRoots";
 
 import { verseMatchResult } from "@/types";
-import {
-  SEARCH_METHOD,
-  qbActions,
-  qbActionsProps,
-} from "@/components/Pages/QuranBrowser/consts";
+import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 import { SearchButton } from "@/components/Generic/Buttons";
 
 import Checkbox from "@/components/Custom/Checkbox";
 
-interface SearchPanelProps {
-  currentChapter: number;
-  searchMethod: string;
-  searchDiacritics: boolean;
-  searchIdentical: boolean;
-  searchStart: boolean;
-  searchString: string;
-  searchResult: verseMatchResult[];
-  dispatchQbAction: Dispatch<qbActionsProps>;
-}
+const SearchPanel = () => {
+  const quranService = useQuran();
+  const { t } = useTranslation();
 
-const SearchPanel = memo(
-  ({
-    currentChapter,
+  const {
+    selectChapter,
     searchMethod,
     searchDiacritics,
     searchIdentical,
     searchStart,
     searchString,
     searchResult,
-    dispatchQbAction,
-  }: SearchPanelProps) => {
-    const quranService = useQuran();
-    const { t } = useTranslation();
+  } = useAppSelector((state) => state.qbPage);
 
-    const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
+  const dispatch = useAppDispatch();
 
-    function setSearchDiacritics(status: boolean) {
-      dispatchQbAction(qbActions.setSearchDiacritics(status));
+  const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
+
+  function setSearchDiacritics(status: boolean) {
+    dispatch(qbPageActions.setSearchDiacritics(status));
+  }
+
+  function setSearchIdentical(status: boolean) {
+    dispatch(qbPageActions.setSearchIdentical(status));
+  }
+
+  function setSearchStart(status: boolean) {
+    dispatch(qbPageActions.setSearchStart(status));
+  }
+
+  function setSearchMethod(method: SEARCH_METHOD) {
+    dispatch(qbPageActions.setSearchMethod(method));
+  }
+
+  function onSearchSubmit() {
+    if (isRootSearch) {
+      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+    } else {
+      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
     }
+  }
 
-    function setSearchIdentical(status: boolean) {
-      dispatchQbAction(qbActions.setSearchIdentical(status));
-    }
+  const handleCurrentChapter = (chapterID: number) => {
+    dispatch(qbPageActions.gotoChapter(chapterID.toString()));
+  };
 
-    function setSearchStart(status: boolean) {
-      dispatchQbAction(qbActions.setSearchStart(status));
-    }
+  const handleSelectedChapters = (selectedChapters: string[]) => {
+    dispatch(qbPageActions.setSelectedChapters(selectedChapters));
+  };
 
-    function setSearchMethod(method: SEARCH_METHOD) {
-      dispatchQbAction(qbActions.setSearchMethod(method));
-    }
-
-    function onSearchSubmit() {
-      if (isRootSearch) {
-        dispatchQbAction(qbActions.submitRootSearch(quranService));
-      } else {
-        dispatchQbAction(qbActions.submitWordSearch(quranService));
-      }
-    }
-
-    const handleCurrentChapter = (chapterID: number) => {
-      dispatchQbAction(qbActions.gotoChapter(chapterID.toString()));
-    };
-
-    const handleSelectedChapters = (selectedChapters: string[]) => {
-      dispatchQbAction(qbActions.setSelectedChapters(selectedChapters));
-    };
-
-    return (
-      <div className="browser-search">
-        <SelectionListChapters
-          handleSelectedChapters={handleSelectedChapters}
-          handleCurrentChapter={handleCurrentChapter}
-          currentChapter={currentChapter}
+  return (
+    <div className="browser-search">
+      <SelectionListChapters
+        handleSelectedChapters={handleSelectedChapters}
+        handleCurrentChapter={handleCurrentChapter}
+        currentChapter={selectChapter}
+      />
+      <div className="browser-search-options">
+        <RadioSearchMethod
+          searchMethod={searchMethod}
+          setSearchMethod={setSearchMethod}
         />
-        <div className="browser-search-options">
-          <RadioSearchMethod
-            searchMethod={searchMethod}
-            setSearchMethod={setSearchMethod}
+        <div className="browser-search-options-checks">
+          <Checkbox
+            checkboxState={searchDiacritics}
+            handleChangeCheckbox={setSearchDiacritics}
+            labelText={t("search_diacritics")}
+            isDisabled={isRootSearch}
+            inputID="CheckboxDiacritics"
           />
-          <div className="browser-search-options-checks">
+          <div className="d-flex">
             <Checkbox
-              checkboxState={searchDiacritics}
-              handleChangeCheckbox={setSearchDiacritics}
-              labelText={t("search_diacritics")}
+              checkboxState={searchIdentical}
+              handleChangeCheckbox={setSearchIdentical}
+              labelText={t("search_identical")}
               isDisabled={isRootSearch}
-              inputID="CheckboxDiacritics"
+              inputID="CheckboxIdentical"
             />
-            <div className="d-flex">
-              <Checkbox
-                checkboxState={searchIdentical}
-                handleChangeCheckbox={setSearchIdentical}
-                labelText={t("search_identical")}
-                isDisabled={isRootSearch}
-                inputID="CheckboxIdentical"
-              />
-              <Checkbox
-                checkboxState={searchStart}
-                handleChangeCheckbox={setSearchStart}
-                labelText={t("search_start")}
-                isDisabled={isRootSearch}
-                inputID="CheckboxStart"
-              />
-            </div>
+            <Checkbox
+              checkboxState={searchStart}
+              handleChangeCheckbox={setSearchStart}
+              labelText={t("search_start")}
+              isDisabled={isRootSearch}
+              inputID="CheckboxStart"
+            />
           </div>
         </div>
-        <FormWordSearch
-          onSearchSubmit={onSearchSubmit}
-          searchString={searchString}
-          dispatchQbAction={dispatchQbAction}
-        />
-        <SelectionListRoots
-          isDisabled={!isRootSearch}
-          searchString={searchString}
-          dispatchQbAction={dispatchQbAction}
-        />
-        <SearchSuccessComponent searchResult={searchResult} />
       </div>
-    );
-  }
-);
+      <FormWordSearch
+        onSearchSubmit={onSearchSubmit}
+        searchString={searchString}
+      />
+      <SelectionListRoots
+        isDisabled={!isRootSearch}
+        searchString={searchString}
+      />
+      <SearchSuccessComponent searchResult={searchResult} />
+    </div>
+  );
+};
 
 SearchPanel.displayName = "SearchPanel";
 
@@ -194,20 +181,19 @@ const RadioSearchMethod = ({
 interface FormWordSearchProps {
   onSearchSubmit: () => void;
   searchString: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const FormWordSearch = ({
   onSearchSubmit,
   searchString,
-  dispatchQbAction,
 }: FormWordSearchProps) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const searchStringHandle = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    dispatchQbAction(qbActions.setSearchString(event.target.value));
+    dispatch(qbPageActions.setSearchString(event.target.value));
   };
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {

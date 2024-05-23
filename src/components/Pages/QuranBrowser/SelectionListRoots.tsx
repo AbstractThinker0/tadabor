@@ -1,28 +1,20 @@
-import { memo, useMemo, useState, Dispatch } from "react";
+import { memo, useMemo, useState } from "react";
 import useQuran from "@/context/useQuran";
 
+import { useAppDispatch } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+
 import { rootProps } from "@/types";
-
-import {
-  qbActions,
-  qbActionsProps,
-} from "@/components/Pages/QuranBrowser/consts";
-
 interface SelectionListRootsProps {
   isDisabled: boolean;
   searchString: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SelectionListRoots = memo(
-  ({ isDisabled, searchString, dispatchQbAction }: SelectionListRootsProps) => {
+  ({ isDisabled, searchString }: SelectionListRootsProps) => {
     return (
       <div className="browser-search-roots">
-        <RootsList
-          isDisabled={isDisabled}
-          searchString={searchString}
-          dispatchQbAction={dispatchQbAction}
-        />
+        <RootsList isDisabled={isDisabled} searchString={searchString} />
       </div>
     );
   },
@@ -42,16 +34,12 @@ SelectionListRoots.displayName = "SelectionListRoots";
 interface RootsListProps {
   isDisabled: boolean;
   searchString: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const RootsList = ({
-  isDisabled,
-  searchString,
-  dispatchQbAction,
-}: RootsListProps) => {
+const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
   const quranService = useQuran();
   const [itemsCount, setItemsCount] = useState(50);
+  const dispatch = useAppDispatch();
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
@@ -72,7 +60,7 @@ const RootsList = ({
   function handleRootSelect(rootName: string) {
     if (isDisabled) return;
 
-    dispatchQbAction(qbActions.setSearchString(rootName));
+    dispatch(qbPageActions.setSearchString(rootName));
   }
 
   return (

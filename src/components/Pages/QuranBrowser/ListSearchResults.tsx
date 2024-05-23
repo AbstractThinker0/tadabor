@@ -1,19 +1,15 @@
-import {
-  Dispatch,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Tooltip } from "bootstrap";
+
+import { useAppDispatch } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
+
+import { Tooltip } from "bootstrap";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -22,11 +18,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import {
-  SEARCH_METHOD,
-  qbActions,
-  qbActionsProps,
-} from "@/components/Pages/QuranBrowser/consts";
+import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -35,7 +27,6 @@ interface ListSearchResultsProps {
   searchMethod: string;
   searchingChapters: string[];
   searchIndexes: searchIndexProps[];
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const ListSearchResults = ({
@@ -45,7 +36,6 @@ const ListSearchResults = ({
   searchMethod,
   searchingChapters,
   searchIndexes,
-  dispatchQbAction,
 }: ListSearchResultsProps) => {
   const quranService = useQuran();
   const { t } = useTranslation();
@@ -122,7 +112,6 @@ const ListSearchResults = ({
               <SearchVerseComponent
                 verse={verse}
                 verseChapter={quranService.getChapterName(verse.suraid)}
-                dispatchQbAction={dispatchQbAction}
               />
             </div>
           ))
@@ -141,44 +130,46 @@ interface SearchTitleProps {
   searchChapters: string[];
 }
 
-const SearchTitle = memo(
-  ({ searchMethod, searchToken, searchChapters }: SearchTitleProps) => {
-    const { t } = useTranslation();
+const SearchTitle = ({
+  searchMethod,
+  searchToken,
+  searchChapters,
+}: SearchTitleProps) => {
+  const { t } = useTranslation();
 
-    const searchType =
-      searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
+  const searchType =
+    searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
 
-    const searchScopeText =
-      searchChapters.length === 114
-        ? t("search_chapters_all")
-        : t("search_chapters");
+  const searchScopeText =
+    searchChapters.length === 114
+      ? t("search_chapters_all")
+      : t("search_chapters");
 
-    const searchText = `${t(
-      "search_result"
-    )} ${searchType} "${searchToken}" ${searchScopeText}`;
+  const searchText = `${t(
+    "search_result"
+  )} ${searchType} "${searchToken}" ${searchScopeText}`;
 
-    const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
-      return (
-        <>
-          {searchChapters.map((chapterName, index) => (
-            <span className="browser-display-card-search-chapter" key={index}>
-              {chapterName}
-            </span>
-          ))}
-        </>
-      );
-    };
-
+  const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
     return (
-      <div className="browser-display-card-search" dir="auto">
-        <h3>{searchText}</h3>
-        {searchChapters.length !== 114 && (
-          <ChaptersList searchChapters={searchChapters} />
-        )}
-      </div>
+      <>
+        {searchChapters.map((chapterName, index) => (
+          <span className="browser-display-card-search-chapter" key={index}>
+            {chapterName}
+          </span>
+        ))}
+      </>
     );
-  }
-);
+  };
+
+  return (
+    <div className="browser-display-card-search" dir="auto">
+      <h3>{searchText}</h3>
+      {searchChapters.length !== 114 && (
+        <ChaptersList searchChapters={searchChapters} />
+      )}
+    </div>
+  );
+};
 
 SearchTitle.displayName = "SearchTitle";
 
@@ -187,62 +178,59 @@ interface DerivationsComponentProps {
   searchIndexes: searchIndexProps[];
 }
 
-const DerivationsComponent = memo(
-  ({ searchIndexes, handleRootClick }: DerivationsComponentProps) => {
-    const refListRoots = useRef<HTMLSpanElement>(null);
-    useEffect(() => {
-      if (!refListRoots.current) return;
+const DerivationsComponent = ({
+  searchIndexes,
+  handleRootClick,
+}: DerivationsComponentProps) => {
+  const refListRoots = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!refListRoots.current) return;
 
-      //init tooltip
-      Array.from(
-        refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).forEach((tooltipNode) => new Tooltip(tooltipNode));
-    }, [searchIndexes]);
+    //init tooltip
+    Array.from(
+      refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
+    ).forEach((tooltipNode) => new Tooltip(tooltipNode));
+  }, [searchIndexes]);
 
-    return (
-      <>
-        <hr />
-        <span ref={refListRoots} className="p-2">
-          {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <span
-              role="button"
-              key={index}
-              onClick={() => handleRootClick(root.key)}
-              data-bs-toggle="tooltip"
-              data-bs-title={root.text}
-            >
-              {`${index ? " -" : " "} ${root.name}`}
-            </span>
-          ))}
-        </span>
-        <hr />
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <hr />
+      <span ref={refListRoots} className="p-2">
+        {searchIndexes.map((root: searchIndexProps, index: number) => (
+          <span
+            role="button"
+            key={index}
+            onClick={() => handleRootClick(root.key)}
+            data-bs-toggle="tooltip"
+            data-bs-title={root.text}
+          >
+            {`${index ? " -" : " "} ${root.name}`}
+          </span>
+        ))}
+      </span>
+      <hr />
+    </>
+  );
+};
 
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface SearchVerseComponentProps {
   verse: verseMatchResult;
   verseChapter: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const SearchVerseComponent = memo(
-  ({ verse, verseChapter, dispatchQbAction }: SearchVerseComponentProps) => {
-    return (
-      <>
-        <VerseContentComponent
-          verse={verse}
-          verseChapter={verseChapter}
-          dispatchQbAction={dispatchQbAction}
-        />
-        <NoteText verseKey={verse.key} />
-      </>
-    );
-  }
-);
+const SearchVerseComponent = ({
+  verse,
+  verseChapter,
+}: SearchVerseComponentProps) => {
+  return (
+    <>
+      <VerseContentComponent verse={verse} verseChapter={verseChapter} />
+      <NoteText verseKey={verse.key} />
+    </>
+  );
+};
 
 SearchVerseComponent.displayName = "SearchVerseComponent";
 
@@ -268,39 +256,40 @@ const SearchErrorsComponent = ({
 interface VerseContentComponentProps {
   verse: verseMatchResult;
   verseChapter: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const VerseContentComponent = memo(
-  ({ verse, verseChapter, dispatchQbAction }: VerseContentComponentProps) => {
-    const verse_key = verse.key;
+const VerseContentComponent = ({
+  verse,
+  verseChapter,
+}: VerseContentComponentProps) => {
+  const dispatch = useAppDispatch();
+  const verse_key = verse.key;
 
-    function gotoChapter(chapter: string) {
-      dispatchQbAction(qbActions.gotoChapter(chapter));
-    }
-
-    const handleVerseClick = (verse_key: string) => {
-      gotoChapter(verse.suraid);
-      dispatchQbAction(qbActions.setScrollKey(verse_key));
-    };
-
-    return (
-      <>
-        <VerseContainer>
-          <VerseHighlightMatches verse={verse} /> (
-          <button
-            className="p-0 border-0 bg-transparent btn-verse"
-            onClick={() => handleVerseClick(verse_key)}
-          >
-            {`${verseChapter}:${verse.verseid}`}
-          </button>
-          )
-        </VerseContainer>
-        <ExpandButton identifier={verse_key} />
-      </>
-    );
+  function gotoChapter(chapter: string) {
+    dispatch(qbPageActions.gotoChapter(chapter));
   }
-);
+
+  const handleVerseClick = (verse_key: string) => {
+    gotoChapter(verse.suraid);
+    dispatch(qbPageActions.setScrollKey(verse_key));
+  };
+
+  return (
+    <>
+      <VerseContainer>
+        <VerseHighlightMatches verse={verse} /> (
+        <button
+          className="p-0 border-0 bg-transparent btn-verse"
+          onClick={() => handleVerseClick(verse_key)}
+        >
+          {`${verseChapter}:${verse.verseid}`}
+        </button>
+        )
+      </VerseContainer>
+      <ExpandButton identifier={verse_key} />
+    </>
+  );
+};
 
 VerseContentComponent.displayName = "VerseContentComponent";
 

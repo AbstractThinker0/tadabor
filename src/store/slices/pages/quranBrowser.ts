@@ -1,0 +1,202 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import quranClass from "@/util/quranService";
+import {
+  getDerivationsInVerse,
+  normalizeAlif,
+  onlySpaces,
+  removeDiacritics,
+  searchVerse,
+} from "@/util/util";
+
+import { verseMatchResult, searchIndexProps } from "@/types";
+
+import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
+
+interface qbStateProps {
+  selectChapter: number;
+  selectedChapters: string[];
+  searchString: string;
+  searchingString: string;
+  searchingChapters: string[];
+  searchResult: verseMatchResult[];
+  searchDiacritics: boolean;
+  searchIdentical: boolean;
+  searchStart: boolean;
+  searchError: boolean;
+  searchMethod: SEARCH_METHOD;
+  searchingMethod: SEARCH_METHOD;
+  searchIndexes: searchIndexProps[];
+  scrollKey: string;
+}
+
+const initialState: qbStateProps = {
+  selectChapter: 1,
+  selectedChapters: Array.from({ length: 114 }, (_, i) => (i + 1).toString()),
+  searchString: "",
+  searchingString: "",
+  searchingChapters: [],
+  searchResult: [],
+  searchDiacritics: false,
+  searchIdentical: false,
+  searchStart: false,
+  searchError: false,
+  searchMethod: SEARCH_METHOD.WORD,
+  searchingMethod: SEARCH_METHOD.WORD,
+  searchIndexes: [],
+  scrollKey: "",
+};
+
+const qbPageSlice = createSlice({
+  name: "qbPage",
+  initialState,
+  reducers: {
+    setSelectedChapters: (state, action: PayloadAction<string[]>) => {
+      state.selectedChapters = action.payload;
+    },
+    setSearchString: (state, action: PayloadAction<string>) => {
+      state.searchString = action.payload;
+    },
+    setSearchDiacritics: (state, action: PayloadAction<boolean>) => {
+      state.searchDiacritics = action.payload;
+    },
+    setSearchIdentical: (state, action: PayloadAction<boolean>) => {
+      state.searchIdentical = action.payload;
+    },
+    setSearchStart: (state, action: PayloadAction<boolean>) => {
+      state.searchStart = action.payload;
+    },
+    setSearchMethod: (state, action: PayloadAction<SEARCH_METHOD>) => {
+      state.searchMethod = action.payload;
+    },
+    submitWordSearch: (
+      state,
+      action: PayloadAction<{ quranInstance: quranClass }>
+    ) => {
+      const quranService = action.payload.quranInstance;
+
+      state.searchResult = [];
+      state.searchIndexes = [];
+      state.searchingString = state.searchString;
+      state.searchingMethod = state.searchMethod;
+      state.searchingChapters = state.selectedChapters.map((chapterID) =>
+        quranService.getChapterName(chapterID)
+      );
+      state.scrollKey = "";
+
+      // Check if we are search with diacrtics or they should be stripped off
+      const normalizedToken = state.searchDiacritics
+        ? state.searchString
+        : normalizeAlif(removeDiacritics(state.searchString));
+
+      // If an empty search token don't initiate a search
+      if (onlySpaces(normalizedToken)) {
+        state.searchError = true;
+        return;
+      }
+
+      const matchVerses: verseMatchResult[] = [];
+
+      state.selectedChapters.forEach((chapter) => {
+        quranService.getVerses(chapter).forEach((verse) => {
+          const result = searchVerse(
+            verse,
+            normalizedToken,
+            state.searchIdentical,
+            state.searchDiacritics,
+            state.searchStart
+          );
+
+          if (result) {
+            matchVerses.push(result);
+          }
+        });
+      });
+
+      if (matchVerses.length === 0) {
+        state.searchError = true;
+      } else {
+        state.searchError = false;
+        state.searchResult = matchVerses;
+      }
+    },
+    submitRootSearch: (
+      state,
+      action: PayloadAction<{ quranInstance: quranClass }>
+    ) => {
+      const quranService = action.payload.quranInstance;
+
+      state.searchResult = [];
+      state.searchIndexes = [];
+      state.searchingString = state.searchString;
+      state.searchingMethod = state.searchMethod;
+      state.searchingChapters = state.selectedChapters.map((chapterID) =>
+        quranService.getChapterName(chapterID)
+      );
+      state.scrollKey = "";
+
+      if (onlySpaces(state.searchString)) {
+        state.searchError = true;
+        return;
+      }
+
+      const rootTarget = quranService.getRootByName(state.searchString);
+
+      if (rootTarget === undefined) {
+        state.searchError = true;
+        return;
+      }
+
+      const occurencesArray = rootTarget.occurences;
+
+      const matchVerses: verseMatchResult[] = [];
+      const derivations: searchIndexProps[] = [];
+
+      if (state.selectedChapters.length) {
+        occurencesArray.forEach((item) => {
+          const info = item.split(":");
+          const currentVerse = quranService.getVerseByRank(info[0]);
+
+          if (state.selectedChapters.includes(currentVerse.suraid)) {
+            const wordIndexes = info[1].split(",");
+
+            const chapterName = quranService.getChapterName(
+              currentVerse.suraid
+            );
+
+            const { verseDerivations, verseResult } = getDerivationsInVerse(
+              wordIndexes,
+              currentVerse,
+              chapterName
+            );
+
+            derivations.push(...verseDerivations);
+            matchVerses.push(verseResult);
+          }
+        });
+      }
+
+      if (matchVerses.length === 0) {
+        state.searchError = true;
+      } else {
+        state.searchResult = matchVerses;
+        state.searchIndexes = derivations;
+      }
+    },
+    gotoChapter: (state, action: PayloadAction<string>) => {
+      state.searchError = false;
+      state.searchResult = [];
+      state.searchIndexes = [];
+      state.selectChapter = Number(action.payload);
+      state.scrollKey = "";
+    },
+    setScrollKey: (state, action: PayloadAction<string>) => {
+      state.scrollKey =
+        state.scrollKey === action.payload ? "" : action.payload;
+    },
+  },
+});
+
+export const qbPageActions = qbPageSlice.actions;
+
+export default qbPageSlice.reducer;

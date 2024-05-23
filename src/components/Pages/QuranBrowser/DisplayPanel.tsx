@@ -1,44 +1,25 @@
-import {
-  Dispatch,
-  useEffect,
-  useRef,
-  memo,
-  useState,
-  useTransition,
-} from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { searchIndexProps, verseProps, verseMatchResult } from "@/types";
+import { verseProps } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import {
-  qbActions,
-  qbActionsProps,
-} from "@/components/Pages/QuranBrowser/consts";
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 
-interface DisplayPanelProps {
-  searchingChapters: string[];
-  searchResult: verseMatchResult[];
-  searchError: boolean;
-  searchingString: string;
-  selectChapter: number;
-  searchingMethod: string;
-  searchIndexes: searchIndexProps[];
-  scrollKey: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
-}
+const DisplayPanel = () => {
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-const DisplayPanel = memo(
-  ({
+  const {
     searchingChapters,
     searchResult,
     searchError,
@@ -47,54 +28,45 @@ const DisplayPanel = memo(
     searchingMethod,
     searchIndexes,
     scrollKey,
-    dispatchQbAction,
-  }: DisplayPanelProps) => {
-    const dispatch = useAppDispatch();
-    const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+  } = useAppSelector((state) => state.qbPage);
 
-    // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
-    const refListVerses = useRef<HTMLDivElement>(null);
+  // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
+  const refListVerses = useRef<HTMLDivElement>(null);
 
-    // Reset scroll whenever we submit a new search or switch from one chapter to another
-    useEffect(() => {
-      if (refListVerses.current) {
-        refListVerses.current.scrollTop = 0;
-      }
-    }, [searchResult]);
+  // Reset scroll whenever we submit a new search or switch from one chapter to another
+  useEffect(() => {
+    if (refListVerses.current) {
+      refListVerses.current.scrollTop = 0;
+    }
+  }, [searchResult]);
 
-    useEffect(() => {
-      dispatch(fetchVerseNotes());
-    }, []);
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
 
-    return (
-      <div className="browser-display" ref={refListVerses}>
-        {isVNotesLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <div className="card browser-display-card" dir="rtl">
-            {searchResult.length || searchError ? (
-              <ListSearchResults
-                versesArray={searchResult}
-                searchToken={searchingString.trim()}
-                searchError={searchError}
-                searchMethod={searchingMethod}
-                searchingChapters={searchingChapters}
-                searchIndexes={searchIndexes}
-                dispatchQbAction={dispatchQbAction}
-              />
-            ) : (
-              <ListVerses
-                selectChapter={selectChapter}
-                scrollKey={scrollKey}
-                dispatchQbAction={dispatchQbAction}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div className="browser-display" ref={refListVerses}>
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="card browser-display-card" dir="rtl">
+          {searchResult.length || searchError ? (
+            <ListSearchResults
+              versesArray={searchResult}
+              searchToken={searchingString.trim()}
+              searchError={searchError}
+              searchMethod={searchingMethod}
+              searchingChapters={searchingChapters}
+              searchIndexes={searchIndexes}
+            />
+          ) : (
+            <ListVerses selectChapter={selectChapter} scrollKey={scrollKey} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 DisplayPanel.displayName = "DisplayPanel";
 
@@ -102,27 +74,22 @@ interface ListTitleProps {
   chapterName: string;
 }
 
-const ListTitle = memo(({ chapterName }: ListTitleProps) => {
+const ListTitle = ({ chapterName }: ListTitleProps) => {
   return (
     <div className="card-header">
       <h3 className="text-primary text-center">سورة {chapterName}</h3>
     </div>
   );
-});
+};
 
 ListTitle.displayName = "ListTitle";
 
 interface ListVersesProps {
   selectChapter: number;
   scrollKey: string;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const ListVerses = ({
-  selectChapter,
-  scrollKey,
-  dispatchQbAction,
-}: ListVersesProps) => {
+const ListVerses = ({ selectChapter, scrollKey }: ListVersesProps) => {
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -171,10 +138,7 @@ const ListVerses = ({
                 scrollKey === verse.key ? "verse-selected" : ""
               }`}
             >
-              <VerseComponent
-                verse={verse}
-                dispatchQbAction={dispatchQbAction}
-              />
+              <VerseComponent verse={verse} />
             </div>
           ))
         )}
@@ -187,43 +151,39 @@ ListVerses.displayName = "ListVerses";
 
 interface VerseComponentProps {
   verse: verseProps;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const VerseComponent = memo(
-  ({ verse, dispatchQbAction }: VerseComponentProps) => {
-    return (
-      <>
-        <VerseTextComponent verse={verse} dispatchQbAction={dispatchQbAction} />
-        <NoteText verseKey={verse.key} />
-      </>
-    );
-  }
-);
+const VerseComponent = ({ verse }: VerseComponentProps) => {
+  return (
+    <>
+      <VerseTextComponent verse={verse} />
+      <NoteText verseKey={verse.key} />
+    </>
+  );
+};
 
 VerseComponent.displayName = "VerseComponent";
 
 interface VerseTextComponentProps {
   verse: verseProps;
-  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
-const VerseTextComponent = memo(
-  ({ verse, dispatchQbAction }: VerseTextComponentProps) => {
-    function onClickVerse() {
-      dispatchQbAction(qbActions.setScrollKey(verse.key));
-    }
-    return (
-      <VerseContainer>
-        {verse.versetext}{" "}
-        <span className="btn-verse" onClick={onClickVerse}>
-          {`(${verse.verseid})`}
-        </span>
-        <ExpandButton identifier={verse.key} />
-      </VerseContainer>
-    );
+const VerseTextComponent = ({ verse }: VerseTextComponentProps) => {
+  const dispatch = useAppDispatch();
+
+  function onClickVerse() {
+    dispatch(qbPageActions.setScrollKey(verse.key));
   }
-);
+  return (
+    <VerseContainer>
+      {verse.versetext}{" "}
+      <span className="btn-verse" onClick={onClickVerse}>
+        {`(${verse.verseid})`}
+      </span>
+      <ExpandButton identifier={verse.key} />
+    </VerseContainer>
+  );
+};
 
 VerseTextComponent.displayName = "VerseTextComponent";
 
