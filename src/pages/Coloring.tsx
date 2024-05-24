@@ -13,6 +13,8 @@ import { coloredProps } from "@/components/Pages/Coloring/consts";
 import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
 
+import "@/styles/pages/coloring.scss";
+
 function Coloring() {
   const [loadingState, setLoadingState] = useState(true);
 

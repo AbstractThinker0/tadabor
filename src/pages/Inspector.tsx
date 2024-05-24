@@ -11,6 +11,8 @@ import Display from "@/components/Pages/Inspector/Display";
 import isReducer from "@/components/Pages/Inspector/isReducer";
 import { stateProps, isActions } from "@/components/Pages/Inspector/consts";
 
+import "@/styles/pages/inspector.scss";
+
 function Inspector() {
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());

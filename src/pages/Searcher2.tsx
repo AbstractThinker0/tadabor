@@ -23,6 +23,8 @@ import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
+import "@/styles/pages/searcher2.scss";
+
 const Searcher2 = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
 

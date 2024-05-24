@@ -12,6 +12,8 @@ import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import TagsSide from "@/components/Pages/Tags/TagsSide";
 import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
+import "@/styles/pages/tags.scss";
+
 function Tags() {
   const [loadingState, setLoadingState] = useState(true);
 

@@ -6,6 +6,8 @@ import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
 import TransNotes from "@/components/Pages/YourNotes/TransNotes";
 
+import "@/styles/pages/yournotes.scss";
+
 function YourNotes() {
   const { t } = useTranslation();
 

@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import "@/styles/pages/about.scss";
+
 const AboutEnglish = () => {
   return (
     <>
