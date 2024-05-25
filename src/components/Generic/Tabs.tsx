@@ -3,6 +3,7 @@ interface TabButtonProps {
   identifier: string;
   extraClass?: string;
   ariaSelected?: boolean;
+  handleClickTab?: () => void;
 }
 
 const TabButton = ({
@@ -10,7 +11,12 @@ const TabButton = ({
   identifier,
   extraClass = "",
   ariaSelected,
+  handleClickTab,
 }: TabButtonProps) => {
+  const onClickTab = () => {
+    if (handleClickTab) handleClickTab();
+  };
+
   return (
     <li className="nav-item" role="presentation">
       <button
@@ -22,6 +28,7 @@ const TabButton = ({
         role="tab"
         aria-controls={`${identifier}-tab-pane`}
         aria-selected={ariaSelected}
+        onClick={onClickTab}
       >
         {text}
       </button>

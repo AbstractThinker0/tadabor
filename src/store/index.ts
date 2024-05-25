@@ -9,6 +9,7 @@ import rootNotesReducer from "@/store/slices/global/rootNotes";
 import settingsReducer from "@/store/slices/global/settings";
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
+import rbPageReducer from "@/store/slices/pages/rootsBrowser";
 import searcherPageReducer from "@/store/slices/pages/searcher";
 import coloringPageReducer from "@/store/slices/pages/coloring";
 import tagsPageReducer from "@/store/slices/pages/tags";
@@ -23,6 +24,7 @@ const store = configureStore({
     settings: settingsReducer,
 
     qbPage: qbPageReducer,
+    rbPage: rbPageReducer,
     searcherPage: searcherPageReducer,
     coloringPage: coloringPageReducer,
     tagsPage: tagsPageReducer,

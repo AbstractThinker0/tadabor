@@ -1,10 +1,12 @@
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Fragment } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { rootProps } from "@/types";
 
 import Checkbox from "@/components/Custom/Checkbox";
+import { useAppDispatch } from "@/store";
+import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
 const arabicAlpha = [
   "ا",
@@ -41,26 +43,23 @@ const arabicAlpha = [
 interface SearchFormProps {
   searchString: string;
   searchInclusive: boolean;
-  setSearchString: Dispatch<SetStateAction<string>>;
-  setSearchInclusive: Dispatch<SetStateAction<boolean>>;
   stateRoots: rootProps[];
 }
 
 const SearchForm = ({
   searchString,
   searchInclusive,
-  setSearchString,
-  setSearchInclusive,
   stateRoots,
 }: SearchFormProps) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(event.target.value);
+    dispatch(rbPageActions.setSearchString(event.target.value));
   };
 
   const handleChangeCheckbox = (status: boolean) => {
-    setSearchInclusive(status);
+    dispatch(rbPageActions.setSearchInclusive(status));
   };
 
   return (
@@ -91,18 +90,16 @@ const SearchForm = ({
           </div>
         </div>
       </div>
-      <AlphabetsComponent setSearchString={setSearchString} />
+      <AlphabetsComponent />
     </div>
   );
 };
 
-interface AlphabetsComponentProps {
-  setSearchString: (value: SetStateAction<string>) => void;
-}
+const AlphabetsComponent = () => {
+  const dispatch = useAppDispatch();
 
-const AlphabetsComponent = ({ setSearchString }: AlphabetsComponentProps) => {
   const onLetterClick = (letter: string) => {
-    setSearchString(letter);
+    dispatch(rbPageActions.setSearchString(letter));
   };
 
   return (
