@@ -59,7 +59,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
 
   return (
     <TabPanel identifier={"verse"}>
-      <div className="searcher-chapter" ref={refListVerses} dir="rtl">
+      <div className="qtab-chapter" ref={refListVerses} dir="rtl">
         <div className="text-center fs-3 text-primary">سورة {chapterName}</div>
         {isPending ? (
           <LoadingSpinner />
@@ -67,9 +67,9 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
           stateVerses.map((verse) => (
             <div
               key={verse.key}
-              className={`searcher-chapter-verse ${
+              className={`qtab-chapter-verse ${
                 highlightedKey === verse.key
-                  ? "searcher-chapter-verse-highlight"
+                  ? "qtab-chapter-verse-highlight"
                   : ""
               }`}
               data-id={verse.key}
@@ -77,7 +77,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
               <VerseContainer>
                 {verse.versetext}{" "}
                 <span
-                  className="searcher-chapter-verse-suffix"
+                  className="qtab-chapter-verse-suffix"
                   onClick={() => onClickVerseSuffix(verse.key)}
                 >
                   ({verse.verseid})
