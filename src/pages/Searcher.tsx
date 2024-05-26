@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 
 import QuranTab from "@/components/Custom/QuranTab";
-
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
@@ -18,24 +17,35 @@ import "@/styles/pages/searcher.scss";
 const Searcher = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const refVerseButton = useRef<HTMLButtonElement>(null);
-  const { verse_tab, press_dummy } = useAppSelector(
+  const { verse_tab, showQuranTab } = useAppSelector(
     (state) => state.searcherPage
   );
 
   useEffect(() => {
+    if (!showQuranTab) return;
+
     if (!verse_tab) return;
 
     if (!refVerseButton.current) return;
 
+    if (refVerseButton.current.classList.contains("show")) return;
+
     refVerseButton.current.click();
-  }, [verse_tab, press_dummy]);
+  }, [verse_tab, showQuranTab]);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
   }, []);
+
+  const handleClickTab = () => {
+    dispatch(searcherPageActions.setShowQuranTab(false));
+  };
+
+  const handleClickQuranTab = () => {
+    dispatch(searcherPageActions.setShowQuranTab(true));
+  };
 
   return (
     <div className="searcher">
@@ -45,6 +55,7 @@ const Searcher = () => {
           identifier="search"
           extraClass="active"
           ariaSelected={true}
+          handleClickTab={handleClickTab}
         />
         {verse_tab && (
           <li className="nav-item" role="presentation">
@@ -57,27 +68,23 @@ const Searcher = () => {
               role="tab"
               aria-controls={`verse-tab-pane`}
               ref={refVerseButton}
+              onClick={handleClickQuranTab}
             >
               {verse_tab}
             </button>
           </li>
         )}
       </ul>
-      {isVNotesLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <TabContent verse_tab={verse_tab} press_dummy={press_dummy} />
-      )}
+      <TabContent verse_tab={verse_tab} />
     </div>
   );
 };
 
 interface TabContentProps {
   verse_tab: string;
-  press_dummy: number;
 }
 
-const TabContent = ({ verse_tab, press_dummy }: TabContentProps) => {
+const TabContent = ({ verse_tab }: TabContentProps) => {
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
@@ -86,11 +93,7 @@ const TabContent = ({ verse_tab, press_dummy }: TabContentProps) => {
           <SearcherDisplay />
         </div>
       </TabPanel>
-      {verse_tab ? (
-        <QuranTab verseKey={verse_tab} dummyProp={press_dummy} />
-      ) : (
-        ""
-      )}
+      {verse_tab ? <QuranTab verseKey={verse_tab} /> : ""}
     </div>
   );
 };

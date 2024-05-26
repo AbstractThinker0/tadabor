@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
+import { isVerseNotesLoading, useAppSelector } from "@/store";
+
 import { verseProps } from "@/types";
 
 import { TabPanel } from "@/components/Generic/Tabs";
@@ -25,6 +27,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
   const [highlightedKey, setHighlightedKey] = useState(verseKey);
   const [isPending, startTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   useEffect(() => {
     startTransition(() => {
@@ -61,7 +64,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
     <TabPanel identifier={"verse"}>
       <div className="qtab-chapter" ref={refListVerses} dir="rtl">
         <div className="text-center fs-3 text-primary">سورة {chapterName}</div>
-        {isPending ? (
+        {isPending || isVNotesLoading ? (
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse) => (

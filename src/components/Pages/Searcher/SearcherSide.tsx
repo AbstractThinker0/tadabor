@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import useQuran from "@/context/useQuran";
@@ -10,10 +10,13 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const onChangeToken = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchToken(event.target.value);
   };
+
+  if (isVNotesLoading) return <LoadingSpinner />;
 
   return (
     <div className="searcher-side d-flex flex-column">
