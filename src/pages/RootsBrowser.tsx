@@ -64,21 +64,12 @@ const RootsBrowser = () => {
           handleClickTab={handleClickTab}
         />
         {verseTab && (
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id={`verse-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#verse-tab-pane`}
-              type="button"
-              role="tab"
-              aria-controls={`verse-tab-pane`}
-              ref={refVerseButton}
-              onClick={handleClickQuranTab}
-            >
-              {verseTab}
-            </button>
-          </li>
+          <TabButton
+            text={verseTab}
+            identifier="verse"
+            refButton={refVerseButton}
+            handleClickTab={handleClickQuranTab}
+          />
         )}
       </ul>
       <TabContent verse_tab={verseTab} handleVerseTab={handleVerseTab} />

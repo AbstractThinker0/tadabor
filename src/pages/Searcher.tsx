@@ -19,21 +19,21 @@ const Searcher = () => {
   const dispatch = useAppDispatch();
 
   const refVerseButton = useRef<HTMLButtonElement>(null);
-  const { verse_tab, showQuranTab } = useAppSelector(
+  const { verseTab, showQuranTab } = useAppSelector(
     (state) => state.searcherPage
   );
 
   useEffect(() => {
     if (!showQuranTab) return;
 
-    if (!verse_tab) return;
+    if (!verseTab) return;
 
     if (!refVerseButton.current) return;
 
     if (refVerseButton.current.classList.contains("show")) return;
 
     refVerseButton.current.click();
-  }, [verse_tab, showQuranTab]);
+  }, [verseTab, showQuranTab]);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
@@ -57,34 +57,25 @@ const Searcher = () => {
           ariaSelected={true}
           handleClickTab={handleClickTab}
         />
-        {verse_tab && (
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id={`verse-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#verse-tab-pane`}
-              type="button"
-              role="tab"
-              aria-controls={`verse-tab-pane`}
-              ref={refVerseButton}
-              onClick={handleClickQuranTab}
-            >
-              {verse_tab}
-            </button>
-          </li>
+        {verseTab && (
+          <TabButton
+            text={verseTab}
+            identifier="verse"
+            refButton={refVerseButton}
+            handleClickTab={handleClickQuranTab}
+          />
         )}
       </ul>
-      <TabContent verse_tab={verse_tab} />
+      <TabContent verseTab={verseTab} />
     </div>
   );
 };
 
 interface TabContentProps {
-  verse_tab: string;
+  verseTab: string;
 }
 
-const TabContent = ({ verse_tab }: TabContentProps) => {
+const TabContent = ({ verseTab }: TabContentProps) => {
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
@@ -93,7 +84,7 @@ const TabContent = ({ verse_tab }: TabContentProps) => {
           <SearcherDisplay />
         </div>
       </TabPanel>
-      {verse_tab ? <QuranTab verseKey={verse_tab} /> : ""}
+      {verseTab ? <QuranTab verseKey={verseTab} /> : ""}
     </div>
   );
 };

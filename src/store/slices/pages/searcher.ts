@@ -16,14 +16,14 @@ interface RootsObject {
 
 interface SearcherPageState {
   search_roots: RootsObject;
-  verse_tab: string;
+  verseTab: string;
   showQuranTab: boolean;
   verses_count: number;
 }
 
 const initialState: SearcherPageState = {
   search_roots: {},
-  verse_tab: "",
+  verseTab: "",
   showQuranTab: false,
   verses_count: 0,
 };
@@ -45,7 +45,7 @@ const searcherPageSlice = createSlice({
     },
     setVerseTab: (state, action: PayloadAction<string>) => {
       //
-      state.verse_tab = action.payload;
+      state.verseTab = action.payload;
       state.showQuranTab = true;
     },
     setVersesCount: (state, action: PayloadAction<number>) => {

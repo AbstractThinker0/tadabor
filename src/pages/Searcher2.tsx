@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
@@ -24,7 +25,6 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import "@/styles/pages/searcher2.scss";
-import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 const Searcher2 = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
@@ -64,6 +64,7 @@ const Searcher2 = () => {
 
   const handleClickQuranTab = () => {
     dispatch(searcher2PageActions.setShowQuranTab(true));
+    console.log("handleClickQuranTab");
   };
 
   return (
@@ -77,21 +78,12 @@ const Searcher2 = () => {
           handleClickTab={handleClickTab}
         />
         {verseTab && (
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id={`verse-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#verse-tab-pane`}
-              type="button"
-              role="tab"
-              aria-controls={`verse-tab-pane`}
-              ref={refVerseButton}
-              onClick={handleClickQuranTab}
-            >
-              {verseTab}
-            </button>
-          </li>
+          <TabButton
+            text={verseTab}
+            identifier="verse"
+            refButton={refVerseButton}
+            handleClickTab={handleClickQuranTab}
+          />
         )}
       </ul>
       <TabContent verseTab={verseTab} handleVerseTab={handleVerseTab} />
@@ -243,7 +235,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
       </div>
       <div className="searcher2-searchpanel-display">
         <div
-          className="searcher2-searchpanel-display-list "
+          className="searcher2-searchpanel-display-list"
           dir="rtl"
           onScroll={handleScroll}
         >

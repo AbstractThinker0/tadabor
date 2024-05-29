@@ -4,6 +4,7 @@ interface TabButtonProps {
   extraClass?: string;
   ariaSelected?: boolean;
   handleClickTab?: () => void;
+  refButton?: React.RefObject<HTMLButtonElement>;
 }
 
 const TabButton = ({
@@ -12,6 +13,7 @@ const TabButton = ({
   extraClass = "",
   ariaSelected,
   handleClickTab,
+  refButton,
 }: TabButtonProps) => {
   const onClickTab = () => {
     if (handleClickTab) handleClickTab();
@@ -29,6 +31,7 @@ const TabButton = ({
         aria-controls={`${identifier}-tab-pane`}
         aria-selected={ariaSelected}
         onClick={onClickTab}
+        ref={refButton}
       >
         {text}
       </button>
