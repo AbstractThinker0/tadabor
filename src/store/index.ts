@@ -11,6 +11,7 @@ import settingsReducer from "@/store/slices/global/settings";
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
 import searcherPageReducer from "@/store/slices/pages/searcher";
+import searcher2PageReducer from "@/store/slices/pages/searcher2";
 import coloringPageReducer from "@/store/slices/pages/coloring";
 import tagsPageReducer from "@/store/slices/pages/tags";
 
@@ -26,6 +27,7 @@ const store = configureStore({
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,
     searcherPage: searcherPageReducer,
+    searcher2Page: searcher2PageReducer,
     coloringPage: coloringPageReducer,
     tagsPage: tagsPageReducer,
   },
