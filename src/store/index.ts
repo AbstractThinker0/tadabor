@@ -15,6 +15,8 @@ import searcher2PageReducer from "@/store/slices/pages/searcher2";
 import coloringPageReducer from "@/store/slices/pages/coloring";
 import tagsPageReducer from "@/store/slices/pages/tags";
 import inspectorPageReducer from "@/store/slices/pages/inspector";
+import translationPageReducer from "@/store/slices/pages/translation";
+import comparatorPageReducer from "@/store/slices/pages/comparator";
 
 const store = configureStore({
   reducer: {
@@ -32,6 +34,8 @@ const store = configureStore({
     coloringPage: coloringPageReducer,
     tagsPage: tagsPageReducer,
     inspectorPage: inspectorPageReducer,
+    translationPage: translationPageReducer,
+    comparatorPage: comparatorPageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

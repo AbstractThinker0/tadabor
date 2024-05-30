@@ -11,6 +11,7 @@ import {
 import { fetchAllTranslations } from "@/store/slices/global/translations";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
+import { comparatorPageActions } from "@/store/slices/pages/comparator";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
@@ -20,8 +21,11 @@ import "@/styles/pages/comparator.scss";
 
 function Comparator() {
   const quranService = useQuran();
-  const [currentChapter, setCurrentChapter] = useState("1");
-  const [currentVerse, setCurrentVerse] = useState("");
+
+  const { currentChapter, currentVerse } = useAppSelector(
+    (state) => state.comparatorPage
+  );
+
   const { loading, data, complete, error } = useAppSelector(
     (state) => state.translations
   );
@@ -70,11 +74,11 @@ function Comparator() {
   }, [loading, complete, dispatch, data]);
 
   const selectVerse = (verseKey: string) => {
-    setCurrentVerse(verseKey);
+    dispatch(comparatorPageActions.setCurrentVerse(verseKey));
   };
 
   const setChapter = (chapterID: string) => {
-    setCurrentChapter(chapterID);
+    dispatch(comparatorPageActions.setCurrentChapter(chapterID));
   };
 
   if (error)

@@ -64,7 +64,6 @@ const Searcher2 = () => {
 
   const handleClickQuranTab = () => {
     dispatch(searcher2PageActions.setShowQuranTab(true));
-    console.log("handleClickQuranTab");
   };
 
   return (

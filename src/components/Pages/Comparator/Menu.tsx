@@ -1,4 +1,5 @@
 import useQuran from "@/context/useQuran";
+import { useAppSelector } from "@/store";
 import { RankedVerseProps } from "@/types";
 
 interface MenuProps {
@@ -13,6 +14,10 @@ const Menu = ({
   handleSelectVerse,
 }: MenuProps) => {
   const quranService = useQuran();
+
+  const { currentChapter, currentVerse } = useAppSelector(
+    (state) => state.comparatorPage
+  );
 
   const onChangeChapter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     handleSetChapter(event.target.value);
@@ -35,7 +40,11 @@ const Menu = ({
   return (
     <div className="menu sticky-top">
       <div className="menu-chapters">
-        <select className="form-select" onChange={onChangeChapter}>
+        <select
+          className="form-select"
+          onChange={onChangeChapter}
+          value={currentChapter}
+        >
           {quranService.chapterNames.map((chapter) => (
             <option key={chapter.id} value={chapter.id}>
               {chapter.id}. {chapter.name}
@@ -44,7 +53,11 @@ const Menu = ({
         </select>
       </div>
       <div className="menu-verses">
-        <select className="form-select" onClick={onClickSelectVerse}>
+        <select
+          className="form-select"
+          onClick={onClickSelectVerse}
+          defaultValue={currentVerse}
+        >
           {chapterVerses.map((verse) => (
             <option key={verse.key} value={verse.key}>
               {verse.verseid}
