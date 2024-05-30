@@ -9,13 +9,18 @@ import {
   searchVerse,
 } from "@/util/util";
 
-import { verseMatchResult, searchIndexProps } from "@/types";
+import {
+  verseMatchResult,
+  searchIndexProps,
+  selectedChaptersType,
+} from "@/types";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
+import { initialSelectedChapters } from "@/util/consts";
 
 interface qbStateProps {
   selectChapter: number;
-  selectedChapters: string[];
+  selectedChapters: selectedChaptersType;
   searchString: string;
   searchingString: string;
   searchingChapters: string[];
@@ -32,7 +37,7 @@ interface qbStateProps {
 
 const initialState: qbStateProps = {
   selectChapter: 1,
-  selectedChapters: Array.from({ length: 114 }, (_, i) => (i + 1).toString()),
+  selectedChapters: initialSelectedChapters,
   searchString: "",
   searchingString: "",
   searchingChapters: [],
@@ -51,8 +56,15 @@ const qbPageSlice = createSlice({
   name: "qbPage",
   initialState,
   reducers: {
-    setSelectedChapters: (state, action: PayloadAction<string[]>) => {
+    setSelectedChapters: (
+      state,
+      action: PayloadAction<selectedChaptersType>
+    ) => {
       state.selectedChapters = action.payload;
+    },
+    toggleSelectChapter: (state, action: PayloadAction<number>) => {
+      state.selectedChapters[action.payload] =
+        !state.selectedChapters[action.payload];
     },
     setSearchString: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload;
@@ -74,12 +86,15 @@ const qbPageSlice = createSlice({
       action: PayloadAction<{ quranInstance: quranClass }>
     ) => {
       const quranService = action.payload.quranInstance;
+      const filteredChapters = Object.keys(state.selectedChapters).filter(
+        (chapterID) => state.selectedChapters[chapterID]
+      );
 
       state.searchResult = [];
       state.searchIndexes = [];
       state.searchingString = state.searchString;
       state.searchingMethod = state.searchMethod;
-      state.searchingChapters = state.selectedChapters.map((chapterID) =>
+      state.searchingChapters = filteredChapters.map((chapterID) =>
         quranService.getChapterName(chapterID)
       );
       state.scrollKey = "";
@@ -97,7 +112,7 @@ const qbPageSlice = createSlice({
 
       const matchVerses: verseMatchResult[] = [];
 
-      state.selectedChapters.forEach((chapter) => {
+      filteredChapters.forEach((chapter) => {
         quranService.getVerses(chapter).forEach((verse) => {
           const result = searchVerse(
             verse,
@@ -125,12 +140,15 @@ const qbPageSlice = createSlice({
       action: PayloadAction<{ quranInstance: quranClass }>
     ) => {
       const quranService = action.payload.quranInstance;
+      const filteredChapters = Object.keys(state.selectedChapters).filter(
+        (chapterID) => state.selectedChapters[chapterID]
+      );
 
       state.searchResult = [];
       state.searchIndexes = [];
       state.searchingString = state.searchString;
       state.searchingMethod = state.searchMethod;
-      state.searchingChapters = state.selectedChapters.map((chapterID) =>
+      state.searchingChapters = filteredChapters.map((chapterID) =>
         quranService.getChapterName(chapterID)
       );
       state.scrollKey = "";
@@ -152,12 +170,12 @@ const qbPageSlice = createSlice({
       const matchVerses: verseMatchResult[] = [];
       const derivations: searchIndexProps[] = [];
 
-      if (state.selectedChapters.length) {
+      if (filteredChapters.length) {
         occurencesArray.forEach((item) => {
           const info = item.split(":");
           const currentVerse = quranService.getVerseByRank(info[0]);
 
-          if (state.selectedChapters.includes(currentVerse.suraid)) {
+          if (filteredChapters.includes(currentVerse.suraid)) {
             const wordIndexes = info[1].split(",");
 
             const chapterName = quranService.getChapterName(

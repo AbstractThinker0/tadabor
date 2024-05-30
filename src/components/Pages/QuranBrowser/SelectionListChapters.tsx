@@ -2,33 +2,29 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
+
+import { useAppDispatch, useAppSelector } from "@/store";
+
 import { selectedChaptersType } from "@/types";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 interface SelectionListChaptersProps {
   currentChapter: number;
-  handleSelectedChapters: (selectedChapters: string[]) => void;
   handleCurrentChapter: (chapterID: number) => void;
 }
 
 const SelectionListChapters = ({
   currentChapter,
-  handleSelectedChapters,
   handleCurrentChapter,
 }: SelectionListChaptersProps) => {
   const quranService = useQuran();
   const { t } = useTranslation();
 
+  const dispatch = useAppDispatch();
+
+  const { selectedChapters } = useAppSelector((state) => state.qbPage);
+
   const [chapterSearch, setChapterSearch] = useState("");
-
-  const [selectionChapters, setSelectionChapters] = useState(() => {
-    const initialSelectionChapters: selectedChaptersType = {};
-
-    quranService.chapterNames.forEach((chapter) => {
-      initialSelectionChapters[chapter.id] = true;
-    });
-
-    return initialSelectionChapters;
-  });
 
   const refChaptersList = useRef<HTMLDivElement>(null);
 
@@ -37,9 +33,9 @@ const SelectionListChapters = ({
 
     if (!parent) return;
 
-    const selectedChapter = parent.querySelector(
+    const selectedChapter = parent.querySelector<HTMLDivElement>(
       `[data-id="${currentChapter}"]`
-    ) as HTMLDivElement;
+    );
 
     if (!selectedChapter) return;
 
@@ -73,11 +69,7 @@ const SelectionListChapters = ({
       newSelectionChapters[chapter.id] = true;
     });
 
-    setSelectionChapters(newSelectionChapters);
-
-    handleSelectedChapters(
-      Array.from(quranService.chapterNames, (chapter) => chapter.id.toString())
-    );
+    dispatch(qbPageActions.setSelectedChapters(newSelectionChapters));
   };
 
   const onClickDeselectAll = () => {
@@ -89,34 +81,22 @@ const SelectionListChapters = ({
 
     newSelectionChapters[currentChapter] = true;
 
-    setSelectionChapters(newSelectionChapters);
-
-    handleSelectedChapters([currentChapter.toString()]);
+    dispatch(qbPageActions.setSelectedChapters(newSelectionChapters));
   };
 
   const onChangeSelectChapter = (chapterID: number) => {
-    const newSelectionChapters: selectedChaptersType = {
-      ...selectionChapters,
-      [chapterID]: !selectionChapters[chapterID],
-    };
-
-    setSelectionChapters(newSelectionChapters);
-
-    handleSelectedChapters(
-      Object.keys(newSelectionChapters).filter(
-        (chapter) => newSelectionChapters[chapter] === true
-      )
-    );
+    dispatch(qbPageActions.toggleSelectChapter(chapterID));
   };
 
-  const selectedChapters = Object.keys(selectionChapters).filter(
-    (chapterID) => selectionChapters[chapterID] === true
+  const currentSelectedChapters = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
   );
 
-  const getSelectedCount = selectedChapters.length;
+  const getSelectedCount = currentSelectedChapters.length;
 
   const onlyCurrentSelected =
-    getSelectedCount === 1 && Number(selectedChapters[0]) === currentChapter;
+    getSelectedCount === 1 &&
+    Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
     <div className="container p-0 browser-search-chapter">
@@ -151,7 +131,7 @@ const SelectionListChapters = ({
               <input
                 className="form-check-input"
                 type="checkbox"
-                checked={selectionChapters[chapter.id]}
+                checked={selectedChapters[chapter.id]}
                 onChange={() => onChangeSelectChapter(chapter.id)}
               />
             </div>

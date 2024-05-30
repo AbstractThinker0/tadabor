@@ -6,6 +6,7 @@ import {
   tagsProps,
   versesTagsProps,
 } from "@/components/Pages/Tags/consts";
+import { initialSelectedChapters } from "@/util/consts";
 
 interface tagsStateProps {
   currentChapter: number;
@@ -17,16 +18,6 @@ interface tagsStateProps {
   selectedTags: tagsProps;
   scrollKey: string;
 }
-
-const initialSelectedChapters = (() => {
-  const obj: selectedChaptersType = {};
-
-  for (let i = 1; i <= 114; i++) {
-    obj[i.toString()] = true;
-  }
-
-  return obj;
-})();
 
 const initialState: tagsStateProps = {
   currentChapter: 1,

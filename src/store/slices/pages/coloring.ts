@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { selectedChaptersType, verseProps } from "@/types";
 import { coloredProps, colorProps } from "@/components/Pages/Coloring/consts";
+import { initialSelectedChapters } from "@/util/consts";
 
 export interface stateProps {
   currentChapter: number;
@@ -13,16 +14,6 @@ export interface stateProps {
   selectedChapters: selectedChaptersType;
   scrollKey: string;
 }
-
-const initialSelectedChapters = (() => {
-  const obj: selectedChaptersType = {};
-
-  for (let i = 1; i <= 114; i++) {
-    obj[i.toString()] = true;
-  }
-
-  return obj;
-})();
 
 const initialState: stateProps = {
   currentChapter: 1,

@@ -61,14 +61,9 @@ const SearchPanel = () => {
     dispatch(qbPageActions.gotoChapter(chapterID.toString()));
   };
 
-  const handleSelectedChapters = (selectedChapters: string[]) => {
-    dispatch(qbPageActions.setSelectedChapters(selectedChapters));
-  };
-
   return (
     <div className="browser-search">
       <SelectionListChapters
-        handleSelectedChapters={handleSelectedChapters}
         handleCurrentChapter={handleCurrentChapter}
         currentChapter={selectChapter}
       />
@@ -238,7 +233,7 @@ const SearchSuccessComponent = ({
     <>
       {searchResult.length > 0 && (
         <div className="fw-bold text-success">
-          {t("search_count") + " " + searchResult.length}{" "}
+          {`${t("search_count")} ${searchResult.length}`}
         </div>
       )}
     </>
