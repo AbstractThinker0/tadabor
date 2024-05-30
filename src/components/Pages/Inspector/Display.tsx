@@ -1,21 +1,15 @@
-import { Dispatch, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { clActionsProps } from "@/components/Pages/Inspector/consts";
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
 
 interface DisplayProps {
   currentChapter: number;
   scrollKey: string;
-  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const Display = ({
-  currentChapter,
-  scrollKey,
-  dispatchIsAction,
-}: DisplayProps) => {
+const Display = ({ currentChapter, scrollKey }: DisplayProps) => {
   const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
@@ -32,11 +26,7 @@ const Display = ({
         <div className="card-header text-primary text-center fs-3">
           سورة {quranService.getChapterName(currentChapter)}
         </div>
-        <ListVerses
-          currentChapter={currentChapter}
-          scrollKey={scrollKey}
-          dispatchIsAction={dispatchIsAction}
-        />
+        <ListVerses currentChapter={currentChapter} scrollKey={scrollKey} />
       </div>
     </div>
   );

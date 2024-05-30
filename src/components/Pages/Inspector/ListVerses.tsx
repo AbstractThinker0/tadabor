@@ -1,5 +1,4 @@
 import {
-  Dispatch,
   Fragment,
   memo,
   useEffect,
@@ -11,6 +10,10 @@ import {
 import { Collapse, Tooltip } from "bootstrap";
 
 import useQuran from "@/context/useQuran";
+
+import { useAppDispatch } from "@/store";
+import { inspectorPageActions } from "@/store/slices/pages/inspector";
+
 import { getRootMatches } from "@/util/util";
 import {
   RankedVerseProps,
@@ -26,19 +29,12 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import { clActionsProps, isActions } from "@/components/Pages/Inspector/consts";
-
 interface ListVersesProps {
   currentChapter: number;
   scrollKey: string;
-  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const ListVerses = ({
-  currentChapter,
-  scrollKey,
-  dispatchIsAction,
-}: ListVersesProps) => {
+const ListVerses = ({ currentChapter, scrollKey }: ListVersesProps) => {
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
@@ -100,7 +96,6 @@ const ListVerses = ({
               verseText={verse.versetext.split(" ")}
               verseID={verse.verseid}
               verseKey={verse.key}
-              dispatchIsAction={dispatchIsAction}
             />
           </div>
         ))
@@ -116,7 +111,6 @@ interface VerseWordsProps {
   verseText: string[];
   verseID: string;
   verseKey: string;
-  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
 const VerseWords = ({
@@ -124,7 +118,6 @@ const VerseWords = ({
   verseRank,
   verseID,
   verseKey,
-  dispatchIsAction,
 }: VerseWordsProps) => {
   const quranService = useQuran();
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
@@ -221,7 +214,6 @@ const VerseWords = ({
                   rootID={root.id}
                   rootOccs={root.occurences}
                   verseRank={verseRank}
-                  dispatchIsAction={dispatchIsAction}
                 />
               </div>
             ))}
@@ -236,14 +228,12 @@ interface RootOccurencesProps {
   rootID: number;
   rootOccs: string[];
   verseRank: number;
-  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
 const RootOccurences = ({
   rootID,
   rootOccs,
   verseRank,
-  dispatchIsAction,
 }: RootOccurencesProps) => {
   const [isShown, setIsShown] = useState(false);
   const [itemsCount, setItemsCount] = useState(20);
@@ -368,10 +358,7 @@ const RootOccurences = ({
                     : ""
                 }`}
               >
-                <RootVerse
-                  rootVerse={rootVerse}
-                  dispatchIsAction={dispatchIsAction}
-                />
+                <RootVerse rootVerse={rootVerse} />
               </div>
             ))}
           </div>
@@ -427,17 +414,17 @@ DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
   rootVerse: verseMatchResult;
-  dispatchIsAction: Dispatch<clActionsProps>;
 }
 
-const RootVerse = ({ rootVerse, dispatchIsAction }: RootVerseProps) => {
+const RootVerse = ({ rootVerse }: RootVerseProps) => {
   const quranService = useQuran();
+  const dispatch = useAppDispatch();
 
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
   function onClickVerseChapter() {
-    dispatchIsAction(isActions.gotoChapter(Number(rootVerse.suraid)));
-    dispatchIsAction(isActions.setScrollKey(rootVerse.key));
+    dispatch(inspectorPageActions.setCurrentChapter(Number(rootVerse.suraid)));
+    dispatch(inspectorPageActions.setScrollKey(rootVerse.key));
   }
 
   return (
