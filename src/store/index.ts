@@ -17,6 +17,7 @@ import tagsPageReducer from "@/store/slices/pages/tags";
 import inspectorPageReducer from "@/store/slices/pages/inspector";
 import translationPageReducer from "@/store/slices/pages/translation";
 import comparatorPageReducer from "@/store/slices/pages/comparator";
+import ynPageReducer from "@/store/slices/pages/yourNotes";
 
 const store = configureStore({
   reducer: {
@@ -36,6 +37,7 @@ const store = configureStore({
     inspectorPage: inspectorPageReducer,
     translationPage: translationPageReducer,
     comparatorPage: comparatorPageReducer,
+    ynPage: ynPageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
