@@ -211,7 +211,6 @@ function SelectedVerses({
 
 const VersesList = () => {
   const coloringState = useAppSelector((state) => state.coloringPage);
-  const dispatch = useAppDispatch();
 
   const quranService = useQuran();
 
@@ -234,8 +233,6 @@ const VersesList = () => {
           behavior: "smooth",
           block: "center",
         });
-
-        dispatch(coloringPageActions.setScrollKey(""));
       }
     });
   }, [coloringState.scrollKey, isPending]);
@@ -300,10 +297,17 @@ const VerseComponent = memo(({ verse, color }: VerseComponentProps) => {
     dispatch(coloringPageActions.setCurrentVerse(verse));
   };
 
+  function onClickVerse() {
+    dispatch(coloringPageActions.setScrollKey(verse.key));
+  }
+
   return (
     <>
       <VerseContainer>
-        {verse.versetext} ({verse.verseid}){" "}
+        {verse.versetext}{" "}
+        <span className="verse-item-text-btn" onClick={onClickVerse}>
+          ({verse.verseid})
+        </span>{" "}
       </VerseContainer>
       <ExpandButton
         identifier={verse.key}

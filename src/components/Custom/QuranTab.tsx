@@ -15,16 +15,17 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface QuranTabProps {
   verseKey: string;
-  dummyProp?: number;
+  scrollKey: string;
+  setScrollKey: (key: string) => void;
 }
 
-const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
+const QuranTab = ({ verseKey, scrollKey, setScrollKey }: QuranTabProps) => {
   const quranService = useQuran();
   const verseInfo = verseKey.split("-");
 
   const chapterName = quranService.getChapterName(verseInfo[0]);
   const refListVerses = useRef<HTMLDivElement>(null);
-  const [highlightedKey, setHighlightedKey] = useState(verseKey);
+
   const [isPending, startTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
@@ -33,13 +34,15 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(verseInfo[0]));
     });
-  }, [verseKey, dummyProp]);
+  }, [verseKey]);
 
   useEffect(() => {
+    if (!scrollKey) return;
+
     if (!refListVerses.current) return;
 
     const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${verseKey}"]`
+      `[data-id="${scrollKey}"]`
     );
 
     if (!verseToHighlight) return;
@@ -48,16 +51,10 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
       behavior: "smooth",
       block: "center",
     });
-
-    setHighlightedKey(verseKey);
-  }, [verseKey, isPending]);
+  }, [scrollKey, isPending]);
 
   const onClickVerseSuffix = (key: string) => {
-    if (highlightedKey === key) {
-      setHighlightedKey("");
-    } else {
-      setHighlightedKey(key);
-    }
+    setScrollKey(key);
   };
 
   return (
@@ -71,9 +68,7 @@ const QuranTab = ({ verseKey, dummyProp }: QuranTabProps) => {
             <div
               key={verse.key}
               className={`qtab-chapter-verse ${
-                highlightedKey === verse.key
-                  ? "qtab-chapter-verse-highlight"
-                  : ""
+                scrollKey === verse.key ? "qtab-chapter-verse-highlight" : ""
               }`}
               data-id={verse.key}
             >

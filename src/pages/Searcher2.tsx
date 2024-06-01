@@ -33,7 +33,7 @@ const Searcher2 = () => {
 
   const dispatch = useAppDispatch();
 
-  const { verseTab, showQuranTab } = useAppSelector(
+  const { verseTab, showQuranTab, scrollKey } = useAppSelector(
     (state) => state.searcher2Page
   );
 
@@ -56,6 +56,7 @@ const Searcher2 = () => {
 
   const handleVerseTab = (verseKey: string) => {
     dispatch(searcher2PageActions.setVerseTab(verseKey));
+    dispatch(searcher2PageActions.setScrollKey(verseKey));
   };
 
   const handleClickTab = () => {
@@ -85,23 +86,46 @@ const Searcher2 = () => {
           />
         )}
       </ul>
-      <TabContent verseTab={verseTab} handleVerseTab={handleVerseTab} />
+      <TabContent
+        verseTab={verseTab}
+        scrollKey={scrollKey}
+        handleVerseTab={handleVerseTab}
+      />
     </div>
   );
 };
 
 interface TabContentProps {
   verseTab: string;
+  scrollKey: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
-const TabContent = ({ verseTab, handleVerseTab }: TabContentProps) => {
+const TabContent = ({
+  verseTab,
+  scrollKey,
+  handleVerseTab,
+}: TabContentProps) => {
+  const dispatch = useAppDispatch();
+
+  const setScrollKey = (key: string) => {
+    dispatch(searcher2PageActions.setScrollKey(key));
+  };
+
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
         <Searcher2Tab handleVerseTab={handleVerseTab} />
       </TabPanel>
-      {verseTab ? <QuranTab verseKey={verseTab} /> : ""}
+      {verseTab ? (
+        <QuranTab
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

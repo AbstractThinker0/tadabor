@@ -19,6 +19,7 @@ interface SearcherPageState {
   verseTab: string;
   showQuranTab: boolean;
   verses_count: number;
+  scrollKey: string;
 }
 
 const initialState: SearcherPageState = {
@@ -26,6 +27,7 @@ const initialState: SearcherPageState = {
   verseTab: "",
   showQuranTab: false,
   verses_count: 0,
+  scrollKey: "",
 };
 
 const searcherPageSlice = createSlice({
@@ -51,6 +53,10 @@ const searcherPageSlice = createSlice({
     setVersesCount: (state, action: PayloadAction<number>) => {
       //
       state.verses_count = action.payload;
+    },
+    setScrollKey: (state, action: PayloadAction<string>) => {
+      state.scrollKey =
+        state.scrollKey === action.payload ? "" : action.payload;
     },
   },
 });

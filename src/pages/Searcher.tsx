@@ -19,7 +19,7 @@ const Searcher = () => {
   const dispatch = useAppDispatch();
 
   const refVerseButton = useRef<HTMLButtonElement>(null);
-  const { verseTab, showQuranTab } = useAppSelector(
+  const { verseTab, showQuranTab, scrollKey } = useAppSelector(
     (state) => state.searcherPage
   );
 
@@ -66,16 +66,23 @@ const Searcher = () => {
           />
         )}
       </ul>
-      <TabContent verseTab={verseTab} />
+      <TabContent verseTab={verseTab} scrollKey={scrollKey} />
     </div>
   );
 };
 
 interface TabContentProps {
   verseTab: string;
+  scrollKey: string;
 }
 
-const TabContent = ({ verseTab }: TabContentProps) => {
+const TabContent = ({ verseTab, scrollKey }: TabContentProps) => {
+  const dispatch = useAppDispatch();
+
+  const setScrollKey = (key: string) => {
+    dispatch(searcherPageActions.setScrollKey(key));
+  };
+
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
@@ -84,7 +91,15 @@ const TabContent = ({ verseTab }: TabContentProps) => {
           <SearcherDisplay />
         </div>
       </TabPanel>
-      {verseTab ? <QuranTab verseKey={verseTab} /> : ""}
+      {verseTab ? (
+        <QuranTab
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

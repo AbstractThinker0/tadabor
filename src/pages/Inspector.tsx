@@ -20,6 +20,7 @@ function Inspector() {
 
   function handleSelectChapter(chapterID: number) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
+    dispatch(inspectorPageActions.setScrollKey(""));
   }
 
   useEffect(() => {

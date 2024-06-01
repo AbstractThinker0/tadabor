@@ -36,6 +36,7 @@ const tagsPageSlice = createSlice({
   reducers: {
     setChapter: (state, action: PayloadAction<number>) => {
       state.currentChapter = action.payload;
+      state.scrollKey = "";
     },
     setSelectedChapters: (
       state,

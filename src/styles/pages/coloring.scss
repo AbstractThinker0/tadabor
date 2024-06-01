@@ -183,6 +183,16 @@
         padding-left: 4px;
         padding-right: 4px;
 
+        &-text {
+          &-btn {
+            cursor: pointer;
+
+            &:hover {
+              color: cornflowerblue;
+            }
+          }
+        }
+
         .verse-btn {
           background: none;
           outline: none;

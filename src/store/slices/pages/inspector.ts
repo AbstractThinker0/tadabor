@@ -18,7 +18,8 @@ const inspectorPageSlice = createSlice({
       state.currentChapter = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
-      state.scrollKey = action.payload;
+      state.scrollKey =
+        state.scrollKey === action.payload ? "" : action.payload;
     },
   },
 });

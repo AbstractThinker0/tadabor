@@ -237,11 +237,9 @@ interface ListVersesProps {
 
 const ListVerses = memo(
   ({ currentChapter, versesTags, tags, scrollKey }: ListVersesProps) => {
-    const dispatch = useAppDispatch();
     const quranService = useQuran();
 
     const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
-    const [highlightedKey, setHighlightedKey] = useState("");
 
     const [isPending, startTransition] = useTransition();
 
@@ -257,8 +255,6 @@ const ListVerses = memo(
           behavior: "smooth",
           block: "center",
         });
-        setHighlightedKey(scrollKey);
-        dispatch(tagsPageActions.setScrollKey(""));
       }
     }, [scrollKey, isPending]);
 
@@ -266,7 +262,6 @@ const ListVerses = memo(
       //
       startTransition(() => {
         setStateVerses(quranService.getVerses(currentChapter));
-        setHighlightedKey("");
       });
     }, [currentChapter]);
 
@@ -284,7 +279,7 @@ const ListVerses = memo(
                 key={verse.key}
                 data-id={verse.key}
                 className={`tags-display-chapter-verses-item ${
-                  highlightedKey === verse.key
+                  scrollKey === verse.key
                     ? "tags-display-chapter-verses-item-highlighted"
                     : ""
                 }`}

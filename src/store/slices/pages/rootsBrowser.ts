@@ -5,6 +5,7 @@ interface rbStateProps {
   verseTab: string;
   searchString: string;
   searchInclusive: boolean;
+  scrollKey: string;
 }
 
 const initialState: rbStateProps = {
@@ -12,6 +13,7 @@ const initialState: rbStateProps = {
   verseTab: "",
   searchString: "",
   searchInclusive: false,
+  scrollKey: "",
 };
 
 const rbPageSlice = createSlice({
@@ -30,6 +32,10 @@ const rbPageSlice = createSlice({
     },
     setSearchInclusive: (state, action: PayloadAction<boolean>) => {
       state.searchInclusive = action.payload;
+    },
+    setScrollKey: (state, action: PayloadAction<string>) => {
+      state.scrollKey =
+        state.scrollKey === action.payload ? "" : action.payload;
     },
   },
 });

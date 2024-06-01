@@ -120,6 +120,8 @@ const VerseWords = ({
   verseKey,
 }: VerseWordsProps) => {
   const quranService = useQuran();
+  const dispatch = useAppDispatch();
+
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const [selectedWord, setSelectedWord] = useState(-1);
   const refCollapsible = useRef<HTMLDivElement>(null);
@@ -134,7 +136,7 @@ const VerseWords = ({
     }
   }, []);
 
-  function onClickWord(index: number) {
+  const onClickWord = (index: number) => {
     const wordRoots = quranService.quranRoots.filter((root) =>
       root.occurences.find((occ) => {
         const rootData = occ.split(":");
@@ -164,7 +166,11 @@ const VerseWords = ({
         refCurrentWord.current = index;
       }
     }
-  }
+  };
+
+  const onClickVerse = () => {
+    dispatch(inspectorPageActions.setScrollKey(verseKey));
+  };
 
   return (
     <>
@@ -183,7 +189,11 @@ const VerseWords = ({
             </span>{" "}
           </Fragment>
         ))}{" "}
-        {`(${verseID})`} <ExpandButton identifier={verseKey} />
+        <span
+          onClick={onClickVerse}
+          className="display-verses-item-text-number"
+        >{`(${verseID})`}</span>{" "}
+        <ExpandButton identifier={verseKey} />
       </VerseContainer>
       <NoteText verseKey={verseKey} />
       <div

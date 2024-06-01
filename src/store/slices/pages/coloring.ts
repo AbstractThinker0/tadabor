@@ -32,6 +32,7 @@ const coloringPageSlice = createSlice({
   reducers: {
     setChapter: (state, action: PayloadAction<number>) => {
       state.currentChapter = action.payload;
+      state.scrollKey = "";
     },
     setColorsList: (state, action: PayloadAction<coloredProps>) => {
       state.colorsList = action.payload;

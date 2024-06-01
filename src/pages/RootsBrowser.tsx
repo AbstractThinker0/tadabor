@@ -27,10 +27,13 @@ const RootsBrowser = () => {
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { showQuranTab, verseTab } = useAppSelector((state) => state.rbPage);
+  const { showQuranTab, verseTab, scrollKey } = useAppSelector(
+    (state) => state.rbPage
+  );
 
   const handleVerseTab = (verseKey: string) => {
     dispatch(rbPageActions.setVerseTab(verseKey));
+    dispatch(rbPageActions.setScrollKey(verseKey));
   };
 
   const handleClickTab = () => {
@@ -72,23 +75,46 @@ const RootsBrowser = () => {
           />
         )}
       </ul>
-      <TabContent verse_tab={verseTab} handleVerseTab={handleVerseTab} />
+      <TabContent
+        verseTab={verseTab}
+        scrollKey={scrollKey}
+        handleVerseTab={handleVerseTab}
+      />
     </div>
   );
 };
 
 interface TabContentProps {
-  verse_tab: string;
+  verseTab: string;
+  scrollKey: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
-const TabContent = ({ verse_tab, handleVerseTab }: TabContentProps) => {
+const TabContent = ({
+  verseTab,
+  handleVerseTab,
+  scrollKey,
+}: TabContentProps) => {
+  const dispatch = useAppDispatch();
+
+  const setScrollKey = (key: string) => {
+    dispatch(rbPageActions.setScrollKey(key));
+  };
+
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
         <RootsPanel handleVerseTab={handleVerseTab} />
       </TabPanel>
-      {verse_tab ? <QuranTab verseKey={verse_tab} /> : ""}
+      {verseTab ? (
+        <QuranTab
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

@@ -168,6 +168,7 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
 
   const onClickVerse = () => {
     dispatch(searcherPageActions.setVerseTab(verseMatch.key));
+    dispatch(searcherPageActions.setScrollKey(verseMatch.key));
   };
 
   return (

@@ -7,6 +7,7 @@ interface Searcher2PageState {
   searchIdentical: boolean;
   searchDiacritics: boolean;
   searchStart: boolean;
+  scrollKey: string;
 }
 
 const initialState: Searcher2PageState = {
@@ -16,6 +17,7 @@ const initialState: Searcher2PageState = {
   searchIdentical: false,
   searchDiacritics: false,
   searchStart: false,
+  scrollKey: "",
 };
 
 const searcher2PageSlice = createSlice({
@@ -42,6 +44,10 @@ const searcher2PageSlice = createSlice({
     },
     setSearchStart: (state, action: PayloadAction<boolean>) => {
       state.searchStart = action.payload;
+    },
+    setScrollKey: (state, action: PayloadAction<string>) => {
+      state.scrollKey =
+        state.scrollKey === action.payload ? "" : action.payload;
     },
   },
 });
