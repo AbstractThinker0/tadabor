@@ -16,6 +16,7 @@ const comparatorPageSlice = createSlice({
   reducers: {
     setCurrentChapter: (state, action: PayloadAction<string>) => {
       state.currentChapter = action.payload;
+      state.currentVerse = "";
     },
     setCurrentVerse: (state, action: PayloadAction<string>) => {
       state.currentVerse = action.payload;

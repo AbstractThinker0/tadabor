@@ -38,6 +38,25 @@ const Display = ({
     });
   }, [chapterVerses]);
 
+  useEffect(() => {
+    if (isPending) return;
+
+    if (!refListVerses.current) return;
+
+    if (!currentVerse) return;
+
+    const verseToHighlight = refListVerses.current.querySelector(
+      `[data-id="${currentVerse}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [isPending])
+
   const quranService = useQuran();
   const refListVerses = useRef<HTMLDivElement>(null);
 
