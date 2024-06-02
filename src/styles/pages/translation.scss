@@ -22,6 +22,20 @@
         }
       }
     }
+
+    &-verse {
+      &-highlight {
+        background-color: antiquewhite;
+      }
+
+      &-number {
+        cursor: pointer;
+
+        &:hover {
+          color: cornflowerblue;
+        }
+      }
+    }
   }
 
   .side {

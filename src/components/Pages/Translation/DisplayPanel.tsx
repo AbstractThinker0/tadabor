@@ -1,6 +1,10 @@
-import { useRef, useState, useTransition, useEffect, Fragment } from "react";
+import { useRef, useState, useTransition, useEffect } from "react";
 
 import useQuran from "@/context/useQuran";
+
+import { useAppDispatch, useAppSelector } from "@/store";
+import { translationPageActions } from "@/store/slices/pages/translation";
+
 import { verseProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -15,7 +19,12 @@ interface DisplayPanelProps {
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const quranService = useQuran();
+
+  const dispatch = useAppDispatch();
+  const { scrollKey } = useAppSelector((state) => state.translationPage);
+
   const refDisplay = useRef<HTMLDivElement>(null);
+  const refListVerses = useRef<HTMLDivElement>(null);
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
@@ -31,6 +40,27 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     refDisplay.current.scrollTop = 0;
   }, [selectChapter]);
 
+  useEffect(() => {
+    if (!scrollKey) return;
+
+    if (!refListVerses.current) return;
+
+    const verseToHighlight = refListVerses.current.querySelector(
+      `[data-id="${scrollKey}"]`
+    );
+
+    if (!verseToHighlight) return;
+
+    verseToHighlight.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [scrollKey, isPending]);
+
+  const onClickVerse = (verseKey: string) => {
+    dispatch(translationPageActions.setScrollKey(verseKey));
+  };
+
   return (
     <div ref={refDisplay} className="translation-display">
       <div className="card translation-display-card">
@@ -39,20 +69,34 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
             {quranService.getChapterName(selectChapter)}
           </h2>
         </div>
-        <div className="card-body p-1">
+        <div className="card-body p-1" ref={refListVerses}>
           {isPending ? (
             <LoadingSpinner />
           ) : (
             stateVerses.map((verse) => {
               return (
-                <Fragment key={verse.key}>
+                <div
+                  key={verse.key}
+                  className={`${
+                    scrollKey === verse.key
+                      ? "translation-display-verse-highlight"
+                      : ""
+                  }`}
+                  data-id={verse.key}
+                >
                   <div dir="rtl">
                     <VerseContainer>
-                      {verse.versetext} ({verse.verseid})
+                      {verse.versetext}{" "}
+                      <span
+                        className="translation-display-verse-number"
+                        onClick={() => onClickVerse(verse.key)}
+                      >
+                        ({verse.verseid})
+                      </span>
                     </VerseContainer>
                   </div>
                   <TransComponent verse_key={verse.key} />
-                </Fragment>
+                </div>
               );
             })
           )}
