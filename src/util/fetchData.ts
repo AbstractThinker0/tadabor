@@ -39,7 +39,7 @@ const fetchQuran = (): Promise<any> => {
 const fetchRoots = (): Promise<any> => {
   return new Promise((resolve, reject) => {
     fetchJsonPerm
-      .get("/quranRoots-0.0.9.json")
+      .get("/quranRoots-0.0.10.json")
       .then((response) => {
         resolve(response.data);
       })
