@@ -183,6 +183,20 @@
         padding-left: 4px;
         padding-right: 4px;
 
+        &-selected {
+          border: 5px solid white;
+          border-image: linear-gradient(
+              to right,
+              grey 25%,
+              yellow 25%,
+              yellow 50%,
+              red 50%,
+              red 75%,
+              teal 75%
+            )
+            5;
+        }
+
         &-text {
           &-btn {
             cursor: pointer;
@@ -201,6 +215,10 @@
 
         &-chapter {
           cursor: pointer;
+
+          &:hover {
+            color: cornflowerblue;
+          }
         }
 
         &-note {

@@ -173,11 +173,9 @@ function SelectedVerses({
                       onClick={() => onClickChapter(verse)}
                       className="verse-item-chapter"
                     >
-                      (
-                      {quranService.getChapterName(verse.suraid) +
-                        ":" +
-                        verse.verseid}
-                      )
+                      {`(${quranService.getChapterName(verse.suraid)}:${
+                        verse.verseid
+                      })`}
                     </span>
                   </VerseContainer>
                   <ExpandButton
@@ -254,7 +252,9 @@ const VersesList = () => {
       <div ref={refListVerse}>
         {stateVerses.map((verse) => (
           <div
-            className="verse-item"
+            className={`verse-item ${
+              coloringState.scrollKey === verse.key ? "verse-item-selected" : ""
+            }`}
             key={verse.key}
             data-id={verse.key}
             style={
