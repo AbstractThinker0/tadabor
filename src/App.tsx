@@ -20,7 +20,7 @@ const Suspenser = ({ children }: PropsWithChildren) => {
   return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;
 };
 
-function App() {
+const App = () => {
   return (
     <Routes>
       <Route
@@ -121,6 +121,6 @@ function App() {
       />
     </Routes>
   );
-}
+};
 
 export default App;

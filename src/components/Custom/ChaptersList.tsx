@@ -24,13 +24,15 @@ const ChaptersList = ({
     setChapterSearch(event.target.value);
   };
 
-  function onFocusSelect(event: React.FocusEvent<HTMLSelectElement, Element>) {
+  const onFocusSelect = (
+    event: React.FocusEvent<HTMLSelectElement, Element>
+  ) => {
     handleChapterChange(Number(event.target.value));
-  }
+  };
 
-  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+  const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     handleChapterChange(Number(event.target.value));
-  }
+  };
 
   return (
     <div className={mainClass}>
