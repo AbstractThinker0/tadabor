@@ -47,14 +47,20 @@ const QuranTab = ({ verseKey, scrollKey, setScrollKey }: QuranTabProps) => {
 
     if (!verseToHighlight) return;
 
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+    setTimeout(() => {
+      verseToHighlight.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     });
   }, [scrollKey, isPending]);
 
   const onClickVerseSuffix = (key: string) => {
-    setScrollKey(key);
+    if (scrollKey === key) {
+      setScrollKey("");
+    } else {
+      setScrollKey(key);
+    }
   };
 
   return (

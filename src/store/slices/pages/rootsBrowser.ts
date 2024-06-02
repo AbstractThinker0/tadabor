@@ -34,8 +34,7 @@ const rbPageSlice = createSlice({
       state.searchInclusive = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
-      state.scrollKey =
-        state.scrollKey === action.payload ? "" : action.payload;
+      state.scrollKey = action.payload;
     },
   },
 });

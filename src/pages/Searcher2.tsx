@@ -61,6 +61,7 @@ const Searcher2 = () => {
 
   const handleClickTab = () => {
     dispatch(searcher2PageActions.setShowQuranTab(false));
+    dispatch(searcher2PageActions.setScrollKey(""));
   };
 
   const handleClickQuranTab = () => {

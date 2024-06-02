@@ -38,6 +38,7 @@ const RootsBrowser = () => {
 
   const handleClickTab = () => {
     dispatch(rbPageActions.setShowQuranTab(false));
+    dispatch(rbPageActions.setScrollKey(""));
   };
 
   const handleClickQuranTab = () => {

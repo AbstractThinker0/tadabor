@@ -55,8 +55,7 @@ const searcherPageSlice = createSlice({
       state.verses_count = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
-      state.scrollKey =
-        state.scrollKey === action.payload ? "" : action.payload;
+      state.scrollKey = action.payload;
     },
   },
 });

@@ -46,8 +46,7 @@ const searcher2PageSlice = createSlice({
       state.searchStart = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
-      state.scrollKey =
-        state.scrollKey === action.payload ? "" : action.payload;
+      state.scrollKey = action.payload;
     },
   },
 });
