@@ -19,15 +19,18 @@ nav {
       &-item {
         a {
           text-decoration: none;
+          font-size: large;
           padding-left: 0.3vw;
           padding-right: 0.3vw;
-          color: rgb(190, 190, 190);
+          color: rgb(0, 0, 0);
+          background-color: #bdb8c6;
+          border-radius: 0.3rem;
         }
 
         a.active {
           color: black;
           background-color: var(--color-primary);
-          border-radius: 0.3rem;
+          
         }
       }
     }
