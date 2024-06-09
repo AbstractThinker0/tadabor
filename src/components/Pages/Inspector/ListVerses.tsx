@@ -25,6 +25,7 @@ import {
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { CollpaseContent } from "@/components/Generic/Collapse";
 
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
@@ -196,10 +197,9 @@ const VerseWords = ({
         <ExpandButton identifier={verseKey} />
       </VerseContainer>
       <NoteText verseKey={verseKey} />
-      <div
-        ref={refCollapsible}
-        className="collapse"
-        id={`collapseExample${verseRank}`}
+      <CollpaseContent
+        refCollapse={refCollapsible}
+        identifier={`collapseExample${verseRank}`}
       >
         <div className="card card-body">
           <div
@@ -229,7 +229,7 @@ const VerseWords = ({
             ))}
           </div>
         </div>
-      </div>
+      </CollpaseContent>
     </>
   );
 };
@@ -344,10 +344,10 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <div
-      ref={refCollapse}
-      id={`panelsStayOpen-${verseRank}-${rootID}`}
-      className="accordion-collapse collapse"
+    <CollpaseContent
+      refCollapse={refCollapse}
+      identifier={`panelsStayOpen-${verseRank}-${rootID}`}
+      extraClass="accordion-collapse"
     >
       {isShown && (
         <div
@@ -374,7 +374,7 @@ const RootOccurences = ({
           </div>
         </div>
       )}
-    </div>
+    </CollpaseContent>
   );
 };
 
