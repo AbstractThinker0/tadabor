@@ -170,9 +170,9 @@ const RootComponent = memo(
             <button
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target={"#collapseOccs" + root_id}
+              data-bs-target={`#collapseOccs${root_id}`}
               aria-expanded="false"
-              aria-controls={"collapseOccs" + root_id}
+              aria-controls={`collapseOccs${root_id}`}
               className="btn roots-panel-list-item-title-btns-derivations"
               value={root_id}
             >

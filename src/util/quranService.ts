@@ -49,7 +49,7 @@ class quranClass {
 
   convertKeyToSuffix(key: string): string {
     const info = key.split("-");
-    return this.getChapterName(info[0]) + ":" + info[1];
+    return `${this.getChapterName(info[0])}:${info[1]}`;
   }
 
   getRootByID = (rootID: string | number) => {

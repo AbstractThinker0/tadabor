@@ -92,9 +92,9 @@ function VerseTagsModal({
         <div className="modal-versetags-title text-center fs-4">
           (
           {currentVerse
-            ? quranService.getChapterName(currentVerse.suraid) +
-              ":" +
-              currentVerse.verseid
+            ? `${quranService.getChapterName(currentVerse.suraid)}:${
+                currentVerse.verseid
+              }`
             : ""}
           )
         </div>

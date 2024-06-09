@@ -46,7 +46,7 @@ const CountVerses = () => {
 
   return (
     <div className="fw-bold text-success">
-      {t("search_count") + " " + verses_count}{" "}
+      {`${t("search_count")} ${verses_count}`}
     </div>
   );
 };
