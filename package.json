@@ -25,7 +25,7 @@
     "dexie": "^4.0.7",
     "i18next": "^23.0.1",
     "i18next-browser-languagedetector": "^7.0.2",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.0",
     "react-redux": "^9.1.0",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^20.11.16",
-    "@types/react": "^18.2.79",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.2.23",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.62.0",
