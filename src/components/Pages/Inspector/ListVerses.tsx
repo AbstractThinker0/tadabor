@@ -152,10 +152,10 @@ const VerseWords = ({
 
     setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
-    if (selectedWord === index - 1) {
+    if (selectedWord === index) {
       setSelectedWord(-1);
     } else {
-      setSelectedWord(index - 1);
+      setSelectedWord(index);
     }
 
     if (refCollapse.current) {
@@ -181,7 +181,7 @@ const VerseWords = ({
             <span
               onClick={() => onClickWord(index + 1)}
               className={`display-verses-item-text-word ${
-                selectedWord === index
+                selectedWord === index + 1
                   ? "display-verses-item-text-word-selected"
                   : ""
               }`}
