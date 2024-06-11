@@ -17,7 +17,7 @@ import RootsList from "@/components/Pages/RootsBrowser/RootsList";
 import { rootProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { TabButton, TabPanel } from "@/components/Generic/Tabs";
+import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
 import QuranTab from "@/components/Custom/QuranTab";
 
 import "@/styles/pages/roots.scss";
@@ -59,7 +59,7 @@ const RootsBrowser = () => {
 
   return (
     <div className="roots">
-      <ul className="nav nav-tabs" id="myTab" role="tablist">
+      <TabNavbar>
         <TabButton
           text={t("searcher_search")}
           identifier="search"
@@ -75,7 +75,7 @@ const RootsBrowser = () => {
             handleClickTab={handleClickQuranTab}
           />
         )}
-      </ul>
+      </TabNavbar>
       <TabContent
         verseTab={verseTab}
         scrollKey={scrollKey}

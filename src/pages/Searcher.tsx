@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
-import { TabButton, TabPanel } from "@/components/Generic/Tabs";
+import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
 
 import QuranTab from "@/components/Custom/QuranTab";
 
@@ -50,7 +50,7 @@ const Searcher = () => {
 
   return (
     <div className="searcher">
-      <ul className="nav nav-tabs" id="myTab" role="tablist">
+      <TabNavbar>
         <TabButton
           text={t("searcher_search")}
           identifier="search"
@@ -66,7 +66,7 @@ const Searcher = () => {
             handleClickTab={handleClickQuranTab}
           />
         )}
-      </ul>
+      </TabNavbar>
       <TabContent verseTab={verseTab} scrollKey={scrollKey} />
     </div>
   );

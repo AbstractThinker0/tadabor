@@ -19,7 +19,7 @@ import QuranTab from "@/components/Custom/QuranTab";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import Checkbox from "@/components/Custom/Checkbox";
 
-import { TabButton, TabPanel } from "@/components/Generic/Tabs";
+import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
@@ -70,7 +70,7 @@ const Searcher2 = () => {
 
   return (
     <div className="searcher2">
-      <ul className="nav nav-tabs" id="myTab" role="tablist">
+      <TabNavbar>
         <TabButton
           text={t("searcher_search")}
           identifier="search"
@@ -86,7 +86,7 @@ const Searcher2 = () => {
             handleClickTab={handleClickQuranTab}
           />
         )}
-      </ul>
+      </TabNavbar>
       <TabContent
         verseTab={verseTab}
         scrollKey={scrollKey}

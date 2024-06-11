@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ynPageActions } from "@/store/slices/pages/yourNotes";
 
-import { TabButton, TabPanel } from "@/components/Generic/Tabs";
+import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
 
 import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
@@ -62,11 +62,7 @@ function YourNotes() {
 
   return (
     <div className="yournotes">
-      <ul
-        className="nav nav-tabs justify-content-center"
-        id="myTab"
-        role="tablist"
-      >
+      <TabNavbar extraClass="justify-content-center">
         <TabButton
           text={t("notes_verses")}
           identifier="verses"
@@ -87,7 +83,7 @@ function YourNotes() {
           refButton={refButtonTrans}
           handleClickTab={onClickButtonTrans}
         />
-      </ul>
+      </TabNavbar>
       <div className="tab-content" id="myTabContent">
         <TabPanel identifier="verses" extraClass="show active">
           <VerseNotes />
