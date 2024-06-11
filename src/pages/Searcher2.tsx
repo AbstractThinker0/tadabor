@@ -19,7 +19,12 @@ import QuranTab from "@/components/Custom/QuranTab";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import Checkbox from "@/components/Custom/Checkbox";
 
-import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
+import {
+  TabButton,
+  TabContent,
+  TabNavbar,
+  TabPanel,
+} from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
@@ -68,6 +73,10 @@ const Searcher2 = () => {
     dispatch(searcher2PageActions.setShowQuranTab(true));
   };
 
+  const setScrollKey = (key: string) => {
+    dispatch(searcher2PageActions.setScrollKey(key));
+  };
+
   return (
     <div className="searcher2">
       <TabNavbar>
@@ -87,46 +96,20 @@ const Searcher2 = () => {
           />
         )}
       </TabNavbar>
-      <TabContent
-        verseTab={verseTab}
-        scrollKey={scrollKey}
-        handleVerseTab={handleVerseTab}
-      />
-    </div>
-  );
-};
-
-interface TabContentProps {
-  verseTab: string;
-  scrollKey: string;
-  handleVerseTab: (verseKey: string) => void;
-}
-
-const TabContent = ({
-  verseTab,
-  scrollKey,
-  handleVerseTab,
-}: TabContentProps) => {
-  const dispatch = useAppDispatch();
-
-  const setScrollKey = (key: string) => {
-    dispatch(searcher2PageActions.setScrollKey(key));
-  };
-
-  return (
-    <div className="tab-content" id="myTabContent">
-      <TabPanel identifier="search" extraClass="show active">
-        <Searcher2Tab handleVerseTab={handleVerseTab} />
-      </TabPanel>
-      {verseTab ? (
-        <QuranTab
-          verseKey={verseTab}
-          scrollKey={scrollKey}
-          setScrollKey={setScrollKey}
-        />
-      ) : (
-        ""
-      )}
+      <TabContent>
+        <TabPanel identifier="search" extraClass="show active">
+          <Searcher2Tab handleVerseTab={handleVerseTab} />
+        </TabPanel>
+        {verseTab ? (
+          <QuranTab
+            verseKey={verseTab}
+            scrollKey={scrollKey}
+            setScrollKey={setScrollKey}
+          />
+        ) : (
+          ""
+        )}
+      </TabContent>
     </div>
   );
 };

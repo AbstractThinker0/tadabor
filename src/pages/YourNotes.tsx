@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ynPageActions } from "@/store/slices/pages/yourNotes";
 
-import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
+import {
+  TabButton,
+  TabContent,
+  TabNavbar,
+  TabPanel,
+} from "@/components/Generic/Tabs";
 
 import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
@@ -84,7 +89,7 @@ function YourNotes() {
           handleClickTab={onClickButtonTrans}
         />
       </TabNavbar>
-      <div className="tab-content" id="myTabContent">
+      <TabContent>
         <TabPanel identifier="verses" extraClass="show active">
           <VerseNotes />
         </TabPanel>
@@ -94,7 +99,7 @@ function YourNotes() {
         <TabPanel identifier="trans">
           <TransNotes />
         </TabPanel>
-      </div>
+      </TabContent>
     </div>
   );
 }

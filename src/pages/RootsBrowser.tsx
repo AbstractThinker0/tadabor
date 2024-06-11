@@ -17,7 +17,12 @@ import RootsList from "@/components/Pages/RootsBrowser/RootsList";
 import { rootProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
+import {
+  TabButton,
+  TabContent,
+  TabNavbar,
+  TabPanel,
+} from "@/components/Generic/Tabs";
 import QuranTab from "@/components/Custom/QuranTab";
 
 import "@/styles/pages/roots.scss";
@@ -43,6 +48,10 @@ const RootsBrowser = () => {
 
   const handleClickQuranTab = () => {
     dispatch(rbPageActions.setShowQuranTab(true));
+  };
+
+  const setScrollKey = (key: string) => {
+    dispatch(rbPageActions.setScrollKey(key));
   };
 
   useEffect(() => {
@@ -76,46 +85,20 @@ const RootsBrowser = () => {
           />
         )}
       </TabNavbar>
-      <TabContent
-        verseTab={verseTab}
-        scrollKey={scrollKey}
-        handleVerseTab={handleVerseTab}
-      />
-    </div>
-  );
-};
-
-interface TabContentProps {
-  verseTab: string;
-  scrollKey: string;
-  handleVerseTab: (verseKey: string) => void;
-}
-
-const TabContent = ({
-  verseTab,
-  handleVerseTab,
-  scrollKey,
-}: TabContentProps) => {
-  const dispatch = useAppDispatch();
-
-  const setScrollKey = (key: string) => {
-    dispatch(rbPageActions.setScrollKey(key));
-  };
-
-  return (
-    <div className="tab-content" id="myTabContent">
-      <TabPanel identifier="search" extraClass="show active">
-        <RootsPanel handleVerseTab={handleVerseTab} />
-      </TabPanel>
-      {verseTab ? (
-        <QuranTab
-          verseKey={verseTab}
-          scrollKey={scrollKey}
-          setScrollKey={setScrollKey}
-        />
-      ) : (
-        ""
-      )}
+      <TabContent>
+        <TabPanel identifier="search" extraClass="show active">
+          <RootsPanel handleVerseTab={handleVerseTab} />
+        </TabPanel>
+        {verseTab ? (
+          <QuranTab
+            verseKey={verseTab}
+            scrollKey={scrollKey}
+            setScrollKey={setScrollKey}
+          />
+        ) : (
+          ""
+        )}
+      </TabContent>
     </div>
   );
 };

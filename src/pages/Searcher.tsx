@@ -5,7 +5,12 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
-import { TabButton, TabNavbar, TabPanel } from "@/components/Generic/Tabs";
+import {
+  TabButton,
+  TabContent,
+  TabNavbar,
+  TabPanel,
+} from "@/components/Generic/Tabs";
 
 import QuranTab from "@/components/Custom/QuranTab";
 
@@ -48,6 +53,10 @@ const Searcher = () => {
     dispatch(searcherPageActions.setShowQuranTab(true));
   };
 
+  const setScrollKey = (key: string) => {
+    dispatch(searcherPageActions.setScrollKey(key));
+  };
+
   return (
     <div className="searcher">
       <TabNavbar>
@@ -67,40 +76,23 @@ const Searcher = () => {
           />
         )}
       </TabNavbar>
-      <TabContent verseTab={verseTab} scrollKey={scrollKey} />
-    </div>
-  );
-};
-
-interface TabContentProps {
-  verseTab: string;
-  scrollKey: string;
-}
-
-const TabContent = ({ verseTab, scrollKey }: TabContentProps) => {
-  const dispatch = useAppDispatch();
-
-  const setScrollKey = (key: string) => {
-    dispatch(searcherPageActions.setScrollKey(key));
-  };
-
-  return (
-    <div className="tab-content" id="myTabContent">
-      <TabPanel identifier="search" extraClass="show active">
-        <div className="searcher-search">
-          <SearcherSide />
-          <SearcherDisplay />
-        </div>
-      </TabPanel>
-      {verseTab ? (
-        <QuranTab
-          verseKey={verseTab}
-          scrollKey={scrollKey}
-          setScrollKey={setScrollKey}
-        />
-      ) : (
-        ""
-      )}
+      <TabContent>
+        <TabPanel identifier="search" extraClass="show active">
+          <div className="searcher-search">
+            <SearcherSide />
+            <SearcherDisplay />
+          </div>
+        </TabPanel>
+        {verseTab ? (
+          <QuranTab
+            verseKey={verseTab}
+            scrollKey={scrollKey}
+            setScrollKey={setScrollKey}
+          />
+        ) : (
+          ""
+        )}
+      </TabContent>
     </div>
   );
 };

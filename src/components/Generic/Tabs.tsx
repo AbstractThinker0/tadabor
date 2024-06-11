@@ -76,4 +76,16 @@ const TabPanel = ({ identifier, extraClass = "", children }: TabPanelProps) => {
   );
 };
 
-export { TabNavbar, TabButton, TabPanel };
+interface TabContentProps {
+  children?: React.ReactNode | undefined;
+}
+
+const TabContent = ({ children }: TabContentProps) => {
+  return (
+    <div className="tab-content" id="myTabContent">
+      {children}
+    </div>
+  );
+};
+
+export { TabNavbar, TabButton, TabContent, TabPanel };
