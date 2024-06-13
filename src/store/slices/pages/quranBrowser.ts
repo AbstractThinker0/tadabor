@@ -74,9 +74,11 @@ const qbPageSlice = createSlice({
     },
     setSearchIdentical: (state, action: PayloadAction<boolean>) => {
       state.searchIdentical = action.payload;
+      state.searchStart = false;
     },
     setSearchStart: (state, action: PayloadAction<boolean>) => {
       state.searchStart = action.payload;
+      state.searchIdentical = false;
     },
     setSearchMethod: (state, action: PayloadAction<SEARCH_METHOD>) => {
       state.searchMethod = action.payload;
