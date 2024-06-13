@@ -1,16 +1,16 @@
-interface CollpaseContentProps {
+interface CollapseContentProps {
   identifier: string;
   children?: React.ReactNode | undefined;
   extraClass?: string;
   refCollapse?: React.RefObject<HTMLDivElement>;
 }
 
-const CollpaseContent = ({
+const CollapseContent = ({
   children,
   identifier,
   extraClass = "",
   refCollapse,
-}: CollpaseContentProps) => {
+}: CollapseContentProps) => {
   return (
     <div className={`collapse ${extraClass}`} id={identifier} ref={refCollapse}>
       {children}
@@ -18,4 +18,4 @@ const CollpaseContent = ({
   );
 };
 
-export { CollpaseContent };
+export { CollapseContent };

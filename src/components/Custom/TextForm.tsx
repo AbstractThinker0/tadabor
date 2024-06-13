@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/store";
 
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
-import { CollpaseContent } from "@/components/Generic/Collapse";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 interface TextFormProps {
   inputKey: string;
@@ -121,13 +121,13 @@ const TextCollapsible = ({
   }, []);
 
   return (
-    <CollpaseContent
+    <CollapseContent
       extraClass={className}
       identifier={`collapseExample${targetID}`}
       refCollapse={collapseRef}
     >
       {children}
-    </CollpaseContent>
+    </CollapseContent>
   );
 };
 

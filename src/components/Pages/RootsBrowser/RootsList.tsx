@@ -25,7 +25,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { CollpaseContent } from "@/components/Generic/Collapse";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -309,7 +309,7 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <CollpaseContent
+    <CollapseContent
       refCollapse={refCollapse}
       identifier={`collapseOccs${root_id}`}
     >
@@ -338,7 +338,7 @@ const RootOccurences = ({
           ))}
         </div>
       )}
-    </CollpaseContent>
+    </CollapseContent>
   );
 };
 

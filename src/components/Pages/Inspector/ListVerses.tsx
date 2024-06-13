@@ -25,7 +25,7 @@ import {
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-import { CollpaseContent } from "@/components/Generic/Collapse";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
@@ -197,7 +197,7 @@ const VerseWords = ({
         <ExpandButton identifier={verseKey} />
       </VerseContainer>
       <NoteText verseKey={verseKey} />
-      <CollpaseContent
+      <CollapseContent
         refCollapse={refCollapsible}
         identifier={`collapseExample${verseRank}`}
       >
@@ -229,7 +229,7 @@ const VerseWords = ({
             ))}
           </div>
         </div>
-      </CollpaseContent>
+      </CollapseContent>
     </>
   );
 };
@@ -344,7 +344,7 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <CollpaseContent
+    <CollapseContent
       refCollapse={refCollapse}
       identifier={`panelsStayOpen-${verseRank}-${rootID}`}
       extraClass="accordion-collapse"
@@ -374,7 +374,7 @@ const RootOccurences = ({
           </div>
         </div>
       )}
-    </CollpaseContent>
+    </CollapseContent>
   );
 };
 
