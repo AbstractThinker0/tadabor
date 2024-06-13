@@ -36,14 +36,16 @@ const searcher2PageSlice = createSlice({
       //
       state.searchString = action.payload;
     },
-    setSearchIdentical: (state, action: PayloadAction<boolean>) => {
-      state.searchIdentical = action.payload;
-    },
     setSearchDiacritics: (state, action: PayloadAction<boolean>) => {
       state.searchDiacritics = action.payload;
     },
+    setSearchIdentical: (state, action: PayloadAction<boolean>) => {
+      state.searchIdentical = action.payload;
+      state.searchStart = false;
+    },
     setSearchStart: (state, action: PayloadAction<boolean>) => {
       state.searchStart = action.payload;
+      state.searchIdentical = false;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey = action.payload;

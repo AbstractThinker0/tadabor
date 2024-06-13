@@ -7,12 +7,7 @@ import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
-import {
-  searchVerse,
-  onlySpaces,
-  removeDiacritics,
-  normalizeAlif,
-} from "@/util/util";
+import { quranSearcher } from "@/util/quranSearch";
 
 import NoteText from "@/components/Custom/NoteText";
 import QuranTab from "@/components/Custom/QuranTab";
@@ -152,49 +147,21 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
 
   const handleCheckboxIdentical = (status: boolean) => {
     dispatch(searcher2PageActions.setSearchIdentical(status));
-    dispatch(searcher2PageActions.setSearchStart(false));
   };
 
   const handleCheckboxStart = (status: boolean) => {
     dispatch(searcher2PageActions.setSearchStart(status));
-    dispatch(searcher2PageActions.setSearchIdentical(false));
   };
 
   useEffect(() => {
     startTransition(() => {
-      const getSearchResult = () => {
-        const matchVerses: verseMatchResult[] = [];
+      const result = quranSearcher.byWord(searchString, quranService, "all", {
+        searchDiacritics,
+        searchIdentical,
+        searchStart,
+      });
 
-        const quranText = quranService.absoluteQuran;
-
-        // Check if we search with diacritics or they should be stripped off
-        const normalizedToken = searchDiacritics
-          ? searchString
-          : normalizeAlif(removeDiacritics(searchString));
-
-        // If an empty search token don't initiate a search
-        if (onlySpaces(normalizedToken)) {
-          return matchVerses;
-        }
-
-        for (const verse of quranText) {
-          const result = searchVerse(
-            verse,
-            normalizedToken,
-            searchIdentical,
-            searchDiacritics,
-            searchStart
-          );
-
-          if (result) {
-            matchVerses.push(result);
-          }
-        }
-
-        return matchVerses;
-      };
-
-      setStateVerses(getSearchResult());
+      setStateVerses(result || []);
     });
   }, [searchString, searchIdentical, searchDiacritics, searchStart]);
 

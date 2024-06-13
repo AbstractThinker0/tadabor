@@ -1,13 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import quranClass from "@/util/quranService";
-import {
-  getDerivationsInVerse,
-  normalizeAlif,
-  onlySpaces,
-  removeDiacritics,
-  searchVerse,
-} from "@/util/util";
+
+import { quranSearcher } from "@/util/quranSearch";
 
 import {
   verseMatchResult,
@@ -101,40 +96,22 @@ const qbPageSlice = createSlice({
       );
       state.scrollKey = "";
 
-      // Check if we are search with diacrtics or they should be stripped off
-      const normalizedToken = state.searchDiacritics
-        ? state.searchString
-        : normalizeAlif(removeDiacritics(state.searchString));
+      const result = quranSearcher.byWord(
+        state.searchString,
+        quranService,
+        filteredChapters,
+        {
+          searchDiacritics: state.searchDiacritics,
+          searchIdentical: state.searchIdentical,
+          searchStart: state.searchStart,
+        }
+      );
 
-      // If an empty search token don't initiate a search
-      if (onlySpaces(normalizedToken)) {
-        state.searchError = true;
-        return;
-      }
-
-      const matchVerses: verseMatchResult[] = [];
-
-      filteredChapters.forEach((chapter) => {
-        quranService.getVerses(chapter).forEach((verse) => {
-          const result = searchVerse(
-            verse,
-            normalizedToken,
-            state.searchIdentical,
-            state.searchDiacritics,
-            state.searchStart
-          );
-
-          if (result) {
-            matchVerses.push(result);
-          }
-        });
-      });
-
-      if (matchVerses.length === 0) {
-        state.searchError = true;
-      } else {
+      if (result) {
         state.searchError = false;
-        state.searchResult = matchVerses;
+        state.searchResult = result;
+      } else {
+        state.searchError = true;
       }
     },
     submitRootSearch: (
@@ -155,52 +132,17 @@ const qbPageSlice = createSlice({
       );
       state.scrollKey = "";
 
-      if (onlySpaces(state.searchString)) {
-        state.searchError = true;
-        return;
-      }
+      const result = quranSearcher.byRoot(
+        state.searchString,
+        quranService,
+        filteredChapters
+      );
 
-      const rootTarget = quranService.getRootByName(state.searchString);
-
-      if (rootTarget === undefined) {
-        state.searchError = true;
-        return;
-      }
-
-      const occurencesArray = rootTarget.occurences;
-
-      const matchVerses: verseMatchResult[] = [];
-      const derivations: searchIndexProps[] = [];
-
-      if (filteredChapters.length) {
-        occurencesArray.forEach((item) => {
-          const info = item.split(":");
-          const currentVerse = quranService.getVerseByRank(info[0]);
-
-          if (filteredChapters.includes(currentVerse.suraid)) {
-            const wordIndexes = info[1].split(",");
-
-            const chapterName = quranService.getChapterName(
-              currentVerse.suraid
-            );
-
-            const { verseDerivations, verseResult } = getDerivationsInVerse(
-              wordIndexes,
-              currentVerse,
-              chapterName
-            );
-
-            derivations.push(...verseDerivations);
-            matchVerses.push(verseResult);
-          }
-        });
-      }
-
-      if (matchVerses.length === 0) {
-        state.searchError = true;
+      if (result) {
+        state.searchResult = result.matchVerses;
+        state.searchIndexes = result.derivations;
       } else {
-        state.searchResult = matchVerses;
-        state.searchIndexes = derivations;
+        state.searchError = true;
       }
     },
     gotoChapter: (state, action: PayloadAction<string>) => {
