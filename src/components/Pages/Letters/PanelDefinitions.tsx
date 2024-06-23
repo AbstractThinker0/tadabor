@@ -77,13 +77,12 @@ interface ModalEditLetterProps {
 }
 
 const ModalEditLetter = ({ currentLetter }: ModalEditLetterProps) => {
-  const currentDef =
-    useAppSelector(
-      (state) => state.lettersPage.lettersDefinitions[currentLetter]
-    ) || "";
+  const currentDef = useAppSelector(
+    (state) => state.lettersPage.lettersDefinitions[currentLetter]
+  ) || { definition: "", dir: "" };
 
   const [letterDef, setLetterDef] = useState(currentDef.definition);
-  const [letterDir, setLetterDir] = useState(currentDef.dir || "");
+  const [letterDir, setLetterDir] = useState(currentDef.dir || "rtl");
 
   const [modalVis, setModalVis] = useState(false);
 
@@ -113,7 +112,7 @@ const ModalEditLetter = ({ currentLetter }: ModalEditLetterProps) => {
   useEffect(() => {
     if (modalVis) {
       setLetterDef(currentDef.definition);
-      setLetterDir(currentDef.dir || "");
+      setLetterDir(currentDef.dir || "rtl");
     } else {
       setLetterDef("");
       setLetterDir("");
