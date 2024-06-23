@@ -203,7 +203,9 @@ const LetterBox = ({
 
   const quranService = useQuran();
 
-  const state = useAppSelector((state) => state.lettersPage);
+  const lettersDefinitions = useAppSelector(
+    (state) => state.lettersPage.lettersDefinitions
+  );
 
   const [letterRole, setLetterRole] = useState<LetterRole>(
     letterData.letter_role
@@ -250,7 +252,7 @@ const LetterBox = ({
       ? quranService.getLetterByKey(selectedLetter)
       : "";
     const definition =
-      state.lettersDefinitions[normalizeAlif(letter, false, true)]?.definition;
+      lettersDefinitions[normalizeAlif(letter, false, true)]?.definition;
 
     return definition ? <option value="-1">{definition}</option> : <></>;
   };
@@ -305,6 +307,8 @@ const LetterBox = ({
     </CollapseContent>
   );
 };
+
+LetterBox.displayName = "LetterBox";
 
 interface VerseWordsProps {
   verseText: string[];
@@ -399,8 +403,10 @@ const WordBox = ({
   selectedWord,
 }: WordBoxProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-  const { lettersData, lettersDefinitions } = useAppSelector(
-    (state) => state.lettersPage
+
+  const lettersData = useAppSelector((state) => state.lettersPage.lettersData);
+  const lettersDefinitions = useAppSelector(
+    (state) => state.lettersPage.lettersDefinitions
   );
 
   const wordIndex = Number(selectedWord.split(":")[1]);
@@ -468,5 +474,7 @@ const WordBox = ({
     </CollapseContent>
   );
 };
+
+WordBox.displayName = "WordBox";
 
 export default ListVerses;
