@@ -75,6 +75,8 @@ const TransComponent = memo(({ verse_key }: TransComponentProps) => {
   );
 });
 
+TransComponent.displayName = "TransComponent";
+
 interface VersetextProps {
   inputValue: string;
   inputKey: string;

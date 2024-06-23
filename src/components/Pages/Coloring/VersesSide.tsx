@@ -332,4 +332,6 @@ const VerseComponent = memo(({ verse, color }: VerseComponentProps) => {
   );
 });
 
+VerseComponent.displayName = "VerseComponent";
+
 export default VersesSide;

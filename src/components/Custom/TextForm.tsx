@@ -166,12 +166,12 @@ const TextComponent = ({
 
 interface TextContainerProps {
   inputValue: string;
-  inputDirection: string;
+  inputDirection?: string;
   className?: string;
 }
 
 const TextContainer = ({
-  inputDirection,
+  inputDirection = "",
   inputValue,
   className = "",
 }: TextContainerProps) => {

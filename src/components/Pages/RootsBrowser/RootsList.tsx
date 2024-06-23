@@ -103,6 +103,8 @@ const RootsList = memo(
   }
 );
 
+RootsList.displayName = "RootsList";
+
 interface RootComponentProps {
   root_occurences: string[];
   root_name: string;
@@ -200,6 +202,8 @@ const RootComponent = memo(
     );
   }
 );
+
+RootComponent.displayName = "RootComponent";
 
 interface RootOccurencesProps {
   root_occurences: string[];

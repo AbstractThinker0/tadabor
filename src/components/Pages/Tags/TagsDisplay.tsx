@@ -298,6 +298,8 @@ const ListVerses = memo(
   }
 );
 
+ListVerses.displayName = "ListVerses";
+
 interface ListVerseComponentProps {
   verse: verseProps;
 }

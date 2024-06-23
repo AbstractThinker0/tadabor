@@ -100,6 +100,8 @@ const TransBody = memo(({ verse_key }: TransBodyProps) => {
   );
 });
 
+TransBody.displayName = "TransBody";
+
 interface VersetextProps {
   inputValue: string;
   inputKey: string;
