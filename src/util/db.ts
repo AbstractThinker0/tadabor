@@ -1,4 +1,5 @@
-import Dexie from "dexie";
+import Dexie, { type EntityTable } from "dexie";
+import { LetterRole } from "@/util/consts";
 
 export interface INote {
   id: string;
@@ -44,21 +45,46 @@ export interface IVerseTags {
   tags_ids: string[];
 }
 
+export interface ILetterDefinition {
+  id: string;
+  name: string;
+  definition: string;
+  preset_id: string;
+  dir?: string;
+}
+
+export interface ILettersPreset {
+  id: string;
+  name: string;
+}
+
+export interface ILetterData {
+  letter_key: string;
+  letter_role: LetterRole;
+  def_id: string;
+}
+
 class tadaborDatabase extends Dexie {
-  notes!: Dexie.Table<INote, string>;
-  root_notes!: Dexie.Table<IRootNote, string>;
-  translations!: Dexie.Table<ITranslation, string>;
-  colors!: Dexie.Table<IColor, string>;
-  verses_color!: Dexie.Table<IVerseColor, string>;
-  tags!: Dexie.Table<ITag, string>;
-  verses_tags!: Dexie.Table<IVerseTags, string>;
+  notes!: EntityTable<INote, "id">;
+  root_notes!: EntityTable<IRootNote, "id">;
+  translations!: EntityTable<ITranslation, "id">;
+
+  colors!: EntityTable<IColor, "id">;
+  verses_color!: EntityTable<IVerseColor, "verse_key">;
+
+  tags!: EntityTable<ITag, "id">;
+  verses_tags!: EntityTable<IVerseTags, "verse_key">;
+
+  letters_def!: EntityTable<ILetterDefinition, "id">;
+  letters_presets!: EntityTable<ILettersPreset, "id">;
+  letters_data!: EntityTable<ILetterData, "letter_key">;
 
   constructor() {
     super("tadaborDatabase");
 
     //
-    // Define tables and indexes
     // (Here's where the implicit table props are dynamically created)
+    // Increase the table version whenever you make changes to the current stores structure
     //
     this.version(11).stores({
       notes: "id, text, date_created, date_modified",
@@ -81,12 +107,134 @@ class tadaborDatabase extends Dexie {
       tags: "id, name",
       verses_tags: "verse_key, *tags_ids",
     });
+
+    this.version(20).stores({
+      notes: "id, text, dir, date_created, date_modified",
+      root_notes: "id, text, dir, date_created, date_modified",
+      translations: "id, text, date_created, date_modified",
+
+      colors: "id, name, code",
+      verses_color: "verse_key, color_id",
+
+      tags: "id, name",
+      verses_tags: "verse_key, *tags_ids",
+
+      letters_def: "id, preset_id, name, definition, dir",
+      letters_presets: "id, name",
+      letters_data: "letter_key, letter_role, def_id",
+    });
   }
 }
 
 const db = new tadaborDatabase();
 
 export const dbFuncs = {
+  saveLetterDefinition: (
+    id: string,
+    preset_id: string,
+    name: string,
+    definition: string,
+    dir: string = ""
+  ) => {
+    return new Promise((resolve, reject) => {
+      db.letters_def
+        .update(id, { preset_id, name, definition, dir })
+        .then((updated) => {
+          if (!updated) {
+            db.letters_def
+              .add({
+                id,
+                preset_id,
+                name,
+                definition,
+                dir,
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
+  },
+  loadLettersDefinition: () => {
+    return db.letters_def.toArray();
+  },
+  saveLetterData: ({
+    letter_key,
+    letter_role = LetterRole.Unit,
+    def_id = "",
+  }: {
+    letter_key: string;
+    letter_role: LetterRole;
+    def_id: string;
+  }) => {
+    return new Promise((resolve, reject) => {
+      db.letters_data
+        .update(letter_key, { letter_role, def_id })
+        .then((updated) => {
+          if (!updated) {
+            db.letters_data
+              .add({
+                letter_key,
+                letter_role,
+                def_id,
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
+  },
+  loadLettersData: () => {
+    return db.letters_data.toArray();
+  },
+  saveLettersPreset: (id: string, name: string) => {
+    return new Promise((resolve, reject) => {
+      db.letters_presets
+        .update(id, { name })
+        .then((updated) => {
+          if (!updated) {
+            db.letters_presets
+              .add({
+                id,
+                name,
+              })
+              .then(() => {
+                resolve(true); // Resolve the promise on successful add
+              })
+              .catch((error) => {
+                reject(error); // Reject the promise on add error
+              });
+          } else {
+            resolve(true); // Resolve the promise on successful update
+          }
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise on update error
+        });
+    });
+  },
+  loadLettersPresets: () => {
+    return db.letters_presets.toArray();
+  },
+
   saveNote: (id: string, text: string, dir: string) => {
     return new Promise((resolve, reject) => {
       db.notes
@@ -119,6 +267,7 @@ export const dbFuncs = {
   loadNotes: () => {
     return db.notes.toArray();
   },
+
   saveRootNote: (id: string, text: string, dir: string) => {
     return new Promise((resolve, reject) => {
       db.root_notes
@@ -151,6 +300,7 @@ export const dbFuncs = {
   loadRootNotes: () => {
     return db.root_notes.toArray();
   },
+
   loadTranslations: () => {
     return db.translations.toArray();
   },
@@ -182,6 +332,7 @@ export const dbFuncs = {
         });
     });
   },
+
   saveColor: (data: IColor) => {
     return db.colors.put(data);
   },
@@ -200,6 +351,7 @@ export const dbFuncs = {
   loadVersesColor: () => {
     return db.verses_color.toArray();
   },
+
   saveTag: (data: ITag) => {
     return db.tags.put(data);
   },

@@ -1,0 +1,171 @@
+.letters {
+  background-color: var(--color-primary);
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+  flex-direction: column;
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tab-pane {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .panel-def {
+    padding: 1rem;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    height: 100%;
+    flex: 1;
+
+    &-letters {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      &-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &-letter {
+          width: 2rem;
+          display: inline-block;
+          font-size: larger;
+        }
+
+        &-def {
+          display: inline-block;
+          width: 50%;
+          height: 60px;
+          background-color: #ffffff;
+          border-radius: 0.3rem;
+          border-color: rgb(51, 52, 52);
+          border-style: solid;
+          padding: 5px;
+        }
+      }
+    }
+  }
+
+  .panel-quran {
+    display: flex;
+    overflow: hidden;
+    max-height: 100%;
+    height: 100%;
+
+    .side {
+      padding-inline-start: 10px;
+      padding-inline-end: 5px;
+      padding-top: 5px;
+
+      &-chapters {
+        &-input {
+          background-color: var(--color-fifth);
+          border-bottom: none;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        &-list {
+          background-color: var(--color-primary);
+          border-top-right-radius: 0;
+          border-top-left-radius: 0;
+        }
+      }
+    }
+
+    .display {
+      flex: 1;
+      overflow-y: scroll;
+      min-height: 100%;
+
+      &-verses {
+        background-color: #f7fafc;
+        min-height: 100%;
+
+        &-item {
+          padding: 9px;
+          border-bottom: 1.5px solid rgba(220, 220, 220, 0.893);
+
+          &-selected {
+            background-color: bisque;
+          }
+
+          &-verseid {
+            &:hover {
+              cursor: pointer;
+              color: cornflowerblue;
+            }
+          }
+
+          &-word {
+            display: inline-block;
+            margin-top: 1px;
+            margin-bottom: 1px;
+            padding: 5px;
+            padding-left: 8px;
+            padding-right: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover:not(:has(.display-verses-item-letter:hover)) {
+              background-color: rgb(159, 159, 205);
+            }
+
+            &-selected {
+              background-color: rgb(159, 159, 205);
+            }
+          }
+
+          &-letter {
+            cursor: pointer;
+
+            &:hover {
+              color: cornflowerblue;
+            }
+
+            &-selected {
+              color: cornflowerblue;
+            }
+          }
+
+          &-collapse {
+            padding-top: 6px;
+          }
+
+          &-letterbox {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            &-btn {
+              align-self: center;
+              width: 5rem;
+            }
+          }
+
+          &-wordbox {
+            &-item {
+              padding: 2px;
+              &-selected {
+                background-color: rgb(159, 159, 205);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

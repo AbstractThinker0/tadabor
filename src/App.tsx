@@ -13,6 +13,7 @@ const Inspector = lazy(() => import("@/pages/Inspector"));
 const Comparator = lazy(() => import("@/pages/Comparator"));
 const Searcher = lazy(() => import("@/pages/Searcher"));
 const Searcher2 = lazy(() => import("@/pages/Searcher2"));
+const Letters = lazy(() => import("@/pages/Letters"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -100,6 +101,14 @@ const App = () => {
         element={
           <Suspenser>
             <Searcher2 />
+          </Suspenser>
+        }
+      />
+      <Route
+        path="/letters"
+        element={
+          <Suspenser>
+            <Letters />
           </Suspenser>
         }
       />

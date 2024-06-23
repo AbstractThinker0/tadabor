@@ -1,3 +1,5 @@
+import { LetterRole } from "@/util/consts";
+
 export interface chapterProps {
   id: number;
   name: string;
@@ -69,4 +71,23 @@ export interface verseMatchResult {
   suraid: string;
   verseid: string;
   verseParts: IMatch[];
+}
+
+interface LetterType {
+  definition: string;
+  dir?: string;
+  preset_id?: string;
+}
+
+export interface LettersDefinitionType {
+  [key: string]: LetterType;
+}
+
+export interface LetterDataType {
+  letter_role: LetterRole;
+  def_id: string;
+}
+
+export interface LettersDataType {
+  [key: string]: LetterDataType;
 }
