@@ -14,9 +14,12 @@ import "@/styles/pages/inspector.scss";
 
 function Inspector() {
   const dispatch = useAppDispatch();
+
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const state = useAppSelector((state) => state.inspectorPage);
+  const currentChapter = useAppSelector(
+    (state) => state.inspectorPage.currentChapter
+  );
 
   function handleSelectChapter(chapterID: number) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
@@ -31,7 +34,7 @@ function Inspector() {
     <div className="inspector">
       <div className="side">
         <ChaptersList
-          selectChapter={state.currentChapter}
+          selectChapter={currentChapter}
           handleChapterChange={handleSelectChapter}
           mainClass="side-chapters"
           inputClass="side-chapters-input"
@@ -41,10 +44,7 @@ function Inspector() {
       {isVNotesLoading ? (
         <LoadingSpinner />
       ) : (
-        <Display
-          currentChapter={state.currentChapter}
-          scrollKey={state.scrollKey}
-        />
+        <Display currentChapter={currentChapter} />
       )}
     </div>
   );

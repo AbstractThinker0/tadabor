@@ -21,12 +21,18 @@ import "@/styles/pages/searcher.scss";
 
 const Searcher = () => {
   const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
 
   const refVerseButton = useRef<HTMLButtonElement>(null);
-  const { verseTab, showQuranTab, scrollKey } = useAppSelector(
-    (state) => state.searcherPage
+
+  const verseTab = useAppSelector((state) => state.searcherPage.verseTab);
+
+  const showQuranTab = useAppSelector(
+    (state) => state.searcherPage.showQuranTab
   );
+
+  const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
 
   useEffect(() => {
     if (!showQuranTab) return;

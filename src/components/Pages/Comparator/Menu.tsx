@@ -15,8 +15,11 @@ const Menu = ({
 }: MenuProps) => {
   const quranService = useQuran();
 
-  const { currentChapter, currentVerse } = useAppSelector(
-    (state) => state.comparatorPage
+  const currentChapter = useAppSelector(
+    (state) => state.comparatorPage.currentChapter
+  );
+  const currentVerse = useAppSelector(
+    (state) => state.comparatorPage.currentVerse
   );
 
   const onChangeChapter = (event: React.ChangeEvent<HTMLSelectElement>) => {

@@ -16,12 +16,14 @@ import { colorProps, coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 const VersesSide = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const selectedColors = useAppSelector(
+    (state) => state.coloringPage.selectedColors
+  );
 
   return (
     <div className="verses-side">
       <div className="card verse-list" dir="rtl">
-        {Object.keys(coloringState.selectedColors).length ? (
+        {Object.keys(selectedColors).length ? (
           <SelectedContainter />
         ) : (
           <VersesList />
@@ -33,7 +35,16 @@ const VersesSide = () => {
 };
 
 const SelectedContainter = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const selectedChapters = useAppSelector(
+    (state) => state.coloringPage.selectedChapters
+  );
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+  const selectedColors = useAppSelector(
+    (state) => state.coloringPage.selectedColors
+  );
+
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
@@ -41,16 +52,16 @@ const SelectedContainter = () => {
     dispatch(coloringPageActions.deselectColor(colorID));
   }
 
-  const chaptersScope = Object.keys(coloringState.selectedChapters).filter(
-    (chapterID) => coloringState.selectedChapters[chapterID] === true
+  const chaptersScope = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
   );
 
   const getSelectedColoredVerses = () => {
-    const asArray = Object.entries(coloringState.coloredVerses);
+    const asArray = Object.entries(coloredVerses);
 
     const filtered = asArray.filter(([key]) => {
       const info = key.split("-");
-      return coloringState.selectedChapters[info[0]] === true;
+      return selectedChapters[info[0]] === true;
     });
 
     return Object.fromEntries(filtered);
@@ -61,25 +72,22 @@ const SelectedContainter = () => {
       <div className="verses-side-colors" dir="ltr">
         <div className="verses-side-colors-selected">
           <div className="fw-bold">Selected colors:</div>
-          {Object.keys(coloringState.selectedColors).map((colorID) => (
+          {Object.keys(selectedColors).map((colorID) => (
             <div
               key={colorID}
               className="verses-side-colors-item text-center rounded"
               style={
-                coloringState.selectedColors[colorID]
+                selectedColors[colorID]
                   ? {
-                      backgroundColor:
-                        coloringState.selectedColors[colorID].colorCode,
-                      color: getTextColor(
-                        coloringState.selectedColors[colorID].colorCode
-                      ),
+                      backgroundColor: selectedColors[colorID].colorCode,
+                      color: getTextColor(selectedColors[colorID].colorCode),
                     }
                   : {}
               }
             >
               <div></div>
               <div className="verses-side-colors-item-text">
-                {coloringState.selectedColors[colorID].colorDisplay}
+                {selectedColors[colorID].colorDisplay}
               </div>
               <div
                 className="verses-side-colors-item-close"
@@ -107,7 +115,7 @@ const SelectedContainter = () => {
       </div>
       {chaptersScope.length ? (
         <SelectedVerses
-          selectedColors={coloringState.selectedColors}
+          selectedColors={selectedColors}
           coloredVerses={getSelectedColoredVerses()}
         />
       ) : (
@@ -208,7 +216,13 @@ function SelectedVerses({
 }
 
 const VersesList = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const scrollKey = useAppSelector((state) => state.coloringPage.scrollKey);
+  const currentChapter = useAppSelector(
+    (state) => state.coloringPage.currentChapter
+  );
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
 
   const quranService = useQuran();
 
@@ -219,10 +233,10 @@ const VersesList = () => {
   const refListVerse = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!coloringState.scrollKey || !refListVerse.current) return;
+    if (!scrollKey || !refListVerse.current) return;
 
     const verseToHighlight = refListVerse.current.querySelector(
-      `[data-id="${coloringState.scrollKey}"]`
+      `[data-id="${scrollKey}"]`
     );
 
     setTimeout(() => {
@@ -233,48 +247,41 @@ const VersesList = () => {
         });
       }
     });
-  }, [coloringState.scrollKey, isPending]);
+  }, [scrollKey, isPending]);
 
   useEffect(() => {
     //
     startTransition(() => {
-      setStateVerses(quranService.getVerses(coloringState.currentChapter));
+      setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [coloringState.currentChapter]);
+  }, [currentChapter]);
 
   if (isPending) return <LoadingSpinner />;
 
   return (
     <>
       <div className="card-title">
-        سورة {quranService.getChapterName(coloringState.currentChapter)}
+        سورة {quranService.getChapterName(currentChapter)}
       </div>
       <div ref={refListVerse}>
         {stateVerses.map((verse) => (
           <div
             className={`verse-item ${
-              coloringState.scrollKey === verse.key ? "verse-item-selected" : ""
+              scrollKey === verse.key ? "verse-item-selected" : ""
             }`}
             key={verse.key}
             data-id={verse.key}
             style={
-              coloringState.coloredVerses[verse.key]
+              coloredVerses[verse.key]
                 ? {
-                    backgroundColor:
-                      coloringState.coloredVerses[verse.key].colorCode,
-                    color: getTextColor(
-                      coloringState.coloredVerses[verse.key].colorCode
-                    ),
+                    backgroundColor: coloredVerses[verse.key].colorCode,
+                    color: getTextColor(coloredVerses[verse.key].colorCode),
                   }
                 : {}
             }
           >
             <VerseComponent
-              color={
-                coloringState.coloredVerses[verse.key]
-                  ? coloringState.coloredVerses[verse.key]
-                  : null
-              }
+              color={coloredVerses[verse.key] ? coloredVerses[verse.key] : null}
               verse={verse}
             />
             <NoteText verseKey={verse.key} className="verse-item-note" />

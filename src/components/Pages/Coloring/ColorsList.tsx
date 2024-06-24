@@ -6,7 +6,11 @@ import { getTextColor } from "@/components/Pages/Coloring/util";
 import { colorProps } from "@/components/Pages/Coloring/consts";
 
 const ColorsList = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
+
   const dispatch = useAppDispatch();
 
   function onClickSelectColor(color: colorProps) {
@@ -20,8 +24,8 @@ const ColorsList = () => {
   const getColoredVerses = (colorID: string | undefined) => {
     if (!colorID) return 0;
 
-    return Object.keys(coloringState.coloredVerses).filter((verseKey) => {
-      return coloringState.coloredVerses[verseKey]?.colorID === colorID;
+    return Object.keys(coloredVerses).filter((verseKey) => {
+      return coloredVerses[verseKey]?.colorID === colorID;
     }).length;
   };
 
@@ -30,42 +34,33 @@ const ColorsList = () => {
       <div className="text-center" dir="ltr">
         Colors list:
       </div>
-      {Object.keys(coloringState.colorsList).length > 0 && (
+      {Object.keys(colorsList).length > 0 && (
         <div className="side-colors-list" dir="ltr">
-          {Object.keys(coloringState.colorsList).map((colorID) => (
+          {Object.keys(colorsList).map((colorID) => (
             <div
-              key={coloringState.colorsList[colorID].colorID}
+              key={colorsList[colorID].colorID}
               className="side-colors-list-item text-center rounded mb-1"
               style={{
-                backgroundColor: coloringState.colorsList[colorID].colorCode,
-                color: getTextColor(
-                  coloringState.colorsList[colorID].colorCode
-                ),
+                backgroundColor: colorsList[colorID].colorCode,
+                color: getTextColor(colorsList[colorID].colorCode),
               }}
             >
               <div
-                onClick={() =>
-                  onClickSelectColor(coloringState.colorsList[colorID])
-                }
+                onClick={() => onClickSelectColor(colorsList[colorID])}
                 className="opacity-0"
               >
                 🗑️
               </div>
               <div
                 className="flex-grow-1 side-colors-list-item-text"
-                onClick={() =>
-                  onClickSelectColor(coloringState.colorsList[colorID])
-                }
+                onClick={() => onClickSelectColor(colorsList[colorID])}
               >
-                {coloringState.colorsList[colorID].colorDisplay} (
-                {getColoredVerses(colorID)})
+                {colorsList[colorID].colorDisplay} ({getColoredVerses(colorID)})
               </div>
               <div
                 data-bs-toggle="modal"
                 data-bs-target="#deleteColorModal"
-                onClick={() =>
-                  onClickDeleteColor(coloringState.colorsList[colorID])
-                }
+                onClick={() => onClickDeleteColor(colorsList[colorID])}
               >
                 🗑️
               </div>

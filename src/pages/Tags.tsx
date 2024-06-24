@@ -18,15 +18,17 @@ function Tags() {
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();
+
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-  const tagsState = useAppSelector((state) => state.tagsPage);
+
+  const tags = useAppSelector((state) => state.tagsPage.tags);
 
   useEffect(() => {
     let clientLeft = false;
 
     async function fetchSavedTags() {
       // Check if we already fetched tags
-      if (Object.keys(tagsState.tags).length) {
+      if (Object.keys(tags).length) {
         setLoadingState(false);
         return;
       }

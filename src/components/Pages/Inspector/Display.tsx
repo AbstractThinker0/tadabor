@@ -6,10 +6,9 @@ import ListVerses from "@/components/Pages/Inspector/ListVerses";
 
 interface DisplayProps {
   currentChapter: number;
-  scrollKey: string;
 }
 
-const Display = ({ currentChapter, scrollKey }: DisplayProps) => {
+const Display = ({ currentChapter }: DisplayProps) => {
   const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
@@ -26,7 +25,7 @@ const Display = ({ currentChapter, scrollKey }: DisplayProps) => {
         <div className="card-header text-primary text-center fs-3">
           سورة {quranService.getChapterName(currentChapter)}
         </div>
-        <ListVerses currentChapter={currentChapter} scrollKey={scrollKey} />
+        <ListVerses currentChapter={currentChapter} />
       </div>
     </div>
   );

@@ -19,15 +19,17 @@ function Coloring() {
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();
+
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-  const coloringState = useAppSelector((state) => state.coloringPage);
+
+  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
 
     async function fetchSavedColors() {
       // Check if we already fetched colors
-      if (Object.keys(coloringState.colorsList).length) {
+      if (Object.keys(colorsList).length) {
         setLoadingState(false);
         return;
       }

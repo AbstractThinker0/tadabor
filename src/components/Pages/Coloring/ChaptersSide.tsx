@@ -43,16 +43,23 @@ const ChaptersSide = () => {
 
 const VersesCount = () => {
   const { t } = useTranslation();
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+  const selectedChapters = useAppSelector(
+    (state) => state.coloringPage.selectedChapters
+  );
+  const selectedColors = useAppSelector(
+    (state) => state.coloringPage.selectedColors
+  );
 
   const getColoredVersesCount = () => {
-    const asArray = Object.entries(coloringState.coloredVerses);
+    const asArray = Object.entries(coloredVerses);
 
     const filtered = asArray.filter(([key, color]) => {
       const info = key.split("-");
       return (
-        coloringState.selectedChapters[info[0]] === true &&
-        coloringState.selectedColors[color.colorID]
+        selectedChapters[info[0]] === true && selectedColors[color.colorID]
       );
     });
 
@@ -61,7 +68,7 @@ const VersesCount = () => {
 
   const selectedCount = getColoredVersesCount();
 
-  if (!Object.keys(coloringState.selectedColors).length) return <></>;
+  if (!Object.keys(selectedColors).length) return <></>;
 
   return (
     <>

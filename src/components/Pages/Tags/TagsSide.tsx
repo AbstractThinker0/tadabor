@@ -5,21 +5,17 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { dbFuncs } from "@/util/db";
 
-import { tagProps, tagsProps } from "@/components/Pages/Tags/consts";
+import { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
 import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
 import ChaptersList from "@/components/Pages/Tags/ChaptersList";
 
 function TagsSide() {
   const dispatch = useAppDispatch();
-  const {
-    currentChapter,
-    selectedChapters,
-    tags,
-    selectedTags,
-    currentTag,
-    versesTags,
-  } = useAppSelector((state) => state.tagsPage);
+
+  const currentTag = useAppSelector((state) => state.tagsPage.currentTag);
+
+  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
 
   function onClickSelectTag(tag: tagProps) {
     dispatch(tagsPageActions.selectTag(tag));
@@ -51,17 +47,10 @@ function TagsSide() {
     return countTags;
   };
 
-  const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
-
   return (
     <div className="tags-side">
-      <ChaptersList
-        currentChapter={currentChapter}
-        selectedChapters={selectedChapters}
-      />
+      <ChaptersList />
       <SideList
-        tags={tags}
-        isTagSelected={isTagSelected}
         onClickSelectTag={onClickSelectTag}
         onClickDeleteTag={onClickDeleteTag}
         getTaggedVerses={getTaggedVerses}
@@ -78,20 +67,22 @@ function TagsSide() {
 }
 
 interface SideListProps {
-  tags: tagsProps;
-  isTagSelected: (tagID: string) => boolean;
   onClickSelectTag(tag: tagProps): void;
   onClickDeleteTag(tag: tagProps): void;
   getTaggedVerses: (tagID: string) => number;
 }
 
 const SideList = ({
-  tags,
-  isTagSelected,
   onClickSelectTag,
   onClickDeleteTag,
   getTaggedVerses,
 }: SideListProps) => {
+  const tags = useAppSelector((state) => state.tagsPage.tags);
+
+  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+
+  const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
+
   return (
     <div className="tags-side-list" dir="ltr">
       <div className="fw-bold pb-1">Tags list:</div>
@@ -134,18 +125,21 @@ const SideList = ({
 
 const VersesCount = () => {
   const { t } = useTranslation();
-  const tagsState = useAppSelector((state) => state.tagsPage);
+
+  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+  const selectedChapters = useAppSelector(
+    (state) => state.tagsPage.selectedChapters
+  );
+  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
 
   const getSelectedVerses = () => {
-    const asArray = Object.entries(tagsState.versesTags);
+    const asArray = Object.entries(versesTags);
 
     const filtered = asArray.filter(([key, tags]) => {
       const info = key.split("-");
       return (
-        tagsState.selectedChapters[info[0]] === true &&
-        tags.some((tagID) =>
-          Object.keys(tagsState.selectedTags).includes(tagID)
-        )
+        selectedChapters[info[0]] === true &&
+        tags.some((tagID) => Object.keys(selectedTags).includes(tagID))
       );
     });
 
@@ -154,7 +148,7 @@ const VersesCount = () => {
 
   const selectedCount = getSelectedVerses();
 
-  if (!Object.keys(tagsState.selectedTags).length) return <></>;
+  if (!Object.keys(selectedTags).length) return <></>;
 
   return (
     <>

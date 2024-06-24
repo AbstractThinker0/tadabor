@@ -18,15 +18,18 @@ import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 function TagsDisplay() {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
-  const {
-    selectedTags,
-    selectedChapters,
-    tags,
-    versesTags,
-    currentChapter,
-    currentVerse,
-    scrollKey,
-  } = useAppSelector((state) => state.tagsPage);
+
+  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+
+  const selectedChapters = useAppSelector(
+    (state) => state.tagsPage.selectedChapters
+  );
+
+  const tags = useAppSelector((state) => state.tagsPage.tags);
+
+  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+
+  const currentVerse = useAppSelector((state) => state.tagsPage.currentVerse);
 
   function onClickDeleteSelected(tagID: string) {
     dispatch(tagsPageActions.deselectTag(tagID));
@@ -111,12 +114,7 @@ function TagsDisplay() {
             )}
           </>
         ) : (
-          <ListVerses
-            currentChapter={currentChapter}
-            versesTags={versesTags}
-            tags={tags}
-            scrollKey={scrollKey}
-          />
+          <ListVerses versesTags={versesTags} tags={tags} />
         )}
       </div>
       <VerseTagsModal
@@ -229,74 +227,76 @@ const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
 };
 
 interface ListVersesProps {
-  currentChapter: number;
   versesTags: versesTagsProps;
   tags: tagsProps;
-  scrollKey: string;
 }
 
-const ListVerses = memo(
-  ({ currentChapter, versesTags, tags, scrollKey }: ListVersesProps) => {
-    const quranService = useQuran();
+const ListVerses = memo(({ versesTags, tags }: ListVersesProps) => {
+  const quranService = useQuran();
 
-    const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
-    const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-    const listRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      const verseToHighlight = scrollKey
-        ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
-        : "";
+  const currentChapter = useAppSelector(
+    (state) => state.tagsPage.currentChapter
+  );
 
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, [scrollKey, isPending]);
+  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
 
-    useEffect(() => {
-      //
-      startTransition(() => {
-        setStateVerses(quranService.getVerses(currentChapter));
+  useEffect(() => {
+    const verseToHighlight = scrollKey
+      ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
+      : "";
+
+    if (verseToHighlight) {
+      verseToHighlight.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
       });
-    }, [currentChapter]);
+    }
+  }, [scrollKey, isPending]);
 
-    return (
-      <>
-        <div className="card-header text-center fs-3 tags-display-chapter-title">
-          سورة {quranService.getChapterName(currentChapter)}
-        </div>
-        <div className="card-body tags-display-chapter-verses" ref={listRef}>
-          {isPending ? (
-            <LoadingSpinner />
-          ) : (
-            stateVerses.map((verse) => (
-              <div
-                key={verse.key}
-                data-id={verse.key}
-                className={`tags-display-chapter-verses-item ${
-                  scrollKey === verse.key
-                    ? "tags-display-chapter-verses-item-highlighted"
-                    : ""
-                }`}
-              >
-                {versesTags[verse.key] !== undefined && (
-                  <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-                )}
-                <ListVerseComponent verse={verse} />
-                <NoteText verseKey={verse.key} />
-              </div>
-            ))
-          )}
-        </div>
-      </>
-    );
-  }
-);
+  useEffect(() => {
+    //
+    startTransition(() => {
+      setStateVerses(quranService.getVerses(currentChapter));
+    });
+  }, [currentChapter]);
+
+  return (
+    <>
+      <div className="card-header text-center fs-3 tags-display-chapter-title">
+        سورة {quranService.getChapterName(currentChapter)}
+      </div>
+      <div className="card-body tags-display-chapter-verses" ref={listRef}>
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse) => (
+            <div
+              key={verse.key}
+              data-id={verse.key}
+              className={`tags-display-chapter-verses-item ${
+                scrollKey === verse.key
+                  ? "tags-display-chapter-verses-item-highlighted"
+                  : ""
+              }`}
+            >
+              {versesTags[verse.key] !== undefined && (
+                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+              )}
+              <ListVerseComponent verse={verse} />
+              <NoteText verseKey={verse.key} />
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  );
+});
 
 ListVerses.displayName = "ListVerses";
 

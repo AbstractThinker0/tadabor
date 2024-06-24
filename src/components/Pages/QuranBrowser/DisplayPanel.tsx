@@ -19,16 +19,8 @@ const DisplayPanel = () => {
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const {
-    searchingChapters,
-    searchResult,
-    searchError,
-    searchingString,
-    selectChapter,
-    searchingMethod,
-    searchIndexes,
-    scrollKey,
-  } = useAppSelector((state) => state.qbPage);
+  const searchResult = useAppSelector((state) => state.qbPage.searchResult);
+  const searchError = useAppSelector((state) => state.qbPage.searchError);
 
   // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
   const refListVerses = useRef<HTMLDivElement>(null);
@@ -53,14 +45,10 @@ const DisplayPanel = () => {
           {searchResult.length || searchError ? (
             <ListSearchResults
               versesArray={searchResult}
-              searchToken={searchingString.trim()}
               searchError={searchError}
-              searchMethod={searchingMethod}
-              searchingChapters={searchingChapters}
-              searchIndexes={searchIndexes}
             />
           ) : (
-            <ListVerses selectChapter={selectChapter} scrollKey={scrollKey} />
+            <ListVerses />
           )}
         </div>
       )}
@@ -84,17 +72,16 @@ const ListTitle = ({ chapterName }: ListTitleProps) => {
 
 ListTitle.displayName = "ListTitle";
 
-interface ListVersesProps {
-  selectChapter: number;
-  scrollKey: string;
-}
-
-const ListVerses = ({ selectChapter, scrollKey }: ListVersesProps) => {
+const ListVerses = () => {
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
+
+  const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
+
+  const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
 
   const chapterName = quranService.getChapterName(selectChapter);
 

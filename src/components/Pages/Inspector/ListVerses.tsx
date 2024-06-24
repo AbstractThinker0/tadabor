@@ -11,7 +11,7 @@ import { Collapse, Tooltip } from "bootstrap";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
 import { getRootMatches } from "@/util/util";
@@ -32,15 +32,16 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface ListVersesProps {
   currentChapter: number;
-  scrollKey: string;
 }
 
-const ListVerses = ({ currentChapter, scrollKey }: ListVersesProps) => {
+const ListVerses = ({ currentChapter }: ListVersesProps) => {
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
+
+  const scrollKey = useAppSelector((state) => state.inspectorPage.scrollKey);
 
   useEffect(() => {
     //

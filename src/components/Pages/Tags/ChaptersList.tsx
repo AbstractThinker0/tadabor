@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { selectedChaptersType } from "@/types";
 import useQuran from "@/context/useQuran";
 
-interface ChaptersListProps {
-  currentChapter: number;
-  selectedChapters: selectedChaptersType;
-}
-
-const ChaptersList = ({
-  currentChapter,
-  selectedChapters,
-}: ChaptersListProps) => {
+const ChaptersList = () => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
   const [chapterToken, setChapterToken] = useState("");
+
+  const currentChapter = useAppSelector(
+    (state) => state.tagsPage.currentChapter
+  );
+
+  const selectedChapters = useAppSelector(
+    (state) => state.tagsPage.selectedChapters
+  );
 
   useEffect(() => {
     const child = refChapter.current;

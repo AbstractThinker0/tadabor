@@ -15,7 +15,9 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const SearcherDisplay = () => {
-  const { search_roots } = useAppSelector((state) => state.searcherPage);
+  const search_roots = useAppSelector(
+    (state) => state.searcherPage.search_roots
+  );
 
   const rootsArray = Object.keys(search_roots);
 
@@ -63,7 +65,9 @@ const RootItem = ({ root_name, root_id }: RootItemProps) => {
 };
 
 const VersesList = () => {
-  const { search_roots } = useAppSelector((state) => state.searcherPage);
+  const search_roots = useAppSelector(
+    (state) => state.searcherPage.search_roots
+  );
   const quranService = useQuran();
 
   const dispatch = useAppDispatch();

@@ -112,8 +112,10 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const { searchString, searchInclusive } = useAppSelector(
-    (state) => state.rbPage
+  const searchString = useAppSelector((state) => state.rbPage.searchString);
+
+  const searchInclusive = useAppSelector(
+    (state) => state.rbPage.searchInclusive
   );
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);

@@ -9,12 +9,10 @@ import { selectedChaptersType } from "@/types";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 interface SelectionListChaptersProps {
-  currentChapter: number;
   handleCurrentChapter: (chapterID: number) => void;
 }
 
 const SelectionListChapters = ({
-  currentChapter,
   handleCurrentChapter,
 }: SelectionListChaptersProps) => {
   const quranService = useQuran();
@@ -22,7 +20,10 @@ const SelectionListChapters = ({
 
   const dispatch = useAppDispatch();
 
-  const { selectedChapters } = useAppSelector((state) => state.qbPage);
+  const currentChapter = useAppSelector((state) => state.qbPage.selectChapter);
+  const selectedChapters = useAppSelector(
+    (state) => state.qbPage.selectedChapters
+  );
 
   const [chapterSearch, setChapterSearch] = useState("");
 

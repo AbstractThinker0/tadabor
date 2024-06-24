@@ -13,31 +13,37 @@ import {
 } from "@/components/Generic/Modal";
 
 const DeleteColorModal = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+  const currentColor = useAppSelector(
+    (state) => state.coloringPage.currentColor
+  );
+
   const dispatch = useAppDispatch();
 
   function deleteColor(colorID: string) {
     dispatch(coloringPageActions.deleteColor(colorID));
     dbFuncs.deleteColor(colorID);
 
-    for (const verseKey in coloringState.coloredVerses) {
-      if (coloringState.coloredVerses[verseKey].colorID === colorID) {
+    for (const verseKey in coloredVerses) {
+      if (coloredVerses[verseKey].colorID === colorID) {
         dbFuncs.deleteVerseColor(verseKey);
       }
     }
   }
 
   function onClickDelete() {
-    if (!coloringState.currentColor) return;
+    if (!currentColor) return;
 
-    deleteColor(coloringState.currentColor.colorID);
+    deleteColor(currentColor.colorID);
   }
 
   const getColoredVerses = (colorID: string | undefined) => {
     if (!colorID) return 0;
 
-    return Object.keys(coloringState.coloredVerses).filter((verseKey) => {
-      return coloringState.coloredVerses[verseKey]?.colorID === colorID;
+    return Object.keys(coloredVerses).filter((verseKey) => {
+      return coloredVerses[verseKey]?.colorID === colorID;
     }).length;
   };
 
@@ -53,21 +59,20 @@ const DeleteColorModal = () => {
           <span
             className="modal-deletecolor-label rounded"
             style={
-              coloringState.currentColor
+              currentColor
                 ? {
-                    backgroundColor: coloringState.currentColor.colorCode,
-                    color: getTextColor(coloringState.currentColor.colorCode),
+                    backgroundColor: currentColor.colorCode,
+                    color: getTextColor(currentColor.colorCode),
                   }
                 : {}
             }
           >
-            {coloringState.currentColor?.colorDisplay}
+            {currentColor?.colorDisplay}
           </span>{" "}
           color? All verses colored with this color will be uncolored.
         </p>
         <p>
-          Number of verses affected:{" "}
-          {getColoredVerses(coloringState.currentColor?.colorID)}
+          Number of verses affected: {getColoredVerses(currentColor?.colorID)}
         </p>
       </ModalBody>
       <ModalFooter>

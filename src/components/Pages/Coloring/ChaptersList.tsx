@@ -9,7 +9,14 @@ import { coloringPageActions } from "@/store/slices/pages/coloring";
 import { selectedChaptersType } from "@/types";
 
 const ChaptersList = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const currentChapter = useAppSelector(
+    (state) => state.coloringPage.currentChapter
+  );
+
+  const selectedChapters = useAppSelector(
+    (state) => state.coloringPage.selectedChapters
+  );
+
   const dispatch = useAppDispatch();
   const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
@@ -49,7 +56,7 @@ const ChaptersList = () => {
       parent.scrollTop =
         child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
     }
-  }, [coloringState.currentChapter]);
+  }, [currentChapter]);
 
   function onChangeSelectChapter(chapterID: number) {
     dispatch(coloringPageActions.toggleSelectChapter(chapterID));
@@ -72,27 +79,27 @@ const ChaptersList = () => {
       selectedChapters[chapter.id] = false;
     });
 
-    selectedChapters[coloringState.currentChapter] = true;
+    selectedChapters[currentChapter] = true;
 
     dispatch(coloringPageActions.setSelectedChapters(selectedChapters));
   }
 
-  const currentSelectedChapters = Object.keys(
-    coloringState.selectedChapters
-  ).filter((chapterID) => coloringState.selectedChapters[chapterID] === true);
+  const currentSelectedChapters = Object.keys(selectedChapters).filter(
+    (chapterID) => selectedChapters[chapterID] === true
+  );
 
   const getSelectedCount = currentSelectedChapters.length;
 
   const onlyCurrentSelected =
     getSelectedCount === 1 &&
-    Number(currentSelectedChapters[0]) === coloringState.currentChapter;
+    Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
     <div className="side-chapters">
       <input
         className="side-chapters-search"
         type="text"
-        placeholder={quranService.getChapterName(coloringState.currentChapter)}
+        placeholder={quranService.getChapterName(currentChapter)}
         value={chapterToken}
         onChange={onChangeChapterToken}
       />
@@ -103,7 +110,7 @@ const ChaptersList = () => {
             <div
               key={chapter.id}
               className={`side-chapters-list-item ${
-                coloringState.currentChapter === chapter.id
+                currentChapter === chapter.id
                   ? "side-chapters-list-item-selected"
                   : ""
               }`}
@@ -118,8 +125,8 @@ const ChaptersList = () => {
               <input
                 type="checkbox"
                 checked={
-                  coloringState.selectedChapters[chapter.id] !== undefined
-                    ? coloringState.selectedChapters[chapter.id]
+                  selectedChapters[chapter.id] !== undefined
+                    ? selectedChapters[chapter.id]
                     : true
                 }
                 onChange={() => onChangeSelectChapter(chapter.id)}

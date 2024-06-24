@@ -8,7 +8,6 @@ import useQuran from "@/context/useQuran";
 import SelectionListChapters from "@/components/Pages/QuranBrowser/SelectionListChapters";
 import SelectionListRoots from "@/components/Pages/QuranBrowser/SelectionListRoots";
 
-import { verseMatchResult } from "@/types";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 import { SearchButton } from "@/components/Generic/Buttons";
@@ -19,15 +18,19 @@ const SearchPanel = () => {
   const quranService = useQuran();
   const { t } = useTranslation();
 
-  const {
-    selectChapter,
-    searchMethod,
-    searchDiacritics,
-    searchIdentical,
-    searchStart,
-    searchString,
-    searchResult,
-  } = useAppSelector((state) => state.qbPage);
+  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+
+  const searchDiacritics = useAppSelector(
+    (state) => state.qbPage.searchDiacritics
+  );
+
+  const searchIdentical = useAppSelector(
+    (state) => state.qbPage.searchIdentical
+  );
+
+  const searchStart = useAppSelector((state) => state.qbPage.searchStart);
+
+  const searchString = useAppSelector((state) => state.qbPage.searchString);
 
   const dispatch = useAppDispatch();
 
@@ -63,10 +66,7 @@ const SearchPanel = () => {
 
   return (
     <div className="browser-search">
-      <SelectionListChapters
-        handleCurrentChapter={handleCurrentChapter}
-        currentChapter={selectChapter}
-      />
+      <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
       <div className="browser-search-options">
         <RadioSearchMethod
           searchMethod={searchMethod}
@@ -106,7 +106,7 @@ const SearchPanel = () => {
         isDisabled={!isRootSearch}
         searchString={searchString}
       />
-      <SearchSuccessComponent searchResult={searchResult} />
+      <SearchSuccessComponent />
     </div>
   );
 };
@@ -221,14 +221,10 @@ const FormWordSearch = ({
   );
 };
 
-interface SearchSuccessComponentProps {
-  searchResult: verseMatchResult[];
-}
-
-const SearchSuccessComponent = ({
-  searchResult,
-}: SearchSuccessComponentProps) => {
+const SearchSuccessComponent = () => {
   const { t } = useTranslation();
+  const searchResult = useAppSelector((state) => state.qbPage.searchResult);
+
   return (
     <>
       {searchResult.length > 0 && (

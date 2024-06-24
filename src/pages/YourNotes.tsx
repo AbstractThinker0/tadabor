@@ -27,7 +27,7 @@ function YourNotes() {
   const refButtonRoots = useRef<HTMLButtonElement>(null);
   const refButtonTrans = useRef<HTMLButtonElement>(null);
 
-  const { currentTab } = useAppSelector((state) => state.ynPage);
+  const currentTab = useAppSelector((state) => state.ynPage.currentTab);
 
   useEffect(() => {
     //

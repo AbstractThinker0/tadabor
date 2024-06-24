@@ -20,16 +20,23 @@ import {
 const activeClassName = "verse-modal-colors-item-active";
 
 const VerseModal = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const currentVerse = useAppSelector(
+    (state) => state.coloringPage.currentVerse
+  );
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
+
   const dispatch = useAppDispatch();
   const quranService = useQuran();
   const refVerseModal = useRef<HTMLDivElement>(null);
 
-  const currentVerseKey = coloringState.currentVerse?.key;
+  const currentVerseKey = currentVerse?.key;
 
   const [chosenColor, setChosenColor] = useState(
-    currentVerseKey && coloringState.coloredVerses[currentVerseKey]
-      ? coloringState.coloredVerses[currentVerseKey]
+    currentVerseKey && coloredVerses[currentVerseKey]
+      ? coloredVerses[currentVerseKey]
       : null
   );
 
@@ -39,13 +46,13 @@ const VerseModal = () => {
       return;
     }
 
-    if (!coloringState.coloredVerses[currentVerseKey]) {
+    if (!coloredVerses[currentVerseKey]) {
       setChosenColor(null);
       return;
     }
 
-    setChosenColor(coloringState.coloredVerses[currentVerseKey]);
-  }, [coloringState.currentVerse]);
+    setChosenColor(coloredVerses[currentVerseKey]);
+  }, [currentVerse]);
 
   useEffect(() => {
     const modelElement = refVerseModal.current;
@@ -84,8 +91,8 @@ const VerseModal = () => {
   }
 
   function onClickSave() {
-    if (coloringState.currentVerse?.key) {
-      setVerseColor(coloringState.currentVerse.key, chosenColor);
+    if (currentVerse?.key) {
+      setVerseColor(currentVerse.key, chosenColor);
     }
   }
 
@@ -112,10 +119,10 @@ const VerseModal = () => {
       <ModalBody>
         <div className="verse-modal-title text-center">
           (
-          {coloringState.currentVerse
-            ? `${quranService.getChapterName(
-                coloringState.currentVerse.suraid
-              )}:${coloringState.currentVerse.verseid}`
+          {currentVerse
+            ? `${quranService.getChapterName(currentVerse.suraid)}:${
+                currentVerse.verseid
+              }`
             : ""}
           )
         </div>
@@ -130,26 +137,22 @@ const VerseModal = () => {
               : {}
           }
         >
-          {coloringState.currentVerse?.versetext}
+          {currentVerse?.versetext}
         </div>
         <div className="verse-modal-colors">
-          {Object.keys(coloringState.colorsList).map((colorID) => (
+          {Object.keys(colorsList).map((colorID) => (
             <div
-              onClick={(event) =>
-                onClickColor(event, coloringState.colorsList[colorID])
-              }
+              onClick={(event) => onClickColor(event, colorsList[colorID])}
               key={colorID}
               className={`verse-modal-colors-item text-center fs-4 mb-1 ${
                 chosenColor?.colorID === colorID ? activeClassName : ""
               }`}
               style={{
-                backgroundColor: coloringState.colorsList[colorID].colorCode,
-                color: getTextColor(
-                  coloringState.colorsList[colorID].colorCode
-                ),
+                backgroundColor: colorsList[colorID].colorCode,
+                color: getTextColor(colorsList[colorID].colorCode),
               }}
             >
-              {coloringState.colorsList[colorID].colorDisplay}
+              {colorsList[colorID].colorDisplay}
             </div>
           ))}
         </div>

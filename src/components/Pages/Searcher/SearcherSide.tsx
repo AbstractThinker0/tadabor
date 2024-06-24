@@ -40,7 +40,9 @@ const SearcherSide = () => {
 
 const CountVerses = () => {
   const { t } = useTranslation();
-  const { verses_count } = useAppSelector((state) => state.searcherPage);
+  const verses_count = useAppSelector(
+    (state) => state.searcherPage.verses_count
+  );
 
   if (!verses_count) return <></>;
 
@@ -64,7 +66,9 @@ const RootsList = ({ searchString }: RootsListProps) => {
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
-  const { search_roots } = useAppSelector((state) => state.searcherPage);
+  const search_roots = useAppSelector(
+    (state) => state.searcherPage.search_roots
+  );
 
   useEffect(() => {
     startTransition(() => {

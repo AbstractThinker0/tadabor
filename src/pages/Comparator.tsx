@@ -22,13 +22,22 @@ import "@/styles/pages/comparator.scss";
 function Comparator() {
   const quranService = useQuran();
 
-  const { currentChapter, currentVerse } = useAppSelector(
-    (state) => state.comparatorPage
+  const currentChapter = useAppSelector(
+    (state) => state.comparatorPage.currentChapter
   );
 
-  const { loading, data, complete, error } = useAppSelector(
-    (state) => state.translations
+  const currentVerse = useAppSelector(
+    (state) => state.comparatorPage.currentVerse
   );
+
+  const loading = useAppSelector((state) => state.translations.loading);
+
+  const data = useAppSelector((state) => state.translations.data);
+
+  const complete = useAppSelector((state) => state.translations.complete);
+
+  const error = useAppSelector((state) => state.translations.error);
+
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
   const dispatch = useAppDispatch();

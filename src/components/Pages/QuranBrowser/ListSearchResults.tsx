@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import useQuran from "@/context/useQuran";
@@ -22,20 +22,14 @@ import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
-  searchToken: string;
+
   searchError: boolean;
-  searchMethod: string;
-  searchingChapters: string[];
-  searchIndexes: searchIndexProps[];
 }
 
 const ListSearchResults = ({
   versesArray,
-  searchToken,
+
   searchError,
-  searchMethod,
-  searchingChapters,
-  searchIndexes,
 }: ListSearchResultsProps) => {
   const quranService = useQuran();
   const { t } = useTranslation();
@@ -46,6 +40,16 @@ const ListSearchResults = ({
   const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
 
   const refListVerses = useRef<HTMLDivElement>(null);
+
+  const searchingChapters = useAppSelector(
+    (state) => state.qbPage.searchingChapters
+  );
+
+  const searchingMethod = useAppSelector(
+    (state) => state.qbPage.searchingMethod
+  );
+
+  const searchIndexes = useAppSelector((state) => state.qbPage.searchIndexes);
 
   useEffect(() => {
     startTransition(() => {
@@ -74,7 +78,7 @@ const ListSearchResults = ({
 
   const memoHandleRootClick = useCallback(handleRootClick, []);
 
-  const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
+  const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 
   if (searchingChapters.length === 0) {
     return (
@@ -87,8 +91,7 @@ const ListSearchResults = ({
   return (
     <>
       <SearchTitle
-        searchMethod={searchMethod}
-        searchToken={searchToken}
+        searchMethod={searchingMethod}
         searchChapters={searchingChapters}
       />
       {isRootSearch && (
@@ -116,7 +119,9 @@ const ListSearchResults = ({
             </div>
           ))
         )}
-        {searchError && <SearchErrorsComponent searchMethod={searchMethod} />}
+        {searchError && (
+          <SearchErrorsComponent searchMethod={searchingMethod} />
+        )}
       </div>
     </>
   );
@@ -126,15 +131,14 @@ ListSearchResults.displayName = "ListSearchResults";
 
 interface SearchTitleProps {
   searchMethod: string;
-  searchToken: string;
   searchChapters: string[];
 }
 
-const SearchTitle = ({
-  searchMethod,
-  searchToken,
-  searchChapters,
-}: SearchTitleProps) => {
+const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
+  const searchingString = useAppSelector(
+    (state) => state.qbPage.searchingString
+  );
+
   const { t } = useTranslation();
 
   const searchType =
@@ -147,7 +151,7 @@ const SearchTitle = ({
 
   const searchText = `${t(
     "search_result"
-  )} ${searchType} "${searchToken}" ${searchScopeText}`;
+  )} ${searchType} "${searchingString}" ${searchScopeText}`;
 
   const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
     return (

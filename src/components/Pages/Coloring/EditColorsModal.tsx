@@ -16,27 +16,27 @@ import {
 } from "@/components/Generic/Modal";
 
 const EditColorsModal = () => {
-  const coloringState = useAppSelector((state) => state.coloringPage);
+  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
+  const coloredVerses = useAppSelector(
+    (state) => state.coloringPage.coloredVerses
+  );
+
   const dispatch = useAppDispatch();
 
-  const [listColors, setListColors] = useState({ ...coloringState.colorsList });
+  const [listColors, setListColors] = useState({ ...colorsList });
   const [currentColor, setCurrentColor] = useState(
-    Object.keys(coloringState.colorsList).length
-      ? coloringState.colorsList[Object.keys(coloringState.colorsList)[0]]
-          .colorID
+    Object.keys(colorsList).length
+      ? colorsList[Object.keys(colorsList)[0]].colorID
       : undefined
   );
 
   useEffect(() => {
-    setListColors({ ...coloringState.colorsList });
+    setListColors({ ...colorsList });
 
-    if (Object.keys(coloringState.colorsList)[0]) {
-      setCurrentColor(
-        coloringState.colorsList[Object.keys(coloringState.colorsList)[0]]
-          .colorID
-      );
+    if (Object.keys(colorsList)[0]) {
+      setCurrentColor(colorsList[Object.keys(colorsList)[0]].colorID);
     }
-  }, [coloringState.colorsList]);
+  }, [colorsList]);
 
   function onChangeColor(event: React.ChangeEvent<HTMLSelectElement>) {
     setCurrentColor(event.target.value);
@@ -65,9 +65,8 @@ const EditColorsModal = () => {
     });
 
     const newColoredVerses: coloredProps = {};
-    Object.keys(coloringState.coloredVerses).forEach((verseKey) => {
-      newColoredVerses[verseKey] =
-        listColors[coloringState.coloredVerses[verseKey].colorID];
+    Object.keys(coloredVerses).forEach((verseKey) => {
+      newColoredVerses[verseKey] = listColors[coloredVerses[verseKey].colorID];
     });
 
     dispatch(coloringPageActions.setColoredVerses(newColoredVerses));

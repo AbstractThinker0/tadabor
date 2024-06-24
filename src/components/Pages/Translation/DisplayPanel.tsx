@@ -21,7 +21,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const quranService = useQuran();
 
   const dispatch = useAppDispatch();
-  const { scrollKey } = useAppSelector((state) => state.translationPage);
+  const scrollKey = useAppSelector((state) => state.translationPage.scrollKey);
 
   const refDisplay = useRef<HTMLDivElement>(null);
   const refListVerses = useRef<HTMLDivElement>(null);
