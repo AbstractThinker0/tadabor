@@ -419,7 +419,7 @@ const WordBox = ({
 
   const wordIndex = Number(selectedWord.split(":")[1]);
 
-  const renderLetter = (
+  const getLetter = (
     letter: string,
     wordIndex: number,
     letterIndex: number
@@ -440,30 +440,42 @@ const WordBox = ({
       return null;
     }
 
-    return (
-      <span key={letterIndex}>
-        {letterDef && lettersDefinitions[letterDef]
-          ? `${lettersDefinitions[letterDef].definition}`
-          : letter}
-      </span>
-    );
+    const isDef = !!(letterDef && lettersDefinitions[letterDef]);
+
+    return {
+      isDef,
+      definition: isDef ? lettersDefinitions[letterDef].definition : letter,
+    };
   };
 
-  const renderWord = (word: string, index: number) => (
-    <Fragment key={index}>
-      <span
-        className={`display-verses-item-wordbox-item${
-          index === wordIndex
-            ? " display-verses-item-wordbox-item-selected"
-            : ""
-        }`}
-      >
-        {splitArabicLetters(word).map((letter, letterIndex) =>
-          renderLetter(letter, index, letterIndex)
-        )}
-      </span>{" "}
-    </Fragment>
-  );
+  const renderWord = (word: string, index: number) => {
+    type DataType = { isDef: boolean; definition: string }[];
+
+    const data: DataType = [];
+    splitArabicLetters(word).forEach((letter, letterIndex) => {
+      const currData = getLetter(letter, index, letterIndex);
+      if (currData) data.push(currData);
+    });
+
+    return (
+      <Fragment key={index}>
+        <span
+          className={`display-verses-item-wordbox-item${
+            index === wordIndex
+              ? " display-verses-item-wordbox-item-selected"
+              : ""
+          }`}
+        >
+          {data.map((def, index) => (
+            <span key={index}>
+              {def.definition}
+              {data.length - 1 !== index && def.isDef ? " " : ""}
+            </span>
+          ))}
+        </span>{" "}
+      </Fragment>
+    );
+  };
 
   return (
     <CollapseContent
