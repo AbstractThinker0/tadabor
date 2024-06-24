@@ -68,11 +68,10 @@ class quranClass {
     return root;
   };
 
-  getLetterByKey = (letterKey: string) => {
-    const verseIndexes = letterKey.split(":");
-    const verseText = this.getVerseByKey(verseIndexes[0]).versetext;
+  getLetterByKey = (verseKey: string, letterKey: string) => {
+    const verseText = this.getVerseByKey(verseKey).versetext;
     const verseWords = verseText.split(" ");
-    const letterIndexes = verseIndexes[1].split("-");
+    const letterIndexes = letterKey.split("-");
     const letterSplit = splitArabicLetters(
       verseWords[Number(letterIndexes[0])]
     )[Number(letterIndexes[1])];

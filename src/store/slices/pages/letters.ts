@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { LettersDefinitionType, LettersDataType } from "@/types";
-import { dbFuncs } from "@/util/db";
+import { LettersDefinitionType, LettersDataByVerseType } from "@/types";
+import { dbFuncs, ILetterData } from "@/util/db";
 import { LetterRole } from "@/util/consts";
 
 interface LettersPageState {
@@ -12,7 +12,7 @@ interface LettersPageState {
   definitionsLoading: boolean;
   definitionsComplete: boolean;
   definitionsError: boolean;
-  lettersData: LettersDataType;
+  lettersData: LettersDataByVerseType;
   dataLoading: boolean;
   dataComplete: boolean;
   dataError: boolean;
@@ -58,10 +58,10 @@ export const fetchLettersDefinitions = createAsyncThunk<
 });
 
 export const fetchLettersData = createAsyncThunk<
-  false | LettersDataType,
+  false | ILetterData[],
   void,
   { state: { lettersPage: LettersPageState } }
->("lettersPage/fetchLettersRoles", async (_, { getState }) => {
+>("lettersPage/fetchLettersData", async (_, { getState }) => {
   const { dataComplete } = getState().lettersPage;
   if (dataComplete) {
     return false;
@@ -69,16 +69,7 @@ export const fetchLettersData = createAsyncThunk<
 
   const dbData = await dbFuncs.loadLettersData();
 
-  const notesData: LettersDataType = {};
-
-  dbData.forEach((letter) => {
-    notesData[letter.letter_key] = {
-      letter_role: letter.letter_role,
-      def_id: letter.def_id,
-    };
-  });
-
-  return notesData;
+  return dbData;
 });
 
 const lettersPageSlice = createSlice({
@@ -118,7 +109,16 @@ const lettersPageSlice = createSlice({
         def_id: string;
       }>
     ) => {
-      state.lettersData[action.payload.letter] = {
+      const letterInfo = action.payload.letter.split(":");
+      const verseKey = letterInfo[0];
+      const letterKey = letterInfo[1];
+
+      if (!state.lettersData[verseKey]) {
+        state.lettersData[verseKey] = {}; // Initialize if not already
+      }
+
+      state.lettersData[verseKey][letterKey] = {
+        letter_key: letterKey,
         letter_role: action.payload.role,
         def_id: action.payload.def_id,
       };
@@ -143,7 +143,25 @@ const lettersPageSlice = createSlice({
         state.dataLoading = false;
         state.dataComplete = true;
         if (action.payload) {
-          state.lettersData = action.payload;
+          const notesData: LettersDataByVerseType = {};
+
+          action.payload.forEach((letter) => {
+            const letterInfo = letter.letter_key.split(":");
+            const verseKey = letterInfo[0];
+            const letterKey = letterInfo[1];
+
+            if (!notesData[verseKey]) {
+              notesData[verseKey] = {}; // Initialize if not already
+            }
+
+            notesData[verseKey][letterKey] = {
+              letter_key: letterKey,
+              letter_role: letter.letter_role,
+              def_id: letter.def_id,
+            };
+          });
+
+          state.lettersData = notesData;
         }
       })
       .addCase(fetchLettersData.pending, (state) => {

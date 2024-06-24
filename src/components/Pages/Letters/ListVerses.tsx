@@ -91,9 +91,10 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
   const [selectedLetter, setSelectedLetter] = useState("");
   const [selectedWord, setSelectedWord] = useState("");
 
-  const letterData = useAppSelector(
-    (state) => state.lettersPage.lettersData[selectedLetter]
+  const verseLetterData = useAppSelector(
+    (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
   ) ?? {
+    letter_key: selectedLetter,
     letter_role: LetterRole.Unit,
     def_id: "",
   };
@@ -178,7 +179,7 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
         refCollapse={refCollapsibleLetterBox}
         verseKey={verse.key}
         selectedLetter={selectedLetter}
-        letterData={letterData}
+        verseLetterData={verseLetterData}
       />
     </div>
   );
@@ -190,14 +191,14 @@ interface LetterBoxProps {
   refCollapse?: React.RefObject<HTMLDivElement>;
   verseKey: string;
   selectedLetter: string;
-  letterData: LetterDataType;
+  verseLetterData: LetterDataType;
 }
 
 const LetterBox = ({
   refCollapse,
   verseKey,
   selectedLetter,
-  letterData,
+  verseLetterData,
 }: LetterBoxProps) => {
   const dispatch = useAppDispatch();
 
@@ -208,11 +209,11 @@ const LetterBox = ({
   );
 
   const [letterRole, setLetterRole] = useState<LetterRole>(
-    letterData.letter_role
+    verseLetterData.letter_role
   );
 
   const [letterDefinitionID, setLetterDefinitionID] = useState(
-    letterData.def_id
+    verseLetterData.def_id
   );
 
   const onChangeSelectRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -225,14 +226,14 @@ const LetterBox = ({
 
   const onClickSave = () => {
     dbFuncs.saveLetterData({
-      letter_key: selectedLetter,
+      letter_key: `${verseKey}:${selectedLetter}`,
       letter_role: letterRole,
       def_id: letterDefinitionID,
     });
 
     dispatch(
       lettersPageActions.setLetterData({
-        letter: selectedLetter,
+        letter: `${verseKey}:${selectedLetter}`,
         role: letterRole,
         def_id: letterDefinitionID,
       })
@@ -240,16 +241,16 @@ const LetterBox = ({
   };
 
   useEffect(() => {
-    setLetterRole(letterData.letter_role);
-  }, [selectedLetter, letterData.letter_role]);
+    setLetterRole(verseLetterData.letter_role);
+  }, [selectedLetter, verseLetterData.letter_role]);
 
   useEffect(() => {
-    setLetterDefinitionID(letterData.def_id);
-  }, [selectedLetter, letterData.def_id]);
+    setLetterDefinitionID(verseLetterData.def_id);
+  }, [selectedLetter, verseLetterData.def_id]);
 
   const renderLetterDefinitionOptions = () => {
     const letter = selectedLetter
-      ? quranService.getLetterByKey(selectedLetter)
+      ? quranService.getLetterByKey(verseKey, selectedLetter)
       : "";
     const definition =
       lettersDefinitions[normalizeAlif(letter, false, true)]?.definition;
@@ -343,7 +344,7 @@ const VerseWords = ({
               <SingleLetter
                 key={letterIndex}
                 letter={letter}
-                letterKey={`${verseKey}:${wordIndex}-${letterIndex}`}
+                letterKey={`${wordIndex}-${letterIndex}`}
                 selectedLetter={selectedLetter}
                 handleClickLetter={handleClickLetter}
               />
@@ -404,7 +405,9 @@ const WordBox = ({
 }: WordBoxProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  const lettersData = useAppSelector((state) => state.lettersPage.lettersData);
+  const verseLettersData =
+    useAppSelector((state) => state.lettersPage.lettersData[verseKey]) || {};
+
   const lettersDefinitions = useAppSelector(
     (state) => state.lettersPage.lettersDefinitions
   );
@@ -413,20 +416,20 @@ const WordBox = ({
 
   const renderLetter = (
     letter: string,
-    verseKey: string,
     wordIndex: number,
     letterIndex: number
   ) => {
-    const letterKey = `${verseKey}:${wordIndex}-${letterIndex}`;
+    const letterKey = `${wordIndex}-${letterIndex}`;
     const currentLetter = removeDiacritics(letter);
     const letterDef = Object.keys(lettersDefinitions).find(
       (key) =>
         normalizeAlif(key) === normalizeAlif(currentLetter) &&
         lettersDefinitions[key].preset_id &&
-        lettersData[letterKey]?.def_id &&
-        lettersDefinitions[key].preset_id === lettersData[letterKey].def_id
+        verseLettersData[letterKey]?.def_id &&
+        lettersDefinitions[key].preset_id === verseLettersData[letterKey].def_id
     );
-    const letterRole = lettersData[letterKey]?.letter_role || LetterRole.Unit;
+    const letterRole =
+      verseLettersData[letterKey]?.letter_role || LetterRole.Unit;
 
     if (letterRole !== LetterRole.Unit) {
       return null;
@@ -435,7 +438,7 @@ const WordBox = ({
     return (
       <span key={letterIndex}>
         {letterDef && lettersDefinitions[letterDef]
-          ? lettersDefinitions[letterDef].definition
+          ? `${lettersDefinitions[letterDef].definition}`
           : letter}
       </span>
     );
@@ -451,7 +454,7 @@ const WordBox = ({
         }`}
       >
         {splitArabicLetters(word).map((letter, letterIndex) =>
-          renderLetter(letter, verseKey, index, letterIndex)
+          renderLetter(letter, index, letterIndex)
         )}
       </span>{" "}
     </Fragment>
