@@ -252,10 +252,15 @@ const LetterBox = ({
     const letter = selectedLetter
       ? quranService.getLetterByKey(verseKey, selectedLetter)
       : "";
-    const definition =
-      lettersDefinitions[normalizeAlif(letter, false, true)]?.definition;
 
-    return definition ? <option value="-1">{definition}</option> : <></>;
+    const letterDefinition =
+      lettersDefinitions[normalizeAlif(letter, false, true)];
+
+    return letterDefinition ? (
+      <option value="-1">{letterDefinition.definition}</option>
+    ) : (
+      <></>
+    );
   };
 
   return (
