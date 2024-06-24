@@ -468,6 +468,7 @@ const WordBox = ({
         >
           {data.map((def, index) => (
             <span key={index}>
+              {index > 0 && def.isDef ? " " : ""}
               {def.definition}
               {data.length - 1 !== index && def.isDef ? " " : ""}
             </span>
