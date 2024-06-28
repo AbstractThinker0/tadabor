@@ -74,6 +74,7 @@ export interface verseMatchResult {
 }
 
 interface LetterType {
+  name: string;
   definition: string;
   dir?: string;
   preset_id?: string;
@@ -95,4 +96,8 @@ export interface LetterDataByVerseType {
 
 export interface LettersDataByVerseType {
   [key: string]: LetterDataByVerseType;
+}
+
+export interface LettersPresetsType {
+  [key: string]: string;
 }

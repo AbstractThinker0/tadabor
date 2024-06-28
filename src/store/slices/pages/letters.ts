@@ -1,17 +1,26 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { LettersDefinitionType, LettersDataByVerseType } from "@/types";
+import {
+  LettersDefinitionType,
+  LettersDataByVerseType,
+  LettersPresetsType,
+} from "@/types";
 import { dbFuncs, ILetterData } from "@/util/db";
 import { LetterRole } from "@/util/consts";
 
 interface LettersPageState {
   currentChapter: number;
+  currentPreset: string;
   scrollKey: string;
   showQuranTab: boolean;
   lettersDefinitions: LettersDefinitionType;
   definitionsLoading: boolean;
   definitionsComplete: boolean;
   definitionsError: boolean;
+  letterPresets: LettersPresetsType;
+  presetsLoading: boolean;
+  presetsComplete: boolean;
+  presetsError: boolean;
   lettersData: LettersDataByVerseType;
   dataLoading: boolean;
   dataComplete: boolean;
@@ -20,12 +29,17 @@ interface LettersPageState {
 
 const initialState: LettersPageState = {
   currentChapter: 1,
+  currentPreset: "-1",
   scrollKey: "",
   showQuranTab: false,
   lettersDefinitions: {},
   definitionsLoading: true,
   definitionsComplete: false,
   definitionsError: false,
+  letterPresets: {},
+  presetsLoading: true,
+  presetsComplete: false,
+  presetsError: false,
   lettersData: {},
   dataLoading: true,
   dataComplete: false,
@@ -47,7 +61,13 @@ export const fetchLettersDefinitions = createAsyncThunk<
   const notesData: LettersDefinitionType = {};
 
   dbData.forEach((letter) => {
-    notesData[letter.name] = {
+    const defKey =
+      letter.preset_id === "-1"
+        ? letter.name
+        : `${letter.name}:${letter.preset_id}`;
+
+    notesData[defKey] = {
+      name: letter.name,
       definition: letter.definition,
       dir: letter.dir,
       preset_id: letter.preset_id,
@@ -72,12 +92,43 @@ export const fetchLettersData = createAsyncThunk<
   return dbData;
 });
 
+export const fetchLettersPresets = createAsyncThunk<
+  false | LettersPresetsType,
+  void,
+  { state: { lettersPage: LettersPageState } }
+>("lettersPage/fetchLettersPresets", async (_, { getState }) => {
+  const { presetsComplete } = getState().lettersPage;
+  if (presetsComplete) {
+    return false;
+  }
+
+  const dbData = await dbFuncs.loadLettersPresets();
+
+  const presetsData: LettersPresetsType = {};
+
+  dbData.forEach((preset) => {
+    presetsData[preset.id] = preset.name;
+  });
+
+  return presetsData;
+});
+
 const lettersPageSlice = createSlice({
   name: "lettersPage",
   initialState,
   reducers: {
     setCurrentChapter: (state, action: PayloadAction<number>) => {
       state.currentChapter = action.payload;
+    },
+    setCurrentPreset: (state, action: PayloadAction<string>) => {
+      state.currentPreset = action.payload;
+    },
+    setPreset: (
+      state,
+      action: PayloadAction<{ presetID: string; presetName: string }>
+    ) => {
+      state.letterPresets[action.payload.presetID] = action.payload.presetName;
+      state.currentPreset = action.payload.presetID;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
@@ -89,13 +140,19 @@ const lettersPageSlice = createSlice({
     setLetterDefinition: (
       state,
       action: PayloadAction<{
-        letter: string;
+        name: string;
         definition: string;
         preset_id: string;
         dir?: string;
       }>
     ) => {
-      state.lettersDefinitions[action.payload.letter] = {
+      const defKey =
+        action.payload.preset_id === "-1"
+          ? action.payload.name
+          : `${action.payload.name}:${action.payload.preset_id}`;
+
+      state.lettersDefinitions[defKey] = {
+        name: action.payload.name,
         definition: action.payload.definition,
         dir: action.payload.dir,
         preset_id: action.payload.preset_id,
@@ -138,6 +195,19 @@ const lettersPageSlice = createSlice({
       })
       .addCase(fetchLettersDefinitions.rejected, (state) => {
         state.definitionsError = true;
+      })
+      .addCase(fetchLettersPresets.fulfilled, (state, action) => {
+        state.presetsLoading = false;
+        state.presetsComplete = true;
+        if (action.payload) {
+          state.letterPresets = action.payload;
+        }
+      })
+      .addCase(fetchLettersPresets.pending, (state) => {
+        state.presetsLoading = true;
+      })
+      .addCase(fetchLettersPresets.rejected, (state) => {
+        state.presetsError = true;
       })
       .addCase(fetchLettersData.fulfilled, (state, action) => {
         state.dataLoading = false;

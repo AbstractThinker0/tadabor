@@ -27,6 +27,14 @@
     height: 100%;
     flex: 1;
 
+    &-preset {
+      width: 50%;
+      display: flex;
+      gap: 0.5rem;
+      padding-bottom: 1rem;
+      align-items: center;
+    }
+
     &-letters {
       display: flex;
       flex-direction: column;

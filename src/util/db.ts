@@ -130,20 +130,21 @@ const db = new tadaborDatabase();
 
 export const dbFuncs = {
   saveLetterDefinition: (
-    id: string,
     preset_id: string,
     name: string,
     definition: string,
     dir: string = ""
   ) => {
+    const defKey = preset_id === "-1" ? name : `${name}:${preset_id}`;
+
     return new Promise((resolve, reject) => {
       db.letters_def
-        .update(id, { preset_id, name, definition, dir })
+        .update(defKey, { preset_id, name, definition, dir })
         .then((updated) => {
           if (!updated) {
             db.letters_def
               .add({
-                id,
+                id: defKey,
                 preset_id,
                 name,
                 definition,

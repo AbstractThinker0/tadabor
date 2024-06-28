@@ -208,6 +208,10 @@ const LetterBox = ({
     (state) => state.lettersPage.lettersDefinitions
   );
 
+  const letterPresets = useAppSelector(
+    (state) => state.lettersPage.letterPresets
+  );
+
   const [letterRole, setLetterRole] = useState<LetterRole>(
     verseLetterData.letter_role
   );
@@ -253,13 +257,34 @@ const LetterBox = ({
       ? quranService.getLetterByKey(verseKey, selectedLetter)
       : "";
 
-    const letterDefinition =
-      lettersDefinitions[normalizeAlif(letter, false, true)];
+    const normalizedLetter = normalizeAlif(letter, false, true);
 
-    return letterDefinition ? (
-      <option value="-1">{letterDefinition.definition}</option>
-    ) : (
-      <></>
+    const letterDefinition = lettersDefinitions[normalizedLetter];
+
+    return (
+      <>
+        {letterDefinition ? (
+          <option value="-1">{letterDefinition.definition}</option>
+        ) : (
+          <></>
+        )}
+        <>
+          {Object.keys(letterPresets).map((presetID) => {
+            const defKey = `${normalizedLetter}:${presetID}`;
+
+            const letterDef = lettersDefinitions[defKey];
+            return (
+              <Fragment key={defKey}>
+                {letterDef ? (
+                  <option value={defKey}>{letterDef.definition}</option>
+                ) : (
+                  <></>
+                )}
+              </Fragment>
+            );
+          })}
+        </>
+      </>
     );
   };
 
@@ -425,14 +450,22 @@ const WordBox = ({
     letterIndex: number
   ) => {
     const letterKey = `${wordIndex}-${letterIndex}`;
+
     const currentLetter = removeDiacritics(letter);
+
     const letterDef = Object.keys(lettersDefinitions).find(
       (key) =>
-        normalizeAlif(key) === normalizeAlif(currentLetter) &&
         lettersDefinitions[key].preset_id &&
         verseLettersData[letterKey]?.def_id &&
-        lettersDefinitions[key].preset_id === verseLettersData[letterKey].def_id
+        normalizeAlif(lettersDefinitions[key].name) ===
+          normalizeAlif(currentLetter) &&
+        (lettersDefinitions[key].preset_id ===
+          verseLettersData[letterKey].def_id ||
+          `${normalizeAlif(currentLetter, false, true)}:${
+            lettersDefinitions[key].preset_id
+          }` === verseLettersData[letterKey].def_id)
     );
+
     const letterRole =
       verseLettersData[letterKey]?.letter_role || LetterRole.Unit;
 
