@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.1.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "dexie": "^4.0.7",
     "i18next": "^23.0.1",
