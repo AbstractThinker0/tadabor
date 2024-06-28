@@ -37,10 +37,10 @@ const RootComponent = ({ rootID }: RootComponentProps) => {
     (key: string, value: string) => {
       dbFuncs
         .saveRootNote(key, value, dir)
-        .then(function () {
+        .then(() => {
           toast.success(t("save_success"));
         })
-        .catch(function () {
+        .catch(() => {
           toast.error(t("save_failed"));
         });
 

@@ -33,10 +33,10 @@ const TransComponent = memo(({ verse_key }: TransComponentProps) => {
 
       dbFuncs
         .saveTranslation(inputKey, inputValue)
-        .then(function () {
+        .then(() => {
           toast.success(t("save_success"));
         })
-        .catch(function () {
+        .catch(() => {
           toast.error(t("save_failed"));
         });
     },

@@ -134,10 +134,10 @@ const RootComponent = memo(
       (key: string, value: string) => {
         dbFuncs
           .saveRootNote(key, value, inputDirection)
-          .then(function () {
+          .then(() => {
             toast.success(t("save_success"));
           })
-          .catch(function () {
+          .catch(() => {
             toast.error(t("save_failed"));
           });
 

@@ -37,10 +37,10 @@ function VerseComponent({ verseKey }: VerseComponentProps) {
     (key: string, value: string) => {
       dbFuncs
         .saveNote(key, value, dir)
-        .then(function () {
+        .then(() => {
           toast.success(t("save_success"));
         })
-        .catch(function () {
+        .catch(() => {
           toast.error(t("save_failed"));
         });
 

@@ -48,10 +48,10 @@ const AddColorModal = () => {
         name: newColor.colorDisplay,
         code: newColor.colorCode,
       })
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
 

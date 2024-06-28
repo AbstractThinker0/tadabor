@@ -167,10 +167,10 @@ const ModalCreatePreset = () => {
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
     dbFuncs
       .saveLettersPreset(presetID, presetName)
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
   };
@@ -274,10 +274,10 @@ const ModalEditLetter = ({
   const onClickSave = () => {
     dbFuncs
       .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
 

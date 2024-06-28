@@ -237,10 +237,10 @@ const LetterBox = ({
         letter_role: letterRole,
         def_id: letterDefinitionID,
       })
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
 
