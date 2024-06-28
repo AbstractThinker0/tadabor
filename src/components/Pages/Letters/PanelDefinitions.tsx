@@ -213,6 +213,7 @@ const ModalCreatePreset = () => {
             Preset name:
           </label>
           <input
+            dir="auto"
             id="presetName"
             className="form-input"
             value={presetName}
