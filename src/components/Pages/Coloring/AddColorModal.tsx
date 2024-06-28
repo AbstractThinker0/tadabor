@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { colorProps } from "./consts";
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -12,6 +14,7 @@ import {
 } from "@/components/Generic/Modal";
 
 const AddColorModal = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const refCloseButton = useRef<HTMLButtonElement>(null);
   const [colorName, setColorName] = useState("");
@@ -39,11 +42,18 @@ const AddColorModal = () => {
 
     dispatch(coloringPageActions.addColor(newColor));
 
-    dbFuncs.saveColor({
-      id: newColor.colorID,
-      name: newColor.colorDisplay,
-      code: newColor.colorCode,
-    });
+    dbFuncs
+      .saveColor({
+        id: newColor.colorID,
+        name: newColor.colorDisplay,
+        code: newColor.colorCode,
+      })
+      .then(function () {
+        toast.success(t("save_success"));
+      })
+      .catch(function () {
+        toast.error(t("save_failed"));
+      });
 
     setColorName("");
     setColorCode("#000000");

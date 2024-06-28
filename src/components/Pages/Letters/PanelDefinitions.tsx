@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 
@@ -146,6 +148,8 @@ const ItemLetter = ({
 };
 
 const ModalCreatePreset = () => {
+  const { t } = useTranslation();
+
   const [presetName, setPresetName] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -161,7 +165,14 @@ const ModalCreatePreset = () => {
   const onClickSave = () => {
     const presetID = Date.now().toString();
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
-    dbFuncs.saveLettersPreset(presetID, presetName);
+    dbFuncs
+      .saveLettersPreset(presetID, presetName)
+      .then(function () {
+        toast.success(t("save_success"));
+      })
+      .catch(function () {
+        toast.error(t("save_failed"));
+      });
   };
 
   useEffect(() => {
@@ -239,6 +250,8 @@ const ModalEditLetter = ({
   currentLetter,
   currentPreset,
 }: ModalEditLetterProps) => {
+  const { t } = useTranslation();
+
   const defKey =
     currentPreset === "-1"
       ? currentLetter
@@ -258,12 +271,14 @@ const ModalEditLetter = ({
   const refVerseModal = useRef<HTMLDivElement>(null);
 
   const onClickSave = () => {
-    dbFuncs.saveLetterDefinition(
-      currentPreset,
-      currentLetter,
-      letterDef,
-      letterDir
-    );
+    dbFuncs
+      .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
+      .then(function () {
+        toast.success(t("save_success"));
+      })
+      .catch(function () {
+        toast.error(t("save_failed"));
+      });
 
     dispatch(
       lettersPageActions.setLetterDefinition({

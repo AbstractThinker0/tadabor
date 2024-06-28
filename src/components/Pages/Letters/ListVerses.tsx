@@ -6,7 +6,8 @@ import {
   useTransition,
   memo,
 } from "react";
-
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import useQuran from "@/context/useQuran";
 
 import { useAppSelector, useAppDispatch } from "@/store";
@@ -200,6 +201,7 @@ const LetterBox = ({
   selectedLetter,
   verseLetterData,
 }: LetterBoxProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   const quranService = useQuran();
@@ -229,11 +231,18 @@ const LetterBox = ({
   };
 
   const onClickSave = () => {
-    dbFuncs.saveLetterData({
-      letter_key: `${verseKey}:${selectedLetter}`,
-      letter_role: letterRole,
-      def_id: letterDefinitionID,
-    });
+    dbFuncs
+      .saveLetterData({
+        letter_key: `${verseKey}:${selectedLetter}`,
+        letter_role: letterRole,
+        def_id: letterDefinitionID,
+      })
+      .then(function () {
+        toast.success(t("save_success"));
+      })
+      .catch(function () {
+        toast.error(t("save_failed"));
+      });
 
     dispatch(
       lettersPageActions.setLetterData({
