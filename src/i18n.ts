@@ -69,6 +69,7 @@ i18n
           searcher_search: "Search",
           panel_definitions: "Definitions",
           panel_display: "Display",
+          letters_preset: "Preset:",
         },
       },
       ar: {
@@ -125,6 +126,7 @@ i18n
           searcher_search: "بحث",
           panel_definitions: "التعريفات",
           panel_display: "العرض",
+          letters_preset: "مجموعة:",
         },
       },
     },

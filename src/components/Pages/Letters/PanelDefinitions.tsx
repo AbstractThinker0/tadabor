@@ -11,6 +11,7 @@ import {
 } from "@/store/slices/pages/letters";
 
 import { dbFuncs } from "@/util/db";
+import { onlySpaces } from "@/util/util";
 import { arabicAlphabetDefault } from "@/util/consts";
 
 import { TextAreaComponent } from "@/components/Custom/TextForm";
@@ -25,6 +26,8 @@ import {
 } from "@/components/Generic/Modal";
 
 const PanelDefinitions = () => {
+  const { t } = useTranslation();
+
   const definitionsLoading = useAppSelector(
     (state) => state.lettersPage.definitionsLoading
   );
@@ -64,7 +67,7 @@ const PanelDefinitions = () => {
     <div className="panel-def">
       <div className="panel-def-preset">
         <label htmlFor="presetSelect" className="form-label fw-bold fs-4">
-          Preset:
+          {t("letters_preset")}
         </label>
         <select
           id="presetSelect"
@@ -163,6 +166,11 @@ const ModalCreatePreset = () => {
   };
 
   const onClickSave = () => {
+    if (onlySpaces(presetName)) {
+      alert("Preset name can't be empty.");
+      return;
+    }
+
     const presetID = Date.now().toString();
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
     dbFuncs
