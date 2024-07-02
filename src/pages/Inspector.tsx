@@ -21,7 +21,7 @@ function Inspector() {
     (state) => state.inspectorPage.currentChapter
   );
 
-  function handleSelectChapter(chapterID: number) {
+  function handleSelectChapter(chapterID: string) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
     dispatch(inspectorPageActions.setScrollKey(""));
   }

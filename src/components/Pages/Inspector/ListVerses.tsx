@@ -31,7 +31,7 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface ListVersesProps {
-  currentChapter: number;
+  currentChapter: string;
 }
 
 const ListVerses = ({ currentChapter }: ListVersesProps) => {
@@ -48,7 +48,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
     const chapterVerses: RankedVerseProps[] = [];
 
     quranService.absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter.toString()) return;
+      if (verse.suraid !== currentChapter) return;
 
       chapterVerses.push({ ...verse, rank: index });
     });
@@ -434,7 +434,7 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
   function onClickVerseChapter() {
-    dispatch(inspectorPageActions.setCurrentChapter(Number(rootVerse.suraid)));
+    dispatch(inspectorPageActions.setCurrentChapter(rootVerse.suraid));
     dispatch(inspectorPageActions.setScrollKey(rootVerse.key));
   }
 

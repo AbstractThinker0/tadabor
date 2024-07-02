@@ -14,7 +14,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import TransComponent from "@/components/Pages/Translation/TransComponent";
 
 interface DisplayPanelProps {
-  selectChapter: number;
+  selectChapter: string;
 }
 
 const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {

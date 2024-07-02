@@ -3,8 +3,8 @@ import { useState } from "react";
 import useQuran from "@/context/useQuran";
 
 interface ChaptersListProps {
-  handleChapterChange: (chapter: number) => void;
-  selectChapter: number;
+  handleChapterChange: (chapter: string) => void;
+  selectChapter: string;
   mainClass?: string;
   inputClass?: string;
   selectClass?: string;
@@ -27,11 +27,11 @@ const ChaptersList = ({
   const onFocusSelect = (
     event: React.FocusEvent<HTMLSelectElement, Element>
   ) => {
-    handleChapterChange(Number(event.target.value));
+    handleChapterChange(event.target.value);
   };
 
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    handleChapterChange(Number(event.target.value));
+    handleChapterChange(event.target.value);
   };
 
   return (

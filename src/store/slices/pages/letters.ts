@@ -9,7 +9,7 @@ import { dbFuncs, ILetterData } from "@/util/db";
 import { LetterRole } from "@/util/consts";
 
 interface LettersPageState {
-  currentChapter: number;
+  currentChapter: string;
   currentPreset: string;
   scrollKey: string;
   showQuranTab: boolean;
@@ -28,7 +28,7 @@ interface LettersPageState {
 }
 
 const initialState: LettersPageState = {
-  currentChapter: 1,
+  currentChapter: "1",
   currentPreset: "-1",
   scrollKey: "",
   showQuranTab: false,
@@ -117,7 +117,7 @@ const lettersPageSlice = createSlice({
   name: "lettersPage",
   initialState,
   reducers: {
-    setCurrentChapter: (state, action: PayloadAction<number>) => {
+    setCurrentChapter: (state, action: PayloadAction<string>) => {
       state.currentChapter = action.payload;
     },
     setCurrentPreset: (state, action: PayloadAction<string>) => {

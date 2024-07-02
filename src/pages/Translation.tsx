@@ -27,7 +27,7 @@ const Translation = () => {
     dispatch(fetchTransNotes());
   }, []);
 
-  const handleChapterChange = (chapter: number) => {
+  const handleChapterChange = (chapter: string) => {
     dispatch(translationPageActions.setCurrentChapter(chapter));
   };
 

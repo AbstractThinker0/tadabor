@@ -5,7 +5,7 @@ import useQuran from "@/context/useQuran";
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
 
 interface DisplayProps {
-  currentChapter: number;
+  currentChapter: string;
 }
 
 const Display = ({ currentChapter }: DisplayProps) => {

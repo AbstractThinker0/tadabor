@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface InspectorPageState {
-  currentChapter: number;
+  currentChapter: string;
   scrollKey: string;
 }
 
 const initialState: InspectorPageState = {
-  currentChapter: 1,
+  currentChapter: "1",
   scrollKey: "",
 };
 
@@ -14,7 +14,7 @@ const inspectorPageSlice = createSlice({
   name: "inspectorPage",
   initialState,
   reducers: {
-    setCurrentChapter: (state, action: PayloadAction<number>) => {
+    setCurrentChapter: (state, action: PayloadAction<string>) => {
       state.currentChapter = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {

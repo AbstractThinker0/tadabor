@@ -22,7 +22,7 @@ const PanelQuran = memo(
 
     const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-    const handleSelectChapter = useCallback((chapterID: number) => {
+    const handleSelectChapter = useCallback((chapterID: string) => {
       dispatch(lettersPageActions.setCurrentChapter(chapterID));
       dispatch(lettersPageActions.setScrollKey(""));
     }, []);
