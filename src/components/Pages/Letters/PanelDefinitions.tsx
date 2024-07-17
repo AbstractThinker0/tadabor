@@ -160,6 +160,7 @@ const ModalCreatePreset = () => {
   const dispatch = useAppDispatch();
 
   const refModal = useRef<HTMLDivElement>(null);
+  const refCloseButton = useRef<HTMLButtonElement>(null);
 
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPresetName(event.target.value);
@@ -181,6 +182,8 @@ const ModalCreatePreset = () => {
       .catch(() => {
         toast.error(t("save_failed"));
       });
+
+    refCloseButton.current?.click();
   };
 
   useEffect(() => {
@@ -234,15 +237,11 @@ const ModalCreatePreset = () => {
           type="button"
           className="btn btn-secondary"
           data-bs-dismiss="modal"
+          ref={refCloseButton}
         >
           Cancel
         </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
+        <button type="button" className="btn btn-primary" onClick={onClickSave}>
           Save
         </button>
       </ModalFooter>
