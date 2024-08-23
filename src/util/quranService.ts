@@ -49,6 +49,14 @@ class quranClass {
     return this.absoluteQuran[Number(rank)];
   }
 
+  getVerseRank(suraid: string, verseid: string) {
+    const rank = this.absoluteQuran.findIndex(
+      (verse) => verse.suraid === suraid && verse.verseid === verseid
+    );
+
+    return rank;
+  }
+
   convertKeyToSuffix(key: string): string {
     const info = key.split("-");
     return `${this.getChapterName(info[0])}:${info[1]}`;

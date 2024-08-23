@@ -1,0 +1,86 @@
+.audio {
+  background-color: var(--color-primary);
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+
+  .side {
+    padding-top: 8px;
+    padding-inline-start: 8px;
+    padding-inline-end: 4px;
+
+    &-chapters {
+      &-list {
+        background-color: var(--color-primary);
+      }
+    }
+  }
+
+  .display {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: hidden;
+    height: 100%;
+
+    &-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding-top: 5px;
+      padding-left: 5px;
+      padding-right: 5px;
+      overflow-y: hidden;
+      height: 100%;
+
+      &-title {
+        text-align: center;
+        font-size: x-large;
+        color: rgb(70, 70, 125);
+        background-color: rgba(33, 37, 41, 0.03);
+        border-radius: 0.3rem;
+        border: 1px solid gray;
+      }
+
+      &-verses {
+        overflow-y: scroll;
+        padding: 0.5rem;
+        border: 1px solid gray;
+        flex: 1;
+
+        &-item {
+          padding: 5px;
+          border-bottom: 1px solid gray;
+
+          &-audio {
+            background: none;
+            border: none;
+          }
+
+          &-selected {
+            background-color: darkseagreen;
+          }
+        }
+      }
+    }
+
+    &-audio {
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      &-buttons {
+        display: flex;
+        gap: 4px;
+        padding-bottom: 5px;
+
+        &-play {
+          min-width: 100px;
+        }
+      }
+    }
+  }
+}

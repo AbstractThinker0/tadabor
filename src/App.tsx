@@ -14,6 +14,7 @@ const Comparator = lazy(() => import("@/pages/Comparator"));
 const Searcher = lazy(() => import("@/pages/Searcher"));
 const Searcher2 = lazy(() => import("@/pages/Searcher2"));
 const Letters = lazy(() => import("@/pages/Letters"));
+const Audio = lazy(() => import("@/pages/Audio"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -109,6 +110,14 @@ const App = () => {
         element={
           <Suspenser>
             <Letters />
+          </Suspenser>
+        }
+      />
+      <Route
+        path="/audio"
+        element={
+          <Suspenser>
+            <Audio />
           </Suspenser>
         }
       />
