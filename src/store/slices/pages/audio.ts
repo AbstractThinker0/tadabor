@@ -2,6 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { verseProps } from "@/types";
 
+const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
+  ? localStorage.getItem("audioAutoPlay") === "true"
+  : true;
+
 interface AudioPageState {
   currentChapter: string;
   currentVerse: verseProps | null;
@@ -16,7 +20,7 @@ const initialState: AudioPageState = {
   currentVerse: null,
   duration: 0,
   currentTime: 0,
-  isPlaying: false,
+  isPlaying: defaultAutoPlay,
   autoPlay: true,
 };
 

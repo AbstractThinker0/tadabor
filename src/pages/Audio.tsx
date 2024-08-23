@@ -134,6 +134,7 @@ const Audio = () => {
 
   const onChangeAutoPlay = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(audioPageActions.setAutoPlaying(e.target.checked));
+    localStorage.setItem("audioAutoPlay", e.target.checked ? "true" : "false");
   };
 
   const onClickPrev = () => {
