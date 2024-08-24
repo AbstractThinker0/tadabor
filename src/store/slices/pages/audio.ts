@@ -6,6 +6,8 @@ const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
   ? localStorage.getItem("audioAutoPlay") === "true"
   : true;
 
+const defaultChapter = localStorage.getItem("audioChapter") || "1";
+
 interface AudioPageState {
   currentChapter: string;
   currentVerse: verseProps | null;
@@ -16,7 +18,7 @@ interface AudioPageState {
 }
 
 const initialState: AudioPageState = {
-  currentChapter: "1",
+  currentChapter: defaultChapter,
   currentVerse: null,
   duration: 0,
   currentTime: 0,
@@ -30,6 +32,7 @@ const audioPageSlice = createSlice({
   reducers: {
     setCurrentChapter: (state, action: PayloadAction<string>) => {
       state.currentChapter = action.payload;
+      localStorage.setItem("audioChapter", action.payload);
     },
     setCurrentVerse: (state, action: PayloadAction<verseProps>) => {
       state.currentVerse = action.payload;
