@@ -11,15 +11,8 @@ export type verseProps = {
   suraid: string;
   verseid: string;
   versetext: string;
-};
-
-export interface RankedVerseProps {
-  key: string;
-  suraid: string;
-  verseid: string;
-  versetext: string;
   rank: number;
-}
+};
 
 export interface translationsProps {
   [key: string]: verseProps[];

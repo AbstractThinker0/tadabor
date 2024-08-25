@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { RankedVerseProps, translationsProps } from "@/types";
+import { translationsProps } from "@/types";
 import useQuran from "@/context/useQuran";
 import {
   isVerseNotesLoading,
@@ -44,16 +44,7 @@ function Comparator() {
 
   const [stateTrans, setStateTrans] = useState<translationsProps>(data);
   const [chapterVerses, setChapterVerses] = useState(() => {
-    //
-    const chapterVerses: RankedVerseProps[] = [];
-
-    quranService.absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter) return;
-
-      chapterVerses.push({ ...verse, rank: index });
-    });
-
-    return chapterVerses;
+    return quranService.getVerses(currentChapter);
   });
 
   useEffect(() => {
@@ -62,16 +53,7 @@ function Comparator() {
   }, []);
 
   useEffect(() => {
-    //
-    const chapterVerses: RankedVerseProps[] = [];
-
-    quranService.absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter) return;
-
-      chapterVerses.push({ ...verse, rank: index });
-    });
-
-    setChapterVerses(chapterVerses);
+    setChapterVerses(quranService.getVerses(currentChapter));
   }, [currentChapter]);
 
   useEffect(() => {

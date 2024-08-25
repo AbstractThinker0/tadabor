@@ -16,7 +16,7 @@ import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
 import { getRootMatches } from "@/util/util";
 import {
-  RankedVerseProps,
+  verseProps,
   rootProps,
   verseMatchResult,
   searchIndexProps,
@@ -37,24 +37,15 @@ interface ListVersesProps {
 const ListVerses = ({ currentChapter }: ListVersesProps) => {
   const quranService = useQuran();
 
-  const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
   const scrollKey = useAppSelector((state) => state.inspectorPage.scrollKey);
 
   useEffect(() => {
-    //
-    const chapterVerses: RankedVerseProps[] = [];
-
-    quranService.absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter) return;
-
-      chapterVerses.push({ ...verse, rank: index });
-    });
-
     startTransition(() => {
-      setStateVerses(chapterVerses);
+      setStateVerses(quranService.getVerses(currentChapter));
     });
   }, [currentChapter]);
 

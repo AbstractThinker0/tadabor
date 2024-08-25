@@ -13,10 +13,21 @@ class quranClass {
   }
 
   setQuran(quranData: quranProps[]) {
-    this.allQuranText = quranData;
+    if (!this.allQuranText.length) {
+      let rank = 0;
+      quranData.forEach((sura, index) => {
+        const rankedVerses: verseProps[] = [];
+        sura.verses.forEach((verse) => {
+          rankedVerses.push({ ...verse, rank });
+          rank++;
+        });
+
+        this.allQuranText.push({ id: index, verses: rankedVerses });
+      });
+    }
 
     if (!this.absoluteQuran.length) {
-      quranData.forEach((sura) => {
+      this.allQuranText.forEach((sura) => {
         sura.verses.forEach((verse) => {
           this.absoluteQuran.push(verse);
         });
@@ -47,14 +58,6 @@ class quranClass {
 
   getVerseByRank(rank: string | number) {
     return this.absoluteQuran[Number(rank)];
-  }
-
-  getVerseRank(suraid: string, verseid: string) {
-    const rank = this.absoluteQuran.findIndex(
-      (verse) => verse.suraid === suraid && verse.verseid === verseid
-    );
-
-    return rank;
   }
 
   convertKeyToSuffix(key: string): string {

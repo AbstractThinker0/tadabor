@@ -1,9 +1,9 @@
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
-import { RankedVerseProps } from "@/types";
+import { verseProps } from "@/types";
 
 interface MenuProps {
-  chapterVerses: RankedVerseProps[];
+  chapterVerses: verseProps[];
   handleSetChapter: (chapterID: string) => void;
   handleSelectVerse: (verseKey: string) => void;
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
-import { RankedVerseProps, translationsProps } from "@/types";
+import { verseProps, translationsProps } from "@/types";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
@@ -14,7 +14,7 @@ import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
 interface DisplayProps {
   currentChapter: string;
   currentVerse: string;
-  chapterVerses: RankedVerseProps[];
+  chapterVerses: verseProps[];
   transVerses: translationsProps;
   handleSelectVerse: (verseKey: string) => void;
 }
@@ -28,7 +28,7 @@ const Display = ({
 }: DisplayProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +55,7 @@ const Display = ({
       behavior: "smooth",
       block: "center",
     });
-  }, [isPending])
+  }, [isPending]);
 
   const quranService = useQuran();
   const refListVerses = useRef<HTMLDivElement>(null);

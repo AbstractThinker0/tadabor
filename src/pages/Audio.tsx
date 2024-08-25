@@ -47,9 +47,7 @@ const Audio = () => {
   const onClickAudio = (verse: verseProps) => {
     if (!refAudio.current) return;
 
-    const verseRank = quranService.getVerseRank(verse.suraid, verse.verseid);
-
-    refAudio.current.src = getVerseAudioURL(verseRank);
+    refAudio.current.src = getVerseAudioURL(verse.rank);
     dispatch(audioPageActions.setCurrentVerse(verse));
     refAudio.current.play();
     dispatch(audioPageActions.setIsPlaying(true));
@@ -89,9 +87,7 @@ const Audio = () => {
 
   const playNextVerse = (reverse: boolean = false) => {
     // Check if a next verse is available
-    const verseRank = currentVerse
-      ? quranService.getVerseRank(currentVerse.suraid, currentVerse.verseid)
-      : -1;
+    const verseRank = currentVerse ? currentVerse.rank : -1;
 
     if (verseRank !== -1) {
       const nextRank = verseRank + (reverse ? -1 : 1);
@@ -124,7 +120,7 @@ const Audio = () => {
   useEffect(() => {
     if (!refAudio.current) return;
 
-    const verseRank = quranService.getVerseRank(currentChapter, "1");
+    const verseRank = quranService.getVerses(currentChapter)[0].rank;
 
     refAudio.current.src = getVerseAudioURL(verseRank);
 

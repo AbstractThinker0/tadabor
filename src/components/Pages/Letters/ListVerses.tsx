@@ -16,7 +16,7 @@ import {
   lettersPageActions,
 } from "@/store/slices/pages/letters";
 
-import { LetterDataType, RankedVerseProps } from "@/types";
+import { LetterDataType, verseProps } from "@/types";
 import { LetterRole } from "@/util/consts";
 import {
   normalizeAlif,
@@ -42,7 +42,7 @@ const ListVerses = () => {
   );
   const dataLoading = useAppSelector((state) => state.lettersPage.dataLoading);
 
-  const [stateVerses, setStateVerses] = useState<RankedVerseProps[]>([]);
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
@@ -51,17 +51,8 @@ const ListVerses = () => {
   }, []);
 
   useEffect(() => {
-    //
-    const chapterVerses: RankedVerseProps[] = [];
-
-    quranService.absoluteQuran.forEach((verse, index) => {
-      if (verse.suraid !== currentChapter.toString()) return;
-
-      chapterVerses.push({ ...verse, rank: index });
-    });
-
     startTransition(() => {
-      setStateVerses(chapterVerses);
+      setStateVerses(quranService.getVerses(currentChapter));
     });
   }, [currentChapter]);
 
@@ -77,7 +68,7 @@ const ListVerses = () => {
 };
 
 interface VerseItemProps {
-  verse: RankedVerseProps;
+  verse: verseProps;
 }
 
 const VerseItem = memo(({ verse }: VerseItemProps) => {
