@@ -13,20 +13,28 @@ import "@/styles/main.scss";
 import Navbar from "./Navbar";
 import AlertMessage from "./AlertMessage";
 import SettingsModal from "./SettingsModal";
+import { Flex } from "@chakra-ui/react";
 
 function Layout({ children }: PropsWithChildren) {
-  const mainRef = useRef<HTMLElement>(null);
+  const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
   const isRtl = i18n.dir() === "rtl";
 
   useEffect(() => {
-    if (mainRef.current) {
-      mainRef.current.dir = i18n.dir();
+    if (refMain.current) {
+      refMain.current.dir = i18n.dir();
     }
   }, [i18n.resolvedLanguage, i18n]);
 
   return (
-    <main ref={mainRef}>
+    <Flex
+      ref={refMain}
+      flexDirection="column"
+      height="100vh"
+      fontFamily={`"Scheherazade New", serif`}
+      fontSize="larger"
+      lineHeight="normal"
+    >
       <Navbar />
       <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
@@ -35,7 +43,7 @@ function Layout({ children }: PropsWithChildren) {
         position={`${isRtl ? "top-left" : "top-right"}`}
         rtl={isRtl}
       />
-    </main>
+    </Flex>
   );
 }
 
