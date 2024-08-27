@@ -2,6 +2,8 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+
 // Import all of Bootstrap's JS
 import "bootstrap";
 
@@ -18,32 +20,36 @@ import { Flex } from "@chakra-ui/react";
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
-  const isRtl = i18n.dir() === "rtl";
+
+  const direction = i18n.dir();
+  const isRtl = direction === "rtl";
 
   useEffect(() => {
-    if (refMain.current) {
-      refMain.current.dir = i18n.dir();
-    }
+    document.dir = direction;
   }, [i18n.resolvedLanguage, i18n]);
 
+  const theme = extendTheme({ direction });
+
   return (
-    <Flex
-      ref={refMain}
-      flexDirection="column"
-      height="100vh"
-      fontFamily={`"Scheherazade New", serif`}
-      fontSize="larger"
-      lineHeight="normal"
-    >
-      <Navbar />
-      <AlertMessage />
-      <QuranProvider>{children}</QuranProvider>
-      <SettingsModal />
-      <ToastContainer
-        position={`${isRtl ? "top-left" : "top-right"}`}
-        rtl={isRtl}
-      />
-    </Flex>
+    <ChakraProvider theme={theme}>
+      <Flex
+        ref={refMain}
+        flexDirection="column"
+        height="100vh"
+        fontFamily={`"Scheherazade New", serif`}
+        fontSize="larger"
+        lineHeight="normal"
+      >
+        <Navbar />
+        <AlertMessage />
+        <QuranProvider>{children}</QuranProvider>
+        <SettingsModal />
+        <ToastContainer
+          position={`${isRtl ? "top-left" : "top-right"}`}
+          rtl={isRtl}
+        />
+      </Flex>
+    </ChakraProvider>
   );
 }
 

@@ -12,6 +12,8 @@ import ChaptersList from "@/components/Custom/ChaptersList";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import NoteText from "@/components/Custom/NoteText";
 import { ExpandButton } from "@/components/Generic/Buttons";
+import CheckboxDir from "@/components/Custom/CheckboxDir";
+import { Box, HStack, Flex, Heading, Button } from "@chakra-ui/react";
 
 import "@/styles/pages/audio.scss";
 
@@ -142,45 +144,102 @@ const Audio = () => {
   };
 
   return (
-    <div className="audio">
-      <div className="side">
+    <Flex
+      backgroundColor="var(--color-primary)"
+      flexWrap="nowrap"
+      maxHeight="100%"
+      height="100%"
+      overflow="hidden"
+      className="audio"
+    >
+      <Box
+        paddingTop="8px"
+        paddingInlineStart="8px"
+        paddingInlineEnd="4px"
+        className="side"
+      >
         <ChaptersList
           selectChapter={currentChapter}
           handleChapterChange={handleChapterChange}
           selectClass="side-chapters-list"
         />
-      </div>
-      <div className="display">
-        <div className="display-container" dir="rtl">
-          <div className="display-container-title">
+      </Box>
+      <Flex
+        flexDirection="column"
+        width="100%"
+        height="100%"
+        overflowY="hidden"
+        className="display"
+      >
+        <Flex
+          flexDirection="column"
+          width="100%"
+          height="100%"
+          paddingTop="5px"
+          paddingLeft="5px"
+          paddingRight="5px"
+          overflowY="hidden"
+          className="display-container"
+          dir="rtl"
+        >
+          <Heading
+            fontSize="x-large"
+            color="#46467d"
+            backgroundColor="#21252908"
+            borderRadius="0.3rem"
+            borderStyle="solid"
+            borderWidth="1px"
+            borderColor="gray"
+            textAlign="center"
+            marginBottom="0"
+            padding={2}
+          >
             سورة {quranService.getChapterName(currentChapter)}
-          </div>
-          <div className="display-container-verses" ref={refVersesList}>
+          </Heading>
+          <Box
+            overflowY="scroll"
+            padding="0.5rem"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="gray"
+            flexGrow={1}
+            className="display-container-verses"
+            ref={refVersesList}
+          >
             {displayVerse.map((verse) => (
-              <div
-                className={`display-container-verses-item${
-                  verse.key === currentVerse?.key
-                    ? " display-container-verses-item-selected"
-                    : ""
-                }`}
+              <Box
+                padding="5px"
+                borderBottom="1px solid gray"
+                backgroundColor={
+                  verse.key === currentVerse?.key ? "darkseagreen" : undefined
+                }
+                className="display-container-verses-item"
                 key={verse.key}
               >
                 <VerseContainer>
                   {verse.versetext} ({verse.verseid}){" "}
-                  <button
-                    className="display-container-verses-item-audio"
+                  <Button
+                    background="none"
+                    border="none"
                     onClick={() => onClickAudio(verse)}
                   >
                     🔊
-                  </button>
+                  </Button>
                   <ExpandButton identifier={verse.key} />
                 </VerseContainer>
                 <NoteText verseKey={verse.key} />
-              </div>
+              </Box>
             ))}
-          </div>
-        </div>
-        <div className="display-audio" dir="ltr">
+          </Box>
+        </Flex>
+        <Flex
+          flexDirection="column"
+          alignSelf="center"
+          justifyContent="center"
+          alignItems="center"
+          className="display-audio"
+          dir="ltr"
+        >
           <audio
             ref={refAudio}
             src={getVerseAudioURL(0)}
@@ -189,7 +248,7 @@ const Audio = () => {
             onEnded={onEnded}
             preload="auto"
           />
-          <div>
+          <HStack>
             <input
               type="range"
               min="0"
@@ -199,32 +258,44 @@ const Audio = () => {
               onChange={handleSliderChange}
             />
 
-            <label htmlFor="checkboxAutoPlay">🔁</label>
-            <input
-              id="checkboxAutoPlay"
-              type="checkbox"
-              checked={autoPlay}
+            <CheckboxDir
+              spacing="0.1rem"
+              isChecked={autoPlay}
               onChange={onChangeAutoPlay}
-            />
-          </div>
-          <div className="display-audio-buttons">
-            <button className="btn btn-dark" onClick={onClickPrev}>
+            >
+              🔁
+            </CheckboxDir>
+          </HStack>
+          <Flex gap="4px" paddingBottom="5px" className="display-audio-buttons">
+            <Button
+              colorScheme="blackAlpha"
+              bg="blackAlpha.900"
+              fontWeight="normal"
+              onClick={onClickPrev}
+            >
               prev
-            </button>
-            <button
+            </Button>
+            <Button
+              colorScheme="blackAlpha"
+              bg="blackAlpha.900"
+              fontWeight="normal"
               onClick={togglePlayPause}
-              className="btn btn-dark display-audio-buttons-play"
             >
               {isPlaying ? "Pause" : "Play"} [{currentVerse?.suraid}:
               {currentVerse?.verseid}]
-            </button>
-            <button className="btn btn-dark" onClick={onClickNext}>
+            </Button>
+            <Button
+              colorScheme="blackAlpha"
+              bg="blackAlpha.900"
+              fontWeight="normal"
+              onClick={onClickNext}
+            >
               next
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Button>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 
