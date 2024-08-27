@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
+import { Box, Flex, Button } from "@chakra-ui/react";
+
 const Navbar = () => {
   const { t } = useTranslation();
 
@@ -25,9 +27,17 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav>
-      <div className="nav-list">
-        <div className="nav-list-start">
+    <Box
+      as="nav"
+      role="navigation"
+      bg="gray.800"
+      paddingStart={2}
+      paddingEnd={2}
+      paddingTop={1}
+      paddingBottom={1}
+    >
+      <Flex justifyContent="space-between">
+        <Flex flexWrap="wrap" gap={1.5}>
           <NavItem to="/" label={t("nav_browser")} />
           <NavItem to="/roots" label={t("nav_roots")} />
           <NavItem to="/translation" label={t("nav_translation")} />
@@ -41,12 +51,12 @@ const Navbar = () => {
           <NavItem to="/letters" label={t("nav_letters")} />
           <NavItem to="/audio" label={t("nav_audio")} />
           <NavItem to="/about" label={t("nav_about")} />
-        </div>
-        <div className="nav-list-end">
+        </Flex>
+        <Flex>
           <SettingsButton />
-        </div>
-      </div>
-    </nav>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 
@@ -57,21 +67,32 @@ interface NavItemProps {
 
 const NavItem = ({ label, to }: NavItemProps) => {
   return (
-    <div className="nav-list-start-item">
-      <NavLink to={to}>{label}</NavLink>
-    </div>
+    <Button
+      _activeLink={{ bg: "var(--color-primary)" }}
+      bg={"#bdb8c6"}
+      padding={1}
+      fontWeight="400"
+      fontSize="large"
+      as={NavLink}
+      to={to}
+    >
+      {label}
+    </Button>
   );
 };
 
 const SettingsButton = () => {
   return (
-    <span
-      className="nav-settings-button"
+    <Button
+      aria-label="Settings"
       data-bs-toggle="modal"
       data-bs-target="#settingsModal"
+      variant="ghost"
+      fontSize="large"
+      padding={0}
     >
       ⚙️
-    </span>
+    </Button>
   );
 };
 
