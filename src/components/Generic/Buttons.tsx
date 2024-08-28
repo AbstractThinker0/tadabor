@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { IconSearch, IconSelect } from "./Icons";
+import { IconSelect } from "./Icons";
 
 interface ExpandButtonProps {
   identifier: string;
@@ -30,16 +30,4 @@ const ExpandButton = ({
   );
 };
 
-interface SearchButtonProps {
-  description: string;
-}
-
-const SearchButton = ({ description }: SearchButtonProps) => {
-  return (
-    <button className="btn btn-outline-success w-50 fw-bold" type="submit">
-      <IconSearch size={15} stroke={3} /> {description}
-    </button>
-  );
-};
-
-export { ExpandButton, SearchButton };
+export { ExpandButton };

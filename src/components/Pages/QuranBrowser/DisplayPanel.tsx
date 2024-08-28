@@ -14,6 +14,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
   const dispatch = useAppDispatch();
@@ -37,11 +38,18 @@ const DisplayPanel = () => {
   }, []);
 
   return (
-    <div className="browser-display" ref={refListVerses}>
+    <Box flex={1} overflowY="scroll" minH="100%" p={1} ref={refListVerses}>
       {isVNotesLoading ? (
         <LoadingSpinner />
       ) : (
-        <div className="card browser-display-card" dir="rtl">
+        <Flex
+          flexDir="column"
+          minH="100%"
+          bg="#f7fafc"
+          borderRadius={5}
+          dir="rtl"
+          border="1px solid gainsboro"
+        >
           {searchResult.length || searchError ? (
             <ListSearchResults
               versesArray={searchResult}
@@ -50,9 +58,9 @@ const DisplayPanel = () => {
           ) : (
             <ListVerses />
           )}
-        </div>
+        </Flex>
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -64,9 +72,17 @@ interface ListTitleProps {
 
 const ListTitle = ({ chapterName }: ListTitleProps) => {
   return (
-    <div className="card-header">
-      <h3 className="text-primary text-center">سورة {chapterName}</h3>
-    </div>
+    <Heading
+      textAlign="center"
+      backgroundColor={"rgba(33, 37, 41, .03)"}
+      color={"rgb(13, 110, 253)"}
+      py={3}
+      size="lg"
+      borderBottom="1px solid gainsboro"
+      fontWeight="500"
+    >
+      سورة {chapterName}
+    </Heading>
   );
 };
 
@@ -113,23 +129,23 @@ const ListVerses = () => {
   return (
     <>
       <ListTitle chapterName={chapterName} />
-      <div className="card-body browser-display-card-list" ref={listRef}>
+      <Box p={1} ref={listRef}>
         {isPending ? (
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse: verseProps) => (
-            <div
+            <Box
               key={verse.key}
               data-id={verse.key}
-              className={`border-bottom browser-display-card-list-item ${
-                scrollKey === verse.key ? "verse-selected" : ""
-              }`}
+              p={1}
+              borderBottom="1px solid gainsboro"
+              backgroundColor={scrollKey === verse.key ? "bisque" : undefined}
             >
               <VerseComponent verse={verse} />
-            </div>
+            </Box>
           ))
         )}
-      </div>
+      </Box>
     </>
   );
 };
@@ -164,9 +180,14 @@ const VerseTextComponent = ({ verse }: VerseTextComponentProps) => {
   return (
     <VerseContainer>
       {verse.versetext}{" "}
-      <span className="btn-verse" onClick={onClickVerse}>
+      <Box
+        display="inline"
+        cursor="pointer"
+        _hover={{ color: "cornflowerblue" }}
+        onClick={onClickVerse}
+      >
         {`(${verse.verseid})`}
-      </span>
+      </Box>
       <ExpandButton identifier={verse.key} />
     </VerseContainer>
   );

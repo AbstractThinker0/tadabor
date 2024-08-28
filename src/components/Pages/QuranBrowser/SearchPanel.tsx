@@ -10,9 +10,21 @@ import SelectionListRoots from "@/components/Pages/QuranBrowser/SelectionListRoo
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
-import { SearchButton } from "@/components/Generic/Buttons";
-
-import Checkbox from "@/components/Custom/Checkbox";
+import {
+  Box,
+  Flex,
+  HStack,
+  Radio,
+  RadioGroup,
+  Checkbox,
+  Wrap,
+  FormControl,
+  Button,
+  Textarea,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
+import { IconSearch } from "@/components/Generic/Icons";
 
 const SearchPanel = () => {
   const quranService = useQuran();
@@ -36,68 +48,86 @@ const SearchPanel = () => {
 
   const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
-  function setSearchDiacritics(status: boolean) {
+  const setSearchDiacritics = (status: boolean) => {
     dispatch(qbPageActions.setSearchDiacritics(status));
-  }
+  };
 
-  function setSearchIdentical(status: boolean) {
+  const setSearchIdentical = (status: boolean) => {
     dispatch(qbPageActions.setSearchIdentical(status));
-  }
+  };
 
-  function setSearchStart(status: boolean) {
+  const setSearchStart = (status: boolean) => {
     dispatch(qbPageActions.setSearchStart(status));
-  }
+  };
 
-  function setSearchMethod(method: SEARCH_METHOD) {
+  const setSearchMethod = (method: SEARCH_METHOD) => {
     dispatch(qbPageActions.setSearchMethod(method));
-  }
+  };
 
-  function onSearchSubmit() {
+  const onSearchSubmit = () => {
     if (isRootSearch) {
       dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
     } else {
       dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
     }
-  }
+  };
 
   const handleCurrentChapter = (chapterID: number) => {
     dispatch(qbPageActions.gotoChapter(chapterID.toString()));
   };
 
+  const onChangeDiacritics = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchDiacritics(e.target.checked);
+  };
+
+  const onChangeIdentical = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchIdentical(e.target.checked);
+  };
+
+  const onChangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchStart(e.target.checked);
+  };
+
   return (
-    <div className="browser-search">
+    <Flex
+      flexDirection="column"
+      fontSize="medium"
+      paddingTop="5px"
+      paddingLeft="min(0.5vw, 10px)"
+      paddingRight="min(0.5vw, 10px)"
+    >
       <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
-      <div className="browser-search-options">
+      <Box paddingInlineStart="6px">
         <RadioSearchMethod
           searchMethod={searchMethod}
           setSearchMethod={setSearchMethod}
         />
-        <div className="browser-search-options-checks">
+        <div>
           <Checkbox
-            checkboxState={searchDiacritics}
-            handleChangeCheckbox={setSearchDiacritics}
-            labelText={t("search_diacritics")}
+            isChecked={searchDiacritics}
+            onChange={onChangeDiacritics}
             isDisabled={isRootSearch}
-            inputID="CheckboxDiacritics"
-          />
-          <div className="d-flex">
+          >
+            {t("search_diacritics")}
+          </Checkbox>
+          <Wrap>
             <Checkbox
-              checkboxState={searchIdentical}
-              handleChangeCheckbox={setSearchIdentical}
-              labelText={t("search_identical")}
+              isChecked={searchIdentical}
+              onChange={onChangeIdentical}
               isDisabled={isRootSearch}
-              inputID="CheckboxIdentical"
-            />
+            >
+              {t("search_identical")}
+            </Checkbox>
             <Checkbox
-              checkboxState={searchStart}
-              handleChangeCheckbox={setSearchStart}
-              labelText={t("search_start")}
+              isChecked={searchStart}
+              onChange={onChangeStart}
               isDisabled={isRootSearch}
-              inputID="CheckboxStart"
-            />
-          </div>
+            >
+              {t("search_start")}
+            </Checkbox>
+          </Wrap>
         </div>
-      </div>
+      </Box>
       <FormWordSearch
         onSearchSubmit={onSearchSubmit}
         searchString={searchString}
@@ -107,7 +137,7 @@ const SearchPanel = () => {
         searchString={searchString}
       />
       <SearchSuccessComponent />
-    </div>
+    </Flex>
   );
 };
 
@@ -122,54 +152,24 @@ const RadioSearchMethod = ({
   searchMethod,
   setSearchMethod,
 }: RadioSearchMethodProps) => {
-  const { t, i18n } = useTranslation();
-  const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchMethod(event.target.value as SEARCH_METHOD);
+  const { t } = useTranslation();
+
+  const onChangeRadio = (value: string) => {
+    setSearchMethod(value as SEARCH_METHOD);
   };
+
   return (
-    <div className="browser-search-options-method">
-      <span className="browser-search-options-method-text fw-bold">
+    <Flex flexWrap="wrap">
+      <Box fontWeight="bold" paddingInlineEnd="5px">
         {t("search_method")}
-      </span>
-      <div className="d-flex">
-        <div
-          className={`form-check ${
-            i18n.resolvedLanguage === "ar" && "form-check-reverse"
-          }`}
-        >
-          <input
-            className="form-check-input"
-            type="radio"
-            name="inlineRadioOptions"
-            id="inlineRadio1"
-            value={SEARCH_METHOD.ROOT}
-            checked={searchMethod === SEARCH_METHOD.ROOT}
-            onChange={handleSearchMethod}
-          />
-          <label className="form-check-label" htmlFor="inlineRadio1">
-            {t("search_root")}
-          </label>
-        </div>
-        <div
-          className={`form-check  ${
-            i18n.resolvedLanguage === "ar" && "form-check-reverse"
-          }`}
-        >
-          <input
-            className="form-check-input"
-            type="radio"
-            name="inlineRadioOptions"
-            id="inlineRadio2"
-            value={SEARCH_METHOD.WORD}
-            checked={searchMethod === SEARCH_METHOD.WORD}
-            onChange={handleSearchMethod}
-          />
-          <label className="form-check-label" htmlFor="inlineRadio2">
-            {t("search_word")}
-          </label>
-        </div>
-      </div>
-    </div>
+      </Box>
+      <RadioGroup onChange={onChangeRadio} value={searchMethod}>
+        <HStack>
+          <Radio value={SEARCH_METHOD.ROOT}>{t("search_root")}</Radio>
+          <Radio value={SEARCH_METHOD.WORD}>{t("search_word")}</Radio>
+        </HStack>
+      </RadioGroup>
+    </Flex>
   );
 };
 
@@ -191,33 +191,34 @@ const FormWordSearch = ({
     dispatch(qbPageActions.setSearchString(event.target.value));
   };
 
-  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const handleSearchSubmit = (event: React.FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
 
     onSearchSubmit();
-  }
+  };
 
   return (
-    <form className="p-0" role="search" onSubmit={handleSearchSubmit}>
-      <div className="">
-        <div>
-          <textarea
-            required
-            dir="rtl"
-            className="form-control browser-search-field"
-            placeholder=""
-            aria-label="Search"
-            onChange={searchStringHandle}
-            id="exampleFormControlTextarea1"
-            rows={1}
-            value={searchString}
-          />
-        </div>
-        <div className="pt-1 ">
-          <SearchButton description={t("search_button")} />
-        </div>
-      </div>
-    </form>
+    <FormControl as="form" role="search" onSubmit={handleSearchSubmit}>
+      <VStack>
+        <Textarea
+          required
+          dir="rtl"
+          aria-label="Search"
+          onChange={searchStringHandle}
+          rows={1}
+          value={searchString}
+          bg="white"
+        />
+        <Button
+          leftIcon={<IconSearch />}
+          colorScheme="green"
+          variant="outline"
+          type="submit"
+        >
+          {t("search_button")}
+        </Button>
+      </VStack>
+    </FormControl>
   );
 };
 
@@ -225,14 +226,12 @@ const SearchSuccessComponent = () => {
   const { t } = useTranslation();
   const searchResult = useAppSelector((state) => state.qbPage.searchResult);
 
+  if (searchResult.length === 0) return null;
+
   return (
-    <>
-      {searchResult.length > 0 && (
-        <div className="fw-bold text-success">
-          {`${t("search_count")} ${searchResult.length}`}
-        </div>
-      )}
-    </>
+    <Text fontWeight="bold" color="green">{`${t("search_count")} ${
+      searchResult.length
+    }`}</Text>
   );
 };
 

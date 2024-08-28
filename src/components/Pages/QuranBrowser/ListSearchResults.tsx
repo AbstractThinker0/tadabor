@@ -19,6 +19,7 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
+import { Box, Button, HStack, Heading, Tag, Text } from "@chakra-ui/react";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -82,14 +83,14 @@ const ListSearchResults = ({
 
   if (searchingChapters.length === 0) {
     return (
-      <h3 className="p-1" dir="auto">
+      <Heading p={3} size="md" dir="auto">
         {t("select_notice")}
-      </h3>
+      </Heading>
     );
   }
 
   return (
-    <>
+    <Box p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
@@ -100,30 +101,32 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <div className="card-body browser-display-card-list" ref={refListVerses}>
+      <Box ref={refListVerses}>
         {isPending ? (
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse) => (
-            <div
+            <Box
               key={verse.key}
               data-id={verse.key}
-              className={`border-bottom browser-display-card-list-item ${
-                verse.key === selectedVerse ? "verse-selected" : ""
-              }`}
+              p={1}
+              borderBottom="1px solid gainsboro"
+              backgroundColor={
+                verse.key === selectedVerse ? "bisque" : undefined
+              }
             >
               <SearchVerseComponent
                 verse={verse}
                 verseChapter={quranService.getChapterName(verse.suraid)}
               />
-            </div>
+            </Box>
           ))
         )}
         {searchError && (
           <SearchErrorsComponent searchMethod={searchingMethod} />
         )}
-      </div>
-    </>
+      </Box>
+    </Box>
   );
 };
 
@@ -155,19 +158,19 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
     return (
-      <>
+      <HStack pt={1} wrap={"wrap"}>
         {searchChapters.map((chapterName, index) => (
-          <span className="browser-display-card-search-chapter" key={index}>
+          <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
             {chapterName}
-          </span>
+          </Tag>
         ))}
-      </>
+      </HStack>
     );
   };
 
   return (
-    <div className="browser-display-card-search" dir="auto">
-      <h3>{searchText}</h3>
+    <div dir="auto">
+      <Heading size="md">{searchText}</Heading>
       {searchChapters.length !== 114 && (
         <ChaptersList searchChapters={searchChapters} />
       )}
@@ -186,7 +189,7 @@ const DerivationsComponent = ({
   searchIndexes,
   handleRootClick,
 }: DerivationsComponentProps) => {
-  const refListRoots = useRef<HTMLSpanElement>(null);
+  const refListRoots = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!refListRoots.current) return;
 
@@ -199,7 +202,7 @@ const DerivationsComponent = ({
   return (
     <>
       <hr />
-      <span ref={refListRoots} className="p-2">
+      <Box px={2} ref={refListRoots}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
           <span
             role="button"
@@ -211,7 +214,7 @@ const DerivationsComponent = ({
             {`${index ? " -" : " "} ${root.name}`}
           </span>
         ))}
-      </span>
+      </Box>
       <hr />
     </>
   );
@@ -247,13 +250,11 @@ const SearchErrorsComponent = ({
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
-    <div dir="auto">
-      <p className="mt-3 text-danger">
-        {searchMethod === SEARCH_METHOD.WORD
-          ? t("search_fail")
-          : t("search_root_error")}
-      </p>
-    </div>
+    <Text p={3} dir="auto" color="rgb(220, 53, 69)">
+      {searchMethod === SEARCH_METHOD.WORD
+        ? t("search_fail")
+        : t("search_root_error")}
+    </Text>
   );
 };
 
@@ -282,12 +283,15 @@ const VerseContentComponent = ({
     <>
       <VerseContainer>
         <VerseHighlightMatches verse={verse} /> (
-        <button
-          className="p-0 border-0 bg-transparent btn-verse"
+        <Button
+          userSelect="text"
+          variant="ghost"
+          size="lg"
           onClick={() => handleVerseClick(verse_key)}
+          _hover={{ color: "cornflowerblue" }}
         >
           {`${verseChapter}:${verse.verseid}`}
-        </button>
+        </Button>
         )
       </VerseContainer>
       <ExpandButton identifier={verse_key} />

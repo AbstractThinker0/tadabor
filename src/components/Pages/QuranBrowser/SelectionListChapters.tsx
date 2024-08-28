@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 import useQuran from "@/context/useQuran";
 
 import { useAppDispatch, useAppSelector } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { selectedChaptersType } from "@/types";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+
+import { Flex, Input, Box, Checkbox, Button } from "@chakra-ui/react";
 
 interface SelectionListChaptersProps {
   handleCurrentChapter: (chapterID: number) => void;
@@ -100,9 +102,11 @@ const SelectionListChapters = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <div className="container p-0 browser-search-chapter">
-      <input
-        className="form-control browser-search-chapter-input"
+    <Flex flexDirection="column" h="40%">
+      <Input
+        bg="var(--color-fifth)"
+        borderBottom="none"
+        borderBottomRadius="0"
         type="search"
         value={chapterSearch}
         onChange={onChangeInput}
@@ -110,54 +114,59 @@ const SelectionListChapters = ({
         aria-label="Search"
         dir="rtl"
       />
-      <div className="browser-search-chapter-list" ref={refChaptersList}>
+      <Box
+        flexGrow="1"
+        bg="var(--color-primary)"
+        border="1px solid gainsboro"
+        overflowY="scroll"
+        padding="2px"
+        ref={refChaptersList}
+      >
         {quranService.chapterNames
           .filter((chapter) => chapter.name.includes(chapterSearch))
           .map((chapter) => (
-            <div
+            <Flex
+              px="14px"
+              cursor="pointer"
               key={chapter.id}
               data-id={chapter.id}
-              className={`browser-search-chapter-list-item ${
-                currentChapter === chapter.id
-                  ? "browser-search-chapter-list-item-selected"
-                  : ""
-              }`}
+              color={currentChapter === chapter.id ? "white" : undefined}
+              bg={currentChapter === chapter.id ? "#767676" : undefined}
             >
-              <div
-                className={"browser-search-chapter-list-item-name"}
-                onClick={() => onClickChapter(chapter.id)}
-              >
+              <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}
-              </div>
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={selectedChapters[chapter.id]}
+              </Box>
+              <Checkbox
+                isChecked={selectedChapters[chapter.id]}
                 onChange={() => onChangeSelectChapter(chapter.id)}
               />
-            </div>
+            </Flex>
           ))}
-      </div>
-      <div className="browser-search-chapter-footer">
-        <div className="text-center fw-bold">{t("search_scope")}:</div>
-        <div className="browser-search-chapter-footer-buttons">
-          <button
-            disabled={getSelectedCount === 114}
+      </Box>
+      <Flex alignItems="center" flexWrap="wrap" padding="5px" bg="#e7e6e6">
+        <Box fontWeight="bold">{t("search_scope")}:</Box>
+        <Flex justifyContent="center" gap="3px">
+          <Button
+            px={2}
+            colorScheme="teal"
+            fontWeight="normal"
+            isDisabled={getSelectedCount === 114}
             onClick={onClickSelectAll}
-            className="btn btn-dark btn-sm"
           >
             {t("all_chapters")}
-          </button>
-          <button
-            disabled={onlyCurrentSelected}
+          </Button>
+          <Button
+            px={2}
+            colorScheme="teal"
+            fontWeight="normal"
+            isDisabled={onlyCurrentSelected}
             onClick={onClickDeselectAll}
-            className="btn btn-dark btn-sm"
           >
             {t("current_chapter")}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 

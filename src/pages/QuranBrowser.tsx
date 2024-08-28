@@ -1,14 +1,14 @@
 import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
 import DisplayPanel from "@/components/Pages/QuranBrowser/DisplayPanel";
 
-import "@/styles/pages/browser.scss";
+import { Flex } from "@chakra-ui/react";
 
 function QuranBrowser() {
   return (
-    <div className="browser">
+    <Flex bg="var(--color-primary)" overflow="hidden" maxH="100%" h="100%">
       <SearchPanel />
       <DisplayPanel />
-    </div>
+    </Flex>
   );
 }
 
