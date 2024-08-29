@@ -317,7 +317,7 @@ const ListVerseComponent = memo(({ verse }: ListVerseComponentProps) => {
 
   return (
     <>
-      <VerseContainer extraClass="tags-display-chapter-verses-item-text">
+      <VerseContainer className="tags-display-chapter-verses-item-text">
         {verse.versetext}{" "}
         <span
           className="tags-display-chapter-verses-item-text-btn"

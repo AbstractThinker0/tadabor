@@ -8,13 +8,20 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { verseProps } from "@/types";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/Custom/NoteText";
-import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  useBoolean,
+  IconButton,
+  Button,
+} from "@chakra-ui/react";
+import CollapsibleNote from "@/components/Custom/CollapsibleNote";
+import { IconSelect } from "@/components/Generic/Icons";
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 const DisplayPanel = () => {
   const dispatch = useAppDispatch();
@@ -134,15 +141,11 @@ const ListVerses = () => {
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse: verseProps) => (
-            <Box
+            <VerseItem
               key={verse.key}
-              data-id={verse.key}
-              p={1}
-              borderBottom="1px solid gainsboro"
-              backgroundColor={scrollKey === verse.key ? "bisque" : undefined}
-            >
-              <VerseComponent verse={verse} />
-            </Box>
+              verse={verse}
+              isSelected={scrollKey === verse.key}
+            />
           ))
         )}
       </Box>
@@ -152,47 +155,49 @@ const ListVerses = () => {
 
 ListVerses.displayName = "ListVerses";
 
-interface VerseComponentProps {
+interface VerseItemProps {
   verse: verseProps;
+  isSelected: boolean;
 }
 
-const VerseComponent = ({ verse }: VerseComponentProps) => {
-  return (
-    <>
-      <VerseTextComponent verse={verse} />
-      <NoteText verseKey={verse.key} />
-    </>
-  );
-};
-
-VerseComponent.displayName = "VerseComponent";
-
-interface VerseTextComponentProps {
-  verse: verseProps;
-}
-
-const VerseTextComponent = ({ verse }: VerseTextComponentProps) => {
+const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   const dispatch = useAppDispatch();
 
-  function onClickVerse() {
+  const [isOpen, setOpen] = useBoolean();
+
+  const onClickVerse = () => {
     dispatch(qbPageActions.setScrollKey(verse.key));
-  }
+  };
+
   return (
-    <VerseContainer>
-      {verse.versetext}{" "}
-      <Box
-        display="inline"
-        cursor="pointer"
-        _hover={{ color: "cornflowerblue" }}
-        onClick={onClickVerse}
-      >
-        {`(${verse.verseid})`}
-      </Box>
-      <ExpandButton identifier={verse.key} />
-    </VerseContainer>
+    <Box
+      data-id={verse.key}
+      p={1}
+      borderBottom="1px solid gainsboro"
+      backgroundColor={isSelected ? "bisque" : undefined}
+    >
+      <VerseContainer py={1}>
+        {verse.versetext}{" "}
+        <Button
+          variant="ghost"
+          _hover={{ color: "cornflowerblue" }}
+          onClick={onClickVerse}
+          fontSize={"inherit"}
+        >
+          {`(${verse.verseid})`}
+        </Button>
+        <IconButton
+          variant="ghost"
+          aria-label="Expand"
+          icon={<IconSelect />}
+          onClick={setOpen.toggle}
+        />
+      </VerseContainer>
+      <CollapsibleNote isOpen={isOpen} verseKey={verse.key} />
+    </Box>
   );
 };
 
-VerseTextComponent.displayName = "VerseTextComponent";
+VerseItem.displayName = "VerseComponent";
 
 export default DisplayPanel;

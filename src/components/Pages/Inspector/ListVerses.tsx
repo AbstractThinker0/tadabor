@@ -167,7 +167,7 @@ const VerseWords = ({
 
   return (
     <>
-      <VerseContainer extraClass="display-verses-item-text">
+      <VerseContainer className="display-verses-item-text">
         {verseText.map((word, index) => (
           <Fragment key={index}>
             <span
@@ -432,7 +432,7 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
   return (
     <>
       <div data-child-id={rootVerse.key}>
-        <VerseContainer extraClass="display-verses-item-roots-verses-item-text">
+        <VerseContainer className="display-verses-item-roots-verses-item-text">
           <VerseHighlightMatches verse={rootVerse} />{" "}
           <span
             onClick={onClickVerseChapter}
