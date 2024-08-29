@@ -1,26 +1,41 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { settingsActions } from "@/store/slices/global/settings";
 
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  Box,
+  ButtonGroup,
+  Slider,
+  SliderTrack,
+  SliderThumb,
+  SliderFilledTrack,
+  Heading,
+  Divider,
+  Stack,
+  StackItem,
+} from "@chakra-ui/react";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 import { nfsDefault, nfsStored, qfsDefault, qfsStored } from "@/util/consts";
 
-import "@/styles/pages/settings.scss";
+interface SettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-const SettingsModal = () => {
+const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const { i18n } = useTranslation();
   const resolvedLang = i18n.resolvedLanguage;
-
-  const refSettingsModal = useRef<HTMLDivElement>(null);
 
   const dispatch = useAppDispatch();
   const quranFS = useAppSelector((state) => state.settings.quranFontSize);
@@ -34,12 +49,12 @@ const SettingsModal = () => {
     i18n.changeLanguage(lang);
   };
 
-  const onChangeQFS = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(settingsActions.setQuranFS(Number(event.target.value)));
+  const onChangeQFS = (val: number) => {
+    dispatch(settingsActions.setQuranFS(val));
   };
 
-  const onChangeNFS = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(settingsActions.setNotesFS(Number(event.target.value)));
+  const onChangeNFS = (val: number) => {
+    dispatch(settingsActions.setNotesFS(val));
   };
 
   const onClickSave = () => {
@@ -48,26 +63,14 @@ const SettingsModal = () => {
     setOrgNotesFS(notesFS);
     localStorage.setItem(nfsStored, String(notesFS));
     setOrgLang(resolvedLang);
+    onClose();
   };
 
-  useEffect(() => {
-    const modalElement = refSettingsModal.current;
-    if (modalElement === null) return;
-
-    const onModalHiden = () => {
-      dispatch(settingsActions.setQuranFS(orgQuranFS));
-      dispatch(settingsActions.setNotesFS(orgNotesFS));
-      i18n.changeLanguage(orgLang);
-    };
-
-    modalElement.addEventListener("hidden.bs.modal", onModalHiden);
-
-    return () => {
-      if (modalElement) {
-        modalElement.removeEventListener("hidden.bs.modal", onModalHiden);
-      }
-    };
-  }, [orgQuranFS, orgNotesFS, orgLang]);
+  const onCloseComplete = () => {
+    dispatch(settingsActions.setQuranFS(orgQuranFS));
+    dispatch(settingsActions.setNotesFS(orgNotesFS));
+    i18n.changeLanguage(orgLang);
+  };
 
   const onClickReset = () => {
     dispatch(settingsActions.setQuranFS(qfsDefault));
@@ -76,118 +79,113 @@ const SettingsModal = () => {
   };
 
   return (
-    <ModalContainer
-      identifier="settingsModal"
-      extraClass="settings-modal"
-      dialogClass="modal-lg"
-      refModal={refSettingsModal}
+    <Modal
+      size="xl"
+      isOpen={isOpen}
+      onClose={onClose}
+      onCloseComplete={onCloseComplete}
+      isCentered
     >
-      <ModalHeader identifier="settingsModal" title="Settings" />
-      <ModalBody>
-        <div>
-          Language:{" "}
-          <div
-            className="btn-group"
-            role="group"
-            aria-label="Basic radio toggle button group"
-          >
-            <input
-              type="radio"
-              className="btn-check"
-              name="btnradio"
-              id="btnradio1"
-              autoComplete="off"
-              checked={resolvedLang === "en"}
-              onChange={() => onChangeLang("en")}
-            />
-            <label className="btn btn-outline-primary" htmlFor="btnradio1">
-              English
-            </label>
-            <input
-              type="radio"
-              className="btn-check"
-              name="btnradio"
-              id="btnradio2"
-              autoComplete="off"
-              checked={resolvedLang === "ar"}
-              onChange={() => onChangeLang("ar")}
-            />
-            <label className="btn btn-outline-primary" htmlFor="btnradio2">
-              العربية
-            </label>
-          </div>
-        </div>
-        <hr />
-        <div>
-          <label htmlFor="qfsRange" className="form-label">
-            Quran Font Size:
-          </label>
-          <input
-            type="range"
-            className="form-range"
-            value={quranFS}
-            min="1"
-            max="4"
-            step="0.125"
-            id="qfsRange"
-            onChange={onChangeQFS}
-          ></input>
-        </div>
-        <div className="text-center">
-          <VerseContainer extraClass="settings-modal-verse">
-            وَلَتَعْلَمُنَّ نَبَأَهُ بَعْدَ حِينٍ (ص:88)
-          </VerseContainer>
-        </div>
-        <hr />
-        <div>
-          <label htmlFor="nfsRange" className="form-label">
-            Notes Font Size:
-          </label>
-          <input
-            type="range"
-            className="form-range"
-            value={notesFS}
-            min="1"
-            max="4"
-            step="0.125"
-            id="nfsRange"
-            onChange={onChangeNFS}
-          ></input>
-        </div>
-        <div className="text-center">
-          <span
-            className="settings-modal-verse"
-            style={{ fontSize: `${notesFS}rem` }}
-          >
-            Note example - مثال كتابة
-          </span>
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">Settings</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack spacing={6} divider={<Divider />}>
+            <StackItem>
+              <Heading size="sm" display={"inline"}>
+                Language:{" "}
+              </Heading>
+              <ButtonGroup colorScheme="blue" isAttached>
+                <Button
+                  variant={resolvedLang === "en" ? "solid" : "outline"}
+                  onClick={() => onChangeLang("en")}
+                >
+                  English
+                </Button>
+                <Button
+                  variant={resolvedLang === "ar" ? "solid" : "outline"}
+                  onClick={() => onChangeLang("ar")}
+                >
+                  العربية
+                </Button>
+              </ButtonGroup>
+            </StackItem>
+            <StackItem>
+              <Box py={1}>
+                <Heading size="sm">Quran Font Size:</Heading>
+                <Slider
+                  value={quranFS}
+                  min={1}
+                  max={4}
+                  step={0.125}
+                  onChange={onChangeQFS}
+                >
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb boxSize={6} />
+                </Slider>
+              </Box>
+              <Box
+                textAlign="center"
+                backgroundColor={"rgb(201, 201, 201)"}
+                borderRadius="0.75rem"
+                padding={2}
+              >
+                <VerseContainer>
+                  وَلَتَعْلَمُنَّ نَبَأَهُ بَعْدَ حِينٍ (ص:88)
+                </VerseContainer>
+              </Box>
+            </StackItem>
+            <StackItem>
+              <Box py={1}>
+                <Heading size="sm">Notes Font Size:</Heading>
+                <Slider
+                  value={notesFS}
+                  min={1}
+                  max={4}
+                  step={0.125}
+                  onChange={onChangeNFS}
+                >
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb boxSize={6} />
+                </Slider>
+              </Box>
+              <Box
+                textAlign="center"
+                backgroundColor={"rgb(201, 201, 201)"}
+                borderRadius="0.75rem"
+                padding={2}
+              >
+                <span style={{ fontSize: `${notesFS}rem` }}>
+                  Note example - مثال كتابة
+                </span>
+              </Box>
+            </StackItem>
+          </Stack>
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
-          Save changes
-        </button>
-        <button
-          type="button"
-          className="btn btn-warning"
-          onClick={onClickReset}
-        >
-          Reset to defaults
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button colorScheme="blue" onClick={onClose}>
+              Close
+            </Button>
+            <Button colorScheme="green" onClick={onClickSave}>
+              Save
+            </Button>
+            <Button colorScheme="yellow" onClick={onClickReset}>
+              Reset to defaults
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

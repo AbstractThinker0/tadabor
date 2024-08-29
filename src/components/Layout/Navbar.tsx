@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
-import { Box, Flex, Button } from "@chakra-ui/react";
+import { Box, Flex, Button, useDisclosure } from "@chakra-ui/react";
+
+import SettingsModal from "@/components/Layout/SettingsModal";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -82,17 +84,21 @@ const NavItem = ({ label, to }: NavItemProps) => {
 };
 
 const SettingsButton = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <Button
-      aria-label="Settings"
-      data-bs-toggle="modal"
-      data-bs-target="#settingsModal"
-      variant="ghost"
-      fontSize="large"
-      padding={0}
-    >
-      ⚙️
-    </Button>
+    <>
+      <Button
+        aria-label="Settings"
+        onClick={onOpen}
+        variant="ghost"
+        fontSize="large"
+        padding={0}
+      >
+        ⚙️
+      </Button>
+      <SettingsModal isOpen={isOpen} onClose={onClose} />
+    </>
   );
 };
 

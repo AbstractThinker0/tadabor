@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 // Import all of Bootstrap's JS
 import "bootstrap";
@@ -10,12 +10,13 @@ import "bootstrap";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QuranProvider } from "@/context/QuranProvider";
-import "@/styles/main.scss";
 
-import Navbar from "./Navbar";
-import AlertMessage from "./AlertMessage";
-import SettingsModal from "./SettingsModal";
+import Navbar from "@/components/Layout/Navbar";
+import AlertMessage from "@/components/Layout/AlertMessage";
+
 import { Flex } from "@chakra-ui/react";
+
+import "@/styles/main.scss";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
@@ -28,10 +29,8 @@ function Layout({ children }: PropsWithChildren) {
     document.dir = direction;
   }, [i18n.resolvedLanguage, i18n]);
 
-  const theme = extendTheme({ direction });
-
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <Flex
         ref={refMain}
         flexDirection="column"
@@ -43,7 +42,6 @@ function Layout({ children }: PropsWithChildren) {
         <Navbar />
         <AlertMessage />
         <QuranProvider>{children}</QuranProvider>
-        <SettingsModal />
         <ToastContainer
           position={`${isRtl ? "top-left" : "top-right"}`}
           rtl={isRtl}
