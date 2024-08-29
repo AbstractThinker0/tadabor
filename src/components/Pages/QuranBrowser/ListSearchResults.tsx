@@ -9,8 +9,6 @@ import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
 
-import { Tooltip } from "bootstrap";
-
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
@@ -19,7 +17,16 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
-import { Box, Button, HStack, Heading, Tag, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  HStack,
+  Heading,
+  Tag,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -189,33 +196,22 @@ const DerivationsComponent = ({
   searchIndexes,
   handleRootClick,
 }: DerivationsComponentProps) => {
-  const refListRoots = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!refListRoots.current) return;
-
-    //init tooltip
-    Array.from(
-      refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
-    ).forEach((tooltipNode) => new Tooltip(tooltipNode));
-  }, [searchIndexes]);
-
   return (
     <>
-      <hr />
-      <Box px={2} ref={refListRoots}>
+      <Divider />
+      <HStack wrap="wrap" px={2} divider={<>-</>}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
-          <span
-            role="button"
-            key={index}
-            onClick={() => handleRootClick(root.key)}
-            data-bs-toggle="tooltip"
-            data-bs-title={root.text}
-          >
-            {`${index ? " -" : " "} ${root.name}`}
-          </span>
+          <Tooltip hasArrow key={index} label={root.text}>
+            <Button
+              px={2}
+              fontSize="xl"
+              variant="ghost"
+              onClick={() => handleRootClick(root.key)}
+            >{`${root.name}`}</Button>
+          </Tooltip>
         ))}
-      </Box>
-      <hr />
+      </HStack>
+      <Divider />
     </>
   );
 };
