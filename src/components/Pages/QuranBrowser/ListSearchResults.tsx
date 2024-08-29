@@ -30,13 +30,11 @@ import {
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
-
   searchError: boolean;
 }
 
 const ListSearchResults = ({
   versesArray,
-
   searchError,
 }: ListSearchResultsProps) => {
   const quranService = useQuran();

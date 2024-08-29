@@ -27,6 +27,10 @@ const SelectionListChapters = ({
     (state) => state.qbPage.selectedChapters
   );
 
+  const searchingString = useAppSelector(
+    (state) => state.qbPage.searchingString
+  );
+
   const [chapterSearch, setChapterSearch] = useState("");
 
   const refChaptersList = useRef<HTMLDivElement>(null);
@@ -130,8 +134,11 @@ const SelectionListChapters = ({
               cursor="pointer"
               key={chapter.id}
               data-id={chapter.id}
-              color={currentChapter === chapter.id ? "white" : undefined}
-              bg={currentChapter === chapter.id ? "#767676" : undefined}
+              {...(!searchingString.length &&
+                currentChapter === chapter.id && {
+                  color: "white",
+                  bg: "#767676",
+                })}
             >
               <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}

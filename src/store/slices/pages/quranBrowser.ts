@@ -151,6 +151,7 @@ const qbPageSlice = createSlice({
       state.searchIndexes = [];
       state.selectChapter = Number(action.payload);
       state.scrollKey = "";
+      state.searchingString = "";
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
