@@ -9,24 +9,28 @@ import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
+
 import {
   Box,
   Button,
   Divider,
   HStack,
   Heading,
+  IconButton,
   Tag,
   Text,
   Tooltip,
+  useBoolean,
 } from "@chakra-ui/react";
+
+import CollapsibleNote from "@/components/Custom/CollapsibleNote";
+import { IconSelect } from "@/components/Generic/Icons";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -37,7 +41,6 @@ const ListSearchResults = ({
   versesArray,
   searchError,
 }: ListSearchResultsProps) => {
-  const quranService = useQuran();
   const { t } = useTranslation();
   const [selectedVerse, setSelectedVerse] = useState("");
 
@@ -111,20 +114,11 @@ const ListSearchResults = ({
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse) => (
-            <Box
+            <VerseItem
               key={verse.key}
-              data-id={verse.key}
-              p={1}
-              borderBottom="1px solid gainsboro"
-              backgroundColor={
-                verse.key === selectedVerse ? "bisque" : undefined
-              }
-            >
-              <SearchVerseComponent
-                verse={verse}
-                verseChapter={quranService.getChapterName(verse.suraid)}
-              />
-            </Box>
+              verse={verse}
+              isSelected={selectedVerse === verse.key}
+            />
           ))
         )}
         {searchError && (
@@ -216,25 +210,6 @@ const DerivationsComponent = ({
 
 DerivationsComponent.displayName = "DerivationsComponent";
 
-interface SearchVerseComponentProps {
-  verse: verseMatchResult;
-  verseChapter: string;
-}
-
-const SearchVerseComponent = ({
-  verse,
-  verseChapter,
-}: SearchVerseComponentProps) => {
-  return (
-    <>
-      <VerseContentComponent verse={verse} verseChapter={verseChapter} />
-      <NoteText verseKey={verse.key} />
-    </>
-  );
-};
-
-SearchVerseComponent.displayName = "SearchVerseComponent";
-
 interface SearchErrorsComponentProps {
   searchMethod: string;
 }
@@ -252,47 +227,53 @@ const SearchErrorsComponent = ({
   );
 };
 
-interface VerseContentComponentProps {
+interface VerseItemProps {
   verse: verseMatchResult;
-  verseChapter: string;
+  isSelected: boolean;
 }
 
-const VerseContentComponent = ({
-  verse,
-  verseChapter,
-}: VerseContentComponentProps) => {
+const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   const dispatch = useAppDispatch();
-  const verse_key = verse.key;
+  const quranService = useQuran();
 
-  function gotoChapter(chapter: string) {
-    dispatch(qbPageActions.gotoChapter(chapter));
-  }
+  const [isOpen, setOpen] = useBoolean();
 
-  const handleVerseClick = (verse_key: string) => {
-    gotoChapter(verse.suraid);
-    dispatch(qbPageActions.setScrollKey(verse_key));
+  const onClickVerseChapter = () => {
+    dispatch(qbPageActions.gotoChapter(verse.suraid));
+    dispatch(qbPageActions.setScrollKey(verse.key));
   };
 
   return (
-    <>
+    <Box
+      data-id={verse.key}
+      p={1}
+      borderBottom="1px solid gainsboro"
+      backgroundColor={isSelected ? "bisque" : undefined}
+    >
       <VerseContainer>
         <VerseHighlightMatches verse={verse} /> (
         <Button
           userSelect="text"
           variant="ghost"
           size="lg"
-          onClick={() => handleVerseClick(verse_key)}
+          onClick={onClickVerseChapter}
           _hover={{ color: "cornflowerblue" }}
         >
-          {`${verseChapter}:${verse.verseid}`}
+          {`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`}
         </Button>
         )
+        <IconButton
+          variant="ghost"
+          aria-label="Expand"
+          icon={<IconSelect />}
+          onClick={setOpen.toggle}
+        />
       </VerseContainer>
-      <ExpandButton identifier={verse_key} />
-    </>
+      <CollapsibleNote isOpen={isOpen} verseKey={verse.key} />
+    </Box>
   );
 };
 
-VerseContentComponent.displayName = "VerseContentComponent";
+VerseItem.displayName = "VerseItem";
 
 export default ListSearchResults;

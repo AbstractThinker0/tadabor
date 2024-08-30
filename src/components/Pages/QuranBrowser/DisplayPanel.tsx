@@ -198,6 +198,6 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   );
 };
 
-VerseItem.displayName = "VerseComponent";
+VerseItem.displayName = "VerseItem";
 
 export default DisplayPanel;
