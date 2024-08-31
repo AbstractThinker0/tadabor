@@ -269,7 +269,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
           onClick={setOpen.toggle}
         />
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} verseKey={verse.key} />
+      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>
   );
 };

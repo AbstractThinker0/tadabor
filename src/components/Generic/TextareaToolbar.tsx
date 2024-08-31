@@ -1,6 +1,7 @@
 import { memo } from "react";
 
 import { IconTextDirectionLtr, IconTextDirectionRtl } from "./Icons";
+import { Box, Button } from "@chakra-ui/react";
 
 interface TextareaToolbarProps {
   inputKey: string;
@@ -10,14 +11,14 @@ interface TextareaToolbarProps {
 const TextareaToolbar = memo(
   ({ inputKey, handleSetDirection }: TextareaToolbarProps) => {
     return (
-      <div dir="ltr" className="text-center">
+      <Box dir="ltr" textAlign="center" lineHeight={1}>
         <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
           <IconTextDirectionLtr />
         </ToolbarOption>
         <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
           <IconTextDirectionRtl />
         </ToolbarOption>
-      </div>
+      </Box>
     );
   }
 );
@@ -33,9 +34,9 @@ function ToolbarOption({ handleClick, children }: ToolbarOptionProps) {
   };
 
   return (
-    <button type="button" className="btn btn-sm" onClick={onClickButton}>
+    <Button variant="ghost" size="sm" onClick={onClickButton}>
       {children}
-    </button>
+    </Button>
   );
 }
 

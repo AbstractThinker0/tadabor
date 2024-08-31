@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useRef } from "react";
+import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -6,96 +6,81 @@ import { selectNote, useAppDispatch, useAppSelector } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { FormComponent, TextComponent } from "@/components/Custom/TextForm";
-
 import { Card, CardBody, Collapse } from "@chakra-ui/react";
+
+import NoteForm from "@/components/Custom/NoteForm";
+import NoteContainer from "@/components/Custom/NoteContainer";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;
-  verseKey: string;
+  inputKey: string;
 }
 
-const CollapsibleNote = memo(({ isOpen, verseKey }: CollapsibleNoteProps) => {
+const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
   const { t } = useTranslation();
-  const currentNote = useAppSelector(selectNote(verseKey));
   const dispatch = useAppDispatch();
+
+  const currentNote = useAppSelector(selectNote(inputKey));
 
   const inputValue = currentNote?.text || "";
   const inputDirection = currentNote?.dir || "";
 
   const [isEditable, setEditable] = useState(inputValue ? false : true);
 
-  const handleInputChange = useCallback(
-    (name: string, value: string) => {
-      dispatch(verseNotesActions.changeNote({ name, value }));
-    },
-    [dispatch]
-  );
+  const handleSetDirection = (dir: string) => {
+    dispatch(
+      verseNotesActions.changeNoteDir({
+        name: inputKey,
+        value: dir,
+      })
+    );
+  };
 
-  const handleInputSubmit = useCallback(
-    (key: string, value: string) => {
-      dbFuncs
-        .saveNote(key, value, inputDirection)
-        .then(() => {
-          toast.success(t("save_success"));
-        })
-        .catch(() => {
-          toast.error(t("save_failed"));
-        });
+  const onChangeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch(
+      verseNotesActions.changeNote({
+        name: inputKey,
+        value: event.target.value,
+      })
+    );
+  };
 
-      setEditable(false);
-    },
-    [inputDirection]
-  );
+  const onSubmitForm = (event: React.FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
 
-  const handleSetDirection = useCallback(
-    (verse_key: string, dir: string) => {
-      dispatch(
-        verseNotesActions.changeNoteDir({
-          name: verse_key,
-          value: dir,
-        })
-      );
-    },
-    [dispatch]
-  );
-
-  const handleEditClick = useCallback(() => {
-    setEditable(true);
-  }, []);
-
-  const formRef = useRef<HTMLDivElement>(null);
-
-  const handleEditButtonClick = () => {
-    handleEditClick();
-
-    if (formRef.current)
-      formRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
+    dbFuncs
+      .saveNote(inputKey, inputValue, inputDirection)
+      .then(() => {
+        toast.success(t("save_success"));
+      })
+      .catch(() => {
+        toast.error(t("save_failed"));
       });
+
+    setEditable(false);
+  };
+
+  const onClickEditButton = () => {
+    setEditable(true);
   };
 
   return (
     <Collapse in={isOpen}>
-      <Card variant={"outline"} ref={formRef}>
-        <CardBody>
+      <Card variant={"outline"}>
+        <CardBody pt={0} pb={1} px={1}>
           {isEditable === false ? (
-            <TextComponent
+            <NoteContainer
               inputValue={inputValue}
-              handleEditButtonClick={handleEditButtonClick}
-              inputKey={verseKey}
               inputDirection={inputDirection}
-              textClassname="p-2 border border-1 border-success rounded"
+              onClickEditButton={onClickEditButton}
             />
           ) : (
-            <FormComponent
-              inputKey={verseKey}
+            <NoteForm
               inputValue={inputValue}
               inputDirection={inputDirection}
               handleSetDirection={handleSetDirection}
-              handleInputSubmit={handleInputSubmit}
-              handleInputChange={handleInputChange}
+              onChangeTextarea={onChangeTextarea}
+              onSubmitForm={onSubmitForm}
             />
           )}
         </CardBody>
