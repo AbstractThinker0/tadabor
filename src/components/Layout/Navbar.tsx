@@ -29,15 +29,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <Box
-      as="nav"
-      role="navigation"
-      bg="gray.800"
-      paddingStart={2}
-      paddingEnd={2}
-      paddingTop={1}
-      paddingBottom={1}
-    >
+    <Box as="nav" role="navigation" bg="gray.800" px={2} py={1}>
       <Flex justifyContent="space-between">
         <Flex flexWrap="wrap" gap={1.5}>
           <NavItem to="/" label={t("nav_browser")} />

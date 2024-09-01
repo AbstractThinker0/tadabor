@@ -1,91 +1,48 @@
-interface TabNavbarProps {
-  extraClass?: string;
-  children?: React.ReactNode | undefined;
-}
+import {
+  Tabs,
+  TabsProps,
+  TabPanels,
+  TabPanelsProps,
+  TabPanel,
+  TabPanelProps,
+} from "@chakra-ui/react";
 
-const TabNavbar = ({ children, extraClass = "" }: TabNavbarProps) => {
+const TabsContainer = (props: TabsProps) => {
+  const { children, ...rest } = props;
+
   return (
-    <ul
-      className={"nav nav-tabs ".concat(extraClass)}
-      id="myTab"
-      role="tablist"
+    <Tabs
+      backgroundColor={"var(--color-primary)"}
+      overflow="hidden"
+      maxH="100%"
+      h="100%"
+      display={"flex"}
+      flexDirection={"column"}
+      {...rest}
     >
       {children}
-    </ul>
+    </Tabs>
   );
 };
 
-interface TabButtonProps {
-  text: string;
-  identifier: string;
-  extraClass?: string;
-  ariaSelected?: boolean;
-  handleClickTab?: () => void;
-  refButton?: React.RefObject<HTMLButtonElement>;
-}
-
-const TabButton = ({
-  text,
-  identifier,
-  extraClass = "",
-  ariaSelected,
-  handleClickTab,
-  refButton,
-}: TabButtonProps) => {
-  const onClickTab = () => {
-    if (handleClickTab) handleClickTab();
-  };
+const TabsPanels = (props: TabPanelsProps) => {
+  const { children, ...rest } = props;
 
   return (
-    <li className="nav-item" role="presentation">
-      <button
-        className={"nav-link ".concat(extraClass)}
-        id={`${identifier}-tab`}
-        data-bs-toggle="tab"
-        data-bs-target={`#${identifier}-tab-pane`}
-        type="button"
-        role="tab"
-        aria-controls={`${identifier}-tab-pane`}
-        aria-selected={ariaSelected}
-        onClick={onClickTab}
-        ref={refButton}
-      >
-        {text}
-      </button>
-    </li>
-  );
-};
-
-interface TabPanelProps {
-  identifier: string;
-  extraClass?: string;
-  children?: React.ReactNode | undefined;
-}
-
-const TabPanel = ({ identifier, extraClass = "", children }: TabPanelProps) => {
-  return (
-    <div
-      className={"tab-pane fade ".concat(extraClass)}
-      id={`${identifier}-tab-pane`}
-      role="tabpanel"
-      aria-labelledby={`${identifier}-tab`}
-      tabIndex={0}
-    >
+    <TabPanels flex={1} overflow={"hidden"} {...rest}>
       {children}
-    </div>
+    </TabPanels>
   );
 };
 
-interface TabContentProps {
-  children?: React.ReactNode | undefined;
-}
+const TabContent = (props: TabPanelProps) => {
+  const { children, ...rest } = props;
 
-const TabContent = ({ children }: TabContentProps) => {
   return (
-    <div className="tab-content" id="myTabContent">
+    <TabPanel p={0} maxH={"100%"} height={"100%"} overflow={"hidden"} {...rest}>
       {children}
-    </div>
+    </TabPanel>
   );
 };
 
-export { TabNavbar, TabButton, TabContent, TabPanel };
+export { TabsContainer, TabsPanels, TabContent };

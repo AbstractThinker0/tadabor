@@ -26,6 +26,7 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { CollapseContent } from "@/components/Generic/Collapse";
+import { Box, Flex, Spacer } from "@chakra-ui/react";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -81,7 +82,12 @@ const RootsList = memo(
     }
 
     return (
-      <div className="roots-panel-list" onScroll={handleScroll}>
+      <Box
+        overflowY={"scroll"}
+        maxH={"100%"}
+        height={"100%"}
+        onScroll={handleScroll}
+      >
         {isPending ? (
           <LoadingSpinner />
         ) : (
@@ -98,7 +104,7 @@ const RootsList = memo(
               />
             ))
         )}
-      </div>
+      </Box>
     );
   }
 );
@@ -164,11 +170,13 @@ const RootComponent = memo(
     }, []);
 
     return (
-      <div className="roots-panel-list-item border">
-        <div className="roots-panel-list-item-title fs-4">
-          <div className="roots-panel-list-item-title-pc">placeholder</div>
-          <div className="roots-panel-list-item-title-text">{root_name}</div>
-          <div className="roots-panel-list-item-title-btns">
+      <Box px={"5px"} border={"1px solid"} borderColor={"gray.300"}>
+        <Flex justify={"center"} fontSize={"larger"}>
+          <Spacer />
+          <Flex w={"3.5rem"} justify={"center"}>
+            {root_name}
+          </Flex>
+          <Flex flex={1}>
             <ExpandButton identifier={root_id} value={root_id} />
             <button
               type="button"
@@ -181,8 +189,8 @@ const RootComponent = memo(
             >
               {t("derivations")} ({root_count})
             </button>
-          </div>
-        </div>
+          </Flex>
+        </Flex>
         <TextForm
           inputKey={root_id}
           inputValue={noteText}
@@ -198,7 +206,7 @@ const RootComponent = memo(
           root_occurences={root_occurences}
           handleVerseTab={handleVerseTab}
         />
-      </div>
+      </Box>
     );
   }
 );

@@ -184,7 +184,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
           onClick={onClickVerse}
           fontSize={"inherit"}
         >
-          {`(${verse.verseid})`}
+          ({verse.verseid})
         </Button>
         <IconButton
           variant="ghost"
