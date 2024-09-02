@@ -66,27 +66,59 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
 
   return (
     <Collapse in={isOpen}>
-      <Card variant={"outline"}>
-        <CardBody pt={0} pb={1} px={1}>
-          {isEditable === false ? (
-            <NoteContainer
-              inputValue={inputValue}
-              inputDirection={inputDirection}
-              onClickEditButton={onClickEditButton}
-            />
-          ) : (
-            <NoteForm
-              inputValue={inputValue}
-              inputDirection={inputDirection}
-              handleSetDirection={handleSetDirection}
-              onChangeTextarea={onChangeTextarea}
-              onSubmitForm={onSubmitForm}
-            />
-          )}
-        </CardBody>
-      </Card>
+      <FormText
+        isEditable={isEditable}
+        inputValue={inputValue}
+        inputDirection={inputDirection}
+        onClickEditButton={onClickEditButton}
+        handleSetDirection={handleSetDirection}
+        onChangeTextarea={onChangeTextarea}
+        onSubmitForm={onSubmitForm}
+      />
     </Collapse>
   );
 });
 
-export default CollapsibleNote;
+interface FormTextProps {
+  isEditable: boolean;
+  inputValue: string;
+  inputDirection: string;
+  onClickEditButton: () => void;
+  handleSetDirection: (dir: string) => void;
+  onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
+}
+
+const FormText = ({
+  isEditable,
+  inputValue,
+  inputDirection,
+  onClickEditButton,
+  handleSetDirection,
+  onChangeTextarea,
+  onSubmitForm,
+}: FormTextProps) => {
+  return (
+    <Card variant={"outline"}>
+      <CardBody pt={0} pb={1} px={1}>
+        {isEditable === false ? (
+          <NoteContainer
+            inputValue={inputValue}
+            inputDirection={inputDirection}
+            onClickEditButton={onClickEditButton}
+          />
+        ) : (
+          <NoteForm
+            inputValue={inputValue}
+            inputDirection={inputDirection}
+            handleSetDirection={handleSetDirection}
+            onChangeTextarea={onChangeTextarea}
+            onSubmitForm={onSubmitForm}
+          />
+        )}
+      </CardBody>
+    </Card>
+  );
+};
+
+export { CollapsibleNote, FormText };

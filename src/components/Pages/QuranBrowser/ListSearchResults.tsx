@@ -29,7 +29,7 @@ import {
   useBoolean,
 } from "@chakra-ui/react";
 
-import CollapsibleNote from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { IconSelect } from "@/components/Generic/Icons";
 
 interface ListSearchResultsProps {

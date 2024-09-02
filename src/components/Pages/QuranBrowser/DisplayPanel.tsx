@@ -19,7 +19,7 @@ import {
   IconButton,
   Button,
 } from "@chakra-ui/react";
-import CollapsibleNote from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { IconSelect } from "@/components/Generic/Icons";
 import VerseContainer from "@/components/Custom/VerseContainer";
 

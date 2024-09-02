@@ -35,7 +35,7 @@ const RootsBrowser = () => {
   };
 
   return (
-    <TabsContainer onChange={onChangeTab} index={tabIndex}>
+    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
       <TabList>
         <Tab>{t("searcher_search")}</Tab>
 

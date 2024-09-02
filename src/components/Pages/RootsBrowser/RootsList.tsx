@@ -9,8 +9,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Tooltip } from "bootstrap";
-
 import { dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
 import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
@@ -18,15 +16,26 @@ import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
-import { TextForm } from "@/components/Custom/TextForm";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { CollapseContent } from "@/components/Generic/Collapse";
-import { Box, Flex, Spacer } from "@chakra-ui/react";
+
+import {
+  Box,
+  Button,
+  Collapse,
+  Divider,
+  Flex,
+  HStack,
+  IconButton,
+  Spacer,
+  useBoolean,
+  Tooltip,
+} from "@chakra-ui/react";
+
+import { IconSelect } from "@/components/Generic/Icons";
+import { CollapsibleNote, FormText } from "@/components/Custom/CollapsibleNote";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -46,7 +55,7 @@ const RootsList = memo(
   }: RootsListProps) => {
     const quranService = useQuran();
 
-    const [itemsCount, setItemsCount] = useState(80);
+    const [itemsCount, setItemsCount] = useState(60);
 
     const [isPending, startTransition] = useTransition();
 
@@ -130,6 +139,8 @@ const RootComponent = memo(
     const currentNote = useAppSelector(selecRootNote(root_id));
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
+    const [isOpen, setOpen] = useBoolean();
+    const [isOccurencesOpen, setOccurencesOpen] = useBoolean();
 
     const noteText = currentNote?.text || "";
     const inputDirection = currentNote?.dir || "";
@@ -137,9 +148,9 @@ const RootComponent = memo(
     const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
     const handleNoteSubmit = useCallback(
-      (key: string, value: string) => {
+      (event: React.FormEvent<HTMLDivElement>) => {
         dbFuncs
-          .saveRootNote(key, value, inputDirection)
+          .saveRootNote(root_id, noteText, inputDirection)
           .then(() => {
             toast.success(t("save_success"));
           })
@@ -152,7 +163,7 @@ const RootComponent = memo(
       [inputDirection]
     );
 
-    const handleSetDirection = useCallback((root_id: string, dir: string) => {
+    const handleSetDirection = useCallback((dir: string) => {
       dispatch(
         rootNotesActions.changeRootNoteDir({
           name: root_id,
@@ -161,9 +172,17 @@ const RootComponent = memo(
       );
     }, []);
 
-    const handleNoteChange = useCallback((name: string, value: string) => {
-      dispatch(rootNotesActions.changeRootNote({ name, value }));
-    }, []);
+    const handleNoteChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        dispatch(
+          rootNotesActions.changeRootNote({
+            name: root_id,
+            value: event.target.value,
+          })
+        );
+      },
+      []
+    );
 
     const handleEditClick = useCallback(() => {
       setStateEditable(true);
@@ -171,37 +190,40 @@ const RootComponent = memo(
 
     return (
       <Box px={"5px"} border={"1px solid"} borderColor={"gray.300"}>
-        <Flex justify={"center"} fontSize={"larger"}>
+        <Flex justify={"center"} fontSize={"larger"} alignItems={"center"}>
           <Spacer />
           <Flex w={"3.5rem"} justify={"center"}>
             {root_name}
           </Flex>
           <Flex flex={1}>
-            <ExpandButton identifier={root_id} value={root_id} />
-            <button
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={`#collapseOccs${root_id}`}
-              aria-expanded="false"
-              aria-controls={`collapseOccs${root_id}`}
-              className="btn roots-panel-list-item-title-btns-derivations"
-              value={root_id}
+            <IconButton
+              variant="ghost"
+              aria-label="Expand"
+              icon={<IconSelect />}
+              onClick={setOpen.toggle}
+            />
+            <Button
+              colorScheme="teal"
+              variant={"outline"}
+              onClick={setOccurencesOpen.toggle}
             >
               {t("derivations")} ({root_count})
-            </button>
+            </Button>
           </Flex>
         </Flex>
-        <TextForm
-          inputKey={root_id}
-          inputValue={noteText}
-          isEditable={stateEditable}
-          inputDirection={inputDirection}
-          handleSetDirection={handleSetDirection}
-          handleInputChange={handleNoteChange}
-          handleInputSubmit={handleNoteSubmit}
-          handleEditClick={handleEditClick}
-        />
+        <Collapse in={isOpen}>
+          <FormText
+            inputValue={noteText}
+            isEditable={stateEditable}
+            inputDirection={inputDirection}
+            handleSetDirection={handleSetDirection}
+            onChangeTextarea={handleNoteChange}
+            onSubmitForm={handleNoteSubmit}
+            onClickEditButton={handleEditClick}
+          />
+        </Collapse>
         <RootOccurences
+          isOccurencesOpen={isOccurencesOpen}
           root_id={root_id}
           root_occurences={root_occurences}
           handleVerseTab={handleVerseTab}
@@ -214,101 +236,84 @@ const RootComponent = memo(
 RootComponent.displayName = "RootComponent";
 
 interface RootOccurencesProps {
+  isOccurencesOpen: boolean;
   root_occurences: string[];
   root_id: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
 const RootOccurences = ({
+  isOccurencesOpen,
   root_occurences,
   root_id,
   handleVerseTab,
 }: RootOccurencesProps) => {
   const quranService = useQuran();
-  const [isShown, setIsShown] = useState(false);
+
   const [itemsCount, setItemsCount] = useState(20);
-  const refCollapse = useRef<HTMLDivElement>(null);
+  const refOccurences = useRef<HTMLDivElement>(null);
   const [scrollKey, setScrollKey] = useState("");
 
-  useEffect(() => {
-    const collapseElement = refCollapse.current;
-    function onShowRoots() {
-      setIsShown(true);
-    }
+  const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
+  const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
 
-    function onHiddenRoots() {
-      setIsShown(false);
-    }
-
-    if (collapseElement !== null) {
-      collapseElement.addEventListener("show.bs.collapse", onShowRoots);
-      collapseElement.addEventListener("hidden.bs.collapse", onHiddenRoots);
-    }
-
-    return () => {
-      if (collapseElement !== null) {
-        collapseElement.removeEventListener("show.bs.collapse", onShowRoots);
-        collapseElement.removeEventListener(
-          "hidden.bs.collapse",
-          onHiddenRoots
-        );
-      }
-    };
-  }, []);
-
-  function onScrollOccs(event: React.UIEvent<HTMLDivElement>) {
+  const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 10) {
       setItemsCount((state) => state + 10);
     }
-  }
+  };
 
-  const derivations: searchIndexProps[] = [];
+  useEffect(() => {
+    if (!isOccurencesOpen) return;
 
-  const rootVerses: verseMatchResult[] = [];
+    const localDer: searchIndexProps[] = [];
+    const localVerses: verseMatchResult[] = [];
 
-  root_occurences.forEach((occ) => {
-    const occData = occ.split(":");
-    const verse = quranService.getVerseByRank(occData[0]);
-    const wordIndexes = occData[1].split(",");
-    const verseWords = verse.versetext.split(" ");
+    root_occurences.forEach((occ) => {
+      const occData = occ.split(":");
+      const verse = quranService.getVerseByRank(occData[0]);
+      const wordIndexes = occData[1].split(",");
+      const verseWords = verse.versetext.split(" ");
 
-    const chapterName = quranService.getChapterName(verse.suraid);
-    const verseDerivations = wordIndexes.map((wordIndex) => ({
-      name: verseWords[Number(wordIndex) - 1],
-      key: verse.key,
-      text: `${chapterName}:${verse.verseid}`,
-      wordIndex,
-    }));
+      const chapterName = quranService.getChapterName(verse.suraid);
+      const verseDerivations = wordIndexes.map((wordIndex) => ({
+        name: verseWords[Number(wordIndex) - 1],
+        key: verse.key,
+        text: `${chapterName}:${verse.verseid}`,
+        wordIndex,
+      }));
 
-    derivations.push(...verseDerivations);
+      localDer.push(...verseDerivations);
 
-    const verseParts = getRootMatches(verseWords, wordIndexes);
+      const verseParts = getRootMatches(verseWords, wordIndexes);
 
-    rootVerses.push({
-      verseParts,
-      key: verse.key,
-      suraid: verse.suraid,
-      verseid: verse.verseid,
+      localVerses.push({
+        verseParts,
+        key: verse.key,
+        suraid: verse.suraid,
+        verseid: verse.verseid,
+      });
     });
-  });
 
-  const slicedItems = rootVerses.slice(0, itemsCount);
+    setDerivations(localDer);
+    setRootVerses(localVerses);
+  }, [isOccurencesOpen, root_occurences]);
 
-  function handleDerivationClick(verseKey: string, verseIndex: number) {
+  const handleDerivationClick = (verseKey: string, verseIndex: number) => {
     if (itemsCount < verseIndex + 20) {
       setItemsCount(verseIndex + 20);
     }
     setScrollKey(verseKey);
-  }
+  };
 
   useEffect(() => {
     if (!scrollKey) return;
 
-    if (!refCollapse.current) return;
+    if (!refOccurences.current) return;
 
-    const verseToHighlight = refCollapse.current.querySelector(
+    const verseToHighlight = refOccurences.current.querySelector(
       `[data-child-id="${scrollKey}"]`
     );
 
@@ -321,36 +326,33 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <CollapseContent
-      refCollapse={refCollapse}
-      identifier={`collapseOccs${root_id}`}
-    >
-      {isShown && (
-        <div
-          className="roots-panel-list-item-verses p-3"
-          onScroll={onScrollOccs}
-          dir="rtl"
-        >
-          <DerivationsComponent
-            searchIndexes={derivations}
-            handleDerivationClick={handleDerivationClick}
-          />
-          {slicedItems.map((verse) => (
-            <div
-              key={verse.key}
-              className={`roots-panel-list-item-verses-item ${
-                scrollKey === verse.key
-                  ? "roots-panel-list-item-verses-item-selected"
-                  : ""
-              }`}
-              data-child-id={verse.key}
-            >
-              <RootVerse rootVerse={verse} handleVerseTab={handleVerseTab} />
-            </div>
-          ))}
-        </div>
-      )}
-    </CollapseContent>
+    <Collapse in={isOccurencesOpen}>
+      <Box
+        padding={3}
+        backgroundColor={"rgb(247, 250, 252)"}
+        maxH={"60vh"}
+        overflowY={"scroll"}
+        onScroll={onScrollOccs}
+        dir="rtl"
+        ref={refOccurences}
+      >
+        <DerivationsComponent
+          searchIndexes={derivations}
+          handleDerivationClick={handleDerivationClick}
+        />
+        {rootVerses.slice(0, itemsCount).map((verse) => (
+          <Box
+            key={verse.key}
+            padding={1}
+            borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+            backgroundColor={scrollKey === verse.key ? "beige" : undefined}
+            data-child-id={verse.key}
+          >
+            <RootVerse rootVerse={verse} handleVerseTab={handleVerseTab} />
+          </Box>
+        ))}
+      </Box>
+    </Collapse>
   );
 };
 
@@ -361,37 +363,22 @@ interface DerivationsComponentProps {
 
 const DerivationsComponent = memo(
   ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
-    const refListRoots = useRef<HTMLSpanElement>(null);
-    useEffect(() => {
-      if (!refListRoots.current) return;
-
-      //init tooltip
-      const tooltipArray = Array.from(
-        refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
-      ).map((tooltipNode) => new Tooltip(tooltipNode));
-
-      return () => {
-        tooltipArray.forEach((tooltip) => tooltip.dispose());
-      };
-    }, [searchIndexes]);
-
     return (
-      <div className="p-2">
-        <span ref={refListRoots} className="">
+      <>
+        <HStack wrap="wrap" p={1} divider={<>-</>}>
           {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <span
-              role="button"
-              key={index}
-              onClick={() => handleDerivationClick(root.key, index)}
-              data-bs-toggle="tooltip"
-              data-bs-title={root.text}
-            >
-              {`${index ? " -" : " "} ${root.name}`}
-            </span>
+            <Tooltip hasArrow key={index} label={root.text}>
+              <Button
+                px={2}
+                fontSize="xl"
+                variant="ghost"
+                onClick={() => handleDerivationClick(root.key, index)}
+              >{`${root.name}`}</Button>
+            </Tooltip>
           ))}
-        </span>
-        <hr />
-      </div>
+        </HStack>
+        <Divider />
+      </>
     );
   }
 );
@@ -406,6 +393,8 @@ interface RootVerseProps {
 const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
   const quranService = useQuran();
 
+  const [isOpen, setOpen] = useBoolean();
+
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
   const onClickChapter = () => {
@@ -415,14 +404,26 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
   return (
     <>
       <VerseContainer>
-        <VerseHighlightMatches verse={rootVerse} />{" "}
-        <span
+        <VerseHighlightMatches verse={rootVerse} /> (
+        <Button
+          userSelect="text"
+          variant="ghost"
+          size="lg"
           onClick={onClickChapter}
-          className="roots-panel-list-item-verses-item-text-chapter"
-        >{`(${verseChapter}:${rootVerse.verseid})`}</span>
-        <ExpandButton identifier={`${rootVerse.key}child`} />
+          _hover={{ color: "cornflowerblue" }}
+        >
+          {`${verseChapter}:${rootVerse.verseid}`}
+        </Button>
+        )
+        <IconButton
+          variant="ghost"
+          aria-label="Expand"
+          icon={<IconSelect />}
+          onClick={setOpen.toggle}
+        />
       </VerseContainer>
-      <NoteText verseKey={rootVerse.key} targetID={`${rootVerse.key}child`} />
+
+      <CollapsibleNote isOpen={isOpen} inputKey={rootVerse.key} />
     </>
   );
 };

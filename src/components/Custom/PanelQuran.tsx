@@ -11,7 +11,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { IconSelect } from "@/components/Generic/Icons";
-import CollapsibleNote from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 import {
   Box,
