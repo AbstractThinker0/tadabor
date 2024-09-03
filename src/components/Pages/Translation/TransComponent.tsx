@@ -6,7 +6,8 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/Custom/TextForm";
+import { Box, Button, Text } from "@chakra-ui/react";
+import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 
 interface TransComponentProps {
   verse_key: string;
@@ -91,30 +92,28 @@ const Versetext = ({
   const { t } = useTranslation();
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  function onClickEdit() {
+  const onClickEdit = () => {
     handleEditClick();
-  }
+  };
 
   return (
-    <div className="p-2">
-      <div className="border p-1 translation-display-card-trans-text">
-        <p
-          style={{ whiteSpace: "pre-wrap", fontSize: `${notesFS}rem` }}
-          dir="ltr"
-        >
+    <Box padding={2}>
+      <Box border={"1px solid #dee2e6"} padding={1}>
+        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} dir="ltr">
           {inputValue}
-        </p>
-      </div>
-      <div className="text-center">
-        <button
-          name={inputKey}
+        </Text>
+      </Box>
+      <Box textAlign={"center"}>
+        <Button
+          colorScheme="blue"
           onClick={onClickEdit}
-          className="mt-2 btn btn-primary btn-sm"
+          size="sm"
+          fontWeight={"normal"}
         >
           {t("text_edit")}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
@@ -133,28 +132,33 @@ const Versearea = ({
 }: VerseareaProps) => {
   const { t } = useTranslation();
 
-  function onClickSave() {
+  const onClickSave = () => {
     handleInputSubmit(inputKey, inputValue);
-  }
+  };
+
+  const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(inputKey, event.target.value);
+  };
 
   return (
-    <div className="p-2" dir="ltr">
-      <TextAreaComponent
-        inputKey={inputKey}
-        inputValue={inputValue}
+    <Box padding={2} dir="ltr">
+      <TextareaAutosize
         placeholder="Enter your text."
-        handleInputChange={handleInputChange}
+        value={inputValue}
+        onChange={onChangeText}
+        backgroundColor={"white"}
       />
-      <div className="text-center">
-        <button
-          name={inputKey}
+      <Box textAlign={"center"}>
+        <Button
+          colorScheme="green"
+          size="sm"
+          fontWeight={"normal"}
           onClick={onClickSave}
-          className="mt-2 btn btn-success btn-sm"
         >
           {t("text_save")}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

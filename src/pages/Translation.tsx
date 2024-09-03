@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 
 import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
@@ -10,11 +9,9 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
-import "@/styles/pages/translation.scss";
+import { Flex } from "@chakra-ui/react";
 
 const Translation = () => {
-  const { t } = useTranslation();
-
   const dispatch = useAppDispatch();
 
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
@@ -32,22 +29,24 @@ const Translation = () => {
   };
 
   return (
-    <div className="translation">
-      <div className="side border-start justify-content-center">
-        <h4 className="side-chapters-title">{t("roots_list")}</h4>
+    <Flex
+      backgroundColor={"var(--color-primary)"}
+      overflow={"hidden"}
+      maxH={"100%"}
+      h={"100%"}
+    >
+      <Flex flexDir={"column"} padding={1}>
         <ChaptersList
           handleChapterChange={handleChapterChange}
           selectChapter={currentChapter}
-          mainClass="side-chapters"
-          inputClass="side-chapters-input"
         />
-      </div>
+      </Flex>
       {isTNotesLoading ? (
         <LoadingSpinner />
       ) : (
         <DisplayPanel selectChapter={currentChapter} />
       )}
-    </div>
+    </Flex>
   );
 };
 
