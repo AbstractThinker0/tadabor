@@ -43,6 +43,8 @@ const EditColorsModal = () => {
   }
 
   function onInputColor(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+
     const newColorsList = { ...listColors };
 
     newColorsList[event.currentTarget.name] = {

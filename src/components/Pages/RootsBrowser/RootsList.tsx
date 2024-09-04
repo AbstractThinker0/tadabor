@@ -149,6 +149,8 @@ const RootComponent = memo(
 
     const handleNoteSubmit = useCallback(
       (event: React.FormEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
         dbFuncs
           .saveRootNote(root_id, noteText, inputDirection)
           .then(() => {

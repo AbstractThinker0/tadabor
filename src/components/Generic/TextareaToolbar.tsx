@@ -1,43 +1,31 @@
-import { memo } from "react";
+import { Box, IconButton } from "@chakra-ui/react";
 
-import { IconTextDirectionLtr, IconTextDirectionRtl } from "./Icons";
-import { Box, Button } from "@chakra-ui/react";
+import {
+  IconTextDirectionLtr,
+  IconTextDirectionRtl,
+} from "@/components/Generic/Icons";
 
 interface TextareaToolbarProps {
-  inputKey: string;
-  handleSetDirection: (key: string, direction: string) => void;
+  handleSetDirection: (direction: string) => void;
 }
 
-const TextareaToolbar = memo(
-  ({ inputKey, handleSetDirection }: TextareaToolbarProps) => {
-    return (
-      <Box dir="ltr" textAlign="center" lineHeight={1}>
-        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "ltr")}>
-          <IconTextDirectionLtr />
-        </ToolbarOption>
-        <ToolbarOption handleClick={() => handleSetDirection(inputKey, "rtl")}>
-          <IconTextDirectionRtl />
-        </ToolbarOption>
-      </Box>
-    );
-  }
-);
-
-interface ToolbarOptionProps {
-  handleClick: () => void;
-  children: JSX.Element;
-}
-
-function ToolbarOption({ handleClick, children }: ToolbarOptionProps) {
-  const onClickButton = () => {
-    handleClick();
-  };
-
+const TextareaToolbar = ({ handleSetDirection }: TextareaToolbarProps) => {
   return (
-    <Button variant="ghost" size="sm" onClick={onClickButton}>
-      {children}
-    </Button>
+    <Box dir="ltr" textAlign="center" lineHeight={1}>
+      <IconButton
+        variant="ghost"
+        aria-label="ltr"
+        icon={<IconTextDirectionLtr />}
+        onClick={() => handleSetDirection("ltr")}
+      />
+      <IconButton
+        variant="ghost"
+        aria-label="rtl"
+        icon={<IconTextDirectionRtl />}
+        onClick={() => handleSetDirection("rtl")}
+      />
+    </Box>
   );
-}
+};
 
 export default TextareaToolbar;

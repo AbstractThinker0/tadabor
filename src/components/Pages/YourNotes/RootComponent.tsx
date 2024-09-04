@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -9,89 +9,86 @@ import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import { dbFuncs } from "@/util/db";
 
-import { FormComponent, TextComponent } from "@/components/Custom/TextForm";
+import VerseContainer from "@/components/Custom/VerseContainer";
+
+import NoteForm from "@/components/Pages/YourNotes/NoteForm";
+import NoteText from "@/components/Pages/YourNotes/NoteText";
+
+import { Card, CardHeader } from "@chakra-ui/react";
 
 interface RootComponentProps {
-  rootID: string;
+  inputKey: string;
 }
 
-const RootComponent = ({ rootID }: RootComponentProps) => {
+const RootComponent = ({ inputKey }: RootComponentProps) => {
   const quranService = useQuran();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const rootNote = useAppSelector(selecRootNote(rootID));
+  const rootNote = useAppSelector(selecRootNote(inputKey));
 
-  const { text, dir = "" } = rootNote;
+  const inputValue = rootNote?.text || "";
+  const inputDirection = rootNote?.dir || "";
 
-  const [stateEditable, setStateEditable] = useState(text ? false : true);
+  const [isEditable, setEditable] = useState(inputValue ? false : true);
 
-  const handleNoteChange = useCallback(
-    (name: string, value: string) => {
-      dispatch(rootNotesActions.changeRootNote({ name, value }));
-    },
-    [dispatch]
-  );
+  const handleTextChange = (value: string) => {
+    dispatch(rootNotesActions.changeRootNote({ name: inputKey, value }));
+  };
 
-  const handleInputSubmit = useCallback(
-    (key: string, value: string) => {
-      dbFuncs
-        .saveRootNote(key, value, dir)
-        .then(() => {
-          toast.success(t("save_success"));
-        })
-        .catch(() => {
-          toast.error(t("save_failed"));
-        });
+  const handleFormSubmit = () => {
+    dbFuncs
+      .saveRootNote(inputKey, inputValue, inputDirection)
+      .then(() => {
+        toast.success(t("save_success"));
+      })
+      .catch(() => {
+        toast.error(t("save_failed"));
+      });
 
-      setStateEditable(false);
-    },
-    [dir]
-  );
+    setEditable(false);
+  };
 
-  const handleSetDirection = useCallback(
-    (verse_key: string, dir: string) => {
-      dispatch(
-        rootNotesActions.changeRootNoteDir({
-          name: verse_key,
-          value: dir,
-        })
-      );
-    },
-    [dispatch]
-  );
+  const handleSetDirection = (dir: string) => {
+    dispatch(
+      rootNotesActions.changeRootNoteDir({
+        name: inputKey,
+        value: dir,
+      })
+    );
+  };
 
-  const handleEditClick = useCallback(() => {
-    setStateEditable(true);
-  }, []);
+  const onClickEditButton = () => {
+    setEditable(true);
+  };
 
   return (
-    <div className="card mb-3">
-      <div className="card-header fs-3" dir="rtl">
-        {quranService.getRootNameByID(rootID)}
-      </div>
-      {stateEditable ? (
-        <FormComponent
-          inputValue={text}
-          inputKey={rootID}
-          inputDirection={dir}
-          handleInputChange={handleNoteChange}
-          handleInputSubmit={handleInputSubmit}
+    <Card w={"100%"} variant={"outline"} borderColor={"rgba(0, 0, 0, .175)"}>
+      <CardHeader
+        dir="rtl"
+        backgroundColor={"rgba(33, 37, 41, .03)"}
+        borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+      >
+        <VerseContainer>
+          {quranService.getRootNameByID(inputKey)}
+        </VerseContainer>
+      </CardHeader>
+      {isEditable ? (
+        <NoteForm
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          handleFormSubmit={handleFormSubmit}
+          handleTextChange={handleTextChange}
           handleSetDirection={handleSetDirection}
-          bodyClassname="card-body"
-          saveClassname="card-footer"
         />
       ) : (
-        <TextComponent
-          inputKey={rootID}
-          inputValue={text}
-          inputDirection={dir}
-          handleEditButtonClick={handleEditClick}
-          textClassname="card-body yournotes-note-text"
-          editClassname="card-footer"
+        <NoteText
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          onClickEditButton={onClickEditButton}
         />
       )}
-    </div>
+    </Card>
   );
 };
 

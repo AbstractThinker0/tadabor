@@ -1,107 +1,63 @@
-import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ynPageActions } from "@/store/slices/pages/yourNotes";
 
+import { Tab, TabList } from "@chakra-ui/react";
+
 import {
-  TabButton,
   TabContent,
-  TabNavbar,
-  TabPanel,
+  TabsContainer,
+  TabsPanels,
 } from "@/components/Generic/Tabs";
 
 import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
 import TransNotes from "@/components/Pages/YourNotes/TransNotes";
 
-import { TAB } from "@/components/Pages/YourNotes/consts";
-
-import "@/styles/pages/yournotes.scss";
-
-function YourNotes() {
+const YourNotes = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const refButtonVerses = useRef<HTMLButtonElement>(null);
-  const refButtonRoots = useRef<HTMLButtonElement>(null);
-  const refButtonTrans = useRef<HTMLButtonElement>(null);
-
   const currentTab = useAppSelector((state) => state.ynPage.currentTab);
 
-  useEffect(() => {
-    //
-    if (
-      !refButtonVerses.current ||
-      !refButtonRoots.current ||
-      !refButtonTrans.current
-    )
-      return;
-
-    let currentButton: HTMLButtonElement;
-
-    if (currentTab == TAB.VERSES) {
-      currentButton = refButtonVerses.current;
-    } else if (currentTab == TAB.ROOTS) {
-      currentButton = refButtonRoots.current;
-    } else {
-      currentButton = refButtonTrans.current;
-    }
-
-    if (currentButton.classList.contains("show")) return;
-
-    currentButton.click();
-  }, [currentTab]);
-
-  const onClickButtonVerses = () => {
-    dispatch(ynPageActions.setCurrentTab(TAB.VERSES));
-  };
-
-  const onClickButtonRoots = () => {
-    dispatch(ynPageActions.setCurrentTab(TAB.ROOTS));
-  };
-
-  const onClickButtonTrans = () => {
-    dispatch(ynPageActions.setCurrentTab(TAB.TRANS));
+  const onChangeTab = (index: number) => {
+    dispatch(ynPageActions.setCurrentTab(index));
   };
 
   return (
-    <div className="yournotes">
-      <TabNavbar extraClass="justify-content-center">
-        <TabButton
-          text={t("notes_verses")}
-          identifier="verses"
-          extraClass="active"
-          ariaSelected={true}
-          refButton={refButtonVerses}
-          handleClickTab={onClickButtonVerses}
-        />
-        <TabButton
-          text={t("notes_roots")}
-          identifier="roots"
-          refButton={refButtonRoots}
-          handleClickTab={onClickButtonRoots}
-        />
-        <TabButton
-          text={t("notes_trans")}
-          identifier="trans"
-          refButton={refButtonTrans}
-          handleClickTab={onClickButtonTrans}
-        />
-      </TabNavbar>
-      <TabContent>
-        <TabPanel identifier="verses" extraClass="show active">
+    <TabsContainer
+      onChange={onChangeTab}
+      index={currentTab}
+      isLazy
+      className="yournotes"
+      overflowY={"scroll"}
+      flex={1}
+      padding={2}
+      display={"block"}
+    >
+      <TabList justifyContent={"center"}>
+        <Tab>{t("notes_verses")}</Tab>
+
+        <Tab>{t("notes_roots")}</Tab>
+
+        <Tab>{t("notes_trans")}</Tab>
+      </TabList>
+      <TabsPanels>
+        <TabContent>
           <VerseNotes />
-        </TabPanel>
-        <TabPanel identifier="roots">
+        </TabContent>
+
+        <TabContent>
           <RootNotes />
-        </TabPanel>
-        <TabPanel identifier="trans">
+        </TabContent>
+
+        <TabContent>
           <TransNotes />
-        </TabPanel>
-      </TabContent>
-    </div>
+        </TabContent>
+      </TabsPanels>
+    </TabsContainer>
   );
-}
+};
 
 export default YourNotes;

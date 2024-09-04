@@ -25,6 +25,8 @@ const AddColorModal = () => {
   }
 
   function onInputColor(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+
     setColorCode(event.currentTarget.value);
   }
 

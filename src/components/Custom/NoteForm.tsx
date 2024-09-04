@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
 
-import { Box, Button, FormControl, IconButton } from "@chakra-ui/react";
+import { Box, Button, FormControl } from "@chakra-ui/react";
 
-import {
-  IconTextDirectionLtr,
-  IconTextDirectionRtl,
-} from "@/components/Generic/Icons";
+import TextareaToolbar from "@/components/Generic/TextareaToolbar";
+
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 
 interface NoteFormProps {
@@ -27,20 +25,7 @@ const NoteForm = ({
 
   return (
     <FormControl as="form" onSubmit={onSubmitForm}>
-      <Box dir="ltr" textAlign="center" lineHeight={1}>
-        <IconButton
-          variant="ghost"
-          aria-label="ltr"
-          icon={<IconTextDirectionLtr />}
-          onClick={() => handleSetDirection("ltr")}
-        />
-        <IconButton
-          variant="ghost"
-          aria-label="rtl"
-          icon={<IconTextDirectionRtl />}
-          onClick={() => handleSetDirection("rtl")}
-        />
-      </Box>
+      <TextareaToolbar handleSetDirection={handleSetDirection} />
       <TextareaAutosize
         value={inputValue}
         dir={inputDirection}

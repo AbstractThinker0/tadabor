@@ -15,6 +15,9 @@ import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseComponent from "@/components/Pages/YourNotes/VerseComponent";
+import BackupForm from "@/components/Pages/YourNotes/BackupForm";
+
+import { Box, VStack } from "@chakra-ui/react";
 
 const VerseNotes = () => {
   const dispatch = useAppDispatch();
@@ -36,14 +39,16 @@ const NotesList = () => {
       {notesKeys.length ? (
         <>
           <BackupComponent />
-          {notesKeys.map((key) => (
-            <VerseComponent verseKey={key} key={key} />
-          ))}
+          <VStack>
+            {notesKeys.map((key) => (
+              <VerseComponent inputKey={key} key={key} />
+            ))}
+          </VStack>
         </>
       ) : (
-        <div className="fs-4 text-center">
-          <div>{t("no_notes")}</div>
-        </div>
+        <Box textAlign={"center"} fontSize={"larger"}>
+          {t("no_notes")}
+        </Box>
       )}
     </>
   );
@@ -101,28 +106,16 @@ const BackupComponent = () => {
     });
   };
 
-  function onChangeFormat(event: React.ChangeEvent<HTMLSelectElement>) {
-    setFormat(event.target.value);
-  }
+  const handleFormat = (format: string) => {
+    setFormat(format);
+  };
 
   return (
-    <div className="backup text-center p-2" dir="ltr">
-      <div>Output format:</div>
-      <div>
-        <select
-          value={currentFormat}
-          onChange={onChangeFormat}
-          className="form-select"
-          aria-label="Default select example"
-        >
-          <option value="1">HTML</option>
-          <option value="2">JSON</option>
-        </select>
-      </div>
-      <button className="btn btn-success" onClick={notesBackup}>
-        Download notes
-      </button>
-    </div>
+    <BackupForm
+      currentFormat={currentFormat}
+      handleFormat={handleFormat}
+      notesBackup={notesBackup}
+    />
   );
 };
 
