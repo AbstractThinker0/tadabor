@@ -28,14 +28,13 @@ import {
   Divider,
   Flex,
   HStack,
-  IconButton,
   Spacer,
   useBoolean,
   Tooltip,
 } from "@chakra-ui/react";
 
-import { IconSelect } from "@/components/Generic/Icons";
 import { CollapsibleNote, FormText } from "@/components/Custom/CollapsibleNote";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -198,12 +197,7 @@ const RootComponent = memo(
             {root_name}
           </Flex>
           <Flex flex={1}>
-            <IconButton
-              variant="ghost"
-              aria-label="Expand"
-              icon={<IconSelect />}
-              onClick={setOpen.toggle}
-            />
+            <ButtonExpand onClick={setOpen.toggle} />
             <Button
               colorScheme="teal"
               variant={"outline"}
@@ -407,22 +401,11 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
     <>
       <VerseContainer>
         <VerseHighlightMatches verse={rootVerse} /> (
-        <Button
-          userSelect="text"
-          variant="ghost"
-          size="lg"
+        <ButtonVerse
           onClick={onClickChapter}
-          _hover={{ color: "cornflowerblue" }}
-        >
-          {`${verseChapter}:${rootVerse.verseid}`}
-        </Button>
+        >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
         )
-        <IconButton
-          variant="ghost"
-          aria-label="Expand"
-          icon={<IconSelect />}
-          onClick={setOpen.toggle}
-        />
+        <ButtonExpand onClick={setOpen.toggle} />
       </VerseContainer>
 
       <CollapsibleNote isOpen={isOpen} inputKey={rootVerse.key} />

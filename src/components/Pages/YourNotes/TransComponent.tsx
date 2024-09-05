@@ -12,7 +12,6 @@ import { transNotesActions } from "@/store/slices/global/transNotes";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -21,6 +20,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import { ButtonSave } from "@/components/Generic/Buttons";
 
 interface TransComponentProps {
   verseKey: string;
@@ -91,7 +91,6 @@ const TransBody = memo(({ inputKey }: TransBodyProps) => {
         <Versetext inputValue={verse_trans} handleEditClick={handleEditClick} />
       ) : (
         <Versearea
-          inputKey={inputKey}
           inputValue={verse_trans}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
@@ -109,7 +108,6 @@ interface VersetextProps {
 }
 
 const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
-  const { t } = useTranslation();
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
@@ -124,21 +122,13 @@ const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
         backgroundColor={"rgba(33, 37, 41, .03)"}
         borderTop={"1px solid rgba(0, 0, 0, .175)"}
       >
-        <Button
-          onClick={handleEditClick}
-          colorScheme="blue"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_edit")}
-        </Button>
+        <ButtonSave onClick={handleEditClick} />
       </CardFooter>
     </>
   );
 };
 
 interface VerseareaProps {
-  inputKey: string;
   inputValue: string;
   handleInputChange: (value: string) => void;
   handleInputSubmit: (inputValue: string) => void;
@@ -146,12 +136,9 @@ interface VerseareaProps {
 
 const Versearea = ({
   inputValue,
-  inputKey,
   handleInputChange,
   handleInputSubmit,
 }: VerseareaProps) => {
-  const { t } = useTranslation();
-
   const onSubmit = (event: React.FormEvent<HTMLDivElement>) => {
     event.preventDefault();
 
@@ -176,14 +163,7 @@ const Versearea = ({
         backgroundColor={"rgba(33, 37, 41, .03)"}
         borderTop={"1px solid rgba(0, 0, 0, .175)"}
       >
-        <Button
-          type="submit"
-          colorScheme="green"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_save")}
-        </Button>
+        <ButtonSave />
       </CardFooter>
     </FormControl>
   );

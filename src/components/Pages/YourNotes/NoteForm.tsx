@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { CardBody, CardFooter, FormControl, Button } from "@chakra-ui/react";
+import { CardBody, CardFooter, FormControl } from "@chakra-ui/react";
 
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
+import { ButtonSave } from "@/components/Generic/Buttons";
 
 interface NoteFormProps {
   inputValue: string;
@@ -49,14 +50,7 @@ const NoteForm = ({
         backgroundColor={"rgba(33, 37, 41, .03)"}
         borderTop={"1px solid rgba(0, 0, 0, .175)"}
       >
-        <Button
-          type="submit"
-          colorScheme="green"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_save")}
-        </Button>
+        <ButtonSave />
       </CardFooter>
     </FormControl>
   );

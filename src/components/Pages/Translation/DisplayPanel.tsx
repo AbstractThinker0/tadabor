@@ -12,7 +12,8 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import TransComponent from "@/components/Pages/Translation/TransComponent";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
 interface DisplayPanelProps {
   selectChapter: string;
@@ -111,8 +112,8 @@ interface VerseItemProps {
 const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
   const dispatch = useAppDispatch();
 
-  const onClickVerse = (verseKey: string) => {
-    dispatch(translationPageActions.setScrollKey(verseKey));
+  const onClickVerse = () => {
+    dispatch(translationPageActions.setScrollKey(verse.key));
   };
 
   return (
@@ -122,16 +123,9 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
     >
       <VerseContainer dir="rtl">
         {verse.versetext}{" "}
-        <Button
-          variant="ghost"
-          _hover={{ color: "cornflowerblue" }}
-          onClick={() => onClickVerse(verse.key)}
-          fontSize={"inherit"}
-        >
-          ({verse.verseid})
-        </Button>
+        <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
       </VerseContainer>
-      <TransComponent verse_key={verse.key} />
+      <TransComponent inputKey={verse.key} />
     </Box>
   );
 };

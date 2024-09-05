@@ -1,7 +1,6 @@
-import { useTranslation } from "react-i18next";
-
 import { useAppSelector } from "@/store";
-import { CardBody, CardFooter, Button, Text } from "@chakra-ui/react";
+import { CardBody, CardFooter, Text } from "@chakra-ui/react";
+import { ButtonEdit } from "@/components/Generic/Buttons";
 
 interface NoteTextProps {
   inputValue: string;
@@ -14,7 +13,6 @@ const NoteText = ({
   inputDirection,
   onClickEditButton,
 }: NoteTextProps) => {
-  const { t } = useTranslation();
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
@@ -29,14 +27,7 @@ const NoteText = ({
         backgroundColor={"rgba(33, 37, 41, .03)"}
         borderTop={"1px solid rgba(0, 0, 0, .175)"}
       >
-        <Button
-          onClick={onClickEditButton}
-          colorScheme="blue"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_edit")}
-        </Button>
+        <ButtonEdit onClick={onClickEditButton} />
       </CardFooter>
     </>
   );

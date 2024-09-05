@@ -10,17 +10,10 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import { IconSelect } from "@/components/Generic/Icons";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  useBoolean,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, useBoolean } from "@chakra-ui/react";
 
 interface PanelQuranProps {
   verseKey: string;
@@ -127,20 +120,10 @@ const VerseItem = ({
     >
       <VerseContainer>
         {verse.versetext}{" "}
-        <Button
-          variant="ghost"
-          _hover={{ color: "cornflowerblue" }}
-          onClick={() => onClickVerseSuffix(verse.key)}
-          fontSize={"inherit"}
-        >
+        <ButtonVerse onClick={() => onClickVerseSuffix(verse.key)}>
           ({verse.verseid})
-        </Button>
-        <IconButton
-          variant="ghost"
-          aria-label="Expand"
-          icon={<IconSelect />}
-          onClick={setOpen.toggle}
-        />
+        </ButtonVerse>
+        <ButtonExpand onClick={setOpen.toggle} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>

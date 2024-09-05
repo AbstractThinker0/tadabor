@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { Box, Button, FormControl } from "@chakra-ui/react";
+import { Box, FormControl } from "@chakra-ui/react";
 
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import { ButtonSave } from "../Generic/Buttons";
 
 interface NoteFormProps {
   inputValue: string;
@@ -35,14 +36,7 @@ const NoteForm = ({
         isRequired
       />
       <Box textAlign={"center"}>
-        <Button
-          type="submit"
-          colorScheme="green"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_save")}
-        </Button>
+        <ButtonSave />
       </Box>
     </FormControl>
   );

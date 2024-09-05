@@ -22,7 +22,6 @@ import {
   Divider,
   HStack,
   Heading,
-  IconButton,
   Tag,
   Text,
   Tooltip,
@@ -30,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import { IconSelect } from "@/components/Generic/Icons";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -252,22 +251,13 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
     >
       <VerseContainer>
         <VerseHighlightMatches verse={verse} /> (
-        <Button
-          userSelect="text"
-          variant="ghost"
-          size="lg"
+        <ButtonVerse
           onClick={onClickVerseChapter}
-          _hover={{ color: "cornflowerblue" }}
-        >
-          {`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`}
-        </Button>
+        >{`${quranService.getChapterName(verse.suraid)}:${
+          verse.verseid
+        }`}</ButtonVerse>
         )
-        <IconButton
-          variant="ghost"
-          aria-label="Expand"
-          icon={<IconSelect />}
-          onClick={setOpen.toggle}
-        />
+        <ButtonExpand onClick={setOpen.toggle} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>

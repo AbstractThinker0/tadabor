@@ -1,8 +1,7 @@
-import { useTranslation } from "react-i18next";
-
 import { useAppSelector } from "@/store";
 
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
+import { ButtonEdit } from "../Generic/Buttons";
 
 interface NoteContainerProps {
   inputValue: string;
@@ -15,7 +14,6 @@ const NoteContainer = ({
   inputDirection,
   onClickEditButton,
 }: NoteContainerProps) => {
-  const { t } = useTranslation();
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
@@ -32,14 +30,7 @@ const NoteContainer = ({
         </Text>
       </Box>
       <Box textAlign={"center"}>
-        <Button
-          onClick={onClickEditButton}
-          colorScheme="blue"
-          size="sm"
-          fontWeight={"normal"}
-        >
-          {t("text_edit")}
-        </Button>
+        <ButtonEdit onClick={onClickEditButton} />
       </Box>
     </Box>
   );

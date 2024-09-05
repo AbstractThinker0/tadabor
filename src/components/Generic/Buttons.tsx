@@ -1,33 +1,62 @@
-import { CSSProperties } from "react";
-import { IconSelect } from "./Icons";
+import { useTranslation } from "react-i18next";
 
-interface ExpandButtonProps {
-  identifier: string;
-  extraClass?: string | undefined;
-  value?: string | number | undefined;
-  style?: CSSProperties | undefined;
-}
+import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
 
-const ExpandButton = ({
-  identifier,
-  extraClass = "",
-  value,
-  style,
-}: ExpandButtonProps) => {
+import { IconSelect } from "@/components/Generic/Icons";
+
+const ButtonSave = (props: ButtonProps) => {
+  const { t } = useTranslation();
+  const { children, ...rest } = props;
+
   return (
-    <button
-      className={"btn ".concat(extraClass)}
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target={`#collapseExample${identifier}`}
-      aria-expanded="false"
-      aria-controls={`collapseExample${identifier}`}
-      style={style}
-      value={value}
+    <Button
+      type="submit"
+      colorScheme="green"
+      size="sm"
+      fontWeight={"normal"}
+      {...rest}
     >
-      <IconSelect />
-    </button>
+      {t("text_save")}
+    </Button>
   );
 };
 
-export { ExpandButton };
+const ButtonEdit = (props: ButtonProps) => {
+  const { t } = useTranslation();
+  const { children, ...rest } = props;
+
+  return (
+    <Button colorScheme="blue" size="sm" fontWeight={"normal"} {...rest}>
+      {t("text_edit")}
+    </Button>
+  );
+};
+
+const ButtonExpand = (props: ButtonProps) => {
+  return (
+    <IconButton
+      variant="ghost"
+      aria-label="Expand"
+      icon={<IconSelect />}
+      {...props}
+    />
+  );
+};
+
+const ButtonVerse = (props: ButtonProps) => {
+  const { children, ...rest } = props;
+
+  return (
+    <Button
+      userSelect="text"
+      variant="ghost"
+      fontSize={"inherit"}
+      _hover={{ color: "cornflowerblue" }}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+};
+
+export { ButtonSave, ButtonEdit, ButtonExpand, ButtonVerse };
