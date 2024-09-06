@@ -5,10 +5,17 @@ import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { colorProps } from "@/components/Pages/Coloring/consts";
 
+import { Box, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
+
+import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
+
 const ColorsList = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const coloredVerses = useAppSelector(
     (state) => state.coloringPage.coloredVerses
   );
+
   const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
 
   const dispatch = useAppDispatch();
@@ -19,6 +26,7 @@ const ColorsList = () => {
 
   function onClickDeleteColor(color: colorProps) {
     dispatch(coloringPageActions.setCurrentColor(color));
+    onOpen();
   }
 
   const getColoredVerses = (colorID: string | undefined) => {
@@ -31,43 +39,50 @@ const ColorsList = () => {
 
   return (
     <>
-      <div className="text-center" dir="ltr">
+      <Box textAlign={"center"} dir="ltr">
         Colors list:
-      </div>
+      </Box>
       {Object.keys(colorsList).length > 0 && (
-        <div className="side-colors-list" dir="ltr">
+        <Flex
+          flexDir={"column"}
+          overflowY={"auto"}
+          fontFamily={"initial"}
+          dir="ltr"
+        >
           {Object.keys(colorsList).map((colorID) => (
-            <div
+            <Flex
               key={colorsList[colorID].colorID}
-              className="side-colors-list-item text-center rounded mb-1"
-              style={{
-                backgroundColor: colorsList[colorID].colorCode,
-                color: getTextColor(colorsList[colorID].colorCode),
-              }}
+              justify={"space-between"}
+              fontSize={"large"}
+              cursor={"pointer"}
+              mb={1}
+              borderRadius={3}
+              bg={colorsList[colorID].colorCode}
+              color={getTextColor(colorsList[colorID].colorCode)}
+              textAlign={"center"}
             >
-              <div
-                onClick={() => onClickSelectColor(colorsList[colorID])}
-                className="opacity-0"
-              >
-                🗑️
-              </div>
-              <div
-                className="flex-grow-1 side-colors-list-item-text"
+              <Spacer onClick={() => onClickSelectColor(colorsList[colorID])} />
+              <Flex
+                overflowWrap={"break-word"}
+                overflowX={"hidden"}
+                justify={"center"}
+                flex={1}
                 onClick={() => onClickSelectColor(colorsList[colorID])}
               >
                 {colorsList[colorID].colorDisplay} ({getColoredVerses(colorID)})
-              </div>
-              <div
-                data-bs-toggle="modal"
-                data-bs-target="#deleteColorModal"
+              </Flex>
+              <Flex
+                justifyContent={"end"}
+                flex={1}
                 onClick={() => onClickDeleteColor(colorsList[colorID])}
               >
                 🗑️
-              </div>
-            </div>
+              </Flex>
+            </Flex>
           ))}
-        </div>
+        </Flex>
       )}
+      <DeleteColorModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
