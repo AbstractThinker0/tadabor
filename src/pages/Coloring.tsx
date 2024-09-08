@@ -12,8 +12,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { coloredProps } from "@/components/Pages/Coloring/consts";
 import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
-
-import "@/styles/pages/coloring.scss";
+import { Flex } from "@chakra-ui/react";
 
 function Coloring() {
   const [loadingState, setLoadingState] = useState(true);
@@ -98,10 +97,16 @@ function Coloring() {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div className="coloring">
+    <Flex
+      overflow={"hidden"}
+      maxH={"100%"}
+      h={"100%"}
+      bg={"var(--color-primary)"}
+      className="coloring"
+    >
       <ChaptersSide />
       {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
-    </div>
+    </Flex>
   );
 }
 

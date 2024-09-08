@@ -56,7 +56,7 @@ const ColorsList = () => {
               fontSize={"large"}
               cursor={"pointer"}
               mb={1}
-              borderRadius={3}
+              borderRadius={5}
               bg={colorsList[colorID].colorCode}
               color={getTextColor(colorsList[colorID].colorCode)}
               textAlign={"center"}
@@ -66,7 +66,7 @@ const ColorsList = () => {
                 overflowWrap={"break-word"}
                 overflowX={"hidden"}
                 justify={"center"}
-                flex={1}
+                flex={2}
                 onClick={() => onClickSelectColor(colorsList[colorID])}
               >
                 {colorsList[colorID].colorDisplay} ({getColoredVerses(colorID)})

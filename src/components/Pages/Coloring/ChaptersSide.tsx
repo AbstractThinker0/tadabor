@@ -3,41 +3,61 @@ import { useAppSelector } from "@/store";
 
 import ChaptersList from "@/components/Pages/Coloring/ChaptersList";
 import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
-import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
+
 import EditColorsModal from "@/components/Pages/Coloring/EditColorsModal";
 import ColorsList from "@/components/Pages/Coloring/ColorsList";
+import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 
 const ChaptersSide = () => {
+  const {
+    isOpen: isOpenAddColor,
+    onOpen: onOpenAddColor,
+    onClose: onCloseAddColor,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenEditColor,
+    onOpen: onOpenEditColor,
+    onClose: onCloseEditColor,
+  } = useDisclosure();
+
   return (
-    <div className="side">
+    <Flex
+      flexDir={"column"}
+      maxW={"350px"}
+      pt={"8px"}
+      paddingInlineStart={"8px"}
+      paddingInlineEnd={"4px"}
+    >
       <ChaptersList />
-      <div className="side-colors">
+      <Flex
+        flexDir={"column"}
+        minH={"30%"}
+        maxH={"50%"}
+        mt={"10px"}
+        border={"1px solid rgb(201, 202, 204)"}
+        p={"10px"}
+        pt={"2px"}
+        bg={"rgb(245, 244, 244)"}
+        borderRadius={"0.275rem"}
+      >
         <ColorsList />
 
-        <div className="text-center d-flex gap-2" dir="ltr">
-          <button
-            className="btn btn-dark mt-1"
-            data-bs-toggle="modal"
-            data-bs-target="#colorsModal"
-          >
-            New color
-          </button>
-          <button
-            className="btn btn-info mt-1"
-            data-bs-toggle="modal"
-            data-bs-target="#editColorsModal"
-          >
+        <Flex gap={2} justify={"center"} dir="ltr">
+          <Button colorScheme="green" onClick={onOpenAddColor}>
+            Add color
+          </Button>
+          <Button colorScheme="cyan" onClick={onOpenEditColor}>
             Edit colors
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </Flex>
 
       <VersesCount />
 
-      <DeleteColorModal />
-      <AddColorModal />
-      <EditColorsModal />
-    </div>
+      <AddColorModal isOpen={isOpenAddColor} onClose={onCloseAddColor} />
+      <EditColorsModal isOpen={isOpenEditColor} onClose={onCloseEditColor} />
+    </Flex>
   );
 };
 
@@ -68,15 +88,9 @@ const VersesCount = () => {
 
   const selectedCount = getColoredVersesCount();
 
-  if (!Object.keys(selectedColors).length) return <></>;
+  if (!Object.keys(selectedColors).length) return null;
 
-  return (
-    <>
-      <div className="fw-bold text-success">
-        {`${t("search_count")} ${selectedCount}`}
-      </div>
-    </>
-  );
+  return <Text color={"green"}>{`${t("search_count")} ${selectedCount}`}</Text>;
 };
 
 export default ChaptersSide;

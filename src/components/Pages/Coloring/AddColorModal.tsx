@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { colorProps } from "./consts";
@@ -7,16 +7,27 @@ import { coloringPageActions } from "@/store/slices/pages/coloring";
 import { dbFuncs } from "@/util/db";
 
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  ButtonGroup,
+  Box,
+  Input,
+} from "@chakra-ui/react";
 
-const AddColorModal = () => {
+interface AddColorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const refCloseButton = useRef<HTMLButtonElement>(null);
   const [colorName, setColorName] = useState("");
   const [colorCode, setColorCode] = useState("#000000");
 
@@ -59,48 +70,46 @@ const AddColorModal = () => {
 
     setColorName("");
     setColorCode("#000000");
-    refCloseButton.current?.click();
+    onClose();
   }
 
   return (
-    <ModalContainer identifier="colorsModal">
-      <ModalHeader identifier="colorsModal" title="Add a new color" />
-      <ModalBody>
-        <div className="pb-1">
-          <label className="w-25">Display name: </label>
-          <input
-            type="text"
-            placeholder="display name"
-            value={colorName}
-            onChange={onChangeName}
-          />
-        </div>
-        <div>
-          <label className="w-25" htmlFor="inputColor">
-            Color:
-          </label>
-          <input
-            onInput={onInputColor}
-            id="inputColor"
-            type="color"
-            value={colorCode}
-          />
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          ref={refCloseButton}
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">
+          Add a new color
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box pb={1}>
+            <span>Display name: </span>
+            <Input
+              type="text"
+              placeholder="display name"
+              value={colorName}
+              onChange={onChangeName}
+            />
+          </Box>
+          <div>
+            <span>Color:</span>
+            <Input onInput={onInputColor} type="color" value={colorCode} />
+          </div>
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          Close
-        </button>
-        <button type="button" className="btn btn-primary" onClick={onClickSave}>
-          Save changes
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" onClick={onClickSave}>
+              Save changes
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

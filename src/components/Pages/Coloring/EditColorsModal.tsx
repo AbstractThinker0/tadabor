@@ -9,13 +9,26 @@ import { coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  ButtonGroup,
+  Input,
+  Flex,
+  Select,
+} from "@chakra-ui/react";
 
-const EditColorsModal = () => {
+interface EditColorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
   const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
   const coloredVerses = useAppSelector(
     (state) => state.coloringPage.coloredVerses
@@ -72,74 +85,70 @@ const EditColorsModal = () => {
     });
 
     dispatch(coloringPageActions.setColoredVerses(newColoredVerses));
+    onClose();
   }
 
   return (
-    <ModalContainer identifier="editColorsModal">
-      <ModalHeader identifier="editColorsModal" title="Edit colors" />
-      <ModalBody>
-        {currentColor && listColors[currentColor] ? (
-          <>
-            <div className="d-flex gap-3 align-items-center pb-2">
-              <div>Name:</div>
-              <select
-                className="form-select"
-                size={1}
-                aria-label="size 1 select example"
-                onChange={onChangeColor}
-                value={currentColor}
-                style={{
-                  backgroundColor: listColors[currentColor].colorCode,
-                  color: getTextColor(listColors[currentColor].colorCode),
-                }}
-              >
-                {Object.keys(listColors).map((colorID) => (
-                  <option
-                    key={listColors[colorID].colorID}
-                    value={listColors[colorID].colorID}
-                    style={{
-                      backgroundColor: listColors[colorID].colorCode,
-                      color: getTextColor(listColors[colorID].colorCode),
-                    }}
-                  >
-                    {listColors[colorID].colorDisplay}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="d-flex gap-3">
-              <label>Color: </label>
-              <input
-                onInput={onInputColor}
-                name={currentColor}
-                id="inputColor"
-                type="color"
-                value={listColors[currentColor].colorCode}
-              />
-            </div>
-          </>
-        ) : (
-          <>No colors to edit.</>
-        )}
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">Edit colors</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {currentColor && listColors[currentColor] ? (
+            <>
+              <Flex gap={3} alignItems={"center"} pb={2}>
+                <div>Name:</div>
+                <Select
+                  onChange={onChangeColor}
+                  value={currentColor}
+                  size={"1"}
+                  borderRadius={"0.375rem"}
+                  backgroundColor={listColors[currentColor].colorCode}
+                  color={getTextColor(listColors[currentColor].colorCode)}
+                >
+                  {Object.keys(listColors).map((colorID) => (
+                    <option
+                      key={listColors[colorID].colorID}
+                      value={listColors[colorID].colorID}
+                      style={{
+                        backgroundColor: listColors[colorID].colorCode,
+                        color: getTextColor(listColors[colorID].colorCode),
+                      }}
+                    >
+                      {listColors[colorID].colorDisplay}
+                    </option>
+                  ))}
+                </Select>
+              </Flex>
+              <Flex gap={3}>
+                <label>Color: </label>
+                <Input
+                  onInput={onInputColor}
+                  name={currentColor}
+                  type="color"
+                  value={listColors[currentColor].colorCode}
+                />
+              </Flex>
+            </>
+          ) : (
+            <>No colors to edit.</>
+          )}
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          No, Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-info"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
-          Save changes
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button onClick={onClose}>No, Cancel</Button>
+            <Button colorScheme="blue" onClick={onClickSave}>
+              Save changes
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

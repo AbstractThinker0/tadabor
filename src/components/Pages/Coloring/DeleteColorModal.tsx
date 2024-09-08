@@ -6,13 +6,25 @@ import { dbFuncs } from "@/util/db";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  ButtonGroup,
+  Text,
+  Box,
+} from "@chakra-ui/react";
 
-const DeleteColorModal = () => {
+interface DeleteColorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   const coloredVerses = useAppSelector(
     (state) => state.coloringPage.coloredVerses
   );
@@ -37,6 +49,7 @@ const DeleteColorModal = () => {
     if (!currentColor) return;
 
     deleteColor(currentColor.colorID);
+    onClose();
   }
 
   const getColoredVerses = (colorID: string | undefined) => {
@@ -48,51 +61,52 @@ const DeleteColorModal = () => {
   };
 
   return (
-    <ModalContainer identifier="deleteColorModal">
-      <ModalHeader
-        identifier="deleteColorModal"
-        title="Delete color confirmation"
-      />
-      <ModalBody>
-        <p>
-          Are you sure you want to delete{" "}
-          <span
-            className="modal-deletecolor-label rounded"
-            style={
-              currentColor
-                ? {
-                    backgroundColor: currentColor.colorCode,
-                    color: getTextColor(currentColor.colorCode),
-                  }
-                : {}
-            }
-          >
-            {currentColor?.colorDisplay}
-          </span>{" "}
-          color? All verses colored with this color will be uncolored.
-        </p>
-        <p>
-          Number of verses affected: {getColoredVerses(currentColor?.colorID)}
-        </p>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">
+          Delete color confirmation
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Text>
+            Are you sure you want to delete{" "}
+            <Box
+              p={1}
+              fontFamily={"initial"}
+              display={"inline"}
+              overflowWrap={"break-word"}
+              borderRadius={4}
+              {...(currentColor && {
+                backgroundColor: currentColor.colorCode,
+                color: getTextColor(currentColor.colorCode),
+              })}
+            >
+              {currentColor?.colorDisplay}
+            </Box>{" "}
+            color? All verses colored with this color will be uncolored.
+          </Text>
+          <Text>
+            Number of verses affected: {getColoredVerses(currentColor?.colorID)}
+          </Text>
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          No, Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-danger"
-          data-bs-dismiss="modal"
-          onClick={onClickDelete}
-        >
-          Yes, delete
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button colorScheme="gray" onClick={onClose}>
+              No, Cancel
+            </Button>
+
+            <Button colorScheme="red" onClick={onClickDelete}>
+              Yes, delete
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
