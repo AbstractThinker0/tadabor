@@ -6,6 +6,7 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { selectedChaptersType } from "@/types";
 import useQuran from "@/context/useQuran";
+import { Box, Button, Checkbox, Flex, Input } from "@chakra-ui/react";
 
 const ChaptersList = () => {
   const dispatch = useAppDispatch();
@@ -95,61 +96,77 @@ const ChaptersList = () => {
 
   return (
     <>
-      <div className="tags-side-chapters">
-        <input
-          className="tags-side-chapters-search"
+      <Flex flexDir={"column"} maxH={"40%"}>
+        <Input
           type="text"
           placeholder={quranService.getChapterName(currentChapter)}
           value={chapterToken}
           onChange={onChangeChapterToken}
+          bg={"white"}
+          borderBottomRadius={"unset"}
         />
-        <div className="tags-side-chapters-list">
+        <Flex
+          flexDir={"column"}
+          border={"1px solid gainsboro"}
+          minW={"200px"}
+          overflowY={"scroll"}
+        >
           {quranService.chapterNames
             .filter((chapter) => chapter.name.includes(chapterToken))
             .map((chapter) => (
-              <div
+              <Flex
+                padding={1}
+                cursor={"pointer"}
                 key={chapter.id}
-                className={`tags-side-chapters-list-item ${
+                bg={
                   currentChapter === chapter.id
-                    ? "tags-side-chapters-list-item-selected"
-                    : ""
-                }`}
+                    ? "rgba(76, 76, 167, 0.623)"
+                    : undefined
+                }
               >
-                <div
-                  className={"tags-side-chapters-list-item-name"}
+                <Box
+                  flexGrow={1}
                   onClick={(event) => onClickChapter(event, chapter.id)}
                 >
                   {chapter.id}. {chapter.name}
-                </div>
-                <input
-                  type="checkbox"
-                  checked={
+                </Box>
+                <Checkbox
+                  isChecked={
                     selectedChapters[chapter.id] !== undefined
                       ? selectedChapters[chapter.id]
                       : true
                   }
                   onChange={() => onChangeSelectChapter(chapter.id)}
                 />
-              </div>
+              </Flex>
             ))}
-        </div>
-      </div>
-      <div className="tags-side-chapters-buttons" dir="ltr">
-        <button
-          disabled={getSelectedCount === 114}
+        </Flex>
+      </Flex>
+      <Flex
+        justify={"center"}
+        gap={4}
+        padding={4}
+        bg={"rgba(0, 0, 0, 0.03)"}
+        borderBottomRadius={"0.275rem"}
+        dir="ltr"
+      >
+        <Button
+          colorScheme="teal"
+          fontWeight="normal"
+          isDisabled={getSelectedCount === 114}
           onClick={onClickSelectAll}
-          className="btn btn-dark btn-sm"
         >
           {t("all_chapters")}
-        </button>
-        <button
-          disabled={onlyCurrentSelected}
+        </Button>
+        <Button
+          colorScheme="teal"
+          fontWeight="normal"
+          isDisabled={onlyCurrentSelected}
           onClick={onClickDeselectAll}
-          className="btn btn-dark btn-sm"
         >
           {t("current_chapter")}
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   );
 };

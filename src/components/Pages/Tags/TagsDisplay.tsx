@@ -5,15 +5,27 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { verseProps } from "@/types";
 import useQuran from "@/context/useQuran";
-import { dbFuncs } from "@/util/db";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
-import NoteText from "@/components/Custom/NoteText";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
+
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  useBoolean,
+  useDisclosure,
+} from "@chakra-ui/react";
+
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 function TagsDisplay() {
   const quranService = useQuran();
@@ -29,7 +41,7 @@ function TagsDisplay() {
 
   const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
 
-  const currentVerse = useAppSelector((state) => state.tagsPage.currentVerse);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function onClickDeleteSelected(tagID: string) {
     dispatch(tagsPageActions.deselectTag(tagID));
@@ -50,87 +62,86 @@ function TagsDisplay() {
     return Object.fromEntries(filtered);
   };
 
-  function setCurrentVerse(verse: verseProps | null) {
-    dispatch(tagsPageActions.setCurrentVerse(verse));
-  }
-
-  function setVerseTags(verseKey: string, tags: string[] | null) {
-    if (tags === null) {
-      dbFuncs.deleteVerseTags(verseKey);
-    } else {
-      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
-    }
-
-    dispatch(tagsPageActions.setVerseTags({ verseKey, tags }));
-  }
-
   return (
-    <div className="tags-display">
-      <div className="card tags-display-chapter" dir="rtl">
+    <Flex
+      flexDir={"column"}
+      overflowY={"scroll"}
+      w={"100%"}
+      minH={"100%"}
+      flex={1}
+      padding={"0.5rem"}
+    >
+      <Card border={"1px solid rgba(0, 0, 0, .175)"} flex={1} dir="rtl">
         {Object.keys(selectedTags).length ? (
           <>
-            <div className="tags-display-header">
-              <div className="tags-display-tags" dir="ltr">
-                <div className="fw-bold">Selected tags:</div>
-                <div className="tags-display-tags-list">
+            <CardHeader py={1}>
+              <Flex alignItems={"center"} gap={"0.5rem"} pb={"2px"} dir="ltr">
+                <Box fontWeight={"bold"}>Selected tags:</Box>
+                <Flex gap={"5px"}>
                   {Object.keys(selectedTags).map((tagID) => (
-                    <div key={tagID} className="tags-display-tags-list-item">
+                    <Flex
+                      overflowX={"hidden"}
+                      overflowWrap={"break-word"}
+                      padding={"3px"}
+                      borderRadius={"0.3rem"}
+                      bg={"#ffffbf"}
+                      key={tagID}
+                    >
                       {selectedTags[tagID].tagDisplay}
-                      <div
+                      <Box
+                        cursor={"pointer"}
+                        px={"3px"}
                         onClick={() => onClickDeleteSelected(tagID)}
-                        className="tags-display-tags-list-item-close"
                       >
                         X
-                      </div>
-                    </div>
+                      </Box>
+                    </Flex>
                   ))}
-                </div>
-              </div>
-              <div className="tags-display-chapters" dir="ltr">
-                <div className="fw-bold">Selected chapters:</div>
+                </Flex>
+              </Flex>
+              <Flex flexWrap={"wrap"} gap={"5px"} dir="ltr">
+                <Box fontWeight={"bold"}>Selected chapters:</Box>
                 {chaptersScope.length === 114 ? (
-                  <div className="fw-bold">All chapters.</div>
+                  <Box fontWeight={"bold"}>All chapters.</Box>
                 ) : chaptersScope.length === 0 ? (
-                  <div className="fw-bold">No chapters selected.</div>
+                  <Box fontWeight={"bold"}>No chapters selected.</Box>
                 ) : (
                   chaptersScope.map((chapterID) => (
-                    <div className="tags-display-chapters-item" key={chapterID}>
+                    <Box
+                      p={"2px"}
+                      borderRadius={"0.3rem"}
+                      bg={"beige"}
+                      key={chapterID}
+                    >
                       {quranService.getChapterName(chapterID)}
-                    </div>
+                    </Box>
                   ))
                 )}
-              </div>
-            </div>
+              </Flex>
+            </CardHeader>
             {chaptersScope.length ? (
               <SelectedVerses
                 selectedTags={selectedTags}
                 tags={tags}
                 versesTags={getSelectedVerses()}
+                onOpenVerseModal={onOpen}
               />
             ) : (
-              <div className="text-center" dir="ltr">
+              <Box textAlign={"center"} dir="ltr">
                 You have to select at least one chapter.
-              </div>
+              </Box>
             )}
           </>
         ) : (
-          <ListVerses versesTags={versesTags} tags={tags} />
+          <ListVerses
+            onOpenVerseModal={onOpen}
+            versesTags={versesTags}
+            tags={tags}
+          />
         )}
-      </div>
-      <VerseTagsModal
-        tags={tags}
-        currentVerse={currentVerse}
-        setCurrentVerse={setCurrentVerse}
-        setVerseTags={setVerseTags}
-        verseTags={
-          currentVerse
-            ? versesTags[currentVerse.key]
-              ? versesTags[currentVerse.key]
-              : null
-            : null
-        }
-      />
-    </div>
+      </Card>
+      <VerseTagsModal isOpen={isOpen} onClose={onClose} />
+    </Flex>
   );
 }
 
@@ -138,12 +149,14 @@ interface SelectedVersesProps {
   selectedTags: tagsProps;
   tags: tagsProps;
   versesTags: versesTagsProps;
+  onOpenVerseModal: () => void;
 }
 
 function SelectedVerses({
   selectedTags,
   versesTags,
   tags,
+  onOpenVerseModal,
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
@@ -162,36 +175,47 @@ function SelectedVerses({
   });
 
   return (
-    <div className="card-body">
+    <CardBody>
       {sortedVerses.length ? (
         <>
           {sortedVerses.map((verseKey) => {
             const verse = quranService.getVerseByKey(verseKey);
             return (
-              <div key={verseKey} className="tags-display-chapter-verses-item">
+              <Box
+                borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+                p={"4px"}
+                key={verseKey}
+              >
                 <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
-                <SelectedVerseComponent verse={verse} />
-                <NoteText verseKey={verse.key} />
-              </div>
+                <SelectedVerseComponent
+                  onOpenVerseModal={onOpenVerseModal}
+                  verse={verse}
+                />
+              </Box>
             );
           })}
         </>
       ) : (
-        <p className="text-center" dir="ltr">
+        <Box textAlign={"center"} dir="ltr">
           There are no verses matching the selected tags.
-        </p>
+        </Box>
       )}
-    </div>
+    </CardBody>
   );
 }
 
 interface SelectedVerseComponentProps {
   verse: verseProps;
+  onOpenVerseModal: () => void;
 }
 
-const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
+const SelectedVerseComponent = ({
+  verse,
+  onOpenVerseModal,
+}: SelectedVerseComponentProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
+  const [isOpen, setOpen] = useBoolean();
 
   function onClickVerse(verse: verseProps) {
     dispatch(tagsPageActions.gotoChapter(verse.suraid));
@@ -200,28 +224,22 @@ const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
 
   function onClickTagVerse(verse: verseProps) {
     dispatch(tagsPageActions.setCurrentVerse(verse));
+    onOpenVerseModal();
   }
 
   return (
     <>
       <VerseContainer>
         {verse.versetext}{" "}
-        <span
-          onClick={() => onClickVerse(verse)}
-          className="tags-display-chapter-verses-item-verse"
-        >
+        <ButtonVerse onClick={() => onClickVerse(verse)}>
           ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
-        </span>
+        </ButtonVerse>
+        <ButtonExpand onClick={setOpen.toggle} />
+        <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
+          🏷️
+        </Button>
       </VerseContainer>
-      <ExpandButton identifier={verse.key} />
-      <button
-        className="btn"
-        data-bs-toggle="modal"
-        data-bs-target="#verseTagsModal"
-        onClick={() => onClickTagVerse(verse)}
-      >
-        🏷️
-      </button>
+      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </>
   );
 };
@@ -229,115 +247,121 @@ const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
 interface ListVersesProps {
   versesTags: versesTagsProps;
   tags: tagsProps;
+  onOpenVerseModal: () => void;
 }
 
-const ListVerses = memo(({ versesTags, tags }: ListVersesProps) => {
-  const quranService = useQuran();
+const ListVerses = memo(
+  ({ versesTags, tags, onOpenVerseModal }: ListVersesProps) => {
+    const quranService = useQuran();
 
-  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+    const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
-  const [isPending, startTransition] = useTransition();
+    const [isPending, startTransition] = useTransition();
 
-  const listRef = useRef<HTMLDivElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
 
-  const currentChapter = useAppSelector(
-    (state) => state.tagsPage.currentChapter
-  );
+    const currentChapter = useAppSelector(
+      (state) => state.tagsPage.currentChapter
+    );
 
-  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
+    const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
 
-  useEffect(() => {
-    const verseToHighlight = scrollKey
-      ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
-      : "";
+    useEffect(() => {
+      const verseToHighlight = scrollKey
+        ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
+        : null;
 
-    if (verseToHighlight) {
-      verseToHighlight.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, [scrollKey, isPending]);
+
+    useEffect(() => {
+      //
+      startTransition(() => {
+        setStateVerses(quranService.getVerses(currentChapter));
       });
-    }
-  }, [scrollKey, isPending]);
+    }, [currentChapter]);
 
-  useEffect(() => {
-    //
-    startTransition(() => {
-      setStateVerses(quranService.getVerses(currentChapter));
-    });
-  }, [currentChapter]);
-
-  return (
-    <>
-      <div className="card-header text-center fs-3 tags-display-chapter-title">
-        سورة {quranService.getChapterName(currentChapter)}
-      </div>
-      <div className="card-body tags-display-chapter-verses" ref={listRef}>
-        {isPending ? (
-          <LoadingSpinner />
-        ) : (
-          stateVerses.map((verse) => (
-            <div
-              key={verse.key}
-              data-id={verse.key}
-              className={`tags-display-chapter-verses-item ${
-                scrollKey === verse.key
-                  ? "tags-display-chapter-verses-item-highlighted"
-                  : ""
-              }`}
-            >
-              {versesTags[verse.key] !== undefined && (
-                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-              )}
-              <ListVerseComponent verse={verse} />
-              <NoteText verseKey={verse.key} />
-            </div>
-          ))
-        )}
-      </div>
-    </>
-  );
-});
+    return (
+      <>
+        <CardHeader
+          bg={"rgba(33, 37, 41, .03)"}
+          textAlign={"center"}
+          fontSize={"larger"}
+          color={"teal"}
+          borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+          py={1}
+        >
+          سورة {quranService.getChapterName(currentChapter)}
+        </CardHeader>
+        <CardBody bg={"#f7fafc"} pt={0} ref={listRef}>
+          {isPending ? (
+            <LoadingSpinner />
+          ) : (
+            stateVerses.map((verse) => (
+              <Box
+                key={verse.key}
+                data-id={verse.key}
+                bg={scrollKey === verse.key ? "#a5d9fc" : undefined}
+                borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+                p={"4px"}
+              >
+                {versesTags[verse.key] !== undefined && (
+                  <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+                )}
+                <ListVerseComponent
+                  onOpenVerseModal={onOpenVerseModal}
+                  verse={verse}
+                />
+              </Box>
+            ))
+          )}
+        </CardBody>
+      </>
+    );
+  }
+);
 
 ListVerses.displayName = "ListVerses";
 
 interface ListVerseComponentProps {
   verse: verseProps;
+  onOpenVerseModal: () => void;
 }
 
-const ListVerseComponent = memo(({ verse }: ListVerseComponentProps) => {
-  const dispatch = useAppDispatch();
+const ListVerseComponent = memo(
+  ({ onOpenVerseModal, verse }: ListVerseComponentProps) => {
+    const dispatch = useAppDispatch();
+    const [isOpen, setOpen] = useBoolean();
 
-  function onClickTagVerse(verse: verseProps) {
-    dispatch(tagsPageActions.setCurrentVerse(verse));
+    function onClickTagVerse(verse: verseProps) {
+      dispatch(tagsPageActions.setCurrentVerse(verse));
+      onOpenVerseModal();
+    }
+
+    function onClickVerse() {
+      dispatch(tagsPageActions.setScrollKey(verse.key));
+    }
+
+    return (
+      <>
+        <VerseContainer>
+          {verse.versetext}{" "}
+          <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
+          <ButtonExpand onClick={setOpen.toggle} />
+          <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
+            🏷️
+          </Button>
+        </VerseContainer>
+        <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+      </>
+    );
   }
-
-  function onClickVerse() {
-    dispatch(tagsPageActions.setScrollKey(verse.key));
-  }
-
-  return (
-    <>
-      <VerseContainer className="tags-display-chapter-verses-item-text">
-        {verse.versetext}{" "}
-        <span
-          className="tags-display-chapter-verses-item-text-btn"
-          onClick={onClickVerse}
-        >
-          ({verse.verseid})
-        </span>{" "}
-      </VerseContainer>
-      <ExpandButton identifier={verse.key} />
-      <button
-        className="btn"
-        data-bs-toggle="modal"
-        data-bs-target="#verseTagsModal"
-        onClick={() => onClickTagVerse(verse)}
-      >
-        🏷️
-      </button>
-    </>
-  );
-});
+);
 
 ListVerseComponent.displayName = "ListVerseComponent";
 
@@ -346,19 +370,25 @@ interface VerseTagsProps {
   tags: tagsProps;
 }
 
-function VerseTags({ versesTags, tags }: VerseTagsProps) {
+const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
   return (
-    <div className="fs-5 tags-display-chapter-verses-item-tags">
+    <Flex flexWrap={"wrap"} gap={"5px"} pb={"5px"} fontSize={"medium"}>
       {versesTags.map((tagID) => (
-        <span
-          className="tags-display-chapter-verses-item-tags-item"
+        <Box
+          display={"inline"}
+          padding={"3px"}
+          bg={"#ffffbf"}
+          borderRadius={"0.3rem"}
+          overflowWrap={"break-word"}
+          overflowX={"hidden"}
+          fontFamily={"initial"}
           key={tagID}
         >
           {tags[tagID].tagDisplay}
-        </span>
+        </Box>
       ))}
-    </div>
+    </Flex>
   );
-}
+};
 
 export default TagsDisplay;

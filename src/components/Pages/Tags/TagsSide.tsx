@@ -3,36 +3,19 @@ import { useAppDispatch, useAppSelector } from "@/store";
 
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { dbFuncs } from "@/util/db";
-
 import { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
 import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
 import ChaptersList from "@/components/Pages/Tags/ChaptersList";
+import { Box, Flex, Button, Text, useDisclosure } from "@chakra-ui/react";
 
 function TagsSide() {
   const dispatch = useAppDispatch();
-
-  const currentTag = useAppSelector((state) => state.tagsPage.currentTag);
 
   const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
 
   function onClickSelectTag(tag: tagProps) {
     dispatch(tagsPageActions.selectTag(tag));
-  }
-
-  function onClickDeleteTag(tag: tagProps) {
-    dispatch(tagsPageActions.setCurrentTag(tag));
-  }
-
-  function addTag(tag: tagProps) {
-    dispatch(tagsPageActions.addTag(tag));
-  }
-
-  function deleteTag(tagID: string) {
-    dispatch(tagsPageActions.deleteTag(tagID));
-
-    dbFuncs.deleteTag(tagID);
   }
 
   const getTaggedVerses = (tagID: string) => {
@@ -48,78 +31,120 @@ function TagsSide() {
   };
 
   return (
-    <div className="tags-side">
+    <Flex
+      flexDir={"column"}
+      pt={"10px"}
+      paddingInlineStart={"10px"}
+      paddingInlineEnd={"1px"}
+    >
       <ChaptersList />
       <SideList
         onClickSelectTag={onClickSelectTag}
-        onClickDeleteTag={onClickDeleteTag}
         getTaggedVerses={getTaggedVerses}
       />
       <VersesCount />
-      <AddTagModal addTag={addTag} />
-      <DeleteTagModal
-        deleteTag={deleteTag}
-        currentTag={currentTag}
-        versesCount={currentTag ? getTaggedVerses(currentTag.tagID) : 0}
-      />
-    </div>
+    </Flex>
   );
 }
 
 interface SideListProps {
   onClickSelectTag(tag: tagProps): void;
-  onClickDeleteTag(tag: tagProps): void;
+
   getTaggedVerses: (tagID: string) => number;
 }
 
 const SideList = ({
   onClickSelectTag,
-  onClickDeleteTag,
+
   getTaggedVerses,
 }: SideListProps) => {
+  const {
+    isOpen: isOpenAddModal,
+    onOpen: onOpenAddModal,
+    onClose: onCloseAddModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenDeleteModal,
+    onOpen: onOpenDeleteModal,
+    onClose: onCloseDeleteModal,
+  } = useDisclosure();
+
+  const dispatch = useAppDispatch();
+
   const tags = useAppSelector((state) => state.tagsPage.tags);
 
   const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
 
+  const onClickDeleteTag = (tag: tagProps) => {
+    dispatch(tagsPageActions.setCurrentTag(tag));
+    onOpenDeleteModal();
+  };
+
   const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
 
   return (
-    <div className="tags-side-list" dir="ltr">
-      <div className="fw-bold pb-1">Tags list:</div>
+    <Flex
+      flexDir={"column"}
+      minH={"40%"}
+      maxH={"50%"}
+      marginTop={"1rem"}
+      padding={"10px"}
+      maxW={"300px"}
+      borderRadius={"0.3rem"}
+      bg={"rgba(0, 0, 0, 0.03)"}
+      dir="ltr"
+    >
+      <Box fontWeight={"bold"} pb={1}>
+        Tags list:
+      </Box>
       {Object.keys(tags).length > 0 && (
-        <div className="tags-side-list-items">
+        <Flex
+          flexWrap={"wrap"}
+          gap={"5px"}
+          maxW={"300px"}
+          cursor={"pointer"}
+          overflowY={"auto"}
+          fontFamily={"initial"}
+          pb={1}
+        >
           {Object.keys(tags).map((tagID) => (
-            <div
-              className={`tags-side-list-items-item ${
-                isTagSelected(tagID) ? "tags-side-list-items-item-selected" : ""
-              }`}
+            <Flex
+              padding={"2px"}
+              bg={isTagSelected(tagID) ? "#ffffbf" : "#fffff8"}
+              borderRadius={"0.3rem"}
               key={tagID}
             >
-              <div
-                className="tags-side-list-items-item-text"
+              <Box
+                paddingRight={"8px"}
+                maxW={"250px"}
+                overflowX={"hidden"}
+                overflowWrap={"break-word"}
                 onClick={() => onClickSelectTag(tags[tagID])}
               >
                 {tags[tagID].tagDisplay} ({getTaggedVerses(tagID)})
-              </div>
-              <div
-                data-bs-toggle="modal"
-                data-bs-target="#deleteTagModal"
-                onClick={() => onClickDeleteTag(tags[tagID])}
-              >
-                🗑️
-              </div>
-            </div>
+              </Box>
+              <div onClick={() => onClickDeleteTag(tags[tagID])}>🗑️</div>
+            </Flex>
           ))}
-        </div>
+        </Flex>
       )}
-      <button
-        data-bs-toggle="modal"
-        data-bs-target="#addTagModal"
-        className="btn btn-dark tags-side-list-btn"
-      >
-        Add tag
-      </button>
-    </div>
+      <DeleteTagModal
+        isOpen={isOpenDeleteModal}
+        onClose={onCloseDeleteModal}
+        getTaggedVerses={getTaggedVerses}
+      />
+      <Box>
+        <Button
+          colorScheme="teal"
+          fontWeight={"normal"}
+          onClick={onOpenAddModal}
+        >
+          Add tag
+        </Button>
+        <AddTagModal isOpen={isOpenAddModal} onClose={onCloseAddModal} />
+      </Box>
+    </Flex>
   );
 };
 
@@ -148,14 +173,12 @@ const VersesCount = () => {
 
   const selectedCount = getSelectedVerses();
 
-  if (!Object.keys(selectedTags).length) return <></>;
+  if (!Object.keys(selectedTags).length) return null;
 
   return (
-    <>
-      <div className="fw-bold text-success">
-        {`${t("search_count")} ${selectedCount}`}
-      </div>
-    </>
+    <Text fontWeight={"bold"} color={"green"}>
+      {`${t("search_count")} ${selectedCount}`}
+    </Text>
   );
 };
 

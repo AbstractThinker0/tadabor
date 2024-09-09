@@ -12,7 +12,7 @@ import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import TagsSide from "@/components/Pages/Tags/TagsSide";
 import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
-import "@/styles/pages/tags.scss";
+import { Flex } from "@chakra-ui/react";
 
 function Tags() {
   const [loadingState, setLoadingState] = useState(true);
@@ -68,10 +68,16 @@ function Tags() {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <div className="tags">
+    <Flex
+      bg={"var(--color-primary)"}
+      overflow={"hidden"}
+      maxH={"100%"}
+      h={"100%"}
+      className="tags"
+    >
       <TagsSide />
       {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}
-    </div>
+    </Flex>
   );
 }
 

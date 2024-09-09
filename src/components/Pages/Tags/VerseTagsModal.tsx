@@ -1,60 +1,75 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+
+import { dbFuncs } from "@/util/db";
 
 import useQuran from "@/context/useQuran";
-import { verseProps } from "@/types";
 
-import { tagsProps } from "@/components/Pages/Tags/consts";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  ButtonGroup,
+  Box,
+  Flex,
+} from "@chakra-ui/react";
+
+import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface VerseTagModalProps {
-  tags: tagsProps;
-  currentVerse: verseProps | null;
-  verseTags: string[] | null;
-  setCurrentVerse: (verse: verseProps | null) => void;
-  setVerseTags: (verseKey: string, verseTags: string[] | null) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-function VerseTagsModal({
-  tags,
-  currentVerse,
-  verseTags,
-  setCurrentVerse,
-  setVerseTags,
-}: VerseTagModalProps) {
+function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
+  const dispatch = useAppDispatch();
+
+  const tags = useAppSelector((state) => state.tagsPage.tags);
+
+  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+
+  const currentVerse = useAppSelector((state) => state.tagsPage.currentVerse);
+
   const quranService = useQuran();
-  const refVerseModal = useRef<HTMLDivElement>(null);
 
   const [chosenTags, setChosenTags] = useState(() =>
-    verseTags === null ? [] : verseTags
+    currentVerse
+      ? versesTags[currentVerse.key]
+        ? versesTags[currentVerse.key]
+        : []
+      : []
   );
 
-  useEffect(() => {
-    setChosenTags(verseTags ? verseTags : []);
-  }, [verseTags]);
-
-  useEffect(() => {
-    const modelElement = refVerseModal.current;
-    if (modelElement === null) return;
-
-    function onModalHidden() {
-      setChosenTags([]);
-      setCurrentVerse(null);
+  const setVerseTags = (verseKey: string, tags: string[] | null) => {
+    if (tags === null) {
+      dbFuncs.deleteVerseTags(verseKey);
+    } else {
+      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
     }
 
-    modelElement.addEventListener("hidden.bs.modal", onModalHidden);
+    dispatch(tagsPageActions.setVerseTags({ verseKey, tags }));
+  };
 
-    return () => {
-      if (modelElement) {
-        modelElement.removeEventListener("hidden.bs.modal", onModalHidden);
-      }
-    };
-  }, [setCurrentVerse]);
+  useEffect(() => {
+    if (!currentVerse) return;
+
+    setChosenTags(
+      versesTags[currentVerse.key] ? versesTags[currentVerse.key] : []
+    );
+  }, [currentVerse]);
+
+  const onCloseComplete = () => {
+    setChosenTags([]);
+
+    dispatch(tagsPageActions.setCurrentVerse(null));
+  };
 
   const canFindTag = (tagID: string) => {
     return chosenTags.includes(tagID);
@@ -78,61 +93,79 @@ function VerseTagsModal({
 
   function onClickSave() {
     if (currentVerse?.key) setVerseTags(currentVerse.key, chosenTags);
+
+    onClose();
   }
 
   return (
-    <ModalContainer
-      identifier="verseTagsModal"
-      extraClass="modal-versetags"
-      dialogClass="modal-lg"
-      refModal={refVerseModal}
+    <Modal
+      size="xl"
+      isOpen={isOpen}
+      onClose={onClose}
+      onCloseComplete={onCloseComplete}
+      isCentered
     >
-      <ModalHeader identifier="verseTagsModal" title="Choose verse tags" />
-      <ModalBody>
-        <div className="modal-versetags-title text-center fs-4">
-          (
-          {currentVerse
-            ? `${quranService.getChapterName(currentVerse.suraid)}:${
-                currentVerse.verseid
-              }`
-            : ""}
-          )
-        </div>
-        <div className="modal-versetags-text text-center rounded fs-4">
-          {currentVerse?.versetext}
-        </div>
-        <div className="modal-versetags-items">
-          {Object.keys(tags).map((tagID) => (
-            <div
-              onClick={() => onClickTag(tagID)}
-              className={`modal-versetags-items-item text-center fs-4 mb-1 ${
-                canFindTag(tagID) ? "modal-versetags-items-item-selected" : ""
-              }`}
-              key={tagID}
-            >
-              {tags[tagID].tagDisplay}
-            </div>
-          ))}
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">
+          Choose verse tags
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box textAlign={"center"} fontSize={"large"}>
+            (
+            {currentVerse
+              ? `${quranService.getChapterName(currentVerse.suraid)}:${
+                  currentVerse.verseid
+                }`
+              : ""}
+            )
+          </Box>
+          <VerseContainer
+            bg={"rgb(245, 244, 244)"}
+            padding={"4px"}
+            mb={"5px"}
+            borderRadius={"0.375rem"}
+            textAlign={"center"}
+          >
+            {currentVerse?.versetext}
+          </VerseContainer>
+          <Flex flexWrap={"wrap"} justify={"center"} gap={"10px"}>
+            {Object.keys(tags).map((tagID) => (
+              <Box
+                cursor={"pointer"}
+                padding={"4px"}
+                overflowWrap={"break-word"}
+                wordBreak={"break-word"}
+                borderRadius={"0.3rem"}
+                textAlign={"center"}
+                fontSize={"large"}
+                mb={1}
+                bg={canFindTag(tagID) ? "#ffffbf" : "grey"}
+                onClick={() => onClickTag(tagID)}
+                key={tagID}
+              >
+                {tags[tagID].tagDisplay}
+              </Box>
+            ))}
+          </Flex>
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          Close
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
-          Save changes
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button colorScheme="blue" onClick={onClose}>
+              Close
+            </Button>
+            <Button colorScheme="green" onClick={onClickSave}>
+              Save changes
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
 

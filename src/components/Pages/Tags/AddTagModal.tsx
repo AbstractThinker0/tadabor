@@ -1,20 +1,32 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { dbFuncs } from "@/util/db";
 import { tagProps } from "@/components/Pages/Tags/consts";
 
+import { useAppDispatch } from "@/store";
+import { tagsPageActions } from "@/store/slices/pages/tags";
+
 import {
+  Modal,
   ModalBody,
-  ModalContainer,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
-} from "@/components/Generic/Modal";
+  ModalOverlay,
+  ModalFooter,
+  Button,
+  ButtonGroup,
+  Box,
+  Input,
+} from "@chakra-ui/react";
 
 interface AddTagModalProps {
-  addTag: (tag: tagProps) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const AddTagModal = ({ addTag }: AddTagModalProps) => {
-  const refCloseButton = useRef<HTMLButtonElement>(null);
+const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
+  const dispatch = useAppDispatch();
+
   const [tagName, setTagName] = useState("");
 
   function onChangeName(event: React.ChangeEvent<HTMLInputElement>) {
@@ -32,7 +44,7 @@ const AddTagModal = ({ addTag }: AddTagModalProps) => {
       tagDisplay: tagName,
     };
 
-    addTag(newTag);
+    dispatch(tagsPageActions.addTag(newTag));
 
     dbFuncs.saveTag({
       id: newTag.tagID,
@@ -40,37 +52,42 @@ const AddTagModal = ({ addTag }: AddTagModalProps) => {
     });
 
     setTagName("");
-    refCloseButton.current?.click();
+    onClose();
   }
 
   return (
-    <ModalContainer identifier="addTagModal">
-      <ModalHeader identifier="addTagModal" title="Add a new tag" />
-      <ModalBody>
-        <div className="pb-1">
-          <label className="w-25">Display name: </label>
-          <input
-            type="text"
-            placeholder="display name"
-            value={tagName}
-            onChange={onChangeName}
-          />
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          ref={refCloseButton}
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
+    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent dir="ltr">
+        <ModalHeader borderBottom="1px solid #dee2e6">
+          Add a new tag
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box pb={1}>
+            <span>Display name: </span>
+            <Input
+              type="text"
+              placeholder="display name"
+              value={tagName}
+              onChange={onChangeName}
+            />
+          </Box>
+        </ModalBody>
+        <ModalFooter
+          mt={5}
+          justifyContent="center"
+          borderTop="1px solid #dee2e6"
         >
-          Close
-        </button>
-        <button type="button" className="btn btn-primary" onClick={onClickSave}>
-          Save changes
-        </button>
-      </ModalFooter>
-    </ModalContainer>
+          <ButtonGroup>
+            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" onClick={onClickSave}>
+              Save changes
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
