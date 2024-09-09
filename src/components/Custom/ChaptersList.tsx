@@ -65,8 +65,8 @@ const ChaptersList = ({
         backgroundColor={"white"}
       />
       <Box
-        maxH="40%"
-        height={"40%"}
+        maxH="60%"
+        height={"60%"}
         aria-label="Chapters select"
         bg="var(--color-primary)"
         border="1px solid gainsboro"

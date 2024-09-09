@@ -220,7 +220,6 @@ const RootComponent = memo(
         </Collapse>
         <RootOccurences
           isOccurencesOpen={isOccurencesOpen}
-          root_id={root_id}
           root_occurences={root_occurences}
           handleVerseTab={handleVerseTab}
         />
@@ -234,14 +233,12 @@ RootComponent.displayName = "RootComponent";
 interface RootOccurencesProps {
   isOccurencesOpen: boolean;
   root_occurences: string[];
-  root_id: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
 const RootOccurences = ({
   isOccurencesOpen,
   root_occurences,
-  root_id,
   handleVerseTab,
 }: RootOccurencesProps) => {
   const quranService = useQuran();

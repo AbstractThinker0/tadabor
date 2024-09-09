@@ -10,7 +10,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import Display from "@/components/Pages/Inspector/Display";
 
-import "@/styles/pages/inspector.scss";
+import { Flex } from "@chakra-ui/react";
 
 function Inspector() {
   const dispatch = useAppDispatch();
@@ -31,22 +31,30 @@ function Inspector() {
   }, []);
 
   return (
-    <div className="inspector">
-      <div className="side">
+    <Flex
+      bg={"var(--color-primary)"}
+      overflow={"hidden"}
+      maxH={"100%"}
+      height={"100%"}
+      className="inspector"
+    >
+      <Flex
+        paddingInlineStart={"10px"}
+        paddingInlineEnd={"1px"}
+        paddingTop={"5px"}
+        className="side"
+      >
         <ChaptersList
           selectChapter={currentChapter}
           handleChapterChange={handleSelectChapter}
-          mainClass="side-chapters"
-          inputClass="side-chapters-input"
-          selectClass="side-chapters-list"
         />
-      </div>
+      </Flex>
       {isVNotesLoading ? (
         <LoadingSpinner />
       ) : (
         <Display currentChapter={currentChapter} />
       )}
-    </div>
+    </Flex>
   );
 }
 
