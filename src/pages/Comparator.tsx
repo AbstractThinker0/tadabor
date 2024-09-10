@@ -17,7 +17,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
-import "@/styles/pages/comparator.scss";
+import { Box, Alert, AlertIcon, CloseButton, Spacer } from "@chakra-ui/react";
 
 function Comparator() {
   const quranService = useQuran();
@@ -74,20 +74,21 @@ function Comparator() {
 
   if (error)
     return (
-      <div dir="auto" className="text-center">
+      <Box dir="auto" textAlign={"center"}>
         Failed to load translations, try reloading the page.
-      </div>
+      </Box>
     );
 
   if (!complete) return <LoadingSpinner />;
 
   return (
-    <div className="comparator">
+    <Box bg={"var(--color-primary)"}>
       <Menu
         chapterVerses={chapterVerses}
         handleSelectVerse={selectVerse}
         handleSetChapter={setChapter}
       />
+      <TransAlert />
       {isVNotesLoading || isTNotesLoading ? (
         <LoadingSpinner />
       ) : (
@@ -99,8 +100,37 @@ function Comparator() {
           handleSelectVerse={selectVerse}
         />
       )}
-    </div>
+    </Box>
   );
 }
+
+const TransAlert = () => {
+  const localStorageTransKey = "transNotified";
+
+  const [transNotified, setTransNotified] = useState(
+    localStorage.getItem(localStorageTransKey) !== null
+  );
+
+  function onClickCloseAlert() {
+    localStorage.setItem(localStorageTransKey, "true");
+    setTransNotified(true);
+  }
+
+  if (transNotified) return null;
+
+  return (
+    <Alert dir="auto" status="info">
+      <AlertIcon />
+      <strong>Note:</strong> Translations may not always fully capture the
+      original meaning of the text. They are sincere attempts by their authors
+      to comprehend the text based on their abilities and knowledge.
+      Additionally, the accuracy of the translated version is inevitably
+      influenced by semantic changes made to the original text prior to
+      translation.
+      <Spacer />
+      <CloseButton onClick={onClickCloseAlert} />
+    </Alert>
+  );
+};
 
 export default Comparator;

@@ -6,7 +6,9 @@ import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/Custom/TextForm";
+import { Box, Button } from "@chakra-ui/react";
+import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import { ButtonEdit } from "@/components/Generic/Buttons";
 
 interface UserTranslationProps {
   verseKey: string;
@@ -23,11 +25,11 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
     setStateEditable(true);
   };
 
-  const handleInputChange = (key: string, value: string) => {
+  const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(
       transNotesActions.changeTranslation({
-        name: key,
-        value: value,
+        name: verseKey,
+        value: event.target.value,
       })
     );
   };
@@ -46,36 +48,45 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   };
 
   return (
-    <div className="py-2" dir="ltr">
-      <div className="text-secondary">Your translation</div>
+    <Box py={2} dir="ltr">
+      <Box color={"rgb(108, 117, 125)"}>Your translation</Box>
       {stateEditable ? (
         <>
-          <TextAreaComponent
-            inputKey={verseKey}
-            inputValue={verseTrans}
+          <TextareaAutosize
+            value={verseTrans}
             placeholder="Enter your text"
-            handleInputChange={handleInputChange}
+            onChange={onChangeText}
           />
-          <button onClick={onClickSave} className="btn btn-success btn-sm">
-            Save
-          </button>
+
+          <Button
+            onClick={onClickSave}
+            colorScheme="green"
+            size="sm"
+            fontWeight={"normal"}
+          >
+            {t("text_save")}
+          </Button>
         </>
       ) : verseTrans ? (
-        <div style={{ whiteSpace: "pre-wrap" }}>
-          <div style={{ fontSize: `${notesFS}rem` }}>{verseTrans}</div>
-          <button onClick={onClickAdd} className="btn btn-primary btn-sm mt-1">
-            Edit
-          </button>
-        </div>
+        <Box whiteSpace={"pre-wrap"}>
+          <Box fontSize={`${notesFS}rem`}>{verseTrans}</Box>
+          <ButtonEdit onClick={onClickAdd} />
+        </Box>
       ) : (
         <div>
           <div>Empty.</div>
-          <button onClick={onClickAdd} className="btn btn-success btn-sm mt-1">
+
+          <Button
+            onClick={onClickAdd}
+            colorScheme="green"
+            size="sm"
+            fontWeight={"normal"}
+          >
             Add
-          </button>
+          </Button>
         </div>
       )}
-    </div>
+    </Box>
   );
 };
 

@@ -4,12 +4,14 @@ import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
 import { verseProps, translationsProps } from "@/types";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
+import { Box, useBoolean } from "@chakra-ui/react";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 interface DisplayProps {
   currentChapter: string;
@@ -26,8 +28,6 @@ const Display = ({
   transVerses,
   handleSelectVerse,
 }: DisplayProps) => {
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
@@ -83,92 +83,78 @@ const Display = ({
   }, [currentVerse]);
 
   return (
-    <div className="card display">
-      <TransAlert />
-      <div className="card-header text-center text-primary fs-3">
+    <Box bg={"#f7fafc"} px={5}>
+      <Box
+        bg={"rgba(33, 37, 41, .03)"}
+        textAlign={"center"}
+        fontSize={"xx-large"}
+        color={"blue.500"}
+      >
         سورة {quranService.getChapterName(currentChapter)}
-      </div>
-      <div className="card-body verses" ref={refListVerses}>
+      </Box>
+      <Box ref={refListVerses}>
         {isPending ? (
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse) => (
-            <div
-              className={`verses-item ${
-                currentVerse === verse.key ? "verses-item-selected" : ""
-              }`}
+            <VerseItem
+              transVerses={transVerses}
+              onClickVerse={onClickVerse}
+              verse={verse}
+              isSelected={currentVerse === verse.key}
               key={verse.key}
-            >
-              <div
-                dir="rtl"
-                className=" py-2 border-top border-bottom"
-                data-id={verse.key}
-              >
-                <VerseContainer>
-                  {verse.versetext}{" "}
-                  <span
-                    onClick={() => onClickVerse(verse.key)}
-                    className="verses-item-number"
-                  >
-                    ({verse.verseid})
-                  </span>{" "}
-                </VerseContainer>
-                <ExpandButton identifier={verse.key} />
-              </div>
-              <NoteText verseKey={verse.key} />
-              {Object.keys(transVerses).map((trans) => (
-                <div className="py-2" key={trans} dir="ltr">
-                  <div className="text-secondary">{trans}</div>
-                  <div style={{ fontSize: `${notesFS}rem` }}>
-                    {transVerses[trans][verse.rank].versetext}
-                  </div>
-                </div>
-              ))}
-              <UserTranslation verseKey={verse.key} />
-            </div>
+            />
           ))
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
-const TransAlert = () => {
-  const localStorageTransKey = "transNotified";
+interface VerseItemProps {
+  verse: verseProps;
+  isSelected: boolean;
+  transVerses: translationsProps;
+  onClickVerse: (verseKey: string) => void;
+}
 
-  const [transNotified, setTransNotified] = useState(
-    localStorage.getItem(localStorageTransKey) !== null
-  );
+const VerseItem = ({
+  verse,
+  isSelected,
+  transVerses,
+  onClickVerse,
+}: VerseItemProps) => {
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  function onClickCloseAlert() {
-    localStorage.setItem(localStorageTransKey, "true");
-    setTransNotified(true);
-  }
+  const [isOpen, setOpen] = useBoolean();
 
   return (
-    <>
-      {!transNotified && (
-        <div
-          className="alert alert-info alert-dismissible fade show"
-          role="alert"
-          dir="auto"
-        >
-          <strong>Note:</strong> Translations may not always fully capture the
-          original meaning of the text. They are sincere attempts by their
-          authors to comprehend the text based on their abilities and knowledge.
-          Additionally, the accuracy of the translated version is inevitably
-          influenced by semantic changes made to the original text prior to
-          translation.
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-            onClick={onClickCloseAlert}
-          ></button>
-        </div>
-      )}
-    </>
+    <Box px={"5px"} bg={isSelected ? "antiquewhite" : undefined}>
+      <VerseContainer
+        dir="rtl"
+        py={2}
+        borderTop={"1px solid #dee2e6"}
+        borderBottom={"1px solid #dee2e6"}
+        data-id={verse.key}
+      >
+        {verse.versetext}
+        <ButtonVerse onClick={() => onClickVerse(verse.key)}>
+          ({verse.verseid})
+        </ButtonVerse>
+        <ButtonExpand onClick={setOpen.toggle} />
+      </VerseContainer>
+      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+      <NoteText verseKey={verse.key} />
+      {Object.keys(transVerses).map((trans) => (
+        <Box py={2} key={trans} dir="ltr">
+          <Box color={"rgb(108, 117, 125)"}>{trans}</Box>
+          <Box fontSize={`${notesFS}rem`}>
+            {transVerses[trans][verse.rank].versetext}
+          </Box>
+        </Box>
+      ))}
+      <UserTranslation verseKey={verse.key} />
+    </Box>
   );
 };
 
