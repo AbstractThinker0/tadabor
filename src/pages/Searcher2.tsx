@@ -1,4 +1,4 @@
-import { useEffect, useState, useTransition, useRef } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
@@ -9,115 +9,77 @@ import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
 import { quranSearcher } from "@/util/quranSearch";
 
-import NoteText from "@/components/Custom/NoteText";
-import QuranTab from "@/components/Custom/QuranTab";
 import VerseContainer from "@/components/Custom/VerseContainer";
-import Checkbox from "@/components/Custom/Checkbox";
+
+import PanelQuran from "@/components/Custom/PanelQuran";
 
 import {
-  TabButton,
+  Box,
+  Flex,
+  Input,
+  Tab,
+  TabList,
+  Checkbox,
+  useBoolean,
+} from "@chakra-ui/react";
+
+import {
   TabContent,
-  TabNavbar,
-  TabPanel,
+  TabsContainer,
+  TabsPanels,
 } from "@/components/Generic/Tabs";
-import { ExpandButton } from "@/components/Generic/Buttons";
+
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-
-import "@/styles/pages/searcher2.scss";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 const Searcher2 = () => {
-  const refVerseButton = useRef<HTMLButtonElement>(null);
-
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
 
   const verseTab = useAppSelector((state) => state.searcher2Page.verseTab);
 
-  const showQuranTab = useAppSelector(
-    (state) => state.searcher2Page.showQuranTab
-  );
+  const tabIndex = useAppSelector((state) => state.searcher2Page.tabIndex);
 
   const scrollKey = useAppSelector((state) => state.searcher2Page.scrollKey);
-
-  useEffect(() => {
-    //
-    if (!showQuranTab) return;
-
-    if (!verseTab) return;
-
-    if (!refVerseButton.current) return;
-
-    if (refVerseButton.current.classList.contains("show")) return;
-
-    refVerseButton.current.click();
-  }, [verseTab, showQuranTab]);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
   }, []);
 
-  const handleVerseTab = (verseKey: string) => {
-    dispatch(searcher2PageActions.setVerseTab(verseKey));
-    dispatch(searcher2PageActions.setScrollKey(verseKey));
-  };
-
-  const handleClickTab = () => {
-    dispatch(searcher2PageActions.setShowQuranTab(false));
-    dispatch(searcher2PageActions.setScrollKey(""));
-  };
-
-  const handleClickQuranTab = () => {
-    dispatch(searcher2PageActions.setShowQuranTab(true));
-  };
-
   const setScrollKey = (key: string) => {
     dispatch(searcher2PageActions.setScrollKey(key));
   };
 
+  const onChangeTab = (index: number) => {
+    dispatch(searcher2PageActions.setTabIndex(index));
+  };
+
   return (
-    <div className="searcher2">
-      <TabNavbar>
-        <TabButton
-          text={t("searcher_search")}
-          identifier="search"
-          extraClass="active"
-          ariaSelected={true}
-          handleClickTab={handleClickTab}
-        />
-        {verseTab && (
-          <TabButton
-            text={verseTab}
-            identifier="verse"
-            refButton={refVerseButton}
-            handleClickTab={handleClickQuranTab}
-          />
-        )}
-      </TabNavbar>
-      <TabContent>
-        <TabPanel identifier="search" extraClass="show active">
-          <Searcher2Tab handleVerseTab={handleVerseTab} />
-        </TabPanel>
-        {verseTab ? (
-          <QuranTab
+    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
+      <TabList>
+        <Tab>{t("searcher_search")}</Tab>
+        <Tab hidden={!verseTab}>{verseTab}</Tab>
+      </TabList>
+      <TabsPanels>
+        <TabContent>
+          <Searcher2Tab />
+        </TabContent>
+        <TabContent>
+          <PanelQuran
             verseKey={verseTab}
             scrollKey={scrollKey}
             setScrollKey={setScrollKey}
           />
-        ) : (
-          ""
-        )}
-      </TabContent>
-    </div>
+        </TabContent>
+      </TabsPanels>
+    </TabsContainer>
   );
 };
 
-interface Searcher2TabProps {
-  handleVerseTab: (verseKey: string) => void;
-}
-
-const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
+const Searcher2Tab = () => {
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
@@ -158,16 +120,20 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
     }
   }
 
-  const handleCheckboxDiacritics = (status: boolean) => {
-    dispatch(searcher2PageActions.setSearchDiacritics(status));
+  const handleCheckboxDiacritics = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(searcher2PageActions.setSearchDiacritics(event.target.checked));
   };
 
-  const handleCheckboxIdentical = (status: boolean) => {
-    dispatch(searcher2PageActions.setSearchIdentical(status));
+  const handleCheckboxIdentical = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(searcher2PageActions.setSearchIdentical(event.target.checked));
   };
 
-  const handleCheckboxStart = (status: boolean) => {
-    dispatch(searcher2PageActions.setSearchStart(status));
+  const handleCheckboxStart = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(searcher2PageActions.setSearchStart(event.target.checked));
   };
 
   useEffect(() => {
@@ -182,16 +148,18 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
     });
   }, [searchString, searchIdentical, searchDiacritics, searchStart]);
 
-  const onClickVerse = (verseKey: string) => {
-    handleVerseTab(verseKey);
-  };
-
   return (
-    <div className="searcher2-searchpanel">
-      <div className="d-flex align-items-center flex-column">
-        <div className="d-flex gap-1 align-items-center">
-          <input
-            className="searcher2-searchpanel-input form-control"
+    <Flex
+      flexDir={"column"}
+      overflow={"hidden"}
+      paddingTop={"10px"}
+      maxH={"100%"}
+      height={"100%"}
+    >
+      <Flex flexDir={"column"} alignItems={"center"}>
+        <Flex alignItems={"center"} gap={1}>
+          <Input
+            bg={"white"}
             type="search"
             placeholder=""
             value={searchString}
@@ -201,60 +169,84 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
             dir="rtl"
           />
           <span>({stateVerses.length})</span>
-        </div>
-        <div className="d-flex gap-1">
-          <span className="fw-bold">{t("search_options")}</span>
+        </Flex>
+        <Flex gap={1}>
+          <Box display={"inline"} fontWeight={"bold"}>
+            {t("search_options")}
+          </Box>
           <Checkbox
-            checkboxState={searchDiacritics}
-            handleChangeCheckbox={handleCheckboxDiacritics}
-            labelText={t("search_diacritics")}
-            inputID="CheckDiacritics"
-          />
+            isChecked={searchDiacritics}
+            onChange={handleCheckboxDiacritics}
+          >
+            {t("search_diacritics")}
+          </Checkbox>
           <Checkbox
-            checkboxState={searchIdentical}
-            handleChangeCheckbox={handleCheckboxIdentical}
-            labelText={t("search_identical")}
-            inputID="CheckIdentical"
-          />
-          <Checkbox
-            checkboxState={searchStart}
-            handleChangeCheckbox={handleCheckboxStart}
-            labelText={t("search_start")}
-            inputID="CheckStart"
-          />
-        </div>
-      </div>
-      <div className="searcher2-searchpanel-display">
-        <div
-          className="searcher2-searchpanel-display-list"
+            isChecked={searchIdentical}
+            onChange={handleCheckboxIdentical}
+          >
+            {t("search_identical")}
+          </Checkbox>
+          <Checkbox isChecked={searchStart} onChange={handleCheckboxStart}>
+            {t("search_start")}
+          </Checkbox>
+        </Flex>
+      </Flex>
+      <Box
+        margin={"0.5rem"}
+        overflow={"hidden"}
+        maxH={"100%"}
+        height={"100%"}
+        border={"1px solid gray"}
+        borderRadius={"1rem"}
+      >
+        <Box
+          maxH={"100%"}
+          height={"100%"}
+          padding={"1rem"}
+          overflowY={"auto"}
           dir="rtl"
           onScroll={handleScroll}
         >
           {isPending || isVNotesLoading ? (
             <LoadingSpinner />
           ) : (
-            stateVerses.slice(0, itemsCount).map((verseMatch) => (
-              <div
-                className="searcher2-searchpanel-display-list-verse border-bottom"
-                key={verseMatch.key}
-              >
-                <VerseContainer>
-                  <VerseHighlightMatches verse={verseMatch} />
-                  <span
-                    className="searcher2-searchpanel-display-list-verse-suffix"
-                    onClick={() => onClickVerse(verseMatch.key)}
-                  >{` (${quranService.getChapterName(verseMatch.suraid)}:${
-                    verseMatch.verseid
-                  })`}</span>
-                  <ExpandButton identifier={verseMatch.key} />
-                </VerseContainer>
-                <NoteText verseKey={verseMatch.key} />
-              </div>
-            ))
+            stateVerses
+              .slice(0, itemsCount)
+              .map((verseMatch) => (
+                <VerseItem key={verseMatch.key} verseMatch={verseMatch} />
+              ))
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Flex>
+  );
+};
+
+interface VerseItemProps {
+  verseMatch: verseMatchResult;
+}
+
+const VerseItem = ({ verseMatch }: VerseItemProps) => {
+  const dispatch = useAppDispatch();
+  const quranService = useQuran();
+  const [isOpen, setOpen] = useBoolean();
+
+  const onClickVerse = () => {
+    dispatch(searcher2PageActions.setVerseTab(verseMatch.key));
+    dispatch(searcher2PageActions.setScrollKey(verseMatch.key));
+  };
+
+  return (
+    <Box py={"4px"} borderBottom={"1px solid #dee2e6"}>
+      <VerseContainer>
+        <VerseHighlightMatches verse={verseMatch} />
+        <ButtonVerse onClick={onClickVerse}>{` (${quranService.getChapterName(
+          verseMatch.suraid
+        )}:${verseMatch.verseid})`}</ButtonVerse>
+        <ButtonExpand onClick={setOpen.toggle} />
+      </VerseContainer>
+      <CollapsibleNote isOpen={isOpen} inputKey={verseMatch.key} />
+    </Box>
   );
 };
 
