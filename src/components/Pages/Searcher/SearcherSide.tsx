@@ -7,6 +7,7 @@ import useQuran from "@/context/useQuran";
 import { rootProps } from "@/types";
 import { hasAllLetters, normalizeAlif } from "@/util/util";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { Box, Flex, Input } from "@chakra-ui/react";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
@@ -19,22 +20,22 @@ const SearcherSide = () => {
   if (isVNotesLoading) return <LoadingSpinner />;
 
   return (
-    <div className="searcher-side d-flex flex-column">
+    <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
       <div>
-        <input
-          className="form-control"
+        <Input
           type="search"
           placeholder=""
           value={searchToken}
           aria-label="Search"
           onChange={onChangeToken}
+          bg={"white"}
           required
           dir="rtl"
         />
       </div>
       <RootsList searchString={searchToken} />
       <CountVerses />
-    </div>
+    </Flex>
   );
 };
 
@@ -44,12 +45,12 @@ const CountVerses = () => {
     (state) => state.searcherPage.verses_count
   );
 
-  if (!verses_count) return <></>;
+  if (!verses_count) return null;
 
   return (
-    <div className="fw-bold text-success">
+    <Box fontWeight={"bold"} color={"green"}>
       {`${t("search_count")} ${verses_count}`}
-    </div>
+    </Box>
   );
 };
 
@@ -97,7 +98,17 @@ const RootsList = ({ searchString }: RootsListProps) => {
   }
 
   return (
-    <div className="searcher-side-roots" onScroll={handleScroll}>
+    <Box
+      overflowY={"scroll"}
+      bg={"var(--color-primary)"}
+      padding={"2px"}
+      minH={"15%"}
+      maxH={"35%"}
+      border={"1px solid gainsboro"}
+      borderRadius={"0.35rem"}
+      onScroll={handleScroll}
+      cursor={"pointer"}
+    >
       {isPending ? (
         <LoadingSpinner />
       ) : (
@@ -111,7 +122,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
             />
           ))
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -123,8 +134,6 @@ interface RootItemProps {
 const RootItem = ({ root, isSelected }: RootItemProps) => {
   const dispatch = useAppDispatch();
 
-  const itemClass = isSelected ? "searcher-side-roots-item-selected" : "";
-
   const onClickRoot = (root: rootProps) => {
     if (isSelected) {
       dispatch(searcherPageActions.deleteRoot({ root_id: root.id.toString() }));
@@ -134,12 +143,14 @@ const RootItem = ({ root, isSelected }: RootItemProps) => {
   };
 
   return (
-    <div
-      className={"searcher-side-roots-item ".concat(itemClass)}
+    <Box
+      px={"10px"}
+      py={"5px"}
+      bg={isSelected ? "gray" : undefined}
       onClick={() => onClickRoot(root)}
     >
       {root.name} ({root.count})
-    </div>
+    </Box>
   );
 };
 

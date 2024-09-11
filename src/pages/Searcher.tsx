@@ -1,105 +1,69 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
-import {
-  TabButton,
-  TabContent,
-  TabNavbar,
-  TabPanel,
-} from "@/components/Generic/Tabs";
+import PanelQuran from "@/components/Custom/PanelQuran";
 
-import QuranTab from "@/components/Custom/QuranTab";
+import { Flex, Tab, TabList } from "@chakra-ui/react";
+
+import {
+  TabContent,
+  TabsContainer,
+  TabsPanels,
+} from "@/components/Generic/Tabs";
 
 import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
-
-import "@/styles/pages/searcher.scss";
 
 const Searcher = () => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
 
-  const refVerseButton = useRef<HTMLButtonElement>(null);
+  const tabIndex = useAppSelector((state) => state.searcherPage.tabIndex);
 
   const verseTab = useAppSelector((state) => state.searcherPage.verseTab);
 
-  const showQuranTab = useAppSelector(
-    (state) => state.searcherPage.showQuranTab
-  );
-
   const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
-
-  useEffect(() => {
-    if (!showQuranTab) return;
-
-    if (!verseTab) return;
-
-    if (!refVerseButton.current) return;
-
-    if (refVerseButton.current.classList.contains("show")) return;
-
-    refVerseButton.current.click();
-  }, [verseTab, showQuranTab]);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
   }, []);
 
-  const handleClickTab = () => {
-    dispatch(searcherPageActions.setShowQuranTab(false));
-    dispatch(searcherPageActions.setScrollKey(""));
-  };
-
-  const handleClickQuranTab = () => {
-    dispatch(searcherPageActions.setShowQuranTab(true));
-  };
-
   const setScrollKey = (key: string) => {
     dispatch(searcherPageActions.setScrollKey(key));
   };
 
+  const onChangeTab = (index: number) => {
+    dispatch(searcherPageActions.setTabIndex(index));
+  };
+
   return (
-    <div className="searcher">
-      <TabNavbar>
-        <TabButton
-          text={t("searcher_search")}
-          identifier="search"
-          extraClass="active"
-          ariaSelected={true}
-          handleClickTab={handleClickTab}
-        />
-        {verseTab && (
-          <TabButton
-            text={verseTab}
-            identifier="verse"
-            refButton={refVerseButton}
-            handleClickTab={handleClickQuranTab}
-          />
-        )}
-      </TabNavbar>
-      <TabContent>
-        <TabPanel identifier="search" extraClass="show active">
-          <div className="searcher-search">
+    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
+      <TabList>
+        <Tab>{t("searcher_search")}</Tab>
+
+        <Tab hidden={!verseTab}>{verseTab}</Tab>
+      </TabList>
+      <TabsPanels>
+        <TabContent>
+          <Flex gap={"10px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
             <SearcherSide />
             <SearcherDisplay />
-          </div>
-        </TabPanel>
-        {verseTab ? (
-          <QuranTab
+          </Flex>
+        </TabContent>
+        <TabContent>
+          <PanelQuran
             verseKey={verseTab}
             scrollKey={scrollKey}
             setScrollKey={setScrollKey}
           />
-        ) : (
-          ""
-        )}
-      </TabContent>
-    </div>
+        </TabContent>
+      </TabsPanels>
+    </TabsContainer>
   );
 };
 

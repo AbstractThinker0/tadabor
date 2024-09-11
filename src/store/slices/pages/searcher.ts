@@ -17,7 +17,7 @@ interface RootsObject {
 interface SearcherPageState {
   search_roots: RootsObject;
   verseTab: string;
-  showQuranTab: boolean;
+  tabIndex: number;
   verses_count: number;
   scrollKey: string;
 }
@@ -25,7 +25,7 @@ interface SearcherPageState {
 const initialState: SearcherPageState = {
   search_roots: {},
   verseTab: "",
-  showQuranTab: false,
+  tabIndex: 0,
   verses_count: 0,
   scrollKey: "",
 };
@@ -42,13 +42,13 @@ const searcherPageSlice = createSlice({
       const { root_id } = action.payload;
       delete state.search_roots[root_id];
     },
-    setShowQuranTab: (state, action: PayloadAction<boolean>) => {
-      state.showQuranTab = action.payload;
+    setTabIndex: (state, action: PayloadAction<number>) => {
+      state.tabIndex = action.payload;
     },
     setVerseTab: (state, action: PayloadAction<string>) => {
       //
       state.verseTab = action.payload;
-      state.showQuranTab = true;
+      state.tabIndex = 1;
     },
     setVersesCount: (state, action: PayloadAction<number>) => {
       //

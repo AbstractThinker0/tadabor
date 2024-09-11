@@ -7,12 +7,13 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
-import { ExpandButton } from "@/components/Generic/Buttons";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { Box, Flex, useBoolean } from "@chakra-ui/react";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 const SearcherDisplay = () => {
   const search_roots = useAppSelector(
@@ -22,8 +23,18 @@ const SearcherDisplay = () => {
   const rootsArray = Object.keys(search_roots);
 
   return (
-    <div className="searcher-display" dir="rtl">
-      <div className="searcher-display-roots">
+    <Flex
+      flexDir={"column"}
+      flex={1}
+      overflowY={"hidden"}
+      padding={"5px"}
+      margin={"5px"}
+      borderRadius={"0.75rem"}
+      border={"1px solid gray"}
+      bg={"#f7fafc"}
+      dir="rtl"
+    >
+      <Flex flexWrap={"wrap"} gap={"10px"} paddingBottom={"10px"}>
         {rootsArray.map((root_id) => (
           <RootItem
             key={root_id}
@@ -31,11 +42,16 @@ const SearcherDisplay = () => {
             root_id={root_id}
           />
         ))}
-      </div>
-      <div className="searcher-display-verses">
+      </Flex>
+      <Flex
+        flexDir={"column"}
+        overflowY={"scroll"}
+        maxH={"100%"}
+        height={"100%"}
+      >
         <VersesList />
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -52,15 +68,25 @@ const RootItem = ({ root_name, root_id }: RootItemProps) => {
   };
 
   return (
-    <div className="searcher-display-roots-item">
-      <span className="searcher-display-roots-item-text">{root_name}</span>
-      <span
-        className="searcher-display-roots-item-delete"
+    <Flex
+      justify={"center"}
+      minW={"2rem"}
+      bg={"#0ee485"}
+      borderRadius={"0.75rem"}
+    >
+      <Flex justify={"center"} minW={"2rem"} px={"4px"}>
+        {root_name}
+      </Flex>
+      <Flex
+        justify={"center"}
+        minW={"1.5rem"}
+        borderInlineStart={"1px solid #dee2e6"}
+        cursor={"pointer"}
         onClick={() => onClickRemove(root_id)}
       >
         ❌
-      </span>
-    </div>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -153,21 +179,19 @@ const VersesList = () => {
   return (
     <>
       {stateVerses.map((verseMatch, index) => (
-        <div key={index} className="searcher-display-verses-item">
-          <VerseComponent verseMatch={verseMatch} />
-          <NoteText verseKey={verseMatch.key} />
-        </div>
+        <VerseItem key={index} verseMatch={verseMatch} />
       ))}
     </>
   );
 };
 
-interface VerseComponentProps {
+interface VerseItemProps {
   verseMatch: verseMatchResult;
 }
 
-const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
+const VerseItem = ({ verseMatch }: VerseItemProps) => {
   const quranService = useQuran();
+  const [isOpen, setOpen] = useBoolean();
   const dispatch = useAppDispatch();
 
   const onClickVerse = () => {
@@ -176,16 +200,16 @@ const VerseComponent = ({ verseMatch }: VerseComponentProps) => {
   };
 
   return (
-    <VerseContainer>
-      <VerseHighlightMatches verse={verseMatch} />{" "}
-      <span
-        className="searcher-display-verses-item-suffix"
-        onClick={onClickVerse}
-      >{`(${quranService.getChapterName(verseMatch.suraid)}:${
-        verseMatch.verseid
-      })`}</span>
-      <ExpandButton identifier={verseMatch.key} />
-    </VerseContainer>
+    <Box py={"5px"} borderBottom={"1px solid #dee2e6"}>
+      <VerseContainer>
+        <VerseHighlightMatches verse={verseMatch} />{" "}
+        <ButtonVerse onClick={onClickVerse}>{`(${quranService.getChapterName(
+          verseMatch.suraid
+        )}:${verseMatch.verseid})`}</ButtonVerse>
+        <ButtonExpand onClick={setOpen.toggle} />
+      </VerseContainer>
+      <CollapsibleNote isOpen={isOpen} inputKey={verseMatch.key} />
+    </Box>
   );
 };
 
