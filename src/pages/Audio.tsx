@@ -10,12 +10,18 @@ import { verseProps } from "@/types";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import VerseContainer from "@/components/Custom/VerseContainer";
-import NoteText from "@/components/Custom/NoteText";
-import { ExpandButton } from "@/components/Generic/Buttons";
-import CheckboxDir from "@/components/Custom/CheckboxDir";
-import { Box, HStack, Flex, Heading, Button } from "@chakra-ui/react";
 
-import "@/styles/pages/audio.scss";
+import { ButtonExpand } from "@/components/Generic/Buttons";
+import CheckboxDir from "@/components/Custom/CheckboxDir";
+import {
+  Box,
+  HStack,
+  Flex,
+  Heading,
+  Button,
+  useBoolean,
+} from "@chakra-ui/react";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 const Audio = () => {
   const dispatch = useAppDispatch();
@@ -150,26 +156,18 @@ const Audio = () => {
       maxHeight="100%"
       height="100%"
       overflow="hidden"
-      className="audio"
     >
-      <Box
-        paddingTop="8px"
-        paddingInlineStart="8px"
-        paddingInlineEnd="4px"
-        className="side"
-      >
+      <Flex paddingTop="8px" paddingInlineStart="8px" paddingInlineEnd="4px">
         <ChaptersList
           selectChapter={currentChapter}
           handleChapterChange={handleChapterChange}
-          selectClass="side-chapters-list"
         />
-      </Box>
+      </Flex>
       <Flex
         flexDirection="column"
         width="100%"
         height="100%"
         overflowY="hidden"
-        className="display"
       >
         <Flex
           flexDirection="column"
@@ -179,7 +177,6 @@ const Audio = () => {
           paddingLeft="5px"
           paddingRight="5px"
           overflowY="hidden"
-          className="display-container"
           dir="rtl"
         >
           <Heading
@@ -190,6 +187,7 @@ const Audio = () => {
             borderStyle="solid"
             borderWidth="1px"
             borderColor="gray"
+            borderBottomRadius={"unset"}
             textAlign="center"
             marginBottom="0"
             padding={2}
@@ -203,32 +201,15 @@ const Audio = () => {
             borderStyle="solid"
             borderColor="gray"
             flexGrow={1}
-            className="display-container-verses"
             ref={refVersesList}
           >
             {displayVerse.map((verse) => (
-              <Box
-                padding="5px"
-                borderBottom="1px solid gray"
-                backgroundColor={
-                  verse.key === currentVerse?.key ? "darkseagreen" : undefined
-                }
-                className="display-container-verses-item"
+              <VerseItem
+                isSelected={verse.key === currentVerse?.key}
                 key={verse.key}
-              >
-                <VerseContainer>
-                  {verse.versetext} ({verse.verseid}){" "}
-                  <Button
-                    background="none"
-                    border="none"
-                    onClick={() => onClickAudio(verse)}
-                  >
-                    🔊
-                  </Button>
-                  <ExpandButton identifier={verse.key} />
-                </VerseContainer>
-                <NoteText verseKey={verse.key} />
-              </Box>
+                onClickAudio={onClickAudio}
+                verse={verse}
+              />
             ))}
           </Box>
         </Flex>
@@ -237,7 +218,6 @@ const Audio = () => {
           alignSelf="center"
           justifyContent="center"
           alignItems="center"
-          className="display-audio"
           dir="ltr"
         >
           <audio
@@ -266,7 +246,7 @@ const Audio = () => {
               🔁
             </CheckboxDir>
           </HStack>
-          <Flex gap="4px" paddingBottom="5px" className="display-audio-buttons">
+          <Flex gap="4px" paddingBottom="5px">
             <Button
               colorScheme="blackAlpha"
               bg="blackAlpha.900"
@@ -296,6 +276,37 @@ const Audio = () => {
         </Flex>
       </Flex>
     </Flex>
+  );
+};
+
+interface VerseItemProps {
+  verse: verseProps;
+  isSelected: boolean;
+  onClickAudio: (verse: verseProps) => void;
+}
+
+const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
+  const [isOpen, setOpen] = useBoolean();
+
+  return (
+    <Box
+      padding="5px"
+      borderBottom="1px solid gray"
+      backgroundColor={isSelected ? "darkseagreen" : undefined}
+    >
+      <VerseContainer>
+        {verse.versetext} ({verse.verseid}){" "}
+        <Button
+          background="none"
+          border="none"
+          onClick={() => onClickAudio(verse)}
+        >
+          🔊
+        </Button>
+        <ButtonExpand onClick={setOpen.toggle} />
+      </VerseContainer>
+      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+    </Box>
   );
 };
 
