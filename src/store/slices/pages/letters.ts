@@ -12,7 +12,7 @@ interface LettersPageState {
   currentChapter: string;
   currentPreset: string;
   scrollKey: string;
-  showQuranTab: boolean;
+  tabIndex: number;
   lettersDefinitions: LettersDefinitionType;
   definitionsLoading: boolean;
   definitionsComplete: boolean;
@@ -31,7 +31,7 @@ const initialState: LettersPageState = {
   currentChapter: "1",
   currentPreset: "-1",
   scrollKey: "",
-  showQuranTab: false,
+  tabIndex: 0,
   lettersDefinitions: {},
   definitionsLoading: true,
   definitionsComplete: false,
@@ -134,8 +134,8 @@ const lettersPageSlice = createSlice({
       state.scrollKey =
         state.scrollKey === action.payload ? "" : action.payload;
     },
-    setShowQuranTab: (state, action: PayloadAction<boolean>) => {
-      state.showQuranTab = action.payload;
+    setTabIndex: (state, action: PayloadAction<number>) => {
+      state.tabIndex = action.payload;
     },
     setLetterDefinition: (
       state,

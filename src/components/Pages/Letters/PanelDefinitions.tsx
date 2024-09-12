@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 
@@ -10,23 +9,36 @@ import {
   lettersPageActions,
 } from "@/store/slices/pages/letters";
 
-import { dbFuncs } from "@/util/db";
-import { onlySpaces } from "@/util/util";
 import { arabicAlphabetDefault } from "@/util/consts";
 
-import { TextAreaComponent } from "@/components/Custom/TextForm";
-import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
+import ModalEditLetter from "@/components/Pages/Letters/ModalEditLetter";
+import ModalCreatePreset from "@/components/Pages/Letters/ModalCreatePreset";
+
 import {
-  ModalContainer,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@/components/Generic/Modal";
+  Box,
+  Button,
+  Flex,
+  Select,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 const PanelDefinitions = () => {
   const { t } = useTranslation();
+
+  const {
+    isOpen: isOpenCreatePreset,
+    onOpen: onOpenCreatePreset,
+    onClose: onCloseCreatePreset,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenEditLetter,
+    onOpen: onOpenEditLetter,
+    onClose: onCloseEditLetter,
+  } = useDisclosure();
 
   const definitionsLoading = useAppSelector(
     (state) => state.lettersPage.definitionsLoading
@@ -50,6 +62,7 @@ const PanelDefinitions = () => {
 
   const handleClickLetter = (letter: string) => {
     setCurrentLetter(letter);
+    onOpenEditLetter();
   };
 
   const onChangePreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -64,17 +77,29 @@ const PanelDefinitions = () => {
   if (definitionsLoading || presetsLoading) return <LoadingSpinner />;
 
   return (
-    <div className="panel-def">
-      <div className="panel-def-preset">
-        <label htmlFor="presetSelect" className="form-label fw-bold fs-4">
+    <Flex
+      flex={1}
+      flexDir={"column"}
+      overflowY={"scroll"}
+      padding={"1rem"}
+      maxH={"100%"}
+      height={"100%"}
+    >
+      <Flex
+        alignItems={"center"}
+        gap={"0.5rem"}
+        paddingBottom={"1rem"}
+        width={"50%"}
+      >
+        <Text as="span" fontWeight={"bold"} fontSize={"larger"}>
           {t("letters_preset")}
-        </label>
-        <select
-          id="presetSelect"
-          className="form-select"
+        </Text>
+        <Select
+          dir="ltr"
           aria-label="Select"
           value={currentPreset}
           onChange={onChangePreset}
+          bg={"white"}
         >
           <option value="-1">Default</option>
           {Object.keys(letterPresets).map((presetID) => (
@@ -82,32 +107,38 @@ const PanelDefinitions = () => {
               {letterPresets[presetID]}
             </option>
           ))}
-        </select>
-        <button
-          className="btn btn-dark"
-          data-bs-toggle="modal"
-          data-bs-target="#createPreset"
+        </Select>
+        <Button
+          bg={"black"}
+          color={"white"}
+          fontWeight={"normal"}
+          onClick={onOpenCreatePreset}
         >
           Create
-        </button>
-      </div>
-      <div className="panel-def-letters">
+        </Button>
+      </Flex>
+      <Flex flexDir={"column"} flexWrap={"wrap"} gap={"1rem"}>
         {arabicAlphabetDefault.map((letter) => (
-          <div className="panel-def-letters-item" key={letter}>
+          <Flex alignItems={"center"} gap={"0.3rem"} key={letter}>
             <ItemLetter
               letter={letter}
               currentPreset={currentPreset}
               handleClickLetter={handleClickLetter}
             />
-          </div>
+          </Flex>
         ))}
-      </div>
-      <ModalCreatePreset />
+      </Flex>
+      <ModalCreatePreset
+        isOpen={isOpenCreatePreset}
+        onClose={onCloseCreatePreset}
+      />
       <ModalEditLetter
+        isOpen={isOpenEditLetter}
+        onClose={onCloseEditLetter}
         currentLetter={currentLetter}
         currentPreset={currentPreset}
       />
-    </div>
+    </Flex>
   );
 };
 
@@ -134,255 +165,30 @@ const ItemLetter = ({
 
   return (
     <>
-      <span className="panel-def-letters-item-letter">{letter}</span>
-      <span className="panel-def-letters-item-def" dir={letterDef?.dir || ""}>
+      <Box as="span" width={"2rem"} fontSize={"larger"}>
+        {letter}
+      </Box>
+      <Box
+        as="span"
+        width={"50%"}
+        height={"60px"}
+        bg={"white"}
+        borderRadius={"0.3rem"}
+        padding={"5px"}
+        borderStyle={"solid"}
+        borderColor={"rgb(51, 52, 52)"}
+        dir={letterDef?.dir || ""}
+      >
         {letterDef?.definition || ""}
-      </span>{" "}
-      <button
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#editLetter"
+      </Box>{" "}
+      <Button
+        colorScheme="blue"
+        fontWeight={"normal"}
         onClick={() => onClickEdit(letter)}
       >
         Edit
-      </button>
+      </Button>
     </>
-  );
-};
-
-const ModalCreatePreset = () => {
-  const { t } = useTranslation();
-
-  const [presetName, setPresetName] = useState("");
-
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const dispatch = useAppDispatch();
-
-  const refModal = useRef<HTMLDivElement>(null);
-  const refCloseButton = useRef<HTMLButtonElement>(null);
-
-  const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPresetName(event.target.value);
-  };
-
-  const onClickSave = () => {
-    if (onlySpaces(presetName)) {
-      alert("Preset name can't be empty.");
-      return;
-    }
-
-    const presetID = Date.now().toString();
-    dispatch(lettersPageActions.setPreset({ presetID, presetName }));
-    dbFuncs
-      .saveLettersPreset(presetID, presetName)
-      .then(() => {
-        toast.success(t("save_success"));
-      })
-      .catch(() => {
-        toast.error(t("save_failed"));
-      });
-
-    refCloseButton.current?.click();
-  };
-
-  useEffect(() => {
-    if (!modalVisible) {
-      setPresetName("");
-    }
-  }, [modalVisible]);
-
-  useEffect(() => {
-    const modelElement = refModal.current;
-    if (modelElement === null) return;
-
-    const onModalShow = () => {
-      setModalVisible(true);
-    };
-
-    const onModalHidden = () => {
-      setModalVisible(false);
-    };
-
-    modelElement.addEventListener("show.bs.modal", onModalShow);
-    modelElement.addEventListener("hidden.bs.modal", onModalHidden);
-
-    return () => {
-      if (modelElement) {
-        modelElement.removeEventListener("show.bs.modal", onModalShow);
-        modelElement.removeEventListener("hidden.bs.modal", onModalHidden);
-      }
-    };
-  }, []);
-
-  return (
-    <ModalContainer identifier="createPreset" refModal={refModal}>
-      <ModalHeader identifier="createPreset" title="Create a new preset" />
-      <ModalBody>
-        <div className="form-group">
-          <label htmlFor="presetName" className="form-label">
-            Preset name:
-          </label>
-          <input
-            dir="auto"
-            id="presetName"
-            className="form-input"
-            value={presetName}
-            onChange={onChangeName}
-          />
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
-          ref={refCloseButton}
-        >
-          Cancel
-        </button>
-        <button type="button" className="btn btn-primary" onClick={onClickSave}>
-          Save
-        </button>
-      </ModalFooter>
-    </ModalContainer>
-  );
-};
-
-interface ModalEditLetterProps {
-  currentLetter: string;
-  currentPreset: string;
-}
-
-const ModalEditLetter = ({
-  currentLetter,
-  currentPreset,
-}: ModalEditLetterProps) => {
-  const { t } = useTranslation();
-
-  const defKey =
-    currentPreset === "-1"
-      ? currentLetter
-      : `${currentLetter}:${currentPreset}`;
-
-  const currentDef = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions[defKey]
-  ) || { name: "", definition: "", dir: "" };
-
-  const [letterDef, setLetterDef] = useState(currentDef.definition);
-  const [letterDir, setLetterDir] = useState(currentDef.dir || "rtl");
-
-  const [modalVis, setModalVis] = useState(false);
-
-  const dispatch = useAppDispatch();
-
-  const refVerseModal = useRef<HTMLDivElement>(null);
-
-  const onClickSave = () => {
-    dbFuncs
-      .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
-      .then(() => {
-        toast.success(t("save_success"));
-      })
-      .catch(() => {
-        toast.error(t("save_failed"));
-      });
-
-    dispatch(
-      lettersPageActions.setLetterDefinition({
-        name: currentLetter,
-        definition: letterDef,
-        dir: letterDir,
-        preset_id: currentPreset,
-      })
-    );
-  };
-
-  useEffect(() => {
-    if (modalVis) {
-      setLetterDef(currentDef.definition);
-      setLetterDir(currentDef.dir || "rtl");
-    } else {
-      setLetterDef("");
-      setLetterDir("");
-    }
-  }, [modalVis]);
-
-  useEffect(() => {
-    const modelElement = refVerseModal.current;
-    if (modelElement === null) return;
-
-    const onModalShow = () => {
-      setModalVis(true);
-    };
-
-    const onModalHidden = () => {
-      setModalVis(false);
-    };
-
-    modelElement.addEventListener("show.bs.modal", onModalShow);
-    modelElement.addEventListener("hidden.bs.modal", onModalHidden);
-
-    return () => {
-      if (modelElement) {
-        modelElement.removeEventListener("show.bs.modal", onModalShow);
-        modelElement.removeEventListener("hidden.bs.modal", onModalHidden);
-      }
-    };
-  }, []);
-
-  const handleSetDirection = useCallback(
-    (inputKey: string, dir: string) => {
-      setLetterDir(dir);
-    },
-    [setLetterDir]
-  );
-
-  const handleInputChange = useCallback(
-    (name: string, value: string) => {
-      setLetterDef(value);
-    },
-    [setLetterDef]
-  );
-
-  return (
-    <ModalContainer identifier="editLetter" refModal={refVerseModal}>
-      <ModalHeader
-        identifier="editLetter"
-        title={`Edit definition of:  ${currentLetter}`}
-      />
-      <ModalBody>
-        <div className="form-group">
-          <TextareaToolbar
-            inputKey={currentLetter}
-            handleSetDirection={handleSetDirection}
-          />
-          <TextAreaComponent
-            inputKey={currentLetter}
-            inputValue={letterDef}
-            inputDirection={letterDir}
-            handleInputChange={handleInputChange}
-          />
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
-          Save changes
-        </button>
-      </ModalFooter>
-    </ModalContainer>
   );
 };
 

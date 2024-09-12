@@ -1,11 +1,4 @@
-import {
-  Fragment,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-  memo,
-} from "react";
+import { Fragment, useEffect, useState, useTransition, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import useQuran from "@/context/useQuran";
@@ -29,8 +22,16 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { CollapseContent } from "@/components/Generic/Collapse";
-import { Collapse } from "bootstrap";
+import {
+  Box,
+  Button,
+  CardBody,
+  Flex,
+  Select,
+  useBoolean,
+  Collapse,
+} from "@chakra-ui/react";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
 const ListVerses = () => {
   const quranService = useQuran();
@@ -57,13 +58,13 @@ const ListVerses = () => {
   }, [currentChapter]);
 
   return (
-    <div className="card-body" dir="rtl">
+    <CardBody pt={0} dir="rtl">
       {isPending || dataLoading ? (
         <LoadingSpinner />
       ) : (
         stateVerses.map((verse) => <VerseItem key={verse.key} verse={verse} />)
       )}
-    </div>
+    </CardBody>
   );
 };
 
@@ -72,122 +73,31 @@ interface VerseItemProps {
 }
 
 const VerseItem = memo(({ verse }: VerseItemProps) => {
-  const refCollapsibleLetterBox = useRef<HTMLDivElement>(null);
-  const refCollapseLetterBox = useRef<Collapse>();
-
-  const refCollapsibleWordBox = useRef<HTMLDivElement>(null);
-  const refCollapseWordBox = useRef<Collapse>();
-
   const scrollKey = useAppSelector((state) => state.lettersPage.scrollKey);
 
-  const [selectedLetter, setSelectedLetter] = useState("");
-  const [selectedWord, setSelectedWord] = useState("");
-
-  const verseLetterData = useAppSelector(
-    (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
-  ) ?? {
-    letter_key: selectedLetter,
-    letter_role: LetterRole.Unit,
-    def_id: "",
-  };
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (refCollapsibleLetterBox.current) {
-      refCollapseLetterBox.current = new Collapse(
-        refCollapsibleLetterBox.current,
-        {
-          toggle: false,
-        }
-      );
-    }
-
-    if (refCollapsibleWordBox.current) {
-      refCollapseWordBox.current = new Collapse(refCollapsibleWordBox.current, {
-        toggle: false,
-      });
-    }
-  }, []);
-
-  const handleClickLetter = (letterKey: string) => {
-    if (refCollapseLetterBox.current) {
-      if (selectedLetter === letterKey) {
-        refCollapseLetterBox.current.hide();
-      } else {
-        refCollapseLetterBox.current.show();
-      }
-    }
-
-    setSelectedLetter(selectedLetter === letterKey ? "" : letterKey);
-  };
-
-  const handleClickWord = (wordKey: string) => {
-    if (refCollapseWordBox.current) {
-      if (selectedWord === wordKey) {
-        refCollapseWordBox.current.hide();
-      } else {
-        refCollapseWordBox.current.show();
-      }
-    }
-
-    setSelectedWord(selectedWord === wordKey ? "" : wordKey);
-  };
-
-  const onClickVerseID = (verseKey: string) => {
-    dispatch(lettersPageActions.setScrollKey(verseKey));
-  };
-
   return (
-    <div
-      className={`display-verses-item${
-        scrollKey === verse.key ? " display-verses-item-selected" : ""
-      }`}
+    <Box
+      py={"9px"}
+      borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+      bg={scrollKey === verse.key ? "beige" : undefined}
       data-id={verse.key}
     >
-      <VerseContainer>
-        <VerseWords
-          verseText={verse.versetext.split(" ")}
-          verseKey={verse.key}
-          selectedLetter={selectedLetter}
-          selectedWord={selectedWord}
-          handleClickLetter={handleClickLetter}
-          handleClickWord={handleClickWord}
-        />
-        <span
-          className="display-verses-item-verseid"
-          onClick={() => onClickVerseID(verse.key)}
-        >
-          ({verse.verseid})
-        </span>
-      </VerseContainer>
-      <WordBox
-        refCollapse={refCollapsibleWordBox}
-        verseKey={verse.key}
-        verseText={verse.versetext}
-        selectedWord={selectedWord}
-      ></WordBox>
-      <LetterBox
-        refCollapse={refCollapsibleLetterBox}
-        verseKey={verse.key}
-        selectedLetter={selectedLetter}
-        verseLetterData={verseLetterData}
-      />
-    </div>
+      <VerseWords verse={verse} />
+    </Box>
   );
 });
 
 VerseItem.displayName = "VerseItem";
 
 interface LetterBoxProps {
-  refCollapse?: React.RefObject<HTMLDivElement>;
+  isOpen: boolean;
   verseKey: string;
   selectedLetter: string;
   verseLetterData: LetterDataType;
 }
 
 const LetterBox = ({
-  refCollapse,
+  isOpen,
   verseKey,
   selectedLetter,
   verseLetterData,
@@ -289,20 +199,19 @@ const LetterBox = ({
   };
 
   return (
-    <CollapseContent
-      refCollapse={refCollapse}
-      identifier={`collapseExample${verseKey}`}
-      extraClass="display-verses-item-collapse"
-    >
-      <div className="card card-body" dir="ltr">
-        <div className="display-verses-item-letterbox">
-          <div className="d-flex">
-            <label htmlFor="typeSelect" className="form-label">
-              Type:
-            </label>
-            <select
-              id="typeSelect"
-              className="form-select"
+    <Collapse in={isOpen}>
+      <Box
+        marginTop={"6px"}
+        border={"1px solid rgba(0, 0, 0, .175)"}
+        borderRadius={"0.375rem"}
+        padding={2}
+        bg={"white"}
+        dir="ltr"
+      >
+        <Flex flexDir={"column"} gap={"0.5rem"}>
+          <Flex>
+            <span>Type:</span>
+            <Select
               aria-label="Select"
               value={letterRole}
               onChange={onChangeSelectRole}
@@ -310,78 +219,131 @@ const LetterBox = ({
               <option value={LetterRole.Unit}>Unit</option>
               <option value={LetterRole.Suffix}>Suffix</option>
               <option value={LetterRole.Ignored}>Unused</option>
-            </select>
-          </div>
-          <div className="d-flex">
-            <label htmlFor="defSelect" className="form-label">
-              Definition:
-            </label>
-            <select
-              id="defSelect"
-              className="form-select"
+            </Select>
+          </Flex>
+          <Flex>
+            <span>Definition:</span>
+            <Select
               aria-label="Select"
               value={letterDefinitionID}
               onChange={onChangeSelectDef}
             >
               <option value="">None</option>
               {renderLetterDefinitionOptions()}
-            </select>
-          </div>
-          <button
-            className="btn btn-primary display-verses-item-box-btn"
+            </Select>
+          </Flex>
+          <Button
+            colorScheme="blue"
+            alignSelf={"center"}
+            width={"5rem"}
+            fontWeight={"normal"}
             onClick={onClickSave}
           >
             Save
-          </button>
-        </div>
-      </div>
-    </CollapseContent>
+          </Button>
+        </Flex>
+      </Box>
+    </Collapse>
   );
 };
 
 LetterBox.displayName = "LetterBox";
 
 interface VerseWordsProps {
-  verseText: string[];
-  verseKey: string;
-  selectedLetter: string;
-  selectedWord: string;
-  handleClickLetter: (letterKey: string) => void;
-  handleClickWord: (wordKey: string) => void;
+  verse: verseProps;
 }
 
-const VerseWords = ({
-  verseText,
-  verseKey,
-  selectedLetter,
-  selectedWord,
-  handleClickLetter,
-  handleClickWord,
-}: VerseWordsProps) => {
+const VerseWords = ({ verse }: VerseWordsProps) => {
+  const dispatch = useAppDispatch();
+
+  const [isOpenWordBox, setOpenWordBox] = useBoolean();
+  const [isOpenLetterBox, setOpenLetterBox] = useBoolean();
+
+  const [selectedLetter, setSelectedLetter] = useState("");
+  const [selectedWord, setSelectedWord] = useState("");
+
+  const verseLetterData = useAppSelector(
+    (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
+  ) ?? {
+    letter_key: selectedLetter,
+    letter_role: LetterRole.Unit,
+    def_id: "",
+  };
+
+  const handleClickLetter = (letterKey: string) => {
+    if (selectedLetter === letterKey) {
+      setOpenLetterBox.off();
+    } else {
+      setOpenLetterBox.on();
+    }
+
+    setSelectedLetter(selectedLetter === letterKey ? "" : letterKey);
+  };
+
+  const handleClickWord = (wordKey: string) => {
+    if (selectedWord === wordKey) {
+      setOpenWordBox.off();
+    } else {
+      setOpenWordBox.on();
+    }
+
+    setSelectedWord(selectedWord === wordKey ? "" : wordKey);
+  };
+
+  const onClickVerseID = (verseKey: string) => {
+    dispatch(lettersPageActions.setScrollKey(verseKey));
+  };
+
   return (
     <>
-      {verseText.map((word, wordIndex) => (
-        <Fragment key={wordIndex}>
-          <span
-            className={`display-verses-item-word${
-              `${verseKey}:${wordIndex}` === selectedWord
-                ? " display-verses-item-word-selected"
-                : ""
-            }`}
-            onClick={() => handleClickWord(`${verseKey}:${wordIndex}`)}
-          >
-            {splitArabicLetters(word).map((letter, letterIndex) => (
-              <SingleLetter
-                key={letterIndex}
-                letter={letter}
-                letterKey={`${wordIndex}-${letterIndex}`}
-                selectedLetter={selectedLetter}
-                handleClickLetter={handleClickLetter}
-              />
-            ))}
-          </span>{" "}
-        </Fragment>
-      ))}
+      <VerseContainer>
+        {verse.versetext.split(" ").map((word, wordIndex) => (
+          <Fragment key={wordIndex}>
+            <Box
+              key={wordIndex}
+              as="span"
+              my={"1px"}
+              py={"5px"}
+              px={"8px"}
+              border={"none"}
+              borderRadius={"5px"}
+              cursor={"pointer"}
+              bg={
+                `${verse.key}:${wordIndex}` === selectedWord
+                  ? "rgb(159, 159, 205)"
+                  : undefined
+              }
+              _hover={{ bg: "rgb(159, 159, 205)" }}
+              onClick={() => handleClickWord(`${verse.key}:${wordIndex}`)}
+            >
+              {splitArabicLetters(word).map((letter, letterIndex) => (
+                <SingleLetter
+                  key={letterIndex}
+                  letter={letter}
+                  letterKey={`${wordIndex}-${letterIndex}`}
+                  selectedLetter={selectedLetter}
+                  handleClickLetter={handleClickLetter}
+                />
+              ))}
+            </Box>{" "}
+          </Fragment>
+        ))}
+        <ButtonVerse onClick={() => onClickVerseID(verse.key)}>
+          ({verse.verseid})
+        </ButtonVerse>
+      </VerseContainer>
+      <WordBox
+        isOpen={isOpenWordBox}
+        verseKey={verse.key}
+        verseText={verse.versetext}
+        selectedWord={selectedWord}
+      ></WordBox>
+      <LetterBox
+        isOpen={isOpenLetterBox}
+        verseKey={verse.key}
+        selectedLetter={selectedLetter}
+        verseLetterData={verseLetterData}
+      />
     </>
   );
 };
@@ -407,28 +369,26 @@ const SingleLetter = ({
   };
 
   return (
-    <span
-      className={`display-verses-item-letter${
-        letterKey === selectedLetter
-          ? " display-verses-item-letter-selected"
-          : ""
-      }`}
+    <Box
+      as="span"
+      bg={letterKey === selectedLetter ? "cornflowerblue" : undefined}
+      _hover={{ bg: "cornflowerblue" }}
       onClick={onClickLetter}
     >
       {letter}
-    </span>
+    </Box>
   );
 };
 
 interface WordBoxProps {
-  refCollapse?: React.RefObject<HTMLDivElement>;
+  isOpen: boolean;
   verseKey: string;
   verseText: string;
   selectedWord: string;
 }
 
 const WordBox = ({
-  refCollapse,
+  isOpen,
   verseKey,
   verseText,
   selectedWord,
@@ -492,12 +452,10 @@ const WordBox = ({
 
     return (
       <Fragment key={index}>
-        <span
-          className={`display-verses-item-wordbox-item${
-            index === wordIndex
-              ? " display-verses-item-wordbox-item-selected"
-              : ""
-          }`}
+        <Box
+          as="span"
+          padding={"2px"}
+          bg={index === wordIndex ? "rgb(159, 159, 205)" : undefined}
         >
           {data.map((def, index) => (
             <span key={index}>
@@ -506,26 +464,26 @@ const WordBox = ({
               {data.length - 1 !== index && def.isDef ? " " : ""}
             </span>
           ))}
-        </span>{" "}
+        </Box>{" "}
       </Fragment>
     );
   };
 
   return (
-    <CollapseContent
-      refCollapse={refCollapse}
-      identifier={`collapseWordBox${verseKey}`}
-      extraClass=""
-    >
-      <div className="card card-body" dir="rtl">
-        <span
-          className="display-verses-item-wordbox"
-          style={{ fontSize: `${notesFS}rem` }}
-        >
+    <Collapse in={isOpen}>
+      <Flex
+        border={"1px solid rgba(0, 0, 0, .175)"}
+        borderRadius={"0.375rem"}
+        marginTop={"6px"}
+        padding={2}
+        bg={"white"}
+        dir="rtl"
+      >
+        <span style={{ fontSize: `${notesFS}rem` }}>
           {verseText.split(" ").map((word, index) => renderWord(word, index))}
         </span>
-      </div>
-    </CollapseContent>
+      </Flex>
+    </Collapse>
   );
 };
 

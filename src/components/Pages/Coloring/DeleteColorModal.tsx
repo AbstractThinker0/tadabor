@@ -72,9 +72,9 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
           <Text>
             Are you sure you want to delete{" "}
             <Box
+              as="span"
               p={1}
               fontFamily={"initial"}
-              display={"inline"}
               overflowWrap={"break-word"}
               borderRadius={4}
               {...(currentColor && {

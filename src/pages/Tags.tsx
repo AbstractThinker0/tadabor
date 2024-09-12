@@ -73,7 +73,6 @@ function Tags() {
       overflow={"hidden"}
       maxH={"100%"}
       h={"100%"}
-      className="tags"
     >
       <TagsSide />
       {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}

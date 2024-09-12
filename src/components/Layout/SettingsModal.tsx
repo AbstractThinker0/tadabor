@@ -93,7 +93,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <ModalBody>
           <Stack spacing={6} divider={<Divider />}>
             <StackItem>
-              <Heading size="sm" display={"inline"}>
+              <Heading as="span" size="sm">
                 Language:{" "}
               </Heading>
               <ButtonGroup colorScheme="blue" isAttached>

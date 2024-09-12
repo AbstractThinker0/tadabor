@@ -166,7 +166,7 @@ const VerseWords = ({
         {verseText.map((word, index) => (
           <Fragment key={index}>
             <Box
-              display={"inline"}
+              as="span"
               cursor={"pointer"}
               py={"2px"}
               borderRadius={"0.3rem"}

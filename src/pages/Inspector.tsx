@@ -36,13 +36,11 @@ function Inspector() {
       overflow={"hidden"}
       maxH={"100%"}
       height={"100%"}
-      className="inspector"
     >
       <Flex
         paddingInlineStart={"10px"}
         paddingInlineEnd={"1px"}
         paddingTop={"5px"}
-        className="side"
       >
         <ChaptersList
           selectChapter={currentChapter}

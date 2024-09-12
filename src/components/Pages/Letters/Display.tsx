@@ -5,6 +5,7 @@ import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
 
 import ListVerses from "@/components/Pages/Letters/ListVerses";
+import { Box, Card, CardHeader } from "@chakra-ui/react";
 
 const Display = () => {
   const quranService = useQuran();
@@ -22,14 +23,25 @@ const Display = () => {
   }, [currentChapter]);
 
   return (
-    <div className="p-2 display" ref={refDisplay}>
-      <div className="card display-verses">
-        <div className="card-header text-primary text-center fs-3">
+    <Box
+      padding={2}
+      flex={1}
+      overflowY={"scroll"}
+      minH={"100%"}
+      ref={refDisplay}
+    >
+      <Card bg={"#f7fafc"} minH={"100%"}>
+        <CardHeader
+          textAlign={"center"}
+          color={"blue.600"}
+          fontSize={"xx-large"}
+          py={1}
+        >
           سورة {quranService.getChapterName(currentChapter)}
-        </div>
+        </CardHeader>
         <ListVerses />
-      </div>
-    </div>
+      </Card>
+    </Box>
   );
 };
 

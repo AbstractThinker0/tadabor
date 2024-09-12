@@ -8,6 +8,7 @@ import Display from "@/components/Pages/Letters/Display";
 import ChaptersList from "@/components/Custom/ChaptersList";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { Flex } from "@chakra-ui/react";
 
 interface PanelQuranProps {
   isVisible: boolean;
@@ -32,18 +33,15 @@ const PanelQuran = memo(
     }, []);
 
     return (
-      <div className="panel-quran">
-        <div className="side">
+      <Flex overflow={"hidden"} maxH={"100%"} height={"100%"}>
+        <Flex padding={1}>
           <ChaptersList
             selectChapter={currentChapter}
             handleChapterChange={handleSelectChapter}
-            mainClass="side-chapters"
-            inputClass="side-chapters-input"
-            selectClass="side-chapters-list"
           />
-        </div>
+        </Flex>
         {isVNotesLoading ? <LoadingSpinner /> : <Display />}
-      </div>
+      </Flex>
     );
   },
   (prevProps, nextProps) => {

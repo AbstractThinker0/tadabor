@@ -375,7 +375,7 @@ const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
     <Flex flexWrap={"wrap"} gap={"5px"} pb={"5px"} fontSize={"medium"}>
       {versesTags.map((tagID) => (
         <Box
-          display={"inline"}
+          as="span"
           padding={"3px"}
           bg={"#ffffbf"}
           borderRadius={"0.3rem"}

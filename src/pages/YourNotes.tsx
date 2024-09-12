@@ -30,7 +30,6 @@ const YourNotes = () => {
       onChange={onChangeTab}
       index={currentTab}
       isLazy
-      className="yournotes"
       overflowY={"scroll"}
       flex={1}
       padding={2}

@@ -171,7 +171,7 @@ const Searcher2Tab = () => {
           <span>({stateVerses.length})</span>
         </Flex>
         <Flex gap={1}>
-          <Box display={"inline"} fontWeight={"bold"}>
+          <Box as="span" fontWeight={"bold"}>
             {t("search_options")}
           </Box>
           <Checkbox

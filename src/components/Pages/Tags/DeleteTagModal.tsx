@@ -54,7 +54,7 @@ const DeleteTagModal = ({
           <Box>
             Are you sure you want to delete{" "}
             <Box
-              display={"inline"}
+              as="span"
               padding={"4px"}
               bg={"#ffffbf"}
               overflowWrap={"break-word"}

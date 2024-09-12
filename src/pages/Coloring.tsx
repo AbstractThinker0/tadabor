@@ -102,7 +102,6 @@ function Coloring() {
       maxH={"100%"}
       h={"100%"}
       bg={"var(--color-primary)"}
-      className="coloring"
     >
       <ChaptersSide />
       {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
