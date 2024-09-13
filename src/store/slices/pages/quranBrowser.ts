@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import quranClass from "@/util/quranService";
 
-import { quranSearcher } from "@/util/quranSearch";
-
 import {
   verseMatchResult,
   searchIndexProps,
@@ -96,9 +94,8 @@ const qbPageSlice = createSlice({
       );
       state.scrollKey = "";
 
-      const result = quranSearcher.byWord(
+      const result = quranService.searchByWord(
         state.searchString,
-        quranService,
         filteredChapters,
         {
           searchDiacritics: state.searchDiacritics,
@@ -132,9 +129,8 @@ const qbPageSlice = createSlice({
       );
       state.scrollKey = "";
 
-      const result = quranSearcher.byRoot(
+      const result = quranService.searchByRoot(
         state.searchString,
-        quranService,
         filteredChapters
       );
 

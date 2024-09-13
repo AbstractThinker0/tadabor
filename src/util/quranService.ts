@@ -1,6 +1,26 @@
-import { removeDiacritics, splitArabicLetters } from "@/util/util";
+import {
+  removeDiacritics,
+  splitArabicLetters,
+  normalizeAlif,
+  onlySpaces,
+  searchVerse,
+  getDerivationsInVerse,
+} from "@/util/util";
 
-import { chapterProps, quranProps, rootProps, verseProps } from "@/types";
+import {
+  chapterProps,
+  quranProps,
+  rootProps,
+  verseProps,
+  verseMatchResult,
+  searchIndexProps,
+} from "@/types";
+
+interface ISearchOptions {
+  searchDiacritics: boolean;
+  searchIdentical: boolean;
+  searchStart: boolean;
+}
 
 class quranClass {
   chapterNames: chapterProps[] = [];
@@ -87,6 +107,99 @@ class quranClass {
       verseWords[Number(letterIndexes[0])]
     )[Number(letterIndexes[1])];
     return removeDiacritics(letterSplit);
+  };
+
+  searchByWord = (
+    word: string,
+    searchChapters: string[] | "all",
+    searchOptions: ISearchOptions
+  ) => {
+    // Check if we are search with diacrtics or they should be stripped off
+    const normalizedToken = searchOptions.searchDiacritics
+      ? word
+      : normalizeAlif(removeDiacritics(word));
+
+    // If an empty search token don't initiate a search
+    if (onlySpaces(normalizedToken)) {
+      return false;
+    }
+
+    const matchVerses: verseMatchResult[] = [];
+
+    const searchVerseInList = (verses: verseProps[]) => {
+      verses.forEach((verse) => {
+        const result = searchVerse(
+          verse,
+          normalizedToken,
+          searchOptions.searchIdentical,
+          searchOptions.searchDiacritics,
+          searchOptions.searchStart
+        );
+
+        if (result) {
+          matchVerses.push(result);
+        }
+      });
+    };
+
+    if (searchChapters === "all" || searchChapters.length === 114) {
+      searchVerseInList(this.absoluteQuran);
+    } else {
+      searchChapters.forEach((chapter) => {
+        searchVerseInList(this.getVerses(chapter));
+      });
+    }
+
+    if (matchVerses.length === 0) {
+      return false;
+    }
+
+    return matchVerses;
+  };
+
+  searchByRoot = (root: string, searchChapters: string[]) => {
+    if (onlySpaces(root)) {
+      return false;
+    }
+
+    const rootTarget = this.getRootByName(root);
+
+    if (rootTarget === undefined) {
+      return false;
+    }
+
+    const occurencesArray = rootTarget.occurences;
+
+    const matchVerses: verseMatchResult[] = [];
+    const derivations: searchIndexProps[] = [];
+
+    if (searchChapters) {
+      occurencesArray.forEach((item) => {
+        const info = item.split(":");
+        const currentVerse = this.getVerseByRank(info[0]);
+
+        if (searchChapters.includes(currentVerse.suraid)) {
+          const wordIndexes = info[1].split(",");
+
+          const chapterName = this.getChapterName(currentVerse.suraid);
+
+          const { verseDerivations, verseResult } = getDerivationsInVerse(
+            wordIndexes,
+            currentVerse,
+            chapterName
+          );
+
+          derivations.push(...verseDerivations);
+          matchVerses.push(verseResult);
+        }
+      });
+    }
+
+    if (matchVerses.length === 0) {
+      return false;
+    } else {
+      return { matchVerses, derivations };
+    }
   };
 }
 

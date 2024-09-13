@@ -7,7 +7,6 @@ import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
-import { quranSearcher } from "@/util/quranSearch";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -138,7 +137,7 @@ const Searcher2Tab = () => {
 
   useEffect(() => {
     startTransition(() => {
-      const result = quranSearcher.byWord(searchString, quranService, "all", {
+      const result = quranService.searchByWord(searchString, "all", {
         searchDiacritics,
         searchIdentical,
         searchStart,
