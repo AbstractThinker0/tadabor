@@ -4,11 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
-// Import all of Bootstrap's JS
-import "bootstrap";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import { QuranProvider } from "@/context/QuranProvider";
 
 import Navbar from "@/components/Layout/Navbar";

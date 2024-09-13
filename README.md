@@ -19,7 +19,7 @@ results based on sentences or roots has not been extensively tested.
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
 - Tanzil project for the Quran text compilation
-- Computer Research Center of Islamic Sciences (noorsoft.org), Tanzil Project (tanzil.info), and Zekr Project (zekr.org) for the Quran roots compilation
+- Initial roots compilation extracted from Zekr Project (zekr.org)
 
 ## Local use
 

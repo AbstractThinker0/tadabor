@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store";
 import { verseProps, translationsProps } from "@/types";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-import NoteText from "@/components/Custom/NoteText";
+
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -144,7 +144,6 @@ const VerseItem = ({
         <ButtonExpand onClick={setOpen.toggle} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-      <NoteText verseKey={verse.key} />
       {Object.keys(transVerses).map((trans) => (
         <Box py={2} key={trans} dir="ltr">
           <Box color={"rgb(108, 117, 125)"}>{trans}</Box>
