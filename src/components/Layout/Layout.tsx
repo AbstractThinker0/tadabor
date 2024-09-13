@@ -2,8 +2,6 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ChakraProvider } from "@chakra-ui/react";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,7 +10,7 @@ import { QuranProvider } from "@/context/QuranProvider";
 import Navbar from "@/components/Layout/Navbar";
 import AlertMessage from "@/components/Layout/AlertMessage";
 
-import { Flex } from "@chakra-ui/react";
+import { Flex, ChakraProvider } from "@chakra-ui/react";
 
 import "@/styles/main.scss";
 

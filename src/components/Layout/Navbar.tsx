@@ -64,9 +64,11 @@ const NavItem = ({ label, to }: NavItemProps) => {
     <Button
       _activeLink={{ bg: "var(--color-primary)" }}
       bg={"#bdb8c6"}
-      padding={1}
+      px={1}
+      py={0}
       fontWeight="400"
       fontSize="large"
+      lineHeight={1}
       as={NavLink}
       to={to}
     >
