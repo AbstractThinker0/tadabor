@@ -83,9 +83,9 @@ const Display = ({
   }, [currentVerse]);
 
   return (
-    <Box bg={"#f7fafc"} px={5}>
+    <Box bgColor={"#f7fafc"} px={5}>
       <Box
-        bg={"rgba(33, 37, 41, .03)"}
+        bgColor={"rgba(33, 37, 41, .03)"}
         textAlign={"center"}
         fontSize={"xx-large"}
         color={"blue.500"}
@@ -129,7 +129,7 @@ const VerseItem = ({
   const [isOpen, setOpen] = useBoolean();
 
   return (
-    <Box px={"5px"} bg={isSelected ? "antiquewhite" : undefined}>
+    <Box px={"5px"} bgColor={isSelected ? "antiquewhite" : undefined}>
       <VerseContainer
         dir="rtl"
         py={2}

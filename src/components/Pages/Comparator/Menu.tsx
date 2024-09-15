@@ -46,7 +46,7 @@ const Menu = ({
       gap={"10px"}
       py={"0.5rem"}
       px={"1rem"}
-      bg={"rgb(187, 186, 186)"}
+      bgColor={"rgb(187, 186, 186)"}
       position={"sticky"}
       top={"0"}
       zIndex={"1020"}
@@ -56,7 +56,7 @@ const Menu = ({
           onChange={onChangeChapter}
           value={currentChapter}
           dir="ltr"
-          bg={"white"}
+          bgColor={"white"}
         >
           {quranService.chapterNames.map((chapter) => (
             <option key={chapter.id} value={chapter.id}>
@@ -70,7 +70,7 @@ const Menu = ({
           onClick={onClickSelectVerse}
           defaultValue={currentVerse}
           dir="ltr"
-          bg={"white"}
+          bgColor={"white"}
         >
           {chapterVerses.map((verse) => (
             <option key={verse.key} value={verse.key}>

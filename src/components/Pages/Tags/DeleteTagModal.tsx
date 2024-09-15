@@ -56,7 +56,7 @@ const DeleteTagModal = ({
             <Box
               as="span"
               padding={"4px"}
-              bg={"#ffffbf"}
+              bgColor={"#ffffbf"}
               overflowWrap={"break-word"}
               borderRadius={"0.375rem"}
             >

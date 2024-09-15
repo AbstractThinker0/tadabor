@@ -69,7 +69,7 @@ function Tags() {
 
   return (
     <Flex
-      bg={"var(--color-primary)"}
+      bgColor={"var(--color-primary)"}
       overflow={"hidden"}
       maxH={"100%"}
       h={"100%"}

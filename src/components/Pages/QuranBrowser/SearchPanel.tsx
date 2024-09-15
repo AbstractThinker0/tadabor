@@ -207,7 +207,7 @@ const FormWordSearch = ({
           onChange={searchStringHandle}
           rows={1}
           value={searchString}
-          bg="white"
+          bgColor="white"
         />
         <Button
           leftIcon={<IconSearch />}

@@ -92,7 +92,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
           <Box
             p={"4px"}
             borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-            bg={scrollKey === verse.key ? "#a5d9fc" : undefined}
+            bgColor={scrollKey === verse.key ? "#a5d9fc" : undefined}
             key={verse.key}
             data-id={verse.key}
           >
@@ -175,7 +175,9 @@ const VerseWords = ({
                   ? { bg: "rgb(255, 212, 159)" }
                   : { bg: "rgb(255, 229, 197)" }
               }
-              bg={selectedWord === index + 1 ? "rgb(255, 212, 159)" : undefined}
+              bgColor={
+                selectedWord === index + 1 ? "rgb(255, 212, 159)" : undefined
+              }
               onClick={() => onClickWord(index + 1)}
             >
               {word}
@@ -187,7 +189,12 @@ const VerseWords = ({
       </VerseContainer>
       <CollapsibleNote isOpen={isNoteOpen} inputKey={verseKey} />
       <Collapse in={isRootListOpen}>
-        <Accordion borderRadius={"0.3rem"} mt={1} bg={"white"} allowMultiple>
+        <Accordion
+          borderRadius={"0.3rem"}
+          mt={1}
+          bgColor={"white"}
+          allowMultiple
+        >
           <Box p={1}>
             {currentRoots.map((root) => (
               <RootItem key={root.id} root={root} />
@@ -323,7 +330,7 @@ const RootOccurences = ({
             <Box
               padding={"4px"}
               borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-              bg={scrollKey === rootVerse.key ? "beige" : undefined}
+              bgColor={scrollKey === rootVerse.key ? "beige" : undefined}
               key={rootVerse.key}
             >
               <RootVerse rootVerse={rootVerse} />

@@ -40,7 +40,7 @@ const VersesSide = () => {
         flex={1}
         px={4}
         py={1}
-        bg={"#f7fafc"}
+        bgColor={"#f7fafc"}
         dir="rtl"
       >
         {Object.keys(selectedColors).length ? (
@@ -140,7 +140,12 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             <Box fontWeight={"bold"}>No chapters selected.</Box>
           ) : (
             chaptersScope.map((chapterID) => (
-              <Box bg={"beige"} p={1} borderRadius={"0.3rem"} key={chapterID}>
+              <Box
+                bgColor={"beige"}
+                p={1}
+                borderRadius={"0.3rem"}
+                key={chapterID}
+              >
                 {quranService.getChapterName(chapterID)}
               </Box>
             ))

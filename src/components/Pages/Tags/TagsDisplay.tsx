@@ -84,7 +84,7 @@ function TagsDisplay() {
                       overflowWrap={"break-word"}
                       padding={"3px"}
                       borderRadius={"0.3rem"}
-                      bg={"#ffffbf"}
+                      bgColor={"#ffffbf"}
                       key={tagID}
                     >
                       {selectedTags[tagID].tagDisplay}
@@ -110,7 +110,7 @@ function TagsDisplay() {
                     <Box
                       p={"2px"}
                       borderRadius={"0.3rem"}
-                      bg={"beige"}
+                      bgColor={"beige"}
                       key={chapterID}
                     >
                       {quranService.getChapterName(chapterID)}
@@ -289,7 +289,7 @@ const ListVerses = memo(
     return (
       <>
         <CardHeader
-          bg={"rgba(33, 37, 41, .03)"}
+          bgColor={"rgba(33, 37, 41, .03)"}
           textAlign={"center"}
           fontSize={"larger"}
           color={"teal"}
@@ -298,7 +298,7 @@ const ListVerses = memo(
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
-        <CardBody bg={"#f7fafc"} pt={0} ref={listRef}>
+        <CardBody bgColor={"#f7fafc"} pt={0} ref={listRef}>
           {isPending ? (
             <LoadingSpinner />
           ) : (
@@ -306,7 +306,7 @@ const ListVerses = memo(
               <Box
                 key={verse.key}
                 data-id={verse.key}
-                bg={scrollKey === verse.key ? "#a5d9fc" : undefined}
+                bgColor={scrollKey === verse.key ? "#a5d9fc" : undefined}
                 borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
                 p={"4px"}
               >
@@ -377,7 +377,7 @@ const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
         <Box
           as="span"
           padding={"3px"}
-          bg={"#ffffbf"}
+          bgColor={"#ffffbf"}
           borderRadius={"0.3rem"}
           overflowWrap={"break-word"}
           overflowX={"hidden"}

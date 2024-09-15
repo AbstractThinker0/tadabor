@@ -249,7 +249,7 @@ const Audio = () => {
           <Flex gap="4px" paddingBottom="5px">
             <Button
               colorScheme="blackAlpha"
-              bg="blackAlpha.900"
+              bgColor="blackAlpha.900"
               fontWeight="normal"
               onClick={onClickPrev}
             >
@@ -257,7 +257,7 @@ const Audio = () => {
             </Button>
             <Button
               colorScheme="blackAlpha"
-              bg="blackAlpha.900"
+              bgColor="blackAlpha.900"
               fontWeight="normal"
               onClick={togglePlayPause}
             >
@@ -266,7 +266,7 @@ const Audio = () => {
             </Button>
             <Button
               colorScheme="blackAlpha"
-              bg="blackAlpha.900"
+              bgColor="blackAlpha.900"
               fontWeight="normal"
               onClick={onClickNext}
             >

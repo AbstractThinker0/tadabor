@@ -46,7 +46,7 @@ const DisplayPanel = () => {
         <Flex
           flexDir="column"
           minH="100%"
-          bg="#f7fafc"
+          bgColor="#f7fafc"
           borderRadius={5}
           dir="rtl"
           border="1px solid gainsboro"

@@ -129,7 +129,7 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
           </Box>
           <VerseContainer
             textAlign={"center"}
-            bg={chosenColor ? chosenColor.colorCode : "rgb(245, 244, 244)"}
+            bgColor={chosenColor ? chosenColor.colorCode : "rgb(245, 244, 244)"}
             color={
               chosenColor ? getTextColor(chosenColor.colorCode) : undefined
             }
@@ -149,7 +149,7 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
                 textAlign={"center"}
                 fontSize={"large"}
                 mb={1}
-                bg={colorsList[colorID].colorCode}
+                bgColor={colorsList[colorID].colorCode}
                 color={getTextColor(colorsList[colorID].colorCode)}
                 onClick={() => onClickColor(colorsList[colorID])}
                 key={colorID}

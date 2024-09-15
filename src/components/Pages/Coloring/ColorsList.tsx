@@ -57,7 +57,7 @@ const ColorsList = () => {
               cursor={"pointer"}
               mb={1}
               borderRadius={5}
-              bg={colorsList[colorID].colorCode}
+              bgColor={colorsList[colorID].colorCode}
               color={getTextColor(colorsList[colorID].colorCode)}
               textAlign={"center"}
             >

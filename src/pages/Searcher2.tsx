@@ -158,7 +158,7 @@ const Searcher2Tab = () => {
       <Flex flexDir={"column"} alignItems={"center"}>
         <Flex alignItems={"center"} gap={1}>
           <Input
-            bg={"white"}
+            bgColor={"white"}
             type="search"
             placeholder=""
             value={searchString}

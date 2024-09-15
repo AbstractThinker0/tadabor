@@ -29,7 +29,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <Box as="nav" role="navigation" bg="gray.800" px={2} py={1}>
+    <Box as="nav" role="navigation" bgColor="gray.800" px={2} py={1}>
       <Flex justifyContent="space-between">
         <Flex flexWrap="wrap" gap={1.5}>
           <NavItem to="/" label={t("nav_browser")} />
@@ -63,7 +63,7 @@ const NavItem = ({ label, to }: NavItemProps) => {
   return (
     <Button
       _activeLink={{ bg: "var(--color-primary)" }}
-      bg={"#bdb8c6"}
+      bgColor={"#bdb8c6"}
       px={1}
       py={0}
       fontWeight="400"

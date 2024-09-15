@@ -38,7 +38,7 @@ const ChaptersSide = () => {
         border={"1px solid rgb(201, 202, 204)"}
         p={"10px"}
         pt={"2px"}
-        bg={"rgb(245, 244, 244)"}
+        bgColor={"rgb(245, 244, 244)"}
         borderRadius={"0.275rem"}
       >
         <ColorsList />

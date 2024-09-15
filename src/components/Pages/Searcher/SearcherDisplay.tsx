@@ -31,7 +31,7 @@ const SearcherDisplay = () => {
       margin={"5px"}
       borderRadius={"0.75rem"}
       border={"1px solid gray"}
-      bg={"#f7fafc"}
+      bgColor={"#f7fafc"}
       dir="rtl"
     >
       <Flex flexWrap={"wrap"} gap={"10px"} paddingBottom={"10px"}>
@@ -71,7 +71,7 @@ const RootItem = ({ root_name, root_id }: RootItemProps) => {
     <Flex
       justify={"center"}
       minW={"2rem"}
-      bg={"#0ee485"}
+      bgColor={"#0ee485"}
       borderRadius={"0.75rem"}
     >
       <Flex justify={"center"} minW={"2rem"} px={"4px"}>

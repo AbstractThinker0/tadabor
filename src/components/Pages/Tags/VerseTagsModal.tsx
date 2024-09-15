@@ -122,7 +122,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
             )
           </Box>
           <VerseContainer
-            bg={"rgb(245, 244, 244)"}
+            bgColor={"rgb(245, 244, 244)"}
             padding={"4px"}
             mb={"5px"}
             borderRadius={"0.375rem"}
@@ -141,7 +141,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
                 textAlign={"center"}
                 fontSize={"large"}
                 mb={1}
-                bg={canFindTag(tagID) ? "#ffffbf" : "grey"}
+                bgColor={canFindTag(tagID) ? "#ffffbf" : "grey"}
                 onClick={() => onClickTag(tagID)}
                 key={tagID}
               >

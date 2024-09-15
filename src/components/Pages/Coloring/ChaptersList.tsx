@@ -99,11 +99,11 @@ const ChaptersList = () => {
   return (
     <Flex flexDir={"column"} minH={"30%"} maxH={"45%"}>
       <Input
-        type="text"
+        type="search"
         placeholder={quranService.getChapterName(currentChapter)}
         value={chapterToken}
         onChange={onChangeChapterToken}
-        bg={"white"}
+        bgColor={"white"}
         borderBottomRadius={"unset"}
       />
       <Box
@@ -120,7 +120,7 @@ const ChaptersList = () => {
               px={"5px"}
               py={"2px"}
               mb={"2px"}
-              bg={
+              bgColor={
                 currentChapter === chapter.id
                   ? "rgba(76, 76, 167, 0.623)"
                   : "rgb(201, 202, 204)"
@@ -148,7 +148,7 @@ const ChaptersList = () => {
         justify={"center"}
         gap={4}
         padding={4}
-        bg={"rgb(245, 244, 244)"}
+        bgColor={"rgb(245, 244, 244)"}
         border={"1px solid rgb(201, 202, 204)"}
         borderBottomRadius={"0.275rem"}
         dir="ltr"

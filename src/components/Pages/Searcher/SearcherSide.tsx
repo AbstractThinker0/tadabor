@@ -28,7 +28,7 @@ const SearcherSide = () => {
           value={searchToken}
           aria-label="Search"
           onChange={onChangeToken}
-          bg={"white"}
+          bgColor={"white"}
           required
           dir="rtl"
         />
@@ -100,7 +100,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
   return (
     <Box
       overflowY={"scroll"}
-      bg={"var(--color-primary)"}
+      bgColor={"var(--color-primary)"}
       padding={"2px"}
       minH={"15%"}
       maxH={"35%"}
@@ -146,7 +146,7 @@ const RootItem = ({ root, isSelected }: RootItemProps) => {
     <Box
       px={"10px"}
       py={"5px"}
-      bg={isSelected ? "gray" : undefined}
+      bgColor={isSelected ? "gray" : undefined}
       onClick={() => onClickRoot(root)}
     >
       {root.name} ({root.count})

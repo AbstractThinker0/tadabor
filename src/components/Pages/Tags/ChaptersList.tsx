@@ -98,11 +98,11 @@ const ChaptersList = () => {
     <>
       <Flex flexDir={"column"} maxH={"40%"}>
         <Input
-          type="text"
+          type="search"
           placeholder={quranService.getChapterName(currentChapter)}
           value={chapterToken}
           onChange={onChangeChapterToken}
-          bg={"white"}
+          bgColor={"white"}
           borderBottomRadius={"unset"}
         />
         <Flex
@@ -118,7 +118,7 @@ const ChaptersList = () => {
                 padding={1}
                 cursor={"pointer"}
                 key={chapter.id}
-                bg={
+                bgColor={
                   currentChapter === chapter.id
                     ? "rgba(76, 76, 167, 0.623)"
                     : undefined
@@ -146,7 +146,7 @@ const ChaptersList = () => {
         justify={"center"}
         gap={4}
         padding={4}
-        bg={"rgba(0, 0, 0, 0.03)"}
+        bgColor={"rgba(0, 0, 0, 0.03)"}
         borderBottomRadius={"0.275rem"}
         dir="ltr"
       >

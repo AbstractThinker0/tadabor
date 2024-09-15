@@ -92,7 +92,7 @@ const SideList = ({
       padding={"10px"}
       maxW={"300px"}
       borderRadius={"0.3rem"}
-      bg={"rgba(0, 0, 0, 0.03)"}
+      bgColor={"rgba(0, 0, 0, 0.03)"}
       dir="ltr"
     >
       <Box fontWeight={"bold"} pb={1}>
@@ -111,7 +111,7 @@ const SideList = ({
           {Object.keys(tags).map((tagID) => (
             <Flex
               padding={"2px"}
-              bg={isTagSelected(tagID) ? "#ffffbf" : "#fffff8"}
+              bgColor={isTagSelected(tagID) ? "#ffffbf" : "#fffff8"}
               borderRadius={"0.3rem"}
               key={tagID}
             >

@@ -30,7 +30,7 @@ const Display = () => {
       minH={"100%"}
       ref={refDisplay}
     >
-      <Card bg={"#f7fafc"} minH={"100%"}>
+      <Card bgColor={"#f7fafc"} minH={"100%"}>
         <CardHeader
           textAlign={"center"}
           color={"blue.600"}

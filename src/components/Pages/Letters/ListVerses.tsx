@@ -79,7 +79,7 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
     <Box
       py={"9px"}
       borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-      bg={scrollKey === verse.key ? "beige" : undefined}
+      bgColor={scrollKey === verse.key ? "beige" : undefined}
       data-id={verse.key}
     >
       <VerseWords verse={verse} />
@@ -205,7 +205,7 @@ const LetterBox = ({
         border={"1px solid rgba(0, 0, 0, .175)"}
         borderRadius={"0.375rem"}
         padding={2}
-        bg={"white"}
+        bgColor={"white"}
         dir="ltr"
       >
         <Flex flexDir={"column"} gap={"0.5rem"}>
@@ -308,12 +308,12 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               border={"none"}
               borderRadius={"5px"}
               cursor={"pointer"}
-              bg={
+              bgColor={
                 `${verse.key}:${wordIndex}` === selectedWord
                   ? "rgb(159, 159, 205)"
                   : undefined
               }
-              _hover={{ bg: "rgb(159, 159, 205)" }}
+              _hover={{ bgColor: "rgb(159, 159, 205)" }}
               onClick={() => handleClickWord(`${verse.key}:${wordIndex}`)}
             >
               {splitArabicLetters(word).map((letter, letterIndex) => (
@@ -371,7 +371,7 @@ const SingleLetter = ({
   return (
     <Box
       as="span"
-      bg={letterKey === selectedLetter ? "cornflowerblue" : undefined}
+      bgColor={letterKey === selectedLetter ? "cornflowerblue" : undefined}
       _hover={{ bg: "cornflowerblue" }}
       onClick={onClickLetter}
     >
@@ -455,7 +455,7 @@ const WordBox = ({
         <Box
           as="span"
           padding={"2px"}
-          bg={index === wordIndex ? "rgb(159, 159, 205)" : undefined}
+          bgColor={index === wordIndex ? "rgb(159, 159, 205)" : undefined}
         >
           {data.map((def, index) => (
             <span key={index}>
@@ -476,7 +476,7 @@ const WordBox = ({
         borderRadius={"0.375rem"}
         marginTop={"6px"}
         padding={2}
-        bg={"white"}
+        bgColor={"white"}
         dir="rtl"
       >
         <span style={{ fontSize: `${notesFS}rem` }}>

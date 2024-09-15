@@ -32,7 +32,7 @@ function Inspector() {
 
   return (
     <Flex
-      bg={"var(--color-primary)"}
+      bgColor={"var(--color-primary)"}
       overflow={"hidden"}
       maxH={"100%"}
       height={"100%"}

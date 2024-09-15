@@ -16,10 +16,10 @@ const AboutEnglish = () => {
           flexDirection={"column"}
           flex={1}
           p={4}
-          bg={"var(--color-primary)"}
+          bgColor={"var(--color-primary)"}
           borderBottomRadius={"0.375rem"}
         >
-          <Text align={"center"} bg={"white"} borderRadius={"0.375rem"}>
+          <Text align={"center"} bgColor={"white"} borderRadius={"0.375rem"}>
             Check out the project's{" "}
             <Link
               href="https://github.com/AbstractThinker0/tadabor"
@@ -73,7 +73,9 @@ const AboutEnglish = () => {
                 project for the compilation of chapter names and their
                 transliteration
               </ListItem>
-              <ListItem>Tanzil project for the Quran text compilation</ListItem>
+              <ListItem>
+                Tanzil project for the Quran text compilation (tanzil.net)
+              </ListItem>
 
               <ListItem>
                 Initial roots compilation extracted from Zekr Project (zekr.org)

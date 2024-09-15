@@ -23,7 +23,7 @@ const Display = ({ currentChapter }: DisplayProps) => {
   return (
     <Box p={2} flex={1} overflowY={"scroll"} minH={"100%"} ref={refDisplay}>
       <Card
-        bg={"#f7fafc"}
+        bgColor={"#f7fafc"}
         minH={"100%"}
         border={"1px solid rgba(0, 0, 0, .175)"}
       >
@@ -32,7 +32,7 @@ const Display = ({ currentChapter }: DisplayProps) => {
           textAlign={"center"}
           fontSize={"x-large  "}
           color={"blue.500"}
-          bg={"rgba(33, 37, 41, .03)"}
+          bgColor={"rgba(33, 37, 41, .03)"}
           borderBottom={"1px solid rgba(0, 0, 0, .175)"}
         >
           سورة {quranService.getChapterName(currentChapter)}

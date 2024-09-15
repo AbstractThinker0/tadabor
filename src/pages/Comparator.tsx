@@ -82,7 +82,7 @@ function Comparator() {
   if (!complete) return <LoadingSpinner />;
 
   return (
-    <Box bg={"var(--color-primary)"}>
+    <Box bgColor={"var(--color-primary)"}>
       <Menu
         chapterVerses={chapterVerses}
         handleSelectVerse={selectVerse}

@@ -108,7 +108,7 @@ const SelectionListChapters = ({
   return (
     <Flex flexDirection="column" h="40%">
       <Input
-        bg="var(--color-fifth)"
+        bgColor="var(--color-fifth)"
         borderBottom="none"
         borderBottomRadius="0"
         type="search"
@@ -120,7 +120,7 @@ const SelectionListChapters = ({
       />
       <Box
         flexGrow="1"
-        bg="var(--color-primary)"
+        bgColor="var(--color-primary)"
         border="1px solid gainsboro"
         overflowY="scroll"
         padding="2px"
@@ -150,7 +150,7 @@ const SelectionListChapters = ({
             </Flex>
           ))}
       </Box>
-      <Flex alignItems="center" flexWrap="wrap" padding="5px" bg="#e7e6e6">
+      <Flex alignItems="center" flexWrap="wrap" padding="5px" bgColor="#e7e6e6">
         <Box fontWeight="bold">{t("search_scope")}:</Box>
         <Flex justifyContent="center" gap="3px">
           <Button

@@ -99,7 +99,7 @@ const PanelDefinitions = () => {
           aria-label="Select"
           value={currentPreset}
           onChange={onChangePreset}
-          bg={"white"}
+          bgColor={"white"}
         >
           <option value="-1">Default</option>
           {Object.keys(letterPresets).map((presetID) => (
@@ -109,7 +109,7 @@ const PanelDefinitions = () => {
           ))}
         </Select>
         <Button
-          bg={"black"}
+          bgColor={"black"}
           color={"white"}
           fontWeight={"normal"}
           onClick={onOpenCreatePreset}
@@ -172,7 +172,7 @@ const ItemLetter = ({
         as="span"
         width={"50%"}
         height={"60px"}
-        bg={"white"}
+        bgColor={"white"}
         borderRadius={"0.3rem"}
         padding={"5px"}
         borderStyle={"solid"}

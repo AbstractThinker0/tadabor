@@ -101,7 +101,7 @@ function Coloring() {
       overflow={"hidden"}
       maxH={"100%"}
       h={"100%"}
-      bg={"var(--color-primary)"}
+      bgColor={"var(--color-primary)"}
     >
       <ChaptersSide />
       {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
