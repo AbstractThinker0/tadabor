@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/store";
 
 import { Box, Text } from "@chakra-ui/react";
-import { ButtonEdit } from "../Generic/Buttons";
+import { ButtonEdit } from "@/components/Generic/Buttons";
 
 interface NoteContainerProps {
   inputValue: string;
