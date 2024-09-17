@@ -137,6 +137,7 @@ const qbPageSlice = createSlice({
       if (result) {
         state.searchResult = result.matchVerses;
         state.searchIndexes = result.derivations;
+        state.searchError = false;
       } else {
         state.searchError = true;
       }
