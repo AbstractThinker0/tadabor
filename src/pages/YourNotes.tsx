@@ -32,7 +32,8 @@ const YourNotes = () => {
       isLazy
       overflowY={"scroll"}
       flex={1}
-      padding={2}
+      px={2}
+      pb={2}
       display={"block"}
     >
       <TabList justifyContent={"center"}>
