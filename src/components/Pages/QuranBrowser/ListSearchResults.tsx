@@ -156,7 +156,7 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
     return (
-      <HStack pt={1} wrap={"wrap"}>
+      <HStack py={1} wrap={"wrap"}>
         {searchChapters.map((chapterName, index) => (
           <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
             {chapterName}
@@ -168,7 +168,9 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   return (
     <div dir="auto">
-      <Heading size="md">{searchText}</Heading>
+      <Heading pb={3} size="xl" color="blue.600">
+        {searchText}
+      </Heading>
       {searchChapters.length !== 114 && (
         <ChaptersList searchChapters={searchChapters} />
       )}
@@ -189,8 +191,8 @@ const DerivationsComponent = ({
 }: DerivationsComponentProps) => {
   return (
     <>
-      <Divider />
-      <HStack wrap="wrap" px={2} divider={<>-</>}>
+      <Divider pb={1} borderColor={"gray"} />
+      <HStack wrap="wrap" p={2} divider={<>-</>}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
           <Tooltip hasArrow key={index} label={root.text}>
             <Button
@@ -202,7 +204,7 @@ const DerivationsComponent = ({
           </Tooltip>
         ))}
       </HStack>
-      <Divider />
+      <Divider mb={2} borderColor={"gray"} />
     </>
   );
 };
