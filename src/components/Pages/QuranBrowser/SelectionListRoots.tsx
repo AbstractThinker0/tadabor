@@ -81,16 +81,14 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
       minH="100%"
       overflowY="scroll"
       p="4px"
-      {...(isDisabled
-        ? {
-            bg: "#e9ecef",
-            cursor: "not-allowed",
-            color: "gray",
-          }
-        : {
-            bg: "var(--color-primary)",
-            cursor: "pointer",
-          })}
+      bgColor="var(--color-primary)"
+      cursor="pointer"
+      aria-disabled={isDisabled}
+      _disabled={{
+        bgColor: "#e9ecef",
+        cursor: "not-allowed",
+        color: "gray",
+      }}
       onScroll={handleScroll}
     >
       {filteredArray.slice(0, itemsCount).map((root) => (
@@ -119,7 +117,8 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
   return (
     <Box
       px="12px"
-      {...(isSelected && { color: "white", bg: "#767676" })}
+      aria-selected={isSelected}
+      _selected={{ color: "white", bgColor: "#767676" }}
       onClick={() => onClickRoot(root.name)}
     >
       {root.name}

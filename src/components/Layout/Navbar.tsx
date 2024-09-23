@@ -62,7 +62,7 @@ interface NavItemProps {
 const NavItem = ({ label, to }: NavItemProps) => {
   return (
     <Button
-      _activeLink={{ bg: "var(--color-primary)" }}
+      _activeLink={{ bgColor: "var(--color-primary)" }}
       bgColor={"#bdb8c6"}
       px={1}
       py={0}

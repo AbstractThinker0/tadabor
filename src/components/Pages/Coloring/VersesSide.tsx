@@ -103,16 +103,8 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
               maxW={"120px"}
               px={"5px"}
               borderRadius={3}
-              {...(selectedColors[colorID] && {
-                //
-                backgroundColor: selectedColors[colorID].colorCode,
-
-                //
-
-                color: getTextColor(selectedColors[colorID].colorCode),
-
-                //
-              })}
+              backgroundColor={selectedColors[colorID].colorCode}
+              color={getTextColor(selectedColors[colorID].colorCode)}
             >
               <div></div>
               <Box
@@ -245,10 +237,8 @@ const SelectedVerseItem = ({
       p={1}
       borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
       key={verse.key}
-      {...(verseColor && {
-        backgroundColor: verseColor.colorCode,
-        color: getTextColor(verseColor.colorCode),
-      })}
+      backgroundColor={verseColor?.colorCode}
+      color={verseColor ? getTextColor(verseColor.colorCode) : undefined}
     >
       <VerseContainer>
         {verse.versetext}{" "}
@@ -343,10 +333,12 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
             }
             key={verse.key}
             data-id={verse.key}
-            {...(coloredVerses[verse.key] && {
-              backgroundColor: coloredVerses[verse.key].colorCode,
-              color: getTextColor(coloredVerses[verse.key].colorCode),
-            })}
+            backgroundColor={coloredVerses[verse.key]?.colorCode}
+            color={
+              coloredVerses[verse.key]
+                ? getTextColor(coloredVerses[verse.key].colorCode)
+                : undefined
+            }
           >
             <VerseComponent verse={verse} openVerseModal={openVerseModal} />
           </Box>

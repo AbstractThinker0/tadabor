@@ -372,7 +372,7 @@ const SingleLetter = ({
     <Box
       as="span"
       bgColor={letterKey === selectedLetter ? "cornflowerblue" : undefined}
-      _hover={{ bg: "cornflowerblue" }}
+      _hover={{ bgColor: "cornflowerblue" }}
       onClick={onClickLetter}
     >
       {letter}

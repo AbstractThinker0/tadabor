@@ -82,10 +82,11 @@ const ChaptersList = ({
               px="14px"
               cursor="pointer"
               data-id={chapter.id}
-              {...(Number(selectChapter) === chapter.id && {
+              aria-selected={Number(selectChapter) === chapter.id}
+              _selected={{
                 color: "white",
-                bg: "#767676",
-              })}
+                bgColor: "#767676",
+              }}
               onClick={() => onClickChapter(chapter.id)}
             >
               {chapter.id}. {chapter.name}

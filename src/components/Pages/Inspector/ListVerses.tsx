@@ -170,14 +170,12 @@ const VerseWords = ({
               cursor={"pointer"}
               py={"2px"}
               borderRadius={"0.3rem"}
-              _hover={
-                selectedWord === index + 1
-                  ? { bg: "rgb(255, 212, 159)" }
-                  : { bg: "rgb(255, 229, 197)" }
-              }
-              bgColor={
-                selectedWord === index + 1 ? "rgb(255, 212, 159)" : undefined
-              }
+              _hover={{ bgColor: "rgb(255, 229, 197)" }}
+              aria-selected={selectedWord === index + 1}
+              _selected={{
+                bgColor: "rgb(255, 212, 159)",
+                _hover: { bgColor: "rgb(255, 212, 159)" },
+              }}
               onClick={() => onClickWord(index + 1)}
             >
               {word}

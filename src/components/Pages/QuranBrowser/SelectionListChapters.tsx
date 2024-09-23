@@ -134,11 +134,13 @@ const SelectionListChapters = ({
               cursor="pointer"
               key={chapter.id}
               data-id={chapter.id}
-              {...(!searchingString.length &&
-                currentChapter === chapter.id && {
-                  color: "white",
-                  bg: "#767676",
-                })}
+              aria-selected={
+                !searchingString.length && currentChapter === chapter.id
+              }
+              _selected={{
+                color: "white",
+                bgColor: "#767676",
+              }}
             >
               <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}
