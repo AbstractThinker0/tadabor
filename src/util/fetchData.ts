@@ -1,21 +1,27 @@
-import axios from "axios";
 import { translationsProps } from "@/types";
 
-// An axios instance that fetches data and cache it for long duration
-const fetchJsonPerm = axios.create({
-  baseURL: "/res",
-  headers: {
-    "Content-Type": "application/json",
-    "Cache-Control": `max-age=31536000, immutable`,
-  },
-});
+// fetches data and cache it for long duration
+async function fetchJsonPerm(url: string) {
+  const response = await fetch(`/res${url}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "max-age=31536000, immutable",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.statusText}`);
+  }
+
+  return response.json();
+}
 
 const fetchChapters = (): Promise<any> => {
   return new Promise((resolve, reject) => {
-    fetchJsonPerm
-      .get("/chapters.json")
-      .then((response) => {
-        resolve(response.data);
+    fetchJsonPerm("/chapters.json")
+      .then((data) => {
+        resolve(data);
       })
       .catch((error) => {
         reject(error);
@@ -25,10 +31,9 @@ const fetchChapters = (): Promise<any> => {
 
 const fetchQuran = (): Promise<any> => {
   return new Promise((resolve, reject) => {
-    fetchJsonPerm
-      .get("/quran_v2.json")
-      .then((response) => {
-        resolve(response.data);
+    fetchJsonPerm("/quran_v2.json")
+      .then((data) => {
+        resolve(data);
       })
       .catch((error) => {
         reject(error);
@@ -38,10 +43,9 @@ const fetchQuran = (): Promise<any> => {
 
 const fetchRoots = (): Promise<any> => {
   return new Promise((resolve, reject) => {
-    fetchJsonPerm
-      .get("/quranRoots-0.0.10.json")
-      .then((response) => {
-        resolve(response.data);
+    fetchJsonPerm("/quranRoots-0.0.10.json")
+      .then((data) => {
+        resolve(data);
       })
       .catch((error) => {
         reject(error);
@@ -62,9 +66,9 @@ const fetchTranslations = async () => {
   const transData: translationsProps = {};
 
   for (const key of Object.keys(transList)) {
-    const response = await fetchJsonPerm.get(transList[key].url);
+    const data = await fetchJsonPerm(transList[key].url);
 
-    transData[key] = response.data;
+    transData[key] = data;
   }
 
   return transData;

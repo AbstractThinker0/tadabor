@@ -23,7 +23,6 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "^2.1.0",
-    "axios": "^1.7.5",
     "dexie": "^4.0.7",
     "framer-motion": "^11.3.30",
     "i18next": "^23.0.1",
@@ -47,7 +46,6 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "sass": "^1.68.0",
     "typescript": "^5.0.2",
     "vite": "^4.5.2"
   }
