@@ -23,6 +23,8 @@ import {
   HStack,
   Heading,
   Tag,
+  TagCloseButton,
+  TagLabel,
   Text,
   Tooltip,
   useBoolean,
@@ -154,27 +156,43 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
     "search_result"
   )} ${searchType} "${searchingString}" ${searchScopeText}`;
 
-  const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
-    return (
-      <HStack py={1} wrap={"wrap"}>
-        {searchChapters.map((chapterName, index) => (
-          <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
-            {chapterName}
-          </Tag>
-        ))}
-      </HStack>
-    );
-  };
-
   return (
     <div dir="auto">
       <Heading pb={3} size="xl" color="blue.600">
         {searchText}
       </Heading>
       {searchChapters.length !== 114 && (
-        <ChaptersList searchChapters={searchChapters} />
+        <ChaptersTags searchChapters={searchChapters} />
       )}
     </div>
+  );
+};
+
+const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
+  const quranService = useQuran();
+  const dispatch = useAppDispatch();
+
+  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+
+  const onClickClose = (chapterID: string) => {
+    dispatch(qbPageActions.toggleSelectChapter(Number(chapterID)));
+
+    if (searchMethod === SEARCH_METHOD.ROOT) {
+      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+    } else {
+      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
+    }
+  };
+
+  return (
+    <HStack py={1} wrap={"wrap"}>
+      {searchChapters.map((chapterID, index) => (
+        <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
+          <TagLabel>{quranService.getChapterName(chapterID)}</TagLabel>
+          <TagCloseButton onClick={() => onClickClose(chapterID)} />
+        </Tag>
+      ))}
+    </HStack>
   );
 };
 
