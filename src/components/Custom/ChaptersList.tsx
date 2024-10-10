@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 import { Box, Input } from "@chakra-ui/react";
@@ -15,33 +15,40 @@ const ChaptersList = ({
   const quranService = useQuran();
   const [chapterSearch, setChapterSearch] = useState("");
 
-  const refChaptersList = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const parent = refChaptersList.current;
-
-    if (!parent) return;
-
-    const selectedChapter = parent.querySelector<HTMLDivElement>(
-      `[data-id="${selectChapter}"]`
+  const filteredChapters = useMemo(() => {
+    return quranService.chapterNames.filter((chapter) =>
+      chapter.name.includes(chapterSearch)
     );
+  }, [chapterSearch]);
 
-    if (!selectedChapter) return;
+  // Callback ref to handle the scroll behavior when the selected chapter changes
+  const handleChapterListRef = useCallback(
+    (parent: HTMLDivElement | null) => {
+      if (!parent) return;
 
-    const parentOffsetTop = parent.offsetTop;
+      const selectedChapter = parent.querySelector<HTMLDivElement>(
+        `[data-id="${selectChapter}"]`
+      );
 
-    if (
-      parent.scrollTop + parentOffsetTop <
-        selectedChapter.offsetTop -
-          parent.clientHeight +
-          selectedChapter.clientHeight * 1.7 ||
-      parent.scrollTop + parentOffsetTop >
-        selectedChapter.offsetTop - selectedChapter.clientHeight * 1.1
-    ) {
-      parent.scrollTop =
-        selectedChapter.offsetTop - parentOffsetTop - parent.clientHeight / 2;
-    }
-  });
+      if (!selectedChapter) return;
+
+      const parentOffsetTop = parent.offsetTop;
+
+      const isOutOfView =
+        parent.scrollTop + parentOffsetTop <
+          selectedChapter.offsetTop -
+            parent.clientHeight +
+            selectedChapter.clientHeight * 1.7 ||
+        parent.scrollTop + parentOffsetTop >
+          selectedChapter.offsetTop - selectedChapter.clientHeight * 1.1;
+
+      if (isOutOfView) {
+        parent.scrollTop =
+          selectedChapter.offsetTop - parentOffsetTop - parent.clientHeight / 2;
+      }
+    },
+    [selectChapter, filteredChapters]
+  );
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChapterSearch(event.target.value);
@@ -72,26 +79,24 @@ const ChaptersList = ({
         border="1px solid gainsboro"
         overflowY="scroll"
         padding="2px"
-        ref={refChaptersList}
+        ref={handleChapterListRef}
       >
-        {quranService.chapterNames
-          .filter((chapter) => chapter.name.includes(chapterSearch))
-          .map((chapter) => (
-            <Box
-              key={chapter.id}
-              px="14px"
-              cursor="pointer"
-              data-id={chapter.id}
-              aria-selected={Number(selectChapter) === chapter.id}
-              _selected={{
-                color: "white",
-                bgColor: "#767676",
-              }}
-              onClick={() => onClickChapter(chapter.id)}
-            >
-              {chapter.id}. {chapter.name}
-            </Box>
-          ))}
+        {filteredChapters.map((chapter) => (
+          <Box
+            key={chapter.id}
+            px="14px"
+            cursor="pointer"
+            data-id={chapter.id}
+            aria-selected={Number(selectChapter) === chapter.id}
+            _selected={{
+              color: "white",
+              bgColor: "#767676",
+            }}
+            onClick={() => onClickChapter(chapter.id)}
+          >
+            {chapter.id}. {chapter.name}
+          </Box>
+        ))}
       </Box>
     </Box>
   );
