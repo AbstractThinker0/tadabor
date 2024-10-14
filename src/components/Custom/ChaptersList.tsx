@@ -32,19 +32,19 @@ const ChaptersList = ({
 
       if (!selectedChapter) return;
 
-      const parentOffsetTop = parent.offsetTop;
-
       const isOutOfView =
-        parent.scrollTop + parentOffsetTop <
+        parent.scrollTop + parent.offsetTop <
           selectedChapter.offsetTop -
             parent.clientHeight +
             selectedChapter.clientHeight * 1.7 ||
-        parent.scrollTop + parentOffsetTop >
+        parent.scrollTop + parent.offsetTop >
           selectedChapter.offsetTop - selectedChapter.clientHeight * 1.1;
 
       if (isOutOfView) {
         parent.scrollTop =
-          selectedChapter.offsetTop - parentOffsetTop - parent.clientHeight / 2;
+          selectedChapter.offsetTop -
+          parent.offsetTop -
+          parent.clientHeight / 2;
       }
     },
     [selectChapter, filteredChapters]

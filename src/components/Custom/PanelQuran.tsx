@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useCallback, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -23,9 +23,7 @@ interface PanelQuranProps {
 
 const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
   const quranService = useQuran();
-  const verseInfo = verseKey.split("-");
-
-  const refListVerses = useRef<HTMLDivElement>(null);
+  const suraID = verseKey.split("-")[0];
 
   const [isPending, startTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -35,28 +33,28 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
     if (!verseKey) return;
 
     startTransition(() => {
-      setStateVerses(quranService.getVerses(verseInfo[0]));
+      setStateVerses(quranService.getVerses(suraID));
     });
   }, [verseKey]);
 
-  useEffect(() => {
-    if (!scrollKey) return;
+  // Handling scroll by using a callback ref
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-    if (!refListVerses.current) return;
-
-    const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${scrollKey}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    setTimeout(() => {
-      verseToHighlight.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    });
-  }, [scrollKey, isPending]);
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [scrollKey, isPending]
+  );
 
   const onClickVerseSuffix = (key: string) => {
     if (scrollKey === key) {
@@ -76,11 +74,11 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       overflowY={"scroll"}
       maxH={"100%"}
       height={"100%"}
-      ref={refListVerses}
+      ref={handleVerseListRef}
       dir="rtl"
     >
       <Heading textAlign={"center"} color="blue.600">
-        سورة {quranService.getChapterName(verseInfo[0])}
+        سورة {quranService.getChapterName(suraID)}
       </Heading>
       {isPending || isVNotesLoading ? (
         <LoadingSpinner />

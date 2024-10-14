@@ -78,7 +78,8 @@ const AboutEnglish = () => {
               </ListItem>
 
               <ListItem>
-                Initial roots compilation extracted from Zekr Project (zekr.org)
+                Initial quran roots compilation extracted from Zekr Project
+                (zekr.org)
               </ListItem>
             </UnorderedList>
             <Heading>Future project:</Heading>

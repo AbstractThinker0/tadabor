@@ -23,7 +23,7 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     document.dir = direction;
-  }, [i18n.resolvedLanguage, i18n]);
+  }, [i18n.resolvedLanguage]);
 
   return (
     <ChakraProvider>
