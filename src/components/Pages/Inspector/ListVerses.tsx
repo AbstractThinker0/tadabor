@@ -1,8 +1,8 @@
 import {
   Fragment,
   memo,
+  useCallback,
   useEffect,
-  useRef,
   useState,
   useTransition,
 } from "react";
@@ -61,30 +61,27 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
     });
   }, [currentChapter]);
 
-  const refList = useRef<HTMLDivElement>(null);
+  // Handling scroll by using a callback ref
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-  // Reset scroll whenever we switch from one chapter to another
-  useEffect(() => {
-    if (!refList.current) return;
-
-    if (!scrollKey) return;
-
-    const verseToHighlight = refList.current.querySelector(
-      `[data-id="${scrollKey}"]`
-    );
-
-    if (verseToHighlight) {
-      setTimeout(() => {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      });
-    }
-  }, [scrollKey, isPending]);
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [scrollKey, isPending]
+  );
 
   return (
-    <CardBody ref={refList} dir="rtl">
+    <CardBody ref={handleVerseListRef} dir="rtl">
       {isPending ? (
         <LoadingSpinner />
       ) : (
@@ -174,7 +171,6 @@ const VerseWords = ({
               aria-selected={selectedWord === index + 1}
               _selected={{
                 bgColor: "rgb(255, 212, 159)",
-                _hover: { bgColor: "rgb(255, 212, 159)" },
               }}
               onClick={() => onClickWord(index + 1)}
             >
@@ -239,7 +235,6 @@ const RootOccurences = ({
   isOccurencesOpen,
 }: RootOccurencesProps) => {
   const [itemsCount, setItemsCount] = useState(20);
-  const refCollapse = useRef<HTMLDivElement>(null);
   const [scrollKey, setScrollKey] = useState("");
 
   const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
@@ -299,25 +294,27 @@ const RootOccurences = ({
     setScrollKey(verseKey);
   };
 
-  useEffect(() => {
-    if (!scrollKey) return;
+  // Handling scroll by using a callback ref
+  const handleCollapseRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-child-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-    if (!refCollapse.current) return;
-
-    const verseToHighlight = refCollapse.current.querySelector(
-      `[data-child-id="${scrollKey}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [scrollKey]);
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [scrollKey]
+  );
 
   return (
-    <AccordionPanel pb={4} ref={refCollapse}>
+    <AccordionPanel pb={4} ref={handleCollapseRef}>
       <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
         <DerivationsComponent
           searchIndexes={derivations}

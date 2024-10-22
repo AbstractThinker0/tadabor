@@ -1,4 +1,4 @@
-import { useEffect, memo, useRef, useTransition, useState } from "react";
+import { useEffect, memo, useTransition, useState, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
 import { verseProps } from "@/types";
@@ -278,24 +278,24 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const refListVerse = useRef<HTMLDivElement>(null);
+  // Handling scroll by using a callback ref
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-  useEffect(() => {
-    if (!scrollKey || !refListVerse.current) return;
-
-    const verseToHighlight = refListVerse.current.querySelector(
-      `[data-id="${scrollKey}"]`
-    );
-
-    setTimeout(() => {
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
       }
-    });
-  }, [scrollKey, isPending]);
+    },
+    [scrollKey, isPending]
+  );
 
   useEffect(() => {
     //
@@ -316,7 +316,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
       >
         سورة {quranService.getChapterName(currentChapter)}
       </CardHeader>
-      <div ref={refListVerse}>
+      <div ref={handleVerseListRef}>
         {stateVerses.map((verse) => (
           <Box
             p={"5px"}

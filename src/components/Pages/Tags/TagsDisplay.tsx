@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useTransition } from "react";
+import { memo, useCallback, useEffect, useState, useTransition } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
@@ -258,26 +258,30 @@ const ListVerses = memo(
 
     const [isPending, startTransition] = useTransition();
 
-    const listRef = useRef<HTMLDivElement>(null);
-
     const currentChapter = useAppSelector(
       (state) => state.tagsPage.currentChapter
     );
 
     const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
 
-    useEffect(() => {
-      const verseToHighlight = scrollKey
-        ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
-        : null;
+    // Handling scroll by using a callback ref
+    const handleVerseListRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        if (node && scrollKey) {
+          const verseToHighlight = node.querySelector(
+            `[data-id="${scrollKey}"]`
+          ) as HTMLDivElement;
 
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, [scrollKey, isPending]);
+          if (verseToHighlight) {
+            verseToHighlight.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }
+      },
+      [scrollKey, isPending]
+    );
 
     useEffect(() => {
       //
@@ -298,7 +302,7 @@ const ListVerses = memo(
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
-        <CardBody bgColor={"#f7fafc"} pt={0} ref={listRef}>
+        <CardBody bgColor={"#f7fafc"} pt={0} ref={handleVerseListRef}>
           {isPending ? (
             <LoadingSpinner />
           ) : (

@@ -1,11 +1,4 @@
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { memo, useCallback, useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -244,7 +237,6 @@ const RootOccurences = ({
   const quranService = useQuran();
 
   const [itemsCount, setItemsCount] = useState(20);
-  const refOccurences = useRef<HTMLDivElement>(null);
   const [scrollKey, setScrollKey] = useState("");
 
   const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
@@ -301,22 +293,24 @@ const RootOccurences = ({
     setScrollKey(verseKey);
   };
 
-  useEffect(() => {
-    if (!scrollKey) return;
+  // Handling scroll by using a callback ref
+  const handleOccurencesRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-child-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-    if (!refOccurences.current) return;
-
-    const verseToHighlight = refOccurences.current.querySelector(
-      `[data-child-id="${scrollKey}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [scrollKey]);
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [scrollKey]
+  );
 
   return (
     <Collapse in={isOccurencesOpen}>
@@ -327,7 +321,7 @@ const RootOccurences = ({
         overflowY={"scroll"}
         onScroll={onScrollOccs}
         dir="rtl"
-        ref={refOccurences}
+        ref={handleOccurencesRef}
       >
         <DerivationsComponent
           searchIndexes={derivations}

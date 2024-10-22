@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
@@ -29,36 +29,8 @@ const Display = ({
   handleSelectVerse,
 }: DisplayProps) => {
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
-
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    startTransition(() => {
-      setStateVerses(chapterVerses);
-    });
-  }, [chapterVerses]);
-
-  useEffect(() => {
-    if (isPending) return;
-
-    if (!refListVerses.current) return;
-
-    if (!currentVerse) return;
-
-    const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${currentVerse}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [isPending]);
-
   const quranService = useQuran();
-  const refListVerses = useRef<HTMLDivElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   const onClickVerse = (verseKey: string) => {
     const verseToSelect = currentVerse === verseKey ? "" : verseKey;
@@ -66,21 +38,29 @@ const Display = ({
   };
 
   useEffect(() => {
-    if (!refListVerses.current) return;
-
-    if (!currentVerse) return;
-
-    const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${currentVerse}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+    startTransition(() => {
+      setStateVerses(chapterVerses);
     });
-  }, [currentVerse]);
+  }, [chapterVerses]);
+
+  // Handling scroll by using a callback ref
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && currentVerse) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${currentVerse}"]`
+        ) as HTMLDivElement;
+
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [currentVerse, isPending]
+  );
 
   return (
     <Box bgColor={"#f7fafc"} px={5}>
@@ -92,7 +72,7 @@ const Display = ({
       >
         سورة {quranService.getChapterName(currentChapter)}
       </Box>
-      <Box ref={refListVerses}>
+      <Box ref={handleVerseListRef}>
         {isPending ? (
           <LoadingSpinner />
         ) : (

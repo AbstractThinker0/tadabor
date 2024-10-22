@@ -1,4 +1,4 @@
-import { useRef, useState, useTransition, useEffect } from "react";
+import { useRef, useState, useTransition, useEffect, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -25,7 +25,6 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
   const scrollKey = useAppSelector((state) => state.translationPage.scrollKey);
 
   const refDisplay = useRef<HTMLDivElement>(null);
-  const refListVerses = useRef<HTMLDivElement>(null);
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
@@ -41,22 +40,34 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     refDisplay.current.scrollTop = 0;
   }, [selectChapter]);
 
-  useEffect(() => {
-    if (!scrollKey) return;
+  // Handling scroll by using a callback ref with MutationObserver
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${scrollKey}"]`
+        ) as HTMLDivElement;
 
-    if (!refListVerses.current) return;
+        if (verseToHighlight) {
+          // using this observer method because otherwise the scroll stops too early
+          const observer = new MutationObserver(() => {
+            verseToHighlight.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            observer.disconnect(); // Stop observing once the scroll is done
+          });
 
-    const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${scrollKey}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [scrollKey, isPending]);
+          observer.observe(verseToHighlight, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+          });
+        }
+      }
+    },
+    [scrollKey, isPending]
+  );
 
   return (
     <Box
@@ -83,7 +94,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           p={1}
           border={"1px solid gainsboro"}
           backgroundColor={"#f7fafc"}
-          ref={refListVerses}
+          ref={handleVerseListRef}
         >
           {isPending ? (
             <LoadingSpinner />
