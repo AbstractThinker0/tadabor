@@ -20,6 +20,9 @@ import {
   Card,
   CardHeader,
   Flex,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   Text,
   useBoolean,
   useDisclosure,
@@ -97,31 +100,24 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
         <Flex flexWrap={"wrap"} gap={"5px"}>
           <Box fontWeight={"bold"}>Selected colors:</Box>
           {Object.keys(selectedColors).map((colorID) => (
-            <Flex
+            <Tag
               key={colorID}
-              justify={"space-between"}
               maxW={"120px"}
-              px={"5px"}
-              borderRadius={3}
               backgroundColor={selectedColors[colorID].colorCode}
               color={getTextColor(selectedColors[colorID].colorCode)}
+              size="lg"
+              variant={"solid"}
             >
-              <div></div>
-              <Box
+              <TagLabel
                 maxW={"500px"}
                 overflowY={"hidden"}
                 overflowWrap={"break-word"}
+                display={"initial"}
               >
                 {selectedColors[colorID].colorDisplay}
-              </Box>
-              <Box
-                cursor={"pointer"}
-                px={"3px"}
-                onClick={() => onClickDeleteSelected(colorID)}
-              >
-                X
-              </Box>
-            </Flex>
+              </TagLabel>
+              <TagCloseButton onClick={() => onClickDeleteSelected(colorID)} />
+            </Tag>
           ))}
         </Flex>
         <Flex pt={"2px"} gap={"5px"} flexWrap={"wrap"}>
