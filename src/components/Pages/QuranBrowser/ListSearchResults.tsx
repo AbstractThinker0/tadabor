@@ -158,7 +158,7 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   return (
     <div dir="auto">
-      <Heading pb={3} size="xl" color="blue.600">
+      <Heading pb={3} size="lg" color="blue.600">
         {searchText}
       </Heading>
       {searchChapters.length !== 114 && (
