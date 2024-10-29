@@ -12,7 +12,7 @@ import AlertMessage from "@/components/Layout/AlertMessage";
 
 import { Flex, ChakraProvider } from "@chakra-ui/react";
 
-import "@/styles/main.scss";
+import "@/styles/main.css";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
