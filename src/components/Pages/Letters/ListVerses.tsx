@@ -89,166 +89,6 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
 
 VerseItem.displayName = "VerseItem";
 
-interface LetterBoxProps {
-  isOpen: boolean;
-  verseKey: string;
-  selectedLetter: string;
-  verseLetterData: LetterDataType;
-}
-
-const LetterBox = ({
-  isOpen,
-  verseKey,
-  selectedLetter,
-  verseLetterData,
-}: LetterBoxProps) => {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const quranService = useQuran();
-
-  const lettersDefinitions = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions
-  );
-
-  const letterPresets = useAppSelector(
-    (state) => state.lettersPage.letterPresets
-  );
-
-  const [letterRole, setLetterRole] = useState<LetterRole>(
-    verseLetterData.letter_role
-  );
-
-  const [letterDefinitionID, setLetterDefinitionID] = useState(
-    verseLetterData.def_id
-  );
-
-  const onChangeSelectRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setLetterRole(Number(event.target.value));
-  };
-
-  const onChangeSelectDef = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setLetterDefinitionID(event.target.value);
-  };
-
-  const onClickSave = () => {
-    dbFuncs
-      .saveLetterData({
-        letter_key: `${verseKey}:${selectedLetter}`,
-        letter_role: letterRole,
-        def_id: letterDefinitionID,
-      })
-      .then(() => {
-        toast.success(t("save_success"));
-      })
-      .catch(() => {
-        toast.error(t("save_failed"));
-      });
-
-    dispatch(
-      lettersPageActions.setLetterData({
-        letter: `${verseKey}:${selectedLetter}`,
-        role: letterRole,
-        def_id: letterDefinitionID,
-      })
-    );
-  };
-
-  useEffect(() => {
-    setLetterRole(verseLetterData.letter_role);
-  }, [selectedLetter, verseLetterData.letter_role]);
-
-  useEffect(() => {
-    setLetterDefinitionID(verseLetterData.def_id);
-  }, [selectedLetter, verseLetterData.def_id]);
-
-  const renderLetterDefinitionOptions = () => {
-    const letter = selectedLetter
-      ? quranService.getLetterByKey(verseKey, selectedLetter)
-      : "";
-
-    const normalizedLetter = normalizeAlif(letter, false, true);
-
-    const letterDefinition = lettersDefinitions[normalizedLetter];
-
-    return (
-      <>
-        {letterDefinition ? (
-          <option value="-1">{letterDefinition.definition}</option>
-        ) : (
-          <></>
-        )}
-        <>
-          {Object.keys(letterPresets).map((presetID) => {
-            const defKey = `${normalizedLetter}:${presetID}`;
-
-            const letterDef = lettersDefinitions[defKey];
-            return (
-              <Fragment key={defKey}>
-                {letterDef ? (
-                  <option value={defKey}>{letterDef.definition}</option>
-                ) : (
-                  <></>
-                )}
-              </Fragment>
-            );
-          })}
-        </>
-      </>
-    );
-  };
-
-  return (
-    <Collapse in={isOpen}>
-      <Box
-        marginTop={"6px"}
-        border={"1px solid rgba(0, 0, 0, .175)"}
-        borderRadius={"0.375rem"}
-        padding={2}
-        bgColor={"white"}
-        dir="ltr"
-      >
-        <Flex flexDir={"column"} gap={"0.5rem"}>
-          <Flex>
-            <span>Type:</span>
-            <Select
-              aria-label="Select"
-              value={letterRole}
-              onChange={onChangeSelectRole}
-            >
-              <option value={LetterRole.Unit}>Unit</option>
-              <option value={LetterRole.Suffix}>Suffix</option>
-              <option value={LetterRole.Ignored}>Unused</option>
-            </Select>
-          </Flex>
-          <Flex>
-            <span>Definition:</span>
-            <Select
-              aria-label="Select"
-              value={letterDefinitionID}
-              onChange={onChangeSelectDef}
-            >
-              <option value="">None</option>
-              {renderLetterDefinitionOptions()}
-            </Select>
-          </Flex>
-          <Button
-            colorScheme="blue"
-            alignSelf={"center"}
-            width={"5rem"}
-            fontWeight={"normal"}
-            onClick={onClickSave}
-          >
-            Save
-          </Button>
-        </Flex>
-      </Box>
-    </Collapse>
-  );
-};
-
-LetterBox.displayName = "LetterBox";
-
 interface VerseWordsProps {
   verse: verseProps;
 }
@@ -488,5 +328,165 @@ const WordBox = ({
 };
 
 WordBox.displayName = "WordBox";
+
+interface LetterBoxProps {
+  isOpen: boolean;
+  verseKey: string;
+  selectedLetter: string;
+  verseLetterData: LetterDataType;
+}
+
+const LetterBox = ({
+  isOpen,
+  verseKey,
+  selectedLetter,
+  verseLetterData,
+}: LetterBoxProps) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const quranService = useQuran();
+
+  const lettersDefinitions = useAppSelector(
+    (state) => state.lettersPage.lettersDefinitions
+  );
+
+  const letterPresets = useAppSelector(
+    (state) => state.lettersPage.letterPresets
+  );
+
+  const [letterRole, setLetterRole] = useState<LetterRole>(
+    verseLetterData.letter_role
+  );
+
+  const [letterDefinitionID, setLetterDefinitionID] = useState(
+    verseLetterData.def_id
+  );
+
+  const onChangeSelectRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLetterRole(Number(event.target.value));
+  };
+
+  const onChangeSelectDef = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLetterDefinitionID(event.target.value);
+  };
+
+  const onClickSave = () => {
+    dbFuncs
+      .saveLetterData({
+        letter_key: `${verseKey}:${selectedLetter}`,
+        letter_role: letterRole,
+        def_id: letterDefinitionID,
+      })
+      .then(() => {
+        toast.success(t("save_success"));
+      })
+      .catch(() => {
+        toast.error(t("save_failed"));
+      });
+
+    dispatch(
+      lettersPageActions.setLetterData({
+        letter: `${verseKey}:${selectedLetter}`,
+        role: letterRole,
+        def_id: letterDefinitionID,
+      })
+    );
+  };
+
+  useEffect(() => {
+    setLetterRole(verseLetterData.letter_role);
+  }, [selectedLetter, verseLetterData.letter_role]);
+
+  useEffect(() => {
+    setLetterDefinitionID(verseLetterData.def_id);
+  }, [selectedLetter, verseLetterData.def_id]);
+
+  const renderLetterDefinitionOptions = () => {
+    const letter = selectedLetter
+      ? quranService.getLetterByKey(verseKey, selectedLetter)
+      : "";
+
+    const normalizedLetter = normalizeAlif(letter, false, true);
+
+    const letterDefinition = lettersDefinitions[normalizedLetter];
+
+    return (
+      <>
+        {letterDefinition ? (
+          <option value="-1">{letterDefinition.definition}</option>
+        ) : (
+          <></>
+        )}
+        <>
+          {Object.keys(letterPresets).map((presetID) => {
+            const defKey = `${normalizedLetter}:${presetID}`;
+
+            const letterDef = lettersDefinitions[defKey];
+            return (
+              <Fragment key={defKey}>
+                {letterDef ? (
+                  <option value={defKey}>{letterDef.definition}</option>
+                ) : (
+                  <></>
+                )}
+              </Fragment>
+            );
+          })}
+        </>
+      </>
+    );
+  };
+
+  return (
+    <Collapse in={isOpen}>
+      <Box
+        marginTop={"6px"}
+        border={"1px solid rgba(0, 0, 0, .175)"}
+        borderRadius={"0.375rem"}
+        padding={2}
+        bgColor={"white"}
+        dir="ltr"
+      >
+        <Flex flexDir={"column"} gap={"0.5rem"}>
+          <Flex>
+            <span>Type:</span>
+            <Select
+              aria-label="Select"
+              value={letterRole}
+              onChange={onChangeSelectRole}
+            >
+              <option value={LetterRole.Unit}>Unit</option>
+              <option value={LetterRole.Suffix}>Suffix</option>
+              <option value={LetterRole.Ignored}>Unused</option>
+            </Select>
+          </Flex>
+          <Flex>
+            <span>Definition:</span>
+            <Select
+              aria-label="Select"
+              value={letterDefinitionID}
+              onChange={onChangeSelectDef}
+            >
+              <option value="">None</option>
+              {renderLetterDefinitionOptions()}
+            </Select>
+          </Flex>
+          <Button
+            colorScheme="blue"
+            alignSelf={"center"}
+            width={"5rem"}
+            fontWeight={"normal"}
+            onClick={onClickSave}
+          >
+            Save
+          </Button>
+        </Flex>
+      </Box>
+    </Collapse>
+  );
+};
+
+LetterBox.displayName = "LetterBox";
 
 export default ListVerses;
