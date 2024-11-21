@@ -12,7 +12,14 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { Box, Flex, useBoolean } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  useBoolean,
+} from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 const SearcherDisplay = () => {
@@ -40,6 +47,7 @@ const SearcherDisplay = () => {
             key={root_id}
             root_name={search_roots[root_id].name}
             root_id={root_id}
+            derCount={search_roots[root_id].count}
           />
         ))}
       </Flex>
@@ -58,9 +66,10 @@ const SearcherDisplay = () => {
 interface RootItemProps {
   root_name: string;
   root_id: string;
+  derCount: string;
 }
 
-const RootItem = ({ root_name, root_id }: RootItemProps) => {
+const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
   const dispatch = useAppDispatch();
 
   const onClickRemove = (root_id: string) => {
@@ -68,25 +77,12 @@ const RootItem = ({ root_name, root_id }: RootItemProps) => {
   };
 
   return (
-    <Flex
-      justify={"center"}
-      minW={"2rem"}
-      bgColor={"#0ee485"}
-      borderRadius={"0.75rem"}
-    >
-      <Flex justify={"center"} minW={"2rem"} px={"4px"}>
-        {root_name}
-      </Flex>
-      <Flex
-        justify={"center"}
-        minW={"1.5rem"}
-        borderInlineStart={"1px solid #dee2e6"}
-        cursor={"pointer"}
-        onClick={() => onClickRemove(root_id)}
-      >
-        ❌
-      </Flex>
-    </Flex>
+    <Tag colorScheme="green" size="lg" variant={"solid"}>
+      <TagLabel overflow={"visible"}>
+        {root_name} ({derCount})
+      </TagLabel>
+      <TagCloseButton onClick={() => onClickRemove(root_id)} />
+    </Tag>
   );
 };
 

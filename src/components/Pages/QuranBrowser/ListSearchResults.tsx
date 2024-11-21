@@ -188,7 +188,9 @@ const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
     <HStack py={1} wrap={"wrap"}>
       {searchChapters.map((chapterID, index) => (
         <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
-          <TagLabel>{quranService.getChapterName(chapterID)}</TagLabel>
+          <TagLabel overflow={"visible"}>
+            {quranService.getChapterName(chapterID)}
+          </TagLabel>
           <TagCloseButton onClick={() => onClickClose(chapterID)} />
         </Tag>
       ))}

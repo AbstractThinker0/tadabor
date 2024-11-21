@@ -120,7 +120,7 @@ function TagsDisplay() {
                       variant={"solid"}
                       key={index}
                     >
-                      <TagLabel>
+                      <TagLabel overflow={"visible"}>
                         {quranService.getChapterName(chapterID)}
                       </TagLabel>
                       <TagCloseButton
