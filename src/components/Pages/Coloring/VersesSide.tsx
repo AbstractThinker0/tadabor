@@ -94,6 +94,10 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
     return Object.fromEntries(filtered);
   };
 
+  const onClickCloseChapter = (chapterID: string) => {
+    dispatch(coloringPageActions.toggleSelectChapter(Number(chapterID)));
+  };
+
   return (
     <>
       <Box pt={"2px"} pb={"5px"} dir="ltr">
@@ -127,15 +131,13 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
           ) : chaptersScope.length === 0 ? (
             <Box fontWeight={"bold"}>No chapters selected.</Box>
           ) : (
-            chaptersScope.map((chapterID) => (
-              <Box
-                bgColor={"beige"}
-                p={1}
-                borderRadius={"0.3rem"}
-                key={chapterID}
-              >
-                {quranService.getChapterName(chapterID)}
-              </Box>
+            chaptersScope.map((chapterID, index) => (
+              <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
+                <TagLabel>{quranService.getChapterName(chapterID)}</TagLabel>
+                <TagCloseButton
+                  onClick={() => onClickCloseChapter(chapterID)}
+                />
+              </Tag>
             ))
           )}
         </Flex>
