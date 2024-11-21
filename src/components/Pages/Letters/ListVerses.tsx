@@ -148,11 +148,8 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               border={"none"}
               borderRadius={"5px"}
               cursor={"pointer"}
-              bgColor={
-                `${verse.key}:${wordIndex}` === selectedWord
-                  ? "rgb(159, 159, 205)"
-                  : undefined
-              }
+              aria-selected={`${verse.key}:${wordIndex}` === selectedWord}
+              _selected={{ bgColor: "rgb(159, 159, 205)" }}
               _hover={{ bgColor: "rgb(159, 159, 205)" }}
               onClick={() => handleClickWord(`${verse.key}:${wordIndex}`)}
             >
