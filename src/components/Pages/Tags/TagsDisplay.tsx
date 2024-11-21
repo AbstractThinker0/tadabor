@@ -21,6 +21,9 @@ import {
   CardBody,
   CardHeader,
   Flex,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -60,6 +63,10 @@ function TagsDisplay() {
     });
 
     return Object.fromEntries(filtered);
+  };
+
+  const onClickCloseChapter = (chapterID: string) => {
+    dispatch(tagsPageActions.toggleSelectChapter(Number(chapterID)));
   };
 
   return (
@@ -106,15 +113,20 @@ function TagsDisplay() {
                 ) : chaptersScope.length === 0 ? (
                   <Box fontWeight={"bold"}>No chapters selected.</Box>
                 ) : (
-                  chaptersScope.map((chapterID) => (
-                    <Box
-                      p={"2px"}
-                      borderRadius={"0.3rem"}
-                      bgColor={"beige"}
-                      key={chapterID}
+                  chaptersScope.map((chapterID, index) => (
+                    <Tag
+                      colorScheme="green"
+                      size="lg"
+                      variant={"solid"}
+                      key={index}
                     >
-                      {quranService.getChapterName(chapterID)}
-                    </Box>
+                      <TagLabel>
+                        {quranService.getChapterName(chapterID)}
+                      </TagLabel>
+                      <TagCloseButton
+                        onClick={() => onClickCloseChapter(chapterID)}
+                      />
+                    </Tag>
                   ))
                 )}
               </Flex>
