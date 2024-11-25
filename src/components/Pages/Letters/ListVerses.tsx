@@ -30,6 +30,7 @@ import {
   Select,
   useBoolean,
   Collapse,
+  Checkbox,
 } from "@chakra-ui/react";
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
@@ -97,6 +98,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   const dispatch = useAppDispatch();
 
   const [isOpenWordBox, setOpenWordBox] = useBoolean();
+  const [isSpace, setSpace] = useState(false);
 
   const [selectedLetter, setSelectedLetter] = useState("");
   const [selectedWord, setSelectedWord] = useState(-1);
@@ -144,6 +146,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               key={wordIndex}
               as="span"
               my={"1px"}
+              me={isSpace === true ? "4px" : undefined}
               py={"5px"}
               px={"8px"}
               border={"none"}
@@ -155,13 +158,15 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               onClick={() => handleClickWord(wordIndex)}
             >
               {splitArabicLetters(word).map((letter, letterIndex) => (
-                <SingleLetter
-                  key={letterIndex}
-                  letter={letter}
-                  letterKey={`${wordIndex}-${letterIndex}`}
-                  selectedLetter={selectedLetter}
-                  handleClickLetter={handleClickLetter}
-                />
+                <Fragment key={letterIndex}>
+                  <SingleLetter
+                    letter={letter}
+                    letterKey={`${wordIndex}-${letterIndex}`}
+                    selectedLetter={selectedLetter}
+                    handleClickLetter={handleClickLetter}
+                  />
+                  {isSpace === true ? " " : ""}
+                </Fragment>
               ))}
             </Box>{" "}
           </Fragment>
@@ -169,6 +174,12 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
         <ButtonVerse onClick={() => onClickVerseID(verse.key)}>
           ({verse.verseid})
         </ButtonVerse>
+        <Flex ps={1} pt={2}>
+          <Checkbox
+            checked={isSpace}
+            onChange={() => setSpace((prev) => !prev)}
+          />
+        </Flex>
       </VerseContainer>
       <InfoBox
         isOpen={isOpenWordBox}
