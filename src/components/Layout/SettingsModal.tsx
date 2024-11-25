@@ -133,7 +133,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 borderRadius="0.75rem"
                 padding={2}
               >
-                <VerseContainer>
+                <VerseContainer fontFamily={`"Scheherazade New", serif`}>
                   وَلَتَعْلَمُنَّ نَبَأَهُ بَعْدَ حِينٍ (ص:88)
                 </VerseContainer>
               </Box>
@@ -159,6 +159,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 backgroundColor={"rgb(201, 201, 201)"}
                 borderRadius="0.75rem"
                 padding={2}
+                fontFamily={`"Scheherazade New", serif`}
               >
                 <span style={{ fontSize: `${notesFS}rem` }}>
                   Note example - مثال كتابة
