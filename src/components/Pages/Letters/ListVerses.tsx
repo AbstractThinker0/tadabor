@@ -97,10 +97,9 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   const dispatch = useAppDispatch();
 
   const [isOpenWordBox, setOpenWordBox] = useBoolean();
-  const [isOpenLetterBox, setOpenLetterBox] = useBoolean();
 
   const [selectedLetter, setSelectedLetter] = useState("");
-  const [selectedWord, setSelectedWord] = useState("");
+  const [selectedWord, setSelectedWord] = useState(-1);
 
   const verseLetterData = useAppSelector(
     (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
@@ -111,23 +110,25 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   };
 
   const handleClickLetter = (letterKey: string) => {
-    if (selectedLetter === letterKey) {
-      setOpenLetterBox.off();
-    } else {
-      setOpenLetterBox.on();
+    setOpenWordBox.on();
+
+    if (letterKey) {
+      const wordIndex = letterKey.split("-")[0];
+      setSelectedWord(Number(wordIndex));
     }
 
     setSelectedLetter(selectedLetter === letterKey ? "" : letterKey);
   };
 
-  const handleClickWord = (wordKey: string) => {
-    if (selectedWord === wordKey) {
+  const handleClickWord = (wordIndex: number) => {
+    if (selectedWord === wordIndex) {
       setOpenWordBox.off();
     } else {
       setOpenWordBox.on();
     }
 
-    setSelectedWord(selectedWord === wordKey ? "" : wordKey);
+    setSelectedWord(selectedWord === wordIndex ? -1 : wordIndex);
+    setSelectedLetter("");
   };
 
   const onClickVerseID = (verseKey: string) => {
@@ -148,10 +149,10 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               border={"none"}
               borderRadius={"5px"}
               cursor={"pointer"}
-              aria-selected={`${verse.key}:${wordIndex}` === selectedWord}
+              aria-selected={wordIndex === selectedWord}
               _selected={{ bgColor: "rgb(159, 159, 205)" }}
               _hover={{ bgColor: "rgb(159, 159, 205)" }}
-              onClick={() => handleClickWord(`${verse.key}:${wordIndex}`)}
+              onClick={() => handleClickWord(wordIndex)}
             >
               {splitArabicLetters(word).map((letter, letterIndex) => (
                 <SingleLetter
@@ -169,15 +170,11 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
           ({verse.verseid})
         </ButtonVerse>
       </VerseContainer>
-      <WordBox
+      <InfoBox
         isOpen={isOpenWordBox}
         verseKey={verse.key}
         verseText={verse.versetext}
         selectedWord={selectedWord}
-      ></WordBox>
-      <LetterBox
-        isOpen={isOpenLetterBox}
-        verseKey={verse.key}
         selectedLetter={selectedLetter}
         verseLetterData={verseLetterData}
       />
@@ -217,19 +214,40 @@ const SingleLetter = ({
   );
 };
 
-interface WordBoxProps {
+interface InfoBoxProps {
   isOpen: boolean;
   verseKey: string;
   verseText: string;
-  selectedWord: string;
+  selectedWord: number;
+  selectedLetter: string;
+  verseLetterData: LetterDataType;
 }
 
-const WordBox = ({
+const InfoBox = ({
   isOpen,
   verseKey,
   verseText,
   selectedWord,
-}: WordBoxProps) => {
+  selectedLetter,
+  verseLetterData,
+}: InfoBoxProps) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const quranService = useQuran();
+
+  const letterPresets = useAppSelector(
+    (state) => state.lettersPage.letterPresets
+  );
+
+  const [letterRole, setLetterRole] = useState<LetterRole>(
+    verseLetterData.letter_role
+  );
+
+  const [letterDefinitionID, setLetterDefinitionID] = useState(
+    verseLetterData.def_id
+  );
+
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   const verseLettersData =
@@ -238,8 +256,6 @@ const WordBox = ({
   const lettersDefinitions = useAppSelector(
     (state) => state.lettersPage.lettersDefinitions
   );
-
-  const wordIndex = Number(selectedWord.split(":")[1]);
 
   const getLetter = (
     letter: string,
@@ -292,7 +308,7 @@ const WordBox = ({
         <Box
           as="span"
           padding={"2px"}
-          bgColor={index === wordIndex ? "rgb(159, 159, 205)" : undefined}
+          bgColor={index === selectedWord ? "rgb(159, 159, 205)" : undefined}
         >
           {data.map((def, index) => (
             <span key={index}>
@@ -305,60 +321,6 @@ const WordBox = ({
       </Fragment>
     );
   };
-
-  return (
-    <Collapse in={isOpen}>
-      <Flex
-        border={"1px solid rgba(0, 0, 0, .175)"}
-        borderRadius={"0.375rem"}
-        marginTop={"6px"}
-        padding={2}
-        bgColor={"white"}
-        dir="rtl"
-      >
-        <span style={{ fontSize: `${notesFS}rem` }}>
-          {verseText.split(" ").map((word, index) => renderWord(word, index))}
-        </span>
-      </Flex>
-    </Collapse>
-  );
-};
-
-WordBox.displayName = "WordBox";
-
-interface LetterBoxProps {
-  isOpen: boolean;
-  verseKey: string;
-  selectedLetter: string;
-  verseLetterData: LetterDataType;
-}
-
-const LetterBox = ({
-  isOpen,
-  verseKey,
-  selectedLetter,
-  verseLetterData,
-}: LetterBoxProps) => {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const quranService = useQuran();
-
-  const lettersDefinitions = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions
-  );
-
-  const letterPresets = useAppSelector(
-    (state) => state.lettersPage.letterPresets
-  );
-
-  const [letterRole, setLetterRole] = useState<LetterRole>(
-    verseLetterData.letter_role
-  );
-
-  const [letterDefinitionID, setLetterDefinitionID] = useState(
-    verseLetterData.def_id
-  );
 
   const onChangeSelectRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLetterRole(Number(event.target.value));
@@ -437,53 +399,66 @@ const LetterBox = ({
 
   return (
     <Collapse in={isOpen}>
-      <Box
-        marginTop={"6px"}
+      <Flex
         border={"1px solid rgba(0, 0, 0, .175)"}
         borderRadius={"0.375rem"}
+        marginTop={"6px"}
         padding={2}
         bgColor={"white"}
-        dir="ltr"
+        dir="rtl"
       >
-        <Flex flexDir={"column"} gap={"0.5rem"}>
-          <Flex>
-            <span>Type:</span>
-            <Select
-              aria-label="Select"
-              value={letterRole}
-              onChange={onChangeSelectRole}
+        <span style={{ fontSize: `${notesFS}rem` }}>
+          {verseText.split(" ").map((word, index) => renderWord(word, index))}
+        </span>
+      </Flex>
+      <Collapse in={!!selectedLetter}>
+        <Box
+          marginTop={"6px"}
+          border={"1px solid rgba(0, 0, 0, .175)"}
+          borderRadius={"0.375rem"}
+          padding={2}
+          bgColor={"white"}
+          dir="ltr"
+        >
+          <Flex flexDir={"column"} gap={"0.5rem"}>
+            <Flex>
+              <span>Type:</span>
+              <Select
+                aria-label="Select"
+                value={letterRole}
+                onChange={onChangeSelectRole}
+              >
+                <option value={LetterRole.Unit}>Unit</option>
+                <option value={LetterRole.Suffix}>Suffix</option>
+                <option value={LetterRole.Ignored}>Unused</option>
+              </Select>
+            </Flex>
+            <Flex>
+              <span>Definition:</span>
+              <Select
+                disabled={letterRole != LetterRole.Unit}
+                aria-label="Select"
+                value={letterDefinitionID}
+                onChange={onChangeSelectDef}
+              >
+                <option value="">None</option>
+                {renderLetterDefinitionOptions()}
+              </Select>
+            </Flex>
+            <Button
+              colorScheme="blue"
+              alignSelf={"center"}
+              width={"5rem"}
+              fontWeight={"normal"}
+              onClick={onClickSave}
             >
-              <option value={LetterRole.Unit}>Unit</option>
-              <option value={LetterRole.Suffix}>Suffix</option>
-              <option value={LetterRole.Ignored}>Unused</option>
-            </Select>
+              Save
+            </Button>
           </Flex>
-          <Flex>
-            <span>Definition:</span>
-            <Select
-              aria-label="Select"
-              value={letterDefinitionID}
-              onChange={onChangeSelectDef}
-            >
-              <option value="">None</option>
-              {renderLetterDefinitionOptions()}
-            </Select>
-          </Flex>
-          <Button
-            colorScheme="blue"
-            alignSelf={"center"}
-            width={"5rem"}
-            fontWeight={"normal"}
-            onClick={onClickSave}
-          >
-            Save
-          </Button>
-        </Flex>
-      </Box>
+        </Box>
+      </Collapse>
     </Collapse>
   );
 };
-
-LetterBox.displayName = "LetterBox";
 
 export default ListVerses;
