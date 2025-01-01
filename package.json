@@ -22,7 +22,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@reduxjs/toolkit": "^2.1.0",
+    "@reduxjs/toolkit": "^2.5.0",
     "dexie": "^4.0.7",
     "framer-motion": "^11.3.30",
     "i18next": "^23.0.1",
