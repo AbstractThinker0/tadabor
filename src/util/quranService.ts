@@ -28,6 +28,9 @@ class quranClass {
   quranRoots: rootProps[] = [];
   absoluteQuran: verseProps[] = [];
 
+  isQuranDataLoaded = false;
+  isRootsDataLoaded = false;
+
   setChapters(chaptersData: chapterProps[]) {
     this.chapterNames = chaptersData;
   }
@@ -53,10 +56,13 @@ class quranClass {
         });
       });
     }
+
+    this.isQuranDataLoaded = true;
   }
 
   setRoots(rootsData: rootProps[]) {
     this.quranRoots = rootsData;
+    this.isRootsDataLoaded = true;
   }
 
   getChapterName(suraid: string | number): string {
