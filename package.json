@@ -23,7 +23,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "^2.1.0",
-    "dexie": "^4.0.7",
+    "dexie": "^4.0.11",
     "framer-motion": "^11.3.30",
     "i18next": "^23.0.1",
     "i18next-browser-languagedetector": "^7.0.2",
