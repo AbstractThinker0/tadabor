@@ -17,8 +17,10 @@ import { rootProps } from "@/types";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Flex } from "@chakra-ui/react";
+import useQuran from "@/context/useQuran";
 
 const PanelRoots = () => {
+  const quranService = useQuran();
   const dispatch = useAppDispatch();
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
@@ -58,7 +60,7 @@ const PanelRoots = () => {
         stateRoots={stateRoots}
       />
 
-      {isRNotesLoading || isVNotesLoading ? (
+      {isRNotesLoading || isVNotesLoading || !quranService.isRootsDataLoaded ? (
         <LoadingSpinner />
       ) : (
         <RootsList

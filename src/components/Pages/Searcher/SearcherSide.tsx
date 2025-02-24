@@ -10,6 +10,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Box, Flex, Input } from "@chakra-ui/react";
 
 const SearcherSide = () => {
+  const quranService = useQuran();
   const [searchToken, setSearchToken] = useState("");
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
@@ -17,7 +18,8 @@ const SearcherSide = () => {
     setSearchToken(event.target.value);
   };
 
-  if (isVNotesLoading) return <LoadingSpinner />;
+  if (isVNotesLoading || !quranService.isRootsDataLoaded)
+    return <LoadingSpinner />;
 
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>

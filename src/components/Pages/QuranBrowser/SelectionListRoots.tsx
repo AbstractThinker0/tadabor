@@ -6,6 +6,8 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { rootProps } from "@/types";
 
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
 import { Box, Flex } from "@chakra-ui/react";
 
 interface SelectionListRootsProps {
@@ -15,6 +17,12 @@ interface SelectionListRootsProps {
 
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
+    const quranService = useQuran();
+
+    if (!quranService.isRootsDataLoaded) {
+      return <LoadingSpinner />;
+    }
+
     return (
       <Flex
         flexGrow="1"

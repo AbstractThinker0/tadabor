@@ -34,6 +34,8 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
         quranInstance.current.setQuran(response);
 
+        setIsLoading(false);
+
         response = await fetchRoots();
 
         if (clientLeft) return;
@@ -43,8 +45,6 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
         fetchData();
         return;
       }
-
-      setIsLoading(false);
     }
 
     fetchData();
