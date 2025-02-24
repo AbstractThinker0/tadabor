@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
@@ -23,6 +23,14 @@ function Inspector() {
   const currentChapter = useAppSelector(
     (state) => state.inspectorPage.currentChapter
   );
+
+  const [rootsLoaded, setRootsLoaded] = useState(
+    quranService.isRootsDataLoaded
+  );
+
+  useEffect(() => {
+    setRootsLoaded(quranService.isRootsDataLoaded);
+  }, [quranService.isRootsDataLoaded]);
 
   function handleSelectChapter(chapterID: string) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
@@ -50,7 +58,7 @@ function Inspector() {
           handleChapterChange={handleSelectChapter}
         />
       </Flex>
-      {isVNotesLoading || !quranService.isRootsDataLoaded ? (
+      {isVNotesLoading || !rootsLoaded ? (
         <LoadingSpinner />
       ) : (
         <Display currentChapter={currentChapter} />

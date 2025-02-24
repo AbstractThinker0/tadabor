@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import useQuran from "@/context/useQuran";
 
 import { useAppDispatch } from "@/store";
@@ -18,8 +18,15 @@ interface SelectionListRootsProps {
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
     const quranService = useQuran();
+    const [rootsLoaded, setRootsLoaded] = useState(
+      quranService.isRootsDataLoaded
+    );
 
-    if (!quranService.isRootsDataLoaded) {
+    useEffect(() => {
+      setRootsLoaded(quranService.isRootsDataLoaded);
+    }, [quranService.isRootsDataLoaded]);
+
+    if (!rootsLoaded) {
       return <LoadingSpinner />;
     }
 

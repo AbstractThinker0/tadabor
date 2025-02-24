@@ -33,6 +33,14 @@ const PanelRoots = () => {
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
+  const [rootsLoaded, setRootsLoaded] = useState(
+    quranService.isRootsDataLoaded
+  );
+
+  useEffect(() => {
+    setRootsLoaded(quranService.isRootsDataLoaded);
+  }, [quranService.isRootsDataLoaded]);
+
   useEffect(() => {
     dispatch(fetchRootNotes());
     dispatch(fetchVerseNotes());
@@ -60,7 +68,7 @@ const PanelRoots = () => {
         stateRoots={stateRoots}
       />
 
-      {isRNotesLoading || isVNotesLoading || !quranService.isRootsDataLoaded ? (
+      {isRNotesLoading || isVNotesLoading || !rootsLoaded ? (
         <LoadingSpinner />
       ) : (
         <RootsList

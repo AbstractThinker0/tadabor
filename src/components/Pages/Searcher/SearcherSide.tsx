@@ -14,12 +14,19 @@ const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
+  const [rootsLoaded, setRootsLoaded] = useState(
+    quranService.isRootsDataLoaded
+  );
+
+  useEffect(() => {
+    setRootsLoaded(quranService.isRootsDataLoaded);
+  }, [quranService.isRootsDataLoaded]);
+
   const onChangeToken = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchToken(event.target.value);
   };
 
-  if (isVNotesLoading || !quranService.isRootsDataLoaded)
-    return <LoadingSpinner />;
+  if (isVNotesLoading || !rootsLoaded) return <LoadingSpinner />;
 
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
