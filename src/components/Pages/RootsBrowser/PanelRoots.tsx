@@ -38,8 +38,16 @@ const PanelRoots = () => {
   );
 
   useEffect(() => {
-    setRootsLoaded(quranService.isRootsDataLoaded);
-  }, [quranService.isRootsDataLoaded]);
+    const handleRootsLoaded = () => {
+      setRootsLoaded(true);
+    };
+
+    quranService.onRootsLoaded(handleRootsLoaded);
+
+    return () => {
+      quranService.onRootsLoaded(() => {}); // Reset callback
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(fetchRootNotes());

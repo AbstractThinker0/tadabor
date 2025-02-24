@@ -29,8 +29,16 @@ function Inspector() {
   );
 
   useEffect(() => {
-    setRootsLoaded(quranService.isRootsDataLoaded);
-  }, [quranService.isRootsDataLoaded]);
+    const handleRootsLoaded = () => {
+      setRootsLoaded(true);
+    };
+
+    quranService.onRootsLoaded(handleRootsLoaded);
+
+    return () => {
+      quranService.onRootsLoaded(() => {}); // Reset callback
+    };
+  }, []);
 
   function handleSelectChapter(chapterID: string) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));

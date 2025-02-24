@@ -31,6 +31,13 @@ class quranClass {
   isQuranDataLoaded = false;
   isRootsDataLoaded = false;
 
+  private onRootsLoadedCallback: (() => void) | null = null;
+
+  // Register the onRootsLoaded event
+  onRootsLoaded(callback: () => void) {
+    this.onRootsLoadedCallback = callback;
+  }
+
   setChapters(chaptersData: chapterProps[]) {
     this.chapterNames = chaptersData;
   }
@@ -63,6 +70,10 @@ class quranClass {
   setRoots(rootsData: rootProps[]) {
     this.quranRoots = rootsData;
     this.isRootsDataLoaded = true;
+
+    if (this.onRootsLoadedCallback) {
+      this.onRootsLoadedCallback();
+    }
   }
 
   getChapterName(suraid: string | number): string {

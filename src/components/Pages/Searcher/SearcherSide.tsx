@@ -10,17 +10,26 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Box, Flex, Input } from "@chakra-ui/react";
 
 const SearcherSide = () => {
-  const quranService = useQuran();
   const [searchToken, setSearchToken] = useState("");
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
+  const quranService = useQuran();
 
   const [rootsLoaded, setRootsLoaded] = useState(
     quranService.isRootsDataLoaded
   );
 
   useEffect(() => {
-    setRootsLoaded(quranService.isRootsDataLoaded);
-  }, [quranService.isRootsDataLoaded]);
+    const handleRootsLoaded = () => {
+      setRootsLoaded(true);
+    };
+
+    quranService.onRootsLoaded(handleRootsLoaded);
+
+    return () => {
+      quranService.onRootsLoaded(() => {}); // Reset callback
+    };
+  }, []);
 
   const onChangeToken = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchToken(event.target.value);

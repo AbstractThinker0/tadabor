@@ -23,8 +23,16 @@ const SelectionListRoots = memo(
     );
 
     useEffect(() => {
-      setRootsLoaded(quranService.isRootsDataLoaded);
-    }, [quranService.isRootsDataLoaded]);
+      const handleRootsLoaded = () => {
+        setRootsLoaded(true);
+      };
+
+      quranService.onRootsLoaded(handleRootsLoaded);
+
+      return () => {
+        quranService.onRootsLoaded(() => {}); // Reset callback
+      };
+    }, []);
 
     if (!rootsLoaded) {
       return <LoadingSpinner />;
