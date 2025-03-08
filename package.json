@@ -18,13 +18,12 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "type": "module",
   "dependencies": {
     "@chakra-ui/react": "^3.8.1",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "^2.1.0",
     "dexie": "^4.0.7",
-    "framer-motion": "^11.3.30",
     "i18next": "^23.0.1",
     "i18next-browser-languagedetector": "^7.0.2",
     "next-themes": "^0.4.4",
