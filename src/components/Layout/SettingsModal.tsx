@@ -5,28 +5,22 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { settingsActions } from "@/store/slices/global/settings";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
   Button,
   Box,
   ButtonGroup,
-  Slider,
-  SliderTrack,
-  SliderThumb,
-  SliderFilledTrack,
   Heading,
-  Divider,
+  Separator,
   Stack,
-  StackItem,
+  Dialog,
+  DialogOpenChangeDetails,
 } from "@chakra-ui/react";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 import { nfsDefault, nfsStored, qfsDefault, qfsStored } from "@/util/consts";
+
+import { Slider } from "@/components/ui/slider";
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { ColorModeButton } from "@/components/ui/color-mode";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -49,12 +43,12 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     i18n.changeLanguage(lang);
   };
 
-  const onChangeQFS = (val: number) => {
-    dispatch(settingsActions.setQuranFS(val));
+  const onChangeQFS = (val: number[]) => {
+    dispatch(settingsActions.setQuranFS(val[0]));
   };
 
-  const onChangeNFS = (val: number) => {
-    dispatch(settingsActions.setNotesFS(val));
+  const onChangeNFS = (val: number[]) => {
+    dispatch(settingsActions.setNotesFS(val[0]));
   };
 
   const onClickSave = () => {
@@ -78,25 +72,36 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     i18n.changeLanguage("ar");
   };
 
+  const onOpenChange = (details: DialogOpenChangeDetails) => {
+    if (!details.open) {
+      onCloseComplete();
+    }
+  };
+
   return (
-    <Modal
-      size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      onCloseComplete={onCloseComplete}
-      isCentered
+    <Dialog.Root
+      size="lg"
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onInteractOutside={onClose}
+      placement={"center"}
     >
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">Settings</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Stack spacing={6} divider={<Divider />}>
-            <StackItem>
-              <Heading as="span" size="sm">
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+          fontSize={"2xl"}
+        >
+          Settings
+        </Dialog.Header>
+
+        <Dialog.Body>
+          <Stack gap={6} separator={<Separator />}>
+            <Box colorPalette="blue" pt={2}>
+              <Heading as="span" size="md">
                 Language:{" "}
               </Heading>
-              <ButtonGroup colorScheme="blue" isAttached>
+              <ButtonGroup attached>
                 <Button
                   variant={resolvedLang === "en" ? "solid" : "outline"}
                   onClick={() => onChangeLang("en")}
@@ -110,83 +115,87 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                   العربية
                 </Button>
               </ButtonGroup>
-            </StackItem>
-            <StackItem>
+            </Box>
+            <Box colorPalette="blue" pt={2}>
+              <Heading as="span" size="md">
+                Theme:{" "}
+              </Heading>
+              <ColorModeButton />
+            </Box>
+            <Box>
               <Box py={1}>
-                <Heading size="sm">Quran Font Size:</Heading>
+                <Heading size="md">Quran Font Size:</Heading>
                 <Slider
-                  value={quranFS}
+                  value={[quranFS]}
                   min={1}
                   max={4}
                   step={0.125}
-                  onChange={onChangeQFS}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb boxSize={6} />
-                </Slider>
+                  onValueChange={(e) => onChangeQFS(e.value)}
+                  colorPalette="blue"
+                />
               </Box>
               <Box
                 textAlign="center"
-                backgroundColor={"rgb(201, 201, 201)"}
+                backgroundColor={"bg.emphasized"}
                 borderRadius="0.75rem"
                 padding={2}
+                lineHeight={"normal"}
               >
                 <VerseContainer fontFamily={`"Scheherazade New", serif`}>
                   وَلَتَعْلَمُنَّ نَبَأَهُ بَعْدَ حِينٍ (ص:88)
                 </VerseContainer>
               </Box>
-            </StackItem>
-            <StackItem>
+            </Box>
+            <Box>
               <Box py={1}>
-                <Heading size="sm">Notes Font Size:</Heading>
+                <Heading size="md">Notes Font Size:</Heading>
                 <Slider
-                  value={notesFS}
+                  value={[notesFS]}
                   min={1}
                   max={4}
                   step={0.125}
-                  onChange={onChangeNFS}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb boxSize={6} />
-                </Slider>
+                  onValueChange={(e) => onChangeNFS(e.value)}
+                  colorPalette="blue"
+                />
               </Box>
               <Box
                 textAlign="center"
-                backgroundColor={"rgb(201, 201, 201)"}
+                backgroundColor={"bg.emphasized"}
                 borderRadius="0.75rem"
-                padding={2}
+                padding={1}
                 fontFamily={`"Scheherazade New", serif`}
+                lineHeight={"normal"}
               >
                 <span style={{ fontSize: `${notesFS}rem` }}>
                   Note example - مثال كتابة
                 </span>
               </Box>
-            </StackItem>
+            </Box>
           </Stack>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button colorScheme="blue" onClick={onClose}>
-              Close
-            </Button>
-            <Button colorScheme="green" onClick={onClickSave}>
+            <Dialog.ActionTrigger asChild>
+              <Button colorPalette="blue" onClick={onClose}>
+                Close
+              </Button>
+            </Dialog.ActionTrigger>
+            <Button colorPalette="green" onClick={onClickSave}>
               Save
             </Button>
-            <Button colorScheme="yellow" onClick={onClickReset}>
+            <Button colorPalette="yellow" onClick={onClickReset}>
               Reset to defaults
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

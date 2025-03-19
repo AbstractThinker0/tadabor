@@ -8,6 +8,7 @@ import SettingsModal from "@/components/Layout/SettingsModal";
 
 const Navbar = () => {
   const { t } = useTranslation();
+  const { open, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     async function storagePersist() {
@@ -29,28 +30,46 @@ const Navbar = () => {
   }, []);
 
   return (
-    <Box as="nav" role="navigation" bgColor="gray.800" px={2} py={1}>
-      <Flex justifyContent="space-between">
-        <Flex flexWrap="wrap" gap={1.5}>
-          <NavItem to="/" label={t("nav_browser")} />
-          <NavItem to="/roots" label={t("nav_roots")} />
-          <NavItem to="/translation" label={t("nav_translation")} />
-          <NavItem to="/notes" label={t("nav_notes")} />
-          <NavItem to="/coloring" label={t("nav_coloring")} />
-          <NavItem to="/tags" label={t("nav_tags")} />
-          <NavItem to="/inspector" label={t("nav_inspector")} />
-          <NavItem to="/comparator" label={t("nav_comparator")} />
-          <NavItem to="/searcher" label={t("nav_searcher")} />
-          <NavItem to="/searcher2" label={`${t("nav_searcher")}  2`} />
-          <NavItem to="/letters" label={t("nav_letters")} />
-          <NavItem to="/audio" label={t("nav_audio")} />
-          <NavItem to="/about" label={t("nav_about")} />
+    <>
+      <Box
+        as="nav"
+        role="navigation"
+        _light={{ backgroundColor: "#1A202C" }}
+        _dark={{ bgColor: "#151a23" }}
+        px={2}
+        py={1}
+      >
+        <Flex justifyContent="space-between">
+          <Flex flexWrap="wrap" gap={1.5}>
+            <NavItem to="/" label={t("nav_browser")} />
+            <NavItem to="/roots" label={t("nav_roots")} />
+            <NavItem to="/translation" label={t("nav_translation")} />
+            <NavItem to="/notes" label={t("nav_notes")} />
+            <NavItem to="/coloring" label={t("nav_coloring")} />
+            <NavItem to="/tags" label={t("nav_tags")} />
+            <NavItem to="/inspector" label={t("nav_inspector")} />
+            <NavItem to="/comparator" label={t("nav_comparator")} />
+            <NavItem to="/searcher" label={t("nav_searcher")} />
+            <NavItem to="/searcher2" label={`${t("nav_searcher")}  2`} />
+            <NavItem to="/letters" label={t("nav_letters")} />
+            <NavItem to="/audio" label={t("nav_audio")} />
+            <NavItem to="/about" label={t("nav_about")} />
+          </Flex>
+          <Flex>
+            <Button
+              aria-label="Settings"
+              onClick={onOpen}
+              variant="ghost"
+              fontSize="large"
+              padding={0}
+            >
+              ⚙️
+            </Button>
+          </Flex>
         </Flex>
-        <Flex>
-          <SettingsButton />
-        </Flex>
-      </Flex>
-    </Box>
+      </Box>
+      <SettingsModal isOpen={open} onClose={onClose} />
+    </>
   );
 };
 
@@ -62,37 +81,18 @@ interface NavItemProps {
 const NavItem = ({ label, to }: NavItemProps) => {
   return (
     <Button
-      _activeLink={{ bgColor: "var(--color-primary)" }}
-      bgColor={"#bdb8c6"}
+      _currentPage={{ bgColor: "gray.focusRing", color: "fg.inverted" }}
+      bgColor={"gray.emphasized"}
+      color={"fg"}
       px={1}
       py={0}
       fontWeight="400"
       fontSize="large"
       lineHeight={1}
-      as={NavLink}
-      to={to}
+      asChild
     >
-      {label}
+      <NavLink to={to}>{label}</NavLink>
     </Button>
-  );
-};
-
-const SettingsButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  return (
-    <>
-      <Button
-        aria-label="Settings"
-        onClick={onOpen}
-        variant="ghost"
-        fontSize="large"
-        padding={0}
-      >
-        ⚙️
-      </Button>
-      <SettingsModal isOpen={isOpen} onClose={onClose} />
-    </>
   );
 };
 
