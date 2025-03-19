@@ -6,7 +6,7 @@ import { selectNote, useAppDispatch, useAppSelector } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { Card, CardBody, Collapse } from "@chakra-ui/react";
+import { Card, Collapsible } from "@chakra-ui/react";
 
 import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
@@ -65,17 +65,19 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
   };
 
   return (
-    <Collapse in={isOpen}>
-      <FormText
-        isEditable={isEditable}
-        inputValue={inputValue}
-        inputDirection={inputDirection}
-        onClickEditButton={onClickEditButton}
-        handleSetDirection={handleSetDirection}
-        onChangeTextarea={onChangeTextarea}
-        onSubmitForm={onSubmitForm}
-      />
-    </Collapse>
+    <Collapsible.Root open={isOpen}>
+      <Collapsible.Content>
+        <FormText
+          isEditable={isEditable}
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          onClickEditButton={onClickEditButton}
+          handleSetDirection={handleSetDirection}
+          onChangeTextarea={onChangeTextarea}
+          onSubmitForm={onSubmitForm}
+        />
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 });
 
@@ -99,8 +101,8 @@ const FormText = ({
   onSubmitForm,
 }: FormTextProps) => {
   return (
-    <Card variant={"outline"}>
-      <CardBody pt={0} pb={1} px={1}>
+    <Card.Root variant={"outline"}>
+      <Card.Body pt={0} pb={1} px={1}>
         {isEditable === false ? (
           <NoteContainer
             inputValue={inputValue}
@@ -116,8 +118,8 @@ const FormText = ({
             onSubmitForm={onSubmitForm}
           />
         )}
-      </CardBody>
-    </Card>
+      </Card.Body>
+    </Card.Root>
   );
 };
 

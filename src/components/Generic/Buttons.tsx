@@ -11,7 +11,7 @@ const ButtonSave = (props: ButtonProps) => {
   return (
     <Button
       type="submit"
-      colorScheme="green"
+      colorPalette="green"
       size="sm"
       fontWeight={"normal"}
       {...rest}
@@ -26,7 +26,7 @@ const ButtonEdit = (props: ButtonProps) => {
   const { children, ...rest } = props;
 
   return (
-    <Button colorScheme="blue" size="sm" fontWeight={"normal"} {...rest}>
+    <Button colorPalette="blue" size="sm" fontWeight={"normal"} {...rest}>
       {t("text_edit")}
     </Button>
   );
@@ -34,12 +34,9 @@ const ButtonEdit = (props: ButtonProps) => {
 
 const ButtonExpand = (props: ButtonProps) => {
   return (
-    <IconButton
-      variant="ghost"
-      aria-label="Expand"
-      icon={<IconSelect />}
-      {...props}
-    />
+    <IconButton variant="ghost" aria-label="Expand" {...props}>
+      <IconSelect />
+    </IconButton>
   );
 };
 

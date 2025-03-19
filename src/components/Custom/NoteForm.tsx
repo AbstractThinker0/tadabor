@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { Box, FormControl } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
-import { ButtonSave } from "../Generic/Buttons";
+import { ButtonSave } from "@/components/Generic/Buttons";
 
 interface NoteFormProps {
   inputValue: string;
@@ -25,7 +25,7 @@ const NoteForm = ({
   const { t } = useTranslation();
 
   return (
-    <FormControl as="form" onSubmit={onSubmitForm}>
+    <Box as="form" onSubmit={onSubmitForm}>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
       <TextareaAutosize
         value={inputValue}
@@ -33,12 +33,12 @@ const NoteForm = ({
         onChange={onChangeTextarea}
         lineHeight={"normal"}
         placeholder={t("text_form")}
-        isRequired
+        required
       />
       <Box textAlign={"center"}>
         <ButtonSave />
       </Box>
-    </FormControl>
+    </Box>
   );
 };
 

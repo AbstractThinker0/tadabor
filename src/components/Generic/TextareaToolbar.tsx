@@ -15,15 +15,17 @@ const TextareaToolbar = ({ handleSetDirection }: TextareaToolbarProps) => {
       <IconButton
         variant="ghost"
         aria-label="ltr"
-        icon={<IconTextDirectionLtr />}
         onClick={() => handleSetDirection("ltr")}
-      />
+      >
+        <IconTextDirectionLtr />
+      </IconButton>
       <IconButton
         variant="ghost"
         aria-label="rtl"
-        icon={<IconTextDirectionRtl />}
         onClick={() => handleSetDirection("rtl")}
-      />
+      >
+        <IconTextDirectionRtl />
+      </IconButton>
     </Box>
   );
 };

@@ -10,9 +10,10 @@ import { QuranProvider } from "@/context/QuranProvider";
 import Navbar from "@/components/Layout/Navbar";
 import AlertMessage from "@/components/Layout/AlertMessage";
 
-import { Flex, ChakraProvider } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import "@/styles/main.css";
+import { Provider } from "../ui/provider";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
@@ -26,7 +27,7 @@ function Layout({ children }: PropsWithChildren) {
   }, [i18n.resolvedLanguage]);
 
   return (
-    <ChakraProvider>
+    <Provider>
       <Flex
         ref={refMain}
         flexDirection="column"
@@ -34,6 +35,7 @@ function Layout({ children }: PropsWithChildren) {
         fontFamily={`"Scheherazade New", serif`}
         fontSize="larger"
         lineHeight="normal"
+        color={"brand.text"}
       >
         <Navbar />
         <AlertMessage />
@@ -43,7 +45,7 @@ function Layout({ children }: PropsWithChildren) {
           rtl={isRtl}
         />
       </Flex>
-    </ChakraProvider>
+    </Provider>
   );
 }
 
