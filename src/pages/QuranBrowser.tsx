@@ -5,7 +5,7 @@ import { Flex } from "@chakra-ui/react";
 
 function QuranBrowser() {
   return (
-    <Flex bgColor="var(--color-primary)" overflow="hidden" maxH="100%" h="100%">
+    <Flex bgColor="brand.bg" overflow="hidden" maxH="100%" h="100%">
       <SearchPanel />
       <DisplayPanel />
     </Flex>
