@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Alert, AlertIcon, CloseButton, Spacer } from "@chakra-ui/react";
+import { CloseButton, Alert } from "@chakra-ui/react";
 
 const AlertMessage = () => {
   const { t } = useTranslation();
@@ -20,12 +20,19 @@ const AlertMessage = () => {
   if (betaNotified) return null;
 
   return (
-    <Alert status="warning">
-      <AlertIcon />
-      {t("alert_message")}
-      <Spacer />
+    <Alert.Root
+      dir="auto"
+      status="warning"
+      alignItems={"center"}
+      fontSize={"xl"}
+    >
+      <Alert.Indicator />
+      <Alert.Content>
+        <Alert.Title>{t("alert_message")}</Alert.Title>
+      </Alert.Content>
+
       <CloseButton onClick={onClickClose} />
-    </Alert>
+    </Alert.Root>
   );
 };
 

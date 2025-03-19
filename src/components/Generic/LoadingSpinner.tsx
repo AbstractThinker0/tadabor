@@ -4,10 +4,9 @@ const LoadingSpinner = () => {
   return (
     <Flex flexDir="column" h="100%" alignItems="center" justifyContent="center">
       <Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="gray.200"
-        color="blue.500"
+        borderWidth="4px"
+        animationDuration="0.65s"
+        color="blue.fg"
         size="xl"
       />
     </Flex>

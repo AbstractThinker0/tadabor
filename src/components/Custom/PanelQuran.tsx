@@ -13,7 +13,8 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
-import { Box, Flex, Heading, useBoolean } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
+import { useBoolean } from "usehooks-ts";
 
 interface PanelQuranProps {
   verseKey: string;
@@ -69,7 +70,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
   return (
     <Flex
       flexDirection={"column"}
-      backgroundColor={"#f7fafc"}
+      backgroundColor={"brand.bg"}
       padding={4}
       overflowY={"scroll"}
       maxH={"100%"}
@@ -77,7 +78,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       ref={handleVerseListRef}
       dir="rtl"
     >
-      <Heading textAlign={"center"} color="blue.600">
+      <Heading textAlign={"center"} color="blue.fg" fontSize={"3xl"} pb={"4"}>
         سورة {quranService.getChapterName(suraID)}
       </Heading>
       {isPending || isVNotesLoading ? (
@@ -107,13 +108,15 @@ const VerseItem = ({
   isSelected,
   onClickVerseSuffix,
 }: VerseItemProps) => {
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   return (
     <Box
       py={1}
-      borderBottom={"1px solid #dee2e6"}
-      backgroundColor={isSelected ? "antiquewhite" : undefined}
+      borderBottom={"1px solid"}
+      borderColor={"border.emphasized"}
+      aria-selected={isSelected}
+      _selected={{ backgroundColor: "orange.muted" }}
       data-id={verse.key}
     >
       <VerseContainer>
@@ -121,7 +124,7 @@ const VerseItem = ({
         <ButtonVerse onClick={() => onClickVerseSuffix(verse.key)}>
           ({verse.verseid})
         </ButtonVerse>
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>
