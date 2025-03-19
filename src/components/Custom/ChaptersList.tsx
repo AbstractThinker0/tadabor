@@ -69,14 +69,15 @@ const ChaptersList = ({
         dir="rtl"
         borderBottom="none"
         borderBottomRadius="0"
-        backgroundColor={"white"}
+        backgroundColor={"bg"}
       />
       <Box
         maxH="60%"
         height={"60%"}
         aria-label="Chapters select"
-        bgColor="var(--color-primary)"
-        border="1px solid gainsboro"
+        bgColor={"brand.bg"}
+        border="1px solid"
+        borderColor={"border.emphasized"}
         overflowY="scroll"
         padding="2px"
         ref={handleChapterListRef}
@@ -90,7 +91,7 @@ const ChaptersList = ({
             aria-selected={Number(selectChapter) === chapter.id}
             _selected={{
               color: "white",
-              bgColor: "#767676",
+              bgColor: "fg.muted",
             }}
             onClick={() => onClickChapter(chapter.id)}
           >

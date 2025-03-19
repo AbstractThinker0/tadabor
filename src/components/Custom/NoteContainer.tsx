@@ -20,8 +20,9 @@ const NoteContainer = ({
     <Box pt={10}>
       <Box
         pt={2}
-        px={4}
-        border={"1px solid green"}
+        px={3}
+        border={"1px solid"}
+        borderColor={"green.solid"}
         borderRadius={"0.375rem"}
         dir={inputDirection}
       >
