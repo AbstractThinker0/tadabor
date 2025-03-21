@@ -10,13 +10,13 @@ import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 
 const ChaptersSide = () => {
   const {
-    isOpen: isOpenAddColor,
+    open: isOpenAddColor,
     onOpen: onOpenAddColor,
     onClose: onCloseAddColor,
   } = useDisclosure();
 
   const {
-    isOpen: isOpenEditColor,
+    open: isOpenEditColor,
     onOpen: onOpenEditColor,
     onClose: onCloseEditColor,
   } = useDisclosure();
@@ -35,19 +35,20 @@ const ChaptersSide = () => {
         minH={"30%"}
         maxH={"50%"}
         mt={"10px"}
-        border={"1px solid rgb(201, 202, 204)"}
+        border={"1px solid"}
+        borderColor={"border.emphasized"}
         p={"10px"}
         pt={"2px"}
-        bgColor={"rgb(245, 244, 244)"}
+        bgColor={"bg.muted"}
         borderRadius={"0.275rem"}
       >
         <ColorsList />
 
         <Flex gap={2} justify={"center"} dir="ltr">
-          <Button colorScheme="green" onClick={onOpenAddColor}>
+          <Button colorPalette="green" onClick={onOpenAddColor}>
             Add color
           </Button>
-          <Button colorScheme="cyan" onClick={onOpenEditColor}>
+          <Button colorPalette="cyan" onClick={onOpenEditColor}>
             Edit colors
           </Button>
         </Flex>
@@ -90,7 +91,9 @@ const VersesCount = () => {
 
   if (!Object.keys(selectedColors).length) return null;
 
-  return <Text color={"green"}>{`${t("search_count")} ${selectedCount}`}</Text>;
+  return (
+    <Text color={"green.fg"}>{`${t("search_count")} ${selectedCount}`}</Text>
+  );
 };
 
 export default ChaptersSide;

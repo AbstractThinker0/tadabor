@@ -9,19 +9,15 @@ import { coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
+  Dialog,
   Button,
   ButtonGroup,
   Input,
   Flex,
-  Select,
+  NativeSelect,
 } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface EditColorModalProps {
   isOpen: boolean;
@@ -89,37 +85,48 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
   }
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">Edit colors</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+    <Dialog.Root
+      size="xl"
+      open={isOpen}
+      onInteractOutside={onClose}
+      placement={"center"}
+    >
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
+          Edit colors
+        </Dialog.Header>
+
+        <Dialog.Body>
           {currentColor && listColors[currentColor] ? (
             <>
               <Flex gap={3} alignItems={"center"} pb={2}>
                 <div>Name:</div>
-                <Select
-                  onChange={onChangeColor}
-                  value={currentColor}
-                  size={"1"}
-                  borderRadius={"0.375rem"}
-                  backgroundColor={listColors[currentColor].colorCode}
-                  color={getTextColor(listColors[currentColor].colorCode)}
-                >
-                  {Object.keys(listColors).map((colorID) => (
-                    <option
-                      key={listColors[colorID].colorID}
-                      value={listColors[colorID].colorID}
-                      style={{
-                        backgroundColor: listColors[colorID].colorCode,
-                        color: getTextColor(listColors[colorID].colorCode),
-                      }}
-                    >
-                      {listColors[colorID].colorDisplay}
-                    </option>
-                  ))}
-                </Select>
+                <NativeSelect.Root>
+                  <NativeSelect.Field
+                    onChange={onChangeColor}
+                    value={currentColor}
+                    borderRadius={"0.375rem"}
+                    backgroundColor={listColors[currentColor].colorCode}
+                    color={getTextColor(listColors[currentColor].colorCode)}
+                  >
+                    {Object.keys(listColors).map((colorID) => (
+                      <option
+                        key={listColors[colorID].colorID}
+                        value={listColors[colorID].colorID}
+                        style={{
+                          backgroundColor: listColors[colorID].colorCode,
+                          color: getTextColor(listColors[colorID].colorCode),
+                        }}
+                      >
+                        {listColors[colorID].colorDisplay}
+                      </option>
+                    ))}
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
               </Flex>
               <Flex gap={3}>
                 <label>Color: </label>
@@ -134,21 +141,23 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
           ) : (
             <>No colors to edit.</>
           )}
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>No, Cancel</Button>
-            <Button colorScheme="blue" onClick={onClickSave}>
+            <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

@@ -11,18 +11,16 @@ import { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
+  Dialog,
   Button,
   Box,
   Flex,
   ButtonGroup,
+  DialogOpenChangeDetails,
 } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 interface VerseModalProps {
@@ -64,6 +62,12 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
     setChosenColor(coloredVerses[currentVerseKey]);
   }, [currentVerse]);
 
+  const onOpenChange = (details: DialogOpenChangeDetails) => {
+    if (!details.open) {
+      onCloseComplete();
+    }
+  };
+
   const onCloseComplete = () => {
     setChosenColor(null);
     dispatch(coloringPageActions.setCurrentVerse(null));
@@ -104,20 +108,23 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
   };
 
   return (
-    <Modal
+    <Dialog.Root
       size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      onCloseComplete={onCloseComplete}
-      isCentered
+      open={isOpen}
+      onInteractOutside={onClose}
+      placement={"center"}
+      onOpenChange={onOpenChange}
     >
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+          fontSize={"xl"}
+        >
           Choose verse color
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+
+        <Dialog.Body>
           <Box textAlign={"center"}>
             (
             {currentVerse
@@ -129,13 +136,14 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
           </Box>
           <VerseContainer
             textAlign={"center"}
-            bgColor={chosenColor ? chosenColor.colorCode : "rgb(245, 244, 244)"}
+            bgColor={chosenColor ? chosenColor.colorCode : "bg.muted"}
             color={
               chosenColor ? getTextColor(chosenColor.colorCode) : undefined
             }
             padding={"4px"}
             mb={"5px"}
             borderRadius={"0.375rem"}
+            lineHeight={"normal"}
           >
             {currentVerse?.versetext}
           </VerseContainer>
@@ -143,7 +151,8 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
             {Object.keys(colorsList).map((colorID) => (
               <Box
                 padding={"4px"}
-                border={"5px solid white"}
+                border={"5px solid"}
+                borderColor={"bg"}
                 minW={"150px"}
                 cursor={"pointer"}
                 textAlign={"center"}
@@ -167,21 +176,23 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
               </Box>
             ))}
           </Flex>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>Close</Button>
-            <Button colorScheme="blue" onClick={onClickSave}>
+            <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

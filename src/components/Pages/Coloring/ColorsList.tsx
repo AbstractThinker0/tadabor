@@ -10,7 +10,7 @@ import { Box, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
 
 const ColorsList = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open: isOpen, onOpen, onClose } = useDisclosure();
 
   const coloredVerses = useAppSelector(
     (state) => state.coloringPage.coloredVerses

@@ -21,16 +21,15 @@ import {
   CardHeader,
   Flex,
   Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
-  useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
+
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { useBoolean } from "usehooks-ts";
 
 const VersesSide = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open: isOpen, onOpen, onClose } = useDisclosure();
 
   const selectedColors = useAppSelector(
     (state) => state.coloringPage.selectedColors
@@ -38,20 +37,22 @@ const VersesSide = () => {
 
   return (
     <Flex flexDir={"column"} flex={1} w={"100%"} p={1}>
-      <Card
+      <Card.Root
         overflowY={"scroll"}
         flex={1}
         px={4}
         py={1}
-        bgColor={"#f7fafc"}
+        //bgColor={"#f7fafc"}
+        bgColor={"brand.contrast"}
         dir="rtl"
+        color={"inherit"}
       >
         {Object.keys(selectedColors).length ? (
           <SelectedContainter openVerseModal={onOpen} />
         ) : (
           <VersesList openVerseModal={onOpen} />
         )}
-      </Card>
+      </Card.Root>
       <VerseModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
@@ -104,7 +105,7 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
         <Flex flexWrap={"wrap"} gap={"5px"}>
           <Box fontWeight={"bold"}>Selected colors:</Box>
           {Object.keys(selectedColors).map((colorID) => (
-            <Tag
+            <Tag.Root
               key={colorID}
               maxW={"120px"}
               backgroundColor={selectedColors[colorID].colorCode}
@@ -112,16 +113,20 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
               size="lg"
               variant={"solid"}
             >
-              <TagLabel
+              <Tag.Label
                 maxW={"500px"}
                 overflowY={"hidden"}
                 overflowWrap={"break-word"}
                 display={"initial"}
               >
                 {selectedColors[colorID].colorDisplay}
-              </TagLabel>
-              <TagCloseButton onClick={() => onClickDeleteSelected(colorID)} />
-            </Tag>
+              </Tag.Label>
+              <Tag.EndElement>
+                <Tag.CloseTrigger
+                  onClick={() => onClickDeleteSelected(colorID)}
+                />
+              </Tag.EndElement>
+            </Tag.Root>
           ))}
         </Flex>
         <Flex pt={"2px"} gap={"5px"} flexWrap={"wrap"}>
@@ -132,14 +137,21 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             <Box fontWeight={"bold"}>No chapters selected.</Box>
           ) : (
             chaptersScope.map((chapterID, index) => (
-              <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
-                <TagLabel overflow={"visible"}>
+              <Tag.Root
+                colorPalette="green"
+                size="lg"
+                variant={"solid"}
+                key={index}
+              >
+                <Tag.Label overflow={"visible"}>
                   {quranService.getChapterName(chapterID)}
-                </TagLabel>
-                <TagCloseButton
-                  onClick={() => onClickCloseChapter(chapterID)}
-                />
-              </Tag>
+                </Tag.Label>
+                <Tag.EndElement>
+                  <Tag.CloseTrigger
+                    onClick={() => onClickCloseChapter(chapterID)}
+                  />
+                </Tag.EndElement>
+              </Tag.Root>
             ))
           )}
         </Flex>
@@ -218,7 +230,7 @@ const SelectedVerseItem = ({
   verseColor,
   openVerseModal,
 }: SelectedVerseItemProps) => {
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
@@ -235,7 +247,8 @@ const SelectedVerseItem = ({
   return (
     <Box
       p={1}
-      borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+      borderBottom={"1.5px solid"}
+      borderColor={"border.emphasized"}
       key={verse.key}
       backgroundColor={verseColor?.colorCode}
       color={verseColor ? getTextColor(verseColor.colorCode) : undefined}
@@ -248,7 +261,7 @@ const SelectedVerseItem = ({
         >{`(${quranService.getChapterName(verse.suraid)}:${
           verse.verseid
         })`}</ButtonVerse>
-        <ButtonExpand onClick={setOpen.toggle} color={"inherit"} />
+        <ButtonExpand onClick={setOpen} color={"inherit"} />
         <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
           🎨
         </Button>
@@ -320,7 +333,8 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
         {stateVerses.map((verse) => (
           <Box
             p={"5px"}
-            borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+            borderBottom={"1.5px solid"}
+            borderColor={"border.emphasized"}
             style={
               scrollKey === verse.key
                 ? {
@@ -355,7 +369,7 @@ interface VerseComponentProps {
 
 const VerseComponent = memo(
   ({ verse, openVerseModal }: VerseComponentProps) => {
-    const [isOpen, setOpen] = useBoolean();
+    const { value: isOpen, toggle: setOpen } = useBoolean();
     const dispatch = useAppDispatch();
 
     const onClickVerseColor = (verse: verseProps) => {
@@ -374,7 +388,7 @@ const VerseComponent = memo(
           <ButtonVerse color={"inherit"} onClick={onClickVerse}>
             ({verse.verseid})
           </ButtonVerse>
-          <ButtonExpand color={"inherit"} onClick={setOpen.toggle} />
+          <ButtonExpand color={"inherit"} onClick={setOpen} />
           <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
             🎨
           </Button>

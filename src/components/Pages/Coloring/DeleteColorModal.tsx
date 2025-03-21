@@ -5,19 +5,9 @@ import { dbFuncs } from "@/util/db";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
-  Button,
-  ButtonGroup,
-  Text,
-  Box,
-} from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Text, Box } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface DeleteColorModalProps {
   isOpen: boolean;
@@ -61,14 +51,20 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   };
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+    <Dialog.Root
+      size="xl"
+      open={isOpen}
+      onInteractOutside={onClose}
+      placement={"center"}
+    >
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Delete color confirmation
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+        <Dialog.Body>
           <Text>
             Are you sure you want to delete{" "}
             <Box
@@ -89,24 +85,26 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
           <Text>
             Number of verses affected: {getColoredVerses(currentColor?.colorID)}
           </Text>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button colorScheme="gray" onClick={onClose}>
+            <Button colorPalette="gray" onClick={onClose}>
               No, Cancel
             </Button>
 
-            <Button colorScheme="red" onClick={onClickDelete}>
+            <Button colorPalette="red" onClick={onClickDelete}>
               Yes, delete
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 
