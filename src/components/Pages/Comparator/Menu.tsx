@@ -1,7 +1,7 @@
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
 import { verseProps } from "@/types";
-import { Box, Flex, Select } from "@chakra-ui/react";
+import { Box, Flex, NativeSelect } from "@chakra-ui/react";
 
 interface MenuProps {
   chapterVerses: verseProps[];
@@ -46,38 +46,42 @@ const Menu = ({
       gap={"10px"}
       py={"0.5rem"}
       px={"1rem"}
-      bgColor={"rgb(187, 186, 186)"}
+      bgColor={"gray.emphasized"}
       position={"sticky"}
       top={"0"}
       zIndex={"1020"}
     >
       <Box w={"15vw"}>
-        <Select
-          onChange={onChangeChapter}
-          value={currentChapter}
-          dir="ltr"
-          bgColor={"white"}
-        >
-          {quranService.chapterNames.map((chapter) => (
-            <option key={chapter.id} value={chapter.id}>
-              {chapter.id}. {chapter.name}
-            </option>
-          ))}
-        </Select>
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            onChange={onChangeChapter}
+            value={currentChapter}
+            bgColor={"bg"}
+          >
+            {quranService.chapterNames.map((chapter) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.id}. {chapter.name}
+              </option>
+            ))}
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
       </Box>
       <div>
-        <Select
-          onClick={onClickSelectVerse}
-          defaultValue={currentVerse}
-          dir="ltr"
-          bgColor={"white"}
-        >
-          {chapterVerses.map((verse) => (
-            <option key={verse.key} value={verse.key}>
-              {verse.verseid}
-            </option>
-          ))}
-        </Select>
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            onClick={onClickSelectVerse}
+            defaultValue={currentVerse}
+            bgColor={"bg"}
+          >
+            {chapterVerses.map((verse) => (
+              <option key={verse.key} value={verse.key}>
+                {verse.verseid}
+              </option>
+            ))}
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
       </div>
     </Flex>
   );

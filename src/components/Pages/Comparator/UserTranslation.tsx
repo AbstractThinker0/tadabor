@@ -49,7 +49,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
 
   return (
     <Box py={2} dir="ltr">
-      <Box color={"rgb(108, 117, 125)"}>Your translation</Box>
+      <Box color={"fg.muted"}>Your translation</Box>
       {stateEditable ? (
         <>
           <TextareaAutosize
@@ -60,7 +60,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
 
           <Button
             onClick={onClickSave}
-            colorScheme="green"
+            colorPalette="green"
             size="sm"
             fontWeight={"normal"}
           >
@@ -78,7 +78,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
 
           <Button
             onClick={onClickAdd}
-            colorScheme="green"
+            colorPalette="green"
             size="sm"
             fontWeight={"normal"}
           >

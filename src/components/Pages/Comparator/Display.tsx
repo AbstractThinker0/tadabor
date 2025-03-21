@@ -10,8 +10,9 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
-import { Box, useBoolean } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { useBoolean } from "usehooks-ts";
 
 interface DisplayProps {
   currentChapter: string;
@@ -63,12 +64,12 @@ const Display = ({
   );
 
   return (
-    <Box bgColor={"#f7fafc"} px={5}>
+    <Box bgColor={"brand.bg"} px={5}>
       <Box
-        bgColor={"rgba(33, 37, 41, .03)"}
+        bgColor={"bg.subtle"}
         textAlign={"center"}
         fontSize={"xx-large"}
-        color={"blue.500"}
+        color={"blue.solid"}
       >
         سورة {quranService.getChapterName(currentChapter)}
       </Box>
@@ -106,27 +107,32 @@ const VerseItem = ({
 }: VerseItemProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   return (
-    <Box px={"5px"} bgColor={isSelected ? "antiquewhite" : undefined}>
+    <Box
+      px={"5px"}
+      aria-selected={isSelected}
+      _selected={{ bgColor: "orange.emphasized" }}
+    >
       <VerseContainer
         dir="rtl"
         py={2}
-        borderTop={"1px solid #dee2e6"}
-        borderBottom={"1px solid #dee2e6"}
+        borderTop={"1px solid"}
+        borderBottom={"1px solid"}
+        borderColor={"border.emphasized"}
         data-id={verse.key}
       >
         {verse.versetext}
         <ButtonVerse onClick={() => onClickVerse(verse.key)}>
           ({verse.verseid})
         </ButtonVerse>
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
       {Object.keys(transVerses).map((trans) => (
         <Box py={2} key={trans} dir="ltr">
-          <Box color={"rgb(108, 117, 125)"}>{trans}</Box>
+          <Box color={"fg.muted"}>{trans}</Box>
           <Box fontSize={`${notesFS}rem`}>
             {transVerses[trans][verse.rank].versetext}
           </Box>
