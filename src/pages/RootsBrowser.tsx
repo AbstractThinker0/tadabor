@@ -8,13 +8,7 @@ import PanelRoots from "@/components/Pages/RootsBrowser/PanelRoots";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Tab, TabList } from "@chakra-ui/react";
-
-import {
-  TabContent,
-  TabsContainer,
-  TabsPanels,
-} from "@/components/Generic/Tabs";
+import { Tabs } from "@chakra-ui/react";
 
 const RootsBrowser = () => {
   const { t } = useTranslation();
@@ -30,32 +24,56 @@ const RootsBrowser = () => {
     dispatch(rbPageActions.setScrollKey(key));
   };
 
-  const onChangeTab = (index: number) => {
+  const onChangeTab = (index: string) => {
     dispatch(rbPageActions.setTabIndex(index));
   };
 
   return (
-    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
-      <TabList>
-        <Tab>{t("searcher_search")}</Tab>
+    <Tabs.Root
+      colorPalette={"blue"}
+      value={tabIndex}
+      onValueChange={(e) => onChangeTab(e.value)}
+      bgColor={"brand.bg"}
+      overflow="hidden"
+      maxH="100%"
+      h="100%"
+      display={"flex"}
+      flexDirection={"column"}
+    >
+      <Tabs.List>
+        <Tabs.Trigger value="rootsTab">{t("searcher_search")}</Tabs.Trigger>
 
-        <Tab hidden={!verseTab}>{verseTab}</Tab>
-      </TabList>
+        <Tabs.Trigger value="verseTab" hidden={!verseTab}>
+          {verseTab}
+        </Tabs.Trigger>
+      </Tabs.List>
 
-      <TabsPanels>
-        <TabContent>
-          <PanelRoots />
-        </TabContent>
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="rootsTab"
+      >
+        <PanelRoots />
+      </Tabs.Content>
 
-        <TabContent>
-          <PanelQuran
-            verseKey={verseTab}
-            scrollKey={scrollKey}
-            setScrollKey={setScrollKey}
-          />
-        </TabContent>
-      </TabsPanels>
-    </TabsContainer>
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="verseTab"
+      >
+        <PanelQuran
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      </Tabs.Content>
+    </Tabs.Root>
   );
 };
 

@@ -17,17 +17,17 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import {
   Box,
   Button,
-  Collapse,
-  Divider,
+  Collapsible,
+  Separator,
   Flex,
   HStack,
   Spacer,
-  useBoolean,
-  Tooltip,
 } from "@chakra-ui/react";
 
+import { Tooltip } from "@/components/ui/tooltip";
 import { CollapsibleNote, FormText } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+import { useBoolean } from "usehooks-ts";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -131,8 +131,8 @@ const RootComponent = memo(
     const currentNote = useAppSelector(selecRootNote(root_id));
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
-    const [isOpen, setOpen] = useBoolean();
-    const [isOccurencesOpen, setOccurencesOpen] = useBoolean();
+    const { value: isOpen, toggle: setOpen } = useBoolean();
+    const { value: isOccurencesOpen, toggle: setOccurencesOpen } = useBoolean();
 
     const noteText = currentNote?.text || "";
     const inputDirection = currentNote?.dir || "";
@@ -183,34 +183,36 @@ const RootComponent = memo(
     }, []);
 
     return (
-      <Box px={"5px"} border={"1px solid"} borderColor={"gray.300"}>
+      <Box px={"5px"} border={"1px solid"} borderColor={"gray.emphasized"}>
         <Flex justify={"center"} fontSize={"larger"} alignItems={"center"}>
           <Spacer />
           <Flex w={"3.5rem"} justify={"center"}>
             {root_name}
           </Flex>
           <Flex flex={1}>
-            <ButtonExpand onClick={setOpen.toggle} />
+            <ButtonExpand onClick={setOpen} />
             <Button
-              colorScheme="teal"
+              colorPalette="teal"
               variant={"outline"}
-              onClick={setOccurencesOpen.toggle}
+              onClick={setOccurencesOpen}
             >
               {t("derivations")} ({root_count})
             </Button>
           </Flex>
         </Flex>
-        <Collapse in={isOpen}>
-          <FormText
-            inputValue={noteText}
-            isEditable={stateEditable}
-            inputDirection={inputDirection}
-            handleSetDirection={handleSetDirection}
-            onChangeTextarea={handleNoteChange}
-            onSubmitForm={handleNoteSubmit}
-            onClickEditButton={handleEditClick}
-          />
-        </Collapse>
+        <Collapsible.Root open={isOpen}>
+          <Collapsible.Content>
+            <FormText
+              inputValue={noteText}
+              isEditable={stateEditable}
+              inputDirection={inputDirection}
+              handleSetDirection={handleSetDirection}
+              onChangeTextarea={handleNoteChange}
+              onSubmitForm={handleNoteSubmit}
+              onClickEditButton={handleEditClick}
+            />
+          </Collapsible.Content>
+        </Collapsible.Root>
         <RootOccurences
           isOccurencesOpen={isOccurencesOpen}
           root_occurences={root_occurences}
@@ -313,33 +315,37 @@ const RootOccurences = ({
   );
 
   return (
-    <Collapse in={isOccurencesOpen}>
-      <Box
-        padding={3}
-        backgroundColor={"rgb(247, 250, 252)"}
-        maxH={"60vh"}
-        overflowY={"scroll"}
-        onScroll={onScrollOccs}
-        dir="rtl"
-        ref={handleOccurencesRef}
-      >
-        <DerivationsComponent
-          searchIndexes={derivations}
-          handleDerivationClick={handleDerivationClick}
-        />
-        {rootVerses.slice(0, itemsCount).map((verse) => (
-          <Box
-            key={verse.key}
-            padding={1}
-            borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-            backgroundColor={scrollKey === verse.key ? "beige" : undefined}
-            data-child-id={verse.key}
-          >
-            <RootVerse rootVerse={verse} handleVerseTab={handleVerseTab} />
-          </Box>
-        ))}
-      </Box>
-    </Collapse>
+    <Collapsible.Root open={isOccurencesOpen}>
+      <Collapsible.Content>
+        <Box
+          padding={3}
+          backgroundColor={"brand.contrast"}
+          maxH={"60vh"}
+          overflowY={"scroll"}
+          onScroll={onScrollOccs}
+          dir="rtl"
+          ref={handleOccurencesRef}
+        >
+          <DerivationsComponent
+            searchIndexes={derivations}
+            handleDerivationClick={handleDerivationClick}
+          />
+          {rootVerses.slice(0, itemsCount).map((verse) => (
+            <Box
+              key={verse.key}
+              padding={1}
+              borderBottom={"1.5px solid"}
+              borderColor={"border.emphasized"}
+              aria-selected={scrollKey === verse.key}
+              _selected={{ bgColor: "orange.emphasized" }}
+              data-child-id={verse.key}
+            >
+              <RootVerse rootVerse={verse} handleVerseTab={handleVerseTab} />
+            </Box>
+          ))}
+        </Box>
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 };
 
@@ -352,9 +358,9 @@ const DerivationsComponent = memo(
   ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
     return (
       <>
-        <HStack wrap="wrap" p={1} divider={<>-</>}>
+        <HStack wrap="wrap" p={1} separator={<>-</>}>
           {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <Tooltip hasArrow key={index} label={root.text}>
+            <Tooltip showArrow key={index} content={root.text}>
               <Button
                 px={2}
                 fontSize="xl"
@@ -364,7 +370,7 @@ const DerivationsComponent = memo(
             </Tooltip>
           ))}
         </HStack>
-        <Divider />
+        <Separator />
       </>
     );
   }
@@ -380,7 +386,7 @@ interface RootVerseProps {
 const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
   const quranService = useQuran();
 
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
@@ -396,7 +402,7 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
           onClick={onClickChapter}
         >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
         )
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
       </VerseContainer>
 
       <CollapsibleNote isOpen={isOpen} inputKey={rootVerse.key} />

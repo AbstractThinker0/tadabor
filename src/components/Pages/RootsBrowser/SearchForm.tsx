@@ -11,11 +11,12 @@ import {
   Box,
   Flex,
   Input,
-  Checkbox,
   HStack,
   Button,
-  StackDivider,
+  StackSeparator,
 } from "@chakra-ui/react";
+
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SearchFormProps {
   searchString: string;
@@ -35,8 +36,8 @@ const SearchForm = ({
     dispatch(rbPageActions.setSearchString(event.target.value));
   };
 
-  const onChangeInclusive = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(rbPageActions.setSearchInclusive(event.target.checked));
+  const onChangeInclusive = (checked: boolean) => {
+    dispatch(rbPageActions.setSearchInclusive(checked));
   };
 
   return (
@@ -45,7 +46,7 @@ const SearchForm = ({
         <Box>
           <Flex gap={1}>
             <Input
-              backgroundColor={"white"}
+              backgroundColor={"bg"}
               type="search"
               value={searchString}
               aria-label="Search"
@@ -57,7 +58,10 @@ const SearchForm = ({
 
           <Flex gap={1} alignSelf={"start"}>
             <Box fontWeight={"bold"}>{t("search_options")}</Box>{" "}
-            <Checkbox isChecked={searchInclusive} onChange={onChangeInclusive}>
+            <Checkbox
+              checked={searchInclusive}
+              onCheckedChange={(e) => onChangeInclusive(!!e.checked)}
+            >
               {t("search_inclusive")}
             </Checkbox>
           </Flex>
@@ -77,10 +81,10 @@ const AlphabetsComponent = () => {
 
   return (
     <HStack
-      spacing={0}
+      gap={0}
       justify={"center"}
       wrap={"wrap"}
-      divider={<StackDivider borderColor="gray" />}
+      separator={<StackSeparator borderColor="border.emphasized" />}
       dir="rtl"
     >
       {arabicAlpha.map((letter, index) => (
@@ -89,9 +93,9 @@ const AlphabetsComponent = () => {
           px={2.5}
           variant={"ghost"}
           key={index}
-          colorScheme="blue"
-          color={"blue.500"}
-          fontSize={"1.1rem"}
+          colorPalette="blue"
+          color={"blue.solid"}
+          fontSize={"lg"}
           onClick={() => onLetterClick(letter)}
         >
           {letter}
