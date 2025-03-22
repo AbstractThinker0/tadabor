@@ -7,13 +7,7 @@ import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Flex, Tab, TabList } from "@chakra-ui/react";
-
-import {
-  TabContent,
-  TabsContainer,
-  TabsPanels,
-} from "@/components/Generic/Tabs";
+import { Flex, Tabs } from "@chakra-ui/react";
 
 import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
@@ -37,33 +31,60 @@ const Searcher = () => {
     dispatch(searcherPageActions.setScrollKey(key));
   };
 
-  const onChangeTab = (index: number) => {
+  const onChangeTab = (index: string) => {
     dispatch(searcherPageActions.setTabIndex(index));
   };
 
   return (
-    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
-      <TabList>
-        <Tab>{t("searcher_search")}</Tab>
+    <Tabs.Root
+      colorPalette={"blue"}
+      value={tabIndex}
+      onValueChange={(e) => onChangeTab(e.value)}
+      bgColor={"brand.bg"}
+      overflow="hidden"
+      maxH="100%"
+      h="100%"
+      display={"flex"}
+      flexDirection={"column"}
+      lazyMount
+    >
+      <Tabs.List>
+        <Tabs.Trigger value="searcherTab">{t("searcher_search")}</Tabs.Trigger>
 
-        <Tab hidden={!verseTab}>{verseTab}</Tab>
-      </TabList>
-      <TabsPanels>
-        <TabContent>
-          <Flex gap={"10px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
-            <SearcherSide />
-            <SearcherDisplay />
-          </Flex>
-        </TabContent>
-        <TabContent>
-          <PanelQuran
-            verseKey={verseTab}
-            scrollKey={scrollKey}
-            setScrollKey={setScrollKey}
-          />
-        </TabContent>
-      </TabsPanels>
-    </TabsContainer>
+        <Tabs.Trigger value="verseTab" hidden={!verseTab}>
+          {verseTab}
+        </Tabs.Trigger>
+      </Tabs.List>
+
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="searcherTab"
+      >
+        <Flex gap={"10px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
+          <SearcherSide />
+          <SearcherDisplay />
+        </Flex>
+      </Tabs.Content>
+
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="verseTab"
+      >
+        <PanelQuran
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      </Tabs.Content>
+    </Tabs.Root>
   );
 };
 
