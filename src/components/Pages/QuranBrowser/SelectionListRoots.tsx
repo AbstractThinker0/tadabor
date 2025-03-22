@@ -43,7 +43,8 @@ const SelectionListRoots = memo(
         flexGrow="1"
         flexDirection="column"
         overflowY="hidden"
-        border="1px solid gainsboro"
+        border="1px solid"
+        borderColor={"border.emphasized"}
         borderRadius={6}
         mt="8px"
         mb="2px"
@@ -104,11 +105,11 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
       minH="100%"
       overflowY="scroll"
       p="4px"
-      bgColor="var(--color-primary)"
+      bgColor={"brand.bg"}
       cursor="pointer"
       aria-disabled={isDisabled}
       _disabled={{
-        bgColor: "#e9ecef",
+        bgColor: "gray.muted",
         cursor: "not-allowed",
         color: "gray",
       }}
@@ -141,7 +142,7 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
     <Box
       px="12px"
       aria-selected={isSelected}
-      _selected={{ color: "white", bgColor: "#767676" }}
+      _selected={{ bgColor: "gray.emphasized" }}
       onClick={() => onClickRoot(root.name)}
     >
       {root.name}

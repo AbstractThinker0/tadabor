@@ -14,16 +14,15 @@ import {
   Box,
   Flex,
   HStack,
-  Radio,
-  RadioGroup,
-  Checkbox,
   Wrap,
-  FormControl,
   Button,
   Textarea,
   VStack,
   Text,
 } from "@chakra-ui/react";
+
+import { Radio, RadioGroup } from "@/components/ui/radio";
+import { Checkbox } from "@/components/ui/checkbox";
 import { IconSearch } from "@/components/Generic/Icons";
 
 const SearchPanel = () => {
@@ -76,16 +75,16 @@ const SearchPanel = () => {
     dispatch(qbPageActions.gotoChapter(chapterID.toString()));
   };
 
-  const onChangeDiacritics = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchDiacritics(e.target.checked);
+  const onChangeDiacritics = (checked: boolean) => {
+    setSearchDiacritics(checked);
   };
 
-  const onChangeIdentical = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchIdentical(e.target.checked);
+  const onChangeIdentical = (checked: boolean) => {
+    setSearchIdentical(checked);
   };
 
-  const onChangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchStart(e.target.checked);
+  const onChangeStart = (checked: boolean) => {
+    setSearchStart(checked);
   };
 
   return (
@@ -102,31 +101,37 @@ const SearchPanel = () => {
           searchMethod={searchMethod}
           setSearchMethod={setSearchMethod}
         />
-        <div>
+        <Box>
           <Checkbox
-            isChecked={searchDiacritics}
-            onChange={onChangeDiacritics}
-            isDisabled={isRootSearch}
+            colorPalette={"blue"}
+            variant={"subtle"}
+            checked={searchDiacritics}
+            onCheckedChange={(e) => onChangeDiacritics(!!e.checked)}
+            disabled={isRootSearch}
           >
             {t("search_diacritics")}
           </Checkbox>
           <Wrap>
             <Checkbox
-              isChecked={searchIdentical}
-              onChange={onChangeIdentical}
-              isDisabled={isRootSearch}
+              colorPalette={"blue"}
+              variant={"subtle"}
+              checked={searchIdentical}
+              onCheckedChange={(e) => onChangeIdentical(!!e.checked)}
+              disabled={isRootSearch}
             >
               {t("search_identical")}
             </Checkbox>
             <Checkbox
-              isChecked={searchStart}
-              onChange={onChangeStart}
-              isDisabled={isRootSearch}
+              colorPalette={"blue"}
+              variant={"subtle"}
+              checked={searchStart}
+              onCheckedChange={(e) => onChangeStart(!!e.checked)}
+              disabled={isRootSearch}
             >
               {t("search_start")}
             </Checkbox>
           </Wrap>
-        </div>
+        </Box>
       </Box>
       <FormWordSearch
         onSearchSubmit={onSearchSubmit}
@@ -159,11 +164,17 @@ const RadioSearchMethod = ({
   };
 
   return (
-    <Flex flexWrap="wrap">
+    <Flex flexWrap="wrap" py={1}>
       <Box fontWeight="bold" paddingInlineEnd="5px">
         {t("search_method")}
       </Box>
-      <RadioGroup onChange={onChangeRadio} value={searchMethod}>
+      <RadioGroup
+        colorPalette={"blue"}
+        onValueChange={(e) => onChangeRadio(e.value)}
+        value={searchMethod}
+        alignSelf={"center"}
+        variant={"subtle"}
+      >
         <HStack>
           <Radio value={SEARCH_METHOD.ROOT}>{t("search_root")}</Radio>
           <Radio value={SEARCH_METHOD.WORD}>{t("search_word")}</Radio>
@@ -198,7 +209,7 @@ const FormWordSearch = ({
   };
 
   return (
-    <FormControl as="form" role="search" onSubmit={handleSearchSubmit}>
+    <Box as="form" role="search" onSubmit={handleSearchSubmit} pt={2}>
       <VStack>
         <Textarea
           required
@@ -207,18 +218,18 @@ const FormWordSearch = ({
           onChange={searchStringHandle}
           rows={1}
           value={searchString}
-          bgColor="white"
+          bgColor="bg"
         />
         <Button
-          leftIcon={<IconSearch />}
-          colorScheme="green"
-          variant="outline"
+          colorPalette="green"
+          variant="solid"
           type="submit"
+          fontSize={"md"}
         >
-          {t("search_button")}
+          <IconSearch /> {t("search_button")}
         </Button>
       </VStack>
-    </FormControl>
+    </Box>
   );
 };
 

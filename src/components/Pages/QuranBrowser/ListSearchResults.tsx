@@ -19,19 +19,18 @@ import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 import {
   Box,
   Button,
-  Divider,
+  Separator,
   HStack,
   Heading,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
-  Tooltip,
-  useBoolean,
 } from "@chakra-ui/react";
+
+import { Tag } from "@/components/ui/tag";
+import { Tooltip } from "@/components/ui/tooltip";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+import { useBoolean } from "usehooks-ts";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -92,7 +91,7 @@ const ListSearchResults = ({
 
   if (searchingChapters.length === 0) {
     return (
-      <Heading p={3} size="md" dir="auto">
+      <Heading p={3} size="lg" dir="auto">
         {t("select_notice")}
       </Heading>
     );
@@ -158,7 +157,7 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   return (
     <div dir="auto">
-      <Heading pb={3} size="lg" color="blue.600">
+      <Heading pb={3} size="2xl" color="blue.fg">
         {searchText}
       </Heading>
       {searchChapters.length !== 114 && (
@@ -187,11 +186,15 @@ const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
   return (
     <HStack py={1} wrap={"wrap"}>
       {searchChapters.map((chapterID, index) => (
-        <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
-          <TagLabel overflow={"visible"}>
-            {quranService.getChapterName(chapterID)}
-          </TagLabel>
-          <TagCloseButton onClick={() => onClickClose(chapterID)} />
+        <Tag
+          colorPalette="teal"
+          size="xl"
+          variant={"solid"}
+          overflow={"visible"}
+          onClose={() => onClickClose(chapterID)}
+          key={index}
+        >
+          {quranService.getChapterName(chapterID)}
         </Tag>
       ))}
     </HStack>
@@ -211,20 +214,21 @@ const DerivationsComponent = ({
 }: DerivationsComponentProps) => {
   return (
     <>
-      <Divider pb={1} borderColor={"gray"} />
-      <HStack wrap="wrap" p={2} divider={<>-</>}>
+      <Separator pb={1} borderColor={"border.emphasized"} />
+      <HStack wrap="wrap" p={2} separator={<>-</>}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
-          <Tooltip hasArrow key={index} label={root.text}>
+          <Tooltip showArrow key={index} content={root.text}>
             <Button
               px={2}
-              fontSize="xl"
+              fontSize="2xl"
+              fontWeight={"bold"}
               variant="ghost"
               onClick={() => handleRootClick(root.key)}
             >{`${root.name}`}</Button>
           </Tooltip>
         ))}
       </HStack>
-      <Divider mb={2} borderColor={"gray"} />
+      <Separator mb={2} borderColor={"border.emphasized"} />
     </>
   );
 };
@@ -240,7 +244,7 @@ const SearchErrorsComponent = ({
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
-    <Text p={3} dir="auto" color="rgb(220, 53, 69)">
+    <Text p={3} dir="auto" color="red.solid">
       {searchMethod === SEARCH_METHOD.WORD
         ? t("search_fail")
         : t("search_root_error")}
@@ -257,7 +261,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle } = useBoolean();
 
   const onClickVerseChapter = () => {
     dispatch(qbPageActions.gotoChapter(verse.suraid));
@@ -268,8 +272,9 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
     <Box
       data-id={verse.key}
       p={1}
-      borderBottom="1px solid gainsboro"
-      backgroundColor={isSelected ? "bisque" : undefined}
+      borderBottom="1px solid"
+      borderColor={"border.emphasized"}
+      backgroundColor={isSelected ? "orange.muted" : undefined}
     >
       <VerseContainer>
         <VerseHighlightMatches verse={verse} /> (
@@ -279,7 +284,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
           verse.verseid
         }`}</ButtonVerse>
         )
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={toggle} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>

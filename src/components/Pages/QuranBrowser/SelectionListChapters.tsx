@@ -8,7 +8,8 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { selectedChaptersType } from "@/types";
 
-import { Flex, Input, Box, Checkbox, Button } from "@chakra-ui/react";
+import { Flex, Input, Box, Button } from "@chakra-ui/react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SelectionListChaptersProps {
   handleCurrentChapter: (chapterID: number) => void;
@@ -108,7 +109,7 @@ const SelectionListChapters = ({
   return (
     <Flex flexDirection="column" h="40%">
       <Input
-        bgColor="var(--color-fifth)"
+        bgColor="bg"
         borderBottom="none"
         borderBottomRadius="0"
         type="search"
@@ -120,8 +121,9 @@ const SelectionListChapters = ({
       />
       <Box
         flexGrow="1"
-        bgColor="var(--color-primary)"
-        border="1px solid gainsboro"
+        bgColor="brand.bg"
+        border="1px solid"
+        borderColor={"border.emphasized"}
         overflowY="scroll"
         padding="2px"
         ref={refChaptersList}
@@ -138,37 +140,44 @@ const SelectionListChapters = ({
                 !searchingString.length && currentChapter === chapter.id
               }
               _selected={{
-                color: "white",
-                bgColor: "#767676",
+                bgColor: "gray.emphasized",
               }}
             >
               <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
-                isChecked={selectedChapters[chapter.id]}
-                onChange={() => onChangeSelectChapter(chapter.id)}
+                colorPalette={"blue"}
+                checked={selectedChapters[chapter.id]}
+                onCheckedChange={() => onChangeSelectChapter(chapter.id)}
               />
             </Flex>
           ))}
       </Box>
-      <Flex alignItems="center" flexWrap="wrap" padding="5px" bgColor="#e7e6e6">
+      <Flex
+        alignItems="center"
+        flexWrap="wrap"
+        padding="5px"
+        bgColor={"gray.muted"}
+        border="1px solid"
+        borderColor={"border.emphasized"}
+      >
         <Box fontWeight="bold">{t("search_scope")}:</Box>
         <Flex justifyContent="center" gap="3px">
           <Button
             px={2}
-            colorScheme="teal"
+            colorPalette="teal"
             fontWeight="normal"
-            isDisabled={getSelectedCount === 114}
+            disabled={getSelectedCount === 114}
             onClick={onClickSelectAll}
           >
             {t("all_chapters")}
           </Button>
           <Button
             px={2}
-            colorScheme="teal"
+            colorPalette="teal"
             fontWeight="normal"
-            isDisabled={onlyCurrentSelected}
+            disabled={onlyCurrentSelected}
             onClick={onClickDeselectAll}
           >
             {t("current_chapter")}
