@@ -27,12 +27,14 @@ import {
   Button,
   CardBody,
   Flex,
-  Select,
-  useBoolean,
-  Collapse,
-  Checkbox,
+  Collapsible,
+  NativeSelect,
 } from "@chakra-ui/react";
+
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { ButtonVerse } from "@/components/Generic/Buttons";
+import { useBoolean } from "usehooks-ts";
 
 const ListVerses = () => {
   const quranService = useQuran();
@@ -79,8 +81,9 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
   return (
     <Box
       py={"9px"}
-      borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-      bgColor={scrollKey === verse.key ? "beige" : undefined}
+      borderBottom={"1.5px solid"}
+      borderColor={"border.emphasized"}
+      bgColor={scrollKey === verse.key ? "orange.emphasized" : undefined}
       data-id={verse.key}
     >
       <VerseWords verse={verse} />
@@ -97,7 +100,7 @@ interface VerseWordsProps {
 const VerseWords = ({ verse }: VerseWordsProps) => {
   const dispatch = useAppDispatch();
 
-  const [isOpenWordBox, setOpenWordBox] = useBoolean();
+  const { value: isOpenWordBox, setValue: setOpenWordBox } = useBoolean();
   const [isSpace, setSpace] = useState(false);
 
   const [selectedLetter, setSelectedLetter] = useState("");
@@ -112,7 +115,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   };
 
   const handleClickLetter = (letterKey: string) => {
-    setOpenWordBox.on();
+    setOpenWordBox(true);
 
     if (letterKey) {
       const wordIndex = letterKey.split("-")[0];
@@ -124,9 +127,9 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
 
   const handleClickWord = (wordIndex: number) => {
     if (selectedWord === wordIndex) {
-      setOpenWordBox.off();
+      setOpenWordBox(false);
     } else {
-      setOpenWordBox.on();
+      setOpenWordBox(true);
     }
 
     setSelectedWord(selectedWord === wordIndex ? -1 : wordIndex);
@@ -153,8 +156,8 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
               borderRadius={"5px"}
               cursor={"pointer"}
               aria-selected={wordIndex === selectedWord}
-              _selected={{ bgColor: "rgb(159, 159, 205)" }}
-              _hover={{ bgColor: "rgb(159, 159, 205)" }}
+              _selected={{ bgColor: "purple.emphasized" }}
+              _hover={{ bgColor: "purple.emphasized" }}
               onClick={() => handleClickWord(wordIndex)}
             >
               {splitArabicLetters(word).map((letter, letterIndex) => (
@@ -216,8 +219,9 @@ const SingleLetter = ({
   return (
     <Box
       as="span"
-      bgColor={letterKey === selectedLetter ? "cornflowerblue" : undefined}
-      _hover={{ bgColor: "cornflowerblue" }}
+      aria-selected={letterKey === selectedLetter}
+      _selected={{ bgColor: "blue.emphasized" }}
+      _hover={{ bgColor: "blue.emphasized" }}
       onClick={onClickLetter}
     >
       {letter}
@@ -319,7 +323,8 @@ const InfoBox = ({
         <Box
           as="span"
           padding={"2px"}
-          bgColor={index === selectedWord ? "rgb(159, 159, 205)" : undefined}
+          aria-selected={index === selectedWord}
+          _selected={{ bgColor: "purple.emphasized" }}
         >
           {data.map((def, index) => (
             <span key={index}>
@@ -409,66 +414,77 @@ const InfoBox = ({
   };
 
   return (
-    <Collapse in={isOpen}>
-      <Flex
-        border={"1px solid rgba(0, 0, 0, .175)"}
-        borderRadius={"0.375rem"}
-        marginTop={"6px"}
-        padding={2}
-        bgColor={"white"}
-        dir="rtl"
-      >
-        <span style={{ fontSize: `${notesFS}rem` }}>
-          {verseText.split(" ").map((word, index) => renderWord(word, index))}
-        </span>
-      </Flex>
-      <Collapse in={!!selectedLetter}>
-        <Box
-          marginTop={"6px"}
-          border={"1px solid rgba(0, 0, 0, .175)"}
+    <Collapsible.Root open={isOpen}>
+      <Collapsible.Content>
+        <Flex
+          border={"1px solid"}
           borderRadius={"0.375rem"}
+          borderColor={"border.emphasized"}
+          marginTop={"6px"}
           padding={2}
-          bgColor={"white"}
-          dir="ltr"
+          bgColor={"bg"}
+          dir="rtl"
         >
-          <Flex flexDir={"column"} gap={"0.5rem"}>
-            <Flex>
-              <span>Type:</span>
-              <Select
-                aria-label="Select"
-                value={letterRole}
-                onChange={onChangeSelectRole}
-              >
-                <option value={LetterRole.Unit}>Unit</option>
-                <option value={LetterRole.Suffix}>Suffix</option>
-                <option value={LetterRole.Ignored}>Unused</option>
-              </Select>
-            </Flex>
-            <Flex>
-              <span>Definition:</span>
-              <Select
-                disabled={letterRole != LetterRole.Unit}
-                aria-label="Select"
-                value={letterDefinitionID}
-                onChange={onChangeSelectDef}
-              >
-                <option value="">None</option>
-                {renderLetterDefinitionOptions()}
-              </Select>
-            </Flex>
-            <Button
-              colorScheme="blue"
-              alignSelf={"center"}
-              width={"5rem"}
-              fontWeight={"normal"}
-              onClick={onClickSave}
+          <span style={{ fontSize: `${notesFS}rem` }}>
+            {verseText.split(" ").map((word, index) => renderWord(word, index))}
+          </span>
+        </Flex>
+        <Collapsible.Root open={!!selectedLetter}>
+          <Collapsible.Content>
+            <Box
+              marginTop={"6px"}
+              border={"1px solid"}
+              borderRadius={"0.375rem"}
+              borderColor={"border.emphasized"}
+              padding={2}
+              bgColor={"bg"}
+              dir="ltr"
             >
-              Save
-            </Button>
-          </Flex>
-        </Box>
-      </Collapse>
-    </Collapse>
+              <Flex flexDir={"column"} gap={"0.5rem"}>
+                <Flex>
+                  <span>Type:</span>
+                  <NativeSelect.Root>
+                    <NativeSelect.Field
+                      aria-label="Select"
+                      value={letterRole}
+                      onChange={onChangeSelectRole}
+                    >
+                      <option value={LetterRole.Unit}>Unit</option>
+                      <option value={LetterRole.Suffix}>Suffix</option>
+                      <option value={LetterRole.Ignored}>Unused</option>
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                </Flex>
+                <Flex>
+                  <span>Definition:</span>
+                  <NativeSelect.Root disabled={letterRole != LetterRole.Unit}>
+                    <NativeSelect.Field
+                      aria-label="Select"
+                      value={letterDefinitionID}
+                      onChange={onChangeSelectDef}
+                    >
+                      <option value="">None</option>
+                      {renderLetterDefinitionOptions()}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                </Flex>
+                <Button
+                  colorPalette="blue"
+                  alignSelf={"center"}
+                  width={"5rem"}
+                  fontWeight={"normal"}
+                  onClick={onClickSave}
+                >
+                  Save
+                </Button>
+              </Flex>
+            </Box>
+          </Collapsible.Content>
+        </Collapsible.Root>
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 };
 

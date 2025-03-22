@@ -20,7 +20,7 @@ import {
   Box,
   Button,
   Flex,
-  Select,
+  NativeSelect,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -29,13 +29,13 @@ const PanelDefinitions = () => {
   const { t } = useTranslation();
 
   const {
-    isOpen: isOpenCreatePreset,
+    open: isOpenCreatePreset,
     onOpen: onOpenCreatePreset,
     onClose: onCloseCreatePreset,
   } = useDisclosure();
 
   const {
-    isOpen: isOpenEditLetter,
+    open: isOpenEditLetter,
     onOpen: onOpenEditLetter,
     onClose: onCloseEditLetter,
   } = useDisclosure();
@@ -94,26 +94,23 @@ const PanelDefinitions = () => {
         <Text as="span" fontWeight={"bold"} fontSize={"larger"}>
           {t("letters_preset")}
         </Text>
-        <Select
-          dir="ltr"
-          aria-label="Select"
-          value={currentPreset}
-          onChange={onChangePreset}
-          bgColor={"white"}
-        >
-          <option value="-1">Default</option>
-          {Object.keys(letterPresets).map((presetID) => (
-            <option key={presetID} value={presetID}>
-              {letterPresets[presetID]}
-            </option>
-          ))}
-        </Select>
-        <Button
-          bgColor={"black"}
-          color={"white"}
-          fontWeight={"normal"}
-          onClick={onOpenCreatePreset}
-        >
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            aria-label="Select"
+            value={currentPreset}
+            onChange={onChangePreset}
+            bgColor={"bg"}
+          >
+            <option value="-1">Default</option>
+            {Object.keys(letterPresets).map((presetID) => (
+              <option key={presetID} value={presetID}>
+                {letterPresets[presetID]}
+              </option>
+            ))}
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
+        <Button fontWeight={"normal"} onClick={onOpenCreatePreset}>
           Create
         </Button>
       </Flex>
@@ -172,17 +169,15 @@ const ItemLetter = ({
         as="span"
         width={"50%"}
         height={"60px"}
-        bgColor={"white"}
+        bgColor={"bg"}
         borderRadius={"0.3rem"}
         padding={"5px"}
-        borderStyle={"solid"}
-        borderColor={"rgb(51, 52, 52)"}
         dir={letterDef?.dir || ""}
       >
         {letterDef?.definition || ""}
       </Box>{" "}
       <Button
-        colorScheme="blue"
+        colorPalette="blue"
         fontWeight={"normal"}
         onClick={() => onClickEdit(letter)}
       >

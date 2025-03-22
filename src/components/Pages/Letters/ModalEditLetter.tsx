@@ -11,16 +11,14 @@ import { dbFuncs } from "@/util/db";
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
+  Dialog,
   Button,
   ButtonGroup,
+  DialogOpenChangeDetails,
 } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 
 interface ModalEditLetterProps {
@@ -86,6 +84,12 @@ const ModalEditLetter = ({
     setLetterDir("");
   };
 
+  const onOpenChange = (details: DialogOpenChangeDetails) => {
+    if (!details.open) {
+      onCloseComplete();
+    }
+  };
+
   const handleSetDirection = (dir: string) => {
     setLetterDir(dir);
   };
@@ -95,20 +99,22 @@ const ModalEditLetter = ({
   };
 
   return (
-    <Modal
+    <Dialog.Root
       size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      onCloseComplete={onCloseComplete}
-      isCentered
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onInteractOutside={onClose}
+      placement={"center"}
     >
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Edit definition of: {currentLetter}
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+
+        <Dialog.Body>
           <div>
             <TextareaToolbar handleSetDirection={handleSetDirection} />
 
@@ -118,21 +124,23 @@ const ModalEditLetter = ({
               onChange={onChangeText}
             />
           </div>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>Cancel</Button>
-            <Button colorScheme="blue" onClick={onClickSave}>
+            <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

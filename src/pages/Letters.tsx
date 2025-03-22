@@ -7,13 +7,7 @@ import { lettersPageActions } from "@/store/slices/pages/letters";
 import PanelDefinitions from "@/components/Pages/Letters/PanelDefinitions";
 import PanelQuran from "@/components/Pages/Letters/PanelQuran";
 
-import { Tab, TabList } from "@chakra-ui/react";
-
-import {
-  TabContent,
-  TabsContainer,
-  TabsPanels,
-} from "@/components/Generic/Tabs";
+import { Tabs } from "@chakra-ui/react";
 
 const Letters = memo(() => {
   const { t } = useTranslation();
@@ -21,25 +15,49 @@ const Letters = memo(() => {
 
   const tabIndex = useAppSelector((state) => state.lettersPage.tabIndex);
 
-  const onChangeTab = (index: number) => {
+  const onChangeTab = (index: string) => {
     dispatch(lettersPageActions.setTabIndex(index));
   };
 
   return (
-    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
-      <TabList>
-        <Tab>{t("panel_definitions")}</Tab>
-        <Tab>{t("panel_display")}</Tab>
-      </TabList>
-      <TabsPanels>
-        <TabContent>
-          <PanelDefinitions />
-        </TabContent>
-        <TabContent>
-          <PanelQuran isVisible={tabIndex === 1} />
-        </TabContent>
-      </TabsPanels>
-    </TabsContainer>
+    <Tabs.Root
+      colorPalette={"blue"}
+      value={tabIndex}
+      onValueChange={(e) => onChangeTab(e.value)}
+      bgColor={"brand.bg"}
+      overflow="hidden"
+      maxH="100%"
+      h="100%"
+      display={"flex"}
+      flexDirection={"column"}
+      lazyMount
+    >
+      <Tabs.List>
+        <Tabs.Trigger value="defTab">{t("panel_definitions")}</Tabs.Trigger>
+        <Tabs.Trigger value="verseTab">{t("panel_display")}</Tabs.Trigger>
+      </Tabs.List>
+
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="defTab"
+      >
+        <PanelDefinitions />
+      </Tabs.Content>
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="verseTab"
+      >
+        <PanelQuran isVisible={tabIndex === "verseTab"} />
+      </Tabs.Content>
+    </Tabs.Root>
   );
 });
 

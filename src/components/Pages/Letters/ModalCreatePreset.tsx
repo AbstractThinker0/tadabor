@@ -10,17 +10,14 @@ import { dbFuncs } from "@/util/db";
 import { onlySpaces } from "@/util/util";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
+  Dialog,
+  DialogOpenChangeDetails,
   Button,
   ButtonGroup,
   Input,
 } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface ModalCreatePresetProps {
   isOpen: boolean;
@@ -62,21 +59,29 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
     setPresetName("");
   };
 
+  const onOpenChange = (details: DialogOpenChangeDetails) => {
+    if (!details.open) {
+      onCloseComplete();
+    }
+  };
+
   return (
-    <Modal
+    <Dialog.Root
       size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      onCloseComplete={onCloseComplete}
-      isCentered
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onInteractOutside={onClose}
+      placement={"center"}
     >
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Create a new preset
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+
+        <Dialog.Body>
           <div>
             <span>Preset name:</span>
             <Input
@@ -86,21 +91,25 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
               onChange={onChangeName}
             />
           </div>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>Close</Button>
-            <Button colorScheme="blue" onClick={onClickSave}>
+            <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

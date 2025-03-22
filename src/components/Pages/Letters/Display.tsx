@@ -30,17 +30,17 @@ const Display = () => {
       minH={"100%"}
       ref={refDisplay}
     >
-      <Card bgColor={"#f7fafc"} minH={"100%"}>
+      <Card.Root bgColor={"brand.panel"} color={"inherit"} minH={"100%"}>
         <CardHeader
           textAlign={"center"}
-          color={"blue.600"}
+          color={"blue.fg"}
           fontSize={"xx-large"}
           py={1}
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
         <ListVerses />
-      </Card>
+      </Card.Root>
     </Box>
   );
 };
