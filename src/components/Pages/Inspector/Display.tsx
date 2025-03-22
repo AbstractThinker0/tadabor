@@ -22,23 +22,26 @@ const Display = ({ currentChapter }: DisplayProps) => {
 
   return (
     <Box p={2} flex={1} overflowY={"scroll"} minH={"100%"} ref={refDisplay}>
-      <Card
-        bgColor={"#f7fafc"}
+      <Card.Root
+        bgColor={"brand.contrast"}
         minH={"100%"}
-        border={"1px solid rgba(0, 0, 0, .175)"}
+        border={"1px solid"}
+        borderColor={"border.emphasized"}
+        color={"inherit"}
       >
         <CardHeader
           py={0}
           textAlign={"center"}
           fontSize={"x-large  "}
           color={"blue.500"}
-          bgColor={"rgba(33, 37, 41, .03)"}
-          borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+          bgColor={"bg.emphasized"}
+          borderBottom={"1px solid"}
+          borderColor={"border.emphasized"}
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
         <ListVerses currentChapter={currentChapter} />
-      </Card>
+      </Card.Root>
     </Box>
   );
 };

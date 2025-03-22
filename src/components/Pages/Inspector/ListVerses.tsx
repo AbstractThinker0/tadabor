@@ -28,19 +28,17 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import {
   Box,
   CardBody,
-  useBoolean,
-  Collapse,
+  Collapsible,
   Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
   HStack,
-  Tooltip,
   Button,
-  Divider,
+  Separator,
 } from "@chakra-ui/react";
+
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { Tooltip } from "@/components/ui/tooltip";
+
+import { useBoolean } from "usehooks-ts";
 
 interface ListVersesProps {
   currentChapter: string;
@@ -88,8 +86,10 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
         stateVerses.map((verse) => (
           <Box
             p={"4px"}
-            borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-            bgColor={scrollKey === verse.key ? "#a5d9fc" : undefined}
+            borderBottom={"1.5px solid"}
+            borderColor={"border.emphasized"}
+            aria-selected={scrollKey === verse.key}
+            _selected={{ bgColor: "blue.subtle" }}
             key={verse.key}
             data-id={verse.key}
           >
@@ -123,8 +123,8 @@ const VerseWords = ({
 }: VerseWordsProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
-  const [isNoteOpen, setNoteOpen] = useBoolean();
-  const [isRootListOpen, setRootListOpen] = useBoolean();
+  const { value: isNoteOpen, toggle: setNoteOpen } = useBoolean();
+  const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
 
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const [selectedWord, setSelectedWord] = useState(-1);
@@ -145,10 +145,10 @@ const VerseWords = ({
     setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
     if (selectedWord === index) {
-      setRootListOpen.off();
+      setRootListOpen(false);
       setSelectedWord(-1);
     } else {
-      setRootListOpen.on();
+      setRootListOpen(true);
       setSelectedWord(index);
     }
   };
@@ -167,10 +167,10 @@ const VerseWords = ({
               cursor={"pointer"}
               py={"2px"}
               borderRadius={"0.3rem"}
-              _hover={{ bgColor: "rgb(255, 229, 197)" }}
+              _hover={{ bgColor: "orange.emphasized" }}
               aria-selected={selectedWord === index + 1}
               _selected={{
-                bgColor: "rgb(255, 212, 159)",
+                bgColor: "orange.emphasized",
               }}
               onClick={() => onClickWord(index + 1)}
             >
@@ -179,23 +179,26 @@ const VerseWords = ({
           </Fragment>
         ))}{" "}
         <ButtonVerse onClick={onClickVerse}>{`(${verseID})`}</ButtonVerse>
-        <ButtonExpand onClick={setNoteOpen.toggle} />
+        <ButtonExpand onClick={setNoteOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isNoteOpen} inputKey={verseKey} />
-      <Collapse in={isRootListOpen}>
-        <Accordion
-          borderRadius={"0.3rem"}
-          mt={1}
-          bgColor={"white"}
-          allowMultiple
-        >
-          <Box p={1}>
-            {currentRoots.map((root) => (
-              <RootItem key={root.id} root={root} />
-            ))}
-          </Box>
-        </Accordion>
-      </Collapse>
+      <Collapsible.Root lazyMount open={isRootListOpen}>
+        <Collapsible.Content>
+          <Accordion.Root
+            borderRadius={"0.3rem"}
+            mt={1}
+            bgColor={"bg"}
+            multiple
+            lazyMount
+          >
+            <Box p={1}>
+              {currentRoots.map((root) => (
+                <RootItem key={root.id} root={root} />
+              ))}
+            </Box>
+          </Accordion.Root>
+        </Collapsible.Content>
+      </Collapsible.Root>
     </>
   );
 };
@@ -206,34 +209,30 @@ interface RootItemProps {
 
 const RootItem = ({ root }: RootItemProps) => {
   return (
-    <AccordionItem>
-      {({ isExpanded }) => (
-        <>
-          <AccordionButton>
-            <Box as="span" flex="1">
-              {root.name} ({root.count})
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <RootOccurences
-            rootOccs={root.occurences}
-            isOccurencesOpen={isExpanded}
-          />
-        </>
-      )}
-    </AccordionItem>
+    <Accordion.Item value={root.name}>
+      <Accordion.ItemTrigger>
+        <Box as="span" flex="1">
+          {root.name} ({root.count})
+        </Box>
+        <Accordion.ItemIndicator />
+      </Accordion.ItemTrigger>
+      <RootOccurences
+        rootOccs={root.occurences}
+        //isOccurencesOpen={isExpanded}
+      />
+    </Accordion.Item>
   );
 };
 
 interface RootOccurencesProps {
   rootOccs: string[];
-  isOccurencesOpen: boolean;
+  //isOccurencesOpen: boolean;
 }
 
 const RootOccurences = ({
   rootOccs,
-  isOccurencesOpen,
-}: RootOccurencesProps) => {
+}: //isOccurencesOpen,
+RootOccurencesProps) => {
   const [itemsCount, setItemsCount] = useState(20);
   const [scrollKey, setScrollKey] = useState("");
 
@@ -251,7 +250,7 @@ const RootOccurences = ({
   const quranService = useQuran();
 
   useEffect(() => {
-    if (!isOccurencesOpen) return;
+    //if (!isOccurencesOpen) return;
 
     const localDer: searchIndexProps[] = [];
     const localVerses: verseMatchResult[] = [];
@@ -285,7 +284,7 @@ const RootOccurences = ({
 
     setDerivations(localDer);
     setRootVerses(localVerses);
-  }, [rootOccs, isOccurencesOpen]);
+  }, [rootOccs]);
 
   const handleDerivationClick = (verseKey: string, verseIndex: number) => {
     if (itemsCount < verseIndex + 20) {
@@ -314,7 +313,7 @@ const RootOccurences = ({
   );
 
   return (
-    <AccordionPanel pb={4} ref={handleCollapseRef}>
+    <Accordion.ItemContent pb={4} ref={handleCollapseRef}>
       <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
         <DerivationsComponent
           searchIndexes={derivations}
@@ -324,8 +323,10 @@ const RootOccurences = ({
           {rootVerses.slice(0, itemsCount).map((rootVerse) => (
             <Box
               padding={"4px"}
-              borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
-              bgColor={scrollKey === rootVerse.key ? "beige" : undefined}
+              borderBottom={"1.5px solid"}
+              borderColor={"border.emphasized"}
+              aria-selected={scrollKey === rootVerse.key}
+              _selected={{ bgColor: "orange.emphasized" }}
               key={rootVerse.key}
             >
               <RootVerse rootVerse={rootVerse} />
@@ -333,7 +334,7 @@ const RootOccurences = ({
           ))}
         </Box>
       </Box>
-    </AccordionPanel>
+    </Accordion.ItemContent>
   );
 };
 
@@ -346,9 +347,9 @@ const DerivationsComponent = memo(
   ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
     return (
       <>
-        <HStack wrap="wrap" p={1} divider={<>-</>}>
+        <HStack wrap="wrap" p={1} separator={<>-</>}>
           {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <Tooltip hasArrow key={index} label={root.text}>
+            <Tooltip showArrow key={index} content={root.text}>
               <Button
                 px={2}
                 fontSize="xl"
@@ -358,7 +359,7 @@ const DerivationsComponent = memo(
             </Tooltip>
           ))}
         </HStack>
-        <Divider />
+        <Separator />
       </>
     );
   }
@@ -373,7 +374,7 @@ interface RootVerseProps {
 const RootVerse = ({ rootVerse }: RootVerseProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
-  const [isNoteOpen, setNoteOpen] = useBoolean();
+  const { value: isNoteOpen, toggle: setNoteOpen } = useBoolean();
 
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
@@ -389,7 +390,7 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
         <ButtonVerse onClick={onClickVerseChapter}>
           ({`${verseChapter}:${rootVerse.verseid}`})
         </ButtonVerse>
-        <ButtonExpand onClick={setNoteOpen.toggle} />
+        <ButtonExpand onClick={setNoteOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isNoteOpen} inputKey={rootVerse.key} />
     </>
