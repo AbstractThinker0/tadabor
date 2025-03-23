@@ -22,13 +22,11 @@ import {
   CardHeader,
   Flex,
   Tag,
-  TagCloseButton,
-  TagLabel,
-  useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { useBoolean } from "usehooks-ts";
 
 function TagsDisplay() {
   const quranService = useQuran();
@@ -44,7 +42,7 @@ function TagsDisplay() {
 
   const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open, onOpen, onClose } = useDisclosure();
 
   function onClickDeleteSelected(tagID: string) {
     dispatch(tagsPageActions.deselectTag(tagID));
@@ -78,31 +76,27 @@ function TagsDisplay() {
       flex={1}
       padding={"0.5rem"}
     >
-      <Card border={"1px solid rgba(0, 0, 0, .175)"} flex={1} dir="rtl">
+      <Card.Root
+        border={"1px solid"}
+        borderColor={"border.emphasized"}
+        flex={1}
+        dir="rtl"
+      >
         {Object.keys(selectedTags).length ? (
           <>
             <CardHeader py={1}>
-              <Flex alignItems={"center"} gap={"0.5rem"} pb={"2px"} dir="ltr">
+              <Flex alignItems={"center"} gap={"0.5rem"} dir="ltr">
                 <Box fontWeight={"bold"}>Selected tags:</Box>
                 <Flex gap={"5px"}>
                   {Object.keys(selectedTags).map((tagID) => (
-                    <Flex
-                      overflowX={"hidden"}
-                      overflowWrap={"break-word"}
-                      padding={"3px"}
-                      borderRadius={"0.3rem"}
-                      bgColor={"#ffffbf"}
-                      key={tagID}
-                    >
-                      {selectedTags[tagID].tagDisplay}
-                      <Box
-                        cursor={"pointer"}
-                        px={"3px"}
-                        onClick={() => onClickDeleteSelected(tagID)}
-                      >
-                        X
-                      </Box>
-                    </Flex>
+                    <Tag.Root size="lg" colorPalette={"yellow"} key={tagID}>
+                      <Tag.Label>{selectedTags[tagID].tagDisplay}</Tag.Label>
+                      <Tag.EndElement>
+                        <Tag.CloseTrigger
+                          onClick={() => onClickDeleteSelected(tagID)}
+                        />
+                      </Tag.EndElement>
+                    </Tag.Root>
                   ))}
                 </Flex>
               </Flex>
@@ -114,19 +108,21 @@ function TagsDisplay() {
                   <Box fontWeight={"bold"}>No chapters selected.</Box>
                 ) : (
                   chaptersScope.map((chapterID, index) => (
-                    <Tag
-                      colorScheme="green"
+                    <Tag.Root
+                      colorPalette="green"
                       size="lg"
                       variant={"solid"}
                       key={index}
                     >
-                      <TagLabel overflow={"visible"}>
+                      <Tag.Label overflow={"visible"}>
                         {quranService.getChapterName(chapterID)}
-                      </TagLabel>
-                      <TagCloseButton
-                        onClick={() => onClickCloseChapter(chapterID)}
-                      />
-                    </Tag>
+                      </Tag.Label>
+                      <Tag.EndElement>
+                        <Tag.CloseTrigger
+                          onClick={() => onClickCloseChapter(chapterID)}
+                        />
+                      </Tag.EndElement>
+                    </Tag.Root>
                   ))
                 )}
               </Flex>
@@ -151,8 +147,8 @@ function TagsDisplay() {
             tags={tags}
           />
         )}
-      </Card>
-      <VerseTagsModal isOpen={isOpen} onClose={onClose} />
+      </Card.Root>
+      <VerseTagsModal isOpen={open} onClose={onClose} />
     </Flex>
   );
 }
@@ -194,7 +190,8 @@ function SelectedVerses({
             const verse = quranService.getVerseByKey(verseKey);
             return (
               <Box
-                borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+                borderBottom={"1.5px solid"}
+                borderColor={"border.emphasized"}
                 p={"4px"}
                 key={verseKey}
               >
@@ -227,7 +224,7 @@ const SelectedVerseComponent = ({
 }: SelectedVerseComponentProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   function onClickVerse(verse: verseProps) {
     dispatch(tagsPageActions.gotoChapter(verse.suraid));
@@ -246,7 +243,7 @@ const SelectedVerseComponent = ({
         <ButtonVerse onClick={() => onClickVerse(verse)}>
           ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
         </ButtonVerse>
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
         <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
           🏷️
         </Button>
@@ -305,16 +302,17 @@ const ListVerses = memo(
     return (
       <>
         <CardHeader
-          bgColor={"rgba(33, 37, 41, .03)"}
+          bgColor={"gray.emphasized"}
           textAlign={"center"}
           fontSize={"larger"}
-          color={"teal"}
-          borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+          color={"teal.fg"}
+          borderBottom={"1px solid"}
+          borderColor={"border.emphasized"}
           py={1}
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
-        <CardBody bgColor={"#f7fafc"} pt={0} ref={handleVerseListRef}>
+        <CardBody bgColor={"brand.contrast"} pt={0} ref={handleVerseListRef}>
           {isPending ? (
             <LoadingSpinner />
           ) : (
@@ -322,8 +320,10 @@ const ListVerses = memo(
               <Box
                 key={verse.key}
                 data-id={verse.key}
-                bgColor={scrollKey === verse.key ? "#a5d9fc" : undefined}
-                borderBottom={"1.5px solid rgba(220, 220, 220, 0.893)"}
+                aria-selected={scrollKey === verse.key}
+                _selected={{ bgColor: "blue.emphasized" }}
+                borderBottom={"1.5px solid"}
+                borderColor={"border.emphasized"}
                 p={"4px"}
               >
                 {versesTags[verse.key] !== undefined && (
@@ -352,7 +352,7 @@ interface ListVerseComponentProps {
 const ListVerseComponent = memo(
   ({ onOpenVerseModal, verse }: ListVerseComponentProps) => {
     const dispatch = useAppDispatch();
-    const [isOpen, setOpen] = useBoolean();
+    const { value: isOpen, toggle: setOpen } = useBoolean();
 
     function onClickTagVerse(verse: verseProps) {
       dispatch(tagsPageActions.setCurrentVerse(verse));
@@ -368,7 +368,7 @@ const ListVerseComponent = memo(
         <VerseContainer>
           {verse.versetext}{" "}
           <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
-          <ButtonExpand onClick={setOpen.toggle} />
+          <ButtonExpand onClick={setOpen} />
           <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
             🏷️
           </Button>
@@ -393,7 +393,7 @@ const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
         <Box
           as="span"
           padding={"3px"}
-          bgColor={"#ffffbf"}
+          bgColor={"yellow.emphasized"}
           borderRadius={"0.3rem"}
           overflowWrap={"break-word"}
           overflowX={"hidden"}

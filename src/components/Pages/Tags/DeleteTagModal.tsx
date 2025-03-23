@@ -3,18 +3,8 @@ import { dbFuncs } from "@/util/db";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
-  Button,
-  ButtonGroup,
-  Box,
-} from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Box } from "@chakra-ui/react";
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface DeleteTagModalProps {
   isOpen: boolean;
@@ -43,20 +33,27 @@ const DeleteTagModal = ({
   }
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+    <Dialog.Root
+      size="xl"
+      open={isOpen}
+      onInteractOutside={onClose}
+      placement={"center"}
+    >
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Delete tag confirmation
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+
+        <Dialog.Body>
           <Box>
             Are you sure you want to delete{" "}
             <Box
               as="span"
               padding={"4px"}
-              bgColor={"#ffffbf"}
+              bgColor={"yellow.emphasized"}
               overflowWrap={"break-word"}
               borderRadius={"0.375rem"}
             >
@@ -65,21 +62,23 @@ const DeleteTagModal = ({
             tag? All verses tagged with this tag will lose it.
           </Box>
           <p>Number of verses affected: {versesCount}</p>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>No, Cancel</Button>
-            <Button colorScheme="red" onClick={onClickDelete}>
+            <Button colorPalette="red" onClick={onClickDelete}>
               Yes, delete
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

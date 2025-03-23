@@ -6,7 +6,9 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { selectedChaptersType } from "@/types";
 import useQuran from "@/context/useQuran";
-import { Box, Button, Checkbox, Flex, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, Input } from "@chakra-ui/react";
+
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ChaptersList = () => {
   const dispatch = useAppDispatch();
@@ -102,12 +104,13 @@ const ChaptersList = () => {
           placeholder={quranService.getChapterName(currentChapter)}
           value={chapterToken}
           onChange={onChangeChapterToken}
-          bgColor={"white"}
+          bgColor={"bg"}
           borderBottomRadius={"unset"}
         />
         <Flex
           flexDir={"column"}
-          border={"1px solid gainsboro"}
+          border={"1px solid"}
+          borderColor={"border.emphasized"}
           minW={"200px"}
           overflowY={"scroll"}
         >
@@ -118,11 +121,8 @@ const ChaptersList = () => {
                 padding={1}
                 cursor={"pointer"}
                 key={chapter.id}
-                bgColor={
-                  currentChapter === chapter.id
-                    ? "rgba(76, 76, 167, 0.623)"
-                    : undefined
-                }
+                aria-selected={currentChapter === chapter.id}
+                _selected={{ bgColor: "purple.emphasized" }}
               >
                 <Box
                   flexGrow={1}
@@ -131,7 +131,7 @@ const ChaptersList = () => {
                   {chapter.id}. {chapter.name}
                 </Box>
                 <Checkbox
-                  isChecked={
+                  checked={
                     selectedChapters[chapter.id] !== undefined
                       ? selectedChapters[chapter.id]
                       : true
@@ -146,22 +146,22 @@ const ChaptersList = () => {
         justify={"center"}
         gap={4}
         padding={4}
-        bgColor={"rgba(0, 0, 0, 0.03)"}
+        bgColor={"gray.muted"}
         borderBottomRadius={"0.275rem"}
         dir="ltr"
       >
         <Button
-          colorScheme="teal"
+          colorPalette="teal"
           fontWeight="normal"
-          isDisabled={getSelectedCount === 114}
+          disabled={getSelectedCount === 114}
           onClick={onClickSelectAll}
         >
           {t("all_chapters")}
         </Button>
         <Button
-          colorScheme="teal"
+          colorPalette="teal"
           fontWeight="normal"
-          isDisabled={onlyCurrentSelected}
+          disabled={onlyCurrentSelected}
           onClick={onClickDeselectAll}
         >
           {t("current_chapter")}

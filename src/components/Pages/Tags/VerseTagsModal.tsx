@@ -8,18 +8,15 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
+  Dialog,
   Button,
   ButtonGroup,
   Box,
   Flex,
+  DialogOpenChangeDetails,
 } from "@chakra-ui/react";
+
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -71,6 +68,12 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
     dispatch(tagsPageActions.setCurrentVerse(null));
   };
 
+  const onOpenChange = (details: DialogOpenChangeDetails) => {
+    if (!details.open) {
+      onCloseComplete();
+    }
+  };
+
   const canFindTag = (tagID: string) => {
     return chosenTags.includes(tagID);
   };
@@ -98,21 +101,23 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
   }
 
   return (
-    <Modal
+    <Dialog.Root
       size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      onCloseComplete={onCloseComplete}
-      isCentered
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onInteractOutside={onClose}
+      placement={"center"}
     >
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Choose verse tags
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Box textAlign={"center"} fontSize={"large"}>
+        </Dialog.Header>
+
+        <Dialog.Body>
+          <Box textAlign={"center"} fontSize={"large"} pb={2}>
             (
             {currentVerse
               ? `${quranService.getChapterName(currentVerse.suraid)}:${
@@ -122,11 +127,12 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
             )
           </Box>
           <VerseContainer
-            bgColor={"rgb(245, 244, 244)"}
+            bgColor={"gray.emphasized"}
             padding={"4px"}
             mb={"5px"}
             borderRadius={"0.375rem"}
             textAlign={"center"}
+            lineHeight={"normal"}
           >
             {currentVerse?.versetext}
           </VerseContainer>
@@ -141,7 +147,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
                 textAlign={"center"}
                 fontSize={"large"}
                 mb={1}
-                bgColor={canFindTag(tagID) ? "#ffffbf" : "grey"}
+                bgColor={canFindTag(tagID) ? "yellow.emphasized" : "gray.muted"}
                 onClick={() => onClickTag(tagID)}
                 key={tagID}
               >
@@ -149,23 +155,25 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
               </Box>
             ))}
           </Flex>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button colorScheme="blue" onClick={onClose}>
+            <Button colorPalette="blue" onClick={onClose}>
               Close
             </Button>
-            <Button colorScheme="green" onClick={onClickSave}>
+            <Button colorPalette="green" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 }
 

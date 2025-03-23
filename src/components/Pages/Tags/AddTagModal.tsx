@@ -5,19 +5,8 @@ import { tagProps } from "@/components/Pages/Tags/consts";
 import { useAppDispatch } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  ModalFooter,
-  Button,
-  ButtonGroup,
-  Box,
-  Input,
-} from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface AddTagModalProps {
   isOpen: boolean;
@@ -56,14 +45,21 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
   }
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent dir="ltr">
-        <ModalHeader borderBottom="1px solid #dee2e6">
+    <Dialog.Root
+      size="xl"
+      open={isOpen}
+      onInteractOutside={onClose}
+      placement={"center"}
+    >
+      <DialogContent dir="ltr">
+        <Dialog.Header
+          borderBottom="1px solid"
+          borderColor={"border.emphasized"}
+        >
           Add a new tag
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        </Dialog.Header>
+
+        <Dialog.Body>
           <Box pb={1}>
             <span>Display name: </span>
             <Input
@@ -73,21 +69,23 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
               onChange={onChangeName}
             />
           </Box>
-        </ModalBody>
-        <ModalFooter
+        </Dialog.Body>
+        <Dialog.Footer
           mt={5}
           justifyContent="center"
-          borderTop="1px solid #dee2e6"
+          borderTop="1px solid"
+          borderColor={"border.emphasized"}
         >
           <ButtonGroup>
             <Button onClick={onClose}>Close</Button>
-            <Button colorScheme="blue" onClick={onClickSave}>
+            <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        <DialogCloseTrigger onClick={onClose} />
+      </DialogContent>
+    </Dialog.Root>
   );
 };
 

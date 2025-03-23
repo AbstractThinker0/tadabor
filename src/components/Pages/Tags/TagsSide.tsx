@@ -59,13 +59,13 @@ const SideList = ({
   getTaggedVerses,
 }: SideListProps) => {
   const {
-    isOpen: isOpenAddModal,
+    open: isOpenAddModal,
     onOpen: onOpenAddModal,
     onClose: onCloseAddModal,
   } = useDisclosure();
 
   const {
-    isOpen: isOpenDeleteModal,
+    open: isOpenDeleteModal,
     onOpen: onOpenDeleteModal,
     onClose: onCloseDeleteModal,
   } = useDisclosure();
@@ -92,7 +92,7 @@ const SideList = ({
       padding={"10px"}
       maxW={"300px"}
       borderRadius={"0.3rem"}
-      bgColor={"rgba(0, 0, 0, 0.03)"}
+      bgColor={"gray.muted"}
       dir="ltr"
     >
       <Box fontWeight={"bold"} pb={1}>
@@ -111,7 +111,9 @@ const SideList = ({
           {Object.keys(tags).map((tagID) => (
             <Flex
               padding={"2px"}
-              bgColor={isTagSelected(tagID) ? "#ffffbf" : "#fffff8"}
+              bgColor={
+                isTagSelected(tagID) ? "yellow.emphasized" : "gray.subtle"
+              }
               borderRadius={"0.3rem"}
               key={tagID}
             >
@@ -136,7 +138,7 @@ const SideList = ({
       />
       <Box>
         <Button
-          colorScheme="teal"
+          colorPalette="teal"
           fontWeight={"normal"}
           onClick={onOpenAddModal}
         >
@@ -176,7 +178,7 @@ const VersesCount = () => {
   if (!Object.keys(selectedTags).length) return null;
 
   return (
-    <Text fontWeight={"bold"} color={"green"}>
+    <Text fontWeight={"bold"} color={"green.fg"}>
       {`${t("search_count")} ${selectedCount}`}
     </Text>
   );
