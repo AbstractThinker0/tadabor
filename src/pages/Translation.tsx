@@ -30,7 +30,7 @@ const Translation = () => {
 
   return (
     <Flex
-      backgroundColor={"var(--color-primary)"}
+      backgroundColor={"brand.bg"}
       overflow={"hidden"}
       maxH={"100%"}
       h={"100%"}

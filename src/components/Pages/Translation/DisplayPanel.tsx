@@ -82,9 +82,10 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           p={2}
           fontSize={"larger"}
           textAlign={"center"}
-          color={"blue.500"}
-          border={"1px solid gray"}
-          backgroundColor={"gainsboro"}
+          color={"blue.fg"}
+          border={"1px solid"}
+          borderColor={"border.emphasized"}
+          backgroundColor={"gray.emphasized"}
           borderTopRadius={5}
         >
           سورة {quranService.getChapterName(selectChapter)}
@@ -92,8 +93,9 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
         <Box
           flex={1}
           p={1}
-          border={"1px solid gainsboro"}
-          backgroundColor={"#f7fafc"}
+          border={"1px solid"}
+          borderColor={"border.emphasized"}
+          backgroundColor={"brand.contrast"}
           ref={handleVerseListRef}
         >
           {isPending ? (
@@ -129,7 +131,8 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
 
   return (
     <Box
-      backgroundColor={isSelected ? "antiquewhite" : undefined}
+      aria-selected={isSelected}
+      _selected={{ bgColor: "yellow.subtle" }}
       data-id={verse.key}
     >
       <VerseContainer dir="rtl">

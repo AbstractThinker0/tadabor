@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { Box, FormControl, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
@@ -80,7 +80,7 @@ const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
 
   return (
     <Box padding={2}>
-      <Box border={"1px solid #dee2e6"} padding={1}>
+      <Box border={"1px solid"} borderColor={"border.emphasized"} padding={1}>
         <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} dir="ltr">
           {inputValue}
         </Text>
@@ -112,17 +112,17 @@ const Versearea = ({
   };
 
   return (
-    <FormControl as="form" onSubmit={onSubmit} padding={2} dir="ltr">
+    <Box as="form" onSubmit={onSubmit} padding={2} dir="ltr">
       <TextareaAutosize
         placeholder="Enter your text."
         value={inputValue}
         onChange={onChangeText}
-        backgroundColor={"white"}
+        backgroundColor={"bg"}
       />
       <Box textAlign={"center"}>
         <ButtonSave />
       </Box>
-    </FormControl>
+    </Box>
   );
 };
 
