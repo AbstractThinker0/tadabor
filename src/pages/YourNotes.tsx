@@ -3,13 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ynPageActions } from "@/store/slices/pages/yourNotes";
 
-import { Tab, TabList } from "@chakra-ui/react";
-
-import {
-  TabContent,
-  TabsContainer,
-  TabsPanels,
-} from "@/components/Generic/Tabs";
+import { Tabs } from "@chakra-ui/react";
 
 import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
@@ -21,42 +15,59 @@ const YourNotes = () => {
 
   const currentTab = useAppSelector((state) => state.ynPage.currentTab);
 
-  const onChangeTab = (index: number) => {
+  const onChangeTab = (index: string) => {
     dispatch(ynPageActions.setCurrentTab(index));
   };
 
   return (
-    <TabsContainer
-      onChange={onChangeTab}
-      index={currentTab}
-      isLazy
+    <Tabs.Root
+      onValueChange={(e) => onChangeTab(e.value)}
+      value={currentTab}
+      lazyMount
+      bgColor={"brand.bg"}
       overflowY={"scroll"}
       flex={1}
       px={2}
       pb={2}
-      display={"block"}
+      maxH="100%"
+      h="100%"
     >
-      <TabList justifyContent={"center"}>
-        <Tab>{t("notes_verses")}</Tab>
+      <Tabs.List justifyContent={"center"}>
+        <Tabs.Trigger value="versesTab">{t("notes_verses")}</Tabs.Trigger>
 
-        <Tab>{t("notes_roots")}</Tab>
+        <Tabs.Trigger value="rootsTab">{t("notes_roots")}</Tabs.Trigger>
 
-        <Tab>{t("notes_trans")}</Tab>
-      </TabList>
-      <TabsPanels>
-        <TabContent>
-          <VerseNotes />
-        </TabContent>
+        <Tabs.Trigger value="transTab">{t("notes_trans")}</Tabs.Trigger>
+      </Tabs.List>
 
-        <TabContent>
+      <Tabs.Content
+        overflow="hidden"
+        display={"flex"}
+        flexDirection={"column"}
+        value="versesTab"
+      >
+        <VerseNotes />
+      </Tabs.Content>
+      <Tabs.ContentGroup>
+        <Tabs.Content
+          overflow="hidden"
+          display={"flex"}
+          flexDirection={"column"}
+          value="rootsTab"
+        >
           <RootNotes />
-        </TabContent>
+        </Tabs.Content>
 
-        <TabContent>
+        <Tabs.Content
+          overflow="hidden"
+          display={"flex"}
+          flexDirection={"column"}
+          value="transTab"
+        >
           <TransNotes />
-        </TabContent>
-      </TabsPanels>
-    </TabsContainer>
+        </Tabs.Content>
+      </Tabs.ContentGroup>
+    </Tabs.Root>
   );
 };
 

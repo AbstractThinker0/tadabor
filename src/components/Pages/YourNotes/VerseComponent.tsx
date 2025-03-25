@@ -12,7 +12,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
-import { Card, CardHeader } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 interface VerseComponentProps {
   inputKey: string;
@@ -66,17 +66,25 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
   };
 
   return (
-    <Card w={"100%"} variant={"outline"} borderColor={"rgba(0, 0, 0, .175)"}>
-      <CardHeader
+    <Box
+      w={"100%"}
+      borderColor={"border.emphasized"}
+      bgColor={"bg"}
+      borderRadius={"0.35rem"}
+    >
+      <Box
+        p={2}
         dir="rtl"
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+        backgroundColor={"gray.muted"}
+        borderBottom={"1px solid"}
+        borderColor={"border.emphasized"}
+        borderTopRadius={"0.35rem"}
       >
         <VerseContainer>
           ({quranService.convertKeyToSuffix(inputKey)}) <br />{" "}
           {quranService.getVerseTextByKey(inputKey)}{" "}
         </VerseContainer>
-      </CardHeader>
+      </Box>
       {isEditable ? (
         <NoteForm
           inputValue={inputValue}
@@ -92,7 +100,7 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
           onClickEditButton={onClickEditButton}
         />
       )}
-    </Card>
+    </Box>
   );
 }
 

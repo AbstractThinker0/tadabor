@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { CardBody, CardFooter, FormControl } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
@@ -33,8 +33,8 @@ const NoteForm = ({
   };
 
   return (
-    <FormControl as="form" onSubmit={onSubmitForm}>
-      <CardBody>
+    <Box as="form" onSubmit={onSubmitForm}>
+      <Box p={2}>
         <TextareaToolbar handleSetDirection={handleSetDirection} />
         <TextareaAutosize
           value={inputValue}
@@ -42,17 +42,19 @@ const NoteForm = ({
           onChange={onChangeTextarea}
           lineHeight={"normal"}
           placeholder={t("text_form")}
-          isRequired
+          required
         />
-      </CardBody>
-      <CardFooter
-        justify={"center"}
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderTop={"1px solid rgba(0, 0, 0, .175)"}
+      </Box>
+      <Flex
+        p={3}
+        justifyContent={"center"}
+        backgroundColor={"gray.muted"}
+        borderTop={"1px solid"}
+        borderColor={"border.emphasized"}
       >
         <ButtonSave />
-      </CardFooter>
-    </FormControl>
+      </Flex>
+    </Box>
   );
 };
 

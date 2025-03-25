@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store";
-import { CardBody, CardFooter, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { ButtonEdit } from "@/components/Generic/Buttons";
 
 interface NoteTextProps {
@@ -17,18 +17,20 @@ const NoteText = ({
 
   return (
     <>
-      <CardBody dir={inputDirection}>
+      <Box dir={inputDirection} p={2}>
         <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`}>
           {inputValue}
         </Text>
-      </CardBody>
-      <CardFooter
-        justify={"center"}
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderTop={"1px solid rgba(0, 0, 0, .175)"}
+      </Box>
+      <Flex
+        p={3}
+        justifyContent={"center"}
+        backgroundColor={"gray.muted"}
+        borderTop={"1px solid"}
+        borderColor={"border.emphasized"}
       >
         <ButtonEdit onClick={onClickEditButton} />
-      </CardFooter>
+      </Flex>
     </>
   );
 };

@@ -63,11 +63,12 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
   };
 
   return (
-    <Card w={"100%"} variant={"outline"} borderColor={"rgba(0, 0, 0, .175)"}>
+    <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
       <CardHeader
         dir="rtl"
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+        backgroundColor={"gray.muted"}
+        borderBottom={"1px solid"}
+        borderColor={"border.emphasized"}
       >
         <VerseContainer>
           {quranService.getRootNameByID(inputKey)}
@@ -88,7 +89,7 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
           onClickEditButton={onClickEditButton}
         />
       )}
-    </Card>
+    </Card.Root>
   );
 };
 

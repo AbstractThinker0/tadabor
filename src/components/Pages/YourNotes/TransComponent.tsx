@@ -11,16 +11,9 @@ import { transNotesActions } from "@/store/slices/global/transNotes";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  FormControl,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Card, CardHeader, Flex, Text } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
-import { ButtonSave } from "@/components/Generic/Buttons";
+import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
 interface TransComponentProps {
   verseKey: string;
@@ -30,10 +23,11 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
   const quranService = useQuran();
 
   return (
-    <Card w={"100%"} variant={"outline"} borderColor={"rgba(0, 0, 0, .175)"}>
+    <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
       <CardHeader
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderBottom={"1px solid rgba(0, 0, 0, .175)"}
+        backgroundColor={"gray.muted"}
+        borderBottom={"1px solid"}
+        borderColor={"border.emphasized"}
         dir="rtl"
       >
         <VerseContainer>
@@ -42,7 +36,7 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
         </VerseContainer>
       </CardHeader>
       <TransBody inputKey={verseKey} />
-    </Card>
+    </Card.Root>
   );
 };
 
@@ -112,18 +106,20 @@ const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
 
   return (
     <>
-      <CardBody dir="ltr">
+      <Box p={3} dir="ltr">
         <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`}>
           {inputValue}
         </Text>
-      </CardBody>
-      <CardFooter
-        justify={"center"}
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderTop={"1px solid rgba(0, 0, 0, .175)"}
+      </Box>
+      <Flex
+        p={3}
+        justifyContent={"center"}
+        backgroundColor={"gray.muted"}
+        borderTop={"1px solid"}
+        borderColor={"border.emphasized"}
       >
-        <ButtonSave onClick={handleEditClick} />
-      </CardFooter>
+        <ButtonEdit onClick={handleEditClick} />
+      </Flex>
     </>
   );
 };
@@ -150,22 +146,26 @@ const Versearea = ({
   };
 
   return (
-    <FormControl as="form" onSubmit={onSubmit} dir="ltr">
-      <TextareaAutosize
-        value={inputValue}
-        onChange={onChangeTextarea}
-        lineHeight={"normal"}
-        placeholder={"Enter your text."}
-        isRequired
-      />
-      <CardFooter
-        justify={"center"}
-        backgroundColor={"rgba(33, 37, 41, .03)"}
-        borderTop={"1px solid rgba(0, 0, 0, .175)"}
+    <Box as="form" onSubmit={onSubmit} dir="ltr">
+      <Box p={3}>
+        <TextareaAutosize
+          value={inputValue}
+          onChange={onChangeTextarea}
+          lineHeight={"normal"}
+          placeholder={"Enter your text."}
+          required
+        />
+      </Box>
+      <Flex
+        p={3}
+        justifyContent={"center"}
+        backgroundColor={"gray.muted"}
+        borderTop={"1px solid"}
+        borderColor={"border.emphasized"}
       >
         <ButtonSave />
-      </CardFooter>
-    </FormControl>
+      </Flex>
+    </Box>
   );
 };
 

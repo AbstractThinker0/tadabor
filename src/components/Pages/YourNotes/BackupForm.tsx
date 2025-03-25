@@ -1,4 +1,4 @@
-import { Button, HStack, Select } from "@chakra-ui/react";
+import { Button, HStack, NativeSelect } from "@chakra-ui/react";
 
 interface BackupFormProps {
   currentFormat: string;
@@ -24,17 +24,16 @@ const BackupForm = ({
     >
       <div>Output format:</div>
       <div>
-        <Select
-          backgroundColor={"whiteAlpha.900"}
-          value={currentFormat}
-          onChange={onChangeFormat}
-        >
-          <option value="1">HTML</option>
-          <option value="2">JSON</option>
-        </Select>
+        <NativeSelect.Root backgroundColor={"bg"}>
+          <NativeSelect.Field value={currentFormat} onChange={onChangeFormat}>
+            <option value="1">HTML</option>
+            <option value="2">JSON</option>
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
       </div>
       <Button
-        colorScheme="green"
+        colorPalette="green"
         size="sm"
         fontWeight={"normal"}
         onClick={notesBackup}
