@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Searcher2PageState {
   verseTab: string;
-  tabIndex: number;
+  tabIndex: string;
   searchString: string;
   searchIdentical: boolean;
   searchDiacritics: boolean;
@@ -12,7 +12,7 @@ interface Searcher2PageState {
 
 const initialState: Searcher2PageState = {
   verseTab: "",
-  tabIndex: 0,
+  tabIndex: "searcherTab",
   searchString: "",
   searchIdentical: false,
   searchDiacritics: false,
@@ -24,13 +24,13 @@ const searcher2PageSlice = createSlice({
   name: "searcher2Page",
   initialState,
   reducers: {
-    setTabIndex: (state, action: PayloadAction<number>) => {
+    setTabIndex: (state, action: PayloadAction<string>) => {
       state.tabIndex = action.payload;
     },
     setVerseTab: (state, action: PayloadAction<string>) => {
       //
       state.verseTab = action.payload;
-      state.tabIndex = 1;
+      state.tabIndex = "verseTab";
     },
     setSearchString: (state, action: PayloadAction<string>) => {
       //

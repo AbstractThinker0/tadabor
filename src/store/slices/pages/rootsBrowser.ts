@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface rbStateProps {
-  tabIndex: number;
+  tabIndex: string;
   verseTab: string;
   searchString: string;
   searchInclusive: boolean;
@@ -9,7 +9,7 @@ interface rbStateProps {
 }
 
 const initialState: rbStateProps = {
-  tabIndex: 0,
+  tabIndex: "rootsTab",
   verseTab: "",
   searchString: "",
   searchInclusive: false,
@@ -20,12 +20,12 @@ const rbPageSlice = createSlice({
   name: "rbPage",
   initialState,
   reducers: {
-    setTabIndex: (state, action: PayloadAction<number>) => {
+    setTabIndex: (state, action: PayloadAction<string>) => {
       state.tabIndex = action.payload;
     },
     setVerseTab: (state, action: PayloadAction<string>) => {
       state.verseTab = action.payload;
-      state.tabIndex = 1;
+      state.tabIndex = "verseTab";
     },
     setSearchString: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload;

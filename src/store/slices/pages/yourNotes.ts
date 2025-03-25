@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface YourNotesPageState {
-  currentTab: number;
+  currentTab: string;
 }
 
 const initialState: YourNotesPageState = {
-  currentTab: 0,
+  currentTab: "versesTab",
 };
 
 const ynPageSlice = createSlice({
   name: "ynPage",
   initialState,
   reducers: {
-    setCurrentTab: (state, action: PayloadAction<number>) => {
+    setCurrentTab: (state, action: PayloadAction<string>) => {
       state.currentTab = action.payload;
     },
   },

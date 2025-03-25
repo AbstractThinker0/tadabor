@@ -12,7 +12,7 @@ interface LettersPageState {
   currentChapter: string;
   currentPreset: string;
   scrollKey: string;
-  tabIndex: number;
+  tabIndex: string;
   lettersDefinitions: LettersDefinitionType;
   definitionsLoading: boolean;
   definitionsComplete: boolean;
@@ -31,7 +31,7 @@ const initialState: LettersPageState = {
   currentChapter: "1",
   currentPreset: "-1",
   scrollKey: "",
-  tabIndex: 0,
+  tabIndex: "defTab",
   lettersDefinitions: {},
   definitionsLoading: true,
   definitionsComplete: false,
@@ -134,7 +134,7 @@ const lettersPageSlice = createSlice({
       state.scrollKey =
         state.scrollKey === action.payload ? "" : action.payload;
     },
-    setTabIndex: (state, action: PayloadAction<number>) => {
+    setTabIndex: (state, action: PayloadAction<string>) => {
       state.tabIndex = action.payload;
     },
     setLetterDefinition: (

@@ -17,7 +17,7 @@ interface RootsObject {
 interface SearcherPageState {
   search_roots: RootsObject;
   verseTab: string;
-  tabIndex: number;
+  tabIndex: string;
   verses_count: number;
   scrollKey: string;
 }
@@ -25,7 +25,7 @@ interface SearcherPageState {
 const initialState: SearcherPageState = {
   search_roots: {},
   verseTab: "",
-  tabIndex: 0,
+  tabIndex: "searcherTab",
   verses_count: 0,
   scrollKey: "",
 };
@@ -42,13 +42,13 @@ const searcherPageSlice = createSlice({
       const { root_id } = action.payload;
       delete state.search_roots[root_id];
     },
-    setTabIndex: (state, action: PayloadAction<number>) => {
+    setTabIndex: (state, action: PayloadAction<string>) => {
       state.tabIndex = action.payload;
     },
     setVerseTab: (state, action: PayloadAction<string>) => {
       //
       state.verseTab = action.payload;
-      state.tabIndex = 1;
+      state.tabIndex = "verseTab";
     },
     setVersesCount: (state, action: PayloadAction<number>) => {
       //
