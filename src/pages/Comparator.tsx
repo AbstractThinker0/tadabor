@@ -17,7 +17,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
-import { Box, Alert, AlertIcon, CloseButton, Spacer } from "@chakra-ui/react";
+import { Box, Alert, CloseButton, Spacer } from "@chakra-ui/react";
 
 function Comparator() {
   const quranService = useQuran();
@@ -82,7 +82,7 @@ function Comparator() {
   if (!complete) return <LoadingSpinner />;
 
   return (
-    <Box bgColor={"var(--color-primary)"}>
+    <Box bgColor={"brand.bg"}>
       <Menu
         chapterVerses={chapterVerses}
         handleSelectVerse={selectVerse}
@@ -119,17 +119,19 @@ const TransAlert = () => {
   if (transNotified) return null;
 
   return (
-    <Alert dir="auto" status="info">
-      <AlertIcon />
-      <strong>Note:</strong> Translations may not always fully capture the
-      original meaning of the text. They are sincere attempts by their authors
-      to comprehend the text based on their abilities and knowledge.
-      Additionally, the accuracy of the translated version is inevitably
-      influenced by semantic changes made to the original text prior to
-      translation.
+    <Alert.Root dir="auto" status="info">
+      <Alert.Indicator />
+      <Alert.Content>
+        <strong>Note:</strong> Translations may not always fully capture the
+        original meaning of the text. They are sincere attempts by their authors
+        to comprehend the text based on their abilities and knowledge.
+        Additionally, the accuracy of the translated version is inevitably
+        influenced by semantic changes made to the original text prior to
+        translation.
+      </Alert.Content>
       <Spacer />
       <CloseButton onClick={onClickCloseAlert} />
-    </Alert>
+    </Alert.Root>
   );
 };
 

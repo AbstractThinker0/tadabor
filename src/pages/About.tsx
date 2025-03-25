@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Link,
-  UnorderedList,
-  ListItem,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Link, List } from "@chakra-ui/react";
 
 const AboutEnglish = () => {
   return (
@@ -16,29 +8,34 @@ const AboutEnglish = () => {
           flexDirection={"column"}
           flex={1}
           p={4}
-          bgColor={"var(--color-primary)"}
+          bgColor={"brand.bg"}
+          color={"gray.fg"}
           borderBottomRadius={"0.375rem"}
         >
-          <Text align={"center"} bgColor={"white"} borderRadius={"0.375rem"}>
+          <Text
+            textAlign={"center"}
+            bgColor={"bg.panel"}
+            borderRadius={"0.375rem"}
+          >
             Check out the project's{" "}
             <Link
               href="https://github.com/AbstractThinker0/tadabor"
               target="_blank"
               rel="noreferrer"
-              color={"blue.600"}
+              color={"blue.fg"}
             >
               Github repository
             </Link>
           </Text>
 
           <Box>
-            <Heading>Intro:</Heading>
+            <Heading size="2xl">Intro:</Heading>
             <Text>
               This project is a web App that allows you to browse through the
               Quran and write your notes/reflections below the verses,
               everything will be saved in your browser.
             </Text>
-            <Heading>How to use:</Heading>
+            <Heading size="2xl">How to use:</Heading>
             <Text>
               Simply go to Quran Browser on the home page, you can click the
               button next to any verse to open a form where you can enter your
@@ -46,7 +43,7 @@ const AboutEnglish = () => {
               the data will be saved on your browser app and clearing your cache
               might erase the data you have saved.
             </Text>
-            <Heading>Disclaimer:</Heading>
+            <Heading size="2xl">Disclaimer:</Heading>
             <Text>
               The app is in beta, which means you may encounter occasional bugs.
               We strongly recommend keeping a backup of any data you save while
@@ -55,34 +52,34 @@ const AboutEnglish = () => {
               results based on sentences or roots has not been extensively
               tested.
             </Text>
-            <Heading>Credits:</Heading>
-            <UnorderedList>
-              <ListItem fontWeight={"bold"}>
+            <Heading size="2xl">Credits:</Heading>
+            <List.Root ps={8}>
+              <List.Item fontWeight={"bold"}>
                 The creator of the universe for all his favors that if I tried
                 to count I would never be able to number them
-              </ListItem>
-              <ListItem>
+              </List.Item>
+              <List.Item>
+                Tanzil project for the Quran text compilation (tanzil.net)
+              </List.Item>
+
+              <List.Item>
+                Initial quran roots compilation extracted from Zekr Project
+                (zekr.org)
+              </List.Item>
+              <List.Item>
                 <Link
                   href="https://github.com/risan/quran-json"
                   target="_blank"
                   rel="noreferrer"
-                  color={"blue.600"}
+                  color={"blue.fg"}
                 >
                   quran-json
                 </Link>{" "}
                 project for the compilation of chapter names and their
                 transliteration
-              </ListItem>
-              <ListItem>
-                Tanzil project for the Quran text compilation (tanzil.net)
-              </ListItem>
-
-              <ListItem>
-                Initial quran roots compilation extracted from Zekr Project
-                (zekr.org)
-              </ListItem>
-            </UnorderedList>
-            <Heading>Future project:</Heading>
+              </List.Item>
+            </List.Root>
+            <Heading size="2xl">Future project:</Heading>
             <Text>
               Once all features of this project are implemented, it will serve
               as the foundation for another project that aims to create a
@@ -94,7 +91,7 @@ const AboutEnglish = () => {
           </Box>
         </Flex>
 
-        <Text align={"center"} color={"rgba(33, 37, 41, 0.75)"}>
+        <Text bgColor={"bg.panel"} textAlign={"center"} color={"fg.muted"}>
           App Version {APP_VERSION}
         </Text>
       </Flex>

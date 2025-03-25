@@ -12,18 +12,20 @@ import ChaptersList from "@/components/Custom/ChaptersList";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { ButtonExpand } from "@/components/Generic/Buttons";
-import CheckboxDir from "@/components/Custom/CheckboxDir";
-import {
-  Box,
-  HStack,
-  Flex,
-  Heading,
-  Button,
-  useBoolean,
-} from "@chakra-ui/react";
+
+import { Box, HStack, Flex, Heading, Button } from "@chakra-ui/react";
+
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
+import { useBoolean } from "usehooks-ts";
+import { useTranslation } from "react-i18next";
+
 const Audio = () => {
+  const { i18n } = useTranslation();
+  const direction = i18n.dir();
+
   const dispatch = useAppDispatch();
 
   const quranService = useQuran();
@@ -136,9 +138,9 @@ const Audio = () => {
     dispatch(audioPageActions.setIsPlaying(false));
   }, [currentChapter]);
 
-  const onChangeAutoPlay = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(audioPageActions.setAutoPlaying(e.target.checked));
-    localStorage.setItem("audioAutoPlay", e.target.checked ? "true" : "false");
+  const onChangeAutoPlay = (checked: boolean) => {
+    dispatch(audioPageActions.setAutoPlaying(checked));
+    localStorage.setItem("audioAutoPlay", checked ? "true" : "false");
   };
 
   const onClickPrev = () => {
@@ -151,7 +153,7 @@ const Audio = () => {
 
   return (
     <Flex
-      backgroundColor="var(--color-primary)"
+      backgroundColor="brand.bg"
       flexWrap="nowrap"
       maxHeight="100%"
       height="100%"
@@ -181,12 +183,12 @@ const Audio = () => {
         >
           <Heading
             fontSize="x-large"
-            color="#46467d"
-            backgroundColor="#21252908"
+            color="purple.fg"
+            backgroundColor="gray.subtle"
             borderRadius="0.3rem"
             borderStyle="solid"
             borderWidth="1px"
-            borderColor="gray"
+            borderColor="gray.emphasized"
             borderBottomRadius={"unset"}
             textAlign="center"
             marginBottom="0"
@@ -199,7 +201,7 @@ const Audio = () => {
             padding="0.5rem"
             borderWidth="1px"
             borderStyle="solid"
-            borderColor="gray"
+            borderColor="gray.emphasized"
             flexGrow={1}
             ref={refVersesList}
           >
@@ -219,6 +221,7 @@ const Audio = () => {
           justifyContent="center"
           alignItems="center"
           dir="ltr"
+          pt={1}
         >
           <audio
             ref={refAudio}
@@ -238,38 +241,24 @@ const Audio = () => {
               onChange={handleSliderChange}
             />
 
-            <CheckboxDir
-              spacing="0.1rem"
-              isChecked={autoPlay}
-              onChange={onChangeAutoPlay}
+            <Checkbox
+              direction={direction}
+              gap="0.1rem"
+              checked={autoPlay}
+              onCheckedChange={(e) => onChangeAutoPlay(!!e.checked)}
             >
               🔁
-            </CheckboxDir>
+            </Checkbox>
           </HStack>
-          <Flex gap="4px" paddingBottom="5px">
-            <Button
-              colorScheme="blackAlpha"
-              bgColor="blackAlpha.900"
-              fontWeight="normal"
-              onClick={onClickPrev}
-            >
+          <Flex mt={1} gap="4px" paddingBottom="5px">
+            <Button fontWeight="normal" onClick={onClickPrev}>
               prev
             </Button>
-            <Button
-              colorScheme="blackAlpha"
-              bgColor="blackAlpha.900"
-              fontWeight="normal"
-              onClick={togglePlayPause}
-            >
+            <Button fontWeight="normal" onClick={togglePlayPause}>
               {isPlaying ? "Pause" : "Play"} [{currentVerse?.suraid}:
               {currentVerse?.verseid}]
             </Button>
-            <Button
-              colorScheme="blackAlpha"
-              bgColor="blackAlpha.900"
-              fontWeight="normal"
-              onClick={onClickNext}
-            >
+            <Button fontWeight="normal" onClick={onClickNext}>
               next
             </Button>
           </Flex>
@@ -286,13 +275,15 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   return (
     <Box
       padding="5px"
-      borderBottom="1px solid gray"
-      backgroundColor={isSelected ? "darkseagreen" : undefined}
+      borderBottom="1px solid"
+      borderColor={"gray.emphasized"}
+      aria-selected={isSelected}
+      _selected={{ bgColor: "green.emphasized" }}
     >
       <VerseContainer>
         {verse.versetext} ({verse.verseid}){" "}
@@ -303,7 +294,7 @@ const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
         >
           🔊
         </Button>
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
     </Box>

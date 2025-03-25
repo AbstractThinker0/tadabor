@@ -33,7 +33,7 @@ const SearcherDisplay = () => {
       borderRadius={"0.75rem"}
       border={"1px solid"}
       borderColor={"border.emphasized"}
-      bgColor={"#f7fafc"}
+      bgColor={"brand.contrast"}
       dir="rtl"
     >
       <Flex flexWrap={"wrap"} gap={"10px"} paddingBottom={"10px"}>

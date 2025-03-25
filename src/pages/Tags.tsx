@@ -68,12 +68,7 @@ function Tags() {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <Flex
-      bgColor={"var(--color-primary)"}
-      overflow={"hidden"}
-      maxH={"100%"}
-      h={"100%"}
-    >
+    <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
       <TagsSide />
       {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}
     </Flex>

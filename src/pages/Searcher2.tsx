@@ -12,26 +12,15 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import {
-  Box,
-  Flex,
-  Input,
-  Tab,
-  TabList,
-  Checkbox,
-  useBoolean,
-} from "@chakra-ui/react";
+import { Box, Flex, Input, Tabs } from "@chakra-ui/react";
 
-import {
-  TabContent,
-  TabsContainer,
-  TabsPanels,
-} from "@/components/Generic/Tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { useBoolean } from "usehooks-ts";
 
 const Searcher2 = () => {
   const { t } = useTranslation();
@@ -52,29 +41,56 @@ const Searcher2 = () => {
     dispatch(searcher2PageActions.setScrollKey(key));
   };
 
-  const onChangeTab = (index: number) => {
+  const onChangeTab = (index: string) => {
     dispatch(searcher2PageActions.setTabIndex(index));
   };
 
   return (
-    <TabsContainer onChange={onChangeTab} index={tabIndex} isLazy>
-      <TabList>
-        <Tab>{t("searcher_search")}</Tab>
-        <Tab hidden={!verseTab}>{verseTab}</Tab>
-      </TabList>
-      <TabsPanels>
-        <TabContent>
-          <Searcher2Tab />
-        </TabContent>
-        <TabContent>
-          <PanelQuran
-            verseKey={verseTab}
-            scrollKey={scrollKey}
-            setScrollKey={setScrollKey}
-          />
-        </TabContent>
-      </TabsPanels>
-    </TabsContainer>
+    <Tabs.Root
+      colorPalette={"blue"}
+      value={tabIndex}
+      onValueChange={(e) => onChangeTab(e.value)}
+      bgColor={"brand.bg"}
+      overflow="hidden"
+      maxH="100%"
+      h="100%"
+      display={"flex"}
+      flexDirection={"column"}
+      lazyMount
+    >
+      <Tabs.List>
+        <Tabs.Trigger value="searcherTab">{t("searcher_search")}</Tabs.Trigger>
+        <Tabs.Trigger value="verseTab" hidden={!verseTab}>
+          {verseTab}
+        </Tabs.Trigger>
+      </Tabs.List>
+
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="searcherTab"
+      >
+        <Searcher2Tab />
+      </Tabs.Content>
+
+      <Tabs.Content
+        overflow="hidden"
+        maxH="100%"
+        h="100%"
+        display={"flex"}
+        flexDirection={"column"}
+        value="verseTab"
+      >
+        <PanelQuran
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
+      </Tabs.Content>
+    </Tabs.Root>
   );
 };
 
@@ -119,20 +135,16 @@ const Searcher2Tab = () => {
     }
   }
 
-  const handleCheckboxDiacritics = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    dispatch(searcher2PageActions.setSearchDiacritics(event.target.checked));
+  const handleCheckboxDiacritics = (checked: boolean) => {
+    dispatch(searcher2PageActions.setSearchDiacritics(checked));
   };
 
-  const handleCheckboxIdentical = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    dispatch(searcher2PageActions.setSearchIdentical(event.target.checked));
+  const handleCheckboxIdentical = (checked: boolean) => {
+    dispatch(searcher2PageActions.setSearchIdentical(checked));
   };
 
-  const handleCheckboxStart = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(searcher2PageActions.setSearchStart(event.target.checked));
+  const handleCheckboxStart = (checked: boolean) => {
+    dispatch(searcher2PageActions.setSearchStart(checked));
   };
 
   useEffect(() => {
@@ -158,7 +170,7 @@ const Searcher2Tab = () => {
       <Flex flexDir={"column"} alignItems={"center"}>
         <Flex alignItems={"center"} gap={1}>
           <Input
-            bgColor={"white"}
+            bgColor={"bg"}
             type="search"
             placeholder=""
             value={searchString}
@@ -174,18 +186,21 @@ const Searcher2Tab = () => {
             {t("search_options")}
           </Box>
           <Checkbox
-            isChecked={searchDiacritics}
-            onChange={handleCheckboxDiacritics}
+            checked={searchDiacritics}
+            onCheckedChange={(e) => handleCheckboxDiacritics(!!e.checked)}
           >
             {t("search_diacritics")}
           </Checkbox>
           <Checkbox
-            isChecked={searchIdentical}
-            onChange={handleCheckboxIdentical}
+            checked={searchIdentical}
+            onCheckedChange={(e) => handleCheckboxIdentical(!!e.checked)}
           >
             {t("search_identical")}
           </Checkbox>
-          <Checkbox isChecked={searchStart} onChange={handleCheckboxStart}>
+          <Checkbox
+            checked={searchStart}
+            onCheckedChange={(e) => handleCheckboxStart(!!e.checked)}
+          >
             {t("search_start")}
           </Checkbox>
         </Flex>
@@ -195,7 +210,8 @@ const Searcher2Tab = () => {
         overflow={"hidden"}
         maxH={"100%"}
         height={"100%"}
-        border={"1px solid gray"}
+        border={"1px solid"}
+        borderColor={"gray.emphasized"}
         borderRadius={"1rem"}
       >
         <Box
@@ -228,7 +244,7 @@ interface VerseItemProps {
 const VerseItem = ({ verseMatch }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
-  const [isOpen, setOpen] = useBoolean();
+  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   const onClickVerse = () => {
     dispatch(searcher2PageActions.setVerseTab(verseMatch.key));
@@ -236,13 +252,13 @@ const VerseItem = ({ verseMatch }: VerseItemProps) => {
   };
 
   return (
-    <Box py={"4px"} borderBottom={"1px solid #dee2e6"}>
+    <Box py={"4px"} borderBottom={"1px solid"} borderColor={"gray.emphasized"}>
       <VerseContainer>
         <VerseHighlightMatches verse={verseMatch} />
         <ButtonVerse onClick={onClickVerse}>{` (${quranService.getChapterName(
           verseMatch.suraid
         )}:${verseMatch.verseid})`}</ButtonVerse>
-        <ButtonExpand onClick={setOpen.toggle} />
+        <ButtonExpand onClick={setOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verseMatch.key} />
     </Box>
