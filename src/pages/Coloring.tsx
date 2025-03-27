@@ -97,7 +97,7 @@ function Coloring() {
   if (loadingState) return <LoadingSpinner />;
 
   return (
-    <Flex overflow={"hidden"} maxH={"100%"} h={"100%"} bgColor={"brand"}>
+    <Flex overflow={"hidden"} maxH={"100%"} h={"100%"} bgColor={"brand.bg"}>
       <ChaptersSide />
       {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
     </Flex>

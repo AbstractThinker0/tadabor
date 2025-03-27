@@ -42,7 +42,6 @@ const VersesSide = () => {
         flex={1}
         px={4}
         py={1}
-        //bgColor={"#f7fafc"}
         bgColor={"brand.contrast"}
         dir="rtl"
         color={"inherit"}
@@ -108,7 +107,7 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             <Tag.Root
               key={colorID}
               maxW={"120px"}
-              backgroundColor={selectedColors[colorID].colorCode}
+              bgColor={selectedColors[colorID].colorCode}
               color={getTextColor(selectedColors[colorID].colorCode)}
               size="lg"
               variant={"solid"}
@@ -250,7 +249,7 @@ const SelectedVerseItem = ({
       borderBottom={"1.5px solid"}
       borderColor={"border.emphasized"}
       key={verse.key}
-      backgroundColor={verseColor?.colorCode}
+      bgColor={verseColor?.colorCode}
       color={verseColor ? getTextColor(verseColor.colorCode) : undefined}
     >
       <VerseContainer>
@@ -347,7 +346,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
             }
             key={verse.key}
             data-id={verse.key}
-            backgroundColor={coloredVerses[verse.key]?.colorCode}
+            bgColor={coloredVerses[verse.key]?.colorCode}
             color={
               coloredVerses[verse.key]
                 ? getTextColor(coloredVerses[verse.key].colorCode)

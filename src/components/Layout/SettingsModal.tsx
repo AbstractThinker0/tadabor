@@ -136,7 +136,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
               </Box>
               <Box
                 textAlign="center"
-                backgroundColor={"bg.emphasized"}
+                bgColor={"bg.emphasized"}
                 borderRadius="0.75rem"
                 padding={2}
                 lineHeight={"normal"}
@@ -160,7 +160,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
               </Box>
               <Box
                 textAlign="center"
-                backgroundColor={"bg.emphasized"}
+                bgColor={"bg.emphasized"}
                 borderRadius="0.75rem"
                 padding={1}
                 fontFamily={`"Scheherazade New", serif`}

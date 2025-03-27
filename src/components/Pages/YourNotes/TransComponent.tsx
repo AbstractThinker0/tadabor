@@ -25,7 +25,7 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
   return (
     <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
       <CardHeader
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
         dir="rtl"
@@ -114,7 +114,7 @@ const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
       <Flex
         p={3}
         justifyContent={"center"}
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderTop={"1px solid"}
         borderColor={"border.emphasized"}
       >
@@ -159,7 +159,7 @@ const Versearea = ({
       <Flex
         p={3}
         justifyContent={"center"}
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderTop={"1px solid"}
         borderColor={"border.emphasized"}
       >

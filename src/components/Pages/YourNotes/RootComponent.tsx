@@ -66,7 +66,7 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
     <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
       <CardHeader
         dir="rtl"
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
       >

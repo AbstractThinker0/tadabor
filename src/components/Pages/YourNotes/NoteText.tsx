@@ -25,7 +25,7 @@ const NoteText = ({
       <Flex
         p={3}
         justifyContent={"center"}
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderTop={"1px solid"}
         borderColor={"border.emphasized"}
       >

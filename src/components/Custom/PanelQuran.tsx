@@ -70,7 +70,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
   return (
     <Flex
       flexDirection={"column"}
-      backgroundColor={"brand.bg"}
+      bgColor={"brand.bg"}
       padding={4}
       overflowY={"scroll"}
       maxH={"100%"}
@@ -116,7 +116,7 @@ const VerseItem = ({
       borderBottom={"1px solid"}
       borderColor={"border.emphasized"}
       aria-selected={isSelected}
-      _selected={{ backgroundColor: "orange.muted" }}
+      _selected={{ bgColor: "orange.muted" }}
       data-id={verse.key}
     >
       <VerseContainer>

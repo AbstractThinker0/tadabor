@@ -153,7 +153,7 @@ const Audio = () => {
 
   return (
     <Flex
-      backgroundColor="brand.bg"
+      bgColor="brand.bg"
       flexWrap="nowrap"
       maxHeight="100%"
       height="100%"
@@ -184,7 +184,7 @@ const Audio = () => {
           <Heading
             fontSize="x-large"
             color="purple.fg"
-            backgroundColor="gray.subtle"
+            bgColor="gray.subtle"
             borderRadius="0.3rem"
             borderStyle="solid"
             borderWidth="1px"

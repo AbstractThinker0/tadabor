@@ -172,7 +172,8 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
       p={1}
       borderBottom="1px solid"
       borderColor={"border.emphasized"}
-      backgroundColor={isSelected ? "orange.muted" : undefined}
+      aria-selected={isSelected}
+      _selected={{ bgColor: "orange.muted" }}
     >
       <VerseContainer py={1} color={"brand.text"}>
         {verse.versetext}{" "}

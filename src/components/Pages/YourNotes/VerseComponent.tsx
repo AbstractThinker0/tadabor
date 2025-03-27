@@ -75,7 +75,7 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
       <Box
         p={2}
         dir="rtl"
-        backgroundColor={"gray.muted"}
+        bgColor={"gray.muted"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
         borderTopRadius={"0.35rem"}

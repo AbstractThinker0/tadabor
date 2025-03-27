@@ -46,7 +46,7 @@ const SearchForm = ({
         <Box>
           <Flex gap={1}>
             <Input
-              backgroundColor={"bg"}
+              bgColor={"bg"}
               type="search"
               value={searchString}
               aria-label="Search"

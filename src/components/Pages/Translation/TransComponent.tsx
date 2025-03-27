@@ -117,7 +117,7 @@ const Versearea = ({
         placeholder="Enter your text."
         value={inputValue}
         onChange={onChangeText}
-        backgroundColor={"bg"}
+        bgColor={"bg"}
       />
       <Box textAlign={"center"}>
         <ButtonSave />

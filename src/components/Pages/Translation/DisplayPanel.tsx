@@ -85,7 +85,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           color={"blue.fg"}
           border={"1px solid"}
           borderColor={"border.emphasized"}
-          backgroundColor={"gray.emphasized"}
+          bgColor={"gray.emphasized"}
           borderTopRadius={5}
         >
           سورة {quranService.getChapterName(selectChapter)}
@@ -95,7 +95,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
           p={1}
           border={"1px solid"}
           borderColor={"border.emphasized"}
-          backgroundColor={"brand.contrast"}
+          bgColor={"brand.contrast"}
           ref={handleVerseListRef}
         >
           {isPending ? (

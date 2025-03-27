@@ -109,7 +109,7 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
                     onChange={onChangeColor}
                     value={currentColor}
                     borderRadius={"0.375rem"}
-                    backgroundColor={listColors[currentColor].colorCode}
+                    bgColor={listColors[currentColor].colorCode}
                     color={getTextColor(listColors[currentColor].colorCode)}
                   >
                     {Object.keys(listColors).map((colorID) => (

@@ -29,12 +29,7 @@ const Translation = () => {
   };
 
   return (
-    <Flex
-      backgroundColor={"brand.bg"}
-      overflow={"hidden"}
-      maxH={"100%"}
-      h={"100%"}
-    >
+    <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
       <Flex flexDir={"column"} padding={1}>
         <ChaptersList
           handleChapterChange={handleChapterChange}

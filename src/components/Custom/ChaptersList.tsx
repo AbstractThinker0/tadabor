@@ -69,7 +69,7 @@ const ChaptersList = ({
         dir="rtl"
         borderBottom="none"
         borderBottomRadius="0"
-        backgroundColor={"bg"}
+        bgColor={"bg"}
       />
       <Box
         maxH="60%"

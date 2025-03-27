@@ -73,7 +73,7 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
               fontFamily={"initial"}
               overflowWrap={"break-word"}
               borderRadius={4}
-              backgroundColor={currentColor?.colorCode}
+              bgColor={currentColor?.colorCode}
               color={
                 currentColor ? getTextColor(currentColor.colorCode) : undefined
               }

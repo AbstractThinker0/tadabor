@@ -34,7 +34,7 @@ const Navbar = () => {
       <Box
         as="nav"
         role="navigation"
-        _light={{ backgroundColor: "#1A202C" }}
+        _light={{ bgColor: "#1A202C" }}
         _dark={{ bgColor: "#151a23" }}
         px={2}
         py={1}

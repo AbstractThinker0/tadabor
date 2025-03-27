@@ -319,7 +319,7 @@ const RootOccurences = ({
       <Collapsible.Content>
         <Box
           padding={3}
-          backgroundColor={"brand.contrast"}
+          bgColor={"brand.contrast"}
           maxH={"60vh"}
           overflowY={"scroll"}
           onScroll={onScrollOccs}

@@ -83,7 +83,8 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
       py={"9px"}
       borderBottom={"1.5px solid"}
       borderColor={"border.emphasized"}
-      bgColor={scrollKey === verse.key ? "orange.emphasized" : undefined}
+      aria-selected={scrollKey === verse.key}
+      _selected={{ bgColor: "orange.emphasized" }}
       data-id={verse.key}
     >
       <VerseWords verse={verse} />

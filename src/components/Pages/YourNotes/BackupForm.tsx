@@ -24,7 +24,7 @@ const BackupForm = ({
     >
       <div>Output format:</div>
       <div>
-        <NativeSelect.Root backgroundColor={"bg"}>
+        <NativeSelect.Root bgColor={"bg"}>
           <NativeSelect.Field value={currentFormat} onChange={onChangeFormat}>
             <option value="1">HTML</option>
             <option value="2">JSON</option>
