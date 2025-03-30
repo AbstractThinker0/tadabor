@@ -159,8 +159,10 @@ const RadioSearchMethod = ({
 }: RadioSearchMethodProps) => {
   const { t } = useTranslation();
 
-  const onChangeRadio = (value: string) => {
-    setSearchMethod(value as SEARCH_METHOD);
+  const onChangeRadio = (value: string | null) => {
+    if (value) {
+      setSearchMethod(value as SEARCH_METHOD);
+    }
   };
 
   return (
