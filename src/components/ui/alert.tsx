@@ -5,7 +5,7 @@ export interface AlertProps extends Omit<ChakraAlert.RootProps, "title"> {
   startElement?: React.ReactNode;
   endElement?: React.ReactNode;
   title?: React.ReactNode;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<any>;
 }
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(

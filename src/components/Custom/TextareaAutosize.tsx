@@ -32,7 +32,7 @@ const forceHiddenStyles = (node: HTMLElement) => {
 
 const TextareaAutosize = (props: TextareaProps) => {
   const refTextarea = useRef<HTMLTextAreaElement>(null);
-  const refHidden = useRef<HTMLTextAreaElement>();
+  const refHidden = useRef<HTMLTextAreaElement>(undefined);
 
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 

@@ -11,7 +11,7 @@ export interface AvatarProps extends ChakraAvatar.RootProps {
   src?: string
   srcSet?: string
   loading?: ImageProps["loading"]
-  icon?: React.ReactElement
+  icon?: React.ReactElement<any>
   fallback?: React.ReactNode
 }
 
