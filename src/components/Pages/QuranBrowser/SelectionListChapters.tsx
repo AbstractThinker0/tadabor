@@ -8,8 +8,9 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { selectedChaptersType } from "@/types";
 
-import { Flex, Input, Box, Button } from "@chakra-ui/react";
+import { Flex, Box, Button } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { InputString } from "@/components/Generic/Input";
 
 interface SelectionListChaptersProps {
   handleCurrentChapter: (chapterID: number) => void;
@@ -62,6 +63,10 @@ const SelectionListChapters = ({
     }
   });
 
+  const onClearInput = () => {
+    setChapterSearch("");
+  };
+
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChapterSearch(event.target.value);
   };
@@ -108,15 +113,15 @@ const SelectionListChapters = ({
 
   return (
     <Flex flexDirection="column" h="40%">
-      <Input
-        bgColor="bg"
-        borderBottom="none"
-        borderBottomRadius="0"
-        type="search"
+      <InputString
+        inputElementProps={{
+          borderBottom: "none",
+          borderBottomRadius: "0",
+          placeholder: quranService.getChapterName(currentChapter),
+        }}
         value={chapterSearch}
         onChange={onChangeInput}
-        placeholder={quranService.getChapterName(currentChapter)}
-        aria-label="Search"
+        onClear={onClearInput}
         dir="rtl"
       />
       <Box
