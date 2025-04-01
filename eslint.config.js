@@ -30,14 +30,17 @@ export default [
     },
     rules: {
       // Disable error for unused parameters
-      "no-unused-vars": [
-        "error",
+      // ✅ Disable built-in ESLint rule
+      "no-unused-vars": "off",
+
+      // ✅ Use TypeScript's version instead
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
         {
           vars: "all",
           args: "none",
           caughtErrors: "none",
           ignoreRestSiblings: false,
-          reportUsedIgnorePattern: false,
         },
       ],
       "react/react-in-jsx-scope": "off",
