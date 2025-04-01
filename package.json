@@ -15,7 +15,7 @@
     "start": "vite",
     "dev": "vite",
     "build": "tsc && vite build",
-    "theme": "npx @chakra-ui/cli typegen ./theme/index.ts",
+    "theme": "npx @chakra-ui/cli typegen ./src/theme/index.ts",
     "lint": "eslint src --ext ts,tsx --config eslint.config.js --max-warnings 0",
     "preview": "vite preview"
   },
