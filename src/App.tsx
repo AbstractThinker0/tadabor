@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router";
 
 import { lazy, PropsWithChildren, Suspense } from "react";
 
