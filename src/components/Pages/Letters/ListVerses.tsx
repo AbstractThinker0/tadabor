@@ -148,7 +148,6 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
         {verse.versetext.split(" ").map((word, wordIndex) => (
           <Fragment key={wordIndex}>
             <Span
-              key={wordIndex}
               my={"1px"}
               me={isSpace === true ? "4px" : undefined}
               py={"5px"}

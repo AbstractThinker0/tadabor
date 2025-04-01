@@ -22,6 +22,7 @@ import {
   Flex,
   HStack,
   Spacer,
+  StackSeparator,
 } from "@chakra-ui/react";
 
 import { Tooltip } from "@/components/ui/tooltip";
@@ -358,7 +359,11 @@ const DerivationsComponent = memo(
   ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
     return (
       <>
-        <HStack wrap="wrap" p={1} separator={<>-</>}>
+        <HStack
+          wrap="wrap"
+          p={1}
+          separator={<StackSeparator border={"none"}>-</StackSeparator>}
+        >
           {searchIndexes.map((root: searchIndexProps, index: number) => (
             <Tooltip showArrow key={index} content={root.text}>
               <Button

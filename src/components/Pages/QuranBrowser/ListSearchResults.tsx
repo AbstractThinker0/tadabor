@@ -23,6 +23,7 @@ import {
   HStack,
   Heading,
   Text,
+  StackSeparator,
 } from "@chakra-ui/react";
 
 import { Tag } from "@/components/ui/tag";
@@ -213,7 +214,11 @@ const DerivationsComponent = ({
   return (
     <>
       <Separator pb={1} borderColor={"border.emphasized"} />
-      <HStack wrap="wrap" p={2} separator={<>-</>}>
+      <HStack
+        wrap="wrap"
+        p={2}
+        separator={<StackSeparator border={"none"}>-</StackSeparator>}
+      >
         {searchIndexes.map((root: searchIndexProps, index: number) => (
           <Tooltip showArrow key={index} content={root.text}>
             <Button
