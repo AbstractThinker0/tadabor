@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -30,6 +30,8 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
+  const refVerses = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!verseKey) return;
 
@@ -38,24 +40,21 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
     });
   }, [verseKey]);
 
-  // Handling scroll by using a callback ref
-  const handleVerseListRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
-        const verseToHighlight = node.querySelector(
-          `[data-id="${scrollKey}"]`
-        ) as HTMLDivElement;
+  // Handling scroll
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
 
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
-    },
-    [scrollKey, isPending]
-  );
+    }
+  }, [scrollKey, isPending]);
 
   const onClickVerseSuffix = (key: string) => {
     if (scrollKey === key) {
@@ -75,7 +74,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       overflowY={"scroll"}
       maxH={"100%"}
       height={"100%"}
-      ref={handleVerseListRef}
+      ref={refVerses}
       dir="rtl"
     >
       <Heading textAlign={"center"} color="blue.fg" fontSize={"3xl"} pb={"4"}>

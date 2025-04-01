@@ -12,7 +12,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Box, Flex, Input, Tabs } from "@chakra-ui/react";
+import { Box, Flex, HStack, Input, Span, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -182,27 +182,27 @@ const Searcher2Tab = () => {
           <span>({stateVerses.length})</span>
         </Flex>
         <Flex gap={1}>
-          <Box as="span" fontWeight={"bold"}>
-            {t("search_options")}
-          </Box>
-          <Checkbox
-            checked={searchDiacritics}
-            onCheckedChange={(e) => handleCheckboxDiacritics(!!e.checked)}
-          >
-            {t("search_diacritics")}
-          </Checkbox>
-          <Checkbox
-            checked={searchIdentical}
-            onCheckedChange={(e) => handleCheckboxIdentical(!!e.checked)}
-          >
-            {t("search_identical")}
-          </Checkbox>
-          <Checkbox
-            checked={searchStart}
-            onCheckedChange={(e) => handleCheckboxStart(!!e.checked)}
-          >
-            {t("search_start")}
-          </Checkbox>
+          <Span fontWeight={"bold"}>{t("search_options")}</Span>
+          <HStack gap={3}>
+            <Checkbox
+              checked={searchDiacritics}
+              onCheckedChange={(e) => handleCheckboxDiacritics(!!e.checked)}
+            >
+              {t("search_diacritics")}
+            </Checkbox>
+            <Checkbox
+              checked={searchIdentical}
+              onCheckedChange={(e) => handleCheckboxIdentical(!!e.checked)}
+            >
+              {t("search_identical")}
+            </Checkbox>
+            <Checkbox
+              checked={searchStart}
+              onCheckedChange={(e) => handleCheckboxStart(!!e.checked)}
+            >
+              {t("search_start")}
+            </Checkbox>
+          </HStack>
         </Flex>
       </Flex>
       <Box

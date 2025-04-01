@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -105,35 +105,33 @@ const ListVerses = () => {
 
   const chapterName = quranService.getChapterName(selectChapter);
 
+  const refVerses = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(selectChapter));
     });
   }, [selectChapter]);
 
-  // Handling scroll by using a callback ref
-  const handleVerseListRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
-        const verseToHighlight = node.querySelector(
-          `[data-id="${scrollKey}"]`
-        ) as HTMLDivElement;
+  useEffect(() => {
+    if (scrollKey && refVerses.current) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
 
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
-    },
-    [scrollKey, isPending]
-  );
+    }
+  }, [scrollKey, isPending]);
 
   return (
     <>
       <ListTitle chapterName={chapterName} />
-      <Box p={1} ref={handleVerseListRef}>
+      <Box p={1} ref={refVerses}>
         {isPending ? (
           <LoadingSpinner />
         ) : (

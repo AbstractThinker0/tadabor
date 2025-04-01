@@ -21,6 +21,7 @@ import {
   CardBody,
   CardHeader,
   Flex,
+  Span,
   Tag,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -390,8 +391,7 @@ const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
   return (
     <Flex flexWrap={"wrap"} gap={"5px"} pb={"5px"} fontSize={"medium"}>
       {versesTags.map((tagID) => (
-        <Box
-          as="span"
+        <Span
           padding={"3px"}
           bgColor={"yellow.emphasized"}
           borderRadius={"0.3rem"}
@@ -401,7 +401,7 @@ const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
           key={tagID}
         >
           {tags[tagID].tagDisplay}
-        </Box>
+        </Span>
       ))}
     </Flex>
   );

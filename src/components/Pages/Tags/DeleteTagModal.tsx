@@ -3,7 +3,7 @@ import { dbFuncs } from "@/util/db";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { Dialog, Button, ButtonGroup, Box } from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Box, Span } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface DeleteTagModalProps {
@@ -50,15 +50,14 @@ const DeleteTagModal = ({
         <Dialog.Body>
           <Box>
             Are you sure you want to delete{" "}
-            <Box
-              as="span"
+            <Span
               padding={"4px"}
               bgColor={"yellow.emphasized"}
               overflowWrap={"break-word"}
               borderRadius={"0.375rem"}
             >
               {currentTag?.tagDisplay}
-            </Box>{" "}
+            </Span>{" "}
             tag? All verses tagged with this tag will lose it.
           </Box>
           <p>Number of verses affected: {versesCount}</p>

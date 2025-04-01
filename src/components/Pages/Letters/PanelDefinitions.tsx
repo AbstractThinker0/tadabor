@@ -17,10 +17,10 @@ import ModalEditLetter from "@/components/Pages/Letters/ModalEditLetter";
 import ModalCreatePreset from "@/components/Pages/Letters/ModalCreatePreset";
 
 import {
-  Box,
   Button,
   Flex,
   NativeSelect,
+  Span,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -162,11 +162,10 @@ const ItemLetter = ({
 
   return (
     <>
-      <Box as="span" width={"2rem"} fontSize={"larger"}>
+      <Span width={"2rem"} fontSize={"larger"}>
         {letter}
-      </Box>
-      <Box
-        as="span"
+      </Span>
+      <Span
         width={"50%"}
         height={"60px"}
         bgColor={"bg"}
@@ -175,7 +174,7 @@ const ItemLetter = ({
         dir={letterDef?.dir || ""}
       >
         {letterDef?.definition || ""}
-      </Box>{" "}
+      </Span>{" "}
       <Button
         colorPalette="blue"
         fontWeight={"normal"}

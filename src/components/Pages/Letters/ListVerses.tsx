@@ -29,6 +29,7 @@ import {
   Flex,
   Collapsible,
   NativeSelect,
+  Span,
 } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -146,9 +147,8 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
       <VerseContainer>
         {verse.versetext.split(" ").map((word, wordIndex) => (
           <Fragment key={wordIndex}>
-            <Box
+            <Span
               key={wordIndex}
-              as="span"
               my={"1px"}
               me={isSpace === true ? "4px" : undefined}
               py={"5px"}
@@ -172,7 +172,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
                   {isSpace === true ? " " : ""}
                 </Fragment>
               ))}
-            </Box>{" "}
+            </Span>{" "}
           </Fragment>
         ))}
         <ButtonVerse onClick={() => onClickVerseID(verse.key)}>
@@ -218,15 +218,14 @@ const SingleLetter = ({
   };
 
   return (
-    <Box
-      as="span"
+    <Span
       aria-selected={letterKey === selectedLetter}
       _selected={{ bgColor: "blue.emphasized" }}
       _hover={{ bgColor: "blue.emphasized" }}
       onClick={onClickLetter}
     >
       {letter}
-    </Box>
+    </Span>
   );
 };
 
@@ -321,8 +320,7 @@ const InfoBox = ({
 
     return (
       <Fragment key={index}>
-        <Box
-          as="span"
+        <Span
           padding={"2px"}
           aria-selected={index === selectedWord}
           _selected={{ bgColor: "purple.emphasized" }}
@@ -334,7 +332,7 @@ const InfoBox = ({
               {data.length - 1 !== index && def.isDef ? " " : ""}
             </span>
           ))}
-        </Box>{" "}
+        </Span>{" "}
       </Fragment>
     );
   };

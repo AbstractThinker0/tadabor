@@ -5,7 +5,7 @@ import { dbFuncs } from "@/util/db";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { Dialog, Button, ButtonGroup, Text, Box } from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Text, Span } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
@@ -67,8 +67,7 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
         <Dialog.Body>
           <Text>
             Are you sure you want to delete{" "}
-            <Box
-              as="span"
+            <Span
               p={1}
               fontFamily={"initial"}
               overflowWrap={"break-word"}
@@ -79,7 +78,7 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
               }
             >
               {currentColor?.colorDisplay}
-            </Box>{" "}
+            </Span>{" "}
             color? All verses colored with this color will be uncolored.
           </Text>
           <Text>
