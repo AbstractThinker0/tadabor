@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -45,13 +45,14 @@ const Audio = () => {
   const currentTime = useAppSelector((state) => state.audioPage.currentTime);
 
   const refAudio = useRef<HTMLAudioElement>(null);
-  const refVersesList = useRef<HTMLDivElement>(null);
 
-  const displayVerse = quranService.getVerses(currentChapter);
+  const [displayVerses, setDisplayVerses] = useState(
+    quranService.getVerses(currentChapter)
+  );
 
   const handleChapterChange = (chapter: string) => {
     dispatch(audioPageActions.setCurrentChapter(chapter));
-    dispatch(audioPageActions.setCurrentVerse(displayVerse[0]));
+    dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
   };
 
   const onClickAudio = (verse: verseProps) => {
@@ -128,13 +129,14 @@ const Audio = () => {
   };
 
   useEffect(() => {
+    setDisplayVerses(quranService.getVerses(currentChapter));
     if (!refAudio.current) return;
 
     const verseRank = quranService.getVerses(currentChapter)[0].rank;
 
     refAudio.current.src = getVerseAudioURL(verseRank);
 
-    dispatch(audioPageActions.setCurrentVerse(displayVerse[0]));
+    dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
     dispatch(audioPageActions.setIsPlaying(false));
   }, [currentChapter]);
 
@@ -171,50 +173,12 @@ const Audio = () => {
         height="100%"
         overflowY="hidden"
       >
-        <Flex
-          flexDirection="column"
-          width="100%"
-          height="100%"
-          paddingTop="5px"
-          paddingLeft="5px"
-          paddingRight="5px"
-          overflowY="hidden"
-          dir="rtl"
-        >
-          <Heading
-            fontSize="x-large"
-            color="purple.fg"
-            bgColor="gray.subtle"
-            borderRadius="0.3rem"
-            borderStyle="solid"
-            borderWidth="1px"
-            borderColor="gray.emphasized"
-            borderBottomRadius={"unset"}
-            textAlign="center"
-            marginBottom="0"
-            padding={2}
-          >
-            سورة {quranService.getChapterName(currentChapter)}
-          </Heading>
-          <Box
-            overflowY="scroll"
-            padding="0.5rem"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="gray.emphasized"
-            flexGrow={1}
-            ref={refVersesList}
-          >
-            {displayVerse.map((verse) => (
-              <VerseItem
-                isSelected={verse.key === currentVerse?.key}
-                key={verse.key}
-                onClickAudio={onClickAudio}
-                verse={verse}
-              />
-            ))}
-          </Box>
-        </Flex>
+        <ChapterDisplay
+          verseKey={currentVerse?.key}
+          displayVerses={displayVerses}
+          onClickAudio={onClickAudio}
+          currentChapter={currentChapter}
+        />
         <Flex
           flexDirection="column"
           alignSelf="center"
@@ -264,6 +228,68 @@ const Audio = () => {
           </Flex>
         </Flex>
       </Flex>
+    </Flex>
+  );
+};
+
+interface ChapterDisplayProps {
+  currentChapter: string;
+  displayVerses: verseProps[];
+  verseKey: string | undefined;
+  onClickAudio: (verse: verseProps) => void;
+}
+
+const ChapterDisplay = ({
+  currentChapter,
+  displayVerses,
+  verseKey,
+  onClickAudio,
+}: ChapterDisplayProps) => {
+  const quranService = useQuran();
+
+  return (
+    <Flex
+      flexDirection="column"
+      width="100%"
+      height="100%"
+      paddingTop="5px"
+      paddingLeft="5px"
+      paddingRight="5px"
+      overflowY="hidden"
+      dir="rtl"
+    >
+      <Heading
+        fontSize="x-large"
+        color="purple.fg"
+        bgColor="gray.subtle"
+        borderRadius="0.3rem"
+        borderStyle="solid"
+        borderWidth="1px"
+        borderColor="gray.emphasized"
+        borderBottomRadius={"unset"}
+        textAlign="center"
+        marginBottom="0"
+        padding={2}
+      >
+        سورة {quranService.getChapterName(currentChapter)}
+      </Heading>
+      <Box
+        overflowY="scroll"
+        padding="0.5rem"
+        borderWidth="1px"
+        borderStyle="solid"
+        borderColor="gray.emphasized"
+        flexGrow={1}
+      >
+        {displayVerses.map((verse) => (
+          <VerseItem
+            isSelected={verse.key === verseKey}
+            key={verse.key}
+            onClickAudio={onClickAudio}
+            verse={verse}
+          />
+        ))}
+      </Box>
     </Flex>
   );
 };
