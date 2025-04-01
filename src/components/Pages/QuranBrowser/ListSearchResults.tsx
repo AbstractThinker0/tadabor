@@ -70,7 +70,7 @@ const ListSearchResults = ({
     setSelectedVerse("");
   }, [searchIndexes]);
 
-  function handleRootClick(verse_key: string) {
+  const memoHandleRootClick = useCallback((verse_key: string) => {
     const verseToHighlight = refListVerses.current?.querySelector(
       `[data-id="${verse_key}"]`
     );
@@ -83,9 +83,7 @@ const ListSearchResults = ({
     });
 
     setSelectedVerse(verse_key);
-  }
-
-  const memoHandleRootClick = useCallback(handleRootClick, []);
+  }, []);
 
   const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 

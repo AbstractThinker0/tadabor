@@ -38,7 +38,7 @@ const ChaptersList = () => {
     dispatch(coloringPageActions.setChapter(chapterID));
     setChapterToken("");
 
-    document.documentElement.scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     refChapter.current = event.currentTarget;
   }

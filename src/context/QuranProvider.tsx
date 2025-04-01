@@ -2,7 +2,7 @@ import {
   useState,
   useEffect,
   PropsWithChildren,
-  useRef,
+  useMemo,
   createContext,
 } from "react";
 
@@ -15,7 +15,7 @@ export const QuranContext = createContext<quranClass | null>(null);
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
-  const quranInstance = useRef(new quranClass());
+  const quranInstance = useMemo(() => new quranClass(), []);
 
   useEffect(() => {
     let clientLeft = false;
@@ -26,13 +26,13 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
         if (clientLeft) return;
 
-        quranInstance.current.setChapters(response);
+        quranInstance.setChapters(response);
 
         response = await fetchQuran();
 
         if (clientLeft) return;
 
-        quranInstance.current.setQuran(response);
+        quranInstance.setQuran(response);
 
         setIsLoading(false);
 
@@ -40,7 +40,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
         if (clientLeft) return;
 
-        quranInstance.current.setRoots(response);
+        quranInstance.setRoots(response);
       } catch (error) {
         fetchData();
         return;
@@ -59,7 +59,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <QuranContext.Provider value={quranInstance.current}>
+    <QuranContext.Provider value={quranInstance}>
       {children}
     </QuranContext.Provider>
   );

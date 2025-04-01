@@ -6,7 +6,7 @@ import { IconSelect } from "@/components/Generic/Icons";
 
 const ButtonSave = (props: ButtonProps) => {
   const { t } = useTranslation();
-  const { children, ...rest } = props;
+  const { ...rest } = props;
 
   return (
     <Button
@@ -23,7 +23,7 @@ const ButtonSave = (props: ButtonProps) => {
 
 const ButtonEdit = (props: ButtonProps) => {
   const { t } = useTranslation();
-  const { children, ...rest } = props;
+  const { ...rest } = props;
 
   return (
     <Button colorPalette="blue" size="sm" fontWeight={"normal"} {...rest}>
