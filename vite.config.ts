@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const ReactCompilerConfig = {};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -10,7 +12,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+      },
+    }),
+    tsconfigPaths(),
+  ],
   build: {
     outDir: "build",
   },
