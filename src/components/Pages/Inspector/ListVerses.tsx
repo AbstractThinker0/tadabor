@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState, useTransition } from "react";
+import { memo, useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -27,6 +27,7 @@ import {
   Button,
   Separator,
   Span,
+  StackSeparator,
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
@@ -47,6 +48,8 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
 
   const scrollKey = useAppSelector((state) => state.inspectorPage.scrollKey);
 
+  const refVerses = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(currentChapter));
@@ -54,26 +57,23 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
   }, [currentChapter]);
 
   // Handling scroll by using a callback ref
-  const handleVerseListRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
-        const verseToHighlight = node.querySelector(
-          `[data-id="${scrollKey}"]`
-        ) as HTMLDivElement;
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
 
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
-    },
-    [scrollKey, isPending]
-  );
+    }
+  }, [scrollKey, isPending]);
 
   return (
-    <CardBody ref={handleVerseListRef} dir="rtl">
+    <CardBody ref={refVerses} dir="rtl">
       {isPending ? (
         <LoadingSpinner />
       ) : (
@@ -207,7 +207,9 @@ const RootItem = ({ root }: RootItemProps) => {
         </Span>
         <Accordion.ItemIndicator />
       </Accordion.ItemTrigger>
-      <RootOccurences rootOccs={root.occurences} />
+      <Accordion.ItemContent pb={4}>
+        <RootOccurences rootOccs={root.occurences} />
+      </Accordion.ItemContent>
     </Accordion.Item>
   );
 };
@@ -216,10 +218,7 @@ interface RootOccurencesProps {
   rootOccs: string[];
 }
 
-const RootOccurences = ({
-  rootOccs,
-}: //isOccurencesOpen,
-RootOccurencesProps) => {
+const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   const [itemsCount, setItemsCount] = useState(20);
   const [scrollKey, setScrollKey] = useState("");
 
@@ -227,15 +226,19 @@ RootOccurencesProps) => {
   const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
   const [isPending, startTransition] = useTransition();
 
+  const quranService = useQuran();
+
+  const refVerses = useRef<HTMLDivElement>(null);
+
   const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 10) {
-      setItemsCount((state) => state + 10);
+      startTransition(() => {
+        setItemsCount((state) => state + 1);
+      });
     }
   };
-
-  const quranService = useQuran();
 
   useEffect(() => {
     const localDer: searchIndexProps[] = [];
@@ -272,6 +275,21 @@ RootOccurencesProps) => {
     setRootVerses(localVerses);
   }, [rootOccs]);
 
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-child-id="${scrollKey}"]`
+      ) as HTMLDivElement;
+
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [scrollKey, isPending]);
+
   const handleDerivationClick = (verseKey: string, verseIndex: number) => {
     startTransition(() => {
       if (itemsCount < verseIndex + 20) {
@@ -281,48 +299,27 @@ RootOccurencesProps) => {
     });
   };
 
-  // Handling scroll by using a callback ref
-  const handleCollapseRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
-        const verseToHighlight = node.querySelector(
-          `[data-child-id="${scrollKey}"]`
-        ) as HTMLDivElement;
-
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }
-    },
-    [scrollKey, isPending]
-  );
-
   return (
-    <Accordion.ItemContent pb={4} ref={handleCollapseRef}>
-      <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
-        <DerivationsComponent
-          searchIndexes={derivations}
-          handleDerivationClick={handleDerivationClick}
-        />
-        <Box padding={3}>
-          {rootVerses.slice(0, itemsCount).map((rootVerse) => (
-            <Box
-              padding={"4px"}
-              borderBottom={"1.5px solid"}
-              borderColor={"border.emphasized"}
-              aria-selected={scrollKey === rootVerse.key}
-              _selected={{ bgColor: "orange.emphasized" }}
-              key={rootVerse.key}
-            >
-              <RootVerse rootVerse={rootVerse} />
-            </Box>
-          ))}
-        </Box>
+    <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
+      <DerivationsComponent
+        searchIndexes={derivations}
+        handleDerivationClick={handleDerivationClick}
+      />
+      <Box padding={3} ref={refVerses}>
+        {rootVerses.slice(0, itemsCount).map((rootVerse) => (
+          <Box
+            key={rootVerse.key}
+            padding={"4px"}
+            borderBottom={"1.5px solid"}
+            borderColor={"border.emphasized"}
+            aria-selected={scrollKey === rootVerse.key}
+            _selected={{ bgColor: "orange.emphasized" }}
+          >
+            <RootVerse rootVerse={rootVerse} />
+          </Box>
+        ))}
       </Box>
-    </Accordion.ItemContent>
+    </Box>
   );
 };
 
@@ -335,7 +332,11 @@ const DerivationsComponent = memo(
   ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
     return (
       <>
-        <HStack wrap="wrap" p={1} separator={<>-</>}>
+        <HStack
+          wrap="wrap"
+          p={1}
+          separator={<StackSeparator border={"none"}>-</StackSeparator>}
+        >
           {searchIndexes.map((root: searchIndexProps, index: number) => (
             <Tooltip showArrow key={index} content={root.text}>
               <Button
