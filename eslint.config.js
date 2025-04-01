@@ -18,6 +18,7 @@ export default [
       globals: {
         ...globals.browser,
         React: "readonly",
+        APP_VERSION: "readonly",
       },
     },
     plugins: {
