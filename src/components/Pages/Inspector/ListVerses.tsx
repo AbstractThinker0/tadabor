@@ -1,11 +1,4 @@
-import {
-  Fragment,
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { memo, useCallback, useEffect, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -33,6 +26,7 @@ import {
   HStack,
   Button,
   Separator,
+  Span,
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
@@ -161,9 +155,8 @@ const VerseWords = ({
     <>
       <VerseContainer pb={"2px"}>
         {verseText.map((word, index) => (
-          <Fragment key={index}>
-            <Box
-              as="span"
+          <Span key={index}>
+            <Span
               cursor={"pointer"}
               py={"2px"}
               borderRadius={"0.3rem"}
@@ -175,8 +168,8 @@ const VerseWords = ({
               onClick={() => onClickWord(index + 1)}
             >
               {word}
-            </Box>{" "}
-          </Fragment>
+            </Span>{" "}
+          </Span>
         ))}{" "}
         <ButtonVerse onClick={onClickVerse}>{`(${verseID})`}</ButtonVerse>
         <ButtonExpand onClick={setNoteOpen} />
@@ -191,11 +184,9 @@ const VerseWords = ({
             multiple
             lazyMount
           >
-            <Box p={1}>
-              {currentRoots.map((root) => (
-                <RootItem key={root.id} root={root} />
-              ))}
-            </Box>
+            {currentRoots.map((root) => (
+              <RootItem key={root.id} root={root} />
+            ))}
           </Accordion.Root>
         </Collapsible.Content>
       </Collapsible.Root>
@@ -211,22 +202,18 @@ const RootItem = ({ root }: RootItemProps) => {
   return (
     <Accordion.Item value={root.name}>
       <Accordion.ItemTrigger>
-        <Box as="span" flex="1">
+        <Span flex="1">
           {root.name} ({root.count})
-        </Box>
+        </Span>
         <Accordion.ItemIndicator />
       </Accordion.ItemTrigger>
-      <RootOccurences
-        rootOccs={root.occurences}
-        //isOccurencesOpen={isExpanded}
-      />
+      <RootOccurences rootOccs={root.occurences} />
     </Accordion.Item>
   );
 };
 
 interface RootOccurencesProps {
   rootOccs: string[];
-  //isOccurencesOpen: boolean;
 }
 
 const RootOccurences = ({
@@ -238,6 +225,7 @@ RootOccurencesProps) => {
 
   const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
   const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
+  const [isPending, startTransition] = useTransition();
 
   const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
@@ -250,8 +238,6 @@ RootOccurencesProps) => {
   const quranService = useQuran();
 
   useEffect(() => {
-    //if (!isOccurencesOpen) return;
-
     const localDer: searchIndexProps[] = [];
     const localVerses: verseMatchResult[] = [];
 
@@ -287,10 +273,12 @@ RootOccurencesProps) => {
   }, [rootOccs]);
 
   const handleDerivationClick = (verseKey: string, verseIndex: number) => {
-    if (itemsCount < verseIndex + 20) {
-      setItemsCount(verseIndex + 20);
-    }
-    setScrollKey(verseKey);
+    startTransition(() => {
+      if (itemsCount < verseIndex + 20) {
+        setItemsCount(verseIndex + 20);
+      }
+      setScrollKey(verseKey);
+    });
   };
 
   // Handling scroll by using a callback ref
@@ -309,7 +297,7 @@ RootOccurencesProps) => {
         }
       }
     },
-    [scrollKey]
+    [scrollKey, isPending]
   );
 
   return (
