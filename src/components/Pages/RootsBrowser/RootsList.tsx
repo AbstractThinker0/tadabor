@@ -201,7 +201,7 @@ const RootComponent = memo(
             </Button>
           </Flex>
         </Flex>
-        <Collapsible.Root open={isOpen}>
+        <Collapsible.Root open={isOpen} lazyMount>
           <Collapsible.Content>
             <FormText
               inputValue={noteText}
@@ -316,7 +316,7 @@ const RootOccurences = ({
   );
 
   return (
-    <Collapsible.Root open={isOccurencesOpen}>
+    <Collapsible.Root open={isOccurencesOpen} lazyMount>
       <Collapsible.Content>
         <Box
           padding={3}

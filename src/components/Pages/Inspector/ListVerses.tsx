@@ -175,7 +175,7 @@ const VerseWords = ({
         <ButtonExpand onClick={setNoteOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isNoteOpen} inputKey={verseKey} />
-      <Collapsible.Root lazyMount open={isRootListOpen}>
+      <Collapsible.Root open={isRootListOpen} lazyMount>
         <Collapsible.Content>
           <Accordion.Root
             borderRadius={"0.3rem"}

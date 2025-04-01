@@ -23,7 +23,6 @@ const YourNotes = () => {
     <Tabs.Root
       onValueChange={(e) => onChangeTab(e.value)}
       value={currentTab}
-      lazyMount
       bgColor={"brand.bg"}
       overflowY={"scroll"}
       flex={1}
@@ -31,6 +30,7 @@ const YourNotes = () => {
       pb={2}
       maxH="100%"
       h="100%"
+      lazyMount
     >
       <Tabs.List justifyContent={"center"}>
         <Tabs.Trigger value="versesTab">{t("notes_verses")}</Tabs.Trigger>

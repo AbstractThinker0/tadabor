@@ -39,6 +39,7 @@ const RootsBrowser = () => {
       h="100%"
       display={"flex"}
       flexDirection={"column"}
+      lazyMount
     >
       <Tabs.List>
         <Tabs.Trigger value="rootsTab">{t("searcher_search")}</Tabs.Trigger>
@@ -47,32 +48,33 @@ const RootsBrowser = () => {
           {verseTab}
         </Tabs.Trigger>
       </Tabs.List>
+      <Tabs.ContentGroup>
+        <Tabs.Content
+          overflow="hidden"
+          maxH="100%"
+          h="100%"
+          display={"flex"}
+          flexDirection={"column"}
+          value="rootsTab"
+        >
+          <PanelRoots />
+        </Tabs.Content>
 
-      <Tabs.Content
-        overflow="hidden"
-        maxH="100%"
-        h="100%"
-        display={"flex"}
-        flexDirection={"column"}
-        value="rootsTab"
-      >
-        <PanelRoots />
-      </Tabs.Content>
-
-      <Tabs.Content
-        overflow="hidden"
-        maxH="100%"
-        h="100%"
-        display={"flex"}
-        flexDirection={"column"}
-        value="verseTab"
-      >
-        <PanelQuran
-          verseKey={verseTab}
-          scrollKey={scrollKey}
-          setScrollKey={setScrollKey}
-        />
-      </Tabs.Content>
+        <Tabs.Content
+          overflow="hidden"
+          maxH="100%"
+          h="100%"
+          display={"flex"}
+          flexDirection={"column"}
+          value="verseTab"
+        >
+          <PanelQuran
+            verseKey={verseTab}
+            scrollKey={scrollKey}
+            setScrollKey={setScrollKey}
+          />
+        </Tabs.Content>
+      </Tabs.ContentGroup>
     </Tabs.Root>
   );
 };

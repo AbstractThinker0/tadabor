@@ -412,7 +412,7 @@ const InfoBox = ({
   };
 
   return (
-    <Collapsible.Root open={isOpen}>
+    <Collapsible.Root open={isOpen} lazyMount>
       <Collapsible.Content>
         <Flex
           border={"1px solid"}
@@ -427,7 +427,7 @@ const InfoBox = ({
             {verseText.split(" ").map((word, index) => renderWord(word, index))}
           </span>
         </Flex>
-        <Collapsible.Root open={!!selectedLetter}>
+        <Collapsible.Root open={!!selectedLetter} lazyMount>
           <Collapsible.Content>
             <Box
               marginTop={"6px"}
