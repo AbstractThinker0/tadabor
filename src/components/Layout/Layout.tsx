@@ -11,9 +11,9 @@ import Navbar from "@/components/Layout/Navbar";
 import AlertMessage from "@/components/Layout/AlertMessage";
 
 import { Flex } from "@chakra-ui/react";
+import { Provider } from "@/components/ui/provider";
 
 import "@/styles/main.css";
-import { Provider } from "../ui/provider";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
