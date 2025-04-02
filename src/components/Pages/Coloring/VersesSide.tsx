@@ -101,8 +101,10 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
   return (
     <>
       <Box pt={"2px"} pb={"5px"} dir="ltr">
-        <Flex flexWrap={"wrap"} gap={"5px"}>
-          <Box fontWeight={"bold"}>Selected colors:</Box>
+        <Flex flexWrap={"wrap"} gap={"5px"} alignItems="center">
+          <Box lineHeight={"short"} fontWeight={"bold"}>
+            Selected colors:
+          </Box>
           {Object.keys(selectedColors).map((colorID) => (
             <Tag.Root
               key={colorID}
@@ -128,8 +130,10 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             </Tag.Root>
           ))}
         </Flex>
-        <Flex pt={"2px"} gap={"5px"} flexWrap={"wrap"}>
-          <Box fontWeight={"bold"}>Selected chapters:</Box>
+        <Flex pt={"2px"} gap={"5px"} flexWrap={"wrap"} alignItems="center">
+          <Box lineHeight={"short"} fontWeight={"bold"}>
+            Selected chapters:
+          </Box>
           {chaptersScope.length === 114 ? (
             <Box fontWeight={"bold"}>All chapters.</Box>
           ) : chaptersScope.length === 0 ? (

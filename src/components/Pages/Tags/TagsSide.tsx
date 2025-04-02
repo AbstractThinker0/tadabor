@@ -133,6 +133,7 @@ const SideList = ({
           maxW={"300px"}
           cursor={"pointer"}
           overflowY={"auto"}
+          overflowX={"hidden"}
           fontFamily={"initial"}
           pb={1}
         >
@@ -144,6 +145,7 @@ const SideList = ({
               }
               borderRadius={"0.3rem"}
               key={tagID}
+              overflowX={"hidden"}
             >
               <Box
                 paddingRight={"8px"}

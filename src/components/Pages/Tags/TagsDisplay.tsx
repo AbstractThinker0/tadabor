@@ -87,10 +87,17 @@ function TagsDisplay() {
           <>
             <CardHeader py={1}>
               <Flex alignItems={"center"} gap={"0.5rem"} dir="ltr">
-                <Box fontWeight={"bold"}>Selected tags:</Box>
-                <Flex gap={"5px"}>
+                <Box lineHeight={"short"} fontWeight={"bold"}>
+                  Selected tags:
+                </Box>
+                <Flex gap={"5px"} flexWrap={"wrap"}>
                   {Object.keys(selectedTags).map((tagID) => (
-                    <Tag.Root size="lg" colorPalette={"yellow"} key={tagID}>
+                    <Tag.Root
+                      size="lg"
+                      colorPalette={"yellow"}
+                      key={tagID}
+                      wordBreak={"break-all"}
+                    >
                       <Tag.Label>{selectedTags[tagID].tagDisplay}</Tag.Label>
                       <Tag.EndElement>
                         <Tag.CloseTrigger
@@ -101,8 +108,10 @@ function TagsDisplay() {
                   ))}
                 </Flex>
               </Flex>
-              <Flex flexWrap={"wrap"} gap={"5px"} dir="ltr">
-                <Box fontWeight={"bold"}>Selected chapters:</Box>
+              <Flex alignItems="center" flexWrap={"wrap"} gap={"5px"} dir="ltr">
+                <Box lineHeight={"short"} fontWeight={"bold"}>
+                  Selected chapters:
+                </Box>
                 {chaptersScope.length === 114 ? (
                   <Box fontWeight={"bold"}>All chapters.</Box>
                 ) : chaptersScope.length === 0 ? (

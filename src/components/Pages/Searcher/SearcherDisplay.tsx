@@ -72,10 +72,10 @@ const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
   };
 
   return (
-    <Tag.Root colorPalette="green" size="lg" variant={"solid"}>
-      <Tag.Root overflow={"visible"}>
+    <Tag.Root colorPalette="green" size="xl" variant={"solid"}>
+      <Tag.Label overflow={"visible"}>
         {root_name} ({derCount})
-      </Tag.Root>
+      </Tag.Label>
 
       <Tag.EndElement>
         <Tag.CloseTrigger onClick={() => onClickRemove(root_id)} />

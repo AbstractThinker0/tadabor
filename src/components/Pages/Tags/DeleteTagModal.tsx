@@ -51,9 +51,9 @@ const DeleteTagModal = ({
           <Box>
             Are you sure you want to delete{" "}
             <Span
-              padding={"4px"}
+              padding={"3px"}
               bgColor={"yellow.emphasized"}
-              overflowWrap={"break-word"}
+              wordBreak={"break-all"}
               borderRadius={"0.375rem"}
             >
               {currentTag?.tagDisplay}
