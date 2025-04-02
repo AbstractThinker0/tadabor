@@ -1,14 +1,28 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Flex, Span, Spinner } from "@chakra-ui/react";
 
-const LoadingSpinner = () => {
+interface LoadingSpinnerProps {
+  text?: string;
+}
+
+const LoadingSpinner = ({ text }: LoadingSpinnerProps) => {
   return (
-    <Flex flexDir="column" h="100%" alignItems="center" justifyContent="center">
-      <Spinner
-        borderWidth="4px"
-        animationDuration="0.65s"
-        color="blue.fg"
-        size="xl"
-      />
+    <Flex
+      flexDir="column"
+      minH="100%"
+      h="100%"
+      alignItems="center"
+      justifyContent="center"
+      flex={1}
+    >
+      <Span>
+        <Spinner
+          borderWidth="4px"
+          animationDuration="0.65s"
+          color="blue.fg"
+          size="xl"
+        />
+      </Span>
+      <Span dir="auto">{text}</Span>
     </Flex>
   );
 };

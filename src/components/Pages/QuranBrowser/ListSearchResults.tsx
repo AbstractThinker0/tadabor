@@ -108,22 +108,23 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <Box ref={refListVerses}>
-        {isPending ? (
-          <LoadingSpinner />
-        ) : (
-          stateVerses.map((verse) => (
+      {isPending ? (
+        <LoadingSpinner text="Loading verses..." />
+      ) : (
+        <Box ref={refListVerses}>
+          {stateVerses.map((verse) => (
             <VerseItem
               key={verse.key}
               verse={verse}
               isSelected={selectedVerse === verse.key}
             />
-          ))
-        )}
-        {searchError && (
-          <SearchErrorsComponent searchMethod={searchingMethod} />
-        )}
-      </Box>
+          ))}
+
+          {searchError && (
+            <SearchErrorsComponent searchMethod={searchingMethod} />
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

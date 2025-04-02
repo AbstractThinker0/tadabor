@@ -34,10 +34,6 @@ const SelectionListRoots = memo(
       };
     }, []);
 
-    if (!rootsLoaded) {
-      return <LoadingSpinner />;
-    }
-
     return (
       <Flex
         flexGrow="1"
@@ -51,7 +47,11 @@ const SelectionListRoots = memo(
         minH="15%"
         maxH="25%"
       >
-        <RootsList isDisabled={isDisabled} searchString={searchString} />
+        {!rootsLoaded ? (
+          <LoadingSpinner text="Loading roots..." />
+        ) : (
+          <RootsList isDisabled={isDisabled} searchString={searchString} />
+        )}
       </Flex>
     );
   },

@@ -7,16 +7,10 @@ import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
 import { arabicAlpha } from "@/components/Pages/RootsBrowser/consts";
 
-import {
-  Box,
-  Flex,
-  Input,
-  HStack,
-  Button,
-  StackSeparator,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Button, StackSeparator } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { InputString } from "@/components/Generic/Input";
 
 interface SearchFormProps {
   searchString: string;
@@ -40,19 +34,22 @@ const SearchForm = ({
     dispatch(rbPageActions.setSearchInclusive(checked));
   };
 
+  const onClearInput = () => {
+    dispatch(rbPageActions.setSearchString(""));
+  };
+
   return (
     <Box py={1}>
       <Flex direction={"column"} alignItems={"center"}>
         <Box>
           <Flex gap={1}>
-            <Input
-              bgColor={"bg"}
-              type="search"
+            <InputString
               value={searchString}
-              aria-label="Search"
               onChange={searchStringHandle}
+              onClear={onClearInput}
               dir="rtl"
             />
+
             <span>({stateRoots.length})</span>
           </Flex>
 

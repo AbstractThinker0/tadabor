@@ -42,7 +42,7 @@ const DisplayPanel = () => {
   return (
     <Box flex={1} overflowY="scroll" minH="100%" p={1} ref={refListVerses}>
       {isVNotesLoading ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading verse notes..." />
       ) : (
         <Flex
           flexDir="column"
@@ -131,19 +131,19 @@ const ListVerses = () => {
   return (
     <>
       <ListTitle chapterName={chapterName} />
-      <Box p={1} ref={refVerses}>
-        {isPending ? (
-          <LoadingSpinner />
-        ) : (
-          stateVerses.map((verse: verseProps) => (
+      {isPending ? (
+        <LoadingSpinner text="Loading verses..." />
+      ) : (
+        <Box p={1} ref={refVerses}>
+          {stateVerses.map((verse: verseProps) => (
             <VerseItem
               key={verse.key}
               verse={verse}
               isSelected={scrollKey === verse.key}
             />
-          ))
-        )}
-      </Box>
+          ))}
+        </Box>
+      )}
     </>
   );
 };

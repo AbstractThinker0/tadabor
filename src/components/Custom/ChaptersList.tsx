@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { Box, Input } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { InputString } from "@/components/Generic/Input";
 
 interface ChaptersListProps {
   handleChapterChange: (chapter: string) => void;
@@ -58,18 +59,22 @@ const ChaptersList = ({
     handleChapterChange(String(chapterID));
   };
 
+  const onClearInput = () => {
+    setChapterSearch("");
+  };
+
   return (
     <Box maxH="100%">
-      <Input
-        type="search"
+      <InputString
+        inputElementProps={{
+          placeholder: quranService.getChapterName(selectChapter),
+          borderBottom: "none",
+          borderBottomRadius: "0",
+        }}
         value={chapterSearch}
         onChange={onChangeInput}
-        placeholder={quranService.getChapterName(selectChapter)}
-        aria-label="Search"
+        onClear={onClearInput}
         dir="rtl"
-        borderBottom="none"
-        borderBottomRadius="0"
-        bgColor={"bg"}
       />
       <Box
         maxH="60%"
