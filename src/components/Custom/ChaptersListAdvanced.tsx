@@ -106,7 +106,7 @@ const ChaptersListAdvanced = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDir={"column"} minH={"30%"} maxH={"45%"}>
+    <Flex flexDir={"column"} minH={"45%"} maxH={"45%"}>
       <InputString
         inputElementProps={{
           placeholder: quranService.getChapterName(currentChapter),
@@ -124,6 +124,7 @@ const ChaptersListAdvanced = ({
         borderColor={"border.emphasized"}
         overflowY={"scroll"}
         w={"100%"}
+        fontSize={"medium"}
       >
         {quranService.chapterNames
           .filter((chapter) => chapter.name.includes(chapterToken))
@@ -133,10 +134,8 @@ const ChaptersListAdvanced = ({
               cursor={"pointer"}
               px={"5px"}
               py={"2px"}
-              mb={"2px"}
               aria-selected={currentChapter === chapter.id}
-              bgColor={"gray.muted"}
-              _selected={{ bgColor: "purple.emphasized" }}
+              _selected={{ bgColor: "gray.emphasized" }}
             >
               <Box
                 flexGrow={1}
@@ -145,6 +144,7 @@ const ChaptersListAdvanced = ({
                 {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
+                colorPalette={"blue"}
                 checked={
                   selectedChapters[chapter.id] !== undefined
                     ? selectedChapters[chapter.id]
