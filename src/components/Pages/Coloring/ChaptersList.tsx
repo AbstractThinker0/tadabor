@@ -13,6 +13,12 @@ import { Box, Button, Flex, Input } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const ChaptersList = () => {
+  const dispatch = useAppDispatch();
+  const quranService = useQuran();
+  const { t } = useTranslation();
+  const refChapter = useRef<HTMLDivElement | null>(null);
+  const [chapterToken, setChapterToken] = useState("");
+
   const currentChapter = useAppSelector(
     (state) => state.coloringPage.currentChapter
   );
@@ -20,28 +26,6 @@ const ChaptersList = () => {
   const selectedChapters = useAppSelector(
     (state) => state.coloringPage.selectedChapters
   );
-
-  const dispatch = useAppDispatch();
-  const [chapterToken, setChapterToken] = useState("");
-  const quranService = useQuran();
-  const { t } = useTranslation();
-  const refChapter = useRef<HTMLDivElement | null>(null);
-
-  function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
-    setChapterToken(event.target.value);
-  }
-
-  function onClickChapter(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) {
-    dispatch(coloringPageActions.setChapter(chapterID));
-    setChapterToken("");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    refChapter.current = event.currentTarget;
-  }
 
   useEffect(() => {
     const child = refChapter.current;
@@ -61,6 +45,18 @@ const ChaptersList = () => {
         child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
     }
   }, [currentChapter]);
+
+  function onClickChapter(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    chapterID: number
+  ) {
+    dispatch(coloringPageActions.setChapter(chapterID));
+    setChapterToken("");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    refChapter.current = event.currentTarget;
+  }
 
   function onChangeSelectChapter(chapterID: number) {
     dispatch(coloringPageActions.toggleSelectChapter(chapterID));
@@ -86,6 +82,10 @@ const ChaptersList = () => {
     selectedChapters[currentChapter] = true;
 
     dispatch(coloringPageActions.setSelectedChapters(selectedChapters));
+  }
+
+  function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
+    setChapterToken(event.target.value);
   }
 
   const currentSelectedChapters = Object.keys(selectedChapters).filter(
@@ -119,6 +119,7 @@ const ChaptersList = () => {
           .filter((chapter) => chapter.name.includes(chapterToken))
           .map((chapter) => (
             <Flex
+              key={chapter.id}
               cursor={"pointer"}
               px={"5px"}
               py={"2px"}
@@ -126,13 +127,12 @@ const ChaptersList = () => {
               aria-selected={currentChapter === chapter.id}
               bgColor={"gray.muted"}
               _selected={{ bgColor: "purple.emphasized" }}
-              key={chapter.id}
             >
               <Box
                 flexGrow={1}
                 onClick={(event) => onClickChapter(event, chapter.id)}
               >
-                {chapter.name}
+                {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
                 checked={
