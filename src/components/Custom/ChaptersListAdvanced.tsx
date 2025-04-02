@@ -5,9 +5,10 @@ import useQuran from "@/context/useQuran";
 
 import { selectedChaptersType } from "@/types";
 
-import { Box, Button, Flex, Input } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { InputString } from "@/components/Generic/Input";
 
 interface ChaptersListAdvancedProps {
   currentChapter: number;
@@ -90,6 +91,10 @@ const ChaptersListAdvanced = ({
     setSelectedChapters(selectedChapters);
   }
 
+  const onClearInput = () => {
+    setChapterToken("");
+  };
+
   const currentSelectedChapters = Object.keys(selectedChapters).filter(
     (chapterID) => selectedChapters[chapterID] === true
   );
@@ -102,13 +107,16 @@ const ChaptersListAdvanced = ({
 
   return (
     <Flex flexDir={"column"} minH={"30%"} maxH={"45%"}>
-      <Input
-        type="search"
-        placeholder={quranService.getChapterName(currentChapter)}
+      <InputString
+        inputElementProps={{
+          placeholder: quranService.getChapterName(currentChapter),
+          borderBottom: "none",
+          borderBottomRadius: "0",
+        }}
         value={chapterToken}
         onChange={onChangeChapterToken}
-        bgColor={"bg"}
-        borderBottomRadius={"unset"}
+        onClear={onClearInput}
+        dir="rtl"
       />
       <Box
         flexGrow={1}
