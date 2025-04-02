@@ -77,8 +77,8 @@ const ListTitle = ({ chapterName }: ListTitleProps) => {
   return (
     <Heading
       textAlign="center"
-      bgColor={"gray.muted"}
-      color={"blue.fg"}
+      bgColor={"bg.muted"}
+      color={"blue.focusRing"}
       py={3}
       size="3xl"
       border={"1px solid"}

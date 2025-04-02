@@ -152,7 +152,7 @@ const SelectionListChapters = ({
                 {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
-                colorPalette={"blue"}
+                colorPalette={"teal"}
                 checked={selectedChapters[chapter.id]}
                 onCheckedChange={() => onChangeSelectChapter(chapter.id)}
               />

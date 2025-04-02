@@ -115,7 +115,7 @@ i18n
           all_chapters: "كل السور",
           current_chapter: "السورة الحالية",
           search_scope: "نطاق البحث",
-          select_notice: "يجب عليك اختيار سورة واحد على الأقل لبدء البحث.",
+          select_notice: "يجب عليك اختيار سورة واحدة على الأقل لبدء البحث.",
           text_form: "أدخل كتاباتك",
           search_options: "خيارات البحث: ",
           derivations: "الإشتقاقات",
