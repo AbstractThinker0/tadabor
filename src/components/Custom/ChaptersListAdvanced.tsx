@@ -3,29 +3,47 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
-
 import { selectedChaptersType } from "@/types";
 
 import { Box, Button, Flex, Input } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-const ChaptersList = () => {
-  const dispatch = useAppDispatch();
+interface ChaptersListAdvancedProps {
+  currentChapter: number;
+  selectedChapters: selectedChaptersType;
+  setChapter: (chapter: number) => void;
+  toggleSelectChapter: (chapter: number) => void;
+  setSelectedChapters: (chapters: selectedChaptersType) => void;
+}
+
+const ChaptersListAdvanced = ({
+  currentChapter,
+  selectedChapters,
+  setChapter,
+  toggleSelectChapter,
+  setSelectedChapters,
+}: ChaptersListAdvancedProps) => {
+  const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
   const { t } = useTranslation();
   const refChapter = useRef<HTMLDivElement | null>(null);
-  const [chapterToken, setChapterToken] = useState("");
 
-  const currentChapter = useAppSelector(
-    (state) => state.tagsPage.currentChapter
-  );
+  function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
+    setChapterToken(event.target.value);
+  }
 
-  const selectedChapters = useAppSelector(
-    (state) => state.tagsPage.selectedChapters
-  );
+  function onClickChapter(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    chapterID: number
+  ) {
+    setChapter(chapterID);
+    setChapterToken("");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    refChapter.current = event.currentTarget;
+  }
 
   useEffect(() => {
     const child = refChapter.current;
@@ -46,20 +64,8 @@ const ChaptersList = () => {
     }
   }, [currentChapter]);
 
-  function onClickChapter(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) {
-    dispatch(tagsPageActions.setChapter(chapterID));
-    setChapterToken("");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    refChapter.current = event.currentTarget;
-  }
-
   function onChangeSelectChapter(chapterID: number) {
-    dispatch(tagsPageActions.toggleSelectChapter(chapterID));
+    toggleSelectChapter(chapterID);
   }
 
   function onClickSelectAll() {
@@ -69,7 +75,7 @@ const ChaptersList = () => {
       selectedChapters[chapter.id] = true;
     });
 
-    dispatch(tagsPageActions.setSelectedChapters(selectedChapters));
+    setSelectedChapters(selectedChapters);
   }
 
   function onClickDeselectAll() {
@@ -81,12 +87,8 @@ const ChaptersList = () => {
 
     selectedChapters[currentChapter] = true;
 
-    dispatch(tagsPageActions.setSelectedChapters(selectedChapters));
+    setSelectedChapters(selectedChapters);
   }
-
-  const onChangeChapterToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChapterToken(e.target.value);
-  };
 
   const currentSelectedChapters = Object.keys(selectedChapters).filter(
     (chapterID) => selectedChapters[chapterID] === true
@@ -176,4 +178,4 @@ const ChaptersList = () => {
   );
 };
 
-export default ChaptersList;
+export { ChaptersListAdvanced };

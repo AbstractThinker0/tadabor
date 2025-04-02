@@ -1,14 +1,19 @@
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import ChaptersList from "@/components/Pages/Coloring/ChaptersList";
 import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
 
 import EditColorsModal from "@/components/Pages/Coloring/EditColorsModal";
 import ColorsList from "@/components/Pages/Coloring/ColorsList";
 import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
+
+import { selectedChaptersType } from "@/types";
 
 const ChaptersSide = () => {
+  const dispatch = useAppDispatch();
+
   const {
     open: isOpenAddColor,
     onOpen: onOpenAddColor,
@@ -21,6 +26,26 @@ const ChaptersSide = () => {
     onClose: onCloseEditColor,
   } = useDisclosure();
 
+  const currentChapter = useAppSelector(
+    (state) => state.coloringPage.currentChapter
+  );
+
+  const selectedChapters = useAppSelector(
+    (state) => state.coloringPage.selectedChapters
+  );
+
+  const setChapter = (chapter: number) => {
+    dispatch(coloringPageActions.setChapter(chapter));
+  };
+
+  const setSelectedChapters = (chapters: selectedChaptersType) => {
+    dispatch(coloringPageActions.setSelectedChapters(chapters));
+  };
+
+  const toggleSelectChapter = (chapter: number) => {
+    dispatch(coloringPageActions.toggleSelectChapter(chapter));
+  };
+
   return (
     <Flex
       flexDir={"column"}
@@ -29,7 +54,13 @@ const ChaptersSide = () => {
       paddingInlineStart={"8px"}
       paddingInlineEnd={"4px"}
     >
-      <ChaptersList />
+      <ChaptersListAdvanced
+        currentChapter={currentChapter}
+        selectedChapters={selectedChapters}
+        setChapter={setChapter}
+        setSelectedChapters={setSelectedChapters}
+        toggleSelectChapter={toggleSelectChapter}
+      />
       <Flex
         flexDir={"column"}
         minH={"30%"}

@@ -6,8 +6,10 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 import { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
 import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
-import ChaptersList from "@/components/Pages/Tags/ChaptersList";
+
 import { Box, Flex, Button, Text, useDisclosure } from "@chakra-ui/react";
+import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
+import { selectedChaptersType } from "@/types";
 
 function TagsSide() {
   const dispatch = useAppDispatch();
@@ -30,6 +32,26 @@ function TagsSide() {
     return countTags;
   };
 
+  const currentChapter = useAppSelector(
+    (state) => state.tagsPage.currentChapter
+  );
+
+  const selectedChapters = useAppSelector(
+    (state) => state.tagsPage.selectedChapters
+  );
+
+  const setChapter = (chapter: number) => {
+    dispatch(tagsPageActions.setChapter(chapter));
+  };
+
+  const setSelectedChapters = (chapters: selectedChaptersType) => {
+    dispatch(tagsPageActions.setSelectedChapters(chapters));
+  };
+
+  const toggleSelectChapter = (chapter: number) => {
+    dispatch(tagsPageActions.toggleSelectChapter(chapter));
+  };
+
   return (
     <Flex
       flexDir={"column"}
@@ -37,7 +59,13 @@ function TagsSide() {
       paddingInlineStart={"10px"}
       paddingInlineEnd={"1px"}
     >
-      <ChaptersList />
+      <ChaptersListAdvanced
+        currentChapter={currentChapter}
+        selectedChapters={selectedChapters}
+        setChapter={setChapter}
+        setSelectedChapters={setSelectedChapters}
+        toggleSelectChapter={toggleSelectChapter}
+      />
       <SideList
         onClickSelectTag={onClickSelectTag}
         getTaggedVerses={getTaggedVerses}
