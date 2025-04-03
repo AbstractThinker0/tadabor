@@ -19,11 +19,12 @@ function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
 
-  const direction = i18n.dir();
-  const isRtl = direction === "rtl";
+  const getDirection = () => i18n.dir();
+
+  const isRtl = () => getDirection() === "rtl";
 
   useEffect(() => {
-    document.dir = direction;
+    window.document.dir = getDirection();
   }, [i18n.resolvedLanguage]);
 
   return (
@@ -41,8 +42,8 @@ function Layout({ children }: PropsWithChildren) {
         <AlertMessage />
         <QuranProvider>{children}</QuranProvider>
         <ToastContainer
-          position={`${isRtl ? "top-left" : "top-right"}`}
-          rtl={isRtl}
+          position={`${isRtl() ? "top-left" : "top-right"}`}
+          rtl={isRtl()}
         />
       </Flex>
     </Provider>
