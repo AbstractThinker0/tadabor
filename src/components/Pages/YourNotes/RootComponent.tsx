@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import useQuran from "@/context/useQuran";
 
@@ -15,6 +14,7 @@ import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
 import { Card, CardHeader } from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 
 interface RootComponentProps {
   inputKey: string;
@@ -40,10 +40,16 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
     dbFuncs
       .saveRootNote(inputKey, inputValue, inputDirection)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     setEditable(false);

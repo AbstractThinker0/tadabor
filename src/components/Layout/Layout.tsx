@@ -2,9 +2,6 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import { QuranProvider } from "@/context/QuranProvider";
 
 import Navbar from "@/components/Layout/Navbar";
@@ -12,6 +9,7 @@ import AlertMessage from "@/components/Layout/AlertMessage";
 
 import { Flex } from "@chakra-ui/react";
 import { Provider } from "@/components/ui/provider";
+import { Toaster } from "@/components/ui/ToasterProvider";
 
 import "@/styles/main.css";
 
@@ -19,12 +17,8 @@ function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
 
-  const getDirection = () => i18n.dir();
-
-  const isRtl = () => getDirection() === "rtl";
-
   useEffect(() => {
-    window.document.dir = getDirection();
+    window.document.dir = i18n.dir();
   }, [i18n.resolvedLanguage]);
 
   return (
@@ -41,10 +35,7 @@ function Layout({ children }: PropsWithChildren) {
         <Navbar />
         <AlertMessage />
         <QuranProvider>{children}</QuranProvider>
-        <ToastContainer
-          position={`${isRtl() ? "top-left" : "top-right"}`}
-          rtl={isRtl()}
-        />
+        <Toaster />
       </Flex>
     </Provider>
   );

@@ -1,10 +1,18 @@
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from "@chakra-ui/react";
 
 export const toastSlotRecipe = defineSlotRecipe({
-  slots: ["root", "title", "description", "indicator", "closeTrigger", "actionTrigger"],
+  slots: [
+    "root",
+    "title",
+    "description",
+    "indicator",
+    "closeTrigger",
+    "actionTrigger",
+  ],
   className: "chakra-toast",
   base: {
     root: {
+      direction: "inherit",
       width: "full",
       display: "flex",
       alignItems: "flex-start",
@@ -20,7 +28,8 @@ export const toastSlotRecipe = defineSlotRecipe({
       height: "var(--height)",
       opacity: "var(--opacity)",
       willChange: "translate, opacity, scale",
-      transition: "translate 400ms, scale 400ms, opacity 400ms, height 400ms, box-shadow 200ms",
+      transition:
+        "translate 400ms, scale 400ms, opacity 400ms, height 400ms, box-shadow 200ms",
       transitionTimingFunction: "cubic-bezier(0.21, 1.02, 0.73, 1)",
       _closed: {
         transition: "translate 400ms, scale 400ms, opacity 200ms",
@@ -50,20 +59,24 @@ export const toastSlotRecipe = defineSlotRecipe({
       },
     },
     title: {
+      direction: "inherit",
       fontWeight: "medium",
       textStyle: "sm",
       marginEnd: "2",
     },
     description: {
+      direction: "inherit",
       display: "inline",
       textStyle: "sm",
       opacity: "0.8",
     },
     indicator: {
+      direction: "inherit",
       flexShrink: "0",
       boxSize: "5",
     },
     actionTrigger: {
+      direction: "inherit",
       textStyle: "sm",
       fontWeight: "medium",
       height: "8",
@@ -78,6 +91,7 @@ export const toastSlotRecipe = defineSlotRecipe({
       },
     },
     closeTrigger: {
+      direction: "inherit",
       position: "absolute",
       top: "1",
       insetEnd: "1",
@@ -94,4 +108,4 @@ export const toastSlotRecipe = defineSlotRecipe({
       },
     },
   },
-})
+});

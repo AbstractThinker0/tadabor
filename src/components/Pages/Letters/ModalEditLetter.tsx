@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 
@@ -18,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { toaster } from "@/components/ui/toaster";
 
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 
@@ -54,10 +54,16 @@ const ModalEditLetter = ({
     dbFuncs
       .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     dispatch(

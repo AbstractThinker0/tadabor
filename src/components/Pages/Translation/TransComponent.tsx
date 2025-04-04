@@ -1,12 +1,12 @@
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
 import { dbFuncs } from "@/util/db";
 
 import { Box, Text } from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
@@ -33,10 +33,16 @@ const TransComponent = memo(({ inputKey }: TransComponentProps) => {
     dbFuncs
       .saveTranslation(inputKey, inputValue)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
   };
 

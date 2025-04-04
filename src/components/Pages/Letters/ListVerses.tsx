@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState, useTransition, memo } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+
 import useQuran from "@/context/useQuran";
 
 import { useAppSelector, useAppDispatch } from "@/store";
@@ -33,8 +33,9 @@ import {
 } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { toaster } from "@/components/ui/toaster";
 import { ButtonVerse } from "@/components/Generic/Buttons";
+
 import { useBoolean } from "usehooks-ts";
 
 const ListVerses = () => {
@@ -352,10 +353,16 @@ const InfoBox = ({
         def_id: letterDefinitionID,
       })
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     dispatch(

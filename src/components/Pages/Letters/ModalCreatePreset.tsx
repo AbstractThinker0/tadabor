@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { useAppDispatch } from "@/store";
 
@@ -18,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { toaster } from "@/components/ui/toaster";
 
 interface ModalCreatePresetProps {
   isOpen: boolean;
@@ -46,10 +46,16 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
     dbFuncs
       .saveLettersPreset(presetID, presetName)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     onClose();

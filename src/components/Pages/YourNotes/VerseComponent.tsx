@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector, selectNote } from "@/store";
@@ -13,6 +12,7 @@ import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
 import { Box } from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 
 interface VerseComponentProps {
   inputKey: string;
@@ -43,10 +43,16 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
     dbFuncs
       .saveNote(inputKey, inputValue, inputDirection)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     setEditable(false);

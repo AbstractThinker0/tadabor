@@ -1,6 +1,5 @@
 import { memo, useCallback, useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
@@ -26,8 +25,10 @@ import {
 } from "@chakra-ui/react";
 
 import { Tooltip } from "@/components/ui/tooltip";
+import { toaster } from "@/components/ui/toaster";
 import { CollapsibleNote, FormText } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+
 import { useBoolean } from "usehooks-ts";
 
 interface RootsListProps {
@@ -147,10 +148,16 @@ const RootComponent = memo(
         dbFuncs
           .saveRootNote(root_id, noteText, inputDirection)
           .then(() => {
-            toast.success(t("save_success"));
+            toaster.create({
+              description: t("save_success"),
+              type: "success",
+            });
           })
           .catch(() => {
-            toast.error(t("save_failed"));
+            toaster.create({
+              description: t("save_failed"),
+              type: "error",
+            });
           });
 
         setStateEditable(false);

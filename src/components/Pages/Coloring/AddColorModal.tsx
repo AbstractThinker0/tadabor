@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+
 import { colorProps } from "./consts";
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -8,6 +8,7 @@ import { dbFuncs } from "@/util/db";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { toaster } from "@/components/ui/toaster";
 
 interface AddColorModalProps {
   isOpen: boolean;
@@ -51,10 +52,16 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
         code: newColor.colorCode,
       })
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     setColorName("");
@@ -71,7 +78,6 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
     >
       <DialogContent dir="ltr">
         <Dialog.Header
-          //fontWeight={"bold"}
           fontSize={"xl"}
           borderBottom="1px solid"
           borderColor={"border.emphasized"}

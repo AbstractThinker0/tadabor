@@ -6,12 +6,13 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import useQuran from "@/context/useQuran";
 
 import { dbFuncs } from "@/util/db";
-import { toast } from "react-toastify";
+
 import { transNotesActions } from "@/store/slices/global/transNotes";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { Box, Card, CardHeader, Flex, Text } from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
@@ -63,10 +64,16 @@ const TransBody = memo(({ inputKey }: TransBodyProps) => {
     dbFuncs
       .saveTranslation(inputKey, inputValue)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
   };
 

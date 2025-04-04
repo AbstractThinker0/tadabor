@@ -1,6 +1,5 @@
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 import { selectNote, useAppDispatch, useAppSelector } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
@@ -10,6 +9,7 @@ import { Card, Collapsible } from "@chakra-ui/react";
 
 import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
+import { toaster } from "@/components/ui/toaster";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;
@@ -51,10 +51,16 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
     dbFuncs
       .saveNote(inputKey, inputValue, inputDirection)
       .then(() => {
-        toast.success(t("save_success"));
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
       })
       .catch(() => {
-        toast.error(t("save_failed"));
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
       });
 
     setEditable(false);
