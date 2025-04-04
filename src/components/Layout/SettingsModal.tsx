@@ -21,6 +21,7 @@ import { nfsDefault, nfsStored, qfsDefault, qfsStored } from "@/util/consts";
 import { Slider } from "@/components/ui/slider";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { useTheme } from "next-themes";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -38,6 +39,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [orgQuranFS, setOrgQuranFS] = useState(quranFS);
   const [orgNotesFS, setOrgNotesFS] = useState(notesFS);
   const [orgLang, setOrgLang] = useState(resolvedLang);
+  const { resolvedTheme, setTheme } = useTheme();
+  const [orgColor, setOrgColor] = useState(resolvedTheme);
 
   const onChangeLang = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -57,6 +60,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     setOrgNotesFS(notesFS);
     localStorage.setItem(nfsStored, String(notesFS));
     setOrgLang(resolvedLang);
+    setOrgColor(resolvedTheme);
     onClose();
   };
 
@@ -64,6 +68,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     dispatch(settingsActions.setQuranFS(orgQuranFS));
     dispatch(settingsActions.setNotesFS(orgNotesFS));
     i18n.changeLanguage(orgLang);
+    setTheme(orgColor!);
   };
 
   const onClickReset = () => {
