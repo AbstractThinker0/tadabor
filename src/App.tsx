@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router";
 
-import { lazy, PropsWithChildren, Suspense } from "react";
+import { lazy, Suspense } from "react";
 
 const About = lazy(() => import("@/pages/About"));
 const Coloring = lazy(() => import("@/pages/Coloring"));
@@ -18,126 +18,26 @@ const Audio = lazy(() => import("@/pages/Audio"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-const Suspenser = ({ children }: PropsWithChildren) => {
-  return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;
-};
-
 const App = () => {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Suspenser>
-            <QuranBrowser />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/roots"
-        element={
-          <Suspenser>
-            <RootsBrowser />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/notes"
-        element={
-          <Suspenser>
-            <YourNotes />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/coloring"
-        element={
-          <Suspenser>
-            <Coloring />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/translation"
-        element={
-          <Suspenser>
-            <Translation />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/tags"
-        element={
-          <Suspenser>
-            <Tags />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/inspector"
-        element={
-          <Suspenser>
-            <Inspector />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/comparator"
-        element={
-          <Suspenser>
-            <Comparator />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/searcher"
-        element={
-          <Suspenser>
-            <Searcher />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/searcher2"
-        element={
-          <Suspenser>
-            <Searcher2 />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/letters"
-        element={
-          <Suspenser>
-            <Letters />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/audio"
-        element={
-          <Suspenser>
-            <Audio />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <Suspenser>
-            <About />
-          </Suspenser>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <Suspenser>
-            <QuranBrowser />
-          </Suspenser>
-        }
-      />
-    </Routes>
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        <Route path="/" element={<QuranBrowser />} />
+        <Route path="/roots" element={<RootsBrowser />} />
+        <Route path="/notes" element={<YourNotes />} />
+        <Route path="/coloring" element={<Coloring />} />
+        <Route path="/translation" element={<Translation />} />
+        <Route path="/tags" element={<Tags />} />
+        <Route path="/inspector" element={<Inspector />} />
+        <Route path="/comparator" element={<Comparator />} />
+        <Route path="/searcher" element={<Searcher />} />
+        <Route path="/searcher2" element={<Searcher2 />} />
+        <Route path="/letters" element={<Letters />} />
+        <Route path="/audio" element={<Audio />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<QuranBrowser />} />
+      </Routes>
+    </Suspense>
   );
 };
 
