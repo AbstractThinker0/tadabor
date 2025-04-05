@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
 
-import { IconSelect } from "@/components/Generic/Icons";
+import { TbSelect } from "react-icons/tb";
 
 const ButtonSave = (props: ButtonProps) => {
   const { t } = useTranslation();
@@ -35,7 +35,7 @@ const ButtonEdit = (props: ButtonProps) => {
 const ButtonExpand = (props: ButtonProps) => {
   return (
     <IconButton variant="ghost" aria-label="Expand" {...props}>
-      <IconSelect />
+      <TbSelect />
     </IconButton>
   );
 };

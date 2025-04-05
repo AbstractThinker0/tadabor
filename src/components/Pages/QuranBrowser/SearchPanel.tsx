@@ -23,7 +23,8 @@ import {
 
 import { Radio, RadioGroup } from "@/components/ui/radio";
 import { Checkbox } from "@/components/ui/checkbox";
-import { IconSearch } from "@/components/Generic/Icons";
+
+import { MdSearch } from "react-icons/md";
 
 const SearchPanel = () => {
   const quranService = useQuran();
@@ -228,7 +229,7 @@ const FormWordSearch = ({
           type="submit"
           fontSize={"md"}
         >
-          <IconSearch /> {t("search_button")}
+          <MdSearch /> {t("search_button")}
         </Button>
       </VStack>
     </Box>

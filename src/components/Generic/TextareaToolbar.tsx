@@ -1,9 +1,7 @@
 import { Box, IconButton } from "@chakra-ui/react";
 
-import {
-  IconTextDirectionLtr,
-  IconTextDirectionRtl,
-} from "@/components/Generic/Icons";
+import { MdOutlineFormatTextdirectionRToL } from "react-icons/md";
+import { MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 
 interface TextareaToolbarProps {
   handleSetDirection: (direction: string) => void;
@@ -17,14 +15,14 @@ const TextareaToolbar = ({ handleSetDirection }: TextareaToolbarProps) => {
         aria-label="ltr"
         onClick={() => handleSetDirection("ltr")}
       >
-        <IconTextDirectionLtr />
+        <MdOutlineFormatTextdirectionLToR />
       </IconButton>
       <IconButton
         variant="ghost"
         aria-label="rtl"
         onClick={() => handleSetDirection("rtl")}
       >
-        <IconTextDirectionRtl />
+        <MdOutlineFormatTextdirectionRToL />
       </IconButton>
     </Box>
   );
