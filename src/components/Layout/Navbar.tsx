@@ -13,6 +13,8 @@ import {
 
 import { MdMenu } from "react-icons/md";
 
+import { TbTableDashed } from "react-icons/tb";
+
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { useAppSelector } from "@/store";
 
@@ -67,6 +69,8 @@ const Navbar = () => {
               justifySelf={"center"}
               alignSelf={"center"}
               justifyContent={"center"}
+              alignContent={"center"}
+              alignItems={"center"}
               borderRadius={"sm"}
               border={"1px solid"}
               borderColor={"fg.subtle"}
@@ -169,7 +173,10 @@ const MenuItem = ({ value, label, to }: MenuItemProps) => {
       value={value}
       asChild
     >
-      <NavLink to={to}>{label}</NavLink>
+      <NavLink to={to}>
+        <TbTableDashed />
+        {label}
+      </NavLink>
     </Menu.Item>
   );
 };
