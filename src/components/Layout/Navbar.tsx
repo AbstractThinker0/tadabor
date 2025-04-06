@@ -59,8 +59,8 @@ const Navbar = () => {
           <Box
             textAlign={"center"}
             minW={"8rem"}
-            px={"1px"}
-            py={"1px"}
+            px={"0.5px"}
+            py={"0.5px"}
             borderRadius={"sm"}
             bgColor={"border.emphasized"}
             lineHeight={"short"}

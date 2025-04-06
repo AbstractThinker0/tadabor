@@ -8,7 +8,7 @@ function QuranBrowser() {
   usePageNav("nav_browser");
 
   return (
-    <Flex bgColor="brand.bg" overflow="hidden" maxH="100%" h="100%">
+    <Flex bgColor="brand.bg" overflow="hidden" maxH="100%" h="100%" pt={1}>
       <SearchPanel />
       <DisplayPanel />
     </Flex>
