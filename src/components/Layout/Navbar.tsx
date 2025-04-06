@@ -162,7 +162,13 @@ interface MenuItemProps {
 
 const MenuItem = ({ value, label, to }: MenuItemProps) => {
   return (
-    <Menu.Item lineHeight={"normal"} fontSize="large" value={value} asChild>
+    <Menu.Item
+      _currentPage={{ bgColor: "bg.emphasized" }}
+      lineHeight={"normal"}
+      fontSize="large"
+      value={value}
+      asChild
+    >
       <NavLink to={to}>{label}</NavLink>
     </Menu.Item>
   );

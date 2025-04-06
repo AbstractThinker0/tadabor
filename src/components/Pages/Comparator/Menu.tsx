@@ -49,7 +49,7 @@ const Menu = ({
       bgColor={"gray.emphasized"}
       position={"sticky"}
       top={"0"}
-      zIndex={"1020"}
+      zIndex={"dropdown"}
     >
       <Box w={"15vw"}>
         <NativeSelect.Root>
