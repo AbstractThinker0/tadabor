@@ -49,6 +49,7 @@ const Searcher = () => {
       display={"flex"}
       flexDirection={"column"}
       lazyMount
+      unmountOnExit
     >
       <Tabs.List>
         <Tabs.Trigger value="searcherTab">{t("searcher_search")}</Tabs.Trigger>

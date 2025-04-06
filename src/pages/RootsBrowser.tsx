@@ -42,6 +42,7 @@ const RootsBrowser = () => {
       display={"flex"}
       flexDirection={"column"}
       lazyMount
+      unmountOnExit
     >
       <Tabs.List>
         <Tabs.Trigger value="rootsTab">{t("searcher_search")}</Tabs.Trigger>
