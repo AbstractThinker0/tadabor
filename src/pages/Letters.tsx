@@ -8,8 +8,10 @@ import PanelDefinitions from "@/components/Pages/Letters/PanelDefinitions";
 import PanelQuran from "@/components/Pages/Letters/PanelQuran";
 
 import { Tabs } from "@chakra-ui/react";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 const Letters = memo(() => {
+  usePageNav("nav_letters");
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 

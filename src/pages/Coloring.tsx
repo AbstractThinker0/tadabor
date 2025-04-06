@@ -13,8 +13,10 @@ import { coloredProps } from "@/components/Pages/Coloring/consts";
 import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
 import { Flex } from "@chakra-ui/react";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 function Coloring() {
+  usePageNav("nav_coloring");
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();

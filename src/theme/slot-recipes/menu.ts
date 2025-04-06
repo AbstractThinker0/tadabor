@@ -1,4 +1,4 @@
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from "@chakra-ui/react";
 
 export const menuSlotRecipe = defineSlotRecipe({
   className: "chakra-menu",
@@ -20,7 +20,14 @@ export const menuSlotRecipe = defineSlotRecipe({
     "itemCommand",
   ],
   base: {
+    trigger: {
+      direction: "inherit",
+    },
+    positioner: {
+      direction: "inherit",
+    },
     content: {
+      direction: "inherit",
       outline: 0,
       bg: "bg.panel",
       boxShadow: "lg",
@@ -135,4 +142,4 @@ export const menuSlotRecipe = defineSlotRecipe({
     size: "md",
     variant: "subtle",
   },
-})
+});

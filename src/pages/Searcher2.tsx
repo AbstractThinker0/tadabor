@@ -21,8 +21,10 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 const Searcher2 = () => {
+  usePageNav("nav_searcher2");
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
@@ -57,6 +59,7 @@ const Searcher2 = () => {
       display={"flex"}
       flexDirection={"column"}
       lazyMount
+      unmountOnExit
     >
       <Tabs.List>
         <Tabs.Trigger value="searcherTab">{t("searcher_search")}</Tabs.Trigger>

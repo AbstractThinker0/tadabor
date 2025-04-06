@@ -2,12 +2,23 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
-import { Box, Flex, Button, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Button,
+  useDisclosure,
+  Menu,
+  Portal,
+} from "@chakra-ui/react";
+
+import { MdMenu } from "react-icons/md";
 
 import SettingsModal from "@/components/Layout/SettingsModal";
+import { useAppSelector } from "@/store";
 
 const Navbar = () => {
   const { t } = useTranslation();
+  const currentPage = useAppSelector((state) => state.navigation.currentPage);
   const { open, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -39,22 +50,31 @@ const Navbar = () => {
         px={2}
         py={1}
       >
-        <Flex justifyContent="space-between">
-          <Flex flexWrap="wrap" gap={1.5}>
-            <NavItem to="/" label={t("nav_browser")} />
-            <NavItem to="/roots" label={t("nav_roots")} />
-            <NavItem to="/translation" label={t("nav_translation")} />
-            <NavItem to="/notes" label={t("nav_notes")} />
-            <NavItem to="/coloring" label={t("nav_coloring")} />
-            <NavItem to="/tags" label={t("nav_tags")} />
-            <NavItem to="/inspector" label={t("nav_inspector")} />
-            <NavItem to="/comparator" label={t("nav_comparator")} />
-            <NavItem to="/searcher" label={t("nav_searcher")} />
-            <NavItem to="/searcher2" label={`${t("nav_searcher")}  2`} />
-            <NavItem to="/letters" label={t("nav_letters")} />
-            <NavItem to="/audio" label={t("nav_audio")} />
-            <NavItem to="/about" label={t("nav_about")} />
-          </Flex>
+        <Flex justifyContent="space-between" alignItems={"center"}>
+          <NavMenu />
+          <Box
+            textAlign={"center"}
+            minW={"8rem"}
+            px={"2.5px"}
+            py={"2.5px"}
+            borderRadius={"sm"}
+            bgColor={"border.emphasized"}
+            lineHeight={"short"}
+          >
+            <Flex
+              minW={"8rem"}
+              bgColor={"bg"}
+              justifySelf={"center"}
+              alignSelf={"center"}
+              justifyContent={"center"}
+              borderRadius={"sm"}
+              border={"1px solid"}
+              borderColor={"fg.subtle"}
+              py={"5px"}
+            >
+              {t(currentPage)}
+            </Flex>
+          </Box>
           <Flex>
             <Button
               aria-label="Settings"
@@ -73,26 +93,78 @@ const Navbar = () => {
   );
 };
 
-interface NavItemProps {
+const NavMenu = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger asChild>
+        <Button bgColor={"bg"} color={"fg"} size="sm">
+          <MdMenu />
+        </Button>
+      </Menu.Trigger>
+      <Portal>
+        <Menu.Positioner>
+          <Menu.Content>
+            <MenuItem value="nav_browser" label={t("nav_browser")} to="/" />
+            <MenuItem value="nav_roots" label={t("nav_roots")} to="/roots" />
+            <MenuItem
+              value="nav_translation"
+              label={t("nav_translation")}
+              to="/translation"
+            />
+            <MenuItem value="nav_notes" label={t("nav_notes")} to="/notes" />
+            <MenuItem
+              value="nav_coloring"
+              label={t("nav_coloring")}
+              to="/coloring"
+            />
+            <MenuItem value="nav_tags" label={t("nav_tags")} to="/tags" />
+            <MenuItem
+              value="nav_inspector"
+              label={t("nav_inspector")}
+              to="/inspector"
+            />
+            <MenuItem
+              value="nav_comparator"
+              label={t("nav_comparator")}
+              to="/comparator"
+            />
+            <MenuItem
+              value="nav_searcher"
+              label={t("nav_searcher")}
+              to="/searcher"
+            />
+            <MenuItem
+              value="nav_searcher2"
+              label={t("nav_searcher2")}
+              to="/searcher2"
+            />
+            <MenuItem
+              value="nav_letters"
+              label={t("nav_letters")}
+              to="/letters"
+            />
+            <MenuItem value="nav_audio" label={t("nav_audio")} to="/audio" />
+            <MenuItem value="nav_about" label={t("nav_about")} to="/about" />
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
+  );
+};
+
+interface MenuItemProps {
+  value: string;
   label: string;
   to: string;
 }
 
-const NavItem = ({ label, to }: NavItemProps) => {
+const MenuItem = ({ value, label, to }: MenuItemProps) => {
   return (
-    <Button
-      _currentPage={{ bgColor: "gray.focusRing", color: "fg.inverted" }}
-      bgColor={"gray.emphasized"}
-      color={"fg"}
-      px={1}
-      py={0}
-      fontWeight="400"
-      fontSize="large"
-      lineHeight={1}
-      asChild
-    >
+    <Menu.Item lineHeight={"normal"} fontSize="large" value={value} asChild>
       <NavLink to={to}>{label}</NavLink>
-    </Button>
+    </Menu.Item>
   );
 };
 

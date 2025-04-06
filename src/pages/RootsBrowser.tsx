@@ -9,8 +9,10 @@ import PanelRoots from "@/components/Pages/RootsBrowser/PanelRoots";
 import PanelQuran from "@/components/Custom/PanelQuran";
 
 import { Tabs } from "@chakra-ui/react";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 const RootsBrowser = () => {
+  usePageNav("nav_roots");
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 

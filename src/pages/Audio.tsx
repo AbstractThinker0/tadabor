@@ -21,8 +21,10 @@ import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 import { useBoolean } from "usehooks-ts";
 import { useTranslation } from "react-i18next";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 const Audio = () => {
+  usePageNav("nav_audio");
   const { i18n } = useTranslation();
   const direction = i18n.dir();
 

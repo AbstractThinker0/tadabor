@@ -13,8 +13,10 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Inspector/Display";
 
 import { Flex } from "@chakra-ui/react";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 function Inspector() {
+  usePageNav("nav_inspector");
   const quranService = useQuran();
   const dispatch = useAppDispatch();
 

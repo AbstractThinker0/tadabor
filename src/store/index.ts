@@ -7,6 +7,7 @@ import translationsReducer from "@/store/slices/global/translations";
 import rootNotesReducer from "@/store/slices/global/rootNotes";
 
 import settingsReducer from "@/store/slices/global/settings";
+import navigationReducer from "@/store/slices/global/navigation";
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
@@ -29,6 +30,7 @@ const store = configureStore({
     rootNotes: rootNotesReducer,
 
     settings: settingsReducer,
+    navigation: navigationReducer,
 
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,

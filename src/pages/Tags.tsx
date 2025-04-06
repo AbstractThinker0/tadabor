@@ -13,8 +13,10 @@ import TagsSide from "@/components/Pages/Tags/TagsSide";
 import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
 import { Flex } from "@chakra-ui/react";
+import { usePageNav } from "@/components/Custom/usePageNav";
 
 function Tags() {
+  usePageNav("nav_tags");
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();

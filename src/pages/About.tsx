@@ -1,3 +1,4 @@
+import { usePageNav } from "@/components/Custom/usePageNav";
 import { Box, Flex, Heading, Text, Link, List } from "@chakra-ui/react";
 
 const AboutEnglish = () => {
@@ -100,6 +101,8 @@ const AboutEnglish = () => {
 };
 
 const About = () => {
+  usePageNav("nav_about");
+
   return <AboutEnglish />;
 };
 
