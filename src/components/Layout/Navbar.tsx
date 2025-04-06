@@ -47,18 +47,20 @@ const Navbar = () => {
       <Box
         as="nav"
         role="navigation"
-        _light={{ bgColor: "#1A202C" }}
+        _light={{ bgColor: "#f6f8fa" }} // old #1A202C
         _dark={{ bgColor: "#151a23" }}
         px={2}
         py={1}
+        borderBottom={"1px solid"}
+        borderColor={"border.emphasized"}
       >
         <Flex justifyContent="space-between" alignItems={"center"}>
           <NavMenu />
           <Box
             textAlign={"center"}
             minW={"8rem"}
-            px={"2.5px"}
-            py={"2.5px"}
+            px={"1px"}
+            py={"1px"}
             borderRadius={"sm"}
             bgColor={"border.emphasized"}
             lineHeight={"short"}
