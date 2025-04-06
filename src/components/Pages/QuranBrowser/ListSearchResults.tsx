@@ -223,7 +223,7 @@ const DerivationsComponent = ({
         {searchIndexes.map((root: searchIndexProps, index: number) => (
           <Tooltip showArrow key={index} content={root.text}>
             <Button
-              px={2}
+              px={1}
               fontSize="2xl"
               fontWeight={"bold"}
               variant="ghost"

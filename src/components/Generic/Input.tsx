@@ -33,6 +33,7 @@ export const InputString = React.forwardRef<HTMLDivElement, InputGroupProps>(
           bgColor="bg"
           onChange={onChange}
           {...inputElementProps}
+          style={{ paddingInlineEnd: 0 }}
         />
       </InputGroup>
     );
