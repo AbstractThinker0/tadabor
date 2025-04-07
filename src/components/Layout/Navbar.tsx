@@ -14,6 +14,15 @@ import {
 import { MdMenu } from "react-icons/md";
 
 import { TbTableDashed } from "react-icons/tb";
+import { LuGitFork } from "react-icons/lu";
+import { LuTag } from "react-icons/lu";
+import { FaBalanceScale } from "react-icons/fa";
+
+import { LuFileQuestion } from "react-icons/lu";
+import { LuTextSearch } from "react-icons/lu";
+import { LuScanSearch } from "react-icons/lu";
+import { LuPalette } from "react-icons/lu";
+import { SiGoogletranslate } from "react-icons/si";
 
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { useAppSelector } from "@/store";
@@ -113,19 +122,31 @@ const NavMenu = () => {
         <Menu.Positioner>
           <Menu.Content>
             <MenuItem value="nav_browser" label={t("nav_browser")} to="/" />
-            <MenuItem value="nav_roots" label={t("nav_roots")} to="/roots" />
+            <MenuItem
+              value="nav_roots"
+              label={t("nav_roots")}
+              to="/roots"
+              icon={<LuGitFork />}
+            />
             <MenuItem
               value="nav_translation"
               label={t("nav_translation")}
               to="/translation"
+              icon={<SiGoogletranslate />}
             />
             <MenuItem value="nav_notes" label={t("nav_notes")} to="/notes" />
             <MenuItem
               value="nav_coloring"
               label={t("nav_coloring")}
               to="/coloring"
+              icon={<LuPalette />}
             />
-            <MenuItem value="nav_tags" label={t("nav_tags")} to="/tags" />
+            <MenuItem
+              value="nav_tags"
+              label={t("nav_tags")}
+              to="/tags"
+              icon={<LuTag />}
+            />
             <MenuItem
               value="nav_inspector"
               label={t("nav_inspector")}
@@ -135,16 +156,19 @@ const NavMenu = () => {
               value="nav_comparator"
               label={t("nav_comparator")}
               to="/comparator"
+              icon={<FaBalanceScale />}
             />
             <MenuItem
               value="nav_searcher"
               label={t("nav_searcher")}
               to="/searcher"
+              icon={<LuScanSearch />}
             />
             <MenuItem
               value="nav_searcher2"
               label={t("nav_searcher2")}
               to="/searcher2"
+              icon={<LuTextSearch />}
             />
             <MenuItem
               value="nav_letters"
@@ -152,7 +176,12 @@ const NavMenu = () => {
               to="/letters"
             />
             <MenuItem value="nav_audio" label={t("nav_audio")} to="/audio" />
-            <MenuItem value="nav_about" label={t("nav_about")} to="/about" />
+            <MenuItem
+              value="nav_about"
+              label={t("nav_about")}
+              to="/about"
+              icon={<LuFileQuestion />}
+            />
           </Menu.Content>
         </Menu.Positioner>
       </Portal>
@@ -164,9 +193,10 @@ interface MenuItemProps {
   value: string;
   label: string;
   to: string;
+  icon?: React.ReactNode;
 }
 
-const MenuItem = ({ value, label, to }: MenuItemProps) => {
+const MenuItem = ({ value, label, to, icon }: MenuItemProps) => {
   return (
     <Menu.Item
       _currentPage={{ bgColor: "bg.emphasized" }}
@@ -176,7 +206,7 @@ const MenuItem = ({ value, label, to }: MenuItemProps) => {
       asChild
     >
       <NavLink to={to}>
-        <TbTableDashed />
+        {icon ? icon : <TbTableDashed />}
         {label}
       </NavLink>
     </Menu.Item>
