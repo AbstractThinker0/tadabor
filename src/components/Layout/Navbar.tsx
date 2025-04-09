@@ -18,11 +18,16 @@ import { LuGitFork } from "react-icons/lu";
 import { LuTag } from "react-icons/lu";
 import { FaBalanceScale } from "react-icons/fa";
 
+import { TfiWrite } from "react-icons/tfi";
+import { FaRegPenToSquare } from "react-icons/fa6";
+
 import { LuFileQuestion } from "react-icons/lu";
 import { LuTextSearch } from "react-icons/lu";
 import { LuScanSearch } from "react-icons/lu";
 import { LuPalette } from "react-icons/lu";
 import { SiGoogletranslate } from "react-icons/si";
+import { VscInspect } from "react-icons/vsc";
+import { LuFileVolume } from "react-icons/lu";
 
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { useAppSelector } from "@/store";
@@ -134,7 +139,12 @@ const NavMenu = () => {
               to="/translation"
               icon={<SiGoogletranslate />}
             />
-            <MenuItem value="nav_notes" label={t("nav_notes")} to="/notes" />
+            <MenuItem
+              value="nav_notes"
+              label={t("nav_notes")}
+              to="/notes"
+              icon={<TfiWrite />}
+            />
             <MenuItem
               value="nav_coloring"
               label={t("nav_coloring")}
@@ -151,6 +161,7 @@ const NavMenu = () => {
               value="nav_inspector"
               label={t("nav_inspector")}
               to="/inspector"
+              icon={<VscInspect />}
             />
             <MenuItem
               value="nav_comparator"
@@ -174,8 +185,14 @@ const NavMenu = () => {
               value="nav_letters"
               label={t("nav_letters")}
               to="/letters"
+              icon={<FaRegPenToSquare />}
             />
-            <MenuItem value="nav_audio" label={t("nav_audio")} to="/audio" />
+            <MenuItem
+              value="nav_audio"
+              label={t("nav_audio")}
+              to="/audio"
+              icon={<LuFileVolume />}
+            />
             <MenuItem
               value="nav_about"
               label={t("nav_about")}
