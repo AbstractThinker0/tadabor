@@ -70,7 +70,7 @@ const BackupComponent = () => {
         let backupHTML = ``;
 
         allNotes.forEach((note) => {
-          const noteVerse = quranService.getVerseByKey(note.id);
+          const noteVerse = quranService.getVerseByKey(note.id)!;
 
           const verseData = htmlNote(
             quranService.convertKeyToSuffix(note.id),
@@ -91,7 +91,7 @@ const BackupComponent = () => {
         }[] = [];
 
         allNotes.forEach((note) => {
-          const noteVerse = quranService.getVerseByKey(note.id);
+          const noteVerse = quranService.getVerseByKey(note.id)!;
 
           backupData.push({
             id: note.id,

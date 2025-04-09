@@ -7,7 +7,7 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import useQuran from "@/context/useQuran";
 
-import { searchIndexProps, verseMatchResult } from "@/types";
+import { searchIndexProps, verseMatchResult } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";

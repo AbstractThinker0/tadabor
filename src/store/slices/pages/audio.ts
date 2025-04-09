@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
   ? localStorage.getItem("audioAutoPlay") === "true"

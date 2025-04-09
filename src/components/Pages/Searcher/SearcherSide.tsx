@@ -4,8 +4,8 @@ import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import useQuran from "@/context/useQuran";
-import { rootProps } from "@/types";
-import { hasAllLetters, normalizeAlif } from "@/util/util";
+import { rootProps } from "quran-tools";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Box, Flex, Input } from "@chakra-ui/react";
 
@@ -92,13 +92,11 @@ const RootsList = ({ searchString }: RootsListProps) => {
   useEffect(() => {
     startTransition(() => {
       setStateRoots(
-        quranService.quranRoots.filter(
-          (root) =>
-            normalizeAlif(root.name).startsWith(searchString) ||
-            root.name.startsWith(searchString) ||
-            !searchString ||
-            hasAllLetters(root.name, searchString)
-        )
+        quranService.searchRoots(searchString, {
+          normalizeRoot: true,
+          searchInclusive: true,
+          normalizeToken: false,
+        })
       );
     });
   }, [searchString]);

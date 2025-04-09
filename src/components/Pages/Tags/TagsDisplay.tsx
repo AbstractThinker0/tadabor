@@ -3,7 +3,7 @@ import { memo, useEffect, useRef, useState, useTransition } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
@@ -197,7 +197,7 @@ function SelectedVerses({
       {sortedVerses.length ? (
         <>
           {sortedVerses.map((verseKey) => {
-            const verse = quranService.getVerseByKey(verseKey);
+            const verse = quranService.getVerseByKey(verseKey)!;
             return (
               <Box
                 borderBottom={"1.5px solid"}

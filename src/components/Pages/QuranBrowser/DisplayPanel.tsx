@@ -6,7 +6,7 @@ import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

@@ -7,7 +7,8 @@ import {
 } from "react";
 
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
-import quranClass from "@/util/quranService";
+
+import { quranClass } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

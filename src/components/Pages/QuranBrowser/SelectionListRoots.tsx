@@ -4,7 +4,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { rootProps } from "@/types";
+import { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -88,9 +88,11 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
 
   const filteredArray = useMemo(
     () =>
-      quranService.quranRoots.filter(
-        (root) => root.name.startsWith(searchString) || isDisabled
-      ),
+      isDisabled
+        ? quranService.quranRoots
+        : quranService.quranRoots.filter((root) =>
+            root.name.startsWith(searchString)
+          ),
     [searchString, isDisabled]
   );
 

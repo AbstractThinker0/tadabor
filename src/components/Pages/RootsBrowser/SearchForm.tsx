@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { rootProps } from "@/types";
+import { rootProps } from "quran-tools";
 
 import { useAppDispatch } from "@/store";
 import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
-import { arabicAlpha } from "@/components/Pages/RootsBrowser/consts";
+import { arabicAlpha } from "quran-tools";
 
 import { Box, Flex, HStack, Button, StackSeparator } from "@chakra-ui/react";
 

@@ -5,7 +5,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { translationPageActions } from "@/store/slices/pages/translation";
 
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

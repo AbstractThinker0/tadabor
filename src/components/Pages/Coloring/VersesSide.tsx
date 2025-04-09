@@ -1,7 +1,7 @@
 import { useEffect, memo, useTransition, useState, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -203,7 +203,7 @@ function SelectedVerses({
             else return Number(infoA[1]) - Number(infoB[1]);
           })
           .map((verseKey) => {
-            const verse = quranService.getVerseByKey(verseKey);
+            const verse = quranService.getVerseByKey(verseKey)!;
             return (
               <SelectedVerseItem
                 key={verse.key}

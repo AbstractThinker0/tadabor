@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
-import { hasAllLetters, normalizeAlif, getRootMatches } from "@/util/util";
-import { rootProps, verseMatchResult, searchIndexProps } from "@/types";
+
+import { rootProps, verseMatchResult, searchIndexProps } from "quran-tools";
 import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
@@ -55,18 +55,11 @@ const RootsList = memo(
 
     useEffect(() => {
       startTransition(() => {
-        const normalizedToken = normalizeAlif(searchString, true);
-
         handleRoots(
-          quranService.quranRoots.filter((root) => {
-            const normalizedRoot = normalizeAlif(root.name, true);
-
-            return (
-              normalizedRoot.startsWith(normalizedToken) ||
-              !searchString ||
-              (searchInclusive &&
-                hasAllLetters(normalizedRoot, normalizedToken))
-            );
+          quranService.searchRoots(searchString, {
+            normalizeToken: true,
+            normalizeRoot: true,
+            searchInclusive: searchInclusive,
           })
         );
       });
@@ -263,37 +256,10 @@ const RootOccurences = ({
   useEffect(() => {
     if (!isOccurencesOpen) return;
 
-    const localDer: searchIndexProps[] = [];
-    const localVerses: verseMatchResult[] = [];
+    const occurencesData = quranService.getOccurencesData(root_occurences);
 
-    root_occurences.forEach((occ) => {
-      const occData = occ.split(":");
-      const verse = quranService.getVerseByRank(occData[0]);
-      const wordIndexes = occData[1].split(",");
-      const verseWords = verse.versetext.split(" ");
-
-      const chapterName = quranService.getChapterName(verse.suraid);
-      const verseDerivations = wordIndexes.map((wordIndex) => ({
-        name: verseWords[Number(wordIndex) - 1],
-        key: verse.key,
-        text: `${chapterName}:${verse.verseid}`,
-        wordIndex,
-      }));
-
-      localDer.push(...verseDerivations);
-
-      const verseParts = getRootMatches(verseWords, wordIndexes);
-
-      localVerses.push({
-        verseParts,
-        key: verse.key,
-        suraid: verse.suraid,
-        verseid: verse.verseid,
-      });
-    });
-
-    setDerivations(localDer);
-    setRootVerses(localVerses);
+    setDerivations(occurencesData.rootDerivations);
+    setRootVerses(occurencesData.rootVerses);
   }, [isOccurencesOpen, root_occurences]);
 
   const handleDerivationClick = (verseKey: string, verseIndex: number) => {

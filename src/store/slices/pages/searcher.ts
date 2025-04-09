@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { rootProps } from "@/types";
+import { rootProps } from "quran-tools";
 
 interface DeleteRootPayload {
   root_id: string;

@@ -1,7 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 
-import { verseMatchResult, verseProps } from "@/types";
-import { getDerivationsInVerse } from "@/util/util";
+import { verseMatchResult } from "quran-tools";
 
 import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -95,73 +94,13 @@ const VersesList = () => {
 
   const [isPending, startTransition] = useTransition();
 
-  interface verseProtoType {
-    verse: verseProps;
-    wordIndexes: string[];
-  }
-
-  interface versesObjectType {
-    [key: string]: verseProtoType;
-  }
-
   useEffect(() => {
     //
-    const matchVerses: verseMatchResult[] = [];
-    const rootsArray = Object.keys(search_roots);
-    const versesObject: versesObjectType = {};
-
-    rootsArray.forEach((root_id) => {
-      const rootTarget = quranService.getRootByID(root_id);
-
-      if (!rootTarget) return;
-
-      rootTarget.occurences.forEach((item) => {
-        const info = item.split(":");
-
-        // between 0 .. 6235
-        const verseRank = info[0];
-
-        const currentVerse = quranService.getVerseByRank(verseRank);
-
-        const wordIndexes = info[1].split(",");
-
-        if (versesObject[currentVerse.key]) {
-          versesObject[currentVerse.key].wordIndexes = Array.from(
-            new Set([
-              ...versesObject[currentVerse.key].wordIndexes,
-              ...wordIndexes,
-            ])
-          );
-        } else {
-          versesObject[currentVerse.key] = {
-            verse: currentVerse,
-            wordIndexes: wordIndexes,
-          };
-        }
-      });
-    });
-
-    Object.keys(versesObject).forEach((verseKey) => {
-      const currentVerse = versesObject[verseKey].verse;
-      const chapterName = quranService.getChapterName(currentVerse.suraid);
-
-      const { verseResult } = getDerivationsInVerse(
-        versesObject[verseKey].wordIndexes,
-        currentVerse,
-        chapterName
-      );
-
-      matchVerses.push(verseResult);
-    });
-
     startTransition(() => {
-      const sortedVerses = matchVerses.sort((verseA, verseB) => {
-        const infoA = verseA.key.split("-");
-        const infoB = verseB.key.split("-");
-        if (Number(infoA[0]) !== Number(infoB[0]))
-          return Number(infoA[0]) - Number(infoB[0]);
-        else return Number(infoA[1]) - Number(infoB[1]);
-      });
+      const sortedVerses = quranService.searchByRootIDs(
+        Object.keys(search_roots),
+        true
+      );
 
       setStateVerses(sortedVerses);
       dispatch(searcherPageActions.setVersesCount(sortedVerses.length));

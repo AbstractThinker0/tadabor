@@ -4,7 +4,7 @@ import useQuran from "@/context/useQuran";
 
 import { isVerseNotesLoading, useAppSelector } from "@/store";
 
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

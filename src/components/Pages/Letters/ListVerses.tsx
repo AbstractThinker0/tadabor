@@ -9,13 +9,15 @@ import {
   lettersPageActions,
 } from "@/store/slices/pages/letters";
 
-import { LetterDataType, verseProps } from "@/types";
+import { LetterDataType } from "@/types";
 import { LetterRole } from "@/util/consts";
 import {
-  normalizeAlif,
   removeDiacritics,
   splitArabicLetters,
-} from "@/util/util";
+  normalizeAlif,
+  verseProps,
+} from "quran-tools";
+
 import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";

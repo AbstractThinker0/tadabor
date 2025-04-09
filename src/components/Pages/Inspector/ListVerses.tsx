@@ -5,13 +5,12 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
-import { getRootMatches } from "@/util/util";
 import {
   verseProps,
   rootProps,
   verseMatchResult,
   searchIndexProps,
-} from "@/types";
+} from "quran-tools";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -123,27 +122,17 @@ const VerseWords = ({
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const [selectedWord, setSelectedWord] = useState(-1);
 
-  const onClickWord = (index: number) => {
-    const wordRoots = quranService.quranRoots.filter((root) =>
-      root.occurences.find((occ) => {
-        const rootData = occ.split(":");
-
-        if (rootData[0] !== verseRank.toString()) return false;
-
-        const wordIndexes = rootData[1].split(",");
-
-        return wordIndexes.includes(index.toString());
-      })
-    );
+  const onClickWord = (wordIndex: number) => {
+    const wordRoots = quranService.getWordRoots(verseRank, wordIndex);
 
     setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
-    if (selectedWord === index) {
+    if (selectedWord === wordIndex) {
       setRootListOpen(false);
       setSelectedWord(-1);
     } else {
       setRootListOpen(true);
-      setSelectedWord(index);
+      setSelectedWord(wordIndex);
     }
   };
 
@@ -241,38 +230,10 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   };
 
   useEffect(() => {
-    const localDer: searchIndexProps[] = [];
-    const localVerses: verseMatchResult[] = [];
+    const occurencesData = quranService.getOccurencesData(rootOccs);
 
-    rootOccs.forEach((occ) => {
-      const occData = occ.split(":");
-      const verse = quranService.getVerseByRank(occData[0]);
-      const wordIndexes = occData[1].split(",");
-      const verseWords = verse.versetext.split(" ");
-
-      const chapterName = quranService.getChapterName(verse.suraid);
-
-      const verseDerivations = wordIndexes.map((wordIndex) => ({
-        name: verseWords[Number(wordIndex) - 1],
-        key: verse.key,
-        text: `${chapterName}:${verse.verseid}`,
-        wordIndex,
-      }));
-
-      localDer.push(...verseDerivations);
-
-      const verseParts = getRootMatches(verseWords, wordIndexes);
-
-      localVerses.push({
-        verseParts,
-        key: verse.key,
-        suraid: verse.suraid,
-        verseid: verse.verseid,
-      });
-    });
-
-    setDerivations(localDer);
-    setRootVerses(localVerses);
+    setDerivations(occurencesData.rootDerivations);
+    setRootVerses(occurencesData.rootVerses);
   }, [rootOccs]);
 
   useEffect(() => {

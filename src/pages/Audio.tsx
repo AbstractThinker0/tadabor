@@ -6,7 +6,7 @@ import { useAppSelector, useAppDispatch } from "@/store";
 import { audioPageActions } from "@/store/slices/pages/audio";
 
 import { getVerseAudioURL } from "@/util/audioData";
-import { verseProps } from "@/types";
+import { verseProps } from "quran-tools";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import VerseContainer from "@/components/Custom/VerseContainer";
