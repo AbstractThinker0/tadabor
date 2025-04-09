@@ -40,7 +40,14 @@ const DisplayPanel = () => {
   }, []);
 
   return (
-    <Box flex={1} overflowY="scroll" minH="100%" p={1} ref={refListVerses}>
+    <Box
+      flex={1}
+      overflowY="scroll"
+      minH="100%"
+      p={1}
+      pt={2}
+      ref={refListVerses}
+    >
       {isVNotesLoading ? (
         <LoadingSpinner text="Loading verse notes..." />
       ) : (

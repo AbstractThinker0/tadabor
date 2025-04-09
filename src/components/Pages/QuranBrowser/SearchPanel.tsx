@@ -92,7 +92,7 @@ const SearchPanel = () => {
     <Flex
       flexDirection="column"
       fontSize="medium"
-      paddingTop="5px"
+      pt={2}
       paddingLeft="min(0.5vw, 10px)"
       paddingRight="min(0.5vw, 10px)"
     >
