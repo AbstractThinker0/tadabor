@@ -72,6 +72,27 @@ i18n
           panel_definitions: "Definitions",
           panel_display: "Display",
           letters_preset: "Preset:",
+          about: {
+            introTitle: "Intro:",
+            introText:
+              "This project is a web App that allows you to browse through the Quran and write your notes/reflections below the verses, everything will be saved in your browser.",
+            howToUseTitle: "How to use:",
+            howToUseText:
+              "Simply go to Quran Browser from the navigation menu, you can click the button next to any verse to open a form where you can enter your text, once you are done writing you can press the save button, all the data will be saved on your browser app and clearing your cache might erase the data you have saved.",
+            disclaimerTitle: "Disclaimer:",
+            disclaimerText:
+              "The app is in beta, which means you may encounter occasional bugs. We strongly recommend keeping a backup of any data you save while using the app. Please be aware that the accuracy of the Quran roots list has not been extensively verified.",
+            creditsTitle: "Credits:",
+            credit1:
+              "The creator of the universe for all his favors that if I tried to count I would never be able to number them",
+            credit2:
+              "Tanzil project for the Quran text compilation (tanzil.net)",
+            credit3:
+              "Initial quran roots compilation extracted from Zekr Project (zekr.org)",
+            credit4: "Chapter names and their transliteration extracted from",
+            githubText: "Check out the project on",
+            appVersion: "App Version",
+          },
         },
       },
       ar: {
@@ -131,6 +152,25 @@ i18n
           panel_definitions: "التعريفات",
           panel_display: "العرض",
           letters_preset: "مجموعة:",
+          about: {
+            introTitle: "تقديم:",
+            introText:
+              "هذا التطبيق هو موقع يخول المستخدم من تصفح القرآن وكتابة تدبرات أو ملاحظات تحت الآيات، كل ما يكتب يتم تسجيله في متصفحك.",
+            howToUseTitle: "كيفية الإستخدام:",
+            howToUseText:
+              "إنتقل إلى متصفح القرآن عبر قائمة التطبيق ثم يمكنك الضغط على الزر المحاذي لأي آية حتى تظهر لك خانة الكتابة، وحين تنتهي من الكتابة يمكنك الضغط على زر الحفظ، كل البيانات يتم تسجيلها في متصفحك وحذف سجل المتصفح قد يحذف أي بيانات قمت بتسجيلها هنا.",
+            disclaimerTitle: "إخلاء مسؤولية:",
+            disclaimerText:
+              "التطبيق في مرحلة تجريبية، مما يعني أنه قد تواجه أحيانًا بعض الأخطاء. نوصي بشدة بأن تقوم بعمل نسخ احتياطية لأي بيانات تقوم بحفظها أثناء استخدام التطبيق. يُرجى ملاحظة أن دقة قائمة جذور/أوزان القرآن لم تتم التحقق منها بشكل مكثّف.",
+            creditsTitle: "الشكر:",
+            credit1: "خالق الكون لنعمه التي إن حاولت أن أحصيها فلن أعدها",
+            credit2: "نص القرآن الإلكتروني أخذ من Tanzil project (tanzil.net)",
+            credit3:
+              "ملف جذور القرآن الإلكتروني قبل التعديل أخذ من Zekr Project (zekr.org)",
+            credit4: "ملف أسماء السور مع ترجمتها أخذ من",
+            githubText: "رابط التطبيق على",
+            appVersion: "نسخة التطبيق",
+          },
         },
       },
     },
