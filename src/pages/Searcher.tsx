@@ -67,7 +67,7 @@ const Searcher = () => {
         flexDirection={"column"}
         value="searcherTab"
       >
-        <Flex gap={"10px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
+        <Flex gap={"5px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
           <SearcherSide />
           <SearcherDisplay />
         </Flex>

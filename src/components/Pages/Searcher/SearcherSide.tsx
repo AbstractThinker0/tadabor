@@ -7,7 +7,8 @@ import useQuran from "@/context/useQuran";
 import { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { Box, Flex, Input } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+import { InputString } from "@/components/Generic/Input";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
@@ -35,22 +36,24 @@ const SearcherSide = () => {
     setSearchToken(event.target.value);
   };
 
+  const onClearInput = () => {
+    setSearchToken("");
+  };
+
   if (isVNotesLoading || !rootsLoaded) return <LoadingSpinner />;
 
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
-      <div>
-        <Input
-          type="search"
-          placeholder=""
-          value={searchToken}
-          aria-label="Search"
-          onChange={onChangeToken}
-          bgColor={"bg"}
-          required
-          dir="rtl"
-        />
-      </div>
+      <InputString
+        inputElementProps={{
+          borderBottom: "none",
+          borderBottomRadius: "0",
+        }}
+        value={searchToken}
+        onChange={onChangeToken}
+        onClear={onClearInput}
+        dir="rtl"
+      />
       <RootsList searchString={searchToken} />
       <CountVerses />
     </Flex>
@@ -123,6 +126,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
       border={"1px solid"}
       borderColor={"border.emphasized"}
       borderRadius={"0.35rem"}
+      borderTopRadius={"none"}
       onScroll={handleScroll}
       cursor={"pointer"}
     >

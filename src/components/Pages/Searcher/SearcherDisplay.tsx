@@ -27,7 +27,8 @@ const SearcherDisplay = () => {
       flexDir={"column"}
       flex={1}
       overflowY={"hidden"}
-      padding={"5px"}
+      py={"5px"}
+      paddingStart={3}
       margin={"5px"}
       borderRadius={"0.75rem"}
       border={"1px solid"}
@@ -50,6 +51,7 @@ const SearcherDisplay = () => {
         overflowY={"scroll"}
         maxH={"100%"}
         height={"100%"}
+        paddingEnd={1}
       >
         <VersesList />
       </Flex>

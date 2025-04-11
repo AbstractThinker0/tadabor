@@ -12,7 +12,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Box, Flex, HStack, Input, Span, Tabs } from "@chakra-ui/react";
+import { Box, Flex, HStack, Span, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -20,6 +20,8 @@ import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { InputString } from "@/components/Generic/Input";
+
 import { useBoolean } from "usehooks-ts";
 import { usePageNav } from "@/components/Custom/usePageNav";
 
@@ -130,6 +132,10 @@ const Searcher2Tab = () => {
     dispatch(searcher2PageActions.setSearchString(event.target.value));
   };
 
+  const onClearInput = () => {
+    dispatch(searcher2PageActions.setSearchString(""));
+  };
+
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
@@ -172,14 +178,10 @@ const Searcher2Tab = () => {
     >
       <Flex flexDir={"column"} alignItems={"center"}>
         <Flex alignItems={"center"} gap={1}>
-          <Input
-            bgColor={"bg"}
-            type="search"
-            placeholder=""
+          <InputString
             value={searchString}
-            aria-label="Search"
             onChange={searchStringHandle}
-            required
+            onClear={onClearInput}
             dir="rtl"
           />
           <span>({stateVerses.length})</span>
