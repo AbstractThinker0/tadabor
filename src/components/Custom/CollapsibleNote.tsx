@@ -5,7 +5,7 @@ import { selectNote, useAppDispatch, useAppSelector } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
 import { dbFuncs } from "@/util/db";
 
-import { Card, Collapsible } from "@chakra-ui/react";
+import { Box, Collapsible } from "@chakra-ui/react";
 
 import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
@@ -107,25 +107,30 @@ const FormText = ({
   onSubmitForm,
 }: FormTextProps) => {
   return (
-    <Card.Root variant={"outline"}>
-      <Card.Body pt={0} pb={1} px={1}>
-        {isEditable === false ? (
-          <NoteContainer
-            inputValue={inputValue}
-            inputDirection={inputDirection}
-            onClickEditButton={onClickEditButton}
-          />
-        ) : (
-          <NoteForm
-            inputValue={inputValue}
-            inputDirection={inputDirection}
-            handleSetDirection={handleSetDirection}
-            onChangeTextarea={onChangeTextarea}
-            onSubmitForm={onSubmitForm}
-          />
-        )}
-      </Card.Body>
-    </Card.Root>
+    <Box
+      bgColor={"bg.panel"}
+      pb={1}
+      px={1}
+      border="1px solid"
+      borderColor={"border"}
+      borderRadius={"l3"}
+    >
+      {isEditable === false ? (
+        <NoteContainer
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          onClickEditButton={onClickEditButton}
+        />
+      ) : (
+        <NoteForm
+          inputValue={inputValue}
+          inputDirection={inputDirection}
+          handleSetDirection={handleSetDirection}
+          onChangeTextarea={onChangeTextarea}
+          onSubmitForm={onSubmitForm}
+        />
+      )}
+    </Box>
   );
 };
 

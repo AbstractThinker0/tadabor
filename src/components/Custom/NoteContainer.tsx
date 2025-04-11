@@ -21,12 +21,13 @@ const NoteContainer = ({
       <Box
         pt={2}
         px={3}
+        mb={2}
         border={"1px solid"}
         borderColor={"green.solid"}
         borderRadius={"0.375rem"}
         dir={inputDirection}
       >
-        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} mb={12}>
+        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} pb={2} mb={10}>
           {inputValue}
         </Text>
       </Box>
