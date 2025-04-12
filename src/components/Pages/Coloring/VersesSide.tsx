@@ -14,16 +14,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseModal from "@/components/Pages/Coloring/VerseModal";
 import { colorProps, coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
-import {
-  Box,
-  Button,
-  Card,
-  CardHeader,
-  Flex,
-  Tag,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Tag, Text, useDisclosure } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
@@ -37,7 +28,7 @@ const VersesSide = () => {
 
   return (
     <Flex flexDir={"column"} flex={1} w={"100%"} p={1}>
-      <Card.Root
+      <Box
         overflowY={"scroll"}
         flex={1}
         px={4}
@@ -45,13 +36,15 @@ const VersesSide = () => {
         bgColor={"brand.contrast"}
         dir="rtl"
         color={"inherit"}
+        border={"1px solid"}
+        borderColor={"border"}
       >
         {Object.keys(selectedColors).length ? (
           <SelectedContainter openVerseModal={onOpen} />
         ) : (
           <VersesList openVerseModal={onOpen} />
         )}
-      </Card.Root>
+      </Box>
       <VerseModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
@@ -324,14 +317,9 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
 
   return (
     <>
-      <CardHeader
-        textAlign={"center"}
-        fontSize={"larger"}
-        color={"blue.500"}
-        py={0}
-      >
+      <Box textAlign={"center"} fontSize={"larger"} color={"blue.500"} py={0}>
         سورة {quranService.getChapterName(currentChapter)}
-      </CardHeader>
+      </Box>
       <div ref={handleVerseListRef}>
         {stateVerses.map((verse) => (
           <Box
