@@ -85,7 +85,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
 
   return (
     <Dialog.Root
-      size="lg"
+      size="md"
       open={isOpen}
       onOpenChange={onOpenChange}
       onInteractOutside={onClose}
@@ -101,7 +101,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         </Dialog.Header>
 
         <Dialog.Body>
-          <Stack gap={6} separator={<Separator />}>
+          <Stack gap={"1rem"} separator={<Separator />}>
             <Box colorPalette="blue" pt={2}>
               <Heading as="span" size="md">
                 Language:{" "}
