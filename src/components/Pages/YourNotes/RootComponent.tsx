@@ -13,8 +13,8 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
-import { Card, CardHeader } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+import { Box } from "@chakra-ui/react";
 
 interface RootComponentProps {
   inputKey: string;
@@ -69,17 +69,24 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
   };
 
   return (
-    <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
-      <CardHeader
+    <Box
+      w={"100%"}
+      border={"1px solid"}
+      borderColor={"border.emphasized"}
+      borderRadius={"l3"}
+      bg={"bg.panel"}
+    >
+      <Box
         dir="rtl"
         bgColor={"gray.muted"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
+        p={2}
       >
         <VerseContainer>
           {quranService.getRootNameByID(inputKey)}
         </VerseContainer>
-      </CardHeader>
+      </Box>
       {isEditable ? (
         <NoteForm
           inputValue={inputValue}
@@ -95,7 +102,7 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
           onClickEditButton={onClickEditButton}
         />
       )}
-    </Card.Root>
+    </Box>
   );
 };
 

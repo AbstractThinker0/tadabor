@@ -11,7 +11,7 @@ import { transNotesActions } from "@/store/slices/global/transNotes";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import { Box, Card, CardHeader, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
@@ -24,20 +24,27 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
   const quranService = useQuran();
 
   return (
-    <Card.Root w={"100%"} variant={"outline"} borderColor={"border.emphasized"}>
-      <CardHeader
+    <Box
+      w={"100%"}
+      border={"1px solid"}
+      borderColor={"border.emphasized"}
+      borderRadius={"l3"}
+      bg={"bg.panel"}
+    >
+      <Box
         bgColor={"gray.muted"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
         dir="rtl"
+        p={2}
       >
         <VerseContainer>
           ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
           {quranService.getVerseTextByKey(verseKey)}{" "}
         </VerseContainer>
-      </CardHeader>
+      </Box>
       <TransBody inputKey={verseKey} />
-    </Card.Root>
+    </Box>
   );
 };
 
