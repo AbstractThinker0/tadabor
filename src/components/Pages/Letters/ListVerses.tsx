@@ -27,7 +27,6 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import {
   Box,
   Button,
-  CardBody,
   Flex,
   Collapsible,
   NativeSelect,
@@ -65,13 +64,13 @@ const ListVerses = () => {
   }, [currentChapter]);
 
   return (
-    <CardBody pt={0} dir="rtl">
+    <Box px={3} dir="rtl">
       {isPending || dataLoading ? (
         <LoadingSpinner />
       ) : (
         stateVerses.map((verse) => <VerseItem key={verse.key} verse={verse} />)
       )}
-    </CardBody>
+    </Box>
   );
 };
 
