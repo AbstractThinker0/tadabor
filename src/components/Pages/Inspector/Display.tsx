@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import useQuran from "@/context/useQuran";
 
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
-import { Box, Card, CardHeader } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 interface DisplayProps {
   currentChapter: string;
@@ -22,26 +22,27 @@ const Display = ({ currentChapter }: DisplayProps) => {
 
   return (
     <Box p={2} flex={1} overflowY={"scroll"} minH={"100%"} ref={refDisplay}>
-      <Card.Root
+      <Box
         bgColor={"brand.contrast"}
         minH={"100%"}
         border={"1px solid"}
         borderColor={"border.emphasized"}
         color={"inherit"}
+        borderRadius={"l3"}
       >
-        <CardHeader
-          py={0}
+        <Box
           textAlign={"center"}
-          fontSize={"x-large  "}
+          fontSize={"x-large"}
           color={"blue.500"}
           bgColor={"bg.emphasized"}
           borderBottom={"1px solid"}
           borderColor={"border.emphasized"}
+          p={1}
         >
           سورة {quranService.getChapterName(currentChapter)}
-        </CardHeader>
+        </Box>
         <ListVerses currentChapter={currentChapter} />
-      </Card.Root>
+      </Box>
     </Box>
   );
 };

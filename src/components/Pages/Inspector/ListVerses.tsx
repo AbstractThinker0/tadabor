@@ -19,7 +19,6 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import {
   Box,
-  CardBody,
   Collapsible,
   Accordion,
   HStack,
@@ -72,7 +71,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
   }, [scrollKey, isPending]);
 
   return (
-    <CardBody ref={refVerses} dir="rtl">
+    <Box ref={refVerses} p={3} dir="rtl">
       {isPending ? (
         <LoadingSpinner />
       ) : (
@@ -95,7 +94,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
           </Box>
         ))
       )}
-    </CardBody>
+    </Box>
   );
 };
 
