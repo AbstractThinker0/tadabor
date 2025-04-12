@@ -119,7 +119,13 @@ const NavMenu = () => {
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
-        <Button bgColor={"bg"} color={"fg"} size="sm">
+        <Button
+          bgColor={"bg"}
+          color={"fg"}
+          size="sm"
+          _hover={{ bg: "bg.emphasized" }}
+          _expanded={{ bg: "bg.emphasized" }}
+        >
           <MdMenu />
         </Button>
       </Menu.Trigger>
