@@ -14,17 +14,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  Span,
-  Tag,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Span, Tag, useDisclosure } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
@@ -77,15 +67,17 @@ function TagsDisplay() {
       flex={1}
       padding={"0.5rem"}
     >
-      <Card.Root
+      <Flex
         border={"1px solid"}
         borderColor={"border.emphasized"}
+        borderRadius={"l3"}
         flex={1}
+        flexDir={"column"}
         dir="rtl"
       >
         {Object.keys(selectedTags).length ? (
           <>
-            <CardHeader py={1}>
+            <Box p={1}>
               <Flex alignItems={"center"} gap={"0.5rem"} dir="ltr">
                 <Box lineHeight={"short"} fontWeight={"bold"}>
                   Selected tags:
@@ -136,7 +128,7 @@ function TagsDisplay() {
                   ))
                 )}
               </Flex>
-            </CardHeader>
+            </Box>
             {chaptersScope.length ? (
               <SelectedVerses
                 selectedTags={selectedTags}
@@ -157,7 +149,7 @@ function TagsDisplay() {
             tags={tags}
           />
         )}
-      </Card.Root>
+      </Flex>
       <VerseTagsModal isOpen={open} onClose={onClose} />
     </Flex>
   );
@@ -193,7 +185,7 @@ function SelectedVerses({
   });
 
   return (
-    <CardBody>
+    <Box p={1}>
       {sortedVerses.length ? (
         <>
           {sortedVerses.map((verseKey) => {
@@ -219,7 +211,7 @@ function SelectedVerses({
           There are no verses matching the selected tags.
         </Box>
       )}
-    </CardBody>
+    </Box>
   );
 }
 
@@ -310,7 +302,7 @@ const ListVerses = memo(
 
     return (
       <>
-        <CardHeader
+        <Box
           bgColor={"gray.emphasized"}
           textAlign={"center"}
           fontSize={"larger"}
@@ -320,8 +312,15 @@ const ListVerses = memo(
           py={1}
         >
           سورة {quranService.getChapterName(currentChapter)}
-        </CardHeader>
-        <CardBody bgColor={"brand.contrast"} pt={0} ref={refVerses}>
+        </Box>
+        <Flex
+          flexDirection={"column"}
+          flex={1}
+          bgColor={"brand.contrast"}
+          p={1}
+          ref={refVerses}
+          borderBottomRadius={"l3"}
+        >
           {isPending ? (
             <LoadingSpinner />
           ) : (
@@ -345,7 +344,7 @@ const ListVerses = memo(
               </Box>
             ))
           )}
-        </CardBody>
+        </Flex>
       </>
     );
   }
