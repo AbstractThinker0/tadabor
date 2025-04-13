@@ -76,27 +76,44 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
         <LoadingSpinner />
       ) : (
         stateVerses.map((verse) => (
-          <Box
-            p={"4px"}
-            borderBottom={"1.5px solid"}
-            borderColor={"border.emphasized"}
-            aria-selected={scrollKey === verse.key}
-            _selected={{ bgColor: "blue.subtle" }}
+          <VerseItem
             key={verse.key}
-            data-id={verse.key}
-          >
-            <VerseWords
-              verseRank={verse.rank}
-              verseText={verse.versetext.split(" ")}
-              verseID={verse.verseid}
-              verseKey={verse.key}
-            />
-          </Box>
+            verse={verse}
+            isSelected={scrollKey === verse.key}
+          />
         ))
       )}
     </Box>
   );
 };
+
+interface VerseItemProps {
+  verse: verseProps;
+  isSelected: boolean;
+}
+
+const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
+  return (
+    <Box
+      p={"4px"}
+      borderBottom={"1.5px solid"}
+      borderColor={"border.emphasized"}
+      aria-selected={isSelected}
+      _selected={{ bgColor: "blue.subtle" }}
+      key={verse.key}
+      data-id={verse.key}
+    >
+      <VerseWords
+        verseRank={verse.rank}
+        verseText={verse.versetext.split(" ")}
+        verseID={verse.verseid}
+        verseKey={verse.key}
+      />
+    </Box>
+  );
+};
+
+VerseItem.displayName = "VerseItem";
 
 export default ListVerses;
 
