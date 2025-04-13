@@ -220,6 +220,8 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ value, label, to, icon }: MenuItemProps) => {
+  const displayIcon = icon ? icon : <TbTableDashed />;
+
   return (
     <Menu.Item
       _currentPage={{ bgColor: "bg.emphasized" }}
@@ -229,7 +231,7 @@ const MenuItem = ({ value, label, to, icon }: MenuItemProps) => {
       asChild
     >
       <NavLink to={to}>
-        {icon ? icon : <TbTableDashed />}
+        {displayIcon}
         {label}
       </NavLink>
     </Menu.Item>
