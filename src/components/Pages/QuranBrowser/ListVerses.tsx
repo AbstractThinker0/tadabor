@@ -33,6 +33,19 @@ const ListTitle = ({ chapterName }: ListTitleProps) => {
 };
 
 const ListVerses = () => {
+  const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
+  const quranService = useQuran();
+  const chapterName = quranService.getChapterName(selectChapter);
+
+  return (
+    <>
+      <ListTitle chapterName={chapterName} />
+      <ListBody />
+    </>
+  );
+};
+
+const ListBody = () => {
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -42,8 +55,6 @@ const ListVerses = () => {
   const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
 
   const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
-
-  const chapterName = quranService.getChapterName(selectChapter);
 
   const refVerses = useRef<HTMLDivElement>(null);
 
@@ -68,23 +79,18 @@ const ListVerses = () => {
     }
   }, [scrollKey, isPending]);
 
+  if (isPending) return <LoadingSpinner text="Loading verses..." />;
+
   return (
-    <>
-      <ListTitle chapterName={chapterName} />
-      {isPending ? (
-        <LoadingSpinner text="Loading verses..." />
-      ) : (
-        <Box p={1} ref={refVerses}>
-          {stateVerses.map((verse: verseProps) => (
-            <VerseItem
-              key={verse.key}
-              verse={verse}
-              isSelected={scrollKey === verse.key}
-            />
-          ))}
-        </Box>
-      )}
-    </>
+    <Box p={1} ref={refVerses}>
+      {stateVerses.map((verse: verseProps) => (
+        <VerseItem
+          key={verse.key}
+          verse={verse}
+          isSelected={scrollKey === verse.key}
+        />
+      ))}
+    </Box>
   );
 };
 
