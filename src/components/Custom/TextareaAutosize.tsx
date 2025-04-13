@@ -16,6 +16,7 @@ const HIDDEN_TEXTAREA_STYLE = {
   "z-index": "-1000",
   top: "0",
   right: "0",
+  display: "block",
 } as const;
 
 const forceHiddenStyles = (node: HTMLElement) => {
@@ -37,7 +38,7 @@ const TextareaAutosize = (props: TextareaProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   const minSize = 100;
-  const extraSize = 2;
+  const extraSize = 50;
 
   // Desc: create a hidden clone to use it for height calculations to apply a smooth resize on the original element
   // TODO: an optimization is to create a global element to handle all height calculations instead of creating a dedicated clone for every textarea element
