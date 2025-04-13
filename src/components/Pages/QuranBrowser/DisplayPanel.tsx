@@ -1,17 +1,13 @@
-import { useEffect, useRef, useState, useTransition } from "react";
-
-import useQuran from "@/context/useQuran";
+import { useEffect, useRef } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
-import { verseProps } from "quran-tools";
-
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
-import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
+import { Box, Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
   const dispatch = useAppDispatch();
@@ -70,86 +66,5 @@ const DisplayPanel = () => {
 };
 
 DisplayPanel.displayName = "DisplayPanel";
-
-interface ListTitleProps {
-  chapterName: string;
-}
-
-const ListTitle = ({ chapterName }: ListTitleProps) => {
-  return (
-    <Heading
-      textAlign="center"
-      bgColor={"bg.muted"}
-      color={"blue.focusRing"}
-      py={3}
-      size="3xl"
-      border={"1px solid"}
-      borderColor={"border.emphasized"}
-      fontWeight="500"
-    >
-      سورة {chapterName}
-    </Heading>
-  );
-};
-
-ListTitle.displayName = "ListTitle";
-
-const ListVerses = () => {
-  const quranService = useQuran();
-
-  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
-
-  const [isPending, startTransition] = useTransition();
-
-  const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
-
-  const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
-
-  const chapterName = quranService.getChapterName(selectChapter);
-
-  const refVerses = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    startTransition(() => {
-      setStateVerses(quranService.getVerses(selectChapter));
-    });
-  }, [selectChapter]);
-
-  useEffect(() => {
-    if (scrollKey && refVerses.current) {
-      const verseToHighlight = refVerses.current.querySelector(
-        `[data-id="${scrollKey}"]`
-      ) as HTMLDivElement;
-
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }
-  }, [scrollKey, isPending]);
-
-  return (
-    <>
-      <ListTitle chapterName={chapterName} />
-      {isPending ? (
-        <LoadingSpinner text="Loading verses..." />
-      ) : (
-        <Box p={1} ref={refVerses}>
-          {stateVerses.map((verse: verseProps) => (
-            <VerseItem
-              key={verse.key}
-              verse={verse}
-              isSelected={scrollKey === verse.key}
-            />
-          ))}
-        </Box>
-      )}
-    </>
-  );
-};
-
-ListVerses.displayName = "ListVerses";
 
 export default DisplayPanel;
