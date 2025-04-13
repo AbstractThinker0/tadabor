@@ -43,15 +43,12 @@ const cloneRef = (referenceElement: HTMLElement) => {
   globalHiddenTextarea = el;
 };
 
-const getOrCreateGlobalHiddenTextarea = (
-  referenceElement: HTMLElement
-): HTMLTextAreaElement => {
-  if (!globalHiddenTextarea) {
-    cloneRef(referenceElement);
-  }
-
+const getOrCreateGlobalHiddenTextarea = (referenceElement: HTMLElement) => {
   const parent = referenceElement.parentElement;
-  if (parent && globalHiddenTextarea!.parentElement !== parent) {
+
+  if (!parent) return null;
+
+  if (!globalHiddenTextarea || globalHiddenTextarea.parentElement !== parent) {
     cloneRef(referenceElement);
     parent.appendChild(globalHiddenTextarea!);
   }
@@ -70,6 +67,8 @@ export const useAutosizeTextarea = (
     if (!textarea) return;
 
     const hidden = getOrCreateGlobalHiddenTextarea(textarea);
+
+    if (!hidden) return;
 
     hidden.value = value;
     hidden.style.height = "auto";
