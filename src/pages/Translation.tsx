@@ -10,7 +10,7 @@ import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
 import { Flex } from "@chakra-ui/react";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 const Translation = () => {
   usePageNav("nav_translation");

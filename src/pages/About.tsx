@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Heading, Text, Link, List } from "@chakra-ui/react";
 
 const AboutContent = () => {

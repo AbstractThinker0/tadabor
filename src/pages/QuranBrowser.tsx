@@ -2,7 +2,7 @@ import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
 import DisplayPanel from "@/components/Pages/QuranBrowser/DisplayPanel";
 
 import { Flex } from "@chakra-ui/react";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 function QuranBrowser() {
   usePageNav("nav_browser");

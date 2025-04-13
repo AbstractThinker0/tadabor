@@ -21,7 +21,7 @@ import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 
 import { useBoolean } from "usehooks-ts";
 import { useTranslation } from "react-i18next";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 const Audio = () => {
   usePageNav("nav_audio");

@@ -8,7 +8,7 @@ import { Tabs } from "@chakra-ui/react";
 import RootNotes from "@/components/Pages/YourNotes/RootNotes";
 import VerseNotes from "@/components/Pages/YourNotes/VerseNotes";
 import TransNotes from "@/components/Pages/YourNotes/TransNotes";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 const YourNotes = () => {
   usePageNav("nav_notes");

@@ -23,7 +23,7 @@ import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { InputString } from "@/components/Generic/Input";
 
 import { useBoolean } from "usehooks-ts";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 const Searcher2 = () => {
   usePageNav("nav_searcher2");

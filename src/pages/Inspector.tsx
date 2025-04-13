@@ -13,7 +13,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Inspector/Display";
 
 import { Flex } from "@chakra-ui/react";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 function Inspector() {
   usePageNav("nav_inspector");

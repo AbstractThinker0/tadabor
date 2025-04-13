@@ -11,7 +11,7 @@ import { Flex, Tabs } from "@chakra-ui/react";
 
 import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 const Searcher = () => {
   usePageNav("nav_searcher");

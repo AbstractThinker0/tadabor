@@ -18,7 +18,7 @@ import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
 import { Box, Alert, CloseButton, Spacer } from "@chakra-ui/react";
-import { usePageNav } from "@/components/Custom/usePageNav";
+import { usePageNav } from "@/hooks/usePageNav";
 
 function Comparator() {
   usePageNav("nav_comparator");
