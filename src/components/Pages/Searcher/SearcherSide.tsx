@@ -9,28 +9,13 @@ import { rootProps } from "quran-tools";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Box, Flex } from "@chakra-ui/react";
 import { InputString } from "@/components/Generic/Input";
+import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const quranService = useQuran();
-
-  const [rootsLoaded, setRootsLoaded] = useState(
-    quranService.isRootsDataLoaded
-  );
-
-  useEffect(() => {
-    const handleRootsLoaded = () => {
-      setRootsLoaded(true);
-    };
-
-    quranService.onRootsLoaded(handleRootsLoaded);
-
-    return () => {
-      quranService.onRootsLoaded(() => {}); // Reset callback
-    };
-  }, []);
+  const rootsLoaded = useRootsLoaded();
 
   const onChangeToken = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchToken(event.target.value);

@@ -17,10 +17,10 @@ import { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Flex } from "@chakra-ui/react";
-import useQuran from "@/context/useQuran";
+
+import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const PanelRoots = () => {
-  const quranService = useQuran();
   const dispatch = useAppDispatch();
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
@@ -33,21 +33,7 @@ const PanelRoots = () => {
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
-  const [rootsLoaded, setRootsLoaded] = useState(
-    quranService.isRootsDataLoaded
-  );
-
-  useEffect(() => {
-    const handleRootsLoaded = () => {
-      setRootsLoaded(true);
-    };
-
-    quranService.onRootsLoaded(handleRootsLoaded);
-
-    return () => {
-      quranService.onRootsLoaded(() => {}); // Reset callback
-    };
-  }, []);
+  const rootsLoaded = useRootsLoaded();
 
   useEffect(() => {
     dispatch(fetchRootNotes());

@@ -20,27 +20,13 @@ import RootComponent from "@/components/Pages/YourNotes/RootComponent";
 import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 
 import { Box, VStack } from "@chakra-ui/react";
+import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const RootNotes = () => {
-  const quranService = useQuran();
   const dispatch = useAppDispatch();
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
 
-  const [rootsLoaded, setRootsLoaded] = useState(
-    quranService.isRootsDataLoaded
-  );
-
-  useEffect(() => {
-    const handleRootsLoaded = () => {
-      setRootsLoaded(true);
-    };
-
-    quranService.onRootsLoaded(handleRootsLoaded);
-
-    return () => {
-      quranService.onRootsLoaded(() => {}); // Reset callback
-    };
-  }, []);
+  const rootsLoaded = useRootsLoaded();
 
   useEffect(() => {
     dispatch(fetchRootNotes());

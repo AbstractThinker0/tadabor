@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import useQuran from "@/context/useQuran";
 
 import { useAppDispatch } from "@/store";
@@ -9,6 +9,7 @@ import { rootProps } from "quran-tools";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { Box, Flex } from "@chakra-ui/react";
+import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 interface SelectionListRootsProps {
   isDisabled: boolean;
@@ -17,22 +18,7 @@ interface SelectionListRootsProps {
 
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
-    const quranService = useQuran();
-    const [rootsLoaded, setRootsLoaded] = useState(
-      quranService.isRootsDataLoaded
-    );
-
-    useEffect(() => {
-      const handleRootsLoaded = () => {
-        setRootsLoaded(true);
-      };
-
-      quranService.onRootsLoaded(handleRootsLoaded);
-
-      return () => {
-        quranService.onRootsLoaded(() => {}); // Reset callback
-      };
-    }, []);
+    const rootsLoaded = useRootsLoaded();
 
     return (
       <Flex

@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
-
-import useQuran from "@/context/useQuran";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 
@@ -14,10 +12,10 @@ import Display from "@/components/Pages/Inspector/Display";
 
 import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
+import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 function Inspector() {
   usePageNav("nav_inspector");
-  const quranService = useQuran();
   const dispatch = useAppDispatch();
 
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
@@ -26,21 +24,7 @@ function Inspector() {
     (state) => state.inspectorPage.currentChapter
   );
 
-  const [rootsLoaded, setRootsLoaded] = useState(
-    quranService.isRootsDataLoaded
-  );
-
-  useEffect(() => {
-    const handleRootsLoaded = () => {
-      setRootsLoaded(true);
-    };
-
-    quranService.onRootsLoaded(handleRootsLoaded);
-
-    return () => {
-      quranService.onRootsLoaded(() => {}); // Reset callback
-    };
-  }, []);
+  const rootsLoaded = useRootsLoaded();
 
   function handleSelectChapter(chapterID: string) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
