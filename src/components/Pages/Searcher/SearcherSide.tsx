@@ -98,7 +98,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
         quranService.searchRoots(searchString, {
           normalizeRoot: true,
           searchInclusive: true,
-          normalizeToken: false,
+          normalizeToken: true,
         })
       );
     });
