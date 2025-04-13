@@ -88,11 +88,11 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
 
   const filteredArray = useMemo(
     () =>
-      isDisabled
-        ? quranService.quranRoots
-        : quranService.quranRoots.filter((root) =>
-            root.name.startsWith(searchString)
-          ),
+      quranService.searchRoots(searchString, {
+        normalizeRoot: true,
+        normalizeToken: true,
+        searchInclusive: false,
+      }),
     [searchString, isDisabled]
   );
 
