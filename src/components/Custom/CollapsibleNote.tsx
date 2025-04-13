@@ -71,7 +71,7 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
   };
 
   return (
-    <Collapsible.Root open={isOpen} lazyMount>
+    <Collapsible.Root open={isOpen} lazyMount unmountOnExit>
       <Collapsible.Content>
         <FormText
           isEditable={isEditable}
