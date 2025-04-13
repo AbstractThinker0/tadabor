@@ -11,8 +11,6 @@ import { Flex } from "@chakra-ui/react";
 import { Provider } from "@/components/ui/provider";
 import { Toaster } from "@/components/ui/ToasterProvider";
 
-import "@/styles/main.css";
-
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
