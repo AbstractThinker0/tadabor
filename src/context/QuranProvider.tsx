@@ -23,25 +23,23 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
     async function fetchData() {
       try {
-        let response = await fetchChapters();
+        const [chapters, quran] = await Promise.all([
+          fetchChapters(),
+          fetchQuran(),
+        ]);
 
         if (clientLeft) return;
 
-        quranInstance.setChapters(response);
-
-        response = await fetchQuran();
-
-        if (clientLeft) return;
-
-        quranInstance.setQuran(response);
+        quranInstance.setChapters(chapters);
+        quranInstance.setQuran(quran);
 
         setIsLoading(false);
 
-        response = await fetchRoots();
+        const roots = await fetchRoots();
 
         if (clientLeft) return;
 
-        quranInstance.setRoots(response);
+        quranInstance.setRoots(roots);
       } catch (error) {
         fetchData();
         return;
