@@ -31,6 +31,7 @@ const SelectionListRoots = memo(
         mt="8px"
         mb="2px"
         minH="15vh"
+        height={"25vh"}
         maxH="25vh"
       >
         {!rootsLoaded ? (
