@@ -97,7 +97,7 @@ const ListSearchResults = ({
   }
 
   return (
-    <Box p={1}>
+    <Box dir="rtl" p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}

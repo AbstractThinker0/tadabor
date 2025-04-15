@@ -40,7 +40,6 @@ const ListTitle = ({ chapterName }: ListTitleProps) => {
       align="center"
       justifyContent={"center"}
       position="relative"
-      direction={"inherit"}
       borderTopRadius={"l2"}
     >
       <Box
@@ -116,7 +115,7 @@ const ListBody = () => {
   if (isPending) return <LoadingSpinner text="Loading verses..." />;
 
   return (
-    <Box py={1} px={"1rem"} ref={refVerses}>
+    <Box dir="rtl" py={1} px={"1rem"} ref={refVerses}>
       {stateVerses.map((verse: verseProps) => (
         <VerseItem
           key={verse.key}

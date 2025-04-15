@@ -47,7 +47,6 @@ const DisplayPanel = () => {
           minH="100%"
           bgColor={"brand.contrast"}
           borderRadius={5}
-          dir="rtl"
           border={"1px solid"}
           borderColor={"border.emphasized"}
         >
