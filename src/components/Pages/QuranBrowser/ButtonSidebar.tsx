@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { Button } from "@chakra-ui/react";
+import { Button, useBreakpointValue } from "@chakra-ui/react";
 
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { MdOutlineMenu } from "react-icons/md";
@@ -12,8 +12,15 @@ const ButtonSidebar = () => {
     (state) => state.qbPage.showSearchPanel
   );
 
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.qbPage.showSearchPanelMobile
+  );
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+
   const onTogglePanel = () => {
-    dispatch(qbPageActions.setSearchPanel(!showSearchPanel));
+    dispatch(qbPageActions.setSearchPanel(!isOpen));
   };
 
   return (
@@ -28,7 +35,7 @@ const ButtonSidebar = () => {
       _active={{ bgColor: "blue.700" }}
       boxShadow="md"
     >
-      {showSearchPanel ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
+      {isOpen ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
     </Button>
   );
 };
