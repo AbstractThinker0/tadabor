@@ -14,6 +14,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
+import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 import {
@@ -24,6 +25,8 @@ import {
   Heading,
   Text,
   StackSeparator,
+  Span,
+  Flex,
 } from "@chakra-ui/react";
 
 import { Tag } from "@/components/ui/tag";
@@ -156,14 +159,17 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
   )} ${searchType} "${searchingString}" ${searchScopeText}`;
 
   return (
-    <div dir="auto">
-      <Heading pb={3} size="2xl" color="blue.fg">
-        {searchText}
-      </Heading>
+    <Box>
+      <Flex alignItems={"center"}>
+        <ButtonSidebar />
+        <Span paddingInlineStart={"0.25rem"} fontSize={"2xl"} color="blue.fg">
+          {searchText}
+        </Span>
+      </Flex>
       {searchChapters.length !== 114 && (
         <ChaptersTags searchChapters={searchChapters} />
       )}
-    </div>
+    </Box>
   );
 };
 

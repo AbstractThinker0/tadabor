@@ -2,65 +2,38 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useAppSelector } from "@/store";
 
 import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
-import { Box, Flex } from "@chakra-ui/react";
+import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 
-import { GoSidebarExpand } from "react-icons/go";
-import { GoSidebarCollapse } from "react-icons/go";
+import { Box, Flex } from "@chakra-ui/react";
 
 interface ListTitleProps {
   chapterName: string;
 }
 
 const ListTitle = ({ chapterName }: ListTitleProps) => {
-  const dispatch = useAppDispatch();
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.qbPage.showSearchPanel
-  );
-
-  const onTogglePanel = () => {
-    dispatch(qbPageActions.setSearchPanel(!showSearchPanel));
-  };
-
   return (
     <Flex
       bgColor="bg.muted"
-      py={3}
-      px={4}
+      px={"0.25rem"}
       border="1px solid"
       borderColor="border.emphasized"
       align="center"
-      justifyContent={"center"}
-      position="relative"
+      justifyContent={"space-between"}
       borderTopRadius={"l2"}
     >
-      <Box
-        onClick={onTogglePanel}
-        position="absolute"
-        insetInlineStart="0.5rem"
-        fontSize={"3xl"}
-        cursor={"pointer"}
-      >
-        {showSearchPanel ? <GoSidebarCollapse /> : <GoSidebarExpand />}
-      </Box>
+      <ButtonSidebar />
 
-      <Flex
-        flex="1"
-        justify="center"
-        fontSize="3xl"
-        fontWeight="medium"
-        color="blue.focusRing"
-      >
+      <Flex fontSize="3xl" fontWeight="medium" color="blue.focusRing">
         سورة {chapterName}
       </Flex>
+      <Box width={"1rem"}></Box>
     </Flex>
   );
 };
