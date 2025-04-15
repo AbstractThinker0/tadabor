@@ -22,7 +22,9 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => {
           size="xl"
         />
       </Span>
-      <Span dir="auto">{text}</Span>
+      <Span color={"fg.muted"} dir="auto">
+        {text}
+      </Span>
     </Flex>
   );
 };
