@@ -17,17 +17,21 @@ const NoteContainer = ({
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
-    <Box pt={10}>
+    <Box px={"0.5rem"} pb={"0.5rem"} pt={"3rem"}>
       <Box
-        pt={2}
+        py={2}
         px={3}
         mb={2}
         border={"1px solid"}
         borderColor={"green.solid"}
-        borderRadius={"0.375rem"}
-        dir={inputDirection}
+        borderRadius={"2xl"}
       >
-        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} pb={2} mb={10}>
+        <Text
+          whiteSpace={"pre-wrap"}
+          fontSize={`${notesFS}rem`}
+          dir={inputDirection}
+          mb={"5.5rem"}
+        >
           {inputValue}
         </Text>
       </Box>

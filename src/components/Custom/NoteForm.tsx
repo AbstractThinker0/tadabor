@@ -25,7 +25,7 @@ const NoteForm = ({
   const { t } = useTranslation();
 
   return (
-    <Box as="form" onSubmit={onSubmitForm}>
+    <Box as="form" onSubmit={onSubmitForm} padding={"0.5rem"}>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
       <TextareaAutosize
         value={inputValue}
@@ -34,6 +34,8 @@ const NoteForm = ({
         lineHeight={"normal"}
         placeholder={t("text_form")}
         required
+        borderRadius={"2xl"}
+        colorPalette={"blue"}
       />
       <Box textAlign={"center"}>
         <ButtonSave />
