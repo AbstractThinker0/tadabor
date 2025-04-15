@@ -294,7 +294,7 @@ const RootOccurences = ({
         <Box
           padding={3}
           bgColor={"brand.contrast"}
-          maxH={"60vh"}
+          maxH={"65vh"}
           overflowY={"scroll"}
           onScroll={onScrollOccs}
           dir="rtl"
