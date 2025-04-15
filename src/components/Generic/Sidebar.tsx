@@ -27,6 +27,8 @@ const Sidebar = ({ isOpen, setOpenState, children }: SidebarProps) => {
           open={isOpen}
           onOpenChange={(e) => handleChangeOpen(e.open)}
           placement={"start"}
+          lazyMount
+          unmountOnExit
         >
           <Portal>
             <Drawer.Backdrop />
