@@ -112,7 +112,7 @@ const SelectionListChapters = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDirection="column" h="40%">
+    <Flex flexDirection="column" h="40vh">
       <InputString
         inputElementProps={{
           borderBottom: "none",

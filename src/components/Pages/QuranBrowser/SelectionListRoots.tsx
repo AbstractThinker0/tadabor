@@ -30,8 +30,8 @@ const SelectionListRoots = memo(
         borderRadius={6}
         mt="8px"
         mb="2px"
-        minH="15%"
-        maxH="25%"
+        minH="15vh"
+        maxH="25vh"
       >
         {!rootsLoaded ? (
           <LoadingSpinner text="Loading roots..." />

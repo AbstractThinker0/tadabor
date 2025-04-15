@@ -2,33 +2,67 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+
+import { GoSidebarExpand } from "react-icons/go";
+import { GoSidebarCollapse } from "react-icons/go";
 
 interface ListTitleProps {
   chapterName: string;
 }
 
 const ListTitle = ({ chapterName }: ListTitleProps) => {
+  const dispatch = useAppDispatch();
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.qbPage.showSearchPanel
+  );
+
+  const onTogglePanel = () => {
+    dispatch(qbPageActions.setSearchPanel(!showSearchPanel));
+  };
+
   return (
-    <Heading
-      textAlign="center"
-      bgColor={"bg.muted"}
-      color={"blue.focusRing"}
+    <Flex
+      bgColor="bg.muted"
       py={3}
-      size="3xl"
-      border={"1px solid"}
-      borderColor={"border.emphasized"}
-      fontWeight="500"
+      px={4}
+      border="1px solid"
+      borderColor="border.emphasized"
+      align="center"
+      justifyContent={"center"}
+      position="relative"
+      direction={"inherit"}
+      borderTopRadius={"l2"}
     >
-      سورة {chapterName}
-    </Heading>
+      <Box
+        onClick={onTogglePanel}
+        position="absolute"
+        insetInlineStart="0.5rem"
+        fontSize={"3xl"}
+        cursor={"pointer"}
+      >
+        {showSearchPanel ? <GoSidebarCollapse /> : <GoSidebarExpand />}
+      </Box>
+
+      <Flex
+        flex="1"
+        justify="center"
+        fontSize="3xl"
+        fontWeight="medium"
+        color="blue.focusRing"
+      >
+        سورة {chapterName}
+      </Flex>
+    </Flex>
   );
 };
 
@@ -82,7 +116,7 @@ const ListBody = () => {
   if (isPending) return <LoadingSpinner text="Loading verses..." />;
 
   return (
-    <Box p={1} ref={refVerses}>
+    <Box py={1} px={"1rem"} ref={refVerses}>
       {stateVerses.map((verse: verseProps) => (
         <VerseItem
           key={verse.key}

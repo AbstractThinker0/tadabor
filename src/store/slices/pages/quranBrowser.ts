@@ -22,6 +22,7 @@ interface qbStateProps {
   searchingMethod: SEARCH_METHOD;
   searchIndexes: searchIndexProps[];
   scrollKey: string;
+  showSearchPanel: boolean;
 }
 
 const initialState: qbStateProps = {
@@ -39,6 +40,7 @@ const initialState: qbStateProps = {
   searchingMethod: SEARCH_METHOD.WORD,
   searchIndexes: [],
   scrollKey: "",
+  showSearchPanel: true,
 };
 
 const qbPageSlice = createSlice({
@@ -145,6 +147,9 @@ const qbPageSlice = createSlice({
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
         state.scrollKey === action.payload ? "" : action.payload;
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
     },
   },
 });
