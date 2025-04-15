@@ -28,6 +28,53 @@ import { MdSearch } from "react-icons/md";
 
 const SearchPanel = () => {
   const quranService = useQuran();
+
+  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+
+  const searchString = useAppSelector((state) => state.qbPage.searchString);
+
+  const dispatch = useAppDispatch();
+
+  const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
+
+  const onSearchSubmit = () => {
+    if (isRootSearch) {
+      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+    } else {
+      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
+    }
+  };
+
+  const handleCurrentChapter = (chapterID: number) => {
+    dispatch(qbPageActions.gotoChapter(chapterID.toString()));
+  };
+
+  return (
+    <Flex
+      flexDirection="column"
+      fontSize="medium"
+      pt={2}
+      paddingLeft="min(0.5vw, 10px)"
+      paddingRight="min(0.5vw, 10px)"
+    >
+      <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
+      <SearchOptions />
+      <FormWordSearch
+        onSearchSubmit={onSearchSubmit}
+        searchString={searchString}
+      />
+      <SelectionListRoots
+        isDisabled={!isRootSearch}
+        searchString={searchString}
+      />
+      <SearchSuccessComponent />
+    </Flex>
+  );
+};
+
+SearchPanel.displayName = "SearchPanel";
+
+const SearchOptions = () => {
   const { t } = useTranslation();
 
   const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
@@ -41,8 +88,6 @@ const SearchPanel = () => {
   );
 
   const searchStart = useAppSelector((state) => state.qbPage.searchStart);
-
-  const searchString = useAppSelector((state) => state.qbPage.searchString);
 
   const dispatch = useAppDispatch();
 
@@ -64,18 +109,6 @@ const SearchPanel = () => {
     dispatch(qbPageActions.setSearchMethod(method));
   };
 
-  const onSearchSubmit = () => {
-    if (isRootSearch) {
-      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
-    } else {
-      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
-    }
-  };
-
-  const handleCurrentChapter = (chapterID: number) => {
-    dispatch(qbPageActions.gotoChapter(chapterID.toString()));
-  };
-
   const onChangeDiacritics = (checked: boolean) => {
     setSearchDiacritics(checked);
   };
@@ -89,65 +122,45 @@ const SearchPanel = () => {
   };
 
   return (
-    <Flex
-      flexDirection="column"
-      fontSize="medium"
-      pt={2}
-      paddingLeft="min(0.5vw, 10px)"
-      paddingRight="min(0.5vw, 10px)"
-    >
-      <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
-      <Box paddingInlineStart="6px">
-        <RadioSearchMethod
-          searchMethod={searchMethod}
-          setSearchMethod={setSearchMethod}
-        />
-        <Box>
+    <Box paddingInlineStart="6px">
+      <RadioSearchMethod
+        searchMethod={searchMethod}
+        setSearchMethod={setSearchMethod}
+      />
+      <Box>
+        <Checkbox
+          colorPalette={"blue"}
+          variant={"subtle"}
+          checked={searchDiacritics}
+          onCheckedChange={(e) => onChangeDiacritics(!!e.checked)}
+          disabled={isRootSearch}
+        >
+          {t("search_diacritics")}
+        </Checkbox>
+        <Wrap>
           <Checkbox
             colorPalette={"blue"}
             variant={"subtle"}
-            checked={searchDiacritics}
-            onCheckedChange={(e) => onChangeDiacritics(!!e.checked)}
+            checked={searchIdentical}
+            onCheckedChange={(e) => onChangeIdentical(!!e.checked)}
             disabled={isRootSearch}
           >
-            {t("search_diacritics")}
+            {t("search_identical")}
           </Checkbox>
-          <Wrap>
-            <Checkbox
-              colorPalette={"blue"}
-              variant={"subtle"}
-              checked={searchIdentical}
-              onCheckedChange={(e) => onChangeIdentical(!!e.checked)}
-              disabled={isRootSearch}
-            >
-              {t("search_identical")}
-            </Checkbox>
-            <Checkbox
-              colorPalette={"blue"}
-              variant={"subtle"}
-              checked={searchStart}
-              onCheckedChange={(e) => onChangeStart(!!e.checked)}
-              disabled={isRootSearch}
-            >
-              {t("search_start")}
-            </Checkbox>
-          </Wrap>
-        </Box>
+          <Checkbox
+            colorPalette={"blue"}
+            variant={"subtle"}
+            checked={searchStart}
+            onCheckedChange={(e) => onChangeStart(!!e.checked)}
+            disabled={isRootSearch}
+          >
+            {t("search_start")}
+          </Checkbox>
+        </Wrap>
       </Box>
-      <FormWordSearch
-        onSearchSubmit={onSearchSubmit}
-        searchString={searchString}
-      />
-      <SelectionListRoots
-        isDisabled={!isRootSearch}
-        searchString={searchString}
-      />
-      <SearchSuccessComponent />
-    </Flex>
+    </Box>
   );
 };
-
-SearchPanel.displayName = "SearchPanel";
 
 interface RadioSearchMethodProps {
   searchMethod: string;
