@@ -23,6 +23,7 @@ interface qbStateProps {
   searchIndexes: searchIndexProps[];
   scrollKey: string;
   showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: qbStateProps = {
@@ -41,6 +42,7 @@ const initialState: qbStateProps = {
   searchIndexes: [],
   scrollKey: "",
   showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 const qbPageSlice = createSlice({
@@ -150,6 +152,7 @@ const qbPageSlice = createSlice({
     },
     setSearchPanel: (state, action: PayloadAction<boolean>) => {
       state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
 });

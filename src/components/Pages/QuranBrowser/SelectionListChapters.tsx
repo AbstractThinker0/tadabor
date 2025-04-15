@@ -112,7 +112,7 @@ const SelectionListChapters = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDirection="column" h="40vh">
+    <Flex flexDirection="column" h="38vh">
       <InputString
         inputElementProps={{
           borderBottom: "none",
@@ -138,6 +138,7 @@ const SelectionListChapters = ({
           .map((chapter) => (
             <Flex
               px="14px"
+              py={"2px"}
               cursor="pointer"
               key={chapter.id}
               data-id={chapter.id}

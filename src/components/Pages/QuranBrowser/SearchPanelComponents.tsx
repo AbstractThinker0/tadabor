@@ -84,7 +84,7 @@ const SearchOptions = () => {
         >
           {t("search_diacritics")}
         </Checkbox>
-        <Wrap>
+        <Wrap pt={"2px"}>
           <Checkbox
             colorPalette={"blue"}
             variant={"subtle"}

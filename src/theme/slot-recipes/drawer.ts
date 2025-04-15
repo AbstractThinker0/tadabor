@@ -1,10 +1,23 @@
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from "@chakra-ui/react";
 
 export const drawerSlotRecipe = defineSlotRecipe({
-  slots: ["trigger", "backdrop", "positioner", "content", "title", "description", "closeTrigger", "header", "body", "footer", "backdrop"],
+  slots: [
+    "trigger",
+    "backdrop",
+    "positioner",
+    "content",
+    "title",
+    "description",
+    "closeTrigger",
+    "header",
+    "body",
+    "footer",
+    "backdrop",
+  ],
   className: "chakra-drawer",
   base: {
     backdrop: {
+      direction: "inherit",
       bg: "blackAlpha.500",
       pos: "fixed",
       insetInlineStart: 0,
@@ -30,8 +43,10 @@ export const drawerSlotRecipe = defineSlotRecipe({
       top: 0,
       zIndex: "modal",
       overscrollBehaviorY: "none",
+      direction: "inherit",
     },
     content: {
+      direction: "inherit",
       display: "flex",
       flexDirection: "column",
       position: "relative",
@@ -198,4 +213,4 @@ export const drawerSlotRecipe = defineSlotRecipe({
     size: "xs",
     placement: "end",
   },
-})
+});

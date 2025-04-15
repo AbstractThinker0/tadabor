@@ -100,7 +100,7 @@ const ListSearchResults = ({
   }
 
   return (
-    <Box dir="rtl" p={1}>
+    <Box p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
@@ -114,7 +114,7 @@ const ListSearchResults = ({
       {isPending ? (
         <LoadingSpinner text="Loading verses..." />
       ) : (
-        <Box ref={refListVerses}>
+        <Box dir="rtl" ref={refListVerses}>
           {stateVerses.map((verse) => (
             <VerseItem
               key={verse.key}
@@ -222,6 +222,7 @@ const DerivationsComponent = ({
     <>
       <Separator pb={1} borderColor={"border.emphasized"} />
       <HStack
+        dir="rtl"
         wrap="wrap"
         p={2}
         separator={<StackSeparator border={"none"}>-</StackSeparator>}
