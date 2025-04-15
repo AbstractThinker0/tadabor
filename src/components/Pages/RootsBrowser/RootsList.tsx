@@ -37,6 +37,7 @@ interface RootsListProps {
   handleVerseTab: (verseKey: string) => void;
   stateRoots: rootProps[];
   handleRoots: (roots: rootProps[]) => void;
+  itemsCount: number;
 }
 
 const RootsList = memo(
@@ -46,10 +47,9 @@ const RootsList = memo(
     handleVerseTab,
     stateRoots,
     handleRoots,
+    itemsCount,
   }: RootsListProps) => {
     const quranService = useQuran();
-
-    const [itemsCount, setItemsCount] = useState(60);
 
     const [isPending, startTransition] = useTransition();
 
@@ -65,25 +65,8 @@ const RootsList = memo(
       });
     }, [searchString, searchInclusive]);
 
-    const fetchMoreData = () => {
-      setItemsCount((state) => state + 15);
-    };
-
-    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
-      const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-      // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-      if (scrollHeight - scrollTop <= clientHeight + 10) {
-        fetchMoreData();
-      }
-    }
-
     return (
-      <Box
-        overflowY={"scroll"}
-        maxH={"100%"}
-        height={"100%"}
-        onScroll={handleScroll}
-      >
+      <Box>
         {isPending ? (
           <LoadingSpinner />
         ) : (

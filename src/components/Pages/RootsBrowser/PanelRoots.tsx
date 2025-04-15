@@ -32,6 +32,7 @@ const PanelRoots = () => {
   );
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
+  const [itemsCount, setItemsCount] = useState(60);
 
   const rootsLoaded = useRootsLoaded();
 
@@ -49,12 +50,25 @@ const PanelRoots = () => {
     dispatch(rbPageActions.setScrollKey(verseKey));
   };
 
+  const fetchMoreData = () => {
+    setItemsCount((state) => state + 15);
+  };
+
+  function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
+    if (scrollHeight - scrollTop <= clientHeight + 10) {
+      fetchMoreData();
+    }
+  }
+
   return (
     <Flex
       flexDirection={"column"}
-      overflow={"hidden"}
+      overflowY={"scroll"}
       maxH={"100%"}
       height={"100%"}
+      onScroll={handleScroll}
     >
       <SearchForm
         searchString={searchString}
@@ -71,6 +85,7 @@ const PanelRoots = () => {
           handleVerseTab={handleVerseTab}
           stateRoots={stateRoots}
           handleRoots={handleRoots}
+          itemsCount={itemsCount}
         />
       )}
     </Flex>
