@@ -51,7 +51,7 @@ const Menu = ({
       top={"0"}
       zIndex={"dropdown"}
     >
-      <Box w={"15vw"}>
+      <Box maxW={"30vw"}>
         <NativeSelect.Root>
           <NativeSelect.Field
             onChange={onChangeChapter}
