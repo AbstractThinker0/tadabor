@@ -8,7 +8,7 @@ import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { Sidebar } from "@/components/Generic/SideBar";
+import { Sidebar } from "@/components/Generic/Sidebar";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";

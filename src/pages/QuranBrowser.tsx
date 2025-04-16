@@ -5,7 +5,7 @@ import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
 import DisplayPanel from "@/components/Pages/QuranBrowser/DisplayPanel";
 
-import { Sidebar } from "@/components/Generic/SideBar";
+import { Sidebar } from "@/components/Generic/Sidebar";
 
 import { usePageNav } from "@/hooks/usePageNav";
 

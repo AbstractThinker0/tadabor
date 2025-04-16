@@ -106,7 +106,7 @@ const ChaptersListAdvanced = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDir={"column"} minH={"45%"} maxH={"45%"}>
+    <Flex flexDir={"column"} minH={"45vh"} maxH={"45vh"}>
       <InputString
         inputElementProps={{
           placeholder: quranService.getChapterName(currentChapter),
@@ -133,7 +133,7 @@ const ChaptersListAdvanced = ({
               key={chapter.id}
               cursor={"pointer"}
               px={"5px"}
-              py={"2px"}
+              py={"3px"}
               aria-selected={currentChapter === chapter.id}
               _selected={{ bgColor: "gray.emphasized" }}
             >

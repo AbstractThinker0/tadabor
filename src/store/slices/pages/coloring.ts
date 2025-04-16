@@ -14,6 +14,8 @@ export interface stateProps {
   currentColor: colorProps | null;
   selectedChapters: selectedChaptersType;
   scrollKey: string;
+  showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: stateProps = {
@@ -25,6 +27,8 @@ const initialState: stateProps = {
   currentColor: null,
   selectedChapters: initialSelectedChapters,
   scrollKey: "",
+  showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 const coloringPageSlice = createSlice({
@@ -98,6 +102,10 @@ const coloringPageSlice = createSlice({
     gotoChapter: (state, action: PayloadAction<number>) => {
       state.selectedColors = {};
       state.currentChapter = action.payload;
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
 });

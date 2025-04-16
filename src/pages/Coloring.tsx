@@ -7,12 +7,14 @@ import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
+import { Sidebar } from "@/components/Generic/Sidebar";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { coloredProps } from "@/components/Pages/Coloring/consts";
 import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
-import { Flex } from "@chakra-ui/react";
+import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Coloring() {
@@ -96,11 +98,28 @@ function Coloring() {
     }
   }, []);
 
+  const showSearchPanel = useAppSelector(
+    (state) => state.coloringPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.coloringPage.showSearchPanelMobile
+  );
+
+  // Use Chakra's breakpoint to determine if it's mobile
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+  const setOpenState = (state: boolean) => {
+    dispatch(coloringPageActions.setSearchPanel(state));
+  };
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
     <Flex overflow={"hidden"} maxH={"100%"} h={"100%"} bgColor={"brand.bg"}>
-      <ChaptersSide />
+      <Sidebar isOpen={isOpen} setOpenState={setOpenState}>
+        <ChaptersSide />
+      </Sidebar>
       {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
     </Flex>
   );

@@ -108,6 +108,7 @@ const FormText = ({
 }: FormTextProps) => {
   return (
     <Box
+      color={"fg"}
       bgColor={"bg.panel"}
       pb={1}
       px={1}

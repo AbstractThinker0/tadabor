@@ -1,4 +1,4 @@
-import { useEffect, memo, useTransition, useState, useCallback } from "react";
+import { useEffect, useTransition, useState, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
 import { verseProps } from "quran-tools";
@@ -11,6 +11,8 @@ import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
+import { ListTitle } from "@/components/Pages/Coloring/ListTitle";
+import { VerseComponent } from "@/components/Pages/Coloring/VerseComponent";
 import VerseModal from "@/components/Pages/Coloring/VerseModal";
 import { colorProps, coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
@@ -27,17 +29,16 @@ const VersesSide = () => {
   );
 
   return (
-    <Flex flexDir={"column"} flex={1} w={"100%"} p={1}>
+    <Flex flexDir={"column"} flex={1} pt={2} ps={1}>
       <Box
         overflowY={"scroll"}
         flex={1}
-        px={4}
-        py={1}
         bgColor={"brand.contrast"}
         dir="rtl"
         color={"inherit"}
         border={"1px solid"}
         borderColor={"border"}
+        borderRadius={"l3"}
       >
         {Object.keys(selectedColors).length ? (
           <SelectedContainter openVerseModal={onOpen} />
@@ -93,7 +94,7 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
 
   return (
     <>
-      <Box pt={"2px"} pb={"5px"} dir="ltr">
+      <Box pt={"2px"} pb={"5px"} px={1} dir="ltr">
         <Flex flexWrap={"wrap"} gap={"5px"} alignItems="center">
           <Box lineHeight={"short"} fontWeight={"bold"}>
             Selected colors:
@@ -185,7 +186,7 @@ function SelectedVerses({
   );
 
   return (
-    <div>
+    <Box px={2}>
       {selectedVerses.length ? (
         selectedVerses
           .sort((keyA, KeyB) => {
@@ -211,7 +212,7 @@ function SelectedVerses({
           There are no verses matching the selected colors.
         </Text>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -317,10 +318,8 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
 
   return (
     <>
-      <Box textAlign={"center"} fontSize={"larger"} color={"blue.500"} py={0}>
-        سورة {quranService.getChapterName(currentChapter)}
-      </Box>
-      <div ref={handleVerseListRef}>
+      <ListTitle />
+      <Box px={2} ref={handleVerseListRef}>
         {stateVerses.map((verse) => (
           <Box
             p={"5px"}
@@ -348,48 +347,9 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
             <VerseComponent verse={verse} openVerseModal={openVerseModal} />
           </Box>
         ))}
-      </div>
+      </Box>
     </>
   );
 };
-
-interface VerseComponentProps {
-  verse: verseProps;
-  openVerseModal: () => void;
-}
-
-const VerseComponent = memo(
-  ({ verse, openVerseModal }: VerseComponentProps) => {
-    const { value: isOpen, toggle: setOpen } = useBoolean();
-    const dispatch = useAppDispatch();
-
-    const onClickVerseColor = (verse: verseProps) => {
-      dispatch(coloringPageActions.setCurrentVerse(verse));
-      openVerseModal();
-    };
-
-    function onClickVerse() {
-      dispatch(coloringPageActions.setScrollKey(verse.key));
-    }
-
-    return (
-      <>
-        <VerseContainer>
-          {verse.versetext}{" "}
-          <ButtonVerse color={"inherit"} onClick={onClickVerse}>
-            ({verse.verseid})
-          </ButtonVerse>
-          <ButtonExpand color={"inherit"} onClick={setOpen} />
-          <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
-            🎨
-          </Button>
-        </VerseContainer>
-        <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-      </>
-    );
-  }
-);
-
-VerseComponent.displayName = "VerseComponent";
 
 export default VersesSide;
