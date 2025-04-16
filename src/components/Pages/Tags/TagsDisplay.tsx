@@ -13,6 +13,8 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
+import { ListTitle } from "@/components/Pages/Tags/ListTitle";
+import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";
 
 import { Box, Button, Flex, Span, Tag, useDisclosure } from "@chakra-ui/react";
 
@@ -20,6 +22,42 @@ import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
 
 function TagsDisplay() {
+  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+
+  const { open, onOpen, onClose } = useDisclosure();
+
+  return (
+    <Flex
+      flexDir={"column"}
+      overflowY={"scroll"}
+      w={"100%"}
+      minH={"100%"}
+      flex={1}
+      padding={"0.5rem"}
+    >
+      <Flex
+        border={"1px solid"}
+        borderColor={"border.emphasized"}
+        borderRadius={"l3"}
+        flex={1}
+        flexDir={"column"}
+      >
+        {Object.keys(selectedTags).length ? (
+          <SelectedContainer onOpenVerseModal={onOpen} />
+        ) : (
+          <ListVerses onOpenVerseModal={onOpen} />
+        )}
+      </Flex>
+      <VerseTagsModal isOpen={open} onClose={onClose} />
+    </Flex>
+  );
+}
+
+interface SelectedContainerProps {
+  onOpenVerseModal: () => void;
+}
+
+const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
 
@@ -32,8 +70,6 @@ function TagsDisplay() {
   const tags = useAppSelector((state) => state.tagsPage.tags);
 
   const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
-
-  const { open, onOpen, onClose } = useDisclosure();
 
   function onClickDeleteSelected(tagID: string) {
     dispatch(tagsPageActions.deselectTag(tagID));
@@ -59,101 +95,79 @@ function TagsDisplay() {
   };
 
   return (
-    <Flex
-      flexDir={"column"}
-      overflowY={"scroll"}
-      w={"100%"}
-      minH={"100%"}
-      flex={1}
-      padding={"0.5rem"}
-    >
-      <Flex
-        border={"1px solid"}
-        borderColor={"border.emphasized"}
-        borderRadius={"l3"}
-        flex={1}
-        flexDir={"column"}
-        dir="rtl"
-      >
-        {Object.keys(selectedTags).length ? (
-          <>
-            <Box p={1}>
-              <Flex alignItems={"center"} gap={"0.5rem"} dir="ltr">
-                <Box lineHeight={"short"} fontWeight={"bold"}>
-                  Selected tags:
-                </Box>
-                <Flex gap={"5px"} flexWrap={"wrap"}>
-                  {Object.keys(selectedTags).map((tagID) => (
-                    <Tag.Root
-                      size="lg"
-                      colorPalette={"yellow"}
-                      key={tagID}
-                      wordBreak={"break-all"}
-                    >
-                      <Tag.Label>{selectedTags[tagID].tagDisplay}</Tag.Label>
-                      <Tag.EndElement>
-                        <Tag.CloseTrigger
-                          onClick={() => onClickDeleteSelected(tagID)}
-                        />
-                      </Tag.EndElement>
-                    </Tag.Root>
-                  ))}
-                </Flex>
-              </Flex>
-              <Flex alignItems="center" flexWrap={"wrap"} gap={"5px"} dir="ltr">
-                <Box lineHeight={"short"} fontWeight={"bold"}>
-                  Selected chapters:
-                </Box>
-                {chaptersScope.length === 114 ? (
-                  <Box fontWeight={"bold"}>All chapters.</Box>
-                ) : chaptersScope.length === 0 ? (
-                  <Box fontWeight={"bold"}>No chapters selected.</Box>
-                ) : (
-                  chaptersScope.map((chapterID, index) => (
-                    <Tag.Root
-                      colorPalette="green"
-                      size="lg"
-                      variant={"solid"}
-                      key={index}
-                    >
-                      <Tag.Label overflow={"visible"}>
-                        {quranService.getChapterName(chapterID)}
-                      </Tag.Label>
-                      <Tag.EndElement>
-                        <Tag.CloseTrigger
-                          onClick={() => onClickCloseChapter(chapterID)}
-                        />
-                      </Tag.EndElement>
-                    </Tag.Root>
-                  ))
-                )}
-              </Flex>
+    <>
+      <Flex p={1}>
+        <Box pt={1} paddingEnd={1}>
+          <ButtonSidebar />
+        </Box>
+        <Box flex={1} dir="ltr">
+          <Flex alignItems={"center"} gap={"0.5rem"}>
+            <Box lineHeight={"short"} fontWeight={"bold"}>
+              Selected tags:
             </Box>
-            {chaptersScope.length ? (
-              <SelectedVerses
-                selectedTags={selectedTags}
-                tags={tags}
-                versesTags={getSelectedVerses()}
-                onOpenVerseModal={onOpen}
-              />
+            <Flex gap={"5px"} flexWrap={"wrap"}>
+              {Object.keys(selectedTags).map((tagID) => (
+                <Tag.Root
+                  size="lg"
+                  colorPalette={"yellow"}
+                  key={tagID}
+                  wordBreak={"break-all"}
+                >
+                  <Tag.Label>{selectedTags[tagID].tagDisplay}</Tag.Label>
+                  <Tag.EndElement>
+                    <Tag.CloseTrigger
+                      onClick={() => onClickDeleteSelected(tagID)}
+                    />
+                  </Tag.EndElement>
+                </Tag.Root>
+              ))}
+            </Flex>
+          </Flex>
+          <Flex alignItems="center" flexWrap={"wrap"} gap={"5px"}>
+            <Box lineHeight={"short"} fontWeight={"bold"}>
+              Selected chapters:
+            </Box>
+            {chaptersScope.length === 114 ? (
+              <Box fontWeight={"bold"}>All chapters.</Box>
+            ) : chaptersScope.length === 0 ? (
+              <Box fontWeight={"bold"}>No chapters selected.</Box>
             ) : (
-              <Box textAlign={"center"} dir="ltr">
-                You have to select at least one chapter.
-              </Box>
+              chaptersScope.map((chapterID, index) => (
+                <Tag.Root
+                  colorPalette="green"
+                  size="lg"
+                  variant={"solid"}
+                  key={index}
+                >
+                  <Tag.Label overflow={"visible"}>
+                    {quranService.getChapterName(chapterID)}
+                  </Tag.Label>
+                  <Tag.EndElement>
+                    <Tag.CloseTrigger
+                      onClick={() => onClickCloseChapter(chapterID)}
+                    />
+                  </Tag.EndElement>
+                </Tag.Root>
+              ))
             )}
-          </>
-        ) : (
-          <ListVerses
-            onOpenVerseModal={onOpen}
-            versesTags={versesTags}
-            tags={tags}
-          />
-        )}
+          </Flex>
+        </Box>
       </Flex>
-      <VerseTagsModal isOpen={open} onClose={onClose} />
-    </Flex>
+      {chaptersScope.length ? (
+        <SelectedVerses
+          selectedTags={selectedTags}
+          tags={tags}
+          versesTags={getSelectedVerses()}
+          onOpenVerseModal={onOpenVerseModal}
+        />
+      ) : (
+        <Box textAlign={"center"} dir="ltr">
+          You have to select at least one chapter.
+        </Box>
+      )}
+    </>
   );
-}
+};
 
 interface SelectedVersesProps {
   selectedTags: tagsProps;
@@ -256,99 +270,90 @@ const SelectedVerseComponent = ({
 };
 
 interface ListVersesProps {
-  versesTags: versesTagsProps;
-  tags: tagsProps;
   onOpenVerseModal: () => void;
 }
 
-const ListVerses = memo(
-  ({ versesTags, tags, onOpenVerseModal }: ListVersesProps) => {
-    const quranService = useQuran();
+const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
+  const quranService = useQuran();
 
-    const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
-    const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-    const currentChapter = useAppSelector(
-      (state) => state.tagsPage.currentChapter
-    );
+  const tags = useAppSelector((state) => state.tagsPage.tags);
 
-    const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
+  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
 
-    const refVerses = useRef<HTMLDivElement>(null);
+  const currentChapter = useAppSelector(
+    (state) => state.tagsPage.currentChapter
+  );
 
-    // Handling scroll
-    useEffect(() => {
-      if (refVerses.current && scrollKey) {
-        const verseToHighlight = refVerses.current.querySelector(
-          `[data-id="${scrollKey}"]`
-        ) as HTMLDivElement;
+  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
 
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
+  const refVerses = useRef<HTMLDivElement>(null);
+
+  // Handling scroll
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
+
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
-    }, [scrollKey, isPending]);
+    }
+  }, [scrollKey, isPending]);
 
-    useEffect(() => {
-      //
-      startTransition(() => {
-        setStateVerses(quranService.getVerses(currentChapter));
-      });
-    }, [currentChapter]);
+  useEffect(() => {
+    //
+    startTransition(() => {
+      setStateVerses(quranService.getVerses(currentChapter));
+    });
+  }, [currentChapter]);
 
-    return (
-      <>
-        <Box
-          bgColor={"gray.emphasized"}
-          textAlign={"center"}
-          fontSize={"larger"}
-          color={"teal.fg"}
-          borderBottom={"1px solid"}
-          borderColor={"border.emphasized"}
-          py={1}
-        >
-          سورة {quranService.getChapterName(currentChapter)}
-        </Box>
-        <Flex
-          flexDirection={"column"}
-          flex={1}
-          bgColor={"brand.contrast"}
-          p={1}
-          ref={refVerses}
-          borderBottomRadius={"l3"}
-        >
-          {isPending ? (
-            <LoadingSpinner />
-          ) : (
-            stateVerses.map((verse) => (
-              <Box
-                key={verse.key}
-                data-id={verse.key}
-                aria-selected={scrollKey === verse.key}
-                _selected={{ bgColor: "blue.emphasized" }}
-                borderBottom={"1.5px solid"}
-                borderColor={"border.emphasized"}
-                p={"4px"}
-              >
-                {versesTags[verse.key] !== undefined && (
-                  <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-                )}
-                <ListVerseComponent
-                  onOpenVerseModal={onOpenVerseModal}
-                  verse={verse}
-                />
-              </Box>
-            ))
-          )}
-        </Flex>
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <ListTitle />
+      <Flex
+        flexDirection={"column"}
+        flex={1}
+        bgColor={"brand.contrast"}
+        p={1}
+        ref={refVerses}
+        borderBottomRadius={"l3"}
+        dir="rtl"
+      >
+        {isPending ? (
+          <LoadingSpinner />
+        ) : (
+          stateVerses.map((verse) => (
+            <Box
+              key={verse.key}
+              data-id={verse.key}
+              aria-selected={scrollKey === verse.key}
+              _selected={{ bgColor: "blue.emphasized" }}
+              borderBottom={"1.5px solid"}
+              borderColor={"border.emphasized"}
+              p={"4px"}
+            >
+              {versesTags[verse.key] !== undefined && (
+                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+              )}
+              <ListVerseComponent
+                onOpenVerseModal={onOpenVerseModal}
+                verse={verse}
+              />
+            </Box>
+          ))
+        )}
+      </Flex>
+    </>
+  );
+});
 
 ListVerses.displayName = "ListVerses";
 

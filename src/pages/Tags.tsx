@@ -7,6 +7,7 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 import { dbFuncs } from "@/util/db";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { Sidebar } from "@/components/Generic/Sidebar";
 
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import TagsSide from "@/components/Pages/Tags/TagsSide";
@@ -67,11 +68,29 @@ function Tags() {
     };
   }, []);
 
+  const showSearchPanel = useAppSelector(
+    (state) => state.tagsPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.tagsPage.showSearchPanelMobile
+  );
+
+  const setOpenState = (state: boolean) => {
+    dispatch(tagsPageActions.setSearchPanel(state));
+  };
+
   if (loadingState) return <LoadingSpinner />;
 
   return (
     <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
-      <TagsSide />
+      <Sidebar
+        isOpenMobile={showSearchPanelMobile}
+        isOpenDesktop={showSearchPanel}
+        setOpenState={setOpenState}
+      >
+        <TagsSide />
+      </Sidebar>
       {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}
     </Flex>
   );

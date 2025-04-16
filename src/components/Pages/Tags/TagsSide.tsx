@@ -114,8 +114,8 @@ const SideList = ({
   return (
     <Flex
       flexDir={"column"}
-      minH={"40%"}
-      maxH={"50%"}
+      minH={"40vh"}
+      maxH={"40vh"}
       marginTop={"1rem"}
       padding={"10px"}
       maxW={"300px"}

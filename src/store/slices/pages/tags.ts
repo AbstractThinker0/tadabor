@@ -18,6 +18,8 @@ interface tagsStateProps {
   currentVerse: verseProps | null;
   selectedTags: tagsProps;
   scrollKey: string;
+  showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: tagsStateProps = {
@@ -29,6 +31,8 @@ const initialState: tagsStateProps = {
   currentVerse: null,
   selectedTags: {},
   scrollKey: "",
+  showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 const tagsPageSlice = createSlice({
@@ -100,6 +104,10 @@ const tagsPageSlice = createSlice({
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
         state.scrollKey === action.payload ? "" : action.payload;
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
 });
