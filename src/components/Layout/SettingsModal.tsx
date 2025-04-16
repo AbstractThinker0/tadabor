@@ -132,7 +132,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 <Heading size="md">Quran Font Size:</Heading>
                 <Slider
                   value={[quranFS]}
-                  min={1}
+                  min={0.8}
                   max={4}
                   step={0.125}
                   onValueChange={(e) => onChangeQFS(e.value)}
@@ -156,7 +156,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 <Heading size="md">Notes Font Size:</Heading>
                 <Slider
                   value={[notesFS]}
-                  min={1}
+                  min={0.8}
                   max={4}
                   step={0.125}
                   onValueChange={(e) => onChangeNFS(e.value)}

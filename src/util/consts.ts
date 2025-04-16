@@ -6,7 +6,7 @@ import { selectedChaptersType } from "@/types";
 */
 
 const qfsStored = "qfsStored";
-const qfsDefault = 1.625;
+const qfsDefault = 1.5;
 
 const nfsStored = "nfsStored";
 const nfsDefault = 1.25;
