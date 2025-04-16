@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { inspectorPageActions } from "@/store/slices/pages/inspector";
+
+import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
 import { Box } from "@chakra-ui/react";
@@ -10,7 +13,6 @@ interface DisplayProps {
 }
 
 const Display = ({ currentChapter }: DisplayProps) => {
-  const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
   // Reset scroll whenever we switch from one chapter to another
@@ -30,20 +32,39 @@ const Display = ({ currentChapter }: DisplayProps) => {
         color={"inherit"}
         borderRadius={"l3"}
       >
-        <Box
-          textAlign={"center"}
-          fontSize={"x-large"}
-          color={"blue.500"}
-          bgColor={"bg.emphasized"}
-          borderBottom={"1px solid"}
-          borderColor={"border.emphasized"}
-          p={1}
-        >
-          سورة {quranService.getChapterName(currentChapter)}
-        </Box>
+        <ListTitle />
         <ListVerses currentChapter={currentChapter} />
       </Box>
     </Box>
+  );
+};
+
+const ListTitle = () => {
+  const selectChapter = useAppSelector(
+    (state) => state.inspectorPage.currentChapter
+  );
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanelMobile
+  );
+
+  const dispatch = useAppDispatch();
+
+  const onTogglePanel = (state: boolean) => {
+    dispatch(inspectorPageActions.setSearchPanel(state));
+  };
+
+  return (
+    <ChapterHeader
+      chapterID={Number(selectChapter)}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
+      onTogglePanel={onTogglePanel}
+    />
   );
 };
 

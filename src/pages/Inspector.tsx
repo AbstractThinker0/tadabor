@@ -6,11 +6,12 @@ import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 
+import { Sidebar } from "@/components/Generic/Sidebar";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import Display from "@/components/Pages/Inspector/Display";
 
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
@@ -35,6 +36,18 @@ function Inspector() {
     dispatch(fetchVerseNotes());
   }, []);
 
+  const showSearchPanel = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanelMobile
+  );
+
+  const setOpenState = (state: boolean) => {
+    dispatch(inspectorPageActions.setSearchPanel(state));
+  };
+
   return (
     <Flex
       bgColor={"brand.bg"}
@@ -42,16 +55,18 @@ function Inspector() {
       maxH={"100%"}
       height={"100%"}
     >
-      <Flex
-        paddingInlineStart={"10px"}
-        paddingInlineEnd={"1px"}
-        paddingTop={"5px"}
+      <Sidebar
+        isOpenMobile={showSearchPanelMobile}
+        isOpenDesktop={showSearchPanel}
+        setOpenState={setOpenState}
       >
-        <ChaptersList
-          selectChapter={currentChapter}
-          handleChapterChange={handleSelectChapter}
-        />
-      </Flex>
+        <Box px={"10px"} paddingTop={"5px"}>
+          <ChaptersList
+            selectChapter={currentChapter}
+            handleChapterChange={handleSelectChapter}
+          />
+        </Box>
+      </Sidebar>
       {isVNotesLoading || !rootsLoaded ? (
         <LoadingSpinner />
       ) : (
