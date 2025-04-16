@@ -25,6 +25,8 @@ interface LettersPageState {
   dataLoading: boolean;
   dataComplete: boolean;
   dataError: boolean;
+  showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: LettersPageState = {
@@ -44,6 +46,8 @@ const initialState: LettersPageState = {
   dataLoading: true,
   dataComplete: false,
   dataError: false,
+  showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 export const fetchLettersDefinitions = createAsyncThunk<
@@ -179,6 +183,10 @@ const lettersPageSlice = createSlice({
         letter_role: action.payload.role,
         def_id: action.payload.def_id,
       };
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
   extraReducers: (builder) => {

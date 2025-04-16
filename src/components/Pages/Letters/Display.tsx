@@ -1,14 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import useQuran from "@/context/useQuran";
-
 import { useAppSelector } from "@/store";
 
+import { ListTitle } from "@/components/Pages/Letters/ListTitle";
 import ListVerses from "@/components/Pages/Letters/ListVerses";
 import { Box } from "@chakra-ui/react";
 
 const Display = () => {
-  const quranService = useQuran();
   const refDisplay = useRef<HTMLDivElement>(null);
 
   const currentChapter = useAppSelector(
@@ -38,14 +36,7 @@ const Display = () => {
         border={"1px solid"}
         borderColor={"border"}
       >
-        <Box
-          textAlign={"center"}
-          color={"blue.fg"}
-          fontSize={"xx-large"}
-          py={1}
-        >
-          سورة {quranService.getChapterName(currentChapter)}
-        </Box>
+        <ListTitle />
         <ListVerses />
       </Box>
     </Box>

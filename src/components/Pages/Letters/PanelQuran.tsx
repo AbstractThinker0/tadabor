@@ -7,8 +7,10 @@ import { lettersPageActions } from "@/store/slices/pages/letters";
 import Display from "@/components/Pages/Letters/Display";
 import ChaptersList from "@/components/Custom/ChaptersList";
 
+import { Sidebar } from "@/components/Generic/Sidebar";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { Flex } from "@chakra-ui/react";
+
+import { Box, Flex } from "@chakra-ui/react";
 
 interface PanelQuranProps {
   isVisible: boolean;
@@ -32,14 +34,32 @@ const PanelQuran = memo(
       dispatch(fetchVerseNotes());
     }, []);
 
+    const showSearchPanel = useAppSelector(
+      (state) => state.lettersPage.showSearchPanel
+    );
+
+    const showSearchPanelMobile = useAppSelector(
+      (state) => state.lettersPage.showSearchPanelMobile
+    );
+
+    const setOpenState = (state: boolean) => {
+      dispatch(lettersPageActions.setSearchPanel(state));
+    };
+
     return (
       <Flex overflow={"hidden"} maxH={"100%"} height={"100%"}>
-        <Flex padding={1}>
-          <ChaptersList
-            selectChapter={currentChapter}
-            handleChapterChange={handleSelectChapter}
-          />
-        </Flex>
+        <Sidebar
+          isOpenMobile={showSearchPanelMobile}
+          isOpenDesktop={showSearchPanel}
+          setOpenState={setOpenState}
+        >
+          <Box padding={1}>
+            <ChaptersList
+              selectChapter={currentChapter}
+              handleChapterChange={handleSelectChapter}
+            />
+          </Box>
+        </Sidebar>
         {isVNotesLoading ? <LoadingSpinner /> : <Display />}
       </Flex>
     );
