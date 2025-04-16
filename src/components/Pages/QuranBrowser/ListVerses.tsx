@@ -7,7 +7,7 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { verseProps } from "quran-tools";
 
-import { Box, useBreakpointValue } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
 
@@ -25,22 +25,17 @@ const ListTitle = () => {
     (state) => state.qbPage.showSearchPanelMobile
   );
 
-  const quranService = useQuran();
-  const chapterName = quranService.getChapterName(selectChapter);
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
-
   const dispatch = useAppDispatch();
 
-  const onTogglePanel = () => {
-    dispatch(qbPageActions.setSearchPanel(!isOpen));
+  const onTogglePanel = (state: boolean) => {
+    dispatch(qbPageActions.setSearchPanel(state));
   };
 
   return (
     <ChapterHeader
-      chapterName={chapterName}
-      isOpen={isOpen}
+      chapterID={selectChapter}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
     />
   );

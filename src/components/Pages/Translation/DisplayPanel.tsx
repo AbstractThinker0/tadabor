@@ -12,7 +12,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import TransComponent from "@/components/Pages/Translation/TransComponent";
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { ButtonVerse } from "@/components/Generic/Buttons";
 import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
@@ -119,22 +119,17 @@ const ListTitle = () => {
     (state) => state.translationPage.showSearchPanelMobile
   );
 
-  const quranService = useQuran();
-  const chapterName = quranService.getChapterName(selectChapter);
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
-
   const dispatch = useAppDispatch();
 
-  const onTogglePanel = () => {
-    dispatch(translationPageActions.setSearchPanel(!isOpen));
+  const onTogglePanel = (state: boolean) => {
+    dispatch(translationPageActions.setSearchPanel(state));
   };
 
   return (
     <ChapterHeader
-      chapterName={chapterName}
-      isOpen={isOpen}
+      chapterID={Number(selectChapter)}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
     />
   );

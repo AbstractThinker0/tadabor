@@ -1,8 +1,5 @@
-import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
-
-import { useBreakpointValue } from "@chakra-ui/react";
 
 import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
@@ -19,22 +16,17 @@ const ListTitle = () => {
     (state) => state.coloringPage.showSearchPanelMobile
   );
 
-  const quranService = useQuran();
-  const chapterName = quranService.getChapterName(selectChapter);
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
-
   const dispatch = useAppDispatch();
 
-  const onTogglePanel = () => {
-    dispatch(coloringPageActions.setSearchPanel(!isOpen));
+  const onTogglePanel = (state: boolean) => {
+    dispatch(coloringPageActions.setSearchPanel(state));
   };
 
   return (
     <ChapterHeader
-      chapterName={chapterName}
-      isOpen={isOpen}
+      chapterID={selectChapter}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
     />
   );
