@@ -8,7 +8,7 @@ import { useAppSelector } from "@/store";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { ListTitle } from "@/components/Pages/Coloring/ListTitle";
-import { SelectedContainter } from "@/components/Pages/Coloring/SelectedContainer";
+import { SelectedContainer } from "@/components/Pages/Coloring/SelectedContainer";
 import { VerseComponent } from "@/components/Pages/Coloring/VerseComponent";
 import VerseModal from "@/components/Pages/Coloring/VerseModal";
 
@@ -28,14 +28,13 @@ const VersesSide = () => {
         overflowY={"scroll"}
         flex={1}
         bgColor={"brand.contrast"}
-        dir="rtl"
         color={"inherit"}
         border={"1px solid"}
         borderColor={"border"}
         borderRadius={"l3"}
       >
         {Object.keys(selectedColors).length ? (
-          <SelectedContainter openVerseModal={onOpen} />
+          <SelectedContainer openVerseModal={onOpen} />
         ) : (
           <VersesList openVerseModal={onOpen} />
         )}
@@ -96,7 +95,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
       {isPending ? (
         <LoadingSpinner />
       ) : (
-        <Box px={2} ref={handleVerseListRef}>
+        <Box px={2} dir="rtl" ref={handleVerseListRef}>
           {stateVerses.map((verse) => (
             <Box
               p={"5px"}

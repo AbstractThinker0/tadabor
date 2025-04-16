@@ -17,11 +17,11 @@ import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { useBoolean } from "usehooks-ts";
 
-interface SelectedContainterProps {
+interface SelectedContainerProps {
   openVerseModal: () => void;
 }
 
-const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
+const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
   const selectedChapters = useAppSelector(
     (state) => state.coloringPage.selectedChapters
   );
@@ -60,14 +60,11 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
 
   return (
     <>
-      <Flex
-        pt={"2px"}
-        pb={"5px"}
-        px={1}
-        dir="ltr"
-        justifyContent={"space-between"}
-      >
-        <Box>
+      <Flex pt={"2px"} pb={"5px"} px={1}>
+        <Box pt={1} paddingEnd={1}>
+          <ButtonSidebar />
+        </Box>
+        <Box flex={1} dir="ltr">
           <Flex flexWrap={"wrap"} gap={"5px"} alignItems="center">
             <Box lineHeight={"short"} fontWeight={"bold"}>
               Selected colors:
@@ -126,9 +123,6 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             )}
           </Flex>
         </Box>
-        <Box pt={1}>
-          <ButtonSidebar />
-        </Box>
       </Flex>
       {chaptersScope.length ? (
         <SelectedVerses
@@ -163,7 +157,7 @@ function SelectedVerses({
   );
 
   return (
-    <Box px={2}>
+    <Box px={2} dir="rtl">
       {selectedVerses.length ? (
         selectedVerses
           .sort((keyA, KeyB) => {
@@ -246,4 +240,4 @@ const SelectedVerseItem = ({
   );
 };
 
-export { SelectedContainter };
+export { SelectedContainer };
