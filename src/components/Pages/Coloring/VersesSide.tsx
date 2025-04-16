@@ -90,40 +90,42 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
     });
   }, [currentChapter]);
 
-  if (isPending) return <LoadingSpinner />;
-
   return (
     <>
       <ListTitle />
-      <Box px={2} ref={handleVerseListRef}>
-        {stateVerses.map((verse) => (
-          <Box
-            p={"5px"}
-            borderBottom={"1.5px solid"}
-            borderColor={"border.emphasized"}
-            style={
-              scrollKey === verse.key
-                ? {
-                    padding: 0,
-                    border: "5px solid",
-                    borderImage:
-                      "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
-                  }
-                : {}
-            }
-            key={verse.key}
-            data-id={verse.key}
-            bgColor={coloredVerses[verse.key]?.colorCode}
-            color={
-              coloredVerses[verse.key]
-                ? getTextColor(coloredVerses[verse.key].colorCode)
-                : undefined
-            }
-          >
-            <VerseComponent verse={verse} openVerseModal={openVerseModal} />
-          </Box>
-        ))}
-      </Box>
+      {isPending ? (
+        <LoadingSpinner />
+      ) : (
+        <Box px={2} ref={handleVerseListRef}>
+          {stateVerses.map((verse) => (
+            <Box
+              p={"5px"}
+              borderBottom={"1.5px solid"}
+              borderColor={"border.emphasized"}
+              style={
+                scrollKey === verse.key
+                  ? {
+                      padding: 0,
+                      border: "5px solid",
+                      borderImage:
+                        "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
+                    }
+                  : {}
+              }
+              key={verse.key}
+              data-id={verse.key}
+              bgColor={coloredVerses[verse.key]?.colorCode}
+              color={
+                coloredVerses[verse.key]
+                  ? getTextColor(coloredVerses[verse.key].colorCode)
+                  : undefined
+              }
+            >
+              <VerseComponent verse={verse} openVerseModal={openVerseModal} />
+            </Box>
+          ))}
+        </Box>
+      )}
     </>
   );
 };
