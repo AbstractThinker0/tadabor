@@ -6,6 +6,8 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
+import { ButtonSidebar } from "@/components/Pages/Searcher/ButtonSiderbar";
+
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
@@ -34,17 +36,25 @@ const SearcherDisplay = () => {
       border={"1px solid"}
       borderColor={"border.emphasized"}
       bgColor={"brand.contrast"}
-      dir="rtl"
     >
-      <Flex flexWrap={"wrap"} gap={"10px"} paddingBottom={"10px"}>
-        {rootsArray.map((root_id) => (
-          <RootItem
-            key={root_id}
-            root_name={search_roots[root_id].name}
-            root_id={root_id}
-            derCount={search_roots[root_id].count}
-          />
-        ))}
+      <Flex gap={"10px"}>
+        <ButtonSidebar />
+        <Flex
+          flex={1}
+          dir="rtl"
+          flexWrap={"wrap"}
+          gap={"10px"}
+          paddingBottom={"10px"}
+        >
+          {rootsArray.map((root_id) => (
+            <RootItem
+              key={root_id}
+              root_name={search_roots[root_id].name}
+              root_id={root_id}
+              derCount={search_roots[root_id].count}
+            />
+          ))}
+        </Flex>
       </Flex>
       <Flex
         flexDir={"column"}
@@ -52,6 +62,7 @@ const SearcherDisplay = () => {
         maxH={"100%"}
         height={"100%"}
         paddingEnd={1}
+        dir="rtl"
       >
         <VersesList />
       </Flex>

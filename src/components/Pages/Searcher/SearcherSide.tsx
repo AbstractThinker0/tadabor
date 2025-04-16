@@ -106,8 +106,8 @@ const RootsList = ({ searchString }: RootsListProps) => {
       overflowY={"scroll"}
       bgColor={"brand.bg"}
       padding={"2px"}
-      minH={"15%"}
-      maxH={"35%"}
+      minH={"35vh"}
+      maxH={"35vh"}
       border={"1px solid"}
       borderColor={"border.emphasized"}
       borderRadius={"0.35rem"}

@@ -6,6 +6,7 @@ import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
+import { Sidebar } from "@/components/Generic/Sidebar";
 
 import { Flex, Tabs } from "@chakra-ui/react";
 
@@ -35,6 +36,18 @@ const Searcher = () => {
 
   const onChangeTab = (index: string) => {
     dispatch(searcherPageActions.setTabIndex(index));
+  };
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.searcherPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.searcherPage.showSearchPanelMobile
+  );
+
+  const setOpenState = (state: boolean) => {
+    dispatch(searcherPageActions.setSearchPanel(state));
   };
 
   return (
@@ -68,7 +81,13 @@ const Searcher = () => {
         value="searcherTab"
       >
         <Flex gap={"5px"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
-          <SearcherSide />
+          <Sidebar
+            isOpenMobile={showSearchPanelMobile}
+            isOpenDesktop={showSearchPanel}
+            setOpenState={setOpenState}
+          >
+            <SearcherSide />
+          </Sidebar>
           <SearcherDisplay />
         </Flex>
       </Tabs.Content>

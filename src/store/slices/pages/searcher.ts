@@ -20,6 +20,8 @@ interface SearcherPageState {
   tabIndex: string;
   verses_count: number;
   scrollKey: string;
+  showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: SearcherPageState = {
@@ -28,6 +30,8 @@ const initialState: SearcherPageState = {
   tabIndex: "searcherTab",
   verses_count: 0,
   scrollKey: "",
+  showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 const searcherPageSlice = createSlice({
@@ -56,6 +60,10 @@ const searcherPageSlice = createSlice({
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey = action.payload;
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
 });
