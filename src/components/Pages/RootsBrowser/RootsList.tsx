@@ -176,6 +176,7 @@ const RootComponent = memo(
           <Flex flex={1}>
             <ButtonExpand onClick={setOpen} />
             <Button
+              w={"7rem"}
               colorPalette="teal"
               variant={"outline"}
               onClick={setOccurencesOpen}

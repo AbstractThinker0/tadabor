@@ -212,6 +212,7 @@ const Searcher2Tab = () => {
       </Flex>
       <Box
         margin={"0.5rem"}
+        smDown={{ margin: "0.25rem" }}
         overflow={"hidden"}
         maxH={"100%"}
         height={"100%"}
@@ -223,6 +224,7 @@ const Searcher2Tab = () => {
           maxH={"100%"}
           height={"100%"}
           padding={"1rem"}
+          smDown={{ padding: "0.5rem" }}
           overflowY={"auto"}
           dir="rtl"
           onScroll={handleScroll}

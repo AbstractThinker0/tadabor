@@ -23,7 +23,14 @@ const Display = ({ currentChapter }: DisplayProps) => {
   }, [currentChapter]);
 
   return (
-    <Box p={2} flex={1} overflowY={"scroll"} minH={"100%"} ref={refDisplay}>
+    <Box
+      padding={"0.5rem"}
+      smDown={{ padding: "0.2rem" }}
+      flex={1}
+      overflowY={"scroll"}
+      minH={"100%"}
+      ref={refDisplay}
+    >
       <Box
         bgColor={"brand.contrast"}
         minH={"100%"}

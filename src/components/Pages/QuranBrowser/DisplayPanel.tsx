@@ -35,8 +35,8 @@ const DisplayPanel = () => {
       flex={1}
       overflowY="scroll"
       minH="100%"
-      p={1}
-      pt={2}
+      px={"0.5rem"}
+      py={"0.5rem"}
       ref={refListVerses}
     >
       {isVNotesLoading ? (

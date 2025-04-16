@@ -70,7 +70,9 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
     <Flex
       flexDirection={"column"}
       bgColor={"brand.bg"}
-      padding={4}
+      py={"1rem"}
+      px={"1rem"}
+      smDown={{ px: "0.5rem" }}
       overflowY={"scroll"}
       maxH={"100%"}
       height={"100%"}

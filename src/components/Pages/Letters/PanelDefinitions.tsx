@@ -17,6 +17,7 @@ import ModalEditLetter from "@/components/Pages/Letters/ModalEditLetter";
 import ModalCreatePreset from "@/components/Pages/Letters/ModalCreatePreset";
 
 import {
+  Box,
   Button,
   Flex,
   NativeSelect,
@@ -94,22 +95,25 @@ const PanelDefinitions = () => {
         <Text as="span" fontWeight={"bold"} fontSize={"larger"}>
           {t("letters_preset")}
         </Text>
-        <NativeSelect.Root>
-          <NativeSelect.Field
-            aria-label="Select"
-            value={currentPreset}
-            onChange={onChangePreset}
-            bgColor={"bg"}
-          >
-            <option value="-1">Default</option>
-            {Object.keys(letterPresets).map((presetID) => (
-              <option key={presetID} value={presetID}>
-                {letterPresets[presetID]}
-              </option>
-            ))}
-          </NativeSelect.Field>
-          <NativeSelect.Indicator />
-        </NativeSelect.Root>
+        <Box>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              width={"8rem"}
+              aria-label="Select"
+              value={currentPreset}
+              onChange={onChangePreset}
+              bgColor={"bg"}
+            >
+              <option value="-1">Default</option>
+              {Object.keys(letterPresets).map((presetID) => (
+                <option key={presetID} value={presetID}>
+                  {letterPresets[presetID]}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Box>
         <Button fontWeight={"normal"} onClick={onOpenCreatePreset}>
           Create
         </Button>

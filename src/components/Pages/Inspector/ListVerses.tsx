@@ -71,7 +71,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
   }, [scrollKey, isPending]);
 
   return (
-    <Box ref={refVerses} p={3} dir="rtl">
+    <Box ref={refVerses} py={"0.5rem"} px={"0.25rem"} dir="rtl">
       {isPending ? (
         <LoadingSpinner />
       ) : (
@@ -95,7 +95,9 @@ interface VerseItemProps {
 const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   return (
     <Box
-      p={"4px"}
+      py={"4px"}
+      px={"0.5rem"}
+      smDown={{ px: "2px" }}
       borderBottom={"1.5px solid"}
       borderColor={"border.emphasized"}
       aria-selected={isSelected}
@@ -286,7 +288,9 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
         {rootVerses.slice(0, itemsCount).map((rootVerse) => (
           <Box
             key={rootVerse.key}
-            padding={"4px"}
+            py={"4px"}
+            px={"5px"}
+            smDown={{ px: "1px" }}
             borderBottom={"1.5px solid"}
             borderColor={"border.emphasized"}
             aria-selected={scrollKey === rootVerse.key}

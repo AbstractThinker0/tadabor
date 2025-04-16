@@ -31,6 +31,7 @@ const SearcherDisplay = () => {
       overflowY={"hidden"}
       py={"5px"}
       paddingStart={3}
+      smDown={{ paddingStart: "5px" }}
       margin={"5px"}
       borderRadius={"0.75rem"}
       border={"1px solid"}

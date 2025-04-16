@@ -65,7 +65,7 @@ const Display = ({
   );
 
   return (
-    <Box bgColor={"brand.bg"} px={5}>
+    <Box bgColor={"brand.bg"} px={5} smDown={{ px: "5px" }}>
       <Box
         bgColor={"bg.subtle"}
         textAlign={"center"}

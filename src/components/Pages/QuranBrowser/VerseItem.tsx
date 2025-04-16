@@ -28,7 +28,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   return (
     <Box
       data-id={verse.key}
-      p={1}
+      p={"0.3rem"}
       borderBottom="1px solid"
       borderColor={"border.emphasized"}
       aria-selected={isSelected}

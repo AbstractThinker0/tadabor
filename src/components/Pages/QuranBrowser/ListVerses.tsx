@@ -87,7 +87,7 @@ const ListBody = () => {
   if (isPending) return <LoadingSpinner text="Loading verses..." />;
 
   return (
-    <Box dir="rtl" py={1} px={"1rem"} ref={refVerses}>
+    <Box dir="rtl" py={1} px={"0.5rem"} ref={refVerses}>
       {stateVerses.map((verse: verseProps) => (
         <VerseItem
           key={verse.key}
