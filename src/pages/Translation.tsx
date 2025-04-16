@@ -4,7 +4,7 @@ import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
 import { translationPageActions } from "@/store/slices/pages/translation";
 
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -41,9 +41,6 @@ const Translation = () => {
     (state) => state.translationPage.showSearchPanelMobile
   );
 
-  // Use Chakra's breakpoint to determine if it's mobile
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
   const setOpenState = (state: boolean) => {
     dispatch(translationPageActions.setSearchPanel(state));
   };
@@ -55,7 +52,11 @@ const Translation = () => {
       maxH={"100%"}
       height={"100%"}
     >
-      <Sidebar isOpen={isOpen} setOpenState={setOpenState}>
+      <Sidebar
+        isOpenMobile={showSearchPanelMobile}
+        isOpenDesktop={showSearchPanel}
+        setOpenState={setOpenState}
+      >
         <Box padding={1}>
           <ChaptersList
             handleChapterChange={handleChapterChange}

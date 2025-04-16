@@ -7,14 +7,22 @@ import {
 } from "@chakra-ui/react";
 
 interface SidebarProps {
-  isOpen: boolean;
+  isOpenMobile: boolean;
+  isOpenDesktop: boolean;
   setOpenState: (state: boolean) => void;
   children: React.ReactNode;
 }
 
-const Sidebar = ({ isOpen, setOpenState, children }: SidebarProps) => {
+const Sidebar = ({
+  isOpenMobile,
+  isOpenDesktop,
+  setOpenState,
+  children,
+}: SidebarProps) => {
   // Use Chakra's breakpoint to determine if it's mobile
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const isOpen = isMobile ? isOpenMobile : isOpenDesktop;
 
   const handleChangeOpen = (state: boolean) => {
     setOpenState(state);
