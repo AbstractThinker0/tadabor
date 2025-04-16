@@ -60,7 +60,13 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
 
   return (
     <>
-      <Flex pt={"2px"} pb={"5px"} px={1} dir="ltr">
+      <Flex
+        pt={"2px"}
+        pb={"5px"}
+        px={1}
+        dir="ltr"
+        justifyContent={"space-between"}
+      >
         <Box>
           <Flex flexWrap={"wrap"} gap={"5px"} alignItems="center">
             <Box lineHeight={"short"} fontWeight={"bold"}>
@@ -120,7 +126,7 @@ const SelectedContainter = ({ openVerseModal }: SelectedContainterProps) => {
             )}
           </Flex>
         </Box>
-        <Box>
+        <Box pt={1}>
           <ButtonSidebar />
         </Box>
       </Flex>
