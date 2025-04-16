@@ -1,10 +1,8 @@
+import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { Button, useBreakpointValue } from "@chakra-ui/react";
-
-import { MdOutlineMenuOpen } from "react-icons/md";
-import { MdOutlineMenu } from "react-icons/md";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 const ButtonSidebar = () => {
   const dispatch = useAppDispatch();
@@ -23,21 +21,7 @@ const ButtonSidebar = () => {
     dispatch(qbPageActions.setSearchPanel(!isOpen));
   };
 
-  return (
-    <Button
-      onClick={onTogglePanel}
-      size="sm"
-      fontSize="xl"
-      borderRadius="full"
-      bgColor="blue.500"
-      color="white"
-      _hover={{ bgColor: "blue.600" }}
-      _active={{ bgColor: "blue.700" }}
-      boxShadow="md"
-    >
-      {isOpen ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
-    </Button>
-  );
+  return <ButtonSidebarGeneric isOpen={isOpen} onTogglePanel={onTogglePanel} />;
 };
 
 export { ButtonSidebar };

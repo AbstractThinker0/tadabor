@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
 
 import { TbSelect } from "react-icons/tb";
+import { MdOutlineMenuOpen } from "react-icons/md";
+import { MdOutlineMenu } from "react-icons/md";
 
 const ButtonSave = (props: ButtonProps) => {
   const { t } = useTranslation();
@@ -56,4 +58,27 @@ const ButtonVerse = (props: ButtonProps) => {
   );
 };
 
-export { ButtonSave, ButtonEdit, ButtonExpand, ButtonVerse };
+interface ButtonSidebarProps {
+  isOpen: boolean;
+  onTogglePanel: () => void;
+}
+
+const ButtonSidebar = ({ isOpen, onTogglePanel }: ButtonSidebarProps) => {
+  return (
+    <Button
+      onClick={onTogglePanel}
+      size="sm"
+      fontSize="xl"
+      borderRadius="full"
+      bgColor="blue.500"
+      color="white"
+      _hover={{ bgColor: "blue.600" }}
+      _active={{ bgColor: "blue.700" }}
+      boxShadow="md"
+    >
+      {isOpen ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
+    </Button>
+  );
+};
+
+export { ButtonSave, ButtonEdit, ButtonExpand, ButtonVerse, ButtonSidebar };

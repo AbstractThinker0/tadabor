@@ -2,50 +2,52 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import { verseProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { Box, useBreakpointValue } from "@chakra-ui/react";
 
 import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
-import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 
-import { Box, Flex } from "@chakra-ui/react";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
-interface ListTitleProps {
-  chapterName: string;
-}
-
-const ListTitle = ({ chapterName }: ListTitleProps) => {
-  return (
-    <Flex
-      bgColor="bg.muted"
-      px={"0.25rem"}
-      border="1px solid"
-      borderColor="border.emphasized"
-      align="center"
-      justifyContent={"space-between"}
-      borderTopRadius={"l2"}
-    >
-      <ButtonSidebar />
-
-      <Flex fontSize="3xl" fontWeight="medium" color="blue.focusRing">
-        سورة {chapterName}
-      </Flex>
-      <Box width={"1rem"}></Box>
-    </Flex>
-  );
-};
-
-const ListVerses = () => {
+const ListTitle = () => {
   const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
   const quranService = useQuran();
   const chapterName = quranService.getChapterName(selectChapter);
 
+  const dispatch = useAppDispatch();
+  const showSearchPanel = useAppSelector(
+    (state) => state.qbPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.qbPage.showSearchPanelMobile
+  );
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+
+  const onTogglePanel = () => {
+    dispatch(qbPageActions.setSearchPanel(!isOpen));
+  };
+
+  return (
+    <ChapterHeader
+      chapterName={chapterName}
+      isOpen={isOpen}
+      onTogglePanel={onTogglePanel}
+    />
+  );
+};
+
+const ListVerses = () => {
   return (
     <>
-      <ListTitle chapterName={chapterName} />
+      <ListTitle />
       <ListBody />
     </>
   );
