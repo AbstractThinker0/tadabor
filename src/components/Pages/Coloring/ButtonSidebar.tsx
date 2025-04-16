@@ -2,8 +2,6 @@ import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Butt
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import { useBreakpointValue } from "@chakra-ui/react";
-
 const ButtonSidebar = () => {
   const dispatch = useAppDispatch();
   const showSearchPanel = useAppSelector(
@@ -14,14 +12,17 @@ const ButtonSidebar = () => {
     (state) => state.coloringPage.showSearchPanelMobile
   );
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
-
-  const onTogglePanel = () => {
-    dispatch(coloringPageActions.setSearchPanel(!isOpen));
+  const onTogglePanel = (state: boolean) => {
+    dispatch(coloringPageActions.setSearchPanel(state));
   };
 
-  return <ButtonSidebarGeneric isOpen={isOpen} onTogglePanel={onTogglePanel} />;
+  return (
+    <ButtonSidebarGeneric
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
+      onTogglePanel={onTogglePanel}
+    />
+  );
 };
 
 export { ButtonSidebar };

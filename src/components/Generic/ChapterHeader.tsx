@@ -1,4 +1,4 @@
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import { ButtonSidebar } from "@/components/Generic/Buttons";
 import useQuran from "@/context/useQuran";
@@ -18,13 +18,6 @@ const ChapterHeader = ({
 }: ChapterHeaderProps) => {
   const quranService = useQuran();
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? isOpenMobile : isOpenDesktop;
-
-  const handlePanelToggle = () => {
-    onTogglePanel(!isOpen);
-  };
-
   return (
     <Flex
       bgColor="bg.muted"
@@ -35,7 +28,11 @@ const ChapterHeader = ({
       justifyContent={"space-between"}
       borderTopRadius={"l2"}
     >
-      <ButtonSidebar isOpen={isOpen} onTogglePanel={handlePanelToggle} />
+      <ButtonSidebar
+        isOpenMobile={isOpenMobile}
+        isOpenDesktop={isOpenDesktop}
+        onTogglePanel={onTogglePanel}
+      />
 
       <Flex fontSize="3xl" fontWeight="medium" color="blue.focusRing">
         سورة {quranService.getChapterName(chapterID)}

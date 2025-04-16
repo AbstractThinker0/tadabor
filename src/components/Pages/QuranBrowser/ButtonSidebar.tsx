@@ -2,8 +2,6 @@ import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Butt
 import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { useBreakpointValue } from "@chakra-ui/react";
-
 const ButtonSidebar = () => {
   const dispatch = useAppDispatch();
   const showSearchPanel = useAppSelector(
@@ -14,14 +12,17 @@ const ButtonSidebar = () => {
     (state) => state.qbPage.showSearchPanelMobile
   );
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
-
-  const onTogglePanel = () => {
-    dispatch(qbPageActions.setSearchPanel(!isOpen));
+  const onTogglePanel = (state: boolean) => {
+    dispatch(qbPageActions.setSearchPanel(state));
   };
 
-  return <ButtonSidebarGeneric isOpen={isOpen} onTogglePanel={onTogglePanel} />;
+  return (
+    <ButtonSidebarGeneric
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
+      onTogglePanel={onTogglePanel}
+    />
+  );
 };
 
 export { ButtonSidebar };

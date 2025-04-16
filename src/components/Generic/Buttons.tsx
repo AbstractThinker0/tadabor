@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 
 import { TbSelect } from "react-icons/tb";
 import { MdOutlineMenuOpen } from "react-icons/md";
@@ -59,14 +64,27 @@ const ButtonVerse = (props: ButtonProps) => {
 };
 
 interface ButtonSidebarProps {
-  isOpen: boolean;
-  onTogglePanel: () => void;
+  isOpenMobile: boolean;
+  isOpenDesktop: boolean;
+  onTogglePanel: (state: boolean) => void;
 }
 
-const ButtonSidebar = ({ isOpen, onTogglePanel }: ButtonSidebarProps) => {
+const ButtonSidebar = ({
+  isOpenMobile,
+  isOpenDesktop,
+  onTogglePanel,
+}: ButtonSidebarProps) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const isOpen = isMobile ? isOpenMobile : isOpenDesktop;
+
+  const handlePanelToggle = () => {
+    onTogglePanel(!isOpen);
+  };
+
   return (
     <Button
-      onClick={onTogglePanel}
+      onClick={handlePanelToggle}
       size="sm"
       fontSize="xl"
       borderRadius="full"
