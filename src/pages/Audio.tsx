@@ -302,7 +302,6 @@ const ChapterDisplay = ({
       paddingLeft="5px"
       paddingRight="5px"
       overflowY="hidden"
-      dir="rtl"
     >
       <ListTitle />
       <Box
@@ -312,6 +311,7 @@ const ChapterDisplay = ({
         borderStyle="solid"
         borderColor="gray.emphasized"
         flexGrow={1}
+        dir="rtl"
       >
         {displayVerses.map((verse) => (
           <VerseItem

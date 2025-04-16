@@ -44,6 +44,5 @@ export const globalCss = defineGlobalStyles({
   },
   mark: {
     backgroundColor: "#fff3cd",
-    py: "2px",
   },
 });

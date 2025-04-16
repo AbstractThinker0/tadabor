@@ -30,15 +30,13 @@ const SearcherDisplay = () => {
       flex={1}
       overflowY={"hidden"}
       py={"5px"}
-      paddingStart={3}
-      smDown={{ paddingStart: "5px" }}
       margin={"5px"}
       borderRadius={"0.75rem"}
       border={"1px solid"}
       borderColor={"border.emphasized"}
       bgColor={"brand.contrast"}
     >
-      <Flex gap={"10px"}>
+      <Flex gap={"10px"} px={"5px"}>
         <ButtonSidebar />
         <Flex
           flex={1}
@@ -62,7 +60,6 @@ const SearcherDisplay = () => {
         overflowY={"scroll"}
         maxH={"100%"}
         height={"100%"}
-        paddingEnd={1}
         dir="rtl"
       >
         <VersesList />
@@ -149,6 +146,8 @@ const VerseItem = ({ verseMatch }: VerseItemProps) => {
   return (
     <Box
       py={"5px"}
+      px={3}
+      smDown={{ px: "5px" }}
       borderBottom={"1px solid"}
       borderColor={"border.emphasized"}
     >
