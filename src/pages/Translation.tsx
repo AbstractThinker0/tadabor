@@ -4,12 +4,15 @@ import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
 import { translationPageActions } from "@/store/slices/pages/translation";
 
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
+import { Sidebar } from "@/components/Generic/SideBar";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
-import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Translation = () => {
@@ -30,6 +33,21 @@ const Translation = () => {
     dispatch(translationPageActions.setCurrentChapter(chapter));
   };
 
+  const showSearchPanel = useAppSelector(
+    (state) => state.translationPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.translationPage.showSearchPanelMobile
+  );
+
+  // Use Chakra's breakpoint to determine if it's mobile
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+  const setOpenState = (state: boolean) => {
+    dispatch(translationPageActions.setSearchPanel(state));
+  };
+
   return (
     <Flex
       bgColor={"brand.bg"}
@@ -37,17 +55,15 @@ const Translation = () => {
       maxH={"100%"}
       height={"100%"}
     >
-      <Flex padding={1}>
-        <ChaptersList
-          handleChapterChange={handleChapterChange}
-          selectChapter={currentChapter}
-        />
-      </Flex>
-      {isTNotesLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <DisplayPanel selectChapter={currentChapter} />
-      )}
+      <Sidebar isOpen={isOpen} setOpenState={setOpenState}>
+        <Box padding={1}>
+          <ChaptersList
+            handleChapterChange={handleChapterChange}
+            selectChapter={currentChapter}
+          />
+        </Box>
+      </Sidebar>
+      {isTNotesLoading ? <LoadingSpinner /> : <DisplayPanel />}
     </Flex>
   );
 };

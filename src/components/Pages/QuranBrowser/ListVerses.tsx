@@ -16,10 +16,7 @@ import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
 const ListTitle = () => {
   const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
-  const quranService = useQuran();
-  const chapterName = quranService.getChapterName(selectChapter);
 
-  const dispatch = useAppDispatch();
   const showSearchPanel = useAppSelector(
     (state) => state.qbPage.showSearchPanel
   );
@@ -28,8 +25,13 @@ const ListTitle = () => {
     (state) => state.qbPage.showSearchPanelMobile
   );
 
+  const quranService = useQuran();
+  const chapterName = quranService.getChapterName(selectChapter);
+
   const isMobile = useBreakpointValue({ base: true, md: false });
   const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+
+  const dispatch = useAppDispatch();
 
   const onTogglePanel = () => {
     dispatch(qbPageActions.setSearchPanel(!isOpen));

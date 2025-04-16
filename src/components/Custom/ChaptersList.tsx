@@ -64,7 +64,7 @@ const ChaptersList = ({
   };
 
   return (
-    <Box maxH="100%">
+    <Box height={"80vh"}>
       <InputString
         inputElementProps={{
           placeholder: quranService.getChapterName(selectChapter),
@@ -91,6 +91,7 @@ const ChaptersList = ({
           <Box
             key={chapter.id}
             px="14px"
+            py={"2px"}
             cursor="pointer"
             data-id={chapter.id}
             aria-selected={Number(selectChapter) === chapter.id}

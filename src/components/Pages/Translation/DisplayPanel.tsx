@@ -12,15 +12,15 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import TransComponent from "@/components/Pages/Translation/TransComponent";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { ButtonVerse } from "@/components/Generic/Buttons";
+import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
-interface DisplayPanelProps {
-  selectChapter: string;
-}
-
-const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
+const DisplayPanel = () => {
   const quranService = useQuran();
+  const currentChapter = useAppSelector(
+    (state) => state.translationPage.currentChapter
+  );
 
   const scrollKey = useAppSelector((state) => state.translationPage.scrollKey);
 
@@ -34,11 +34,11 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
     if (!refDisplay.current) return;
 
     startTransition(() => {
-      setStateVerses(quranService.getVerses(selectChapter));
+      setStateVerses(quranService.getVerses(currentChapter));
     });
 
     refDisplay.current.scrollTop = 0;
-  }, [selectChapter]);
+  }, [currentChapter]);
 
   // Handling scroll by using a callback ref with MutationObserver
   const handleVerseListRef = useCallback(
@@ -78,18 +78,7 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
       padding={1}
     >
       <Flex flexDirection={"column"} minH={"100%"}>
-        <Box
-          p={2}
-          fontSize={"larger"}
-          textAlign={"center"}
-          color={"blue.fg"}
-          border={"1px solid"}
-          borderColor={"border.emphasized"}
-          bgColor={"gray.emphasized"}
-          borderTopRadius={5}
-        >
-          سورة {quranService.getChapterName(selectChapter)}
-        </Box>
+        <ListTitle />
         <Box
           flex={1}
           p={1}
@@ -114,6 +103,40 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
         </Box>
       </Flex>
     </Box>
+  );
+};
+
+const ListTitle = () => {
+  const selectChapter = useAppSelector(
+    (state) => state.translationPage.currentChapter
+  );
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.translationPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.translationPage.showSearchPanelMobile
+  );
+
+  const quranService = useQuran();
+  const chapterName = quranService.getChapterName(selectChapter);
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isOpen = isMobile ? showSearchPanelMobile : showSearchPanel;
+
+  const dispatch = useAppDispatch();
+
+  const onTogglePanel = () => {
+    dispatch(translationPageActions.setSearchPanel(!isOpen));
+  };
+
+  return (
+    <ChapterHeader
+      chapterName={chapterName}
+      isOpen={isOpen}
+      onTogglePanel={onTogglePanel}
+    />
   );
 };
 
