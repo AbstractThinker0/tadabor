@@ -47,6 +47,7 @@ const ColorsList = () => {
           flexDir={"column"}
           overflowY={"auto"}
           fontFamily={"initial"}
+          maxHeight={"30vh"}
           dir="ltr"
         >
           {Object.keys(colorsList).map((colorID) => (
