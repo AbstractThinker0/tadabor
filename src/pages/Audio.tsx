@@ -11,9 +11,11 @@ import { verseProps } from "quran-tools";
 import ChaptersList from "@/components/Custom/ChaptersList";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
+import { Sidebar } from "@/components/Generic/Sidebar";
+import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 import { ButtonExpand } from "@/components/Generic/Buttons";
 
-import { Box, HStack, Flex, Heading, Button } from "@chakra-ui/react";
+import { Box, HStack, Flex, Button } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -155,6 +157,18 @@ const Audio = () => {
     playNextVerse();
   };
 
+  const showSearchPanel = useAppSelector(
+    (state) => state.audioPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.audioPage.showSearchPanelMobile
+  );
+
+  const setOpenState = (state: boolean) => {
+    dispatch(audioPageActions.setSearchPanel(state));
+  };
+
   return (
     <Flex
       bgColor="brand.bg"
@@ -163,12 +177,18 @@ const Audio = () => {
       height="100%"
       overflow="hidden"
     >
-      <Flex paddingTop="8px" paddingInlineStart="8px" paddingInlineEnd="4px">
-        <ChaptersList
-          selectChapter={currentChapter}
-          handleChapterChange={handleChapterChange}
-        />
-      </Flex>
+      <Sidebar
+        isOpenMobile={showSearchPanelMobile}
+        isOpenDesktop={showSearchPanel}
+        setOpenState={setOpenState}
+      >
+        <Box paddingTop="8px" paddingInlineStart="8px" paddingInlineEnd="4px">
+          <ChaptersList
+            selectChapter={currentChapter}
+            handleChapterChange={handleChapterChange}
+          />
+        </Box>
+      </Sidebar>
       <Flex
         flexDirection="column"
         width="100%"
@@ -179,7 +199,6 @@ const Audio = () => {
           verseKey={currentVerse?.key}
           displayVerses={displayVerses}
           onClickAudio={onClickAudio}
-          currentChapter={currentChapter}
         />
         <Flex
           flexDirection="column"
@@ -234,21 +253,46 @@ const Audio = () => {
   );
 };
 
+const ListTitle = () => {
+  const selectChapter = useAppSelector(
+    (state) => state.audioPage.currentChapter
+  );
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.audioPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.audioPage.showSearchPanelMobile
+  );
+
+  const dispatch = useAppDispatch();
+
+  const onTogglePanel = (state: boolean) => {
+    dispatch(audioPageActions.setSearchPanel(state));
+  };
+
+  return (
+    <ChapterHeader
+      chapterID={Number(selectChapter)}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
+      onTogglePanel={onTogglePanel}
+    />
+  );
+};
+
 interface ChapterDisplayProps {
-  currentChapter: string;
   displayVerses: verseProps[];
   verseKey: string | undefined;
   onClickAudio: (verse: verseProps) => void;
 }
 
 const ChapterDisplay = ({
-  currentChapter,
   displayVerses,
   verseKey,
   onClickAudio,
 }: ChapterDisplayProps) => {
-  const quranService = useQuran();
-
   return (
     <Flex
       flexDirection="column"
@@ -260,21 +304,7 @@ const ChapterDisplay = ({
       overflowY="hidden"
       dir="rtl"
     >
-      <Heading
-        fontSize="x-large"
-        color="purple.fg"
-        bgColor="gray.subtle"
-        borderRadius="0.3rem"
-        borderStyle="solid"
-        borderWidth="1px"
-        borderColor="gray.emphasized"
-        borderBottomRadius={"unset"}
-        textAlign="center"
-        marginBottom="0"
-        padding={2}
-      >
-        سورة {quranService.getChapterName(currentChapter)}
-      </Heading>
+      <ListTitle />
       <Box
         overflowY="scroll"
         padding="0.5rem"

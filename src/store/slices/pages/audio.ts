@@ -15,6 +15,8 @@ interface AudioPageState {
   currentTime: number;
   isPlaying: boolean;
   autoPlay: boolean;
+  showSearchPanel: boolean;
+  showSearchPanelMobile: boolean;
 }
 
 const initialState: AudioPageState = {
@@ -24,6 +26,8 @@ const initialState: AudioPageState = {
   currentTime: 0,
   isPlaying: defaultAutoPlay,
   autoPlay: true,
+  showSearchPanel: true,
+  showSearchPanelMobile: false,
 };
 
 const audioPageSlice = createSlice({
@@ -48,6 +52,10 @@ const audioPageSlice = createSlice({
     },
     setAutoPlaying: (state, action: PayloadAction<boolean>) => {
       state.autoPlay = action.payload;
+    },
+    setSearchPanel: (state, action: PayloadAction<boolean>) => {
+      state.showSearchPanel = action.payload;
+      state.showSearchPanelMobile = action.payload;
     },
   },
 });
