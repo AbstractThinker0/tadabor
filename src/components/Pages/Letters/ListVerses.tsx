@@ -428,6 +428,7 @@ const InfoBox = ({
           borderColor={"border.emphasized"}
           marginTop={"6px"}
           padding={2}
+          mx={"0.25rem"}
           bgColor={"bg"}
           dir="rtl"
         >
@@ -443,6 +444,7 @@ const InfoBox = ({
               borderRadius={"0.375rem"}
               borderColor={"border.emphasized"}
               padding={2}
+              mx={"0.25rem"}
               bgColor={"bg"}
               dir="ltr"
             >
