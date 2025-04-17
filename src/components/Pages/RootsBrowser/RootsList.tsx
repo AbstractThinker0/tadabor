@@ -138,7 +138,7 @@ const RootComponent = memo(
 
         setStateEditable(false);
       },
-      [inputDirection]
+      [noteText, inputDirection]
     );
 
     const handleSetDirection = useCallback((dir: string) => {
