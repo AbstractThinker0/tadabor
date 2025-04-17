@@ -74,7 +74,7 @@ export const selectTransNote = (key: string) => {
 export const getAllRootNotesKeys = (state: RootState) =>
   state.rootNotes.dataKeys;
 
-export const selecRootNote = (key: string) => {
+export const selectRootNote = (key: string) => {
   return (state: RootState) => state.rootNotes.data[key];
 };
 

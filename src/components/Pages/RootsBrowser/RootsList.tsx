@@ -5,7 +5,7 @@ import { dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
 
 import { rootProps, verseMatchResult, searchIndexProps } from "quran-tools";
-import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
+import { selectRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
@@ -106,7 +106,7 @@ const RootComponent = memo(
     root_count,
     handleVerseTab,
   }: RootComponentProps) => {
-    const currentNote = useAppSelector(selecRootNote(root_id));
+    const currentNote = useAppSelector(selectRootNote(root_id));
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const { value: isOpen, toggle: setOpen } = useBoolean();

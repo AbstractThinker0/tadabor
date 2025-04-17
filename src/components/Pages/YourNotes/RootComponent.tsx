@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
+import { selectRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import { dbFuncs } from "@/util/db";
@@ -25,7 +25,7 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const rootNote = useAppSelector(selecRootNote(inputKey));
+  const rootNote = useAppSelector(selectRootNote(inputKey));
 
   const inputValue = rootNote?.text || "";
   const inputDirection = rootNote?.dir || "";
