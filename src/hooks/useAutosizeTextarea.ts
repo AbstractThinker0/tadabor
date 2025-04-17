@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 
 // Singleton hidden textarea
 let globalHiddenTextarea: HTMLTextAreaElement | null = null;
@@ -62,7 +62,9 @@ export const useAutosizeTextarea = (
   minHeight = 100,
   extraSize = 50
 ) => {
-  useEffect(() => {
+  const [height, setHeight] = useState<string | undefined>(undefined);
+
+  useLayoutEffect(() => {
     const textarea = ref.current;
     if (!textarea) return;
 
@@ -73,8 +75,13 @@ export const useAutosizeTextarea = (
     hidden.value = value;
     hidden.style.height = "auto";
 
-    const newHeight = Math.max(hidden.scrollHeight + extraSize, minHeight);
+    const newHeight = `${Math.max(
+      hidden.scrollHeight + extraSize,
+      minHeight
+    )}px`;
 
-    textarea.style.height = `${newHeight}px`;
+    setHeight(newHeight);
   }, [value]);
+
+  return height;
 };

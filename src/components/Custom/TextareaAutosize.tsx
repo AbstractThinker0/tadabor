@@ -10,9 +10,16 @@ const TextareaAutosize = (props: TextareaProps) => {
 
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  useAutosizeTextarea(refTextarea, props.value as string);
+  const height = useAutosizeTextarea(refTextarea, props.value as string);
 
-  return <Textarea {...props} ref={refTextarea} fontSize={`${notesFS}rem`} />;
+  return (
+    <Textarea
+      {...props}
+      ref={refTextarea}
+      fontSize={`${notesFS}rem`}
+      height={height}
+    />
+  );
 };
 
 export default TextareaAutosize;
