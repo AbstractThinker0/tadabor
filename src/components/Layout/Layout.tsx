@@ -10,6 +10,7 @@ import AlertMessage from "@/components/Layout/AlertMessage";
 import { Flex } from "@chakra-ui/react";
 import { Provider } from "@/components/ui/provider";
 import { Toaster } from "@/components/ui/ToasterProvider";
+import ReloadPrompt from "@/components/Generic/ReloadPrompt";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ function Layout({ children }: PropsWithChildren) {
         <AlertMessage />
         <QuranProvider>{children}</QuranProvider>
         <Toaster />
+        <ReloadPrompt />
       </Flex>
     </Provider>
   );

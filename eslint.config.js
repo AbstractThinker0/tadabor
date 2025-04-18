@@ -19,6 +19,7 @@ export default [
         ...globals.browser,
         React: "readonly",
         APP_VERSION: "readonly",
+        APP_BUILD_DATE: "readonly",
       },
     },
     plugins: {
@@ -58,7 +59,13 @@ export default [
       "import/resolver": {
         alias: {
           extensions: [".js", ".jsx", ".ts", ".tsx"],
-          map: [["@", "./src"]],
+          map: [
+            ["@", "./src"],
+            [
+              "virtual:pwa-register/react",
+              "./node_modules/vite-plugin-pwa/client.d.ts",
+            ],
+          ],
         },
       },
       react: {
