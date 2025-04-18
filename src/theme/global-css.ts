@@ -43,6 +43,7 @@ export const globalCss = defineGlobalStyles({
     bg: "colorPalette.muted/80",
   },
   mark: {
-    backgroundColor: "#fff3cd",
+    backgroundColor: "bg.highlight",
+    color: "fg",
   },
 });
