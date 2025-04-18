@@ -83,19 +83,19 @@ function ReloadPrompt() {
           boxShadow="3px 4px 5px 0 #8885"
           backgroundColor="white"
         >
-          <Box marginBottom={"8px"} colorPalette={"green"}>
-            <span>
-              New version is available, click on reload button to update.
-            </span>
+          <Box marginBottom={"8px"} color={"black"}>
+            New version is available, click on reload button to update.
           </Box>
           <Button
             marginRight={"5px"}
-            colorPalette={"gray"}
+            colorPalette={"green"}
             onClick={() => updateServiceWorker()}
           >
             Reload
           </Button>
-          <Button onClick={() => close()}>Close</Button>
+          <Button bgColor={"gray.300"} color={"black"} onClick={() => close()}>
+            Close
+          </Button>
         </Box>
       )}
     </Box>
