@@ -168,10 +168,12 @@ const SelectionListChapters = ({
         border="1px solid"
         borderColor={"border.emphasized"}
       >
-        <Box fontWeight="bold">{t("search_scope")}:</Box>
+        <Box fontWeight="bold" paddingEnd={"0.1rem"}>
+          {t("search_scope")}:
+        </Box>
         <Flex justifyContent="center" gap="3px">
           <Button
-            px={2}
+            px={"0.25rem"}
             colorPalette="teal"
             fontWeight="normal"
             disabled={getSelectedCount === 114}
@@ -180,7 +182,7 @@ const SelectionListChapters = ({
             {t("all_chapters")}
           </Button>
           <Button
-            px={2}
+            px={"0.25rem"}
             colorPalette="teal"
             fontWeight="normal"
             disabled={onlyCurrentSelected}
