@@ -12,7 +12,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Box, Flex, HStack, Span, Tabs } from "@chakra-ui/react";
+import { Box, Flex, HStack, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -186,9 +186,11 @@ const Searcher2Tab = () => {
           />
           <span>({stateVerses.length})</span>
         </Flex>
-        <Flex gap={1}>
-          <Span fontWeight={"bold"}>{t("search_options")}</Span>
-          <HStack gap={3}>
+        <Flex p={1} gap={1}>
+          <Flex fontWeight={"bold"} flexShrink={0} lineHeight={"short"}>
+            {t("search_options")}
+          </Flex>
+          <HStack gap={3} flexWrap={"wrap"}>
             <Checkbox
               checked={searchDiacritics}
               onCheckedChange={(e) => handleCheckboxDiacritics(!!e.checked)}
