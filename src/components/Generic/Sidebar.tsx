@@ -35,6 +35,7 @@ const Sidebar = ({
           open={isOpen}
           onOpenChange={(e) => handleChangeOpen(e.open)}
           placement={"start"}
+          initialFocusEl={() => null}
           lazyMount
           unmountOnExit
         >
@@ -45,9 +46,16 @@ const Sidebar = ({
                 <Drawer.Body px={1} py={0}>
                   {children}
                 </Drawer.Body>
-                <Drawer.CloseTrigger asChild>
-                  <CloseButton size="sm" />
-                </Drawer.CloseTrigger>
+                <Drawer.Footer>
+                  <Drawer.CloseTrigger asChild>
+                    <CloseButton
+                      border="2px solid"
+                      borderColor="gray.600"
+                      borderRadius="full"
+                      size="sm"
+                    />
+                  </Drawer.CloseTrigger>
+                </Drawer.Footer>
               </Drawer.Content>
             </Drawer.Positioner>
           </Portal>

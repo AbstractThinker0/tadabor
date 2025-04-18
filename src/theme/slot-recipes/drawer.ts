@@ -82,7 +82,7 @@ export const drawerSlotRecipe = defineSlotRecipe({
     footer: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-end",
+      justifyContent: "center",
       gap: "3",
       px: "6",
       pt: "2",
