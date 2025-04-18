@@ -1,8 +1,9 @@
 name: Trigger Cloudflare Pages Deploy Hook
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "*" # triggers on push to any tag
 
 jobs:
   deploy:
