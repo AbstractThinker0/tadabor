@@ -17,7 +17,7 @@ const AboutContent = () => {
   }, [i18n.resolvedLanguage]);
 
   return (
-    <Flex flexDir={"column"} flex={1} overflow={"hidden"}>
+    <Flex flexDir={"column"} flex={1} overflowY={"auto"}>
       <Flex
         flexDirection={"column"}
         flex={1}
