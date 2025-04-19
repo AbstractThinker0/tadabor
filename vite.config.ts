@@ -104,7 +104,11 @@ export default defineConfig({
     port: 3000,
   },
   define: {
-    APP_VERSION: JSON.stringify(process.env.npm_package_version),
+    APP_VERSION: JSON.stringify(
+      process.env.NODE_ENV === "development"
+        ? `${process.env.npm_package_version}-dev`
+        : process.env.npm_package_version
+    ),
     APP_BUILD_DATE: JSON.stringify(new Date().getTime()),
   },
 });
