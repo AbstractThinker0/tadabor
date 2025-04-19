@@ -20,6 +20,7 @@ export interface IRootNote {
 export interface ITranslation {
   id: string;
   text: string;
+  dir?: string;
   date_created: number;
   date_modified: number;
 }
@@ -112,6 +113,22 @@ class tadaborDatabase extends Dexie {
       notes: "id, text, dir, date_created, date_modified",
       root_notes: "id, text, dir, date_created, date_modified",
       translations: "id, text, date_created, date_modified",
+
+      colors: "id, name, code",
+      verses_color: "verse_key, color_id",
+
+      tags: "id, name",
+      verses_tags: "verse_key, *tags_ids",
+
+      letters_def: "id, preset_id, name, definition, dir",
+      letters_presets: "id, name",
+      letters_data: "letter_key, letter_role, def_id",
+    });
+
+    this.version(21).stores({
+      notes: "id, text, dir, date_created, date_modified",
+      root_notes: "id, text, dir, date_created, date_modified",
+      translations: "id, text, dir, date_created, date_modified",
 
       colors: "id, name, code",
       verses_color: "verse_key, color_id",
@@ -305,16 +322,17 @@ export const dbFuncs = {
   loadTranslations: () => {
     return db.translations.toArray();
   },
-  saveTranslation: (id: string, text: string) => {
+  saveTranslation: (id: string, text: string, dir: string = "") => {
     return new Promise((resolve, reject) => {
       db.translations
-        .update(id, { text, date_modified: Date.now() })
+        .update(id, { text, dir, date_modified: Date.now() })
         .then((updated) => {
           if (!updated) {
             db.translations
               .add({
                 id,
                 text,
+                dir,
                 date_modified: Date.now(),
                 date_created: Date.now(),
               })
