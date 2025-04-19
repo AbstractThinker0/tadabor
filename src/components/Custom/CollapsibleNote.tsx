@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useState } from "react";
 
 import { RootState, selectNote, selectRootNote } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
@@ -77,31 +77,27 @@ const CollapsibleNoteGeneric = memo(
 
     const [isEditable, setEditable] = useState(noteText ? false : true);
 
-    const handleSetDirection = useCallback((dir: string) => {
+    const handleSetDirection = (dir: string) => {
       setDirection(dir);
-    }, []);
+    };
 
-    const onChangeTextarea = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setText(event.target.value);
-      },
-      []
-    );
+    const onChangeTextarea = (
+      event: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
+      setText(event.target.value);
+    };
 
-    const onSubmitForm = useCallback(
-      (event: React.FormEvent<HTMLDivElement>) => {
-        event.preventDefault();
+    const onSubmitForm = (event: React.FormEvent<HTMLDivElement>) => {
+      event.preventDefault();
 
-        saveNote();
+      saveNote();
 
-        setEditable(false);
-      },
-      [noteText, noteDirection]
-    );
+      setEditable(false);
+    };
 
-    const onClickEditButton = useCallback(() => {
+    const onClickEditButton = () => {
       setEditable(true);
-    }, []);
+    };
 
     return (
       <CollapsibleGeneric
