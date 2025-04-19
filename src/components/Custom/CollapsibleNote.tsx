@@ -33,48 +33,54 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
 
   const [isEditable, setEditable] = useState(inputValue ? false : true);
 
-  const handleSetDirection = (dir: string) => {
+  const handleSetDirection = useCallback((dir: string) => {
     dispatch(
       verseNotesActions.changeNoteDir({
         name: inputKey,
         value: dir,
       })
     );
-  };
+  }, []);
 
-  const onChangeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(
-      verseNotesActions.changeNote({
-        name: inputKey,
-        value: event.target.value,
-      })
-    );
-  };
+  const onChangeTextarea = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      dispatch(
+        verseNotesActions.changeNote({
+          name: inputKey,
+          value: event.target.value,
+        })
+      );
+    },
+    []
+  );
 
-  const onSubmitForm = (event: React.FormEvent<HTMLDivElement>) => {
-    event.preventDefault();
+  const onSubmitForm = useCallback(
+    (event: React.FormEvent<HTMLDivElement>) => {
+      event.preventDefault();
 
-    dbFuncs
-      .saveNote(inputKey, inputValue, inputDirection)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
+      dbFuncs
+        .saveNote(inputKey, inputValue, inputDirection)
+        .then(() => {
+          toaster.create({
+            description: t("save_success"),
+            type: "success",
+          });
+        })
+        .catch(() => {
+          toaster.create({
+            description: t("save_failed"),
+            type: "error",
+          });
         });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
 
-    setEditable(false);
-  };
+      setEditable(false);
+    },
+    [inputValue, inputDirection]
+  );
 
-  const onClickEditButton = () => {
+  const onClickEditButton = useCallback(() => {
     setEditable(true);
-  };
+  }, []);
 
   return (
     <CollapsibleGeneric
