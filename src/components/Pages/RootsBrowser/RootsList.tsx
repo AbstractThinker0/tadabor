@@ -1,12 +1,9 @@
 import { memo, useCallback, useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
-import { dbFuncs } from "@/util/db";
 import useQuran from "@/context/useQuran";
 
 import { rootProps, verseMatchResult, searchIndexProps } from "quran-tools";
-import { selectRootNote, useAppDispatch, useAppSelector } from "@/store";
-import { rootNotesActions } from "@/store/slices/global/rootNotes";
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
@@ -25,8 +22,11 @@ import {
 } from "@chakra-ui/react";
 
 import { Tooltip } from "@/components/ui/tooltip";
-import { toaster } from "@/components/ui/toaster";
-import { CollapsibleNote, FormText } from "@/components/Custom/CollapsibleNote";
+
+import {
+  CollapsibleNote,
+  CollapsibleRootNote,
+} from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 import { useBoolean } from "usehooks-ts";
@@ -106,65 +106,9 @@ const RootComponent = memo(
     root_count,
     handleVerseTab,
   }: RootComponentProps) => {
-    const currentNote = useAppSelector(selectRootNote(root_id));
     const { t } = useTranslation();
-    const dispatch = useAppDispatch();
     const { value: isOpen, toggle: setOpen } = useBoolean();
     const { value: isOccurencesOpen, toggle: setOccurencesOpen } = useBoolean();
-
-    const noteText = currentNote?.text || "";
-    const inputDirection = currentNote?.dir || "";
-
-    const [stateEditable, setStateEditable] = useState(noteText ? false : true);
-
-    const handleNoteSubmit = useCallback(
-      (event: React.FormEvent<HTMLDivElement>) => {
-        event.preventDefault();
-
-        dbFuncs
-          .saveRootNote(root_id, noteText, inputDirection)
-          .then(() => {
-            toaster.create({
-              description: t("save_success"),
-              type: "success",
-            });
-          })
-          .catch(() => {
-            toaster.create({
-              description: t("save_failed"),
-              type: "error",
-            });
-          });
-
-        setStateEditable(false);
-      },
-      [noteText, inputDirection]
-    );
-
-    const handleSetDirection = useCallback((dir: string) => {
-      dispatch(
-        rootNotesActions.changeRootNoteDir({
-          name: root_id,
-          value: dir,
-        })
-      );
-    }, []);
-
-    const handleNoteChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        dispatch(
-          rootNotesActions.changeRootNote({
-            name: root_id,
-            value: event.target.value,
-          })
-        );
-      },
-      []
-    );
-
-    const handleEditClick = useCallback(() => {
-      setStateEditable(true);
-    }, []);
 
     return (
       <Box px={"5px"} border={"1px solid"} borderColor={"gray.emphasized"}>
@@ -185,19 +129,7 @@ const RootComponent = memo(
             </Button>
           </Flex>
         </Flex>
-        <Collapsible.Root open={isOpen} lazyMount>
-          <Collapsible.Content>
-            <FormText
-              inputValue={noteText}
-              isEditable={stateEditable}
-              inputDirection={inputDirection}
-              handleSetDirection={handleSetDirection}
-              onChangeTextarea={handleNoteChange}
-              onSubmitForm={handleNoteSubmit}
-              onClickEditButton={handleEditClick}
-            />
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <CollapsibleRootNote isOpen={isOpen} rootID={root_id} />
         <RootOccurences
           isOccurencesOpen={isOccurencesOpen}
           root_occurences={root_occurences}

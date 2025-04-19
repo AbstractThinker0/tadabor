@@ -1,8 +1,14 @@
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { selectNote, useAppDispatch, useAppSelector } from "@/store";
+import {
+  selectNote,
+  selectRootNote,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
+import { rootNotesActions } from "@/store/slices/global/rootNotes";
 import { dbFuncs } from "@/util/db";
 
 import { Box, Collapsible } from "@chakra-ui/react";
@@ -71,6 +77,119 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
   };
 
   return (
+    <CollapsibleGeneric
+      isOpen={isOpen}
+      isEditable={isEditable}
+      inputValue={inputValue}
+      inputDirection={inputDirection}
+      onClickEditButton={onClickEditButton}
+      handleSetDirection={handleSetDirection}
+      onChangeTextarea={onChangeTextarea}
+      onSubmitForm={onSubmitForm}
+    />
+  );
+});
+
+interface CollapsibleRootNoteProps {
+  isOpen: boolean;
+  rootID: string;
+}
+
+const CollapsibleRootNote = ({ isOpen, rootID }: CollapsibleRootNoteProps) => {
+  const currentNote = useAppSelector(selectRootNote(rootID));
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const noteText = currentNote?.text || "";
+  const inputDirection = currentNote?.dir || "";
+
+  const [stateEditable, setStateEditable] = useState(noteText ? false : true);
+
+  const handleNoteSubmit = useCallback(
+    (event: React.FormEvent<HTMLDivElement>) => {
+      event.preventDefault();
+
+      dbFuncs
+        .saveRootNote(rootID, noteText, inputDirection)
+        .then(() => {
+          toaster.create({
+            description: t("save_success"),
+            type: "success",
+          });
+        })
+        .catch(() => {
+          toaster.create({
+            description: t("save_failed"),
+            type: "error",
+          });
+        });
+
+      setStateEditable(false);
+    },
+    [noteText, inputDirection]
+  );
+
+  const handleSetDirection = useCallback((dir: string) => {
+    dispatch(
+      rootNotesActions.changeRootNoteDir({
+        name: rootID,
+        value: dir,
+      })
+    );
+  }, []);
+
+  const handleNoteChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      dispatch(
+        rootNotesActions.changeRootNote({
+          name: rootID,
+          value: event.target.value,
+        })
+      );
+    },
+    []
+  );
+
+  const handleEditClick = useCallback(() => {
+    setStateEditable(true);
+  }, []);
+
+  return (
+    <CollapsibleGeneric
+      isOpen={isOpen}
+      inputValue={noteText}
+      isEditable={stateEditable}
+      inputDirection={inputDirection}
+      handleSetDirection={handleSetDirection}
+      onChangeTextarea={handleNoteChange}
+      onSubmitForm={handleNoteSubmit}
+      onClickEditButton={handleEditClick}
+    />
+  );
+};
+
+interface CollapsibleGenericProps {
+  isOpen: boolean;
+  isEditable: boolean;
+  inputValue: string;
+  inputDirection: string;
+  onClickEditButton: () => void;
+  handleSetDirection: (dir: string) => void;
+  onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
+}
+
+const CollapsibleGeneric = ({
+  isOpen,
+  isEditable,
+  inputValue,
+  inputDirection,
+  onClickEditButton,
+  handleSetDirection,
+  onChangeTextarea,
+  onSubmitForm,
+}: CollapsibleGenericProps) => {
+  return (
     <Collapsible.Root open={isOpen} lazyMount unmountOnExit>
       <Collapsible.Content>
         <FormText
@@ -85,7 +204,7 @@ const CollapsibleNote = memo(({ isOpen, inputKey }: CollapsibleNoteProps) => {
       </Collapsible.Content>
     </Collapsible.Root>
   );
-});
+};
 
 interface FormTextProps {
   isEditable: boolean;
@@ -135,4 +254,4 @@ const FormText = ({
   );
 };
 
-export { CollapsibleNote, FormText };
+export { CollapsibleNote, CollapsibleRootNote, CollapsibleGeneric, FormText };
