@@ -12,9 +12,16 @@ interface ChangeNoteDirPayload {
   value: string;
 }
 
+interface SavedNotePayload {
+  name: string;
+  text: string;
+  dir: string;
+}
+
 interface VerseNotesType {
   data: UserNotesType;
   dataKeys: string[];
+  dataSaved: UserNotesType;
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -23,6 +30,7 @@ interface VerseNotesType {
 const initialState: VerseNotesType = {
   data: {},
   dataKeys: [],
+  dataSaved: {},
   loading: true,
   complete: false,
   error: false,
@@ -84,6 +92,12 @@ const verseNotesSlice = createSlice({
         state.dataKeys.push(name);
       }
     },
+    changeSavedNote: (state, action: PayloadAction<SavedNotePayload>) => {
+      const name = action.payload.name;
+      state.data[name].saved = true;
+      state.dataSaved[name].text = action.payload.text;
+      state.dataSaved[name].dir = action.payload.dir;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,6 +107,8 @@ const verseNotesSlice = createSlice({
         if (action.payload) {
           state.data = action.payload;
           state.dataKeys = Object.keys(action.payload);
+
+          state.dataSaved = action.payload;
         }
       })
       .addCase(fetchVerseNotes.pending, (state) => {

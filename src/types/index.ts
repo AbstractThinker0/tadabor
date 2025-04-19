@@ -12,6 +12,7 @@ export interface selectedChaptersType {
 export interface NoteProp {
   text: string;
   dir?: string;
+  saved?: boolean;
 }
 
 export interface UserNotesType {

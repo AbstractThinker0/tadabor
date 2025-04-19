@@ -47,6 +47,7 @@ export const fetchRootNotes = createAsyncThunk<
     notesData[note.id] = {
       text: note.text,
       dir: note.dir,
+      saved: true,
     };
   });
 
