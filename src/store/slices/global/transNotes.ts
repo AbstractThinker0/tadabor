@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TransNotesType } from "@/types";
+import { UserNotesType } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 interface ChangeTranslationPayload {
@@ -7,9 +7,16 @@ interface ChangeTranslationPayload {
   value: string;
 }
 
+interface SavedTransPayload {
+  name: string;
+  text: string;
+  dir: string;
+}
+
 interface TransNotesState {
-  data: TransNotesType;
+  data: UserNotesType;
   dataKeys: string[];
+  dataSaved: UserNotesType;
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -18,13 +25,14 @@ interface TransNotesState {
 const initialState: TransNotesState = {
   data: {},
   dataKeys: [],
+  dataSaved: {},
   loading: true,
   complete: false,
   error: false,
 };
 
 export const fetchTransNotes = createAsyncThunk<
-  false | TransNotesType,
+  false | UserNotesType,
   void,
   { state: { transNotes: TransNotesState } }
 >("transNotes/fetchTransNotes", async (_, { getState }) => {
@@ -36,10 +44,14 @@ export const fetchTransNotes = createAsyncThunk<
 
   const dbData = await dbFuncs.loadTranslations();
 
-  const notesData: TransNotesType = {};
+  const notesData: UserNotesType = {};
 
   dbData.forEach((note) => {
-    notesData[note.id] = note.text;
+    notesData[note.id] = {
+      text: note.text,
+      dir: "",
+      saved: true,
+    };
   });
 
   return notesData;
@@ -55,11 +67,24 @@ const transNotesSlice = createSlice({
     ) => {
       const { name, value } = action.payload;
 
-      state.data[name] = value;
-
-      if (!state.dataKeys.includes(name)) {
+      if (state.data[name]) {
+        if (state.data[name].text !== value) {
+          state.data[name].text = value;
+          state.data[name].saved = false;
+        }
+      } else {
+        state.data[name] = {
+          text: value,
+          dir: "",
+          saved: false,
+        };
         state.dataKeys.push(name);
       }
+    },
+    changeSavedTrans: (state, action: PayloadAction<SavedTransPayload>) => {
+      const name = action.payload.name;
+      state.data[name].saved = true;
+      state.dataSaved[name] = state.data[name];
     },
   },
   extraReducers: (builder) => {
@@ -70,6 +95,8 @@ const transNotesSlice = createSlice({
         if (action.payload) {
           state.data = action.payload;
           state.dataKeys = Object.keys(action.payload);
+
+          state.dataSaved = action.payload;
         }
       })
       .addCase(fetchTransNotes.pending, (state) => {

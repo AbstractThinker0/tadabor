@@ -19,10 +19,6 @@ export interface UserNotesType {
   [key: string]: NoteProp;
 }
 
-export interface TransNotesType {
-  [key: string]: string;
-}
-
 interface LetterType {
   name: string;
   definition: string;

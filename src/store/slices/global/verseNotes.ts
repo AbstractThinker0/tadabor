@@ -54,6 +54,7 @@ export const fetchVerseNotes = createAsyncThunk<
     notesData[note.id] = {
       text: note.text,
       dir: note.dir,
+      saved: true,
     };
   });
 
@@ -68,13 +69,16 @@ const verseNotesSlice = createSlice({
       const { name, value } = action.payload;
 
       if (state.data[name]) {
-        state.data[name].text = value;
+        if (state.data[name].text !== value) {
+          state.data[name].text = value;
+          state.data[name].saved = false;
+        }
       } else {
         state.data[name] = {
           text: value,
           dir: "",
+          saved: false,
         };
-
         state.dataKeys.push(name);
       }
     },
@@ -88,15 +92,13 @@ const verseNotesSlice = createSlice({
           text: "",
           dir: value,
         };
-
         state.dataKeys.push(name);
       }
     },
     changeSavedNote: (state, action: PayloadAction<SavedNotePayload>) => {
       const name = action.payload.name;
       state.data[name].saved = true;
-      state.dataSaved[name].text = action.payload.text;
-      state.dataSaved[name].dir = action.payload.dir;
+      state.dataSaved[name] = state.data[name];
     },
   },
   extraReducers: (builder) => {

@@ -12,9 +12,16 @@ interface ChangeNoteDirPayload {
   value: string;
 }
 
+interface SavedNotePayload {
+  name: string;
+  text: string;
+  dir: string;
+}
+
 interface RootNotesType {
   data: UserNotesType;
   dataKeys: string[];
+  dataSaved: UserNotesType;
   loading: boolean;
   complete: boolean;
   error: boolean;
@@ -23,6 +30,7 @@ interface RootNotesType {
 const initialState: RootNotesType = {
   data: {},
   dataKeys: [],
+  dataSaved: {},
   loading: true,
   complete: false,
   error: false,
@@ -62,13 +70,16 @@ const rootNotesSlice = createSlice({
       const { name, value } = action.payload;
 
       if (state.data[name]) {
-        state.data[name].text = value;
+        if (state.data[name].text !== value) {
+          state.data[name].text = value;
+          state.data[name].saved = false;
+        }
       } else {
         state.data[name] = {
           text: value,
           dir: "",
+          saved: false,
         };
-
         state.dataKeys.push(name);
       }
     },
@@ -82,9 +93,13 @@ const rootNotesSlice = createSlice({
           text: "",
           dir: value,
         };
-
         state.dataKeys.push(name);
       }
+    },
+    changeSavedNote: (state, action: PayloadAction<SavedNotePayload>) => {
+      const name = action.payload.name;
+      state.data[name].saved = true;
+      state.dataSaved[name] = state.data[name];
     },
   },
   extraReducers: (builder) => {
@@ -95,6 +110,8 @@ const rootNotesSlice = createSlice({
         if (action.payload) {
           state.data = action.payload;
           state.dataKeys = Object.keys(action.payload);
+
+          state.dataSaved = action.payload;
         }
       })
       .addCase(fetchRootNotes.pending, (state) => {
