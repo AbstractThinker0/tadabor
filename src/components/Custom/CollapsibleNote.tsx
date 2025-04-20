@@ -75,15 +75,21 @@ const CollapsibleNoteGeneric = memo(
     actionSaveNote,
     dbSaveNote,
   }: CollapsibleNoteGenericProps) => {
-    const { noteText, noteDirection, setText, setDirection, saveNote } =
-      useNote({
-        noteID,
-        noteSelector,
-        actionChangeNoteDir,
-        actionChangeNote,
-        actionSaveNote,
-        dbSaveNote,
-      });
+    const {
+      noteText,
+      noteDirection,
+      noteSaved,
+      setText,
+      setDirection,
+      saveNote,
+    } = useNote({
+      noteID,
+      noteSelector,
+      actionChangeNoteDir,
+      actionChangeNote,
+      actionSaveNote,
+      dbSaveNote,
+    });
 
     const [isEditable, setEditable] = useState(noteText ? false : true);
 
@@ -113,8 +119,9 @@ const CollapsibleNoteGeneric = memo(
       <CollapsibleGeneric
         isOpen={isOpen}
         inputValue={noteText}
-        isEditable={isEditable}
         inputDirection={noteDirection}
+        inputSaved={noteSaved}
+        isEditable={isEditable}
         handleSetDirection={handleSetDirection}
         onChangeTextarea={onChangeTextarea}
         onSubmitForm={onSubmitForm}
@@ -129,6 +136,7 @@ interface CollapsibleGenericProps {
   isEditable: boolean;
   inputValue: string;
   inputDirection: string;
+  inputSaved: boolean;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -140,6 +148,7 @@ const CollapsibleGeneric = ({
   isEditable,
   inputValue,
   inputDirection,
+  inputSaved,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -152,6 +161,7 @@ const CollapsibleGeneric = ({
           isEditable={isEditable}
           inputValue={inputValue}
           inputDirection={inputDirection}
+          inputSaved={inputSaved}
           onClickEditButton={onClickEditButton}
           handleSetDirection={handleSetDirection}
           onChangeTextarea={onChangeTextarea}
@@ -166,6 +176,7 @@ interface FormTextProps {
   isEditable: boolean;
   inputValue: string;
   inputDirection: string;
+  inputSaved?: boolean;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -176,6 +187,7 @@ const FormText = ({
   isEditable,
   inputValue,
   inputDirection,
+  inputSaved = true,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -195,7 +207,9 @@ const FormText = ({
         <NoteContainer
           inputValue={inputValue}
           inputDirection={inputDirection}
+          inputSaved={inputSaved}
           onClickEditButton={onClickEditButton}
+          onSubmitForm={onSubmitForm}
         />
       ) : (
         <NoteForm

@@ -6,12 +6,13 @@ import { toaster } from "@/components/ui/toaster";
 import {
   ChangeNoteDirPayload,
   ChangeNotePayload,
+  NoteProp,
   SavedNotePayload,
 } from "@/types";
 
 interface useNoteParams {
   noteID: string;
-  noteSelector: (id: string) => (state: RootState) => any;
+  noteSelector: (id: string) => (state: RootState) => NoteProp;
   actionChangeNote: (payload: ChangeNotePayload) => any;
   actionChangeNoteDir: (payload: ChangeNoteDirPayload) => any;
   actionSaveNote: (payload: SavedNotePayload) => any;
@@ -29,6 +30,8 @@ export const useNote = ({
   const note = useAppSelector(noteSelector(noteID));
   const noteText = note?.text || "";
   const noteDirection = note?.dir || "";
+  const noteSaved = note?.saved || false;
+
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
@@ -41,17 +44,19 @@ export const useNote = ({
   };
 
   const saveNote = () => {
+    dispatch(
+      actionSaveNote({ name: noteID, text: noteText, dir: noteDirection })
+    );
+
     dbSaveNote(noteID, noteText, noteDirection)
       .then(() => {
-        dispatch(
-          actionSaveNote({ name: noteID, text: noteText, dir: noteDirection })
-        );
         toaster.create({
           description: t("save_success"),
           type: "success",
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("Failed to save note:", error);
         toaster.create({
           description: t("save_failed"),
           type: "error",
@@ -62,6 +67,7 @@ export const useNote = ({
   return {
     noteText,
     noteDirection,
+    noteSaved,
     setText,
     setDirection,
     saveNote,

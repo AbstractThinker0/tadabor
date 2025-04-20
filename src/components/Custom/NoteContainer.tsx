@@ -1,29 +1,39 @@
 import { useAppSelector } from "@/store";
 
-import { Box, Text } from "@chakra-ui/react";
-import { ButtonEdit } from "@/components/Generic/Buttons";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
 interface NoteContainerProps {
   inputValue: string;
   inputDirection: string;
+  inputSaved?: boolean;
   onClickEditButton: () => void;
+  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
 }
 
 const NoteContainer = ({
   inputValue,
   inputDirection,
+  inputSaved = true,
   onClickEditButton,
+  onSubmitForm,
 }: NoteContainerProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
-    <Box px={"0.5rem"} pb={"0.5rem"} pt={"3rem"}>
+    <Box
+      as="form"
+      onSubmit={onSubmitForm}
+      px={"0.5rem"}
+      pb={"0.5rem"}
+      pt={"3rem"}
+    >
       <Box
         py={2}
         px={3}
         mb={2}
         border={"1px solid"}
-        borderColor={"green.solid"}
+        borderColor={inputSaved ? "green.solid" : "yellow.solid"}
         borderRadius={"2xl"}
       >
         <Text
@@ -35,9 +45,10 @@ const NoteContainer = ({
           {inputValue}
         </Text>
       </Box>
-      <Box textAlign={"center"}>
+      <Flex justifyContent={"center"} gap={"1rem"}>
         <ButtonEdit onClick={onClickEditButton} />
-      </Box>
+        {!inputSaved && <ButtonSave />}
+      </Flex>
     </Box>
   );
 };
