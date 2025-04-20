@@ -44,11 +44,11 @@ const DisplayPanel = () => {
       ) : (
         <Flex
           flexDir="column"
-          minH="100%"
           bgColor={"brand.contrast"}
           borderRadius={5}
           border={"1px solid"}
           borderColor={"border.emphasized"}
+          flex={1}
         >
           {searchResult.length || searchError ? (
             <ListSearchResults
