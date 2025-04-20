@@ -6,7 +6,7 @@ import { inspectorPageActions } from "@/store/slices/pages/inspector";
 import { ChapterHeader } from "@/components/Generic/ChapterHeader";
 
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 interface DisplayProps {
   currentChapter: string;
@@ -31,17 +31,18 @@ const Display = ({ currentChapter }: DisplayProps) => {
       minH={"100%"}
       ref={refDisplay}
     >
-      <Box
+      <Flex
         bgColor={"brand.contrast"}
         minH={"100%"}
         border={"1px solid"}
         borderColor={"border.emphasized"}
         color={"inherit"}
         borderRadius={"l3"}
+        flexDirection={"column"}
       >
         <ListTitle />
         <ListVerses currentChapter={currentChapter} />
-      </Box>
+      </Flex>
     </Box>
   );
 };

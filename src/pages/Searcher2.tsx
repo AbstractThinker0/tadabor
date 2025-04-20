@@ -232,7 +232,7 @@ const Searcher2Tab = () => {
           onScroll={handleScroll}
         >
           {isPending || isVNotesLoading ? (
-            <LoadingSpinner />
+            <LoadingSpinner text="Loading verses.." />
           ) : (
             stateVerses
               .slice(0, itemsCount)

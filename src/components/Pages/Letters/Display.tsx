@@ -4,7 +4,7 @@ import { useAppSelector } from "@/store";
 
 import { ListTitle } from "@/components/Pages/Letters/ListTitle";
 import ListVerses from "@/components/Pages/Letters/ListVerses";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 const Display = () => {
   const refDisplay = useRef<HTMLDivElement>(null);
@@ -28,17 +28,18 @@ const Display = () => {
       minH={"100%"}
       ref={refDisplay}
     >
-      <Box
+      <Flex
         bgColor={"brand.panel"}
         color={"inherit"}
         minH={"100%"}
         borderRadius={"l3"}
         border={"1px solid"}
         borderColor={"border"}
+        flexDirection={"column"}
       >
         <ListTitle />
         <ListVerses />
-      </Box>
+      </Flex>
     </Box>
   );
 };

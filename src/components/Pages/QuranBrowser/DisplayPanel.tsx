@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
   const dispatch = useAppDispatch();
@@ -31,10 +31,10 @@ const DisplayPanel = () => {
   }, []);
 
   return (
-    <Box
+    <Flex
       flex={1}
       overflowY="scroll"
-      minH="100%"
+      flexDirection={"column"}
       px={"0.5rem"}
       py={"0.5rem"}
       ref={refListVerses}
@@ -60,7 +60,7 @@ const DisplayPanel = () => {
           )}
         </Flex>
       )}
-    </Box>
+    </Flex>
   );
 };
 

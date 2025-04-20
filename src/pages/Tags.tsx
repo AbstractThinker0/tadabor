@@ -80,7 +80,7 @@ function Tags() {
     dispatch(tagsPageActions.setSearchPanel(state));
   };
 
-  if (loadingState) return <LoadingSpinner />;
+  if (loadingState) return <LoadingSpinner text="Loading tags.." />;
 
   return (
     <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>
@@ -91,7 +91,11 @@ function Tags() {
       >
         <TagsSide />
       </Sidebar>
-      {isVNotesLoading ? <LoadingSpinner /> : <TagsDisplay />}
+      {isVNotesLoading ? (
+        <LoadingSpinner text="Loading verses.." />
+      ) : (
+        <TagsDisplay />
+      )}
     </Flex>
   );
 }

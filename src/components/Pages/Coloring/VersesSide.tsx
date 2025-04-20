@@ -24,7 +24,8 @@ const VersesSide = () => {
 
   return (
     <Flex flexDir={"column"} flex={1} pt={2} ps={1}>
-      <Box
+      <Flex
+        flexDir={"column"}
         overflowY={"scroll"}
         flex={1}
         bgColor={"brand.contrast"}
@@ -38,7 +39,7 @@ const VersesSide = () => {
         ) : (
           <VersesList openVerseModal={onOpen} />
         )}
-      </Box>
+      </Flex>
       <VerseModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
@@ -93,7 +94,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
     <>
       <ListTitle />
       {isPending ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading verses.." />
       ) : (
         <Box px={2} dir="rtl" ref={handleVerseListRef}>
           {stateVerses.map((verse) => (

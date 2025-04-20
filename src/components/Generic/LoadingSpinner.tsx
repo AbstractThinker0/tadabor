@@ -6,14 +6,7 @@ interface LoadingSpinnerProps {
 
 const LoadingSpinner = ({ text }: LoadingSpinnerProps) => {
   return (
-    <Flex
-      flexDir="column"
-      minH="100%"
-      h="100%"
-      alignItems="center"
-      justifyContent="center"
-      flex={1}
-    >
+    <Flex flexDir="column" alignItems="center" justifyContent="center" flex={1}>
       <Span>
         <Spinner
           borderWidth="4px"

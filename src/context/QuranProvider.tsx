@@ -54,7 +54,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner text="Loading Quran data.." />;
   }
 
   return (

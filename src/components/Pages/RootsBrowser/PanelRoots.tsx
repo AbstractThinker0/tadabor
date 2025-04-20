@@ -77,7 +77,7 @@ const PanelRoots = () => {
       />
 
       {isRNotesLoading || isVNotesLoading || !rootsLoaded ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading roots data.." />
       ) : (
         <RootsList
           searchString={searchString}

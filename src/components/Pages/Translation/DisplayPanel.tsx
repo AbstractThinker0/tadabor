@@ -79,8 +79,9 @@ const DisplayPanel = () => {
     >
       <Flex flexDirection={"column"} minH={"100%"}>
         <ListTitle />
-        <Box
+        <Flex
           flex={1}
+          flexDirection={"column"}
           p={1}
           border={"1px solid"}
           borderColor={"border.emphasized"}
@@ -88,7 +89,7 @@ const DisplayPanel = () => {
           ref={handleVerseListRef}
         >
           {isPending ? (
-            <LoadingSpinner />
+            <LoadingSpinner text="Loading verses.." />
           ) : (
             stateVerses.map((verse) => {
               return (
@@ -100,7 +101,7 @@ const DisplayPanel = () => {
               );
             })
           )}
-        </Box>
+        </Flex>
       </Flex>
     </Box>
   );

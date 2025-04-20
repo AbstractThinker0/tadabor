@@ -64,7 +64,11 @@ const Translation = () => {
           />
         </Box>
       </Sidebar>
-      {isTNotesLoading ? <LoadingSpinner /> : <DisplayPanel />}
+      {isTNotesLoading ? (
+        <LoadingSpinner text="Loading translation notes.." />
+      ) : (
+        <DisplayPanel />
+      )}
     </Flex>
   );
 };

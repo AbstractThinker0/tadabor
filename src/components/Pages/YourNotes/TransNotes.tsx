@@ -28,7 +28,15 @@ const TransNotes = () => {
     dispatch(fetchTransNotes());
   }, []);
 
-  return <>{isTNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+  return (
+    <>
+      {isTNotesLoading ? (
+        <LoadingSpinner text="Loading translation data.." />
+      ) : (
+        <NotesList />
+      )}
+    </>
+  );
 };
 
 const NotesList = () => {

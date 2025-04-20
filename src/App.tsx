@@ -20,7 +20,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const App = () => {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<LoadingSpinner text="Loading page.." />}>
       <Routes>
         <Route path="/" element={<QuranBrowser />} />
         <Route path="/roots" element={<RootsBrowser />} />

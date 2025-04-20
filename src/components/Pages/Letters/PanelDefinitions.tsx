@@ -75,7 +75,8 @@ const PanelDefinitions = () => {
     dispatch(fetchLettersPresets());
   }, []);
 
-  if (definitionsLoading || presetsLoading) return <LoadingSpinner />;
+  if (definitionsLoading || presetsLoading)
+    return <LoadingSpinner text="Loading definitions" />;
 
   return (
     <Flex

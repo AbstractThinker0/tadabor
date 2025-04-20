@@ -110,7 +110,7 @@ function Coloring() {
     dispatch(coloringPageActions.setSearchPanel(state));
   };
 
-  if (loadingState) return <LoadingSpinner />;
+  if (loadingState) return <LoadingSpinner text="Loading colors data.." />;
 
   return (
     <Flex overflow={"hidden"} maxH={"100%"} h={"100%"} bgColor={"brand.bg"}>
@@ -121,7 +121,11 @@ function Coloring() {
       >
         <ChaptersSide />
       </Sidebar>
-      {isVNotesLoading ? <LoadingSpinner /> : <VersesSide />}
+      {isVNotesLoading ? (
+        <LoadingSpinner text="Loading verse notes.." />
+      ) : (
+        <VersesSide />
+      )}
     </Flex>
   );
 }

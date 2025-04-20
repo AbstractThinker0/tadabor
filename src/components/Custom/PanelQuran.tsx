@@ -83,7 +83,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
         سورة {quranService.getChapterName(suraID)}
       </Heading>
       {isPending || isVNotesLoading ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading verses.." />
       ) : (
         stateVerses.map((verse) => (
           <VerseItem

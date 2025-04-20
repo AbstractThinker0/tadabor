@@ -118,7 +118,7 @@ const VersesList = () => {
     });
   }, [search_roots]);
 
-  if (isPending) return <LoadingSpinner />;
+  if (isPending) return <LoadingSpinner text="Loading verses.." />;
 
   return (
     <>

@@ -25,22 +25,26 @@ const SearcherSide = () => {
     setSearchToken("");
   };
 
-  if (isVNotesLoading || !rootsLoaded) return <LoadingSpinner />;
-
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
-      <InputString
-        inputElementProps={{
-          borderBottom: "none",
-          borderBottomRadius: "0",
-        }}
-        value={searchToken}
-        onChange={onChangeToken}
-        onClear={onClearInput}
-        dir="rtl"
-      />
-      <RootsList searchString={searchToken} />
-      <CountVerses />
+      {isVNotesLoading || !rootsLoaded ? (
+        <LoadingSpinner text="Loading roots.." />
+      ) : (
+        <>
+          <InputString
+            inputElementProps={{
+              borderBottom: "none",
+              borderBottomRadius: "0",
+            }}
+            value={searchToken}
+            onChange={onChangeToken}
+            onClear={onClearInput}
+            dir="rtl"
+          />
+          <RootsList searchString={searchToken} />
+          <CountVerses />
+        </>
+      )}
     </Flex>
   );
 };
@@ -116,7 +120,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
       cursor={"pointer"}
     >
       {isPending ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading roots.." />
       ) : (
         stateRoots
           .slice(0, itemsCount)

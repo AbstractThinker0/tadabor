@@ -11,7 +11,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
 
@@ -65,7 +65,13 @@ const Display = ({
   );
 
   return (
-    <Box bgColor={"brand.bg"} px={5} smDown={{ px: "5px" }}>
+    <Flex
+      flex={1}
+      flexDirection={"column"}
+      bgColor={"brand.bg"}
+      px={5}
+      smDown={{ px: "5px" }}
+    >
       <Box
         bgColor={"bg.subtle"}
         textAlign={"center"}
@@ -74,9 +80,9 @@ const Display = ({
       >
         سورة {quranService.getChapterName(currentChapter)}
       </Box>
-      <Box ref={handleVerseListRef}>
+      <Flex flexDirection={"column"} flex={1} ref={handleVerseListRef}>
         {isPending ? (
-          <LoadingSpinner />
+          <LoadingSpinner text="Loading verses.." />
         ) : (
           stateVerses.map((verse) => (
             <VerseItem
@@ -88,8 +94,8 @@ const Display = ({
             />
           ))
         )}
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   );
 };
 

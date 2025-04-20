@@ -100,7 +100,7 @@ const ListSearchResults = ({
   }
 
   return (
-    <Box p={1}>
+    <Flex flex={1} flexDirection={"column"} p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
@@ -128,7 +128,7 @@ const ListSearchResults = ({
           )}
         </Box>
       )}
-    </Box>
+    </Flex>
   );
 };
 

@@ -32,7 +32,8 @@ const RootNotes = () => {
     dispatch(fetchRootNotes());
   }, []);
 
-  if (!rootsLoaded || isRNotesLoading) return <LoadingSpinner />;
+  if (!rootsLoaded || isRNotesLoading)
+    return <LoadingSpinner text="Loading roots data.." />;
 
   return <NotesList />;
 };

@@ -17,7 +17,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
-import { Box, Alert, CloseButton, Spacer } from "@chakra-ui/react";
+import { Box, Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Comparator() {
@@ -81,10 +81,10 @@ function Comparator() {
       </Box>
     );
 
-  if (!complete) return <LoadingSpinner />;
+  if (!complete) return <LoadingSpinner text="Loading translations.." />;
 
   return (
-    <Box bgColor={"brand.bg"}>
+    <Flex flexDirection={"column"} flex={1} bgColor={"brand.bg"}>
       <Menu
         chapterVerses={chapterVerses}
         handleSelectVerse={selectVerse}
@@ -92,7 +92,7 @@ function Comparator() {
       />
       <TransAlert />
       {isVNotesLoading || isTNotesLoading ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading notes.." />
       ) : (
         <Display
           currentChapter={currentChapter}
@@ -102,7 +102,7 @@ function Comparator() {
           handleSelectVerse={selectVerse}
         />
       )}
-    </Box>
+    </Flex>
   );
 }
 

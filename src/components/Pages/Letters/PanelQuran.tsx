@@ -23,6 +23,7 @@ const PanelQuran = memo(
       (state) => state.lettersPage.currentChapter
     );
 
+    // Note yet using verse notes in this page @TODO
     const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
     const handleSelectChapter = useCallback((chapterID: string) => {
@@ -60,7 +61,11 @@ const PanelQuran = memo(
             />
           </Box>
         </Sidebar>
-        {isVNotesLoading ? <LoadingSpinner /> : <Display />}
+        {isVNotesLoading ? (
+          <LoadingSpinner text="Loading verse notes" />
+        ) : (
+          <Display />
+        )}
       </Flex>
     );
   },

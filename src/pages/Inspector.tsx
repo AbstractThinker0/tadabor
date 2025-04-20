@@ -68,7 +68,7 @@ function Inspector() {
         </Box>
       </Sidebar>
       {isVNotesLoading || !rootsLoaded ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading data.." />
       ) : (
         <Display currentChapter={currentChapter} />
       )}

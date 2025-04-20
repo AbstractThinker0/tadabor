@@ -66,9 +66,9 @@ const RootsList = memo(
     }, [searchString, searchInclusive]);
 
     return (
-      <Box>
+      <Flex flex={1} flexDirection={"column"}>
         {isPending ? (
-          <LoadingSpinner />
+          <LoadingSpinner text="Loading roots.." />
         ) : (
           stateRoots
             .slice(0, itemsCount)
@@ -83,7 +83,7 @@ const RootsList = memo(
               />
             ))
         )}
-      </Box>
+      </Flex>
     );
   }
 );

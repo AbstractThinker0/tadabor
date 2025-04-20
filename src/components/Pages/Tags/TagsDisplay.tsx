@@ -328,7 +328,7 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
         dir="rtl"
       >
         {isPending ? (
-          <LoadingSpinner />
+          <LoadingSpinner text="Loading verses.." />
         ) : (
           stateVerses.map((verse) => (
             <Box

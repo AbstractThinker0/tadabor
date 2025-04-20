@@ -84,7 +84,7 @@ const ListBody = () => {
     }
   }, [scrollKey, isPending]);
 
-  if (isPending) return <LoadingSpinner text="Loading verses..." />;
+  if (isPending) return <LoadingSpinner text="Loading verses.." />;
 
   return (
     <Box

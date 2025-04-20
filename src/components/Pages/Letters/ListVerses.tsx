@@ -64,13 +64,13 @@ const ListVerses = () => {
   }, [currentChapter]);
 
   return (
-    <Box px={3} dir="rtl">
+    <Flex flexDirection={"column"} flex={1} px={3} dir="rtl">
       {isPending || dataLoading ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading verses.." />
       ) : (
         stateVerses.map((verse) => <VerseItem key={verse.key} verse={verse} />)
       )}
-    </Box>
+    </Flex>
   );
 };
 

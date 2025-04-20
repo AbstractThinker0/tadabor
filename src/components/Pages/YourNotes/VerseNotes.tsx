@@ -27,7 +27,15 @@ const VerseNotes = () => {
     dispatch(fetchVerseNotes());
   }, []);
 
-  return <>{isVNotesLoading ? <LoadingSpinner /> : <NotesList />}</>;
+  return (
+    <>
+      {isVNotesLoading ? (
+        <LoadingSpinner text="Loading verses data.." />
+      ) : (
+        <NotesList />
+      )}
+    </>
+  );
 };
 
 const NotesList = () => {

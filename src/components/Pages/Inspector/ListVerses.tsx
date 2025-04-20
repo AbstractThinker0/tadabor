@@ -26,6 +26,7 @@ import {
   Separator,
   Span,
   StackSeparator,
+  Flex,
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
@@ -71,9 +72,16 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
   }, [scrollKey, isPending]);
 
   return (
-    <Box ref={refVerses} py={"0.5rem"} px={"0.25rem"} dir="rtl">
+    <Flex
+      flex={1}
+      flexDirection={"column"}
+      ref={refVerses}
+      py={"0.5rem"}
+      px={"0.25rem"}
+      dir="rtl"
+    >
       {isPending ? (
-        <LoadingSpinner />
+        <LoadingSpinner text="Loading verses.." />
       ) : (
         stateVerses.map((verse) => (
           <VerseItem
@@ -83,7 +91,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
           />
         ))
       )}
-    </Box>
+    </Flex>
   );
 };
 
