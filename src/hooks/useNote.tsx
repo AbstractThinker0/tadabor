@@ -14,7 +14,7 @@ interface useNoteParams {
   noteID: string;
   noteSelector: (id: string) => (state: RootState) => NoteProp;
   actionChangeNote: (payload: ChangeNotePayload) => any;
-  actionChangeNoteDir: (payload: ChangeNoteDirPayload) => any;
+  actionChangeNoteDir?: (payload: ChangeNoteDirPayload) => any;
   actionSaveNote: (payload: SavedNotePayload) => any;
   dbSaveNote: (id: string, text: string, dir: string) => Promise<any>;
 }
@@ -40,7 +40,9 @@ export const useNote = ({
   };
 
   const setDirection = (dir: string) => {
-    dispatch(actionChangeNoteDir({ name: noteID, value: dir }));
+    if (actionChangeNoteDir) {
+      dispatch(actionChangeNoteDir({ name: noteID, value: dir }));
+    }
   };
 
   const saveNote = () => {

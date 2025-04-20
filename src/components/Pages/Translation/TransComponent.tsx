@@ -1,12 +1,13 @@
 import { memo, useState } from "react";
-import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
+import { useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
+
+import { useNote } from "@/hooks/useNote";
 import { dbFuncs } from "@/util/db";
 
 import { Box, Text } from "@chakra-ui/react";
-import { toaster } from "@/components/ui/toaster";
+
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
@@ -15,13 +16,15 @@ interface TransComponentProps {
 }
 
 const TransComponent = memo(({ inputKey }: TransComponentProps) => {
-  const { t } = useTranslation();
+  const { noteText, setText, saveNote } = useNote({
+    noteID: inputKey,
+    noteSelector: selectTransNote,
+    actionChangeNote: transNotesActions.changeTranslation,
+    actionSaveNote: transNotesActions.changeSavedTrans,
+    dbSaveNote: dbFuncs.saveTranslation,
+  });
 
-  const dispatch = useAppDispatch();
-
-  const inputValue = useAppSelector(selectTransNote(inputKey))?.text;
-
-  const [isEditable, setEditable] = useState(inputValue ? false : true);
+  const [isEditable, setEditable] = useState(noteText ? false : true);
 
   const handleEditClick = () => {
     setEditable(true);
@@ -30,41 +33,23 @@ const TransComponent = memo(({ inputKey }: TransComponentProps) => {
   const handleInputSubmit = () => {
     setEditable(false);
 
-    dbFuncs
-      .saveTranslation(inputKey, inputValue)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+    saveNote();
   };
 
   const handleInputChange = (value: string) => {
-    dispatch(
-      transNotesActions.changeTranslation({
-        name: inputKey,
-        value: value,
-      })
-    );
+    setText(value);
   };
 
   return (
     <>
       {isEditable ? (
         <Versearea
-          inputValue={inputValue}
+          inputValue={noteText}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
         />
       ) : (
-        <Versetext inputValue={inputValue} handleEditClick={handleEditClick} />
+        <Versetext inputValue={noteText} handleEditClick={handleEditClick} />
       )}
     </>
   );
@@ -109,7 +94,8 @@ const Versearea = ({
   handleInputChange,
   handleInputSubmit,
 }: VerseareaProps) => {
-  const onSubmit = () => {
+  const onSubmit = (event: React.FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
     handleInputSubmit(inputValue);
   };
 

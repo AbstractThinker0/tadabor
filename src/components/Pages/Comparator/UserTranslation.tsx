@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { selectTransNote, useAppDispatch, useAppSelector } from "@/store";
+import { selectTransNote, useAppSelector } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
+
+import { useNote } from "@/hooks/useNote";
 import { dbFuncs } from "@/util/db";
 
 import { Box, Button } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit } from "@/components/Generic/Buttons";
-import { toaster } from "@/components/ui/toaster";
 
 interface UserTranslationProps {
   verseKey: string;
@@ -16,41 +17,30 @@ interface UserTranslationProps {
 
 const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const { t } = useTranslation();
-  const verseTrans = useAppSelector(selectTransNote(verseKey))?.text;
+
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
   const [stateEditable, setStateEditable] = useState(false);
-  const dispatch = useAppDispatch();
+
+  const { noteText, setText, saveNote } = useNote({
+    noteID: verseKey,
+    noteSelector: selectTransNote,
+    actionChangeNote: transNotesActions.changeTranslation,
+    actionSaveNote: transNotesActions.changeSavedTrans,
+    dbSaveNote: dbFuncs.saveTranslation,
+  });
 
   const onClickAdd = () => {
     setStateEditable(true);
   };
 
   const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(
-      transNotesActions.changeTranslation({
-        name: verseKey,
-        value: event.target.value,
-      })
-    );
+    setText(event.target.value);
   };
 
   const onClickSave = () => {
     setStateEditable(false);
 
-    dbFuncs
-      .saveTranslation(verseKey, verseTrans)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+    saveNote();
   };
 
   return (
@@ -59,7 +49,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
       {stateEditable ? (
         <>
           <TextareaAutosize
-            value={verseTrans}
+            value={noteText}
             placeholder="Enter your text"
             onChange={onChangeText}
           />
@@ -73,9 +63,9 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
             {t("text_save")}
           </Button>
         </>
-      ) : verseTrans ? (
+      ) : noteText ? (
         <Box whiteSpace={"pre-wrap"}>
-          <Box fontSize={`${notesFS}rem`}>{verseTrans}</Box>
+          <Box fontSize={`${notesFS}rem`}>{noteText}</Box>
           <ButtonEdit onClick={onClickAdd} />
         </Box>
       ) : (

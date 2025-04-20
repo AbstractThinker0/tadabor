@@ -1,18 +1,17 @@
 import { memo, useState } from "react";
 
-import { useTranslation } from "react-i18next";
-
-import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
+import { useAppSelector, selectTransNote } from "@/store";
+import { transNotesActions } from "@/store/slices/global/transNotes";
 import useQuran from "@/context/useQuran";
 
-import { dbFuncs } from "@/util/db";
+import { useNote } from "@/hooks/useNote";
 
-import { transNotesActions } from "@/store/slices/global/transNotes";
+import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { toaster } from "@/components/ui/toaster";
+
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
@@ -53,13 +52,15 @@ interface TransBodyProps {
 }
 
 const TransBody = memo(({ inputKey }: TransBodyProps) => {
-  const { t } = useTranslation();
+  const { noteText, setText, saveNote } = useNote({
+    noteID: inputKey,
+    noteSelector: selectTransNote,
+    actionChangeNote: transNotesActions.changeTranslation,
+    actionSaveNote: transNotesActions.changeSavedTrans,
+    dbSaveNote: dbFuncs.saveTranslation,
+  });
 
-  const dispatch = useAppDispatch();
-
-  const verse_trans = useAppSelector(selectTransNote(inputKey))?.text;
-
-  const [isEditable, setEditable] = useState(verse_trans ? false : true);
+  const [isEditable, setEditable] = useState(noteText ? false : true);
 
   const handleEditClick = () => {
     setEditable(true);
@@ -68,38 +69,20 @@ const TransBody = memo(({ inputKey }: TransBodyProps) => {
   const handleInputSubmit = (inputValue: string) => {
     setEditable(false);
 
-    dbFuncs
-      .saveTranslation(inputKey, inputValue)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+    saveNote();
   };
 
   const handleInputChange = (value: string) => {
-    dispatch(
-      transNotesActions.changeTranslation({
-        name: inputKey,
-        value: value,
-      })
-    );
+    setText(value);
   };
 
   return (
     <>
       {isEditable === false ? (
-        <Versetext inputValue={verse_trans} handleEditClick={handleEditClick} />
+        <Versetext inputValue={noteText} handleEditClick={handleEditClick} />
       ) : (
         <Versearea
-          inputValue={verse_trans}
+          inputValue={noteText}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
         />

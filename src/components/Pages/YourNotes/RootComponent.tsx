@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { selectRootNote, useAppDispatch, useAppSelector } from "@/store";
+import { selectRootNote } from "@/store";
 import { rootNotesActions } from "@/store/slices/global/rootNotes";
+
+import { useNote } from "@/hooks/useNote";
 
 import { dbFuncs } from "@/util/db";
 
@@ -13,7 +14,6 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
-import { toaster } from "@/components/ui/toaster";
 import { Box } from "@chakra-ui/react";
 
 interface RootComponentProps {
@@ -22,46 +22,30 @@ interface RootComponentProps {
 
 const RootComponent = ({ inputKey }: RootComponentProps) => {
   const quranService = useQuran();
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
 
-  const rootNote = useAppSelector(selectRootNote(inputKey));
+  const { noteText, noteDirection, setText, setDirection, saveNote } = useNote({
+    noteID: inputKey,
+    noteSelector: selectRootNote,
+    actionChangeNoteDir: rootNotesActions.changeRootNote,
+    actionChangeNote: rootNotesActions.changeRootNote,
+    actionSaveNote: rootNotesActions.changeSavedNote,
+    dbSaveNote: dbFuncs.saveRootNote,
+  });
 
-  const inputValue = rootNote?.text || "";
-  const inputDirection = rootNote?.dir || "";
-
-  const [isEditable, setEditable] = useState(inputValue ? false : true);
+  const [isEditable, setEditable] = useState(noteText ? false : true);
 
   const handleTextChange = (value: string) => {
-    dispatch(rootNotesActions.changeRootNote({ name: inputKey, value }));
+    setText(value);
   };
 
   const handleFormSubmit = () => {
-    dbFuncs
-      .saveRootNote(inputKey, inputValue, inputDirection)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+    saveNote();
 
     setEditable(false);
   };
 
   const handleSetDirection = (dir: string) => {
-    dispatch(
-      rootNotesActions.changeRootNoteDir({
-        name: inputKey,
-        value: dir,
-      })
-    );
+    setDirection(dir);
   };
 
   const onClickEditButton = () => {
@@ -89,16 +73,16 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
       </Box>
       {isEditable ? (
         <NoteForm
-          inputValue={inputValue}
-          inputDirection={inputDirection}
+          inputValue={noteText}
+          inputDirection={noteDirection}
           handleFormSubmit={handleFormSubmit}
           handleTextChange={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
         <NoteText
-          inputValue={inputValue}
-          inputDirection={inputDirection}
+          inputValue={noteText}
+          inputDirection={noteDirection}
           onClickEditButton={onClickEditButton}
         />
       )}

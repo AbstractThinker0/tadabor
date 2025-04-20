@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
-import { useAppDispatch, useAppSelector, selectNote } from "@/store";
+import { selectNote } from "@/store";
 import { verseNotesActions } from "@/store/slices/global/verseNotes";
+import { useNote } from "@/hooks/useNote";
+
 import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
@@ -12,7 +13,6 @@ import NoteForm from "@/components/Pages/YourNotes/NoteForm";
 import NoteText from "@/components/Pages/YourNotes/NoteText";
 
 import { Box } from "@chakra-ui/react";
-import { toaster } from "@/components/ui/toaster";
 
 interface VerseComponentProps {
   inputKey: string;
@@ -20,51 +20,30 @@ interface VerseComponentProps {
 
 function VerseComponent({ inputKey }: VerseComponentProps) {
   const quranService = useQuran();
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
 
-  const verseNote = useAppSelector(selectNote(inputKey));
+  const { noteText, noteDirection, setText, setDirection, saveNote } = useNote({
+    noteID: inputKey,
+    noteSelector: selectNote,
+    actionChangeNoteDir: verseNotesActions.changeNoteDir,
+    actionChangeNote: verseNotesActions.changeNote,
+    actionSaveNote: verseNotesActions.changeSavedNote,
+    dbSaveNote: dbFuncs.saveNote,
+  });
 
-  const inputValue = verseNote?.text || "";
-  const inputDirection = verseNote?.dir || "";
-
-  const [isEditable, setEditable] = useState(inputValue ? false : true);
+  const [isEditable, setEditable] = useState(noteText ? false : true);
 
   const handleTextChange = (value: string) => {
-    dispatch(
-      verseNotesActions.changeNote({
-        name: inputKey,
-        value,
-      })
-    );
+    setText(value);
   };
 
   const handleFormSubmit = () => {
-    dbFuncs
-      .saveNote(inputKey, inputValue, inputDirection)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+    saveNote();
 
     setEditable(false);
   };
 
   const handleSetDirection = (dir: string) => {
-    dispatch(
-      verseNotesActions.changeNoteDir({
-        name: inputKey,
-        value: dir,
-      })
-    );
+    setDirection(dir);
   };
 
   const onClickEditButton = () => {
@@ -93,16 +72,16 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
       </Box>
       {isEditable ? (
         <NoteForm
-          inputValue={inputValue}
-          inputDirection={inputDirection}
+          inputValue={noteText}
+          inputDirection={noteDirection}
           handleFormSubmit={handleFormSubmit}
           handleTextChange={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
         <NoteText
-          inputValue={inputValue}
-          inputDirection={inputDirection}
+          inputValue={noteText}
+          inputDirection={noteDirection}
           onClickEditButton={onClickEditButton}
         />
       )}
