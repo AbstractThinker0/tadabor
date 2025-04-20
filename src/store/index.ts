@@ -23,6 +23,7 @@ import lettersPageReducer from "@/store/slices/pages/letters";
 import audioPageReducer from "@/store/slices/pages/audio";
 
 const store = configureStore({
+  devTools: APP_MODE === "development",
   reducer: {
     verseNotes: verseNotesReducer,
     transNotes: transNotesReducer,

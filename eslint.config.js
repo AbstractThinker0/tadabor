@@ -20,6 +20,7 @@ export default [
         React: "readonly",
         APP_VERSION: "readonly",
         APP_BUILD_DATE: "readonly",
+        APP_MODE: "readonly",
       },
     },
     plugins: {

@@ -110,5 +110,6 @@ export default defineConfig({
         : process.env.npm_package_version
     ),
     APP_BUILD_DATE: JSON.stringify(new Date().getTime()),
+    APP_MODE: JSON.stringify(process.env.NODE_ENV),
   },
 });
