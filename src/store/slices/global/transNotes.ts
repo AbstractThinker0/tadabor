@@ -1,17 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserNotesType } from "@/types";
+import { ChangeNotePayload, SavedNotePayload, UserNotesType } from "@/types";
 import { dbFuncs } from "@/util/db";
-
-interface ChangeTranslationPayload {
-  name: string;
-  value: string;
-}
-
-interface SavedTransPayload {
-  name: string;
-  text: string;
-  dir: string;
-}
 
 interface TransNotesState {
   data: UserNotesType;
@@ -61,10 +50,7 @@ const transNotesSlice = createSlice({
   name: "transNotes",
   initialState,
   reducers: {
-    changeTranslation: (
-      state,
-      action: PayloadAction<ChangeTranslationPayload>
-    ) => {
+    changeTranslation: (state, action: PayloadAction<ChangeNotePayload>) => {
       const { name, value } = action.payload;
 
       if (state.data[name]) {
@@ -81,7 +67,7 @@ const transNotesSlice = createSlice({
         state.dataKeys.push(name);
       }
     },
-    changeSavedTrans: (state, action: PayloadAction<SavedTransPayload>) => {
+    changeSavedTrans: (state, action: PayloadAction<SavedNotePayload>) => {
       const name = action.payload.name;
       state.data[name].saved = true;
       state.dataSaved[name] = state.data[name];

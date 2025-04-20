@@ -19,6 +19,22 @@ export interface UserNotesType {
   [key: string]: NoteProp;
 }
 
+export interface ChangeNotePayload {
+  name: string;
+  value: string;
+}
+
+export interface ChangeNoteDirPayload {
+  name: string;
+  value: string;
+}
+
+export interface SavedNotePayload {
+  name: string;
+  text: string;
+  dir?: string;
+}
+
 interface LetterType {
   name: string;
   definition: string;

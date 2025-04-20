@@ -1,22 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserNotesType } from "@/types";
+import {
+  ChangeNoteDirPayload,
+  ChangeNotePayload,
+  SavedNotePayload,
+  UserNotesType,
+} from "@/types";
 import { dbFuncs } from "@/util/db";
-
-interface ChangeNotePayload {
-  name: string;
-  value: string;
-}
-
-interface ChangeNoteDirPayload {
-  name: string;
-  value: string;
-}
-
-interface SavedNotePayload {
-  name: string;
-  text: string;
-  dir: string;
-}
 
 interface VerseNotesType {
   data: UserNotesType;

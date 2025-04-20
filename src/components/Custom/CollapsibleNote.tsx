@@ -11,6 +11,11 @@ import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
 
 import { useNote } from "@/hooks/useNote";
+import {
+  ChangeNotePayload,
+  ChangeNoteDirPayload,
+  SavedNotePayload,
+} from "@/types";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;
@@ -25,6 +30,7 @@ const CollapsibleNote = ({ isOpen, inputKey }: CollapsibleNoteProps) => {
       noteSelector={selectNote}
       actionChangeNote={verseNotesActions.changeNote}
       actionChangeNoteDir={verseNotesActions.changeNoteDir}
+      actionSaveNote={verseNotesActions.changeSavedNote}
       dbSaveNote={dbFuncs.saveNote}
     />
   );
@@ -43,6 +49,7 @@ const CollapsibleRootNote = ({ isOpen, rootID }: CollapsibleRootNoteProps) => {
       noteSelector={selectRootNote}
       actionChangeNote={rootNotesActions.changeRootNote}
       actionChangeNoteDir={rootNotesActions.changeRootNoteDir}
+      actionSaveNote={rootNotesActions.changeSavedNote}
       dbSaveNote={dbFuncs.saveRootNote}
     />
   );
@@ -52,8 +59,9 @@ interface CollapsibleNoteGenericProps {
   isOpen: boolean;
   noteID: string;
   noteSelector: (id: string) => (state: RootState) => any;
-  actionChangeNote: (payload: { name: string; value: string }) => any;
-  actionChangeNoteDir: (payload: { name: string; value: string }) => any;
+  actionChangeNote: (payload: ChangeNotePayload) => any;
+  actionChangeNoteDir: (payload: ChangeNoteDirPayload) => any;
+  actionSaveNote: (payload: SavedNotePayload) => any;
   dbSaveNote: (id: string, text: string, dir: string) => Promise<any>;
 }
 
@@ -64,6 +72,7 @@ const CollapsibleNoteGeneric = memo(
     noteSelector,
     actionChangeNoteDir,
     actionChangeNote,
+    actionSaveNote,
     dbSaveNote,
   }: CollapsibleNoteGenericProps) => {
     const { noteText, noteDirection, setText, setDirection, saveNote } =
@@ -72,6 +81,7 @@ const CollapsibleNoteGeneric = memo(
         noteSelector,
         actionChangeNoteDir,
         actionChangeNote,
+        actionSaveNote,
         dbSaveNote,
       });
 

@@ -3,12 +3,18 @@ import { useTranslation } from "react-i18next";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 
 import { toaster } from "@/components/ui/toaster";
+import {
+  ChangeNoteDirPayload,
+  ChangeNotePayload,
+  SavedNotePayload,
+} from "@/types";
 
 interface useNoteParams {
   noteID: string;
   noteSelector: (id: string) => (state: RootState) => any;
-  actionChangeNote: (payload: { name: string; value: string }) => any;
-  actionChangeNoteDir: (payload: { name: string; value: string }) => any;
+  actionChangeNote: (payload: ChangeNotePayload) => any;
+  actionChangeNoteDir: (payload: ChangeNoteDirPayload) => any;
+  actionSaveNote: (payload: SavedNotePayload) => any;
   dbSaveNote: (id: string, text: string, dir: string) => Promise<any>;
 }
 
@@ -17,6 +23,7 @@ export const useNote = ({
   noteSelector,
   actionChangeNoteDir,
   actionChangeNote,
+  actionSaveNote,
   dbSaveNote,
 }: useNoteParams) => {
   const note = useAppSelector(noteSelector(noteID));
@@ -36,6 +43,9 @@ export const useNote = ({
   const saveNote = () => {
     dbSaveNote(noteID, noteText, noteDirection)
       .then(() => {
+        dispatch(
+          actionSaveNote({ name: noteID, text: noteText, dir: noteDirection })
+        );
         toaster.create({
           description: t("save_success"),
           type: "success",
