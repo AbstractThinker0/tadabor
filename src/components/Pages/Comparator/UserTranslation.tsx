@@ -16,7 +16,7 @@ interface UserTranslationProps {
 
 const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const { t } = useTranslation();
-  const verseTrans = useAppSelector(selectTransNote(verseKey)).text;
+  const verseTrans = useAppSelector(selectTransNote(verseKey))?.text;
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
   const [stateEditable, setStateEditable] = useState(false);
   const dispatch = useAppDispatch();
