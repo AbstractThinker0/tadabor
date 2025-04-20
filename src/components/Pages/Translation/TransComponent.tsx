@@ -19,7 +19,7 @@ const TransComponent = memo(({ inputKey }: TransComponentProps) => {
 
   const dispatch = useAppDispatch();
 
-  const inputValue = useAppSelector(selectTransNote(inputKey));
+  const inputValue = useAppSelector(selectTransNote(inputKey)).text;
 
   const [isEditable, setEditable] = useState(inputValue ? false : true);
 

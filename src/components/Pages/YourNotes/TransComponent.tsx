@@ -57,7 +57,7 @@ const TransBody = memo(({ inputKey }: TransBodyProps) => {
 
   const dispatch = useAppDispatch();
 
-  const verse_trans = useAppSelector(selectTransNote(inputKey));
+  const verse_trans = useAppSelector(selectTransNote(inputKey)).text;
 
   const [isEditable, setEditable] = useState(verse_trans ? false : true);
 
