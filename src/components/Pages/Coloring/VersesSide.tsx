@@ -9,10 +9,10 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { ListTitle } from "@/components/Pages/Coloring/ListTitle";
 import { SelectedContainer } from "@/components/Pages/Coloring/SelectedContainer";
-import { VerseComponent } from "@/components/Pages/Coloring/VerseComponent";
-import VerseModal from "@/components/Pages/Coloring/VerseModal";
 
-import { getTextColor } from "@/components/Pages/Coloring/util";
+import VerseModal from "@/components/Pages/Coloring/VerseModal";
+import { VerseItem } from "@/components/Pages/Coloring/VerseItem";
+
 import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 
 const VersesSide = () => {
@@ -98,31 +98,13 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
       ) : (
         <Box px={2} dir="rtl" ref={handleVerseListRef}>
           {stateVerses.map((verse) => (
-            <Box
-              p={"5px"}
-              borderBottom={"1.5px solid"}
-              borderColor={"border.emphasized"}
-              style={
-                scrollKey === verse.key
-                  ? {
-                      padding: 0,
-                      border: "5px solid",
-                      borderImage:
-                        "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
-                    }
-                  : {}
-              }
+            <VerseItem
               key={verse.key}
-              data-id={verse.key}
-              bgColor={coloredVerses[verse.key]?.colorCode}
-              color={
-                coloredVerses[verse.key]
-                  ? getTextColor(coloredVerses[verse.key].colorCode)
-                  : undefined
-              }
-            >
-              <VerseComponent verse={verse} openVerseModal={openVerseModal} />
-            </Box>
+              verse={verse}
+              verseColor={coloredVerses[verse.key]}
+              isSelected={scrollKey === verse.key}
+              openVerseModal={openVerseModal}
+            />
           ))}
         </Box>
       )}

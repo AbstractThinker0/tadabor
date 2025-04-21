@@ -5,13 +5,53 @@ import { verseProps } from "quran-tools";
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import { Button } from "@chakra-ui/react";
+import { Button, Box } from "@chakra-ui/react";
+
+import { colorProps } from "@/components/Pages/Coloring/consts";
+import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import { ButtonVerse, ButtonExpand } from "@/components/Generic/Buttons";
 
 import { useBoolean } from "usehooks-ts";
+
+interface VerseItemProps {
+  verse: verseProps;
+  verseColor: colorProps | undefined;
+  isSelected: boolean;
+  openVerseModal: () => void;
+}
+
+const VerseItem = ({
+  verse,
+  verseColor,
+  isSelected,
+  openVerseModal,
+}: VerseItemProps) => {
+  return (
+    <Box
+      p={"5px"}
+      borderBottom={"1.5px solid"}
+      borderColor={"border.emphasized"}
+      style={
+        isSelected
+          ? {
+              padding: 0,
+              border: "5px solid",
+              borderImage:
+                "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
+            }
+          : {}
+      }
+      data-id={verse.key}
+      bgColor={verseColor?.colorCode}
+      color={verseColor ? getTextColor(verseColor.colorCode) : undefined}
+    >
+      <VerseComponent verse={verse} openVerseModal={openVerseModal} />
+    </Box>
+  );
+};
 
 interface VerseComponentProps {
   verse: verseProps;
@@ -52,4 +92,4 @@ const VerseComponent = memo(
 
 VerseComponent.displayName = "VerseComponent";
 
-export { VerseComponent };
+export { VerseItem };
