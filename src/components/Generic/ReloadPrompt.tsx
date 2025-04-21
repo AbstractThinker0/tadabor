@@ -4,17 +4,20 @@ import { useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
 const LAST_SW_CHECK_KEY = "lastSWCheck";
-const SW_CHECK_INTERVAL_MS = 60 * 60000; // 1 hour
-const UPDATE_CHECK_INTERVAL_MS = 10 * 60000; // 10 minute
+const SW_CHECK_INTERVAL_MS = 120 * 60000; // 2 hours
+const UPDATE_CHECK_INTERVAL_MS = 15 * 60000; // 15 minute
 
 function ReloadPrompt() {
   const [showPrompt, setShowPrompt] = useState(true);
+  const [updatePending, setUpdatePending] = useState(false);
+
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
       if (r) {
+        //
         setInterval(async () => {
           const now = Date.now();
           const lastCheck = Number(
@@ -34,7 +37,11 @@ function ReloadPrompt() {
           console.log("⏱️ Checking for SW update...");
 
           if (r.installing || !navigator) return;
-          if ("connection" in navigator && !navigator.onLine) return;
+
+          if ("connection" in navigator && !navigator.onLine) {
+            console.log("⚠️ No connection, Can't check for updates.");
+            return;
+          }
 
           try {
             const resp = await fetch(swUrl, {
@@ -63,7 +70,12 @@ function ReloadPrompt() {
     },
   });
 
-  const close = () => {
+  const onClickReload = () => {
+    updateServiceWorker();
+    setUpdatePending(true);
+  };
+
+  const onClickClose = () => {
     setShowPrompt(false);
   };
 
@@ -83,19 +95,31 @@ function ReloadPrompt() {
           boxShadow="3px 4px 5px 0 #8885"
           backgroundColor="white"
         >
-          <Box marginBottom={"8px"} color={"black"}>
-            New version is available, click on reload button to update.
-          </Box>
-          <Button
-            marginRight={"5px"}
-            colorPalette={"green"}
-            onClick={() => updateServiceWorker()}
-          >
-            Reload
-          </Button>
-          <Button bgColor={"gray.300"} color={"black"} onClick={() => close()}>
-            Close
-          </Button>
+          {updatePending ? (
+            <Box marginBottom={"8px"} color={"black"}>
+              Reloading the page to apply updates..
+            </Box>
+          ) : (
+            <>
+              <Box marginBottom={"8px"} color={"black"}>
+                New version is available, click on reload button to update.
+              </Box>
+              <Button
+                marginRight={"5px"}
+                colorPalette={"green"}
+                onClick={onClickReload}
+              >
+                Reload
+              </Button>
+              <Button
+                bgColor={"gray.300"}
+                color={"black"}
+                onClick={onClickClose}
+              >
+                Close
+              </Button>
+            </>
+          )}
         </Box>
       )}
     </Box>
