@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="119.99999mm"
-   height="119.99999mm"
-   viewBox="0 0 119.99999 119.99999"
+   width="160mm"
+   height="160mm"
+   viewBox="0 0 160 160"
    version="1.1"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg"
@@ -22,40 +22,39 @@
   <g
      id="layer1"
      style="display:inline;opacity:1"
-     transform="translate(-43.543381,-131.15125)">
+     transform="translate(-32.525246,-51.820665)">
     <rect
-       style="fill:#00aa88;stroke-width:1.88467"
+       style="fill:#00aa88;stroke-width:2.44052"
        id="rect2"
-       width="120"
-       height="120"
-       x="43.543381"
-       y="131.15125"
-       rx="10" />
+       width="160"
+       height="160"
+       x="32.525246"
+       y="51.820663" />
   </g>
   <g
      id="layer3"
-     transform="translate(-43.543381,-131.15125)">
+     transform="translate(-32.525246,-51.820665)">
     <ellipse
-       style="fill:#e3e2db;fill-opacity:1;stroke-width:0.264999;stroke-dasharray:none"
+       style="fill:#e3e2db;fill-opacity:1;stroke-width:0.343156;stroke-dasharray:none"
        id="path8"
-       cx="103.57049"
-       cy="191.22589"
-       rx="48"
-       ry="36" />
+       cx="112.52525"
+       cy="131.82066"
+       rx="60"
+       ry="48" />
   </g>
   <g
      id="layer2"
-     transform="translate(-43.543381,-131.15125)">
+     transform="translate(-32.525246,-51.820665)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:103.022px;font-family:Calibri;-inkscape-font-specification:'Calibri, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#0088aa;stroke-width:8.58516"
-       x="66.198357"
-       y="213.13295"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:133.407px;font-family:Calibri;-inkscape-font-specification:'Calibri, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#0088aa;stroke-width:11.1172"
+       x="68.154007"
+       y="159.99094"
        id="text2"
-       transform="scale(0.96101588,1.0405655)"><tspan
+       transform="scale(0.92536078,1.0806596)"><tspan
          id="tspan2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:103.022px;font-family:Calibri;-inkscape-font-specification:'Calibri, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#0088aa;stroke-width:8.58516"
-         x="66.198357"
-         y="213.13295">ت</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:133.407px;font-family:Calibri;-inkscape-font-specification:'Calibri, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#0088aa;stroke-width:11.1172"
+         x="68.154007"
+         y="159.99094">ت</tspan></text>
   </g>
 </svg>
