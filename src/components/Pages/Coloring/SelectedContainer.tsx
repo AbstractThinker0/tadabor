@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { useAppSelector, useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
@@ -145,32 +147,36 @@ function SelectedVerses({
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
-  const selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
-    Object.keys(selectedColors).includes(coloredVerses[verseKey].colorID)
+  const selectedVerses = useMemo(
+    () =>
+      Object.keys(coloredVerses)
+        .filter((verseKey) =>
+          Object.keys(selectedColors).includes(coloredVerses[verseKey].colorID)
+        )
+        .sort((keyA, KeyB) => {
+          const infoA = keyA.split("-");
+          const infoB = KeyB.split("-");
+          if (Number(infoA[0]) !== Number(infoB[0]))
+            return Number(infoA[0]) - Number(infoB[0]);
+          else return Number(infoA[1]) - Number(infoB[1]);
+        }),
+    [coloredVerses, selectedColors]
   );
 
   return (
     <Box px={2} dir="rtl">
       {selectedVerses.length ? (
-        selectedVerses
-          .sort((keyA, KeyB) => {
-            const infoA = keyA.split("-");
-            const infoB = KeyB.split("-");
-            if (Number(infoA[0]) !== Number(infoB[0]))
-              return Number(infoA[0]) - Number(infoB[0]);
-            else return Number(infoA[1]) - Number(infoB[1]);
-          })
-          .map((verseKey) => {
-            const verse = quranService.getVerseByKey(verseKey)!;
-            return (
-              <SelectedVerseItem
-                key={verse.key}
-                verse={verse}
-                verseColor={coloredVerses[verse.key]}
-                openVerseModal={openVerseModal}
-              />
-            );
-          })
+        selectedVerses.map((verseKey) => {
+          const verse = quranService.getVerseByKey(verseKey)!;
+          return (
+            <SelectedVerseItem
+              key={verse.key}
+              verse={verse}
+              verseColor={coloredVerses[verse.key]}
+              openVerseModal={openVerseModal}
+            />
+          );
+        })
       ) : (
         <Text textAlign="center" dir="ltr">
           There are no verses matching the selected colors.
