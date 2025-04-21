@@ -6,21 +6,17 @@ import { tagsPageActions } from "@/store/slices/pages/tags";
 import { verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-
-import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 import { ListTitle } from "@/components/Pages/Tags/ListTitle";
 import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";
-import { VerseTags } from "@/components/Pages/Tags/VerseTags";
 
-import { Box, Button, Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { VerseItem } from "@/components/Pages/Tags/VerseItem";
+import { SelectedVerseItem } from "@/components/Pages/Tags/SelectedVerseItem";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import { useBoolean } from "usehooks-ts";
+import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 
 function TagsDisplay() {
   const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
@@ -206,18 +202,13 @@ function SelectedVerses({
           {sortedVerses.map((verseKey) => {
             const verse = quranService.getVerseByKey(verseKey)!;
             return (
-              <Box
-                borderBottom={"1.5px solid"}
-                borderColor={"border.emphasized"}
-                p={"4px"}
+              <SelectedVerseItem
                 key={verseKey}
-              >
-                <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
-                <SelectedVerseComponent
-                  onOpenVerseModal={onOpenVerseModal}
-                  verse={verse}
-                />
-              </Box>
+                verse={verse}
+                versesTags={versesTags}
+                tags={tags}
+                onOpenVerseModal={onOpenVerseModal}
+              />
             );
           })}
         </>
@@ -229,46 +220,6 @@ function SelectedVerses({
     </Box>
   );
 }
-
-interface SelectedVerseComponentProps {
-  verse: verseProps;
-  onOpenVerseModal: () => void;
-}
-
-const SelectedVerseComponent = ({
-  verse,
-  onOpenVerseModal,
-}: SelectedVerseComponentProps) => {
-  const dispatch = useAppDispatch();
-  const quranService = useQuran();
-  const { value: isOpen, toggle: setOpen } = useBoolean();
-
-  function onClickVerse(verse: verseProps) {
-    dispatch(tagsPageActions.gotoChapter(verse.suraid));
-    dispatch(tagsPageActions.setScrollKey(verse.key));
-  }
-
-  function onClickTagVerse(verse: verseProps) {
-    dispatch(tagsPageActions.setCurrentVerse(verse));
-    onOpenVerseModal();
-  }
-
-  return (
-    <>
-      <VerseContainer>
-        {verse.versetext}{" "}
-        <ButtonVerse onClick={() => onClickVerse(verse)}>
-          ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
-        </ButtonVerse>
-        <ButtonExpand onClick={setOpen} />
-        <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
-          🏷️
-        </Button>
-      </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-    </>
-  );
-};
 
 interface ListVersesProps {
   onOpenVerseModal: () => void;
@@ -332,23 +283,14 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
           <LoadingSpinner text="Loading verses.." />
         ) : (
           stateVerses.map((verse) => (
-            <Box
+            <VerseItem
               key={verse.key}
-              data-id={verse.key}
-              aria-selected={scrollKey === verse.key}
-              _selected={{ bgColor: "blue.emphasized" }}
-              borderBottom={"1.5px solid"}
-              borderColor={"border.emphasized"}
-              p={"4px"}
-            >
-              {versesTags[verse.key] !== undefined && (
-                <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-              )}
-              <ListVerseComponent
-                onOpenVerseModal={onOpenVerseModal}
-                verse={verse}
-              />
-            </Box>
+              verse={verse}
+              isSelected={verse.key == scrollKey}
+              versesTags={versesTags}
+              tags={tags}
+              onOpenVerseModal={onOpenVerseModal}
+            />
           ))
         )}
       </Flex>
@@ -357,42 +299,5 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
 });
 
 ListVerses.displayName = "ListVerses";
-
-interface ListVerseComponentProps {
-  verse: verseProps;
-  onOpenVerseModal: () => void;
-}
-
-const ListVerseComponent = memo(
-  ({ onOpenVerseModal, verse }: ListVerseComponentProps) => {
-    const dispatch = useAppDispatch();
-    const { value: isOpen, toggle: setOpen } = useBoolean();
-
-    function onClickTagVerse(verse: verseProps) {
-      dispatch(tagsPageActions.setCurrentVerse(verse));
-      onOpenVerseModal();
-    }
-
-    function onClickVerse() {
-      dispatch(tagsPageActions.setScrollKey(verse.key));
-    }
-
-    return (
-      <>
-        <VerseContainer>
-          {verse.versetext}{" "}
-          <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
-          <ButtonExpand onClick={setOpen} />
-          <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
-            🏷️
-          </Button>
-        </VerseContainer>
-        <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-      </>
-    );
-  }
-);
-
-ListVerseComponent.displayName = "ListVerseComponent";
 
 export default TagsDisplay;
