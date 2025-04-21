@@ -3,31 +3,49 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { translationsProps } from "@/types";
 import { fetchTranslations } from "@/util/fetchData";
 
-// Create a single async thunk for multiple fetch requests
-export const fetchAllTranslations = createAsyncThunk(
-  "translations/fetchAllTranslations",
-  async () => {
-    const transData: translationsProps = await fetchTranslations();
+interface TranslationsStateProps {
+  data: translationsProps;
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
+}
 
-    return { transData };
+const initialState: TranslationsStateProps = {
+  error: false,
+  loading: false,
+  complete: false,
+  data: {} as translationsProps,
+};
+
+// Create a single async thunk for multiple fetch requests
+export const fetchAllTranslations = createAsyncThunk<
+  false | translationsProps,
+  void,
+  { state: { translations: TranslationsStateProps } }
+>("translations/fetchAllTranslations", async (_, { getState }) => {
+  const { complete } = getState().translations;
+
+  if (complete) {
+    return false;
   }
-);
+  const transData: translationsProps = await fetchTranslations();
+
+  return transData;
+});
 
 const translationsSlice = createSlice({
   name: "translations",
-  initialState: {
-    error: false,
-    loading: false,
-    complete: false,
-    data: {} as translationsProps,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllTranslations.fulfilled, (state, action) => {
         state.loading = false;
         state.complete = true;
-        state.data = action.payload.transData;
+
+        if (action.payload) {
+          state.data = action.payload;
+        }
       })
       .addCase(fetchAllTranslations.pending, (state) => {
         state.loading = true;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { translationsProps } from "@/types";
 import useQuran from "@/context/useQuran";
 import {
   isVerseNotesLoading,
   isTransNotesLoading,
+  isTranslationsLoading,
   useAppDispatch,
   useAppSelector,
 } from "@/store";
@@ -17,7 +17,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
-import { Box, Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
+import { Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Comparator() {
@@ -32,19 +32,14 @@ function Comparator() {
     (state) => state.comparatorPage.currentVerse
   );
 
-  const loading = useAppSelector((state) => state.translations.loading);
-
-  const data = useAppSelector((state) => state.translations.data);
-
-  const complete = useAppSelector((state) => state.translations.complete);
-
-  const error = useAppSelector((state) => state.translations.error);
+  const transData = useAppSelector((state) => state.translations.data);
 
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
+  const isTransLoading = useAppSelector(isTranslationsLoading());
+
   const dispatch = useAppDispatch();
 
-  const [stateTrans, setStateTrans] = useState<translationsProps>(data);
   const [chapterVerses, setChapterVerses] = useState(() => {
     return quranService.getVerses(currentChapter);
   });
@@ -52,19 +47,12 @@ function Comparator() {
   useEffect(() => {
     dispatch(fetchVerseNotes());
     dispatch(fetchTransNotes());
+    dispatch(fetchAllTranslations());
   }, []);
 
   useEffect(() => {
     setChapterVerses(quranService.getVerses(currentChapter));
   }, [currentChapter]);
-
-  useEffect(() => {
-    if (complete) {
-      setStateTrans(data);
-    } else if (!loading) {
-      dispatch(fetchAllTranslations());
-    }
-  }, [loading, complete, dispatch, data]);
 
   const selectVerse = (verseKey: string) => {
     dispatch(comparatorPageActions.setCurrentVerse(verseKey));
@@ -74,14 +62,7 @@ function Comparator() {
     dispatch(comparatorPageActions.setCurrentChapter(chapterID));
   };
 
-  if (error)
-    return (
-      <Box dir="auto" textAlign={"center"}>
-        Failed to load translations, try reloading the page.
-      </Box>
-    );
-
-  if (!complete) return <LoadingSpinner text="Loading translations.." />;
+  if (isTransLoading) return <LoadingSpinner text="Loading translations.." />;
 
   return (
     <Flex flexDirection={"column"} flex={1} bgColor={"brand.bg"}>
@@ -98,7 +79,7 @@ function Comparator() {
           currentChapter={currentChapter}
           currentVerse={currentVerse}
           chapterVerses={chapterVerses}
-          transVerses={stateTrans}
+          transVerses={transData}
           handleSelectVerse={selectVerse}
         />
       )}

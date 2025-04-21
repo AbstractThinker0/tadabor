@@ -98,4 +98,8 @@ export const isVerseNotesLoading = () => {
   return (state: RootState) => state.verseNotes.loading;
 };
 
+export const isTranslationsLoading = () => {
+  return (state: RootState) => state.translations.loading;
+};
+
 export default store;
