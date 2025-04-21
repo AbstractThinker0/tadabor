@@ -12,7 +12,7 @@ interface TranslationsStateProps {
 
 const initialState: TranslationsStateProps = {
   error: false,
-  loading: false,
+  loading: true,
   complete: false,
   data: {} as translationsProps,
 };
