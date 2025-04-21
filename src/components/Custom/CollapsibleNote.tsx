@@ -215,6 +215,7 @@ const FormText = ({
         <NoteForm
           inputValue={inputValue}
           inputDirection={inputDirection}
+          inputSaved={inputSaved}
           handleSetDirection={handleSetDirection}
           onChangeTextarea={onChangeTextarea}
           onSubmitForm={onSubmitForm}

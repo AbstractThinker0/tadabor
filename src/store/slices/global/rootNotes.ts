@@ -63,6 +63,13 @@ const rootNotesSlice = createSlice({
           state.data[name].text = value;
           state.data[name].saved = false;
         }
+
+        if (
+          state.dataSaved[name] &&
+          state.dataSaved[name].text === state.data[name].text
+        ) {
+          state.data[name].saved = true;
+        }
       } else {
         state.data[name] = {
           text: value,

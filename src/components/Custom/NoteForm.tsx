@@ -10,6 +10,7 @@ import { ButtonSave } from "@/components/Generic/Buttons";
 interface NoteFormProps {
   inputValue: string;
   inputDirection: string;
+  inputSaved?: boolean;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
@@ -18,6 +19,7 @@ interface NoteFormProps {
 const NoteForm = ({
   inputValue,
   inputDirection,
+  inputSaved = true,
   handleSetDirection,
   onChangeTextarea,
   onSubmitForm,
@@ -36,6 +38,11 @@ const NoteForm = ({
         required
         borderRadius={"2xl"}
         colorPalette={"blue"}
+        data-incomplete={!inputSaved ? true : undefined}
+        _incomplete={{
+          borderColor: "yellow.solid",
+          outlineColor: "yellow.solid",
+        }}
       />
       <Box textAlign={"center"}>
         <ButtonSave />
