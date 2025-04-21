@@ -15,8 +15,9 @@ import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 import { ListTitle } from "@/components/Pages/Tags/ListTitle";
 import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";
+import { VerseTags } from "@/components/Pages/Tags/VerseTags";
 
-import { Box, Button, Flex, Span, Tag, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
@@ -393,30 +394,5 @@ const ListVerseComponent = memo(
 );
 
 ListVerseComponent.displayName = "ListVerseComponent";
-
-interface VerseTagsProps {
-  versesTags: string[];
-  tags: tagsProps;
-}
-
-const VerseTags = ({ versesTags, tags }: VerseTagsProps) => {
-  return (
-    <Flex flexWrap={"wrap"} gap={"5px"} pb={"5px"} fontSize={"medium"}>
-      {versesTags.map((tagID) => (
-        <Span
-          padding={"3px"}
-          bgColor={"yellow.emphasized"}
-          borderRadius={"0.3rem"}
-          overflowWrap={"break-word"}
-          overflowX={"hidden"}
-          fontFamily={"initial"}
-          key={tagID}
-        >
-          {tags[tagID].tagDisplay}
-        </Span>
-      ))}
-    </Flex>
-  );
-};
 
 export default TagsDisplay;
