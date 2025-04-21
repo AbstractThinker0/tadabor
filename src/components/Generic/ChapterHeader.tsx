@@ -19,7 +19,7 @@ const ChapterHeader = ({
   isOpenMobile,
   isOpenDesktop,
   onTogglePanel,
-  versesOptions = false,
+  versesOptions = true,
 }: ChapterHeaderProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();

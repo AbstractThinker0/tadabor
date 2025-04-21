@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch } from "@/store";
 
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
@@ -21,8 +21,6 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
 
   const { value: isOpen, toggle } = useBoolean();
 
-  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
-
   const onClickVerse = () => {
     dispatch(qbPageActions.setScrollKey(verse.key));
   };
@@ -37,11 +35,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
       aria-selected={isSelected}
       _selected={{ bgColor: "orange.muted" }}
     >
-      <VerseContainer
-        py={1}
-        color={"brand.text"}
-        textAlign={centerVerses ? "center" : undefined}
-      >
+      <VerseContainer py={1} color={"brand.text"}>
         {verse.versetext}{" "}
         <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
         <ButtonExpand onClick={toggle} />

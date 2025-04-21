@@ -4,9 +4,14 @@ import { useAppSelector } from "@/store";
 const VerseContainer = (props: BoxProps) => {
   const { children, ...rest } = props;
   const quranFS = useAppSelector((state) => state.settings.quranFontSize);
+  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
 
   return (
-    <Box fontSize={`${quranFS}rem`} {...rest}>
+    <Box
+      textAlign={centerVerses ? "center" : undefined}
+      fontSize={`${quranFS}rem`}
+      {...rest}
+    >
       {children}
     </Box>
   );
