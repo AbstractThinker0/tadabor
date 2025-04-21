@@ -59,7 +59,6 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
         id: "/",
         start_url: "/",
