@@ -49,7 +49,15 @@ const Navbar = () => {
       const isPersisted = await navigator.storage.persisted();
 
       if (!isPersisted) {
-        navigator.storage.persist();
+        const granted = await navigator.storage.persist();
+
+        if (granted) {
+          console.log("✅ Storage is now persistent.");
+        } else {
+          console.log(
+            "❌ Storage persistence was denied, try installing as PWA or bookmarking the website."
+          );
+        }
       }
     }
 
