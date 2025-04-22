@@ -39,6 +39,8 @@ const cloneRef = (referenceElement: HTMLElement) => {
   const el = referenceElement.cloneNode() as HTMLTextAreaElement;
   el.setAttribute("tabindex", "-1");
   el.setAttribute("aria-hidden", "true");
+  el.setAttribute("form", "none"); // Ensure it is not part of any form
+  el.setAttribute("inert", ""); // Prevent focus and interaction
   forceHiddenStyles(el);
   globalHiddenTextarea = el;
 };
