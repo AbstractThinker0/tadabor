@@ -10,10 +10,8 @@ import useQuran from "@/context/useQuran";
 import { searchIndexProps, verseMatchResult } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
-
+import { SearchVerseItem } from "@/components/Pages/QuranBrowser/SearchVerseItem";
 import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
@@ -31,10 +29,6 @@ import {
 
 import { Tag } from "@/components/ui/tag";
 import { Tooltip } from "@/components/ui/tooltip";
-
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-import { useBoolean } from "usehooks-ts";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -116,7 +110,7 @@ const ListSearchResults = ({
       ) : (
         <Box dir="rtl" ref={refListVerses}>
           {stateVerses.map((verse) => (
-            <VerseItem
+            <SearchVerseItem
               key={verse.key}
               verse={verse}
               isSelected={selectedVerse === verse.key}
@@ -262,47 +256,5 @@ const SearchErrorsComponent = ({
     </Text>
   );
 };
-
-interface VerseItemProps {
-  verse: verseMatchResult;
-  isSelected: boolean;
-}
-
-const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
-  const dispatch = useAppDispatch();
-  const quranService = useQuran();
-
-  const { value: isOpen, toggle } = useBoolean();
-
-  const onClickVerseChapter = () => {
-    dispatch(qbPageActions.gotoChapter(verse.suraid));
-    dispatch(qbPageActions.setScrollKey(verse.key));
-  };
-
-  return (
-    <Box
-      data-id={verse.key}
-      p={1}
-      borderBottom="1px solid"
-      borderColor={"border.emphasized"}
-      aria-selected={isSelected}
-      _selected={{ bgColor: "orange.muted" }}
-    >
-      <VerseContainer>
-        <VerseHighlightMatches verse={verse} /> (
-        <ButtonVerse
-          onClick={onClickVerseChapter}
-        >{`${quranService.getChapterName(verse.suraid)}:${
-          verse.verseid
-        }`}</ButtonVerse>
-        )
-        <ButtonExpand onClick={toggle} />
-      </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-    </Box>
-  );
-};
-
-VerseItem.displayName = "VerseItem";
 
 export default ListSearchResults;
