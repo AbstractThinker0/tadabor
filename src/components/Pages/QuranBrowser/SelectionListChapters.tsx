@@ -139,6 +139,7 @@ const SelectionListChapters = ({
             <Flex
               px="14px"
               py={"2px"}
+              smDown={{ py: "8px" }}
               cursor="pointer"
               key={chapter.id}
               data-id={chapter.id}
