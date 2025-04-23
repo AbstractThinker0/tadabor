@@ -72,6 +72,7 @@ const ListTitle = () => {
       isOpenMobile={showSearchPanelMobile}
       isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
+      versesOptions={true}
     />
   );
 };
