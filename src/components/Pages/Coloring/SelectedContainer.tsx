@@ -7,7 +7,7 @@ import useQuran from "@/context/useQuran";
 
 import { Box, Flex, Tag, Text } from "@chakra-ui/react";
 
-import { SelectedVerseItem } from "@/components/Pages/Coloring/SelectedVerseItem";
+import { SelectedVerseItem } from "@/components/Pages/Coloring/VerseItem";
 import { ButtonSidebar } from "@/components/Pages/Coloring/ButtonSidebar";
 import { coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";

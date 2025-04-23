@@ -1,20 +1,18 @@
-import { memo } from "react";
-
 import { verseProps } from "quran-tools";
 
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
-import { Button, Box } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 import { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import VerseContainer from "@/components/Custom/VerseContainer";
-import { ButtonVerse, ButtonExpand } from "@/components/Generic/Buttons";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
-import { useBoolean } from "usehooks-ts";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+
+import useQuran from "@/context/useQuran";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -29,67 +27,91 @@ const VerseItem = ({
   isSelected,
   openVerseModal,
 }: VerseItemProps) => {
+  const dispatch = useAppDispatch();
+
+  const onClickVerseColor = (verse: verseProps) => {
+    dispatch(coloringPageActions.setCurrentVerse(verse));
+    openVerseModal();
+  };
+
+  function onClickVerse() {
+    dispatch(coloringPageActions.setScrollKey(verse.key));
+  }
+
   return (
-    <Box
-      p={"5px"}
-      borderBottom={"1.5px solid"}
-      borderColor={"border.emphasized"}
-      style={
-        isSelected
-          ? {
-              padding: 0,
-              border: "5px solid",
-              borderImage:
-                "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
-            }
-          : {}
+    <BaseVerseItem
+      verseKey={verse.key}
+      isSelected={isSelected}
+      rootProps={{
+        bgColor: verseColor?.colorCode,
+        color: verseColor ? getTextColor(verseColor.colorCode) : undefined,
+        _selected: {
+          padding: 0,
+          border: "5px solid",
+          borderImage:
+            "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
+        },
+      }}
+      endElement={
+        <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
+          🎨
+        </Button>
       }
-      data-id={verse.key}
-      bgColor={verseColor?.colorCode}
-      color={verseColor ? getTextColor(verseColor.colorCode) : undefined}
     >
-      <VerseComponent verse={verse} openVerseModal={openVerseModal} />
-    </Box>
+      {verse.versetext}{" "}
+      <ButtonVerse color={"inherit"} onClick={onClickVerse}>
+        ({verse.verseid})
+      </ButtonVerse>
+    </BaseVerseItem>
   );
 };
 
-interface VerseComponentProps {
+interface SelectedVerseItemProps {
   verse: verseProps;
+  verseColor: colorProps | undefined;
   openVerseModal: () => void;
 }
 
-const VerseComponent = memo(
-  ({ verse, openVerseModal }: VerseComponentProps) => {
-    const { value: isOpen, toggle: setOpen } = useBoolean();
-    const dispatch = useAppDispatch();
+const SelectedVerseItem = ({
+  verse,
+  verseColor,
+  openVerseModal,
+}: SelectedVerseItemProps) => {
+  const dispatch = useAppDispatch();
+  const quranService = useQuran();
 
-    const onClickVerseColor = (verse: verseProps) => {
-      dispatch(coloringPageActions.setCurrentVerse(verse));
-      openVerseModal();
-    };
+  const onClickChapter = (verse: verseProps) => {
+    dispatch(coloringPageActions.gotoChapter(Number(verse.suraid)));
+    dispatch(coloringPageActions.setScrollKey(verse.key));
+  };
 
-    function onClickVerse() {
-      dispatch(coloringPageActions.setScrollKey(verse.key));
-    }
+  const onClickVerseColor = (verse: verseProps) => {
+    dispatch(coloringPageActions.setCurrentVerse(verse));
+    openVerseModal();
+  };
 
-    return (
-      <>
-        <VerseContainer>
-          {verse.versetext}{" "}
-          <ButtonVerse color={"inherit"} onClick={onClickVerse}>
-            ({verse.verseid})
-          </ButtonVerse>
-          <ButtonExpand color={"inherit"} onClick={setOpen} />
-          <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
-            🎨
-          </Button>
-        </VerseContainer>
-        <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-      </>
-    );
-  }
-);
+  return (
+    <BaseVerseItem
+      verseKey={verse.key}
+      rootProps={{
+        bgColor: verseColor?.colorCode,
+        color: verseColor ? getTextColor(verseColor.colorCode) : undefined,
+      }}
+      endElement={
+        <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
+          🎨
+        </Button>
+      }
+    >
+      {verse.versetext}{" "}
+      <ButtonVerse
+        color={"inherit"}
+        onClick={() => onClickChapter(verse)}
+      >{`(${quranService.getChapterName(verse.suraid)}:${
+        verse.verseid
+      })`}</ButtonVerse>
+    </BaseVerseItem>
+  );
+};
 
-VerseComponent.displayName = "VerseComponent";
-
-export { VerseItem };
+export { VerseItem, SelectedVerseItem };
