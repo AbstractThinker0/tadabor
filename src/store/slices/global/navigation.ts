@@ -17,7 +17,7 @@ const initialState: NavigationState = {
   currentPage: "",
   centerVerses: defaultCenterVerses,
   compactVerses: defaultCompactVerses,
-  isSmallScreen: window.innerWidth <= 480 || window.innerHeight <= 480,
+  isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
 };
 
 const navigationSlice = createSlice({

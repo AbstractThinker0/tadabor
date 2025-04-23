@@ -26,7 +26,7 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const handleResize = () => {
-      const isSmall = window.innerWidth <= 480 || window.innerHeight <= 480;
+      const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
       dispatch(navigationActions.setSmallScreen(isSmall));
     };
 
