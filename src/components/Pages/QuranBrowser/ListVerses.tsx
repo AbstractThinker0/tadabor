@@ -9,7 +9,7 @@ import { verseProps } from "quran-tools";
 
 import { Box } from "@chakra-ui/react";
 
-import VerseItem from "@/components/Pages/QuranBrowser/VerseItem";
+import { VerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { ChapterHeader } from "@/components/Generic/ChapterHeader";

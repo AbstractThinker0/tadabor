@@ -11,7 +11,7 @@ import { searchIndexProps, verseMatchResult } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { SearchVerseItem } from "@/components/Pages/QuranBrowser/SearchVerseItem";
+import { SearchVerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
