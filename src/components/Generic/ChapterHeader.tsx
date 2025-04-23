@@ -2,9 +2,12 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { navigationActions } from "@/store/slices/global/navigation";
 
-import { Flex, Button, Box } from "@chakra-ui/react";
+import { Flex, Button } from "@chakra-ui/react";
 import { ButtonSidebar } from "@/components/Generic/Buttons";
-import { MdFormatAlignCenter, MdFormatAlignRight } from "react-icons/md";
+import { MdFormatAlignRight } from "react-icons/md";
+import { MdFormatAlignCenter } from "react-icons/md";
+import { MdOutlineViewCompactAlt } from "react-icons/md";
+import { RiExpandLeftRightLine } from "react-icons/ri";
 
 interface ChapterHeaderProps {
   chapterID: number;
@@ -19,14 +22,21 @@ const ChapterHeader = ({
   isOpenMobile,
   isOpenDesktop,
   onTogglePanel,
-  versesOptions = true,
+  versesOptions = false,
 }: ChapterHeaderProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
   const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
+  const compactVerses = useAppSelector(
+    (state) => state.navigation.compactVerses
+  );
 
   const toggleCenterVerses = () => {
-    dispatch(navigationActions.setCenterVerses(!centerVerses));
+    dispatch(navigationActions.toggleCenterVerses());
+  };
+
+  const toggleCompactVerses = () => {
+    dispatch(navigationActions.toggleCompactVerses());
   };
 
   return (
@@ -49,13 +59,20 @@ const ChapterHeader = ({
         سورة {quranService.getChapterName(chapterID)}
       </Flex>
 
-      {versesOptions ? (
+      <Flex gap={"0.5rem"}>
         <Button size="sm" onClick={toggleCenterVerses} colorPalette="blue">
           {centerVerses ? <MdFormatAlignRight /> : <MdFormatAlignCenter />}
         </Button>
-      ) : (
-        <Box width={"1rem"}></Box>
-      )}
+        {versesOptions && (
+          <Button size="sm" onClick={toggleCompactVerses} colorPalette="blue">
+            {compactVerses ? (
+              <RiExpandLeftRightLine />
+            ) : (
+              <MdOutlineViewCompactAlt />
+            )}
+          </Button>
+        )}
+      </Flex>
     </Flex>
   );
 };
