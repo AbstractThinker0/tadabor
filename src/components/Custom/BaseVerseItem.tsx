@@ -13,9 +13,11 @@ import { useState } from "react";
 interface BaseVerseItemProps {
   verseKey: string;
   isSelected?: boolean;
+  rootProps?: BoxProps;
   children?: React.ReactNode;
   endElement?: React.ReactNode;
-  rootProps?: BoxProps;
+  outerStartElement?: React.ReactNode;
+  outerEndElement?: React.ReactNode;
 }
 
 const BaseVerseItem = ({
@@ -24,6 +26,8 @@ const BaseVerseItem = ({
   children,
   rootProps,
   endElement,
+  outerStartElement,
+  outerEndElement,
 }: BaseVerseItemProps) => {
   const { value: isOpen, toggle } = useBoolean();
   const [isHovered, setIsHovered] = useState(false);
@@ -56,6 +60,7 @@ const BaseVerseItem = ({
       onMouseLeave={onMouseLeave}
       {...rootProps}
     >
+      {outerStartElement}
       <VerseContainer>
         {children}
         {shouldShowButtons && (
@@ -66,6 +71,7 @@ const BaseVerseItem = ({
         )}
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} inputKey={verseKey} />
+      {outerEndElement}
     </Box>
   );
 };

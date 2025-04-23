@@ -1,21 +1,18 @@
-import { memo } from "react";
-
 import { useAppDispatch } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { verseProps } from "quran-tools";
 
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
 import { VerseTags } from "@/components/Pages/Tags/VerseTags";
 import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
 
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import { useBoolean } from "usehooks-ts";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+
+import useQuran from "@/context/useQuran";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -32,58 +29,83 @@ const VerseItem = ({
   tags,
   onOpenVerseModal,
 }: VerseItemProps) => {
+  const dispatch = useAppDispatch();
+
+  function onClickTagVerse(verse: verseProps) {
+    dispatch(tagsPageActions.setCurrentVerse(verse));
+    onOpenVerseModal();
+  }
+
+  function onClickVerse() {
+    dispatch(tagsPageActions.setScrollKey(verse.key));
+  }
+
   return (
-    <Box
-      data-id={verse.key}
-      aria-selected={isSelected}
-      _selected={{ bgColor: "blue.emphasized" }}
-      borderBottom={"1.5px solid"}
-      borderColor={"border.emphasized"}
-      p={"4px"}
+    <BaseVerseItem
+      verseKey={verse.key}
+      isSelected={isSelected}
+      rootProps={{ _selected: { bgColor: "blue.emphasized" } }}
+      outerStartElement={
+        versesTags[verse.key] !== undefined && (
+          <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
+        )
+      }
+      endElement={
+        <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
+          🏷️
+        </Button>
+      }
     >
-      {versesTags[verse.key] !== undefined && (
-        <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
-      )}
-      <ListVerseComponent onOpenVerseModal={onOpenVerseModal} verse={verse} />
-    </Box>
+      {verse.versetext}{" "}
+      <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
+    </BaseVerseItem>
   );
 };
 
-interface ListVerseComponentProps {
+interface SelectedVerseItemProps {
   verse: verseProps;
+  versesTags: versesTagsProps;
+  tags: tagsProps;
   onOpenVerseModal: () => void;
 }
 
-const ListVerseComponent = memo(
-  ({ onOpenVerseModal, verse }: ListVerseComponentProps) => {
-    const dispatch = useAppDispatch();
-    const { value: isOpen, toggle: setOpen } = useBoolean();
+const SelectedVerseItem = ({
+  verse,
+  versesTags,
+  tags,
+  onOpenVerseModal,
+}: SelectedVerseItemProps) => {
+  const dispatch = useAppDispatch();
+  const quranService = useQuran();
 
-    function onClickTagVerse(verse: verseProps) {
-      dispatch(tagsPageActions.setCurrentVerse(verse));
-      onOpenVerseModal();
-    }
-
-    function onClickVerse() {
-      dispatch(tagsPageActions.setScrollKey(verse.key));
-    }
-
-    return (
-      <>
-        <VerseContainer>
-          {verse.versetext}{" "}
-          <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
-          <ButtonExpand onClick={setOpen} />
-          <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
-            🏷️
-          </Button>
-        </VerseContainer>
-        <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-      </>
-    );
+  function onClickVerse(verse: verseProps) {
+    dispatch(tagsPageActions.gotoChapter(verse.suraid));
+    dispatch(tagsPageActions.setScrollKey(verse.key));
   }
-);
 
-ListVerseComponent.displayName = "ListVerseComponent";
+  function onClickTagVerse(verse: verseProps) {
+    dispatch(tagsPageActions.setCurrentVerse(verse));
+    onOpenVerseModal();
+  }
 
-export { VerseItem };
+  return (
+    <BaseVerseItem
+      verseKey={verse.key}
+      outerStartElement={
+        <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
+      }
+      endElement={
+        <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
+          🏷️
+        </Button>
+      }
+    >
+      {verse.versetext}{" "}
+      <ButtonVerse onClick={() => onClickVerse(verse)}>
+        ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
+      </ButtonVerse>
+    </BaseVerseItem>
+  );
+};
+
+export { VerseItem, SelectedVerseItem };

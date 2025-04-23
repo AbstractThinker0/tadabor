@@ -14,7 +14,7 @@ import { ListTitle } from "@/components/Pages/Tags/ListTitle";
 import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";
 
 import { VerseItem } from "@/components/Pages/Tags/VerseItem";
-import { SelectedVerseItem } from "@/components/Pages/Tags/SelectedVerseItem";
+import { SelectedVerseItem } from "@/components/Pages/Tags/VerseItem";
 
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 
