@@ -1,10 +1,6 @@
-import {
-  CloseButton,
-  Collapsible,
-  Drawer,
-  Portal,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { CloseButton, Collapsible, Drawer, Portal } from "@chakra-ui/react";
+
+import useScreenSize from "@/hooks/useScreenSize";
 
 interface SidebarProps {
   isOpenMobile: boolean;
@@ -19,8 +15,7 @@ const Sidebar = ({
   setOpenState,
   children,
 }: SidebarProps) => {
-  // Use Chakra's breakpoint to determine if it's mobile
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useScreenSize();
 
   const isOpen = isMobile ? isOpenMobile : isOpenDesktop;
 

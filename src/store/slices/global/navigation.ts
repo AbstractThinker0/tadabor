@@ -10,12 +10,14 @@ interface NavigationState {
   currentPage: string;
   centerVerses: boolean;
   compactVerses: boolean;
+  isSmallScreen: boolean;
 }
 
 const initialState: NavigationState = {
   currentPage: "",
   centerVerses: defaultCenterVerses,
   compactVerses: defaultCompactVerses,
+  isSmallScreen: window.innerWidth <= 480 || window.innerHeight <= 480,
 };
 
 const navigationSlice = createSlice({
@@ -46,6 +48,9 @@ const navigationSlice = createSlice({
         keyCompactVerses,
         state.compactVerses ? "true" : "false"
       );
+    },
+    setSmallScreen: (state, action: PayloadAction<boolean>) => {
+      state.isSmallScreen = action.payload;
     },
   },
 });

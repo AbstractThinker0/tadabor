@@ -1,15 +1,12 @@
 import { useTranslation } from "react-i18next";
 
-import {
-  Button,
-  ButtonProps,
-  IconButton,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
 
 import { TbSelect } from "react-icons/tb";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { MdOutlineMenu } from "react-icons/md";
+
+import useScreenSize from "@/hooks/useScreenSize";
 
 const ButtonSave = (props: ButtonProps) => {
   const { t } = useTranslation();
@@ -74,7 +71,7 @@ const ButtonSidebar = ({
   isOpenDesktop,
   onTogglePanel,
 }: ButtonSidebarProps) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useScreenSize();
 
   const isOpen = isMobile ? isOpenMobile : isOpenDesktop;
 
