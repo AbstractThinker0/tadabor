@@ -84,8 +84,9 @@ function ReloadPrompt() {
       {needRefresh && showPrompt && (
         <Box
           position="fixed"
-          right="0"
           bottom="0"
+          left="50%"
+          transform="translateX(-50%)"
           margin="16px"
           padding="12px"
           border="1px solid"
