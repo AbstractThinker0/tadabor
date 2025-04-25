@@ -1,8 +1,10 @@
 import Dexie, { type EntityTable } from "dexie";
 import { LetterRole } from "@/util/consts";
+import { v4 as uuidv4 } from "uuid";
 
 export interface INote {
   id: string;
+  uuid?: string;
   text: string;
   dir?: string;
   date_created?: number;
@@ -11,6 +13,7 @@ export interface INote {
 
 export interface IRootNote {
   id: string;
+  uuid?: string;
   text: string;
   dir?: string;
   date_created?: number;
@@ -19,6 +22,7 @@ export interface IRootNote {
 
 export interface ITranslation {
   id: string;
+  uuid?: string;
   text: string;
   dir?: string;
   date_created: number;
@@ -27,27 +31,32 @@ export interface ITranslation {
 
 export interface IColor {
   id: string;
+  uuid?: string;
   name: string;
   code: string;
 }
 
 export interface IVerseColor {
   verse_key: string;
+  uuid?: string;
   color_id: string;
 }
 
 export interface ITag {
   id: string;
+  uuid?: string;
   name: string;
 }
 
 export interface IVerseTags {
   verse_key: string;
+  uuid?: string;
   tags_ids: string[];
 }
 
 export interface ILetterDefinition {
   id: string;
+  uuid?: string;
   name: string;
   definition: string;
   preset_id: string;
@@ -56,11 +65,13 @@ export interface ILetterDefinition {
 
 export interface ILettersPreset {
   id: string;
+  uuid?: string;
   name: string;
 }
 
 export interface ILetterData {
   letter_key: string;
+  uuid?: string;
   letter_role: LetterRole;
   def_id: string;
 }
@@ -140,6 +151,50 @@ class tadaborDatabase extends Dexie {
       letters_presets: "id, name",
       letters_data: "letter_key, letter_role, def_id",
     });
+
+    this.version(22)
+      .stores({
+        notes: "id, uuid, text, dir, date_created, date_modified",
+        root_notes: "id, uuid, text, dir, date_created, date_modified",
+        translations: "id, uuid, text, dir, date_created, date_modified",
+
+        colors: "id, uuid, name, code",
+        verses_color: "verse_key, uuid, color_id",
+
+        tags: "id, uuid, name",
+        verses_tags: "verse_key, uuid, *tags_ids",
+
+        letters_def: "id, uuid, preset_id, name, definition, dir",
+        letters_presets: "id, uuid, name",
+        letters_data: "letter_key, uuid, letter_role, def_id",
+      })
+      .upgrade(async (tx) => {
+        const tableNames = [
+          "notes",
+          "root_notes",
+          "translations",
+          "colors",
+          "verses_color",
+          "tags",
+          "verses_tags",
+          "letters_def",
+          "letters_presets",
+          "letters_data",
+        ];
+
+        for (const tableName of tableNames) {
+          const table = tx.table(tableName);
+
+          const rows = await table.toArray();
+
+          for (const row of rows) {
+            if (!row.uuid) {
+              row.uuid = uuidv4();
+              await table.put(row);
+            }
+          }
+        }
+      });
   }
 }
 
