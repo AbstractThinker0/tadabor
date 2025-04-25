@@ -217,6 +217,7 @@ export const dbFuncs = {
             db.letters_def
               .add({
                 id: defKey,
+                uuid: uuidv4(),
                 preset_id,
                 name,
                 definition,
@@ -257,6 +258,7 @@ export const dbFuncs = {
             db.letters_data
               .add({
                 letter_key,
+                uuid: uuidv4(),
                 letter_role,
                 def_id,
               })
@@ -287,6 +289,7 @@ export const dbFuncs = {
             db.letters_presets
               .add({
                 id,
+                uuid: uuidv4(),
                 name,
               })
               .then(() => {
@@ -317,6 +320,7 @@ export const dbFuncs = {
             db.notes
               .add({
                 id,
+                uuid: uuidv4(),
                 text,
                 dir,
                 date_modified: Date.now(),
@@ -350,6 +354,7 @@ export const dbFuncs = {
             db.root_notes
               .add({
                 id,
+                uuid: uuidv4(),
                 text,
                 dir,
                 date_modified: Date.now(),
@@ -386,6 +391,7 @@ export const dbFuncs = {
             db.translations
               .add({
                 id,
+                uuid: uuidv4(),
                 text,
                 dir,
                 date_modified: Date.now(),
@@ -408,7 +414,7 @@ export const dbFuncs = {
   },
 
   saveColor: (data: IColor) => {
-    return db.colors.put(data);
+    return db.colors.put({ ...data, uuid: uuidv4() });
   },
   loadColors: () => {
     return db.colors.toArray();
@@ -417,7 +423,7 @@ export const dbFuncs = {
     return db.colors.delete(id);
   },
   saveVerseColor: (data: IVerseColor) => {
-    return db.verses_color.put(data);
+    return db.verses_color.put({ ...data, uuid: uuidv4() });
   },
   deleteVerseColor: (verse_key: string) => {
     return db.verses_color.delete(verse_key);
@@ -427,7 +433,7 @@ export const dbFuncs = {
   },
 
   saveTag: (data: ITag) => {
-    return db.tags.put(data);
+    return db.tags.put({ ...data, uuid: uuidv4() });
   },
   deleteTag: (id: string) => {
     db.tags.delete(id);
@@ -443,7 +449,7 @@ export const dbFuncs = {
     return db.tags.toArray();
   },
   saveVerseTags: (data: IVerseTags) => {
-    return db.verses_tags.put(data);
+    return db.verses_tags.put({ ...data, uuid: uuidv4() });
   },
   deleteVerseTags: (verse_key: string) => {
     return db.verses_tags.delete(verse_key);
