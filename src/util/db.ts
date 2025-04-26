@@ -2,108 +2,77 @@ import Dexie, { type EntityTable } from "dexie";
 import { LetterRole } from "@/util/consts";
 import { v4 as uuidv4 } from "uuid";
 
-export interface INote {
-  id: string;
+// Common fields
+export interface ISyncable {
   uuid?: string;
-  text: string;
-  dir?: string;
-  date_created?: number;
-  date_modified?: number;
   syncedAt?: number;
   deleted?: boolean;
   ownerId?: string;
 }
 
-export interface IRootNote {
+// Specific interfaces
+export interface INote extends ISyncable {
   id: string;
-  uuid?: string;
   text: string;
   dir?: string;
   date_created?: number;
   date_modified?: number;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface ITranslation {
+export interface IRootNote extends ISyncable {
   id: string;
-  uuid?: string;
+  text: string;
+  dir?: string;
+  date_created?: number;
+  date_modified?: number;
+}
+
+export interface ITranslation extends ISyncable {
+  id: string;
   text: string;
   dir?: string;
   date_created: number;
   date_modified: number;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface IColor {
+export interface IColor extends ISyncable {
   id: string;
-  uuid?: string;
   name: string;
   code: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface IVerseColor {
+export interface IVerseColor extends ISyncable {
   verse_key: string;
-  uuid?: string;
   color_id: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface ITag {
+export interface ITag extends ISyncable {
   id: string;
-  uuid?: string;
   name: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface IVerseTags {
+export interface IVerseTags extends ISyncable {
   verse_key: string;
-  uuid?: string;
   tags_ids: string[];
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface ILetterDefinition {
+export interface ILetterDefinition extends ISyncable {
   id: string;
-  uuid?: string;
   name: string;
   definition: string;
   preset_id: string;
   dir?: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface ILettersPreset {
+export interface ILettersPreset extends ISyncable {
   id: string;
-  uuid?: string;
   name: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
-export interface ILetterData {
+export interface ILetterData extends ISyncable {
   letter_key: string;
-  uuid?: string;
   letter_role: LetterRole;
   def_id: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
 }
 
 class tadaborDatabase extends Dexie {
