@@ -9,6 +9,9 @@ export interface INote {
   dir?: string;
   date_created?: number;
   date_modified?: number;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface IRootNote {
@@ -18,6 +21,9 @@ export interface IRootNote {
   dir?: string;
   date_created?: number;
   date_modified?: number;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface ITranslation {
@@ -27,6 +33,9 @@ export interface ITranslation {
   dir?: string;
   date_created: number;
   date_modified: number;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface IColor {
@@ -34,24 +43,36 @@ export interface IColor {
   uuid?: string;
   name: string;
   code: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface IVerseColor {
   verse_key: string;
   uuid?: string;
   color_id: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface ITag {
   id: string;
   uuid?: string;
   name: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface IVerseTags {
   verse_key: string;
   uuid?: string;
   tags_ids: string[];
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface ILetterDefinition {
@@ -61,12 +82,18 @@ export interface ILetterDefinition {
   definition: string;
   preset_id: string;
   dir?: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface ILettersPreset {
   id: string;
   uuid?: string;
   name: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 export interface ILetterData {
@@ -74,6 +101,9 @@ export interface ILetterData {
   uuid?: string;
   letter_role: LetterRole;
   def_id: string;
+  syncedAt?: number;
+  deleted?: boolean;
+  ownerId?: string;
 }
 
 class tadaborDatabase extends Dexie {
@@ -98,44 +128,6 @@ class tadaborDatabase extends Dexie {
     // (Here's where the implicit table props are dynamically created)
     // Increase the table version whenever you make changes to the current stores structure
     //
-    this.version(11).stores({
-      notes: "id, text, date_created, date_modified",
-      notes_dir: "id, dir",
-      root_notes: "id, text, date_created, date_modified",
-      root_notes_dir: "id, dir",
-      translations: "id, text, date_created, date_modified",
-      colors: "id, name, code",
-      verses_color: "verse_key, color_id",
-      tags: "id, name",
-      verses_tags: "verse_key, *tags_ids",
-    });
-
-    this.version(15).stores({
-      notes: "id, text, dir, date_created, date_modified",
-      root_notes: "id, text, dir, date_created, date_modified",
-      translations: "id, text, date_created, date_modified",
-      colors: "id, name, code",
-      verses_color: "verse_key, color_id",
-      tags: "id, name",
-      verses_tags: "verse_key, *tags_ids",
-    });
-
-    this.version(20).stores({
-      notes: "id, text, dir, date_created, date_modified",
-      root_notes: "id, text, dir, date_created, date_modified",
-      translations: "id, text, date_created, date_modified",
-
-      colors: "id, name, code",
-      verses_color: "verse_key, color_id",
-
-      tags: "id, name",
-      verses_tags: "verse_key, *tags_ids",
-
-      letters_def: "id, preset_id, name, definition, dir",
-      letters_presets: "id, name",
-      letters_data: "letter_key, letter_role, def_id",
-    });
-
     this.version(21).stores({
       notes: "id, text, dir, date_created, date_modified",
       root_notes: "id, text, dir, date_created, date_modified",
