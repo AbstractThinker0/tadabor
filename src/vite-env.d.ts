@@ -3,3 +3,11 @@
 declare const APP_VERSION: string;
 declare const APP_BUILD_DATE: string;
 declare const APP_MODE: string;
+
+interface ImportMetaEnv {
+  readonly VITE_API: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
