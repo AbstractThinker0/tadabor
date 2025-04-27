@@ -25,6 +25,9 @@
     "@chakra-ui/react": "^3.16.0",
     "@emotion/react": "^11.14.0",
     "@reduxjs/toolkit": "^2.6.1",
+    "@tanstack/react-query": "^5.74.4",
+    "@trpc/client": "^11.1.1",
+    "@trpc/tanstack-react-query": "^11.1.1",
     "dexie": "^4.0.7",
     "i18next": "^23.0.1",
     "i18next-browser-languagedetector": "^7.0.2",
@@ -37,7 +40,8 @@
     "react-redux": "^9.2.0",
     "react-router": "^7.5.2",
     "usehooks-ts": "^3.1.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",

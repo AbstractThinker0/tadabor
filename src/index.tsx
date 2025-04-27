@@ -10,6 +10,7 @@ import store from "@/store";
 import App from "@/App";
 
 import Layout from "@/components/Layout/Layout";
+import { QueryProvider } from "@/components/Custom/QueryProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,11 +19,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <Layout>
-          <App />
-        </Layout>
-      </BrowserRouter>
+      <QueryProvider>
+        <BrowserRouter>
+          <Layout>
+            <App />
+          </Layout>
+        </BrowserRouter>
+      </QueryProvider>
     </Provider>
   </React.StrictMode>
 );
