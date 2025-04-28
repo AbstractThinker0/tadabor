@@ -10,6 +10,9 @@ function makeQueryClient() {
       queries: {
         // For now we only save Offline First Data so we don't refetching
         staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
       },
     },
   });
