@@ -134,7 +134,7 @@ const ChaptersListAdvanced = ({
               cursor={"pointer"}
               px={"5px"}
               py={"3px"}
-              smDown={{ py: "8px" }}
+              mdDown={{ py: "8px" }}
               aria-selected={currentChapter === chapter.id}
               _selected={{ bgColor: "gray.emphasized" }}
             >

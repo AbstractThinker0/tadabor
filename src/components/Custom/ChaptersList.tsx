@@ -92,7 +92,7 @@ const ChaptersList = ({
             key={chapter.id}
             px="14px"
             py={"2px"}
-            smDown={{ py: "8px" }}
+            mdDown={{ py: "8px" }}
             cursor="pointer"
             data-id={chapter.id}
             aria-selected={Number(selectChapter) === chapter.id}

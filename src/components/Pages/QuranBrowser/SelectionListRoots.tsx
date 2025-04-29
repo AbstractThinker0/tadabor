@@ -131,7 +131,7 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
     <Box
       px="12px"
       py={"3px"}
-      smDown={{ py: "8px" }}
+      mdDown={{ py: "8px" }}
       aria-selected={isSelected}
       _selected={{ bgColor: "gray.emphasized" }}
       onClick={() => onClickRoot(root.name)}
