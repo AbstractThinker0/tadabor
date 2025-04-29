@@ -162,7 +162,7 @@ class tadaborDatabase extends Dexie {
 const db = new tadaborDatabase();
 
 export const dbFuncs = {
-  saveLetterDefinition: (
+  saveLetterDefinition: async (
     preset_id: string,
     name: string,
     definition: string,
@@ -170,39 +170,30 @@ export const dbFuncs = {
   ) => {
     const defKey = preset_id === "-1" ? name : `${name}:${preset_id}`;
 
-    return new Promise((resolve, reject) => {
-      db.letters_def
-        .update(defKey, { preset_id, name, definition, dir })
-        .then((updated) => {
-          if (!updated) {
-            db.letters_def
-              .add({
-                id: defKey,
-                uuid: uuidv4(),
-                preset_id,
-                name,
-                definition,
-                dir,
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+    const updated = await db.letters_def.update(defKey, {
+      preset_id,
+      name,
+      definition,
+      dir,
     });
+
+    if (updated) return true;
+
+    await db.letters_def.add({
+      id: defKey,
+      uuid: uuidv4(),
+      preset_id,
+      name,
+      definition,
+      dir,
+    });
+
+    return true;
   },
   loadLettersDefinition: () => {
     return db.letters_def.toArray();
   },
-  saveLetterData: ({
+  saveLetterData: async ({
     letter_key,
     letter_role = LetterRole.Unit,
     def_id = "",
@@ -211,130 +202,89 @@ export const dbFuncs = {
     letter_role: LetterRole;
     def_id: string;
   }) => {
-    return new Promise((resolve, reject) => {
-      db.letters_data
-        .update(letter_key, { letter_role, def_id })
-        .then((updated) => {
-          if (!updated) {
-            db.letters_data
-              .add({
-                letter_key,
-                uuid: uuidv4(),
-                letter_role,
-                def_id,
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+    const updated = await db.letters_data.update(letter_key, {
+      letter_role,
+      def_id,
     });
+
+    if (updated) return true;
+
+    await db.letters_data.add({
+      letter_key,
+      uuid: uuidv4(),
+      letter_role,
+      def_id,
+    });
+
+    return true;
   },
   loadLettersData: () => {
     return db.letters_data.toArray();
   },
-  saveLettersPreset: (id: string, name: string) => {
-    return new Promise((resolve, reject) => {
-      db.letters_presets
-        .update(id, { name })
-        .then((updated) => {
-          if (!updated) {
-            db.letters_presets
-              .add({
-                id,
-                uuid: uuidv4(),
-                name,
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+  saveLettersPreset: async (id: string, name: string) => {
+    const updated = await db.letters_presets.update(id, { name });
+
+    if (updated) return true;
+
+    await db.letters_presets.add({
+      id,
+      uuid: uuidv4(),
+      name,
     });
+
+    return true;
   },
   loadLettersPresets: () => {
     return db.letters_presets.toArray();
   },
 
-  saveNote: (id: string, text: string, dir: string) => {
-    return new Promise((resolve, reject) => {
-      db.notes
-        .update(id, { text, dir, date_modified: Date.now() })
-        .then((updated) => {
-          if (!updated) {
-            db.notes
-              .add({
-                id,
-                uuid: uuidv4(),
-                text,
-                dir,
-                date_modified: Date.now(),
-                date_created: Date.now(),
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+  saveNote: async (id: string, text: string, dir: string) => {
+    const now = Date.now();
+
+    const updated = await db.notes.update(id, {
+      text,
+      dir,
+      date_modified: now,
     });
+
+    if (updated) return true;
+
+    await db.notes.add({
+      id,
+      uuid: uuidv4(),
+      text,
+      dir,
+      date_modified: now,
+      date_created: now,
+    });
+
+    return true;
   },
   loadNotes: () => {
     return db.notes.toArray();
   },
 
-  saveRootNote: (id: string, text: string, dir: string) => {
-    return new Promise((resolve, reject) => {
-      db.root_notes
-        .update(id, { text, dir, date_modified: Date.now() })
-        .then((updated) => {
-          if (!updated) {
-            db.root_notes
-              .add({
-                id,
-                uuid: uuidv4(),
-                text,
-                dir,
-                date_modified: Date.now(),
-                date_created: Date.now(),
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+  saveRootNote: async (id: string, text: string, dir: string) => {
+    const now = Date.now();
+
+    const updated = await db.root_notes.update(id, {
+      text,
+      dir,
+      date_modified: now,
     });
+
+    if (updated) return true;
+
+    await db.root_notes.add({
+      id,
+      uuid: uuidv4(),
+      text,
+      dir,
+      date_modified: now,
+      date_created: now,
+    });
+
+    return true;
   },
   loadRootNotes: () => {
     return db.root_notes.toArray();
@@ -343,37 +293,27 @@ export const dbFuncs = {
   loadTranslations: () => {
     return db.translations.toArray();
   },
-  saveTranslation: (id: string, text: string, dir: string = "") => {
-    return new Promise((resolve, reject) => {
-      db.translations
-        .update(id, { text, dir, date_modified: Date.now() })
-        .then((updated) => {
-          if (!updated) {
-            db.translations
-              .add({
-                id,
-                uuid: uuidv4(),
-                text,
-                dir,
-                date_modified: Date.now(),
-                date_created: Date.now(),
-              })
-              .then(() => {
-                resolve(true); // Resolve the promise on successful add
-              })
-              .catch((error) => {
-                reject(error); // Reject the promise on add error
-              });
-          } else {
-            resolve(true); // Resolve the promise on successful update
-          }
-        })
-        .catch((error) => {
-          reject(error); // Reject the promise on update error
-        });
+  saveTranslation: async (id: string, text: string, dir: string = "") => {
+    const now = Date.now();
+    const updated = await db.translations.update(id, {
+      text,
+      dir,
+      date_modified: now,
     });
-  },
 
+    if (updated) return true;
+
+    await db.translations.add({
+      id,
+      uuid: uuidv4(),
+      text,
+      dir,
+      date_modified: now,
+      date_created: now,
+    });
+
+    return true;
+  },
   saveColor: (data: IColor) => {
     return db.colors.put({ ...data, uuid: uuidv4() });
   },
