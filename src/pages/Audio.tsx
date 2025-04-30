@@ -9,19 +9,15 @@ import { getVerseAudioURL } from "@/util/audioData";
 import { verseProps } from "quran-tools";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 import { ChapterHeader } from "@/components/Generic/ChapterHeader";
-import { ButtonExpand } from "@/components/Generic/Buttons";
 
 import { Box, HStack, Flex, Button } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-
-import { useBoolean } from "usehooks-ts";
 import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 
@@ -278,6 +274,7 @@ const ListTitle = () => {
       isOpenMobile={showSearchPanelMobile}
       isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
+      versesOptions={true}
     />
   );
 };
@@ -333,18 +330,12 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
-  const { value: isOpen, toggle: setOpen } = useBoolean();
-
   return (
-    <Box
-      padding="5px"
-      borderBottom="1px solid"
-      borderColor={"gray.emphasized"}
-      aria-selected={isSelected}
-      _selected={{ bgColor: "green.emphasized" }}
-    >
-      <VerseContainer>
-        {verse.versetext} ({verse.verseid}){" "}
+    <BaseVerseItem
+      verseKey={verse.key}
+      isSelected={isSelected}
+      rootProps={{ _selected: { bgColor: "green.emphasized" } }}
+      endElement={
         <Button
           background="none"
           border="none"
@@ -352,10 +343,10 @@ const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
         >
           🔊
         </Button>
-        <ButtonExpand onClick={setOpen} />
-      </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
-    </Box>
+      }
+    >
+      {verse.versetext} ({verse.verseid}){" "}
+    </BaseVerseItem>
   );
 };
 
