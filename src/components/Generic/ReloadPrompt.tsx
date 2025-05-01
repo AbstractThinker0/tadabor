@@ -85,10 +85,11 @@ function ReloadPrompt() {
         <Box
           position="fixed"
           bottom="0"
-          left="50%"
-          transform="translateX(-50%)"
-          margin="16px"
-          padding="12px"
+          left="0"
+          right="0"
+          mx={"auto"}
+          my={"16px"}
+          padding="8px"
           border="1px solid"
           borderColor={"border"}
           borderRadius="4px"
@@ -97,13 +98,15 @@ function ReloadPrompt() {
           boxShadow="md"
           color={"fg"}
           backgroundColor="bg"
+          maxWidth={"95vw"}
+          width={"400px"}
         >
           {updatePending ? (
             <Box marginBottom={"8px"}>
               Reloading the page to apply updates..
             </Box>
           ) : (
-            <>
+            <Box>
               <Box marginBottom={"8px"}>
                 New version available. Save your notes and reload.
               </Box>
@@ -122,7 +125,7 @@ function ReloadPrompt() {
               >
                 Close
               </Button>
-            </>
+            </Box>
           )}
         </Box>
       )}
