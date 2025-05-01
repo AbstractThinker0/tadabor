@@ -22,7 +22,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@chakra-ui/react": "^3.16.0",
+    "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@tanstack/react-query": "^5.74.4",
