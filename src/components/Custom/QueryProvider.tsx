@@ -38,7 +38,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: import.meta.env.VITE_API,
+          url: import.meta.env.VITE_API || "",
         }),
       ],
     })
