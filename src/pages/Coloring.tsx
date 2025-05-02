@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
@@ -28,8 +27,6 @@ function Coloring() {
   const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
 
   useEffect(() => {
-    dispatch(fetchVerseNotes());
-
     async function fetchSavedColors() {
       // Check if we already fetched colors
       if (Object.keys(colorsList).length) {

@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
   isTransNotesLoading,
-  useAppDispatch,
   useAppSelector,
   getAllTransNotesKeys,
 } from "@/store";
-import { fetchTransNotes } from "@/store/slices/global/transNotes";
 
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
@@ -21,12 +19,7 @@ import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 import { Box, VStack } from "@chakra-ui/react";
 
 const TransNotes = () => {
-  const dispatch = useAppDispatch();
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
-
-  useEffect(() => {
-    dispatch(fetchTransNotes());
-  }, []);
 
   return (
     <>

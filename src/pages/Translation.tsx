@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-
 import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchTransNotes } from "@/store/slices/global/transNotes";
+
 import { translationPageActions } from "@/store/slices/pages/translation";
 
 import { Box, Flex } from "@chakra-ui/react";
@@ -24,10 +22,6 @@ const Translation = () => {
   const currentChapter = useAppSelector(
     (state) => state.translationPage.currentChapter
   );
-
-  useEffect(() => {
-    dispatch(fetchTransNotes());
-  }, []);
 
   const handleChapterChange = (chapter: string) => {
     dispatch(translationPageActions.setCurrentChapter(chapter));

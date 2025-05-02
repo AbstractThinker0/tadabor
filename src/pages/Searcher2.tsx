@@ -2,7 +2,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
@@ -36,10 +36,6 @@ const Searcher2 = () => {
   const tabIndex = useAppSelector((state) => state.searcher2Page.tabIndex);
 
   const scrollKey = useAppSelector((state) => state.searcher2Page.scrollKey);
-
-  useEffect(() => {
-    dispatch(fetchVerseNotes());
-  }, []);
 
   const setScrollKey = (key: string) => {
     dispatch(searcher2PageActions.setScrollKey(key));

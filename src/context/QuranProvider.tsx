@@ -6,6 +6,11 @@ import {
   createContext,
 } from "react";
 
+import { useAppDispatch } from "@/store";
+import { fetchRootNotes } from "@/store/slices/global/rootNotes";
+import { fetchTransNotes } from "@/store/slices/global/transNotes";
+import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 
 import { quranClass } from "quran-tools";
@@ -15,6 +20,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 export const QuranContext = createContext<quranClass | null>(null);
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const quranInstance = useMemo(() => new quranClass(), []);
 
@@ -47,6 +53,10 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
     }
 
     fetchData();
+
+    dispatch(fetchRootNotes());
+    dispatch(fetchVerseNotes());
+    dispatch(fetchTransNotes());
 
     return () => {
       clientLeft = true;

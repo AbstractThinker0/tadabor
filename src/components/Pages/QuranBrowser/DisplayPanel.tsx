@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { isVerseNotesLoading, useAppSelector } from "@/store";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -10,7 +9,6 @@ import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
 import { Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
-  const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const searchResult = useAppSelector((state) => state.qbPage.searchResult);
@@ -25,10 +23,6 @@ const DisplayPanel = () => {
       refListVerses.current.scrollTop = 0;
     }
   }, [searchResult]);
-
-  useEffect(() => {
-    dispatch(fetchVerseNotes());
-  }, []);
 
   return (
     <Flex

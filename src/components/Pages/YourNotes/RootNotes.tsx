@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
   isRootNotesLoading,
-  useAppDispatch,
   getAllRootNotesKeys,
   useAppSelector,
 } from "@/store";
-
-import { fetchRootNotes } from "@/store/slices/global/rootNotes";
 
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
@@ -23,14 +20,9 @@ import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const RootNotes = () => {
-  const dispatch = useAppDispatch();
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
 
   const rootsLoaded = useRootsLoaded();
-
-  useEffect(() => {
-    dispatch(fetchRootNotes());
-  }, []);
 
   if (!rootsLoaded || isRNotesLoading)
     return <LoadingSpinner text="Loading roots data.." />;

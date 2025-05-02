@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
@@ -31,10 +29,6 @@ function Inspector() {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
     dispatch(inspectorPageActions.setScrollKey(""));
   }
-
-  useEffect(() => {
-    dispatch(fetchVerseNotes());
-  }, []);
 
   const showSearchPanel = useAppSelector(
     (state) => state.inspectorPage.showSearchPanel

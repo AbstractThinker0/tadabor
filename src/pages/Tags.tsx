@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
 import { dbFuncs } from "@/util/db";
@@ -61,7 +61,6 @@ function Tags() {
     }
 
     fetchSavedTags();
-    dispatch(fetchVerseNotes());
 
     return () => {
       clientLeft = true;

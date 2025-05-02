@@ -1,7 +1,7 @@
-import { useEffect, memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { lettersPageActions } from "@/store/slices/pages/letters";
 
 import Display from "@/components/Pages/Letters/Display";
@@ -29,10 +29,6 @@ const PanelQuran = memo(
     const handleSelectChapter = useCallback((chapterID: string) => {
       dispatch(lettersPageActions.setCurrentChapter(chapterID));
       dispatch(lettersPageActions.setScrollKey(""));
-    }, []);
-
-    useEffect(() => {
-      dispatch(fetchVerseNotes());
     }, []);
 
     const showSearchPanel = useAppSelector(

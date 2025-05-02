@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
   isRootNotesLoading,
@@ -6,8 +6,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "@/store";
-import { fetchRootNotes } from "@/store/slices/global/rootNotes";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
 import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
@@ -35,11 +34,6 @@ const PanelRoots = () => {
   const [itemsCount, setItemsCount] = useState(60);
 
   const rootsLoaded = useRootsLoaded();
-
-  useEffect(() => {
-    dispatch(fetchRootNotes());
-    dispatch(fetchVerseNotes());
-  }, []);
 
   const handleRoots = (roots: rootProps[]) => {
     setStateRoots(roots);

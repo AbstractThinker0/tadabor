@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
-import {
-  isVerseNotesLoading,
-  useAppDispatch,
-  getAllNotesKeys,
-  useAppSelector,
-} from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { isVerseNotesLoading, getAllNotesKeys, useAppSelector } from "@/store";
+
 import { dbFuncs } from "@/util/db";
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
@@ -20,12 +15,7 @@ import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 import { Box, VStack } from "@chakra-ui/react";
 
 const VerseNotes = () => {
-  const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-
-  useEffect(() => {
-    dispatch(fetchVerseNotes());
-  }, []);
 
   return (
     <>

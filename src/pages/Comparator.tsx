@@ -9,8 +9,7 @@ import {
   useAppSelector,
 } from "@/store";
 import { fetchAllTranslations } from "@/store/slices/global/translations";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
-import { fetchTransNotes } from "@/store/slices/global/transNotes";
+
 import { comparatorPageActions } from "@/store/slices/pages/comparator";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -45,8 +44,6 @@ function Comparator() {
   });
 
   useEffect(() => {
-    dispatch(fetchVerseNotes());
-    dispatch(fetchTransNotes());
     dispatch(fetchAllTranslations());
   }, []);
 

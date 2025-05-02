@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
@@ -25,10 +24,6 @@ const Searcher = () => {
   const verseTab = useAppSelector((state) => state.searcherPage.verseTab);
 
   const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
-
-  useEffect(() => {
-    dispatch(fetchVerseNotes());
-  }, []);
 
   const setScrollKey = (key: string) => {
     dispatch(searcherPageActions.setScrollKey(key));
