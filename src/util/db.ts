@@ -11,6 +11,17 @@ export interface ISyncable {
 }
 
 // Specific interfaces
+
+export interface ILocalNote extends ISyncable {
+  id: string;
+  key: string;
+  type: string;
+  text: string;
+  dir?: string;
+  date_created?: number;
+  date_modified?: number;
+}
+
 export interface INote extends ISyncable {
   id: string;
   text: string;
@@ -31,8 +42,8 @@ export interface ITranslation extends ISyncable {
   id: string;
   text: string;
   dir?: string;
-  date_created: number;
-  date_modified: number;
+  date_created?: number;
+  date_modified?: number;
 }
 
 export interface IColor extends ISyncable {
@@ -79,6 +90,8 @@ class tadaborDatabase extends Dexie {
   notes!: EntityTable<INote, "id">;
   root_notes!: EntityTable<IRootNote, "id">;
   translations!: EntityTable<ITranslation, "id">;
+
+  local_notes!: EntityTable<ILocalNote, "id">;
 
   colors!: EntityTable<IColor, "id">;
   verses_color!: EntityTable<IVerseColor, "verse_key">;
@@ -153,6 +166,40 @@ class tadaborDatabase extends Dexie {
               row.uuid = uuidv4();
               await table.put(row);
             }
+          }
+        }
+      });
+
+    this.version(23)
+      .stores({
+        local_notes:
+          "id, uuid, key, type, text, dir, date_created, date_modified",
+      })
+      .upgrade(async (tx) => {
+        const mapping = {
+          notes: "verse",
+          root_notes: "root",
+          translations: "translation",
+        };
+
+        for (const [tableName, noteType] of Object.entries(mapping)) {
+          const table = tx.table(tableName);
+
+          const rows = await table.toArray();
+
+          const localNotesTable = tx.table("local_notes");
+
+          for (const row of rows) {
+            await localNotesTable.put({
+              id: `${noteType}:${row.id}`,
+              key: row.id,
+              uuid: row.uuid ?? uuidv4(),
+              type: noteType,
+              text: row.text,
+              dir: row.dir,
+              date_created: row.date_created,
+              date_modified: row.date_modified,
+            });
           }
         }
       });
@@ -238,10 +285,32 @@ export const dbFuncs = {
     return db.letters_presets.toArray();
   },
 
-  saveNote: async (id: string, text: string, dir: string) => {
-    const now = Date.now();
+  saveNote: (id: string, text: string, dir: string) =>
+    dbFuncs.saveLocalNote("verse", id, text, dir),
 
-    const updated = await db.notes.update(id, {
+  loadNotes: () => dbFuncs.loadLocalNotesByType("verse"),
+
+  saveRootNote: (id: string, text: string, dir: string) =>
+    dbFuncs.saveLocalNote("root", id, text, dir),
+
+  loadRootNotes: () => dbFuncs.loadLocalNotesByType("root"),
+
+  saveTranslation: (id: string, text: string, dir: string = "") =>
+    dbFuncs.saveLocalNote("translation", id, text, dir),
+
+  loadTranslations: () => dbFuncs.loadLocalNotesByType("translation"),
+
+  // New unified APIs
+  saveLocalNote: async (
+    type: "verse" | "root" | "translation",
+    id: string,
+    text: string,
+    dir: string = ""
+  ) => {
+    const now = Date.now();
+    const localId = `${type}:${id}`;
+
+    const updated = await db.local_notes.update(localId, {
       text,
       dir,
       date_modified: now,
@@ -249,70 +318,26 @@ export const dbFuncs = {
 
     if (updated) return true;
 
-    await db.notes.add({
-      id,
+    await db.local_notes.add({
+      id: localId,
       uuid: uuidv4(),
+      key: id,
+      type,
       text,
       dir,
-      date_modified: now,
       date_created: now,
+      date_modified: now,
     });
 
     return true;
   },
-  loadNotes: () => {
-    return db.notes.toArray();
+
+  loadLocalNotesByType: async (type: "verse" | "root" | "translation") => {
+    return db.local_notes.where("type").equals(type).toArray();
   },
 
-  saveRootNote: async (id: string, text: string, dir: string) => {
-    const now = Date.now();
-
-    const updated = await db.root_notes.update(id, {
-      text,
-      dir,
-      date_modified: now,
-    });
-
-    if (updated) return true;
-
-    await db.root_notes.add({
-      id,
-      uuid: uuidv4(),
-      text,
-      dir,
-      date_modified: now,
-      date_created: now,
-    });
-
-    return true;
-  },
-  loadRootNotes: () => {
-    return db.root_notes.toArray();
-  },
-
-  loadTranslations: () => {
-    return db.translations.toArray();
-  },
-  saveTranslation: async (id: string, text: string, dir: string = "") => {
-    const now = Date.now();
-    const updated = await db.translations.update(id, {
-      text,
-      dir,
-      date_modified: now,
-    });
-
-    if (updated) return true;
-
-    await db.translations.add({
-      id,
-      uuid: uuidv4(),
-      text,
-      dir,
-      date_modified: now,
-      date_created: now,
-    });
-
-    return true;
+  loadAllLocalNotes: () => {
+    return db.local_notes.toArray();
   },
   saveColor: (data: IColor) => {
     return db.colors.put({ ...data, uuid: uuidv4() });

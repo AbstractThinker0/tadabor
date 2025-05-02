@@ -69,7 +69,7 @@ const BackupComponent = () => {
         let backupHTML = ``;
 
         allNotes.forEach((note) => {
-          const noteRoot = quranService.getRootByID(note.id);
+          const noteRoot = quranService.getRootByID(note.key);
 
           if (!noteRoot) return;
 
@@ -87,12 +87,12 @@ const BackupComponent = () => {
         }[] = [];
 
         allNotes.forEach((note) => {
-          const noteRoot = quranService.getRootByID(note.id);
+          const noteRoot = quranService.getRootByID(note.key);
 
           if (!noteRoot) return;
 
           backupData.push({
-            id: note.id,
+            id: note.key,
             root: noteRoot.name,
             text: note.text,
           });

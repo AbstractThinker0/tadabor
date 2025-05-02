@@ -67,10 +67,10 @@ const BackupComponent = () => {
         let backupHTML = ``;
 
         allNotes.forEach((note) => {
-          const noteVerse = quranService.getVerseByKey(note.id)!;
+          const noteVerse = quranService.getVerseByKey(note.key)!;
 
           const verseData = htmlNote(
-            quranService.convertKeyToSuffix(note.id),
+            quranService.convertKeyToSuffix(note.key),
             noteVerse.versetext,
             note.text,
             note.dir
@@ -88,10 +88,10 @@ const BackupComponent = () => {
         }[] = [];
 
         allNotes.forEach((note) => {
-          const noteVerse = quranService.getVerseByKey(note.id)!;
+          const noteVerse = quranService.getVerseByKey(note.key)!;
 
           backupData.push({
-            id: note.id,
+            id: note.key,
             verse: noteVerse.versetext,
             text: note.text,
           });

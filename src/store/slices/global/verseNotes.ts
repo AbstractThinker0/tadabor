@@ -40,7 +40,7 @@ export const fetchVerseNotes = createAsyncThunk<
   const notesData: UserNotesType = {};
 
   dbData.forEach((note) => {
-    notesData[note.id] = {
+    notesData[note.key] = {
       text: note.text,
       dir: note.dir,
       saved: true,

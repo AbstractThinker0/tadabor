@@ -36,7 +36,7 @@ export const fetchTransNotes = createAsyncThunk<
   const notesData: UserNotesType = {};
 
   dbData.forEach((note) => {
-    notesData[note.id] = {
+    notesData[note.key] = {
       text: note.text,
       dir: "",
       saved: true,
