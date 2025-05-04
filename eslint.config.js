@@ -10,6 +10,10 @@ import react from "eslint-plugin-react";
 export default [
   js.configs.recommended,
   {
+    linterOptions: {
+      noInlineConfig: false,
+      reportUnusedDisableDirectives: true,
+    },
     languageOptions: {
       parser: tsParser,
       ecmaVersion: "latest",
@@ -46,6 +50,7 @@ export default [
       ],
       "react/react-in-jsx-scope": "off",
       "react-hooks/react-compiler": "error",
+      //"react-hooks/exhaustive-deps": "warn",
       "react-refresh/only-export-components": "warn",
       "import/no-unresolved": [
         "error",
