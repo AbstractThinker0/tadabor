@@ -1,12 +1,10 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 
-import { useAppSelector, selectTransNote } from "@/store";
-import { transNotesActions } from "@/store/slices/global/transNotes";
+import { useAppSelector } from "@/store";
+
 import useQuran from "@/context/useQuran";
 
 import { useNote } from "@/hooks/useNote";
-
-import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -16,11 +14,31 @@ import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
 interface TransComponentProps {
-  verseKey: string;
+  noteID: string;
 }
 
-const TransComponent = ({ verseKey }: TransComponentProps) => {
+const TransComponent = ({ noteID }: TransComponentProps) => {
   const quranService = useQuran();
+
+  const note = useNote({
+    noteID: noteID,
+  });
+
+  const [isEditable, setEditable] = useState(note.text ? false : true);
+
+  const handleEditClick = () => {
+    setEditable(true);
+  };
+
+  const handleInputSubmit = (inputValue: string) => {
+    setEditable(false);
+
+    note.save();
+  };
+
+  const handleInputChange = (value: string) => {
+    note.setText(value);
+  };
 
   return (
     <Box
@@ -38,60 +56,22 @@ const TransComponent = ({ verseKey }: TransComponentProps) => {
         p={2}
       >
         <VerseContainer>
-          ({quranService.convertKeyToSuffix(verseKey)}) <br />{" "}
-          {quranService.getVerseTextByKey(verseKey)}{" "}
+          ({quranService.convertKeyToSuffix(note.key)}) <br />{" "}
+          {quranService.getVerseTextByKey(note.key)}{" "}
         </VerseContainer>
       </Box>
-      <TransBody inputKey={verseKey} />
-    </Box>
-  );
-};
-
-interface TransBodyProps {
-  inputKey: string;
-}
-
-const TransBody = memo(({ inputKey }: TransBodyProps) => {
-  const { noteText, setText, saveNote } = useNote({
-    noteID: inputKey,
-    noteSelector: selectTransNote,
-    actionChangeNote: transNotesActions.changeTranslation,
-    actionSaveNote: transNotesActions.changeSavedTrans,
-    dbSaveNote: dbFuncs.saveTranslation,
-  });
-
-  const [isEditable, setEditable] = useState(noteText ? false : true);
-
-  const handleEditClick = () => {
-    setEditable(true);
-  };
-
-  const handleInputSubmit = (inputValue: string) => {
-    setEditable(false);
-
-    saveNote();
-  };
-
-  const handleInputChange = (value: string) => {
-    setText(value);
-  };
-
-  return (
-    <>
       {isEditable === false ? (
-        <Versetext inputValue={noteText} handleEditClick={handleEditClick} />
+        <Versetext inputValue={note.text} handleEditClick={handleEditClick} />
       ) : (
         <Versearea
-          inputValue={noteText}
+          inputValue={note.text}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
         />
       )}
-    </>
+    </Box>
   );
-});
-
-TransBody.displayName = "TransBody";
+};
 
 interface VersetextProps {
   inputValue: string;

@@ -1,10 +1,8 @@
 import { memo, useState } from "react";
 
-import { useAppSelector, selectTransNote } from "@/store";
-import { transNotesActions } from "@/store/slices/global/transNotes";
+import { useAppSelector } from "@/store";
 
 import { useNote } from "@/hooks/useNote";
-import { dbFuncs } from "@/util/db";
 
 import { Box, Text } from "@chakra-ui/react";
 
@@ -12,19 +10,16 @@ import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
 interface TransComponentProps {
-  inputKey: string;
+  verseKey: string;
 }
 
-const TransComponent = memo(({ inputKey }: TransComponentProps) => {
-  const { noteText, setText, saveNote } = useNote({
-    noteID: inputKey,
-    noteSelector: selectTransNote,
-    actionChangeNote: transNotesActions.changeTranslation,
-    actionSaveNote: transNotesActions.changeSavedTrans,
-    dbSaveNote: dbFuncs.saveTranslation,
+const TransComponent = memo(({ verseKey }: TransComponentProps) => {
+  const note = useNote({
+    noteType: "translation",
+    noteKey: verseKey,
   });
 
-  const [isEditable, setEditable] = useState(noteText ? false : true);
+  const [isEditable, setEditable] = useState(note.text ? false : true);
 
   const handleEditClick = () => {
     setEditable(true);
@@ -33,23 +28,23 @@ const TransComponent = memo(({ inputKey }: TransComponentProps) => {
   const handleInputSubmit = () => {
     setEditable(false);
 
-    saveNote();
+    note.save();
   };
 
   const handleInputChange = (value: string) => {
-    setText(value);
+    note.setText(value);
   };
 
   return (
     <>
       {isEditable ? (
         <Versearea
-          inputValue={noteText}
+          inputValue={note.text}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
         />
       ) : (
-        <Versetext inputValue={noteText} handleEditClick={handleEditClick} />
+        <Versetext inputValue={note.text} handleEditClick={handleEditClick} />
       )}
     </>
   );

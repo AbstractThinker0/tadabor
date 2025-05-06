@@ -2,18 +2,26 @@ import Dexie, { type EntityTable } from "dexie";
 import { LetterRole } from "@/util/consts";
 import { v4 as uuidv4 } from "uuid";
 
-// Common fields
-export interface ISyncable {
-  uuid?: string;
-  syncedAt?: number;
-  deleted?: boolean;
-  ownerId?: string;
+export interface ICloudNote {
+  id: string;
+  uuid: string;
+  authorId?: number;
+  key: string;
+  type: string;
+  text: string;
+  dir?: string;
+  date_created?: number;
+  date_modified?: number;
+
+  date_synced?: number;
+  isDeleted?: boolean;
+  isPublished?: boolean;
 }
 
-// Specific interfaces
-
-export interface ILocalNote extends ISyncable {
+export interface ILocalNote {
   id: string;
+  uuid: string;
+  authorId?: number;
   key: string;
   type: string;
   text: string;
@@ -22,30 +30,12 @@ export interface ILocalNote extends ISyncable {
   date_modified?: number;
 }
 
-export interface INote extends ISyncable {
-  id: string;
-  text: string;
-  dir?: string;
-  date_created?: number;
-  date_modified?: number;
+// Common fields
+export interface ISyncable {
+  uuid?: string;
 }
 
-export interface IRootNote extends ISyncable {
-  id: string;
-  text: string;
-  dir?: string;
-  date_created?: number;
-  date_modified?: number;
-}
-
-export interface ITranslation extends ISyncable {
-  id: string;
-  text: string;
-  dir?: string;
-  date_created?: number;
-  date_modified?: number;
-}
-
+// Specific interfaces
 export interface IColor extends ISyncable {
   id: string;
   name: string;
@@ -87,11 +77,8 @@ export interface ILetterData extends ISyncable {
 }
 
 class tadaborDatabase extends Dexie {
-  notes!: EntityTable<INote, "id">;
-  root_notes!: EntityTable<IRootNote, "id">;
-  translations!: EntityTable<ITranslation, "id">;
-
   local_notes!: EntityTable<ILocalNote, "id">;
+  cloud_notes!: EntityTable<ICloudNote, "id">;
 
   colors!: EntityTable<IColor, "id">;
   verses_color!: EntityTable<IVerseColor, "verse_key">;
@@ -203,6 +190,11 @@ class tadaborDatabase extends Dexie {
           }
         }
       });
+
+    this.version(26).stores({
+      cloud_notes:
+        "id, uuid, authorId, key, type, text, dir, date_created, date_modified, date_synced, isDeleted, isPublished",
+    });
   }
 }
 
@@ -285,60 +277,68 @@ export const dbFuncs = {
     return db.letters_presets.toArray();
   },
 
-  saveNote: (id: string, text: string, dir: string) =>
-    dbFuncs.saveLocalNote("verse", id, text, dir),
-
-  loadNotes: () => dbFuncs.loadLocalNotesByType("verse"),
-
-  saveRootNote: (id: string, text: string, dir: string) =>
-    dbFuncs.saveLocalNote("root", id, text, dir),
-
-  loadRootNotes: () => dbFuncs.loadLocalNotesByType("root"),
-
-  saveTranslation: (id: string, text: string, dir: string = "") =>
-    dbFuncs.saveLocalNote("translation", id, text, dir),
-
-  loadTranslations: () => dbFuncs.loadLocalNotesByType("translation"),
-
   // New unified APIs
-  saveLocalNote: async (
-    type: "verse" | "root" | "translation",
-    id: string,
-    text: string,
-    dir: string = ""
-  ) => {
-    const now = Date.now();
-    const localId = `${type}:${id}`;
-
-    const updated = await db.local_notes.update(localId, {
+  saveLocalNote: async ({
+    key,
+    type,
+    uuid,
+    id,
+    text,
+    dir = "",
+    date_created,
+    date_modified,
+  }: {
+    type: "verse" | "root" | "translation" | string;
+    uuid: string;
+    id: string;
+    key: string;
+    text: string;
+    dir?: string;
+    date_created?: number;
+    date_modified?: number;
+  }) => {
+    const updated = await db.local_notes.update(id, {
       text,
       dir,
-      date_modified: now,
+      date_modified,
     });
 
     if (updated) return true;
 
     await db.local_notes.add({
-      id: localId,
-      uuid: uuidv4(),
-      key: id,
+      id,
+      uuid,
+      key,
       type,
       text,
       dir,
-      date_created: now,
-      date_modified: now,
+      date_created,
+      date_modified,
     });
 
     return true;
   },
-
-  loadLocalNotesByType: async (type: "verse" | "root" | "translation") => {
-    return db.local_notes.where("type").equals(type).toArray();
-  },
-
-  loadAllLocalNotes: () => {
+  loadLocalNotes: () => {
     return db.local_notes.toArray();
   },
+  loadCloudNotes: () => {
+    return db.cloud_notes.toArray();
+  },
+  saveCloudNote: async (note: ICloudNote) => {
+    const updated = await db.cloud_notes.update(note.id, {
+      ...note,
+    });
+
+    if (updated) return true;
+
+    await db.cloud_notes.add(note);
+
+    return true;
+  },
+  clearCloudNotes: () => {
+    return db.cloud_notes.clear();
+  },
+
   saveColor: (data: IColor) => {
     return db.colors.put({ ...data, uuid: uuidv4() });
   },

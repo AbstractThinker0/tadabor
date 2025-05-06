@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useAppDispatch } from "@/store";
 import { navigationActions } from "@/store/slices/global/navigation";
+import { fetchLocalNotes } from "@/store/slices/global/localNotes";
 
 import { QuranProvider } from "@/context/QuranProvider";
 
@@ -11,9 +12,9 @@ import Navbar from "@/components/Layout/Navbar";
 import AlertMessage from "@/components/Layout/AlertMessage";
 
 import { Flex } from "@chakra-ui/react";
-import { Provider } from "@/components/ui/provider";
-import { Toaster } from "@/components/ui/ToasterProvider";
-import ReloadPrompt from "@/components/Generic/ReloadPrompt";
+
+import UserProvider from "@/components/Custom/UserProvider";
+import NotesProvider from "@/components/Custom/NotesProvider";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
@@ -25,6 +26,8 @@ function Layout({ children }: PropsWithChildren) {
   }, [i18n.resolvedLanguage]);
 
   useEffect(() => {
+    dispatch(fetchLocalNotes());
+
     const handleResize = () => {
       const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
       dispatch(navigationActions.setSmallScreen(isSmall));
@@ -38,23 +41,23 @@ function Layout({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <Provider>
-      <Flex
-        ref={refMain}
-        flexDirection="column"
-        height="100vh"
-        fontFamily={`"Scheherazade New", serif`}
-        fontSize="larger"
-        lineHeight="normal"
-        color={"brand.text"}
-      >
-        <Navbar />
-        <AlertMessage />
-        <QuranProvider>{children}</QuranProvider>
-        <Toaster />
-        <ReloadPrompt />
-      </Flex>
-    </Provider>
+    <UserProvider>
+      <NotesProvider>
+        <Flex
+          ref={refMain}
+          flexDirection="column"
+          height="100vh"
+          fontFamily={`"Scheherazade New", serif`}
+          fontSize="larger"
+          lineHeight="normal"
+          color={"brand.text"}
+        >
+          <Navbar />
+          <AlertMessage />
+          <QuranProvider>{children}</QuranProvider>
+        </Flex>
+      </NotesProvider>
+    </UserProvider>
   );
 }
 

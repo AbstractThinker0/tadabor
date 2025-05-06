@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  isRootNotesLoading,
-  getAllRootNotesKeys,
-  useAppSelector,
-} from "@/store";
-
 import useQuran from "@/context/useQuran";
-import { dbFuncs } from "@/util/db";
+
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -18,30 +12,30 @@ import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
+import { useSavedNotes } from "@/hooks/useSavedNote";
 
 const RootNotes = () => {
-  const isRNotesLoading = useAppSelector(isRootNotesLoading());
-
   const rootsLoaded = useRootsLoaded();
 
-  if (!rootsLoaded || isRNotesLoading)
-    return <LoadingSpinner text="Loading roots data.." />;
+  if (!rootsLoaded) return <LoadingSpinner text="Loading roots data.." />;
 
   return <NotesList />;
 };
 
 const NotesList = () => {
-  const myNotes = useAppSelector(getAllRootNotesKeys);
   const { t } = useTranslation();
+
+  const { getNotesIDsbyType } = useSavedNotes();
+  const rootNotesIDs = getNotesIDsbyType("root");
 
   return (
     <>
-      {myNotes.length ? (
+      {rootNotesIDs.length ? (
         <>
           <BackupComponent />
           <VStack>
-            {myNotes.map((key) => (
-              <RootComponent inputKey={key} key={key} />
+            {rootNotesIDs.map((noteID) => (
+              <RootComponent noteID={noteID} key={noteID} />
             ))}
           </VStack>
         </>
@@ -59,50 +53,53 @@ const BackupComponent = () => {
   const [currentFormat, setFormat] = useState("1");
   const quranService = useQuran();
 
+  const { getNotesIDsbyType, userNotes } = useSavedNotes();
+  const rootNotesIDs = getNotesIDsbyType("root");
+
   const notesBackup = () => {
     if (loadingNotes) return;
 
     setLoadingNotes(true);
 
-    dbFuncs.loadRootNotes().then((allNotes) => {
-      if (currentFormat === "1") {
-        let backupHTML = ``;
+    if (currentFormat === "1") {
+      let backupHTML = ``;
 
-        allNotes.forEach((note) => {
-          const noteRoot = quranService.getRootByID(note.key);
+      rootNotesIDs.forEach((noteID) => {
+        const note = userNotes[noteID];
+        const noteRoot = quranService.getRootByID(note.key);
 
-          if (!noteRoot) return;
+        if (!noteRoot) return;
 
-          const verseData = htmlNote(noteRoot.name, "", note.text, note.dir);
+        const verseData = htmlNote(noteRoot.name, "", note.text, note.dir);
 
-          backupHTML = backupHTML.concat(verseData);
+        backupHTML = backupHTML.concat(verseData);
+      });
+
+      downloadHtmlFile(backupHTML, "rootNotesBackup");
+    } else {
+      const backupData: {
+        root: string;
+        id: string;
+        text: string;
+      }[] = [];
+
+      rootNotesIDs.forEach((noteID) => {
+        const note = userNotes[noteID];
+        const noteRoot = quranService.getRootByID(note.key);
+
+        if (!noteRoot) return;
+
+        backupData.push({
+          id: note.key,
+          root: noteRoot.name,
+          text: note.text,
         });
+      });
 
-        downloadHtmlFile(backupHTML, "rootNotesBackup");
-      } else {
-        const backupData: {
-          root: string;
-          id: string;
-          text: string;
-        }[] = [];
+      downloadNotesFile(backupData, "rootNotesBackup");
+    }
 
-        allNotes.forEach((note) => {
-          const noteRoot = quranService.getRootByID(note.key);
-
-          if (!noteRoot) return;
-
-          backupData.push({
-            id: note.key,
-            root: noteRoot.name,
-            text: note.text,
-          });
-        });
-
-        downloadNotesFile(backupData, "rootNotesBackup");
-      }
-
-      setLoadingNotes(false);
-    });
+    setLoadingNotes(false);
   };
 
   const handleFormat = (format: string) => {

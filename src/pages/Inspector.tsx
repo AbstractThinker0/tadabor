@@ -1,4 +1,4 @@
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
@@ -16,8 +16,6 @@ import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 function Inspector() {
   usePageNav("nav_inspector");
   const dispatch = useAppDispatch();
-
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const currentChapter = useAppSelector(
     (state) => state.inspectorPage.currentChapter
@@ -61,7 +59,7 @@ function Inspector() {
           />
         </Box>
       </Sidebar>
-      {isVNotesLoading || !rootsLoaded ? (
+      {!rootsLoaded ? (
         <LoadingSpinner text="Loading data.." />
       ) : (
         <Display currentChapter={currentChapter} />

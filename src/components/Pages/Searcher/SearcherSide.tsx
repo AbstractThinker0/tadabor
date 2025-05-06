@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import useQuran from "@/context/useQuran";
@@ -13,7 +13,6 @@ import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const SearcherSide = () => {
   const [searchToken, setSearchToken] = useState("");
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const rootsLoaded = useRootsLoaded();
 
@@ -27,7 +26,7 @@ const SearcherSide = () => {
 
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
-      {isVNotesLoading || !rootsLoaded ? (
+      {!rootsLoaded ? (
         <LoadingSpinner text="Loading roots.." />
       ) : (
         <>

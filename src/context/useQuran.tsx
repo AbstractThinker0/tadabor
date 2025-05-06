@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { QuranContext } from "./QuranProvider";
+import { QuranContext } from "@/context/QuranContext";
 
 const useQuran = () => {
   const quranInstance = useContext(QuranContext);

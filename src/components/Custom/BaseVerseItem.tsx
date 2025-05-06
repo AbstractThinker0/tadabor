@@ -70,7 +70,7 @@ const BaseVerseItem = ({
           </>
         )}
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verseKey} />
+      <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verseKey} />
       {outerEndElement}
     </Box>
   );

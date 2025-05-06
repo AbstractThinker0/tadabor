@@ -158,7 +158,11 @@ const VerseItem = ({ verseMatch }: VerseItemProps) => {
         )}:${verseMatch.verseid})`}</ButtonVerse>
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verseMatch.key} />
+      <CollapsibleNote
+        isOpen={isOpen}
+        noteType="verse"
+        noteKey={verseMatch.key}
+      />
     </Box>
   );
 };

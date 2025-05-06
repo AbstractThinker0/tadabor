@@ -1,16 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router";
+import { ErrorBoundary } from "react-error-boundary";
 
 import "@/i18n";
 
-import store from "@/store";
 import App from "@/App";
 
 import Layout from "@/components/Layout/Layout";
-import { QueryProvider } from "@/components/Custom/QueryProvider";
+
+import AppProviders from "@/components/Custom/AppProviders";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,14 +17,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <QueryProvider>
-        <BrowserRouter>
-          <Layout>
-            <App />
-          </Layout>
-        </BrowserRouter>
-      </QueryProvider>
-    </Provider>
+    <AppProviders>
+      <Layout>
+        <ErrorBoundary fallback={<div>Couldn't load the page.</div>}>
+          <App />
+        </ErrorBoundary>
+      </Layout>
+    </AppProviders>
   </React.StrictMode>
 );

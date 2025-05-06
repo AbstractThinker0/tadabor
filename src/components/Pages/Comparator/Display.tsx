@@ -136,7 +136,7 @@ const VerseItem = ({
         </ButtonVerse>
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+      <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verse.key} />
       {Object.keys(transVerses).map((trans) => (
         <Box py={2} key={trans} dir="ltr">
           <Box color={"fg.muted"}>{trans}</Box>

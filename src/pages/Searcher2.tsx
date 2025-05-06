@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
@@ -122,8 +122,6 @@ const Searcher2Tab = () => {
     (state) => state.searcher2Page.searchStart
   );
 
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(searcher2PageActions.setSearchString(event.target.value));
   };
@@ -227,7 +225,7 @@ const Searcher2Tab = () => {
           dir="rtl"
           onScroll={handleScroll}
         >
-          {isPending || isVNotesLoading ? (
+          {isPending ? (
             <LoadingSpinner text="Loading verses.." />
           ) : (
             stateVerses
@@ -265,7 +263,11 @@ const VerseItem = ({ verseMatch }: VerseItemProps) => {
         )}:${verseMatch.verseid})`}</ButtonVerse>
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verseMatch.key} />
+      <CollapsibleNote
+        isOpen={isOpen}
+        noteType="verse"
+        noteKey={verseMatch.key}
+      />
     </Box>
   );
 };

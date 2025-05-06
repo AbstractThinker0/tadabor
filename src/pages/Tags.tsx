@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
@@ -21,8 +21,6 @@ function Tags() {
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();
-
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const tags = useAppSelector((state) => state.tagsPage.tags);
 
@@ -90,11 +88,7 @@ function Tags() {
       >
         <TagsSide />
       </Sidebar>
-      {isVNotesLoading ? (
-        <LoadingSpinner text="Loading verses.." />
-      ) : (
-        <TagsDisplay />
-      )}
+      <TagsDisplay />
     </Flex>
   );
 }

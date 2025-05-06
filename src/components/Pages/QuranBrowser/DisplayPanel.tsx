@@ -1,16 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import { isVerseNotesLoading, useAppSelector } from "@/store";
-
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { useAppSelector } from "@/store";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
 import { Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-
   const searchResult = useAppSelector((state) => state.qbPage.searchResult);
   const searchError = useAppSelector((state) => state.qbPage.searchError);
 
@@ -33,27 +29,23 @@ const DisplayPanel = () => {
       py={"0.5rem"}
       ref={refListVerses}
     >
-      {isVNotesLoading ? (
-        <LoadingSpinner text="Loading verse notes..." />
-      ) : (
-        <Flex
-          flexDir="column"
-          bgColor={"brand.contrast"}
-          borderRadius={5}
-          border={"1px solid"}
-          borderColor={"border.emphasized"}
-          flex={1}
-        >
-          {searchResult.length || searchError ? (
-            <ListSearchResults
-              versesArray={searchResult}
-              searchError={searchError}
-            />
-          ) : (
-            <ListVerses />
-          )}
-        </Flex>
-      )}
+      <Flex
+        flexDir="column"
+        bgColor={"brand.contrast"}
+        borderRadius={5}
+        border={"1px solid"}
+        borderColor={"border.emphasized"}
+        flex={1}
+      >
+        {searchResult.length || searchError ? (
+          <ListSearchResults
+            versesArray={searchResult}
+            searchError={searchError}
+          />
+        ) : (
+          <ListVerses />
+        )}
+      </Flex>
     </Flex>
   );
 };

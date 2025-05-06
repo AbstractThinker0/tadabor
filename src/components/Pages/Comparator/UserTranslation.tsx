@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { selectTransNote, useAppSelector } from "@/store";
-import { transNotesActions } from "@/store/slices/global/transNotes";
+import { useAppSelector } from "@/store";
 
 import { useNote } from "@/hooks/useNote";
-import { dbFuncs } from "@/util/db";
 
 import { Box, Button } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
@@ -21,12 +19,9 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
   const [stateEditable, setStateEditable] = useState(false);
 
-  const { noteText, setText, saveNote } = useNote({
-    noteID: verseKey,
-    noteSelector: selectTransNote,
-    actionChangeNote: transNotesActions.changeTranslation,
-    actionSaveNote: transNotesActions.changeSavedTrans,
-    dbSaveNote: dbFuncs.saveTranslation,
+  const note = useNote({
+    noteType: "translation",
+    noteKey: verseKey,
   });
 
   const onClickAdd = () => {
@@ -34,13 +29,13 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   };
 
   const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
+    note.setText(event.target.value);
   };
 
   const onClickSave = () => {
     setStateEditable(false);
 
-    saveNote();
+    note.save();
   };
 
   return (
@@ -49,7 +44,7 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
       {stateEditable ? (
         <>
           <TextareaAutosize
-            value={noteText}
+            value={note.text}
             placeholder="Enter your text"
             onChange={onChangeText}
           />
@@ -63,9 +58,9 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
             {t("text_save")}
           </Button>
         </>
-      ) : noteText ? (
+      ) : note.text ? (
         <Box whiteSpace={"pre-wrap"}>
-          <Box fontSize={`${notesFS}rem`}>{noteText}</Box>
+          <Box fontSize={`${notesFS}rem`}>{note.text}</Box>
           <ButtonEdit onClick={onClickAdd} />
         </Box>
       ) : (

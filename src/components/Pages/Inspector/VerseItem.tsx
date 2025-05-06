@@ -274,7 +274,11 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
         </ButtonVerse>
         <ButtonExpand onClick={setNoteOpen} />
       </VerseContainer>
-      <CollapsibleNote isOpen={isNoteOpen} inputKey={rootVerse.key} />
+      <CollapsibleNote
+        isOpen={isNoteOpen}
+        noteType="verse"
+        noteKey={rootVerse.key}
+      />
     </>
   );
 };

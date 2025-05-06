@@ -1,11 +1,6 @@
 import { useState } from "react";
 
-import {
-  isRootNotesLoading,
-  isVerseNotesLoading,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
@@ -21,8 +16,6 @@ import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const PanelRoots = () => {
   const dispatch = useAppDispatch();
-  const isRNotesLoading = useAppSelector(isRootNotesLoading());
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const searchString = useAppSelector((state) => state.rbPage.searchString);
 
@@ -70,7 +63,7 @@ const PanelRoots = () => {
         stateRoots={stateRoots}
       />
 
-      {isRNotesLoading || isVNotesLoading || !rootsLoaded ? (
+      {!rootsLoaded ? (
         <LoadingSpinner text="Loading roots data.." />
       ) : (
         <RootsList

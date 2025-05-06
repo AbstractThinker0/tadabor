@@ -1,11 +1,8 @@
 import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { selectNote } from "@/store";
-import { verseNotesActions } from "@/store/slices/global/verseNotes";
-import { useNote } from "@/hooks/useNote";
 
-import { dbFuncs } from "@/util/db";
+import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -15,35 +12,32 @@ import NoteText from "@/components/Pages/YourNotes/NoteText";
 import { Box } from "@chakra-ui/react";
 
 interface VerseComponentProps {
-  inputKey: string;
+  noteID: string;
 }
 
-function VerseComponent({ inputKey }: VerseComponentProps) {
+function VerseComponent({ noteID }: VerseComponentProps) {
   const quranService = useQuran();
 
-  const { noteText, noteDirection, setText, setDirection, saveNote } = useNote({
-    noteID: inputKey,
-    noteSelector: selectNote,
-    actionChangeNoteDir: verseNotesActions.changeNoteDir,
-    actionChangeNote: verseNotesActions.changeNote,
-    actionSaveNote: verseNotesActions.changeSavedNote,
-    dbSaveNote: dbFuncs.saveNote,
+  const note = useNote({
+    noteID: noteID,
   });
 
-  const [isEditable, setEditable] = useState(noteText ? false : true);
+  //console.log("noteKey:", noteKey);
+
+  const [isEditable, setEditable] = useState(note.text ? false : true);
 
   const handleTextChange = (value: string) => {
-    setText(value);
+    note.setText(value);
   };
 
   const handleFormSubmit = () => {
-    saveNote();
+    note.save();
 
     setEditable(false);
   };
 
   const handleSetDirection = (dir: string) => {
-    setDirection(dir);
+    note.setDirection(dir);
   };
 
   const onClickEditButton = () => {
@@ -66,22 +60,22 @@ function VerseComponent({ inputKey }: VerseComponentProps) {
         borderTopRadius={"0.35rem"}
       >
         <VerseContainer>
-          ({quranService.convertKeyToSuffix(inputKey)}) <br />{" "}
-          {quranService.getVerseTextByKey(inputKey)}{" "}
+          ({quranService.convertKeyToSuffix(note.key)}) <br />{" "}
+          {quranService.getVerseTextByKey(note.key)}{" "}
         </VerseContainer>
       </Box>
       {isEditable ? (
         <NoteForm
-          inputValue={noteText}
-          inputDirection={noteDirection}
+          inputValue={note.text}
+          inputDirection={note.direction}
           handleFormSubmit={handleFormSubmit}
           handleTextChange={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
         <NoteText
-          inputValue={noteText}
-          inputDirection={noteDirection}
+          inputValue={note.text}
+          inputDirection={note.direction}
           onClickEditButton={onClickEditButton}
         />
       )}

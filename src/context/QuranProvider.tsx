@@ -1,28 +1,26 @@
-import {
-  useState,
-  useEffect,
-  PropsWithChildren,
-  useMemo,
-  createContext,
-} from "react";
+import { useState, useEffect, PropsWithChildren, useMemo } from "react";
 
-import { useAppDispatch } from "@/store";
-import { fetchRootNotes } from "@/store/slices/global/rootNotes";
-import { fetchTransNotes } from "@/store/slices/global/transNotes";
-import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { useAppSelector } from "@/store";
 
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 
 import { quranClass } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-
-export const QuranContext = createContext<quranClass | null>(null);
+import { QuranContext } from "@/context/QuranContext";
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
-  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const quranInstance = useMemo(() => new quranClass(), []);
+
+  const isLogged = useAppSelector((state) => state.user.isLogged);
+
+  const isLocalNotesLoading = useAppSelector(
+    (state) => state.localNotes.loading
+  );
+  const isCloudNotesLoading = useAppSelector(
+    (state) => state.cloudNotes.loading
+  );
 
   useEffect(() => {
     let clientLeft = false;
@@ -54,10 +52,6 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
     fetchData();
 
-    dispatch(fetchRootNotes());
-    dispatch(fetchVerseNotes());
-    dispatch(fetchTransNotes());
-
     return () => {
       clientLeft = true;
     };
@@ -65,6 +59,10 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
   if (isLoading) {
     return <LoadingSpinner text="Loading Quran data.." />;
+  }
+
+  if (isLocalNotesLoading || (isLogged && isCloudNotesLoading)) {
+    return <LoadingSpinner text="Loading notes.." />;
   }
 
   return (

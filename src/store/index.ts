@@ -1,13 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, createSelector } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import verseNotesReducer from "@/store/slices/global/verseNotes";
-import transNotesReducer from "@/store/slices/global/transNotes";
 import translationsReducer from "@/store/slices/global/translations";
-import rootNotesReducer from "@/store/slices/global/rootNotes";
+
+import cloudNotesReducer from "@/store/slices/global/cloudNotes";
+import localNotesReducer from "@/store/slices/global/localNotes";
 
 import settingsReducer from "@/store/slices/global/settings";
 import navigationReducer from "@/store/slices/global/navigation";
+import userReducer from "@/store/slices/global/user";
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
@@ -25,13 +26,14 @@ import audioPageReducer from "@/store/slices/pages/audio";
 const store = configureStore({
   devTools: APP_MODE === "development",
   reducer: {
-    verseNotes: verseNotesReducer,
-    transNotes: transNotesReducer,
     translations: translationsReducer,
-    rootNotes: rootNotesReducer,
+
+    cloudNotes: cloudNotesReducer,
+    localNotes: localNotesReducer,
 
     settings: settingsReducer,
     navigation: navigationReducer,
+    user: userReducer,
 
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,
@@ -59,47 +61,23 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook that can be reused to resolve types
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export const getAllNotesKeys = (state: RootState) => state.verseNotes.dataKeys;
-
-export const selectNote = (key: string) => {
-  return (state: RootState) => state.verseNotes.data[key];
+export const selectLocalNote = (id: string) => {
+  return (state: RootState) => state.localNotes.data[id];
 };
 
-export const getAllTransNotesKeys = (state: RootState) =>
-  state.transNotes.dataKeys;
+const selectDataKeys = (guest?: boolean) => (state: RootState) =>
+  guest ? state.localNotes.dataKeys : state.cloudNotes.dataKeys;
 
-export const selectTransNote = (key: string) => {
-  return (state: RootState) => state.transNotes.data[key];
+export const getNotesKeys = (type?: string, guest?: boolean) =>
+  createSelector(selectDataKeys(guest), (keys) =>
+    type ? keys.filter((id) => id.startsWith(type)) : keys.slice()
+  );
+
+export const selectCloudNote = (id: string) => {
+  return (state: RootState) => state.cloudNotes.data[id];
 };
 
-export const getAllRootNotesKeys = (state: RootState) =>
-  state.rootNotes.dataKeys;
-
-export const selectRootNote = (key: string) => {
-  return (state: RootState) => state.rootNotes.data[key];
-};
-
-export const isDataLoading = () => {
-  return (state: RootState) =>
-    state.rootNotes.loading &&
-    state.transNotes.loading &&
-    state.verseNotes.loading;
-};
-
-export const isRootNotesLoading = () => {
-  return (state: RootState) => state.rootNotes.loading;
-};
-
-export const isTransNotesLoading = () => {
-  return (state: RootState) => state.transNotes.loading;
-};
-
-export const isVerseNotesLoading = () => {
-  return (state: RootState) => state.verseNotes.loading;
-};
-
-export const isTranslationsLoading = () => {
-  return (state: RootState) => state.translations.loading;
-};
+export const isTranslationsLoading = (state: RootState) =>
+  state.translations.loading;
 
 export default store;

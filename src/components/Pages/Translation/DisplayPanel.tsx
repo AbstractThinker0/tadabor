@@ -158,7 +158,7 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
         {verse.versetext}{" "}
         <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
       </VerseContainer>
-      <TransComponent inputKey={verse.key} />
+      <TransComponent verseKey={verse.key} />
     </Box>
   );
 };

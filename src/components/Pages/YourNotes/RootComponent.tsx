@@ -2,12 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { selectRootNote } from "@/store";
-import { rootNotesActions } from "@/store/slices/global/rootNotes";
-
 import { useNote } from "@/hooks/useNote";
-
-import { dbFuncs } from "@/util/db";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -17,35 +12,30 @@ import NoteText from "@/components/Pages/YourNotes/NoteText";
 import { Box } from "@chakra-ui/react";
 
 interface RootComponentProps {
-  inputKey: string;
+  noteID: string;
 }
 
-const RootComponent = ({ inputKey }: RootComponentProps) => {
+const RootComponent = ({ noteID }: RootComponentProps) => {
   const quranService = useQuran();
 
-  const { noteText, noteDirection, setText, setDirection, saveNote } = useNote({
-    noteID: inputKey,
-    noteSelector: selectRootNote,
-    actionChangeNoteDir: rootNotesActions.changeRootNote,
-    actionChangeNote: rootNotesActions.changeRootNote,
-    actionSaveNote: rootNotesActions.changeSavedNote,
-    dbSaveNote: dbFuncs.saveRootNote,
+  const note = useNote({
+    noteID: noteID,
   });
 
-  const [isEditable, setEditable] = useState(noteText ? false : true);
+  const [isEditable, setEditable] = useState(note.text ? false : true);
 
   const handleTextChange = (value: string) => {
-    setText(value);
+    note.setText(value);
   };
 
   const handleFormSubmit = () => {
-    saveNote();
+    note.save();
 
     setEditable(false);
   };
 
   const handleSetDirection = (dir: string) => {
-    setDirection(dir);
+    note.setDirection(dir);
   };
 
   const onClickEditButton = () => {
@@ -68,21 +58,21 @@ const RootComponent = ({ inputKey }: RootComponentProps) => {
         p={2}
       >
         <VerseContainer>
-          {quranService.getRootNameByID(inputKey)}
+          {quranService.getRootNameByID(note.key)}
         </VerseContainer>
       </Box>
       {isEditable ? (
         <NoteForm
-          inputValue={noteText}
-          inputDirection={noteDirection}
+          inputValue={note.text}
+          inputDirection={note.direction}
           handleFormSubmit={handleFormSubmit}
           handleTextChange={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
         <NoteText
-          inputValue={noteText}
-          inputDirection={noteDirection}
+          inputValue={note.text}
+          inputDirection={note.direction}
           onClickEditButton={onClickEditButton}
         />
       )}

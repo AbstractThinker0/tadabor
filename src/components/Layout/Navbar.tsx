@@ -30,11 +30,16 @@ import { VscInspect } from "react-icons/vsc";
 import { LuFileVolume } from "react-icons/lu";
 
 import SettingsModal from "@/components/Layout/SettingsModal";
+import { NavbarUser } from "@/components/Layout/NavbarUser";
+
 import { useAppSelector } from "@/store";
+import { isBackendEnabled } from "@/util/util";
 
 const Navbar = () => {
   const { t } = useTranslation();
+
   const currentPage = useAppSelector((state) => state.navigation.currentPage);
+
   const { open, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -69,41 +74,49 @@ const Navbar = () => {
       <Box
         as="nav"
         role="navigation"
-        _light={{ bgColor: "#f6f8fa" }} // old #1A202C
+        _light={{ bgColor: "#f6f8fa" }}
         _dark={{ bgColor: "#151a23" }}
         px={2}
+        smDown={{ px: "4px" }}
         py={1}
-        borderBottom={"1px solid"}
-        borderColor={"border.emphasized"}
+        borderBottom="1px solid"
+        borderColor="border.emphasized"
       >
-        <Flex justifyContent="space-between" alignItems={"center"}>
-          <NavMenu />
-          <Box
-            textAlign={"center"}
-            minW={"8rem"}
-            px={"0.5px"}
-            py={"0.5px"}
-            borderRadius={"sm"}
-            bgColor={"border.emphasized"}
-            lineHeight={"short"}
-          >
-            <Flex
-              minW={"8rem"}
-              bgColor={"bg"}
-              justifySelf={"center"}
-              alignSelf={"center"}
-              justifyContent={"center"}
-              alignContent={"center"}
-              alignItems={"center"}
-              borderRadius={"sm"}
-              border={"1px solid"}
-              borderColor={"fg.subtle"}
-              py={"5px"}
+        <Flex justifyContent="space-between" alignItems="center">
+          {/* NavMenu */}
+          <Flex flex={1} justifyContent="flex-start">
+            <NavMenu />
+          </Flex>
+
+          {/* Centered currentPage */}
+          <Flex flex={1} justifyContent="center" alignItems="center">
+            <Box
+              textAlign="center"
+              px="0.5px"
+              py="0.5px"
+              borderRadius="sm"
+              bgColor="border.emphasized"
+              lineHeight="short"
             >
-              {t(currentPage)}
-            </Flex>
-          </Box>
-          <Flex>
+              <Flex
+                minW={"8rem"}
+                bgColor="bg"
+                justifyContent={"center"}
+                alignItems="center"
+                borderRadius="sm"
+                border="1px solid"
+                borderColor="fg.subtle"
+                py="5px"
+              >
+                {t(currentPage)}
+              </Flex>
+            </Box>
+          </Flex>
+
+          {/* Buttons */}
+          <Flex flex={1} justifyContent="flex-end" alignItems="center">
+            {isBackendEnabled() && <NavbarUser />}
+
             <Button
               aria-label="Settings"
               onClick={onOpen}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { IColor, IVerseColor, dbFuncs } from "@/util/db";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
@@ -21,8 +21,6 @@ function Coloring() {
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();
-
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
 
@@ -118,11 +116,7 @@ function Coloring() {
       >
         <ChaptersSide />
       </Sidebar>
-      {isVNotesLoading ? (
-        <LoadingSpinner text="Loading verse notes.." />
-      ) : (
-        <VersesSide />
-      )}
+      <VersesSide />
     </Flex>
   );
 }

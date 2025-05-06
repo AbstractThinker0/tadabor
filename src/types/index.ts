@@ -1,4 +1,6 @@
 import { LetterRole } from "@/util/consts";
+import { ICloudNote, ILocalNote } from "@/util/db";
+
 import { verseProps } from "quran-tools";
 
 export interface translationsProps {
@@ -9,15 +11,17 @@ export interface selectedChaptersType {
   [key: string]: boolean;
 }
 
-export interface NoteProp {
-  text: string;
-  dir?: string;
+interface NoteSaveProps {
   saved?: boolean;
+  preSave?: string;
+  oldModifiedDate?: number;
 }
 
-export interface UserNotesType {
-  [key: string]: NoteProp;
+export interface CloudNoteProps extends ICloudNote, NoteSaveProps {
+  isSynced?: boolean;
 }
+
+export interface LocalNoteProps extends ILocalNote, NoteSaveProps {}
 
 export interface ChangeNotePayload {
   name: string;
@@ -27,12 +31,6 @@ export interface ChangeNotePayload {
 export interface ChangeNoteDirPayload {
   name: string;
   value: string;
-}
-
-export interface SavedNotePayload {
-  name: string;
-  text: string;
-  dir?: string;
 }
 
 interface LetterType {

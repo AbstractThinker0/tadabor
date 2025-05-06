@@ -1,10 +1,8 @@
-import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { translationPageActions } from "@/store/slices/pages/translation";
 
 import { Box, Flex } from "@chakra-ui/react";
-
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
@@ -16,8 +14,6 @@ import { usePageNav } from "@/hooks/usePageNav";
 const Translation = () => {
   usePageNav("nav_translation");
   const dispatch = useAppDispatch();
-
-  const isTNotesLoading = useAppSelector(isTransNotesLoading());
 
   const currentChapter = useAppSelector(
     (state) => state.translationPage.currentChapter
@@ -58,11 +54,7 @@ const Translation = () => {
           />
         </Box>
       </Sidebar>
-      {isTNotesLoading ? (
-        <LoadingSpinner text="Loading translation notes.." />
-      ) : (
-        <DisplayPanel />
-      )}
+      <DisplayPanel />
     </Flex>
   );
 };

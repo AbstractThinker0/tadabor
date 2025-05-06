@@ -23,10 +23,7 @@ import {
 
 import { Tooltip } from "@/components/ui/tooltip";
 
-import {
-  CollapsibleNote,
-  CollapsibleRootNote,
-} from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 import { useBoolean } from "usehooks-ts";
@@ -129,7 +126,7 @@ const RootComponent = memo(
             </Button>
           </Flex>
         </Flex>
-        <CollapsibleRootNote isOpen={isOpen} rootID={root_id} />
+        <CollapsibleNote isOpen={isOpen} noteType="root" noteKey={root_id} />
         <RootOccurences
           isOccurencesOpen={isOccurencesOpen}
           root_occurences={root_occurences}
@@ -299,7 +296,11 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
 
-      <CollapsibleNote isOpen={isOpen} inputKey={rootVerse.key} />
+      <CollapsibleNote
+        isOpen={isOpen}
+        noteType="verse"
+        noteKey={rootVerse.key}
+      />
     </>
   );
 };

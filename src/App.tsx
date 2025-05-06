@@ -15,8 +15,14 @@ const Searcher = lazy(() => import("@/pages/Searcher"));
 const Searcher2 = lazy(() => import("@/pages/Searcher2"));
 const Letters = lazy(() => import("@/pages/Letters"));
 const Audio = lazy(() => import("@/pages/Audio"));
+const Login = lazy(() => import("@/pages/Login"));
+const Register = lazy(() => import("@/pages/Register"));
+const Profile = lazy(() => import("@/pages/Profile"));
+const PasswordReset = lazy(() => import("@/pages/PasswordReset"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import ProtectedRoute from "@/components/Custom/ProtectedRoute";
+import GuestRoute from "@/components/Custom/GuestRoute";
 
 const App = () => {
   return (
@@ -35,6 +41,31 @@ const App = () => {
         <Route path="/letters" element={<Letters />} />
         <Route path="/audio" element={<Audio />} />
         <Route path="/about" element={<About />} />
+        <Route path="/passwordreset" element={<PasswordReset />} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<QuranBrowser />} />
       </Routes>
     </Suspense>

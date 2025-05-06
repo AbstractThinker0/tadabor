@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react";
 
-import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { lettersPageActions } from "@/store/slices/pages/letters";
 
@@ -8,7 +8,6 @@ import Display from "@/components/Pages/Letters/Display";
 import ChaptersList from "@/components/Custom/ChaptersList";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { Box, Flex } from "@chakra-ui/react";
 
@@ -22,9 +21,6 @@ const PanelQuran = memo(
     const currentChapter = useAppSelector(
       (state) => state.lettersPage.currentChapter
     );
-
-    // Note yet using verse notes in this page @TODO
-    const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
     const handleSelectChapter = useCallback((chapterID: string) => {
       dispatch(lettersPageActions.setCurrentChapter(chapterID));
@@ -57,11 +53,7 @@ const PanelQuran = memo(
             />
           </Box>
         </Sidebar>
-        {isVNotesLoading ? (
-          <LoadingSpinner text="Loading verse notes" />
-        ) : (
-          <Display />
-        )}
+        <Display />
       </Flex>
     );
   },

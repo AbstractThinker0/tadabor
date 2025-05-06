@@ -2,8 +2,6 @@ import { useEffect, useState, useTransition, useRef } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { isVerseNotesLoading, useAppSelector } from "@/store";
-
 import { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -28,7 +26,6 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
 
   const [isPending, startTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const refVerses = useRef<HTMLDivElement>(null);
 
@@ -82,7 +79,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       <Heading textAlign={"center"} color="blue.fg" fontSize={"3xl"} pb={"4"}>
         سورة {quranService.getChapterName(suraID)}
       </Heading>
-      {isPending || isVNotesLoading ? (
+      {isPending ? (
         <LoadingSpinner text="Loading verses.." />
       ) : (
         stateVerses.map((verse) => (
@@ -127,7 +124,7 @@ const VerseItem = ({
         </ButtonVerse>
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+      <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verse.key} />
     </Box>
   );
 };

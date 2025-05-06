@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import {
-  isVerseNotesLoading,
-  isTransNotesLoading,
-  isTranslationsLoading,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store";
+import { isTranslationsLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchAllTranslations } from "@/store/slices/global/translations";
 
 import { comparatorPageActions } from "@/store/slices/pages/comparator";
@@ -33,9 +27,7 @@ function Comparator() {
 
   const transData = useAppSelector((state) => state.translations.data);
 
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
-  const isTNotesLoading = useAppSelector(isTransNotesLoading());
-  const isTransLoading = useAppSelector(isTranslationsLoading());
+  const isTransLoading = useAppSelector(isTranslationsLoading);
 
   const dispatch = useAppDispatch();
 
@@ -69,17 +61,13 @@ function Comparator() {
         handleSetChapter={setChapter}
       />
       <TransAlert />
-      {isVNotesLoading || isTNotesLoading ? (
-        <LoadingSpinner text="Loading notes.." />
-      ) : (
-        <Display
-          currentChapter={currentChapter}
-          currentVerse={currentVerse}
-          chapterVerses={chapterVerses}
-          transVerses={transData}
-          handleSelectVerse={selectVerse}
-        />
-      )}
+      <Display
+        currentChapter={currentChapter}
+        currentVerse={currentVerse}
+        chapterVerses={chapterVerses}
+        transVerses={transData}
+        handleSelectVerse={selectVerse}
+      />
     </Flex>
   );
 }
