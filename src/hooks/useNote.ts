@@ -15,6 +15,7 @@ import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
 import { createNewNote } from "@/util/notes";
+import { CloudNoteProps } from "@/types";
 
 interface useNoteParams {
   noteID?: string;
@@ -44,6 +45,8 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   const noteDirection = note?.dir ?? "";
   const noteSaved = note?.saved ?? false;
   const noteValidKey = note?.key ?? noteKey ?? noteIndex.split(":")[1];
+  const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
+  const noteIsSyncing = uploadNote.isPending;
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -146,6 +149,8 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
     direction: noteDirection,
     isSaved: noteSaved,
     key: noteValidKey,
+    isSynced: noteIsSynced,
+    isSyncing: noteIsSyncing,
     setText,
     setDirection,
     save: saveNote,

@@ -1,9 +1,14 @@
 import { useAppSelector } from "@/store";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
+import { MdOutlineCheckCircle } from "react-icons/md";
+import { Tooltip } from "../ui/tooltip";
+
 interface NoteContainerProps {
+  isSynced: boolean;
+  isSyncing: boolean;
   inputValue: string;
   inputDirection: string;
   inputSaved?: boolean;
@@ -12,6 +17,8 @@ interface NoteContainerProps {
 }
 
 const NoteContainer = ({
+  isSynced,
+  isSyncing,
   inputValue,
   inputDirection,
   inputSaved = true,
@@ -19,6 +26,12 @@ const NoteContainer = ({
   onSubmitForm,
 }: NoteContainerProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+
+  const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
+    if (isSyncing) return "Syncing note...";
+    if (isSynced) return "Note is synced to the cloud.";
+    return "Saved locally. Log in to enable cloud sync.";
+  };
 
   return (
     <Box
@@ -35,7 +48,22 @@ const NoteContainer = ({
         border={"1px solid"}
         borderColor={inputSaved ? "green.solid" : "yellow.solid"}
         borderRadius={"2xl"}
+        position="relative"
       >
+        {/* Top-right indicator */}
+        <Box position="absolute" top="-8px" insetEnd="0.3rem">
+          <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
+            {isSyncing ? (
+              <Spinner size="sm" color="blue.500" />
+            ) : (
+              <Icon
+                as={MdOutlineCheckCircle}
+                color={isSynced ? "green.500" : "gray.500"}
+                boxSize={4}
+              />
+            )}
+          </Tooltip>
+        </Box>
         <Text
           whiteSpace={"pre-wrap"}
           fontSize={`${notesFS}rem`}

@@ -55,6 +55,8 @@ const CollapsibleNote = ({
       inputDirection={note.direction}
       inputSaved={note.isSaved}
       isEditable={isEditable}
+      isSynced={note.isSynced}
+      isSyncing={note.isSyncing}
       handleSetDirection={handleSetDirection}
       onChangeTextarea={onChangeTextarea}
       onSubmitForm={onSubmitForm}
@@ -66,6 +68,8 @@ const CollapsibleNote = ({
 interface CollapsibleGenericProps {
   isOpen: boolean;
   isEditable: boolean;
+  isSynced: boolean;
+  isSyncing: boolean;
   inputValue: string;
   inputDirection: string;
   inputSaved: boolean;
@@ -78,6 +82,8 @@ interface CollapsibleGenericProps {
 const CollapsibleGeneric = ({
   isOpen,
   isEditable,
+  isSynced,
+  isSyncing,
   inputValue,
   inputDirection,
   inputSaved,
@@ -91,6 +97,8 @@ const CollapsibleGeneric = ({
       <Collapsible.Content>
         <FormText
           isEditable={isEditable}
+          isSynced={isSynced}
+          isSyncing={isSyncing}
           inputValue={inputValue}
           inputDirection={inputDirection}
           inputSaved={inputSaved}
@@ -106,6 +114,8 @@ const CollapsibleGeneric = ({
 
 interface FormTextProps {
   isEditable: boolean;
+  isSynced: boolean;
+  isSyncing: boolean;
   inputValue: string;
   inputDirection: string;
   inputSaved?: boolean;
@@ -117,6 +127,8 @@ interface FormTextProps {
 
 const FormText = ({
   isEditable,
+  isSynced,
+  isSyncing,
   inputValue,
   inputDirection,
   inputSaved = true,
@@ -137,6 +149,8 @@ const FormText = ({
     >
       {isEditable === false ? (
         <NoteContainer
+          isSynced={isSynced}
+          isSyncing={isSyncing}
           inputValue={inputValue}
           inputDirection={inputDirection}
           inputSaved={inputSaved}
