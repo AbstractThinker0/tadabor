@@ -4,6 +4,7 @@ import { Box, BoxProps } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import VerseContainer from "@/components/Custom/VerseContainer";
+import { ButtonCopyVerse } from "@/components/Custom/ButtonCopyVerse";
 
 import { ButtonExpand } from "@/components/Generic/Buttons";
 
@@ -66,6 +67,7 @@ const BaseVerseItem = ({
         {shouldShowButtons && (
           <>
             <ButtonExpand onClick={toggle} />
+            <ButtonCopyVerse verseKey={verseKey} />
             {endElement}
           </>
         )}

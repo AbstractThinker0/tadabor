@@ -57,7 +57,12 @@ export const ToasterBottom = () => {
             <Stack gap="1" flex="1" maxWidth="100%">
               {toast.title && <Toast.Title>{toast.title}</Toast.Title>}
               {toast.description && (
-                <Toast.Description>{toast.description}</Toast.Description>
+                <Toast.Description
+                  textAlign={toast.meta?.center ? "center" : undefined}
+                  direction={"auto"}
+                >
+                  {toast.description}
+                </Toast.Description>
               )}
             </Stack>
             {toast.action && (
