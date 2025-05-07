@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
-import { useTRPC } from "@/util/trpc";
-import { useMutation } from "@tanstack/react-query";
+import { useTRPC, useTRPCClient } from "@/util/trpc";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CloudNoteProps } from "@/types";
 import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
 import { dbFuncs } from "@/util/db";
@@ -31,6 +31,43 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
   const syncNotes = useMutation(trpc.notes.syncNotes.mutationOptions());
   const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
+
+  const trpcClient = useTRPCClient();
+  const queryClient = useQueryClient();
+
+  const fetchNoteById = async ({ noteID }: { noteID: string }) => {
+    return await queryClient.fetchQuery({
+      queryKey: ["notes.fetchNote", { noteID }],
+      queryFn: () => trpcClient.notes.fetchNote.query({ id: noteID }),
+    });
+  };
+
+  const fetchNotes = async (noteIDs: string[]) => {
+    // Fetching notes from the cloud
+    for (const noteID of noteIDs) {
+      try {
+        const fetchedNote = (await fetchNoteById({ noteID })).note;
+
+        const clNote: CloudNoteProps = {
+          id: fetchedNote.id,
+          authorId: fetchedNote.authorId,
+          key: fetchedNote.key,
+          text: fetchedNote.content!,
+          type: fetchedNote.type,
+          uuid: fetchedNote.uuid,
+          dir: fetchedNote.direction!,
+          date_created: fetchedNote.dateCreated,
+          date_modified: fetchedNote.dateModified,
+          date_synced: fetchedNote.dateLastSynced,
+        };
+
+        dispatch(cloudNotesActions.cacheNote(clNote));
+        dbFuncs.saveCloudNote(clNote);
+      } catch (err) {
+        console.error("Fetch failed", err);
+      }
+    }
+  };
 
   useEffect(() => {
     if (
@@ -112,23 +149,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
     if (syncNotes.isSuccess) {
       const serverNotes = syncNotes.data.notesToSendToClient;
 
-      for (const fetchedNote of serverNotes) {
-        const clNote: CloudNoteProps = {
-          id: fetchedNote.id,
-          authorId: fetchedNote.authorId,
-          key: fetchedNote.key,
-          text: fetchedNote.content!,
-          type: fetchedNote.type,
-          uuid: fetchedNote.uuid,
-          dir: fetchedNote.direction!,
-          date_created: fetchedNote.dateCreated,
-          date_modified: fetchedNote.dateModified,
-          date_synced: fetchedNote.dateLastSynced,
-        };
-
-        dispatch(cloudNotesActions.cacheNote(clNote));
-        dbFuncs.saveCloudNote(clNote);
-      }
+      fetchNotes(serverNotes);
 
       const clientNotesKeys = syncNotes.data.notesToRequestFromClient;
       const guestNotesKeys = syncNotes.data.notesToRequestFromGuest;
