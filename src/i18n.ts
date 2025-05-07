@@ -72,6 +72,8 @@ i18n
           panel_definitions: "Definitions",
           panel_display: "Display",
           letters_preset: "Preset:",
+          noteVerse: "Note for verse",
+          noteRoot: "Note for root",
           about: {
             introTitle: "Intro:",
             introText:
@@ -188,6 +190,8 @@ i18n
           panel_definitions: "التعريفات",
           panel_display: "العرض",
           letters_preset: "مجموعة:",
+          noteVerse: "تدوينة للآية",
+          noteRoot: "تدوينة للجذر",
           about: {
             introTitle: "تقديم:",
             introText:

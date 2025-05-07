@@ -41,10 +41,13 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   const trpc = useTRPC();
   const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
 
+  const [noteSplitType, noteSplitKey] = noteIndex.split(":");
+
   const noteText = note?.text ?? "";
   const noteDirection = note?.dir ?? "";
   const noteSaved = note?.saved ?? false;
-  const noteValidKey = note?.key ?? noteKey ?? noteIndex.split(":")[1];
+  const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
+  const noteValidType = note?.type ?? noteType ?? noteSplitType;
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
   const noteIsSyncing = uploadNote.isPending;
 
@@ -148,6 +151,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
     text: noteText,
     direction: noteDirection,
     isSaved: noteSaved,
+    type: noteValidType,
     key: noteValidKey,
     isSynced: noteIsSynced,
     isSyncing: noteIsSyncing,

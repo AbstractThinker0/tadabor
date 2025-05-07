@@ -59,6 +59,8 @@ const CollapsibleNote = ({
       isSyncing={note.isSyncing}
       dateCreated={note.dateCreated}
       dateModified={note.dateModified}
+      noteType={note.type}
+      noteKey={note.key}
       handleSetDirection={handleSetDirection}
       onChangeTextarea={onChangeTextarea}
       onSubmitForm={onSubmitForm}
@@ -77,6 +79,8 @@ interface CollapsibleGenericProps {
   inputSaved: boolean;
   dateCreated?: number;
   dateModified?: number;
+  noteType?: string;
+  noteKey?: string;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -93,6 +97,8 @@ const CollapsibleGeneric = ({
   inputSaved,
   dateCreated,
   dateModified,
+  noteType,
+  noteKey,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -110,6 +116,8 @@ const CollapsibleGeneric = ({
           inputSaved={inputSaved}
           dateCreated={dateCreated}
           dateModified={dateModified}
+          noteType={noteType}
+          noteKey={noteKey}
           onClickEditButton={onClickEditButton}
           handleSetDirection={handleSetDirection}
           onChangeTextarea={onChangeTextarea}
@@ -129,6 +137,8 @@ interface FormTextProps {
   inputSaved?: boolean;
   dateCreated?: number;
   dateModified?: number;
+  noteType?: string;
+  noteKey?: string;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -144,6 +154,8 @@ const FormText = ({
   inputSaved = true,
   dateCreated,
   dateModified,
+  noteType,
+  noteKey,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -168,6 +180,8 @@ const FormText = ({
           inputSaved={inputSaved}
           dateCreated={dateCreated}
           dateModified={dateModified}
+          noteType={noteType}
+          noteKey={noteKey}
           onClickEditButton={onClickEditButton}
           onSubmitForm={onSubmitForm}
         />
