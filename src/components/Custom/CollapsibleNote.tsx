@@ -57,6 +57,8 @@ const CollapsibleNote = ({
       isEditable={isEditable}
       isSynced={note.isSynced}
       isSyncing={note.isSyncing}
+      dateCreated={note.dateCreated}
+      dateModified={note.dateModified}
       handleSetDirection={handleSetDirection}
       onChangeTextarea={onChangeTextarea}
       onSubmitForm={onSubmitForm}
@@ -73,6 +75,8 @@ interface CollapsibleGenericProps {
   inputValue: string;
   inputDirection: string;
   inputSaved: boolean;
+  dateCreated?: number;
+  dateModified?: number;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -87,6 +91,8 @@ const CollapsibleGeneric = ({
   inputValue,
   inputDirection,
   inputSaved,
+  dateCreated,
+  dateModified,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -102,6 +108,8 @@ const CollapsibleGeneric = ({
           inputValue={inputValue}
           inputDirection={inputDirection}
           inputSaved={inputSaved}
+          dateCreated={dateCreated}
+          dateModified={dateModified}
           onClickEditButton={onClickEditButton}
           handleSetDirection={handleSetDirection}
           onChangeTextarea={onChangeTextarea}
@@ -119,6 +127,8 @@ interface FormTextProps {
   inputValue: string;
   inputDirection: string;
   inputSaved?: boolean;
+  dateCreated?: number;
+  dateModified?: number;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
   onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -132,6 +142,8 @@ const FormText = ({
   inputValue,
   inputDirection,
   inputSaved = true,
+  dateCreated,
+  dateModified,
   onClickEditButton,
   handleSetDirection,
   onChangeTextarea,
@@ -154,6 +166,8 @@ const FormText = ({
           inputValue={inputValue}
           inputDirection={inputDirection}
           inputSaved={inputSaved}
+          dateCreated={dateCreated}
+          dateModified={dateModified}
           onClickEditButton={onClickEditButton}
           onSubmitForm={onSubmitForm}
         />

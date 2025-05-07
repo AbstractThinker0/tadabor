@@ -151,6 +151,8 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
     key: noteValidKey,
     isSynced: noteIsSynced,
     isSyncing: noteIsSyncing,
+    dateCreated: note?.date_created,
+    dateModified: note?.date_modified,
     setText,
     setDirection,
     save: saveNote,
