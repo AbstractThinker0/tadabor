@@ -45,9 +45,9 @@ const userSlice = createSlice({
       state.token = token;
       localStorage.setItem(keyToken, token);
       state.email = email;
-      localStorage.setItem(keyEmail, token);
+      localStorage.setItem(keyEmail, email);
       state.username = username;
-      localStorage.setItem(keyUsername, token);
+      localStorage.setItem(keyUsername, username);
 
       state.isLogged = true;
       state.isLoggedOffline = false;
@@ -70,11 +70,12 @@ const userSlice = createSlice({
     },
     logout: (state) => {
       state.token = "";
-      localStorage.setItem(keyToken, "");
       state.email = "";
-      localStorage.setItem(keyEmail, "");
       state.username = "";
-      localStorage.setItem(keyUsername, "");
+
+      localStorage.removeItem(keyToken);
+      localStorage.removeItem(keyEmail);
+      localStorage.removeItem(keyUsername);
 
       state.isLogged = false;
       state.isPending = false;
