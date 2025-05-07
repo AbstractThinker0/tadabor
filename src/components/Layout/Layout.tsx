@@ -3,7 +3,7 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch } from "@/store";
-import { navigationActions } from "@/store/slices/global/navigation";
+
 import { fetchLocalNotes } from "@/store/slices/global/localNotes";
 
 import { QuranProvider } from "@/context/QuranProvider";
@@ -16,6 +16,8 @@ import { Flex } from "@chakra-ui/react";
 import UserProvider from "@/components/Custom/UserProvider";
 import NotesProvider from "@/components/Custom/NotesProvider";
 
+import { HookResizeEvent } from "@/hooks/useScreenSize";
+
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
@@ -27,17 +29,6 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
-
-    const handleResize = () => {
-      const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
-      dispatch(navigationActions.setSmallScreen(isSmall));
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
   }, []);
 
   return (
@@ -55,6 +46,7 @@ function Layout({ children }: PropsWithChildren) {
           <Navbar />
           <AlertMessage />
           <QuranProvider>{children}</QuranProvider>
+          <HookResizeEvent />
         </Flex>
       </NotesProvider>
     </UserProvider>
