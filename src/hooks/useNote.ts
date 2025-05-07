@@ -65,32 +65,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   };
 
   const saveNote = async () => {
-    dispatch(noteAction.markSaved(noteIndex));
-
-    dbSave({
-      id: noteIndex,
-      key: noteValidKey,
-      text: noteText,
-      type: note.type,
-      uuid: note.uuid,
-      dir: noteDirection,
-      date_created: note.date_created,
-      date_modified: note.date_modified,
-    })
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch((error) => {
-        console.error("Failed to save note:", error);
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
-
+    let syncDate = 0;
     if (isLogged) {
       // upload the note to cloud
       try {
@@ -107,10 +82,11 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
         const result = await uploadNote.mutateAsync(uploadData);
 
         if (result?.success) {
+          syncDate = result?.note.dateLastSynced;
           dispatch(
             cloudNotesActions.updateSyncDate({
               name: note.id,
-              value: result?.note.dateLastSynced,
+              value: syncDate,
             })
           );
         }
@@ -118,6 +94,51 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
         console.error("Upload failed", err);
       }
     }
+
+    dispatch(noteAction.markSaved(noteIndex));
+
+    type SaveDataProps = {
+      id: string;
+      key: string;
+      text: string;
+      type: string;
+      uuid: string;
+      dir: string;
+      date_created: number | undefined;
+      date_modified: number | undefined;
+      date_synced?: number; // Optional property
+    };
+
+    const saveData: SaveDataProps = {
+      id: noteIndex,
+      key: noteValidKey,
+      text: noteText,
+      type: note.type,
+      uuid: note.uuid,
+      dir: noteDirection,
+      date_created: note.date_created,
+      date_modified: note.date_modified,
+    };
+
+    // Add date_synced only for cloud notes
+    if (syncDate) {
+      saveData.date_synced = syncDate;
+    }
+
+    dbSave(saveData)
+      .then(() => {
+        toaster.create({
+          description: t("save_success"),
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to save note:", error);
+        toaster.create({
+          description: t("save_failed"),
+          type: "error",
+        });
+      });
   };
 
   return {
