@@ -135,18 +135,25 @@ const Profile = () => {
       bg="gray.subtle"
       justifyItems={"center"}
       alignItems={"center"}
-      direction="column"
+      flexDirection="column"
       p={4}
     >
-      <Flex direction="column" width={"50vw"} mb={4}>
+      <Flex
+        flexDirection="column"
+        width={"50vw"}
+        mdDown={{ width: "auto" }}
+        mb={4}
+      >
         <Text>{t("auth.username")}</Text>
         <Input
+          direction={"ltr"}
           value={username}
           onChange={onChangeUsername}
           placeholder="Enter your username"
         />
         <Text>{t("auth.email")}</Text>
         <Input
+          direction={"ltr"}
           type="email"
           value={email}
           onChange={onChangeEmail}
@@ -175,7 +182,7 @@ const Profile = () => {
           </Button>
         </Box>
       </Flex>
-      <Flex direction="column" width={"50vw"}>
+      <Flex flexDirection="column" width={"50vw"}>
         <Flex justifyContent={"space-between"}>
           <Text>{t("auth.oldPassword")}</Text>
           <Link colorPalette={"teal"} asChild>

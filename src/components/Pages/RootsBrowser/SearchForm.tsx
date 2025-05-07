@@ -40,7 +40,7 @@ const SearchForm = ({
 
   return (
     <Box py={1}>
-      <Flex direction={"column"} alignItems={"center"}>
+      <Flex flexDirection={"column"} alignItems={"center"}>
         <Box>
           <Flex gap={1}>
             <InputString
