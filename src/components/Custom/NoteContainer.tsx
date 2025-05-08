@@ -64,23 +64,21 @@ const NoteContainer = ({
       pb={"0.5rem"}
       pt={"0.1rem"}
     >
-      <Flex justifyContent={"space-between"}>
-        <Box>
-          <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
-            {isSyncing ? (
-              <Spinner size="sm" color="blue.500" />
-            ) : (
-              <Icon
-                as={MdOutlineCheckCircle}
-                color={isSynced ? "green.500" : "gray.500"}
-                boxSize={4}
-              />
-            )}
-          </Tooltip>
-        </Box>
-        <Text dir={"auto"} fontSize="lg" fontWeight="bold" color={"gray.600"}>
-          {getNoteTitle()}
+      <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
+        <Text fontSize="lg" fontWeight="bold" color={"gray.600"}>
+          {getNoteTitle()}{" "}
         </Text>
+        <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
+          {isSyncing ? (
+            <Spinner size="sm" color="blue.500" />
+          ) : (
+            <Icon
+              as={MdOutlineCheckCircle}
+              color={isSynced ? "green.500" : "gray.500"}
+              boxSize={4}
+            />
+          )}
+        </Tooltip>
       </Flex>
       <Box
         pt={"0.1rem"}
