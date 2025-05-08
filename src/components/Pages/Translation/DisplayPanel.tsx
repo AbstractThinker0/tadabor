@@ -14,7 +14,7 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import TransComponent from "@/components/Pages/Translation/TransComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import { ButtonVerse } from "@/components/Generic/Buttons";
-import { ChapterHeader } from "@/components/Generic/ChapterHeader";
+import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const DisplayPanel = () => {
   const quranService = useQuran();

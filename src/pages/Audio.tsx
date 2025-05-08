@@ -12,7 +12,7 @@ import ChaptersList from "@/components/Custom/ChaptersList";
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
-import { ChapterHeader } from "@/components/Generic/ChapterHeader";
+import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 import { Box, HStack, Flex, Button } from "@chakra-ui/react";
 

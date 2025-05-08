@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { ChapterHeader } from "@/components/Generic/ChapterHeader";
+import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListTitle = () => {
   const selectChapter = useAppSelector(

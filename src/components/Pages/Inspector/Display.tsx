@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
-import { ChapterHeader } from "@/components/Generic/ChapterHeader";
+import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
 import { Box, Flex } from "@chakra-ui/react";
