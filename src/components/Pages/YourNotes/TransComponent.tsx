@@ -70,6 +70,7 @@ const TransComponent = ({ noteID }: TransComponentProps) => {
           isSyncing={note.isSyncing}
           inputValue={note.text}
           inputSaved={note.isSaved}
+          inputDirection="ltr"
           dateCreated={note.dateCreated}
           dateModified={note.dateModified}
           noteType={note.type}
@@ -105,6 +106,7 @@ const Versearea = ({
   return (
     <NoteFormContainer onSaveNote={onSaveNote}>
       <NoteFormEditor
+        inputDirection="ltr"
         inputValue={inputValue}
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
