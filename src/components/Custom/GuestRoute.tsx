@@ -4,7 +4,8 @@ import { useAppSelector } from "@/store";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
-import { isBackendEnabled } from "@/util/util";
+
+import { useBackend } from "@/hooks/useBackend";
 
 interface GuestRouteProps {
   children: React.ReactNode;
@@ -13,11 +14,13 @@ interface GuestRouteProps {
 const GuestRoute: React.FC<GuestRouteProps> = ({ children }) => {
   const { t } = useTranslation();
 
+  const isBackendEnabled = useBackend();
+
   const isLogged = useAppSelector((state) => state.user.isLogged);
 
   const isPending = useAppSelector((state) => state.user.isPending);
 
-  if (!isBackendEnabled()) {
+  if (!isBackendEnabled) {
     return (
       <>
         <Navigate to="/" replace />

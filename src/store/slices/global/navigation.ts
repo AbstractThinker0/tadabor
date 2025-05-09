@@ -11,6 +11,7 @@ interface NavigationState {
   centerVerses: boolean;
   compactVerses: boolean;
   isSmallScreen: boolean;
+  isBetaVersion: boolean;
 }
 
 const initialState: NavigationState = {
@@ -18,6 +19,7 @@ const initialState: NavigationState = {
   centerVerses: defaultCenterVerses,
   compactVerses: defaultCompactVerses,
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
+  isBetaVersion: localStorage.getItem("betaVersion") === "true",
 };
 
 const navigationSlice = createSlice({
@@ -51,6 +53,11 @@ const navigationSlice = createSlice({
     },
     setSmallScreen: (state, action: PayloadAction<boolean>) => {
       state.isSmallScreen = action.payload;
+    },
+    setBetaStatus: (state, action: PayloadAction<boolean>) => {
+      state.isBetaVersion = action.payload;
+
+      localStorage.setItem("betaVersion", action.payload ? "true" : "false");
     },
   },
 });

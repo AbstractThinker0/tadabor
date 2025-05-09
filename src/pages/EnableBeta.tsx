@@ -2,13 +2,18 @@ import { useEffect } from "react";
 import { Navigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
+import { useAppDispatch } from "@/store";
+import { navigationActions } from "@/store/slices/global/navigation";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const EnableBeta = () => {
   const { t } = useTranslation();
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    localStorage.setItem("betaVersion", "true");
+    dispatch(navigationActions.setBetaStatus(true));
   }, []);
 
   return (

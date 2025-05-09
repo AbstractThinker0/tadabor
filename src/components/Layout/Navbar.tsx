@@ -33,10 +33,12 @@ import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
 import { useAppSelector } from "@/store";
-import { isBackendEnabled } from "@/util/util";
+import { useBackend } from "@/hooks/useBackend";
 
 const Navbar = () => {
   const { t } = useTranslation();
+
+  const isBackendEnabled = useBackend();
 
   const currentPage = useAppSelector((state) => state.navigation.currentPage);
 
@@ -115,7 +117,7 @@ const Navbar = () => {
 
           {/* Buttons */}
           <Flex flex={1} justifyContent="flex-end" alignItems="center">
-            {isBackendEnabled() && <NavbarUser />}
+            {isBackendEnabled && <NavbarUser />}
 
             <Button
               aria-label="Settings"

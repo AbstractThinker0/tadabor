@@ -4,7 +4,7 @@ import { useAppSelector } from "@/store";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
-import { isBackendEnabled } from "@/util/util";
+import { useBackend } from "@/hooks/useBackend";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,7 +17,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   const isPending = useAppSelector((state) => state.user.isPending);
 
-  if (!isBackendEnabled()) {
+  const isBackendEnabled = useBackend();
+
+  if (!isBackendEnabled) {
     return (
       <>
         <Navigate to="/" replace />

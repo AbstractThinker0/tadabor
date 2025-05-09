@@ -9,10 +9,12 @@ import { validator } from "@/util/validators";
 import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useAuth } from "@/hooks/useAuth";
-import { isBackendEnabled } from "@/util/util";
+import { useBackend } from "@/hooks/useBackend";
 
 const PasswordReset = () => {
   usePageNav("auth.resetPassword");
+
+  const isBackendEnabled = useBackend();
 
   const { t } = useTranslation();
 
@@ -112,7 +114,7 @@ const PasswordReset = () => {
     }
   }, [updatePassword.isError]);
 
-  if (!isBackendEnabled()) {
+  if (!isBackendEnabled) {
     return (
       <>
         <Navigate to="/" replace />
