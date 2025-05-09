@@ -7,7 +7,7 @@ import { TbUserX } from "react-icons/tb";
 import { TbUserCheck } from "react-icons/tb";
 
 import { useAppSelector } from "@/store";
-import { isBackendEnabled } from "@/util/util";
+import { useBackend } from "@/hooks/useBackend";
 
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogout } from "react-icons/md";
@@ -16,6 +16,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 const NavbarUser = () => {
   const { t } = useTranslation();
+
+  const isBackendEnabled = useBackend();
 
   const { logout } = useAuth();
 
@@ -28,7 +30,7 @@ const NavbarUser = () => {
     logout();
   };
 
-  if (!isBackendEnabled()) return <></>;
+  if (!isBackendEnabled) return <></>;
 
   return (
     <>
