@@ -19,6 +19,7 @@ const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const PasswordReset = lazy(() => import("@/pages/PasswordReset"));
+const EnableBeta = lazy(() => import("@/pages/EnableBeta"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import ProtectedRoute from "@/components/Custom/ProtectedRoute";
@@ -66,6 +67,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/beta" element={<EnableBeta />} />
         <Route path="*" element={<QuranBrowser />} />
       </Routes>
     </Suspense>
