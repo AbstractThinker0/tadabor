@@ -22,7 +22,7 @@ const TransNotes = () => {
       {translationNotesIDs.length ? (
         <>
           <BackupComponent />
-          <VStack>
+          <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {translationNotesIDs.map((noteID) => (
               <TransComponent noteID={noteID} key={noteID} />
             ))}

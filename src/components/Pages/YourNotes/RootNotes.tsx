@@ -33,7 +33,7 @@ const NotesList = () => {
       {rootNotesIDs.length ? (
         <>
           <BackupComponent />
-          <VStack>
+          <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {rootNotesIDs.map((noteID) => (
               <RootComponent noteID={noteID} key={noteID} />
             ))}
