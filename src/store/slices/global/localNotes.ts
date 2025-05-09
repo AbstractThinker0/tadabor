@@ -74,12 +74,10 @@ const localNotesSlice = createSlice({
       if (state.data[id].text !== value) {
         state.data[id].text = value;
         state.data[id].saved = false;
-        state.data[id].date_modified = Date.now();
       }
 
       if (state.data[id].preSave === state.data[id].text) {
         state.data[id].saved = true;
-        state.data[id].date_modified = state.data[id].oldModifiedDate;
       }
     },
     changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
@@ -90,7 +88,11 @@ const localNotesSlice = createSlice({
     markSaved: (state, action: PayloadAction<string>) => {
       const id = action.payload;
       state.data[id].saved = true;
-      state.data[id].preSave = state.data[id].text;
+
+      if (state.data[id].text !== state.data[id].preSave) {
+        state.data[id].preSave = state.data[id].text;
+        state.data[id].date_modified = Date.now();
+      }
     },
   },
   extraReducers: (builder) => {

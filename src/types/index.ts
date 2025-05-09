@@ -14,7 +14,6 @@ export interface selectedChaptersType {
 interface NoteSaveProps {
   saved?: boolean;
   preSave?: string;
-  oldModifiedDate?: number;
 }
 
 export interface CloudNoteProps extends ICloudNote, NoteSaveProps {
