@@ -125,16 +125,24 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
         const result = await uploadNote.mutateAsync(uploadData);
 
+        const syncedNote: CloudNoteProps = { ...clNote, date_synced: 0 };
+
         if (result?.success) {
-          dispatch(
-            cloudNotesActions.updateSyncDate({
-              name: clNote.id!,
-              value: result?.note.dateLastSynced,
-            })
-          );
+          syncedNote.date_synced = result?.note.dateLastSynced;
+          // if a guest note we need to cache it to cloud notes first
+          if (guest) {
+            dispatch(cloudNotesActions.cacheNote(syncedNote));
+          } else {
+            dispatch(
+              cloudNotesActions.updateSyncDate({
+                name: clNote.id!,
+                value: syncedNote.date_synced,
+              })
+            );
+          }
 
           try {
-            await dbFuncs.saveCloudNote(clNote);
+            await dbFuncs.saveCloudNote(syncedNote);
           } catch (error) {
             console.error("error:", error);
           }
