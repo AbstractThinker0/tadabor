@@ -1,17 +1,19 @@
 import { useState } from "react";
 
-import { useAppSelector } from "@/store";
-
 import useQuran from "@/context/useQuran";
 
 import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
-import TextareaAutosize from "@/components/Custom/TextareaAutosize";
-import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
+import {
+  NoteFormContainer,
+  NoteFormEditor,
+  NoteFormFooter,
+} from "@/components/Custom/NoteForm";
+import NoteContainer from "@/components/Custom/NoteContainer";
 
 interface TransComponentProps {
   noteID: string;
@@ -30,7 +32,7 @@ const TransComponent = ({ noteID }: TransComponentProps) => {
     setEditable(true);
   };
 
-  const handleInputSubmit = (inputValue: string) => {
+  const handleInputSubmit = () => {
     setEditable(false);
 
     note.save();
@@ -43,15 +45,17 @@ const TransComponent = ({ noteID }: TransComponentProps) => {
   return (
     <Box
       w={"100%"}
+      bgColor={"bg"}
       border={"1px solid"}
       borderColor={"border.emphasized"}
       borderRadius={"l3"}
-      bg={"bg.panel"}
+      shadow={"sm"}
     >
       <Box
-        bgColor={"gray.muted"}
+        bgColor={"bg.info"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
+        borderTopRadius={"l3"}
         dir="rtl"
         p={2}
       >
@@ -61,88 +65,52 @@ const TransComponent = ({ noteID }: TransComponentProps) => {
         </VerseContainer>
       </Box>
       {isEditable === false ? (
-        <Versetext inputValue={note.text} handleEditClick={handleEditClick} />
+        <NoteContainer
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          inputValue={note.text}
+          inputSaved={note.isSaved}
+          dateCreated={note.dateCreated}
+          dateModified={note.dateModified}
+          noteType={note.type}
+          noteKey={note.key}
+          onClickEditButton={handleEditClick}
+          onSaveNote={handleInputSubmit}
+        />
       ) : (
         <Versearea
           inputValue={note.text}
-          handleInputChange={handleInputChange}
-          handleInputSubmit={handleInputSubmit}
+          inputSaved={note.isSaved}
+          onChangeNote={handleInputChange}
+          onSaveNote={handleInputSubmit}
         />
       )}
     </Box>
   );
 };
 
-interface VersetextProps {
-  inputValue: string;
-  handleEditClick: () => void;
-}
-
-const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-
-  return (
-    <>
-      <Box p={3} dir="ltr">
-        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`}>
-          {inputValue}
-        </Text>
-      </Box>
-      <Flex
-        p={3}
-        justifyContent={"center"}
-        bgColor={"gray.muted"}
-        borderTop={"1px solid"}
-        borderColor={"border.emphasized"}
-      >
-        <ButtonEdit onClick={handleEditClick} />
-      </Flex>
-    </>
-  );
-};
-
 interface VerseareaProps {
   inputValue: string;
-  handleInputChange: (value: string) => void;
-  handleInputSubmit: (inputValue: string) => void;
+  inputSaved?: boolean;
+  onChangeNote: (text: string) => void;
+  onSaveNote: () => void;
 }
 
 const Versearea = ({
   inputValue,
-  handleInputChange,
-  handleInputSubmit,
+  inputSaved = true,
+  onChangeNote,
+  onSaveNote,
 }: VerseareaProps) => {
-  const onSubmit = (event: React.FormEvent<HTMLDivElement>) => {
-    event.preventDefault();
-
-    handleInputSubmit(inputValue);
-  };
-
-  const onChangeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    handleInputChange(event.target.value);
-  };
-
   return (
-    <Box as="form" onSubmit={onSubmit} dir="ltr">
-      <Box p={3}>
-        <TextareaAutosize
-          value={inputValue}
-          onChange={onChangeTextarea}
-          lineHeight={"normal"}
-          placeholder={"Enter your text."}
-          required
-        />
-      </Box>
-      <Flex
-        p={3}
-        justifyContent={"center"}
-        bgColor={"gray.muted"}
-        borderTop={"1px solid"}
-        borderColor={"border.emphasized"}
-      >
-        <ButtonSave />
-      </Flex>
-    </Box>
+    <NoteFormContainer onSaveNote={onSaveNote}>
+      <NoteFormEditor
+        inputValue={inputValue}
+        inputSaved={inputSaved}
+        onChangeNote={onChangeNote}
+      />
+      <NoteFormFooter />
+    </NoteFormContainer>
   );
 };
 

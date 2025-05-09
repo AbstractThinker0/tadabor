@@ -12,35 +12,81 @@ interface NoteContainerProps {
   isSynced: boolean;
   isSyncing: boolean;
   inputValue: string;
-  inputDirection: string;
+  inputDirection?: string;
   inputSaved?: boolean;
   dateCreated?: number;
   dateModified?: number;
   noteType?: string;
   noteKey?: string;
   onClickEditButton: () => void;
-  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
+  onSaveNote: () => void;
 }
 
 const NoteContainer = ({
   isSynced,
   isSyncing,
   inputValue,
-  inputDirection,
+  inputDirection = "",
   inputSaved = true,
   dateCreated,
   dateModified,
   noteType,
   noteKey,
   onClickEditButton,
-  onSubmitForm,
+  onSaveNote,
 }: NoteContainerProps) => {
+  const onSubmitNote = (event: React.FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    onSaveNote();
+  };
+
+  return (
+    <Box
+      as="form"
+      onSubmit={onSubmitNote}
+      px={"0.5rem"}
+      pb={"0.5rem"}
+      pt={"0.1rem"}
+    >
+      <NoteContainerHeader
+        noteKey={noteKey}
+        noteType={noteType}
+        isSynced={isSynced}
+        isSyncing={isSyncing}
+      />
+      <NoteContainerBody
+        inputSaved={inputSaved}
+        inputValue={inputValue}
+        inputDirection={inputDirection}
+      />
+      <NoteContainerFooter
+        inputSaved={inputSaved}
+        dateCreated={dateCreated}
+        dateModified={dateModified}
+        onClickEditButton={onClickEditButton}
+      />
+    </Box>
+  );
+};
+
+interface NoteContainerHeaderProps {
+  noteType?: string;
+  noteKey?: string;
+  isSyncing: boolean;
+  isSynced: boolean;
+}
+
+const NoteContainerHeader = ({
+  noteType,
+  noteKey,
+  isSyncing,
+  isSynced,
+}: NoteContainerHeaderProps) => {
   const { t } = useTranslation();
 
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-  const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
-
   const quranService = useQuran();
+
+  const isLogged = useAppSelector((state) => state.user.isLogged);
 
   const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
     if (isSyncing) return "Syncing note...";
@@ -53,21 +99,19 @@ const NoteContainer = ({
       return `${t("noteVerse")} (${quranService.convertKeyToSuffix(noteKey!)})`;
     } else if (noteType === "root") {
       return `${t("noteRoot")} (${quranService.getRootNameByID(noteKey!)})`;
+    } else if (noteType === "translation") {
+      return `${t("translationVerse")} (${quranService.convertKeyToSuffix(
+        noteKey!
+      )})`;
     }
   };
 
   return (
-    <Box
-      as="form"
-      onSubmit={onSubmitForm}
-      px={"0.5rem"}
-      pb={"0.5rem"}
-      pt={"0.1rem"}
-    >
-      <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
-        <Text fontSize="lg" fontWeight="bold" color={"gray.600"}>
-          {getNoteTitle()}{" "}
-        </Text>
+    <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
+      <Text fontSize="lg" fontWeight="bold" color={"gray.600"}>
+        {getNoteTitle()}{" "}
+      </Text>
+      {isLogged && (
         <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
           {isSyncing ? (
             <Spinner size="sm" color="blue.500" />
@@ -79,24 +123,62 @@ const NoteContainer = ({
             />
           )}
         </Tooltip>
-      </Flex>
-      <Box
-        pt={"0.1rem"}
-        pb={2}
-        px={3}
-        border={"1px solid"}
-        borderColor={inputSaved ? "green.solid" : "yellow.solid"}
-        borderRadius={"2xl"}
+      )}
+    </Flex>
+  );
+};
+
+interface NoteContainerBodyProps {
+  inputSaved: boolean;
+  inputValue: string;
+  inputDirection?: string;
+}
+
+const NoteContainerBody = ({
+  inputSaved,
+  inputValue,
+  inputDirection,
+}: NoteContainerBodyProps) => {
+  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+
+  return (
+    <Box
+      pt={"0.1rem"}
+      pb={2}
+      px={3}
+      border={"1px solid"}
+      borderColor={inputSaved ? "green.solid" : "yellow.solid"}
+      borderRadius={"2xl"}
+    >
+      <Text
+        whiteSpace={"pre-wrap"}
+        fontSize={`${notesFS}rem`}
+        dir={inputDirection}
+        mb={"5.5rem"}
       >
-        <Text
-          whiteSpace={"pre-wrap"}
-          fontSize={`${notesFS}rem`}
-          dir={inputDirection}
-          mb={"5.5rem"}
-        >
-          {inputValue}
-        </Text>
-      </Box>
+        {inputValue}
+      </Text>
+    </Box>
+  );
+};
+
+interface NoteContainerFooterProps {
+  inputSaved?: boolean;
+  dateCreated?: number;
+  dateModified?: number;
+  onClickEditButton: () => void;
+}
+
+const NoteContainerFooter = ({
+  inputSaved = true,
+  dateCreated,
+  dateModified,
+  onClickEditButton,
+}: NoteContainerFooterProps) => {
+  const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
+
+  return (
+    <>
       {/* Date output */}
       {(dateCreated || dateModified) && (
         <Flex
@@ -138,8 +220,9 @@ const NoteContainer = ({
         <ButtonEdit onClick={onClickEditButton} />
         {!inputSaved && <ButtonSave />}
       </Flex>
-    </Box>
+    </>
   );
 };
 
+export { NoteContainerBody, NoteContainerHeader, NoteContainerFooter };
 export default NoteContainer;

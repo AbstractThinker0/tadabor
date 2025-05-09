@@ -6,8 +6,8 @@ import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import NoteForm from "@/components/Pages/YourNotes/NoteForm";
-import NoteText from "@/components/Pages/YourNotes/NoteText";
+import NoteForm from "@/components/Custom/NoteForm";
+import NoteContainer from "@/components/Custom/NoteContainer";
 
 import { Box } from "@chakra-ui/react";
 
@@ -21,8 +21,6 @@ function VerseComponent({ noteID }: VerseComponentProps) {
   const note = useNote({
     noteID: noteID,
   });
-
-  //console.log("noteKey:", noteKey);
 
   const [isEditable, setEditable] = useState(note.text ? false : true);
 
@@ -47,17 +45,19 @@ function VerseComponent({ noteID }: VerseComponentProps) {
   return (
     <Box
       w={"100%"}
-      borderColor={"border.emphasized"}
       bgColor={"bg"}
-      borderRadius={"0.35rem"}
+      border={"1px solid"}
+      borderColor={"border.emphasized"}
+      borderRadius={"l3"}
+      shadow={"sm"}
     >
       <Box
         p={2}
         dir="rtl"
-        bgColor={"gray.muted"}
+        bgColor={"bg.info"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
-        borderTopRadius={"0.35rem"}
+        borderTopRadius={"l3"}
       >
         <VerseContainer>
           ({quranService.convertKeyToSuffix(note.key)}) <br />{" "}
@@ -66,16 +66,25 @@ function VerseComponent({ noteID }: VerseComponentProps) {
       </Box>
       {isEditable ? (
         <NoteForm
+          inputSaved={note.isSaved}
           inputValue={note.text}
           inputDirection={note.direction}
-          handleFormSubmit={handleFormSubmit}
-          handleTextChange={handleTextChange}
+          onSaveNote={handleFormSubmit}
+          onChangeNote={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
-        <NoteText
+        <NoteContainer
           inputValue={note.text}
           inputDirection={note.direction}
+          inputSaved={note.isSaved}
+          dateCreated={note.dateCreated}
+          dateModified={note.dateModified}
+          noteType={note.type}
+          noteKey={note.key}
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          onSaveNote={handleFormSubmit}
           onClickEditButton={onClickEditButton}
         />
       )}

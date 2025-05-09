@@ -6,8 +6,8 @@ import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import NoteForm from "@/components/Pages/YourNotes/NoteForm";
-import NoteText from "@/components/Pages/YourNotes/NoteText";
+import NoteForm from "@/components/Custom/NoteForm";
+import NoteContainer from "@/components/Custom/NoteContainer";
 
 import { Box } from "@chakra-ui/react";
 
@@ -48,13 +48,15 @@ const RootComponent = ({ noteID }: RootComponentProps) => {
       border={"1px solid"}
       borderColor={"border.emphasized"}
       borderRadius={"l3"}
-      bg={"bg.panel"}
+      bg={"bg"}
+      shadow={"sm"}
     >
       <Box
         dir="rtl"
-        bgColor={"gray.muted"}
+        bgColor={"bg.info"}
         borderBottom={"1px solid"}
         borderColor={"border.emphasized"}
+        borderTopRadius={"l3"}
         p={2}
       >
         <VerseContainer>
@@ -63,16 +65,25 @@ const RootComponent = ({ noteID }: RootComponentProps) => {
       </Box>
       {isEditable ? (
         <NoteForm
+          inputSaved={note.isSaved}
           inputValue={note.text}
           inputDirection={note.direction}
-          handleFormSubmit={handleFormSubmit}
-          handleTextChange={handleTextChange}
+          onSaveNote={handleFormSubmit}
+          onChangeNote={handleTextChange}
           handleSetDirection={handleSetDirection}
         />
       ) : (
-        <NoteText
+        <NoteContainer
           inputValue={note.text}
           inputDirection={note.direction}
+          inputSaved={note.isSaved}
+          dateCreated={note.dateCreated}
+          dateModified={note.dateModified}
+          noteType={note.type}
+          noteKey={note.key}
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          onSaveNote={handleFormSubmit}
           onClickEditButton={onClickEditButton}
         />
       )}

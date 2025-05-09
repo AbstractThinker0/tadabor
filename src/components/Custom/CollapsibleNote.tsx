@@ -1,9 +1,11 @@
 import { useState } from "react";
 
-import { Box, Collapsible } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
+
+import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 import { useNote } from "@/hooks/useNote";
 
@@ -32,13 +34,11 @@ const CollapsibleNote = ({
     note.setDirection(dir);
   };
 
-  const onChangeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    note.setText(event.target.value);
+  const onChangeNote = (text: string) => {
+    note.setText(text);
   };
 
-  const onSubmitForm = (event: React.FormEvent<HTMLDivElement>) => {
-    event.preventDefault();
-
+  const onSaveNote = () => {
     note.save();
 
     setEditable(false);
@@ -49,82 +49,24 @@ const CollapsibleNote = ({
   };
 
   return (
-    <CollapsibleGeneric
-      isOpen={isOpen}
-      inputValue={note.text}
-      inputDirection={note.direction}
-      inputSaved={note.isSaved}
-      isEditable={isEditable}
-      isSynced={note.isSynced}
-      isSyncing={note.isSyncing}
-      dateCreated={note.dateCreated}
-      dateModified={note.dateModified}
-      noteType={note.type}
-      noteKey={note.key}
-      handleSetDirection={handleSetDirection}
-      onChangeTextarea={onChangeTextarea}
-      onSubmitForm={onSubmitForm}
-      onClickEditButton={onClickEditButton}
-    />
-  );
-};
-
-interface CollapsibleGenericProps {
-  isOpen: boolean;
-  isEditable: boolean;
-  isSynced: boolean;
-  isSyncing: boolean;
-  inputValue: string;
-  inputDirection: string;
-  inputSaved: boolean;
-  dateCreated?: number;
-  dateModified?: number;
-  noteType?: string;
-  noteKey?: string;
-  onClickEditButton: () => void;
-  handleSetDirection: (dir: string) => void;
-  onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
-}
-
-const CollapsibleGeneric = ({
-  isOpen,
-  isEditable,
-  isSynced,
-  isSyncing,
-  inputValue,
-  inputDirection,
-  inputSaved,
-  dateCreated,
-  dateModified,
-  noteType,
-  noteKey,
-  onClickEditButton,
-  handleSetDirection,
-  onChangeTextarea,
-  onSubmitForm,
-}: CollapsibleGenericProps) => {
-  return (
-    <Collapsible.Root open={isOpen} lazyMount unmountOnExit>
-      <Collapsible.Content>
-        <FormText
-          isEditable={isEditable}
-          isSynced={isSynced}
-          isSyncing={isSyncing}
-          inputValue={inputValue}
-          inputDirection={inputDirection}
-          inputSaved={inputSaved}
-          dateCreated={dateCreated}
-          dateModified={dateModified}
-          noteType={noteType}
-          noteKey={noteKey}
-          onClickEditButton={onClickEditButton}
-          handleSetDirection={handleSetDirection}
-          onChangeTextarea={onChangeTextarea}
-          onSubmitForm={onSubmitForm}
-        />
-      </Collapsible.Content>
-    </Collapsible.Root>
+    <CollapsibleGeneric isOpen={isOpen}>
+      <FormText
+        inputValue={note.text}
+        inputDirection={note.direction}
+        inputSaved={note.isSaved}
+        isEditable={isEditable}
+        isSynced={note.isSynced}
+        isSyncing={note.isSyncing}
+        dateCreated={note.dateCreated}
+        dateModified={note.dateModified}
+        noteType={note.type}
+        noteKey={note.key}
+        handleSetDirection={handleSetDirection}
+        onChangeNote={onChangeNote}
+        onSaveNote={onSaveNote}
+        onClickEditButton={onClickEditButton}
+      />
+    </CollapsibleGeneric>
   );
 };
 
@@ -141,8 +83,8 @@ interface FormTextProps {
   noteKey?: string;
   onClickEditButton: () => void;
   handleSetDirection: (dir: string) => void;
-  onChangeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSubmitForm: (event: React.FormEvent<HTMLDivElement>) => void;
+  onChangeNote: (text: string) => void;
+  onSaveNote: () => void;
 }
 
 const FormText = ({
@@ -158,8 +100,8 @@ const FormText = ({
   noteKey,
   onClickEditButton,
   handleSetDirection,
-  onChangeTextarea,
-  onSubmitForm,
+  onChangeNote,
+  onSaveNote,
 }: FormTextProps) => {
   return (
     <Box
@@ -183,7 +125,7 @@ const FormText = ({
           noteType={noteType}
           noteKey={noteKey}
           onClickEditButton={onClickEditButton}
-          onSubmitForm={onSubmitForm}
+          onSaveNote={onSaveNote}
         />
       ) : (
         <NoteForm
@@ -191,8 +133,8 @@ const FormText = ({
           inputDirection={inputDirection}
           inputSaved={inputSaved}
           handleSetDirection={handleSetDirection}
-          onChangeTextarea={onChangeTextarea}
-          onSubmitForm={onSubmitForm}
+          onChangeNote={onChangeNote}
+          onSaveNote={onSaveNote}
         />
       )}
     </Box>

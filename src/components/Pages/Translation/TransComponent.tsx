@@ -1,13 +1,16 @@
 import { memo, useState } from "react";
 
-import { useAppSelector } from "@/store";
-
 import { useNote } from "@/hooks/useNote";
 
-import { Box, Text } from "@chakra-ui/react";
-
-import TextareaAutosize from "@/components/Custom/TextareaAutosize";
-import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
+import {
+  NoteFormContainer,
+  NoteFormEditor,
+  NoteFormFooter,
+} from "@/components/Custom/NoteForm";
+import NoteContainer, {
+  NoteContainerHeader,
+} from "@/components/Custom/NoteContainer";
+import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 interface TransComponentProps {
   verseKey: string;
@@ -36,80 +39,76 @@ const TransComponent = memo(({ verseKey }: TransComponentProps) => {
   };
 
   return (
-    <>
-      {isEditable ? (
-        <Versearea
+    <CollapsibleGeneric isOpen>
+      {isEditable === false ? (
+        <NoteContainer
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
           inputValue={note.text}
-          handleInputChange={handleInputChange}
-          handleInputSubmit={handleInputSubmit}
+          inputSaved={note.isSaved}
+          inputDirection="ltr"
+          dateCreated={note.dateCreated}
+          dateModified={note.dateModified}
+          noteType={note.type}
+          noteKey={note.key}
+          onClickEditButton={handleEditClick}
+          onSaveNote={handleInputSubmit}
         />
       ) : (
-        <Versetext inputValue={note.text} handleEditClick={handleEditClick} />
+        <Versearea
+          inputValue={note.text}
+          inputSaved={note.isSaved}
+          onChangeNote={handleInputChange}
+          onSaveNote={handleInputSubmit}
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          noteKey={note.key}
+          noteType={note.type}
+        />
       )}
-    </>
+    </CollapsibleGeneric>
   );
 });
 
 TransComponent.displayName = "TransComponent";
 
-interface VersetextProps {
-  inputValue: string;
-  handleEditClick: () => void;
-}
-
-const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-
-  const onClickEdit = () => {
-    handleEditClick();
-  };
-
-  return (
-    <Box padding={2}>
-      <Box border={"1px solid"} borderColor={"border.emphasized"} padding={1}>
-        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} dir="ltr">
-          {inputValue}
-        </Text>
-      </Box>
-      <Box textAlign={"center"}>
-        <ButtonEdit onClick={onClickEdit} />
-      </Box>
-    </Box>
-  );
-};
-
 interface VerseareaProps {
   inputValue: string;
-  handleInputChange: (value: string) => void;
-  handleInputSubmit: (inputValue: string) => void;
+  inputSaved?: boolean;
+  isSynced: boolean;
+  isSyncing: boolean;
+  noteKey: string;
+  noteType: string;
+  onChangeNote: (text: string) => void;
+  onSaveNote: () => void;
 }
 
 const Versearea = ({
   inputValue,
-  handleInputChange,
-  handleInputSubmit,
+  inputSaved = true,
+  onChangeNote,
+  onSaveNote,
+  isSynced,
+  isSyncing,
+  noteKey,
+  noteType,
 }: VerseareaProps) => {
-  const onSubmit = (event: React.FormEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    handleInputSubmit(inputValue);
-  };
-
-  const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    handleInputChange(event.target.value);
-  };
-
   return (
-    <Box as="form" onSubmit={onSubmit} padding={2} dir="ltr">
-      <TextareaAutosize
-        placeholder="Enter your text."
-        value={inputValue}
-        onChange={onChangeText}
-        bgColor={"bg"}
+    <NoteFormContainer onSaveNote={onSaveNote}>
+      <NoteContainerHeader
+        isSynced={isSynced}
+        isSyncing={isSyncing}
+        noteKey={noteKey}
+        noteType={noteType}
       />
-      <Box textAlign={"center"}>
-        <ButtonSave />
-      </Box>
-    </Box>
+      <NoteFormEditor
+        inputDirection="ltr"
+        inputValue={inputValue}
+        inputSaved={inputSaved}
+        onChangeNote={onChangeNote}
+      />
+      <NoteFormFooter />
+    </NoteFormContainer>
   );
 };
 

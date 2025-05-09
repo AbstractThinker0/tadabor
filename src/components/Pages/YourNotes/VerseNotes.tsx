@@ -22,7 +22,7 @@ const VerseNotes = () => {
       {verseNotesIDs.length ? (
         <>
           <BackupComponent />
-          <VStack>
+          <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {verseNotesIDs.map((noteID) => (
               <VerseComponent noteID={noteID} key={noteID} />
             ))}
