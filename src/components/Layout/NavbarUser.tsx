@@ -14,6 +14,8 @@ import { MdOutlineLogout } from "react-icons/md";
 
 import { useAuth } from "@/hooks/useAuth";
 
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
 const NavbarUser = () => {
   const { t } = useTranslation();
 
@@ -23,6 +25,7 @@ const NavbarUser = () => {
 
   const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
 
+  const isPending = useAppSelector((state) => state.user.isPending);
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
 
@@ -31,6 +34,8 @@ const NavbarUser = () => {
   };
 
   if (!isBackendEnabled) return <></>;
+
+  if (isPending) return <LoadingSpinner />;
 
   return (
     <>
