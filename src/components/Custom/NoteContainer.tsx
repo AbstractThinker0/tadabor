@@ -60,6 +60,7 @@ const NoteContainer = ({
         inputDirection={inputDirection}
       />
       <NoteContainerFooter
+        isSyncing={isSyncing}
         inputSaved={inputSaved}
         dateCreated={dateCreated}
         dateModified={dateModified}
@@ -163,6 +164,7 @@ const NoteContainerBody = ({
 };
 
 interface NoteContainerFooterProps {
+  isSyncing: boolean;
   inputSaved?: boolean;
   dateCreated?: number;
   dateModified?: number;
@@ -170,6 +172,7 @@ interface NoteContainerFooterProps {
 }
 
 const NoteContainerFooter = ({
+  isSyncing,
   inputSaved = true,
   dateCreated,
   dateModified,
@@ -217,8 +220,8 @@ const NoteContainerFooter = ({
         </Flex>
       )}
       <Flex justifyContent={"center"} gap={"1rem"}>
-        <ButtonEdit onClick={onClickEditButton} />
-        {!inputSaved && <ButtonSave />}
+        <ButtonEdit onClick={onClickEditButton} loading={isSyncing} />
+        {!inputSaved && !isSyncing && <ButtonSave />}
       </Flex>
     </>
   );
