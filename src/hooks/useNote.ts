@@ -14,7 +14,7 @@ import { dbFuncs } from "@/util/db";
 import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
-import { createNewNote } from "@/util/notes";
+import { createNewNote, NoteUploadPayload } from "@/util/notes";
 import { CloudNoteProps } from "@/types";
 
 interface useNoteParams {
@@ -80,7 +80,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
     if (isLogged) {
       // upload the note to cloud
       try {
-        const uploadData = {
+        const uploadData: NoteUploadPayload = {
           key: noteValidKey,
           type: note.type,
           uuid: note.uuid,

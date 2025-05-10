@@ -5,7 +5,12 @@ import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CloudNoteProps } from "@/types";
 import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
-import { dbFuncs } from "@/util/db";
+import { dbFuncs, ICloudNote } from "@/util/db";
+import {
+  fromBackendToDexie,
+  fromDexieToBackend,
+  fromReduxToDexie,
+} from "@/util/notes";
 
 interface NotesProviderProps {
   children: React.ReactNode;
@@ -48,18 +53,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
       try {
         const fetchedNote = (await fetchNoteById({ noteID })).note;
 
-        const clNote: CloudNoteProps = {
-          id: fetchedNote.id,
-          authorId: fetchedNote.authorId,
-          key: fetchedNote.key,
-          text: fetchedNote.content!,
-          type: fetchedNote.type,
-          uuid: fetchedNote.uuid,
-          dir: fetchedNote.direction!,
-          date_created: fetchedNote.dateCreated,
-          date_modified: fetchedNote.dateModified,
-          date_synced: fetchedNote.dateLastSynced,
-        };
+        const clNote: ICloudNote = fromBackendToDexie(fetchedNote);
 
         dispatch(cloudNotesActions.cacheNote(clNote));
         dbFuncs.saveCloudNote(clNote);
@@ -113,15 +107,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
       if (!clNote) continue;
 
       try {
-        const uploadData = {
-          key: clNote.key,
-          type: clNote.type,
-          uuid: clNote.uuid,
-          content: clNote.text,
-          dateCreated: clNote.date_created!,
-          dateModified: clNote.date_modified!,
-          direction: clNote.dir!,
-        };
+        const uploadData = fromDexieToBackend(clNote);
 
         const result = await uploadNote.mutateAsync(uploadData);
 
@@ -142,7 +128,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
           }
 
           try {
-            await dbFuncs.saveCloudNote(syncedNote);
+            await dbFuncs.saveCloudNote(fromReduxToDexie(syncedNote));
           } catch (error) {
             console.error("error:", error);
           }

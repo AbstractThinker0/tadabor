@@ -207,10 +207,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             uuid: string;
             key: string;
             type: string;
+            content: string | null;
+            direction: string | null;
             dateModified: number;
             dateCreated: number;
-            content?: string | undefined;
-            direction?: string | undefined;
           };
           output:
             | {
@@ -315,3 +315,9 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
   }>
 >;
 export type AppRouter = typeof appRouter;
+
+import type { inferProcedureOutput } from "@trpc/server";
+// Extract the note type from the fetchNote procedure output
+export type BackendNote = inferProcedureOutput<
+  AppRouter["notes"]["fetchNote"]
+>["note"];

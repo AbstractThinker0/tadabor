@@ -1,4 +1,7 @@
+import { CloudNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
+import { ICloudNote } from "@/util/db";
+import { BackendNote } from "@/util/AppRouter";
 
 interface CreateNewNoteParams {
   id: string;
@@ -20,6 +23,78 @@ const createNewNote = ({ id, text = "", dir = "" }: CreateNewNoteParams) => {
     saved: false,
     date_modified: now,
     date_created: now,
+  };
+};
+
+// Converts from Redux (CloudNoteProps) to IndexDB (ICloudNote)
+export const fromReduxToDexie = (note: CloudNoteProps): ICloudNote => {
+  const {
+    id,
+    uuid,
+    authorId,
+    key,
+    type,
+    text,
+    dir,
+    date_created,
+    date_modified,
+    date_synced,
+    isDeleted,
+    isPublished,
+  } = note;
+
+  return {
+    id,
+    uuid,
+    authorId,
+    key,
+    type,
+    text,
+    dir,
+    date_created,
+    date_modified,
+    date_synced,
+    isDeleted,
+    isPublished,
+  };
+};
+
+export type NoteUploadPayload = Pick<
+  BackendNote,
+  | "key"
+  | "type"
+  | "uuid"
+  | "content"
+  | "dateCreated"
+  | "dateModified"
+  | "direction"
+>;
+
+// Converts to backend payload (NoteProps)
+export const fromDexieToBackend = (note: ICloudNote): NoteUploadPayload => ({
+  uuid: note.uuid,
+  key: note.key,
+  type: note.type,
+  content: note.text,
+  direction: note.dir ?? null,
+  dateCreated: note.date_created ?? 0,
+  dateModified: note.date_modified ?? 0,
+});
+
+export const fromBackendToDexie = (note: BackendNote): ICloudNote => {
+  return {
+    id: note.id,
+    uuid: note.uuid,
+    authorId: note.authorId,
+    key: note.key,
+    type: note.type,
+    text: note.content ?? "", // Normalize null to empty string
+    dir: note.direction ?? undefined,
+    date_created: note.dateCreated,
+    date_modified: note.dateModified,
+    date_synced: note.dateLastSynced,
+    isDeleted: note.isDeleted ?? undefined,
+    isPublished: note.isPublished ?? undefined,
   };
 };
 
