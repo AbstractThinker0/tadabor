@@ -14,6 +14,8 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   const quranInstance = useMemo(() => new quranClass(), []);
 
   const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
+  const isLoginPending = useAppSelector((state) => state.user.isPending);
 
   const isLocalNotesLoading = useAppSelector(
     (state) => state.localNotes.loading
@@ -61,8 +63,15 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
     return <LoadingSpinner text="Loading Quran data.." />;
   }
 
-  if (isLocalNotesLoading || (isLogged && isCloudNotesLoading)) {
+  if (
+    isLocalNotesLoading ||
+    ((isLogged || isLoggedOffline) && isCloudNotesLoading)
+  ) {
     return <LoadingSpinner text="Loading notes.." />;
+  }
+
+  if (isLoginPending) {
+    return <LoadingSpinner text="Pending loggin.." />;
   }
 
   return (

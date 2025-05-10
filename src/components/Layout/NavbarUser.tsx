@@ -14,8 +14,6 @@ import { MdOutlineLogout } from "react-icons/md";
 
 import { useAuth } from "@/hooks/useAuth";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-
 const NavbarUser = () => {
   const { t } = useTranslation();
 
@@ -35,7 +33,19 @@ const NavbarUser = () => {
 
   if (!isBackendEnabled) return <></>;
 
-  if (isPending) return <LoadingSpinner />;
+  if (isPending)
+    return (
+      <Button
+        colorPalette={"gray"}
+        marginEnd={"0.5rem"}
+        size={"sm"}
+        borderRadius={"l3"}
+        boxShadow={"md"}
+        loading={true}
+      >
+        <TbUserCheck />
+      </Button>
+    );
 
   return (
     <>

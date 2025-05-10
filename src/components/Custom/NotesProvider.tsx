@@ -18,6 +18,7 @@ interface NotesProviderProps {
 
 const NotesProvider = ({ children }: NotesProviderProps) => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
 
   const hasLoadedLocalNotes = useAppSelector(
     (state) => state.localNotes.complete
@@ -66,6 +67,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
   useEffect(() => {
     if (
       isLogged &&
+      !isLoggedOffline &&
       hasLoadedCloudNotes &&
       hasLoadedLocalNotes &&
       !syncNotes.isPending
@@ -95,7 +97,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
         guestNotes: uniqueGuestNotes,
       });
     }
-  }, [isLogged, hasLoadedCloudNotes, hasLoadedLocalNotes]);
+  }, [isLogged, isLoggedOffline, hasLoadedCloudNotes, hasLoadedLocalNotes]);
 
   const uploadNotes = async (notesKeys: string[], guest: boolean = false) => {
     // Uploading notes to the cloud
