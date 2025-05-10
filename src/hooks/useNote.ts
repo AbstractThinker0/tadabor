@@ -72,6 +72,11 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
 
   const saveNote = async () => {
     let syncDate = 0;
+    const now = Date.now();
+
+    const shouldUpdate = note.text !== note.preSave;
+    const newDateModified = shouldUpdate ? now : note.date_modified!;
+
     if (isLogged) {
       // upload the note to cloud
       try {
@@ -81,7 +86,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
           uuid: note.uuid,
           content: note.text,
           dateCreated: note.date_created!,
-          dateModified: note.date_modified!,
+          dateModified: newDateModified,
           direction: note.dir!,
         };
 
@@ -101,7 +106,12 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
       }
     }
 
-    dispatch(noteAction.markSaved(noteIndex));
+    dispatch(
+      noteAction.markSaved({
+        id: noteIndex,
+        dateModified: newDateModified,
+      })
+    );
 
     type SaveDataProps = {
       id: string;
@@ -123,7 +133,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
       uuid: note.uuid,
       dir: noteDirection,
       date_created: note.date_created,
-      date_modified: note.date_modified,
+      date_modified: newDateModified,
     };
 
     // Add date_synced only for cloud notes

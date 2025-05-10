@@ -32,6 +32,11 @@ export interface ChangeNoteDirPayload {
   value: string;
 }
 
+export interface MarkSavedPayload {
+  id: string;
+  dateModified: number;
+}
+
 interface LetterType {
   name: string;
   definition: string;

@@ -5,6 +5,7 @@ import {
   ChangeNoteDirPayload,
   ChangeNotePayload,
   CloudNoteProps,
+  MarkSavedPayload,
 } from "@/types";
 
 export interface SyncDatePayload {
@@ -101,13 +102,13 @@ const cloudNotesSlice = createSlice({
 
       state.data[id].dir = value;
     },
-    markSaved: (state, action: PayloadAction<string>) => {
-      const id = action.payload;
+    markSaved: (state, action: PayloadAction<MarkSavedPayload>) => {
+      const { id, dateModified } = action.payload;
       state.data[id].saved = true;
 
       if (state.data[id].text !== state.data[id].preSave) {
         state.data[id].preSave = state.data[id].text;
-        state.data[id].date_modified = Date.now();
+        state.data[id].date_modified = dateModified;
       }
     },
     reset: () => initialState,
