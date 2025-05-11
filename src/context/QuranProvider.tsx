@@ -71,7 +71,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   }
 
   if (isLoginPending) {
-    return <LoadingSpinner text="Pending loggin.." />;
+    return <LoadingSpinner text="Pending login.." />;
   }
 
   return (
