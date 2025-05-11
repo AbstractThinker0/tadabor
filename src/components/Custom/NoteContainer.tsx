@@ -2,7 +2,7 @@ import { useAppSelector } from "@/store";
 
 import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip-mobile";
 
 import { MdOutlineCheckCircle } from "react-icons/md";
 import useQuran from "@/context/useQuran";
