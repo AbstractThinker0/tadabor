@@ -234,7 +234,7 @@ i18n
             confirmPassword: "تأكيد كلمة المرور",
             questionYesAccount: "لديك حساب؟",
             questionNoAccount: "لا تملك حساب؟",
-            questionPassword: "هل نسيت كلمة المرور؟",
+            questionPassword: "نسيت كلمة المرور؟",
             resetPassword: "إستعادة كلمة المرور",
             sendResetToken: "أرسل رمز الإستعادة",
             sendTokenDone: "تم إرسال رمز الإستعادة.",
