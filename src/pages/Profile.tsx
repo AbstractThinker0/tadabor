@@ -141,7 +141,7 @@ const Profile = () => {
       <Flex
         flexDirection="column"
         width={"50vw"}
-        mdDown={{ width: "auto" }}
+        mdDown={{ width: "90vw" }}
         mb={4}
       >
         <Text>{t("auth.username")}</Text>
@@ -182,7 +182,7 @@ const Profile = () => {
           </Button>
         </Box>
       </Flex>
-      <Flex flexDirection="column" width={"50vw"}>
+      <Flex flexDirection="column" width={"50vw"} mdDown={{ width: "90vw" }}>
         <Flex justifyContent={"space-between"}>
           <Text>{t("auth.oldPassword")}</Text>
           <Link colorPalette={"teal"} asChild>
