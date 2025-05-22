@@ -9,21 +9,34 @@ import {
 
 import { toaster } from "@/components/ui/toaster";
 
-import { localNotesActions } from "@/store/slices/global/localNotes";
+import {
+  fetchSingleLocalNote,
+  localNotesActions,
+} from "@/store/slices/global/localNotes";
 import { dbFuncs } from "@/util/db";
-import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
+import {
+  cloudNotesActions,
+  fetchSingleCloudNote,
+} from "@/store/slices/global/cloudNotes";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
 import { createNewNote, NoteUploadPayload } from "@/util/notes";
 import { CloudNoteProps } from "@/types";
+import { useEffect } from "react";
 
 interface useNoteParams {
   noteID?: string;
   noteType?: "verse" | "root" | "translation";
   noteKey?: string;
+  isVisible?: boolean;
 }
 
-export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
+export const useNote = ({
+  noteID,
+  noteType,
+  noteKey,
+  isVisible = true,
+}: useNoteParams) => {
   const noteIndex = noteID || `${noteType}:${noteKey}`;
 
   const isLogged = useAppSelector((state) => state.user.isLogged);
@@ -33,6 +46,16 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
     : selectLocalNote(noteIndex);
 
   const note = useAppSelector(selector);
+
+  const isLoadingLocal = useAppSelector(
+    (state) => state.localNotes.dataLoading[noteIndex]
+  );
+
+  const isLoadingCloud = useAppSelector(
+    (state) => state.cloudNotes.dataLoading[noteIndex]
+  );
+
+  const isNoteLoading = isLogged ? isLoadingCloud : isLoadingLocal;
 
   const noteAction = isLogged ? cloudNotesActions : localNotesActions;
 
@@ -157,12 +180,23 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
       });
   };
 
+  useEffect(() => {
+    if (!isVisible || isNoteLoading === false) return;
+
+    dispatch(
+      isLogged
+        ? fetchSingleCloudNote(noteIndex)
+        : fetchSingleLocalNote(noteIndex)
+    );
+  }, [isVisible, isLogged, isNoteLoading]);
+
   return {
     text: noteText,
     direction: noteDirection,
     isSaved: noteSaved,
     type: noteValidType,
     key: noteValidKey,
+    isLoading: isNoteLoading !== false,
     isSynced: noteIsSynced,
     isSyncing: noteIsSyncing,
     dateCreated: note?.date_created,

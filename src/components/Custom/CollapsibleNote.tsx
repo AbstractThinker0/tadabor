@@ -6,6 +6,7 @@ import NoteForm from "@/components/Custom/NoteForm";
 import NoteContainer from "@/components/Custom/NoteContainer";
 
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { useNote } from "@/hooks/useNote";
 
@@ -26,6 +27,7 @@ const CollapsibleNote = ({
     noteID,
     noteType,
     noteKey,
+    isVisible: isOpen,
   });
 
   const [isEditable, setEditable] = useState(note.text ? false : true);
@@ -50,22 +52,26 @@ const CollapsibleNote = ({
 
   return (
     <CollapsibleGeneric isOpen={isOpen}>
-      <FormText
-        inputValue={note.text}
-        inputDirection={note.direction}
-        inputSaved={note.isSaved}
-        isEditable={isEditable}
-        isSynced={note.isSynced}
-        isSyncing={note.isSyncing}
-        dateCreated={note.dateCreated}
-        dateModified={note.dateModified}
-        noteType={note.type}
-        noteKey={note.key}
-        handleSetDirection={handleSetDirection}
-        onChangeNote={onChangeNote}
-        onSaveNote={onSaveNote}
-        onClickEditButton={onClickEditButton}
-      />
+      {note.isLoading ? (
+        <LoadingSpinner text="Fetching note.." />
+      ) : (
+        <FormText
+          inputValue={note.text}
+          inputDirection={note.direction}
+          inputSaved={note.isSaved}
+          isEditable={isEditable}
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          dateCreated={note.dateCreated}
+          dateModified={note.dateModified}
+          noteType={note.type}
+          noteKey={note.key}
+          handleSetDirection={handleSetDirection}
+          onChangeNote={onChangeNote}
+          onSaveNote={onSaveNote}
+          onClickEditButton={onClickEditButton}
+        />
+      )}
     </CollapsibleGeneric>
   );
 };

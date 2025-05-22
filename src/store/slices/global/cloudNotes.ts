@@ -16,6 +16,8 @@ export interface SyncDatePayload {
 interface CloudNotesStateProps {
   data: Record<string, CloudNoteProps>;
   dataKeys: string[];
+  dataLoading: Record<string, boolean>;
+  dataComplete: Record<string, boolean>;
 
   loading: boolean;
   complete: boolean;
@@ -25,11 +27,40 @@ interface CloudNotesStateProps {
 const initialState: CloudNotesStateProps = {
   data: {},
   dataKeys: [],
+  dataLoading: {},
+  dataComplete: {},
 
   loading: true,
   complete: false,
   error: false,
 };
+
+export const fetchSingleCloudNote = createAsyncThunk<
+  CloudNoteProps | null,
+  string,
+  { state: { cloudNotes: CloudNotesStateProps }; rejectValue: string }
+>("cloudNotes/fetchSingleCloudNote", async (noteId, thunkAPI) => {
+  const { getState, rejectWithValue } = thunkAPI;
+  const { dataComplete } = getState().cloudNotes;
+
+  // If the note is already is loading, don't fetch it again
+  if (dataComplete[noteId]) return null;
+
+  try {
+    const note = await dbFuncs.loadCloudNote(noteId);
+
+    if (!note) return null;
+
+    return {
+      ...note,
+      saved: true,
+      isSynced: true,
+      preSave: note.text,
+    };
+  } catch (error) {
+    return rejectWithValue(`Failed to load note ${noteId}: ${error}`);
+  }
+});
 
 export const fetchCloudNotes = createAsyncThunk<
   false | Record<string, CloudNoteProps>,
@@ -73,6 +104,7 @@ const cloudNotesSlice = createSlice({
       note.isSynced = true;
       note.preSave = note.text;
       state.data[note.id] = note;
+      state.dataLoading[note.id] = false;
 
       if (!state.dataKeys.includes(note.id)) {
         state.dataKeys.push(note.id);
@@ -121,6 +153,9 @@ const cloudNotesSlice = createSlice({
         if (action.payload) {
           state.data = action.payload;
           state.dataKeys = Object.keys(action.payload);
+          Object.keys(action.payload).forEach((key) => {
+            state.dataLoading[key] = false;
+          });
         }
       })
       .addCase(fetchCloudNotes.pending, (state) => {
@@ -138,6 +173,39 @@ const cloudNotesSlice = createSlice({
         } else {
           console.error(
             "fetchCloudNotes rejected without custom message:",
+            action.error.message
+          );
+        }
+      })
+      .addCase(fetchSingleCloudNote.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.data[action.payload.id] = action.payload;
+          state.dataComplete[action.payload.id] = true;
+
+          if (!state.dataKeys.includes(action.payload.id)) {
+            state.dataKeys.push(action.payload.id);
+          }
+        }
+
+        const noteId = action.meta.arg;
+        state.dataLoading[noteId] = false;
+      })
+      .addCase(fetchSingleCloudNote.pending, (state, action) => {
+        const noteId = action.meta.arg;
+        state.dataLoading[noteId] = true;
+      })
+      .addCase(fetchSingleCloudNote.rejected, (state, action) => {
+        state.error = true;
+
+        // Log the custom error message passed with rejectWithValue
+        if (action.payload) {
+          console.error(
+            "fetchSingleCloudNote rejected with message:",
+            action.payload
+          );
+        } else {
+          console.error(
+            "fetchSingleCloudNote rejected without custom message:",
             action.error.message
           );
         }

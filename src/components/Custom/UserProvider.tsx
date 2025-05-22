@@ -36,7 +36,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
     ...trpc.auth.refresh.queryOptions(),
     enabled: isLoggedOffline && userToken.length > 0,
     retry: false,
-    refetchInterval: 10000, // Check every 10 seconds
+    refetchInterval: 60000, // Check every 60 seconds
   });
 
   // Handle initial login attempt
@@ -74,8 +74,13 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
   // Handle connection check results
   useEffect(() => {
-    if (!isLoggedOffline || !connectionCheck.isSuccess || !connectionCheck.data?.user) return;
-    
+    if (
+      !isLoggedOffline ||
+      !connectionCheck.isSuccess ||
+      !connectionCheck.data?.user
+    )
+      return;
+
     // If we successfully connected to the backend while in offline mode,
     // transition to regular logged in state
     confirmLogin({
@@ -87,13 +92,14 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     if (connectionCheck.isError) {
-      const isUnauthorized = connectionCheck.error.data?.code === "UNAUTHORIZED";
+      const isUnauthorized =
+        connectionCheck.error.data?.code === "UNAUTHORIZED";
 
       if (isUnauthorized) {
         logout({ message: "auth.sessionExpired" });
       }
     }
-  }, [connectionCheck.isError])
+  }, [connectionCheck.isError]);
 
   return <>{children}</>;
 };

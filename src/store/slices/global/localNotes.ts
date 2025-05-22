@@ -11,6 +11,8 @@ import {
 interface LocalNotesStateProps {
   data: Record<string, LocalNoteProps>;
   dataKeys: string[];
+  dataLoading: Record<string, boolean>;
+  dataComplete: Record<string, boolean>;
 
   loading: boolean;
   complete: boolean;
@@ -20,11 +22,40 @@ interface LocalNotesStateProps {
 const initialState: LocalNotesStateProps = {
   data: {},
   dataKeys: [],
+  dataLoading: {},
+  dataComplete: {},
 
   loading: true,
   complete: false,
   error: false,
 };
+
+export const fetchSingleLocalNote = createAsyncThunk<
+  LocalNoteProps | null,
+  string,
+  { state: { localNotes: LocalNotesStateProps }; rejectValue: string }
+>("localNotes/fetchSingleLocalNote", async (noteId, thunkAPI) => {
+  const { getState, rejectWithValue } = thunkAPI;
+  const { dataComplete } = getState().localNotes;
+
+  // If the note is already loading, don't fetch it again
+  // TODO: verify if this null return will cause a bug
+  if (dataComplete[noteId]) return null;
+
+  try {
+    const note = await dbFuncs.loadLocalNote(noteId);
+
+    if (!note) return null;
+
+    return {
+      ...note,
+      saved: true,
+      preSave: note.text,
+    };
+  } catch (error) {
+    return rejectWithValue(`Failed to load note ${noteId}: ${error}`);
+  }
+});
 
 export const fetchLocalNotes = createAsyncThunk<
   false | Record<string, LocalNoteProps>,
@@ -64,6 +95,7 @@ const localNotesSlice = createSlice({
       note.saved = true;
       note.preSave = note.text;
       state.data[note.id] = note;
+      state.dataLoading[note.id] = false;
 
       if (!state.dataKeys.includes(note.id)) {
         state.dataKeys.push(note.id);
@@ -104,6 +136,9 @@ const localNotesSlice = createSlice({
         if (action.payload) {
           state.data = action.payload;
           state.dataKeys = Object.keys(action.payload);
+          Object.keys(action.payload).forEach((key) => {
+            state.dataLoading[key] = false;
+          });
         }
       })
       .addCase(fetchLocalNotes.pending, (state) => {
@@ -121,6 +156,40 @@ const localNotesSlice = createSlice({
         } else {
           console.error(
             "fetchLocalNotes rejected without custom message:",
+            action.error.message
+          );
+        }
+      })
+      .addCase(fetchSingleLocalNote.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.data[action.payload.id] = action.payload;
+          state.dataComplete[action.payload.id] = true;
+
+          if (!state.dataKeys.includes(action.payload.id)) {
+            state.dataKeys.push(action.payload.id);
+          }
+        }
+
+        const noteId = action.meta.arg;
+        state.dataLoading[noteId] = false;
+      })
+      .addCase(fetchSingleLocalNote.pending, (state, action) => {
+        const noteId = action.meta.arg;
+
+        state.dataLoading[noteId] = true;
+      })
+      .addCase(fetchSingleLocalNote.rejected, (state, action) => {
+        state.error = true;
+
+        // Log the custom error message passed with rejectWithValue
+        if (action.payload) {
+          console.error(
+            "fetchSingleLocalNote rejected with message:",
+            action.payload
+          );
+        } else {
+          console.error(
+            "fetchSingleLocalNote rejected without custom message:",
             action.error.message
           );
         }

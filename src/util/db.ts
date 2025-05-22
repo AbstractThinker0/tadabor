@@ -324,6 +324,12 @@ export const dbFuncs = {
   loadCloudNotes: () => {
     return db.cloud_notes.toArray();
   },
+  loadLocalNote: (id: string) => {
+    return db.local_notes.get(id);
+  },
+  loadCloudNote: (id: string) => {
+    return db.cloud_notes.get(id);
+  },
   saveCloudNote: async (note: ICloudNote) => {
     const updated = await db.cloud_notes.update(note.id, {
       ...note,
