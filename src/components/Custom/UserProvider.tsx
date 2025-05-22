@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchCloudNotes } from "@/store/slices/global/cloudNotes";
 
 import { useTRPC } from "@/util/trpc";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +20,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
   const userToken = useAppSelector((state) => state.user.token);
   const email = useAppSelector((state) => state.user.email);
   const username = useAppSelector((state) => state.user.username);
+
+  const dispatch = useAppDispatch();
 
   const hasShownToast = useRef(false);
 
@@ -51,6 +54,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
         username: userLogin.data.user.username,
         token: userToken,
       });
+
+      dispatch(fetchCloudNotes());
     }
 
     if (userLogin.isError) {
