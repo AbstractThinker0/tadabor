@@ -29,6 +29,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+import { ButtonCopyVerse } from "@/components/Custom/ButtonCopyVerse";
 
 import { useBoolean } from "usehooks-ts";
 
@@ -298,6 +299,7 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
         >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
         )
         <ButtonExpand onClick={setOpen} />
+        <ButtonCopyVerse verseKey={rootVerse.key} />
       </VerseContainer>
 
       <CollapsibleNote
