@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import { fetchLocalNotes } from "@/store/slices/global/localNotes";
 
@@ -15,6 +15,8 @@ import { Flex } from "@chakra-ui/react";
 
 import UserProvider from "@/components/Custom/UserProvider";
 import NotesProvider from "@/components/Custom/NotesProvider";
+
+import LoadingSpinner from "@/components//Generic/LoadingSpinner";
 
 import { HookResizeEvent } from "@/hooks/useScreenSize";
 
@@ -45,12 +47,40 @@ function Layout({ children }: PropsWithChildren) {
         >
           <Navbar />
           <AlertMessage />
-          <QuranProvider>{children}</QuranProvider>
+          <QuranProvider>
+            <PageBody>{children}</PageBody>
+          </QuranProvider>
           <HookResizeEvent />
         </Flex>
       </NotesProvider>
     </UserProvider>
   );
 }
+
+const PageBody = ({ children }: PropsWithChildren) => {
+  const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
+  const isLoginPending = useAppSelector((state) => state.user.isPending);
+
+  const isLocalNotesLoading = useAppSelector(
+    (state) => state.localNotes.loading
+  );
+  const isCloudNotesLoading = useAppSelector(
+    (state) => state.cloudNotes.loading
+  );
+
+  if (
+    isLocalNotesLoading ||
+    ((isLogged || isLoggedOffline) && isCloudNotesLoading)
+  ) {
+    return <LoadingSpinner text="Loading notes.." />;
+  }
+
+  if (isLoginPending) {
+    return <LoadingSpinner text="Pending login.." />;
+  }
+
+  return <>{children}</>;
+};
 
 export default Layout;

@@ -1,7 +1,5 @@
 import { useState, useEffect, PropsWithChildren, useMemo } from "react";
 
-import { useAppSelector } from "@/store";
-
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 
 import { quranClass } from "quran-tools";
@@ -12,17 +10,6 @@ import { QuranContext } from "@/context/QuranContext";
 export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
   const quranInstance = useMemo(() => new quranClass(), []);
-
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
-  const isLoginPending = useAppSelector((state) => state.user.isPending);
-
-  const isLocalNotesLoading = useAppSelector(
-    (state) => state.localNotes.loading
-  );
-  const isCloudNotesLoading = useAppSelector(
-    (state) => state.cloudNotes.loading
-  );
 
   useEffect(() => {
     let clientLeft = false;
@@ -61,17 +48,6 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
   if (isLoading) {
     return <LoadingSpinner text="Loading Quran data.." />;
-  }
-
-  if (
-    isLocalNotesLoading ||
-    ((isLogged || isLoggedOffline) && isCloudNotesLoading)
-  ) {
-    return <LoadingSpinner text="Loading notes.." />;
-  }
-
-  if (isLoginPending) {
-    return <LoadingSpinner text="Pending login.." />;
   }
 
   return (
