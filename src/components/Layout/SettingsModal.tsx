@@ -12,7 +12,7 @@ import {
   Separator,
   Stack,
   Dialog,
-  DialogOpenChangeDetails,
+  type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
 
 import VerseContainer from "@/components/Custom/VerseContainer";

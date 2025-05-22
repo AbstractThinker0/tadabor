@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 import { useAppSelector } from "@/store";
 
-import { Textarea, TextareaProps } from "@chakra-ui/react";
+import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import { useAutosizeTextarea } from "@/hooks/useAutosizeTextarea";
 
 const TextareaAutosize = (props: TextareaProps) => {

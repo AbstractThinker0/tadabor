@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { rootProps } from "quran-tools";
+import type { rootProps } from "quran-tools";
 
 import { useAppDispatch } from "@/store";
 import { rbPageActions } from "@/store/slices/pages/rootsBrowser";

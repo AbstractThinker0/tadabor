@@ -16,7 +16,7 @@ export const InputString = React.forwardRef<HTMLDivElement, InputGroupProps>(
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     const onClearDefault = () => {
-      onClear && onClear();
+      if (onClear) onClear();
       inputRef.current?.focus();
     };
 

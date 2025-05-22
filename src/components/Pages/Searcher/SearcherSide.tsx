@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { searcherPageActions } from "@/store/slices/pages/searcher";
 
 import useQuran from "@/context/useQuran";
-import { rootProps } from "quran-tools";
+import type { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Box, Flex } from "@chakra-ui/react";

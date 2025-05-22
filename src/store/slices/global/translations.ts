@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { translationsProps } from "@/types";
+import type { translationsProps } from "@/types";
 import { fetchTranslations } from "@/util/fetchData";
 
 interface TranslationsStateProps {

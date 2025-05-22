@@ -1,11 +1,11 @@
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 
 import { Button } from "@chakra-ui/react";
 
-import { colorProps } from "@/components/Pages/Coloring/consts";
+import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";

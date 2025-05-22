@@ -1,6 +1,6 @@
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 import { Box, Flex, NativeSelect } from "@chakra-ui/react";
 
 interface MenuProps {

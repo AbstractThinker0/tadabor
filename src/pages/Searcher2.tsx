@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
-import { verseMatchResult } from "quran-tools";
+import type { verseMatchResult } from "quran-tools";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 

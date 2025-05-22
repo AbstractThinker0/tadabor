@@ -10,7 +10,7 @@ import { onlySpaces } from "@/util/util";
 
 import {
   Dialog,
-  DialogOpenChangeDetails,
+  type DialogOpenChangeDetails,
   Button,
   ButtonGroup,
   Input,

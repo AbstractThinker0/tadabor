@@ -3,7 +3,7 @@ import { coloringPageActions } from "@/store/slices/pages/coloring";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { colorProps } from "@/components/Pages/Coloring/consts";
+import type { colorProps } from "@/components/Pages/Coloring/consts";
 
 import { Box, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 

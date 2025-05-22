@@ -1,7 +1,7 @@
 import { useEffect, useTransition, useState, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 import { useAppSelector } from "@/store";
 

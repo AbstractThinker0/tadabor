@@ -3,12 +3,15 @@ import { memo, useEffect, useRef, useState, useTransition } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import type {
+  tagsProps,
+  versesTagsProps,
+} from "@/components/Pages/Tags/consts";
 import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
 import { ListTitle } from "@/components/Pages/Tags/ListTitle";
 import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";

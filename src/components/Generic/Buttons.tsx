@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { Button, ButtonProps, IconButton } from "@chakra-ui/react";
+import { Button, type ButtonProps, IconButton } from "@chakra-ui/react";
 
 import { TbSelect } from "react-icons/tb";
 import { MdOutlineMenuOpen } from "react-icons/md";

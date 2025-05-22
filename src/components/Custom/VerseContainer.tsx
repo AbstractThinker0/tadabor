@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 import { useAppSelector } from "@/store";
 
 const VerseContainer = (props: BoxProps) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 
-import { verseMatchResult } from "quran-tools";
+import type { verseMatchResult } from "quran-tools";
 
 import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";

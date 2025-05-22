@@ -1,5 +1,9 @@
 import { configureStore, createSelector } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import {
+  type TypedUseSelectorHook,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 
 import translationsReducer from "@/store/slices/global/translations";
 

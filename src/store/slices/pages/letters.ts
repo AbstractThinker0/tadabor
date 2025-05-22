@@ -1,12 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+
+import type {
   LettersDefinitionType,
   LettersDataByVerseType,
   LettersPresetsType,
 } from "@/types";
-import { dbFuncs, ILetterData } from "@/util/db";
-import { LetterRole } from "@/util/consts";
+import { dbFuncs, type ILetterData } from "@/util/db";
+import { type LetterRoleType } from "@/util/consts";
 
 interface LettersPageState {
   currentChapter: string;
@@ -166,7 +170,7 @@ const lettersPageSlice = createSlice({
       state,
       action: PayloadAction<{
         letter: string;
-        role: LetterRole;
+        role: LetterRoleType;
         def_id: string;
       }>
     ) => {

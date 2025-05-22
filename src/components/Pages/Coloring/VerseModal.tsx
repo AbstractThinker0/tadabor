@@ -7,7 +7,7 @@ import { dbFuncs } from "@/util/db";
 
 import useQuran from "@/context/useQuran";
 
-import { colorProps } from "@/components/Pages/Coloring/consts";
+import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
@@ -16,7 +16,7 @@ import {
   Box,
   Flex,
   ButtonGroup,
-  DialogOpenChangeDetails,
+  type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";

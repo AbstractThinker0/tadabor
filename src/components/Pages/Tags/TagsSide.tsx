@@ -3,13 +3,13 @@ import { useAppDispatch, useAppSelector } from "@/store";
 
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { tagProps } from "@/components/Pages/Tags/consts";
+import type { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
 import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
 
 import { Box, Flex, Button, Text, useDisclosure } from "@chakra-ui/react";
 import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 function TagsSide() {
   const dispatch = useAppDispatch();

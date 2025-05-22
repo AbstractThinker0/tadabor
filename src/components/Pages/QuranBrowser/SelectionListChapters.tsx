@@ -6,7 +6,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 import { Flex, Box, Button } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";

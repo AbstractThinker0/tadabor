@@ -1,23 +1,18 @@
 import js from "@eslint/js";
 import globals from "globals";
-import ts from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
 import reactHooks from "eslint-plugin-react-hooks";
 import importPlugin from "eslint-plugin-import";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 
-export default [
-  js.configs.recommended,
+export default tseslint.config(
+  { ignores: ["dist"] },
   {
-    linterOptions: {
-      noInlineConfig: false,
-      reportUnusedDisableDirectives: true,
-    },
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 2020,
       globals: {
         ...globals.browser,
         React: "readonly",
@@ -27,37 +22,20 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": ts,
       "react-hooks": reactHooks,
       import: importPlugin,
       "react-refresh": reactRefresh,
       react,
     },
     rules: {
-      // Disable error for unused parameters
-      // ✅ Disable built-in ESLint rule
-      "no-unused-vars": "off",
-
-      // ✅ Use TypeScript's version instead
-      "@typescript-eslint/no-unused-vars": [
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": [
         "warn",
-        {
-          vars: "all",
-          args: "none",
-          caughtErrors: "none",
-          ignoreRestSiblings: false,
-        },
+        { allowConstantExport: true },
       ],
-      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
       "react-hooks/react-compiler": "error",
-      //"react-hooks/exhaustive-deps": "warn",
-      "react-refresh/only-export-components": "warn",
-      "import/no-unresolved": [
-        "error",
-        {
-          ignore: ["^/"],
-        },
-      ],
     },
     settings: {
       "import/resolver": {
@@ -76,5 +54,5 @@ export default [
         version: "detect", // Auto-detect React version
       },
     },
-  },
-];
+  }
+);

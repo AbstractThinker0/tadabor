@@ -5,7 +5,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 import { Box } from "@chakra-ui/react";
 

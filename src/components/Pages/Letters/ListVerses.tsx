@@ -9,13 +9,13 @@ import {
   lettersPageActions,
 } from "@/store/slices/pages/letters";
 
-import { LetterDataType } from "@/types";
-import { LetterRole } from "@/util/consts";
+import type { LetterDataType } from "@/types";
+import { LetterRole, type LetterRoleType } from "@/util/consts";
 import {
   removeDiacritics,
   splitArabicLetters,
   normalizeAlif,
-  verseProps,
+  type verseProps,
 } from "quran-tools";
 
 import { dbFuncs } from "@/util/db";
@@ -256,7 +256,7 @@ const InfoBox = ({
     (state) => state.lettersPage.letterPresets
   );
 
-  const [letterRole, setLetterRole] = useState<LetterRole>(
+  const [letterRole, setLetterRole] = useState<LetterRoleType>(
     verseLetterData.letter_role
   );
 

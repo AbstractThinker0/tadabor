@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import { verseMatchResult } from "quran-tools";
+import type { verseMatchResult } from "quran-tools";
 
 interface VerseHighlightMatchesProps {
   verse: verseMatchResult;

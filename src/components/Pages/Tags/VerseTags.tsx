@@ -1,5 +1,5 @@
 import { Flex, Span } from "@chakra-ui/react";
-import { tagsProps } from "@/components/Pages/Tags/consts";
+import type { tagsProps } from "@/components/Pages/Tags/consts";
 
 interface VerseTagsProps {
   versesTags: string[];

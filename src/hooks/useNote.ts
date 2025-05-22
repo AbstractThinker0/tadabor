@@ -20,8 +20,8 @@ import {
 } from "@/store/slices/global/cloudNotes";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
-import { createNewNote, NoteUploadPayload } from "@/util/notes";
-import { CloudNoteProps } from "@/types";
+import { createNewNote, type NoteUploadPayload } from "@/util/notes";
+import type { CloudNoteProps } from "@/types";
 import { useEffect } from "react";
 
 interface useNoteParams {

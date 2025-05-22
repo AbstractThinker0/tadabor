@@ -1,7 +1,7 @@
-import { LetterRole } from "@/util/consts";
-import { ICloudNote, ILocalNote } from "@/util/db";
+import { type LetterRoleType } from "@/util/consts";
+import type { ICloudNote, ILocalNote } from "@/util/db";
 
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 export interface translationsProps {
   [key: string]: verseProps[];
@@ -50,7 +50,7 @@ export interface LettersDefinitionType {
 
 export interface LetterDataType {
   letter_key: string;
-  letter_role: LetterRole;
+  letter_role: LetterRoleType;
   def_id: string;
 }
 

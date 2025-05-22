@@ -9,7 +9,7 @@ import ColorsList from "@/components/Pages/Coloring/ColorsList";
 import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 const ChaptersSide = () => {
   const dispatch = useAppDispatch();

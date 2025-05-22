@@ -1,7 +1,7 @@
-import { CloudNoteProps } from "@/types";
+import type { CloudNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
-import { ICloudNote } from "@/util/db";
-import { BackendNote } from "@/util/AppRouter";
+import type { ICloudNote } from "@/util/db";
+import type { BackendNote } from "@/util/AppRouter";
 
 interface CreateNewNoteParams {
   id: string;

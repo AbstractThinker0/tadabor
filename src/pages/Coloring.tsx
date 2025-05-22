@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { IColor, IVerseColor, dbFuncs } from "@/util/db";
+import { type IColor, type IVerseColor, dbFuncs } from "@/util/db";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 
@@ -10,7 +10,7 @@ import { Sidebar } from "@/components/Generic/Sidebar";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { coloredProps } from "@/components/Pages/Coloring/consts";
+import type { coloredProps } from "@/components/Pages/Coloring/consts";
 import VersesSide from "@/components/Pages/Coloring/VersesSide";
 import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
 import { Flex } from "@chakra-ui/react";

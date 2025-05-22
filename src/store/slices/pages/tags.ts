@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { selectedChaptersType } from "@/types";
-import { verseProps } from "quran-tools";
-import {
+import type { selectedChaptersType } from "@/types";
+import type { verseProps } from "quran-tools";
+import type {
   tagProps,
   tagsProps,
   versesTagsProps,

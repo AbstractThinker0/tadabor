@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { type PropsWithChildren, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 

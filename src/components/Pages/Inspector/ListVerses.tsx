@@ -4,7 +4,7 @@ import useQuran from "@/context/useQuran";
 
 import { useAppSelector } from "@/store";
 
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 import { VerseItem } from "@/components/Pages/Inspector/VerseItem";
 

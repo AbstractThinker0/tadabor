@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from "dexie";
-import { LetterRole } from "@/util/consts";
+import { LetterRole, type LetterRoleType } from "@/util/consts";
 import { v4 as uuidv4 } from "uuid";
 
 export interface ICloudNote {
@@ -72,7 +72,7 @@ export interface ILettersPreset extends ISyncable {
 
 export interface ILetterData extends ISyncable {
   letter_key: string;
-  letter_role: LetterRole;
+  letter_role: LetterRoleType;
   def_id: string;
 }
 
@@ -238,7 +238,7 @@ export const dbFuncs = {
     def_id = "",
   }: {
     letter_key: string;
-    letter_role: LetterRole;
+    letter_role: LetterRoleType;
     def_id: string;
   }) => {
     const updated = await db.letters_data.update(letter_key, {

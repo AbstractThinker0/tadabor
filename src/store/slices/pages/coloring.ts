@@ -1,8 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { selectedChaptersType } from "@/types";
-import { verseProps } from "quran-tools";
-import { coloredProps, colorProps } from "@/components/Pages/Coloring/consts";
+import type { selectedChaptersType } from "@/types";
+import type { verseProps } from "quran-tools";
+import type {
+  coloredProps,
+  colorProps,
+} from "@/components/Pages/Coloring/consts";
 import { initialSelectedChapters } from "@/util/consts";
 
 export interface stateProps {

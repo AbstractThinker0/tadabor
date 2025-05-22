@@ -13,7 +13,7 @@ import {
   Dialog,
   Button,
   ButtonGroup,
-  DialogOpenChangeDetails,
+  type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";

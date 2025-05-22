@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
-import { translationsProps } from "@/types";
-import { verseProps } from "quran-tools";
+import type { translationsProps } from "@/types";
+import type { verseProps } from "quran-tools";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 

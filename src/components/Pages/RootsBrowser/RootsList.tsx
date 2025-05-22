@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { rootProps, verseMatchResult, searchIndexProps } from "quran-tools";
+import type {
+  rootProps,
+  verseMatchResult,
+  searchIndexProps,
+} from "quran-tools";
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 

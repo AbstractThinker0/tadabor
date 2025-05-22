@@ -5,7 +5,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch } from "@/store";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
-import {
+import type {
   verseProps,
   rootProps,
   verseMatchResult,

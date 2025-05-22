@@ -1,4 +1,4 @@
-import { translationsProps } from "@/types";
+import type { translationsProps } from "@/types";
 
 // fetches data and cache it for long duration
 async function fetchJsonPerm(url: string) {

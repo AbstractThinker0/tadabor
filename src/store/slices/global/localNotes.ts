@@ -1,7 +1,11 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 
 import { dbFuncs } from "@/util/db";
-import {
+import type {
   ChangeNoteDirPayload,
   ChangeNotePayload,
   LocalNoteProps,

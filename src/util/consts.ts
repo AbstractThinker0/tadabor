@@ -1,4 +1,4 @@
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 /*
     qfs = Quran Font Size
@@ -21,11 +21,13 @@ const initialSelectedChapters = (() => {
   return obj;
 })();
 
-enum LetterRole {
-  Unit,
-  Suffix,
-  Ignored,
-}
+const LetterRole = {
+  Unit: 0,
+  Suffix: 1,
+  Ignored: 2,
+};
+
+export type LetterRoleType = (typeof LetterRole)[keyof typeof LetterRole];
 
 // 28 Letters
 const arabicAlphabetDefault = [

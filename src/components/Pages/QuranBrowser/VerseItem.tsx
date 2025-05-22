@@ -1,4 +1,4 @@
-import { verseMatchResult, verseProps } from "quran-tools";
+import type { verseMatchResult, verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
 import { useAppDispatch } from "@/store";

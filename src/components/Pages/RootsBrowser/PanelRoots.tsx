@@ -7,7 +7,7 @@ import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
 import RootsList from "@/components/Pages/RootsBrowser/RootsList";
 
-import { rootProps } from "quran-tools";
+import type { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Flex } from "@chakra-ui/react";

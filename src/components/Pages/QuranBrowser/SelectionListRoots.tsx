@@ -4,7 +4,7 @@ import useQuran from "@/context/useQuran";
 import { useAppDispatch } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
-import { rootProps } from "quran-tools";
+import type { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

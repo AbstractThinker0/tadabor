@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CloudNoteProps } from "@/types";
+import type { CloudNoteProps } from "@/types";
 import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
-import { dbFuncs, ICloudNote } from "@/util/db";
+import { dbFuncs, type ICloudNote } from "@/util/db";
 import {
   fromBackendToDexie,
   fromDexieToBackend,

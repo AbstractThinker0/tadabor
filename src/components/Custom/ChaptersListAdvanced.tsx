@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 import { Box, Button, Flex } from "@chakra-ui/react";
 

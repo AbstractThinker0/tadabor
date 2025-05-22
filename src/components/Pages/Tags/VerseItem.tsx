@@ -1,12 +1,15 @@
 import { useAppDispatch } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { verseProps } from "quran-tools";
+import type { verseProps } from "quran-tools";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
 import { VerseTags } from "@/components/Pages/Tags/VerseTags";
-import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import type {
+  tagsProps,
+  versesTagsProps,
+} from "@/components/Pages/Tags/consts";
 
 import { Button } from "@chakra-ui/react";
 

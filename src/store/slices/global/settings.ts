@@ -1,5 +1,5 @@
 import { nfsDefault, nfsStored, qfsDefault, qfsStored } from "@/util/consts";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface SettingsState {
   quranFontSize: number;

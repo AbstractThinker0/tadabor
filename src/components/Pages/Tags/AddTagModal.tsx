@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dbFuncs } from "@/util/db";
-import { tagProps } from "@/components/Pages/Tags/consts";
+import type { tagProps } from "@/components/Pages/Tags/consts";
 
 import { useAppDispatch } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";

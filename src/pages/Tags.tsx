@@ -9,7 +9,10 @@ import { dbFuncs } from "@/util/db";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Sidebar } from "@/components/Generic/Sidebar";
 
-import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import type {
+  tagsProps,
+  versesTagsProps,
+} from "@/components/Pages/Tags/consts";
 import TagsSide from "@/components/Pages/Tags/TagsSide";
 import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 

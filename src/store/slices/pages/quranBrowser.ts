@@ -1,8 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { quranClass, verseMatchResult, searchIndexProps } from "quran-tools";
+import type {
+  quranClass,
+  verseMatchResult,
+  searchIndexProps,
+} from "quran-tools";
 
-import { selectedChaptersType } from "@/types";
+import type { selectedChaptersType } from "@/types";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 import { initialSelectedChapters } from "@/util/consts";
