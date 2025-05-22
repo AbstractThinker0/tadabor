@@ -52,6 +52,8 @@ export const useAuth = () => {
         username: result.user.username,
       });
 
+      dispatch(fetchCloudNotes());
+
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -76,8 +78,6 @@ export const useAuth = () => {
         username,
       })
     );
-
-    dispatch(fetchCloudNotes());
 
     queueMicrotask(() =>
       toasterBottomCenter.create({
@@ -136,6 +136,8 @@ export const useAuth = () => {
         username,
       });
 
+      dispatch(fetchCloudNotes());
+
       navigate("/");
     } catch (error) {
       console.error("Sign Up failed:", error);
@@ -178,6 +180,8 @@ export const useAuth = () => {
           username: result.user.username,
           message: "auth.passwordUpdated",
         });
+
+        dispatch(fetchCloudNotes());
 
         navigate("/");
 
