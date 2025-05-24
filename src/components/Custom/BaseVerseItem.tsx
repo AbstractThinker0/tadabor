@@ -12,6 +12,9 @@ import { useBoolean } from "usehooks-ts";
 import { useState } from "react";
 
 interface BaseVerseItemProps {
+  noteType?: "verse" | "translation";
+  defaultOpen?: boolean;
+  dataKey?: string;
   verseKey: string;
   isSelected?: boolean;
   rootProps?: BoxProps;
@@ -22,6 +25,9 @@ interface BaseVerseItemProps {
 }
 
 const BaseVerseItem = ({
+  noteType = "verse",
+  defaultOpen,
+  dataKey,
   verseKey,
   isSelected,
   children,
@@ -30,7 +36,7 @@ const BaseVerseItem = ({
   outerStartElement,
   outerEndElement,
 }: BaseVerseItemProps) => {
-  const { value: isOpen, toggle } = useBoolean();
+  const { value: isOpen, toggle } = useBoolean(defaultOpen);
   const [isHovered, setIsHovered] = useState(false);
 
   const compactVerses = useAppSelector(
@@ -49,7 +55,7 @@ const BaseVerseItem = ({
 
   return (
     <Box
-      data-id={verseKey}
+      data-id={dataKey ? dataKey : verseKey}
       py={"0.5rem"}
       px={"1rem"}
       smDown={{ px: "0.2rem" }}
@@ -72,7 +78,7 @@ const BaseVerseItem = ({
           </>
         )}
       </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verseKey} />
+      <CollapsibleNote isOpen={isOpen} noteType={noteType} noteKey={verseKey} />
       {outerEndElement}
     </Box>
   );

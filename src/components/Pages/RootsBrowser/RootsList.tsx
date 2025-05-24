@@ -11,7 +11,6 @@ import type {
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import {
@@ -29,9 +28,9 @@ import { Tooltip } from "@/components/ui/tooltip";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-import { ButtonCopyVerse } from "@/components/Custom/ButtonCopyVerse";
 
 import { useBoolean } from "usehooks-ts";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -178,7 +177,7 @@ const RootOccurences = ({
 
     setDerivations(occurencesData.rootDerivations);
     setRootVerses(occurencesData.rootVerses);
-  }, [isOccurencesOpen, root_occurences]);
+  }, [isOccurencesOpen, root_occurences, quranService]);
 
   const handleDerivationClick = (verseKey: string, verseIndex: number) => {
     if (itemsCount < verseIndex + 20) {
@@ -192,7 +191,7 @@ const RootOccurences = ({
     (node: HTMLDivElement | null) => {
       if (node && scrollKey) {
         const verseToHighlight = node.querySelector(
-          `[data-child-id="${scrollKey}"]`
+          `[data-id="sub-${scrollKey}"]`
         ) as HTMLDivElement;
 
         if (verseToHighlight) {
@@ -223,17 +222,12 @@ const RootOccurences = ({
             handleDerivationClick={handleDerivationClick}
           />
           {rootVerses.slice(0, itemsCount).map((verse) => (
-            <Box
+            <RootVerse
               key={verse.key}
-              padding={1}
-              borderBottom={"1.5px solid"}
-              borderColor={"border.emphasized"}
-              aria-selected={scrollKey === verse.key}
-              _selected={{ bgColor: "orange.emphasized" }}
-              data-child-id={verse.key}
-            >
-              <RootVerse rootVerse={verse} handleVerseTab={handleVerseTab} />
-            </Box>
+              isSelected={scrollKey === verse.key}
+              rootVerse={verse}
+              handleVerseTab={handleVerseTab}
+            />
           ))}
         </Box>
       </Collapsible.Content>
@@ -275,14 +269,17 @@ const DerivationsComponent = memo(
 DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
+  isSelected: boolean;
   rootVerse: verseMatchResult;
   handleVerseTab: (verseKey: string) => void;
 }
 
-const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
+const RootVerse = ({
+  isSelected,
+  rootVerse,
+  handleVerseTab,
+}: RootVerseProps) => {
   const quranService = useQuran();
-
-  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
@@ -291,23 +288,18 @@ const RootVerse = ({ rootVerse, handleVerseTab }: RootVerseProps) => {
   };
 
   return (
-    <>
-      <VerseContainer>
-        <VerseHighlightMatches verse={rootVerse} /> (
-        <ButtonVerse
-          onClick={onClickChapter}
-        >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
-        )
-        <ButtonExpand onClick={setOpen} />
-        <ButtonCopyVerse verseKey={rootVerse.key} />
-      </VerseContainer>
-
-      <CollapsibleNote
-        isOpen={isOpen}
-        noteType="verse"
-        noteKey={rootVerse.key}
-      />
-    </>
+    <BaseVerseItem
+      dataKey={`sub-${rootVerse.key}`}
+      verseKey={rootVerse.key}
+      isSelected={isSelected}
+      rootProps={{ px: "0.25rem" }}
+    >
+      <VerseHighlightMatches verse={rootVerse} /> (
+      <ButtonVerse
+        onClick={onClickChapter}
+      >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
+      )
+    </BaseVerseItem>
   );
 };
 
