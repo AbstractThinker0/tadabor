@@ -8,6 +8,7 @@ import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonSave } from "@/components/Generic/Buttons";
 
 interface NoteFormProps {
+  preSaveText?: string;
   inputValue: string;
   inputDirection: string;
   inputSaved?: boolean;
@@ -82,7 +83,7 @@ const NoteFormEditor = ({
       value={inputValue}
       dir={inputDirection}
       onChange={onChangeTextarea}
-      lineHeight={"normal"}
+      lineHeight={"tall"}
       placeholder={t("text_form")}
       required
       borderRadius={"2xl"}

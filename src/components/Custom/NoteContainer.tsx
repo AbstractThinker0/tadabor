@@ -156,6 +156,7 @@ const NoteContainerBody = ({
         fontSize={`${notesFS}rem`}
         dir={inputDirection}
         mb={"5.5rem"}
+        lineHeight={"tall"}
       >
         {inputValue}
       </Text>
