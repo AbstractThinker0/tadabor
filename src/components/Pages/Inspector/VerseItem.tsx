@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -16,21 +16,13 @@ import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
+import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
+
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 import VerseContainer from "@/components/Custom/VerseContainer";
-import {
-  Box,
-  Collapsible,
-  Accordion,
-  HStack,
-  Button,
-  Separator,
-  Span,
-  StackSeparator,
-} from "@chakra-ui/react";
+import { Box, Collapsible, Accordion, Span, Separator } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
-import { Tooltip } from "@/components/ui/tooltip";
 
 import { useBoolean } from "usehooks-ts";
 
@@ -164,7 +156,7 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
 
     setDerivations(occurencesData.rootDerivations);
     setRootVerses(occurencesData.rootVerses);
-  }, [rootOccs]);
+  }, [rootOccs, quranService]);
 
   useEffect(() => {
     if (refVerses.current && scrollKey) {
@@ -181,11 +173,14 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
     }
   }, [scrollKey, isPending]);
 
-  const handleDerivationClick = (verseKey: string, verseIndex: number) => {
+  const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
     startTransition(() => {
-      if (itemsCount < verseIndex + 20) {
-        setItemsCount(verseIndex + 20);
+      if (verseIndex) {
+        if (itemsCount < verseIndex + 20) {
+          setItemsCount(verseIndex + 20);
+        }
       }
+
       setScrollKey(verseKey);
     });
   };
@@ -196,6 +191,7 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
         searchIndexes={derivations}
         handleDerivationClick={handleDerivationClick}
       />
+      <Separator />
       <Box padding={3} ref={refVerses}>
         {rootVerses.slice(0, itemsCount).map((rootVerse) => (
           <Box
@@ -215,39 +211,6 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
     </Box>
   );
 };
-
-interface DerivationsComponentProps {
-  handleDerivationClick: (verseKey: string, verseIndex: number) => void;
-  searchIndexes: searchIndexProps[];
-}
-
-const DerivationsComponent = memo(
-  ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
-    return (
-      <>
-        <HStack
-          wrap="wrap"
-          p={1}
-          separator={<StackSeparator border={"none"}>-</StackSeparator>}
-        >
-          {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <Tooltip showArrow key={index} content={root.text}>
-              <Button
-                px={2}
-                fontSize="xl"
-                variant="ghost"
-                onClick={() => handleDerivationClick(root.key, index)}
-              >{`${root.name}`}</Button>
-            </Tooltip>
-          ))}
-        </HStack>
-        <Separator />
-      </>
-    );
-  }
-);
-
-DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
   rootVerse: verseMatchResult;

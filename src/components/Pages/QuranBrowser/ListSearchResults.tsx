@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +7,7 @@ import { qbPageActions } from "@/store/slices/pages/quranBrowser";
 
 import useQuran from "@/context/useQuran";
 
-import type { searchIndexProps, verseMatchResult } from "quran-tools";
+import type { verseMatchResult } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -15,20 +15,19 @@ import { SearchVerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
+import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
+
 import {
   Box,
-  Button,
-  Separator,
   HStack,
   Heading,
   Text,
-  StackSeparator,
   Span,
   Flex,
+  Separator,
 } from "@chakra-ui/react";
 
 import { Tag } from "@/components/ui/tag";
-import { Tooltip } from "@/components/ui/tooltip";
 
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
@@ -68,7 +67,7 @@ const ListSearchResults = ({
     setSelectedVerse("");
   }, [searchIndexes]);
 
-  const memoHandleRootClick = useCallback((verse_key: string) => {
+  const handleDerivationClick = (verse_key: string) => {
     const verseToHighlight = refListVerses.current?.querySelector(
       `[data-id="${verse_key}"]`
     );
@@ -81,7 +80,7 @@ const ListSearchResults = ({
     });
 
     setSelectedVerse(verse_key);
-  }, []);
+  };
 
   const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 
@@ -100,10 +99,14 @@ const ListSearchResults = ({
         searchChapters={searchingChapters}
       />
       {isRootSearch && (
-        <DerivationsComponent
-          handleRootClick={memoHandleRootClick}
-          searchIndexes={searchIndexes}
-        />
+        <>
+          <Separator pb={1} borderColor={"border.emphasized"} />
+          <DerivationsComponent
+            handleDerivationClick={handleDerivationClick}
+            searchIndexes={searchIndexes}
+          />
+          <Separator mb={2} borderColor={"border.emphasized"} />
+        </>
       )}
       {isPending ? (
         <LoadingSpinner text="Loading verses..." />
@@ -202,43 +205,6 @@ const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
 };
 
 SearchTitle.displayName = "SearchTitle";
-
-interface DerivationsComponentProps {
-  handleRootClick: (verse_key: string) => void;
-  searchIndexes: searchIndexProps[];
-}
-
-const DerivationsComponent = ({
-  searchIndexes,
-  handleRootClick,
-}: DerivationsComponentProps) => {
-  return (
-    <>
-      <Separator pb={1} borderColor={"border.emphasized"} />
-      <HStack
-        dir="rtl"
-        wrap="wrap"
-        p={2}
-        separator={<StackSeparator border={"none"}>-</StackSeparator>}
-      >
-        {searchIndexes.map((root: searchIndexProps, index: number) => (
-          <Tooltip showArrow key={index} content={root.text}>
-            <Button
-              px={1}
-              fontSize="2xl"
-              fontWeight={"bold"}
-              variant="ghost"
-              onClick={() => handleRootClick(root.key)}
-            >{`${root.name}`}</Button>
-          </Tooltip>
-        ))}
-      </HStack>
-      <Separator mb={2} borderColor={"border.emphasized"} />
-    </>
-  );
-};
-
-DerivationsComponent.displayName = "DerivationsComponent";
 
 interface SearchErrorsComponentProps {
   searchMethod: string;

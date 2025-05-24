@@ -9,6 +9,8 @@ import type {
   searchIndexProps,
 } from "quran-tools";
 
+import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
+
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -17,14 +19,10 @@ import {
   Box,
   Button,
   Collapsible,
-  Separator,
   Flex,
-  HStack,
+  Separator,
   Spacer,
-  StackSeparator,
 } from "@chakra-ui/react";
-
-import { Tooltip } from "@/components/ui/tooltip";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
@@ -64,7 +62,7 @@ const RootsList = memo(
           })
         );
       });
-    }, [searchString, searchInclusive]);
+    }, [searchString, searchInclusive, quranService]);
 
     return (
       <Flex flex={1} flexDirection={"column"}>
@@ -179,10 +177,13 @@ const RootOccurences = ({
     setRootVerses(occurencesData.rootVerses);
   }, [isOccurencesOpen, root_occurences, quranService]);
 
-  const handleDerivationClick = (verseKey: string, verseIndex: number) => {
-    if (itemsCount < verseIndex + 20) {
-      setItemsCount(verseIndex + 20);
+  const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
+    if (verseIndex) {
+      if (itemsCount < verseIndex + 20) {
+        setItemsCount(verseIndex + 20);
+      }
     }
+
     setScrollKey(verseKey);
   };
 
@@ -221,6 +222,7 @@ const RootOccurences = ({
             searchIndexes={derivations}
             handleDerivationClick={handleDerivationClick}
           />
+          <Separator />
           {rootVerses.slice(0, itemsCount).map((verse) => (
             <RootVerse
               key={verse.key}
@@ -234,39 +236,6 @@ const RootOccurences = ({
     </Collapsible.Root>
   );
 };
-
-interface DerivationsComponentProps {
-  handleDerivationClick: (verseKey: string, verseIndex: number) => void;
-  searchIndexes: searchIndexProps[];
-}
-
-const DerivationsComponent = memo(
-  ({ searchIndexes, handleDerivationClick }: DerivationsComponentProps) => {
-    return (
-      <>
-        <HStack
-          wrap="wrap"
-          p={1}
-          separator={<StackSeparator border={"none"}>-</StackSeparator>}
-        >
-          {searchIndexes.map((root: searchIndexProps, index: number) => (
-            <Tooltip showArrow key={index} content={root.text}>
-              <Button
-                px={2}
-                fontSize="xl"
-                variant="ghost"
-                onClick={() => handleDerivationClick(root.key, index)}
-              >{`${root.name}`}</Button>
-            </Tooltip>
-          ))}
-        </HStack>
-        <Separator />
-      </>
-    );
-  }
-);
-
-DerivationsComponent.displayName = "DerivationsComponent";
 
 interface RootVerseProps {
   isSelected: boolean;
