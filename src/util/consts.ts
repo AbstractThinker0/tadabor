@@ -6,10 +6,10 @@ import type { selectedChaptersType } from "@/types";
 */
 
 const qfsStored = "qfsStored";
-const qfsDefault = 1.5;
+const qfsDefault = 1.4;
 
 const nfsStored = "nfsStored";
-const nfsDefault = 1.25;
+const nfsDefault = 1.2;
 
 const initialSelectedChapters = (() => {
   const obj: selectedChaptersType = {};
