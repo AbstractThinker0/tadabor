@@ -6,13 +6,11 @@ import type { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { Flex, Heading } from "@chakra-ui/react";
 
-import { Box, Flex, Heading } from "@chakra-ui/react";
-import { useBoolean } from "usehooks-ts";
+import { BaseVerseItem } from "./BaseVerseItem";
 
 interface PanelQuranProps {
   verseKey: string;
@@ -30,12 +28,12 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
   const refVerses = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!verseKey) return;
+    if (!suraID) return;
 
     startTransition(() => {
       setStateVerses(quranService.getVerses(suraID));
     });
-  }, [verseKey]);
+  }, [suraID, quranService]);
 
   // Handling scroll
   useEffect(() => {
@@ -106,26 +104,13 @@ const VerseItem = ({
   isSelected,
   onClickVerseSuffix,
 }: VerseItemProps) => {
-  const { value: isOpen, toggle: setOpen } = useBoolean();
-
   return (
-    <Box
-      py={1}
-      borderBottom={"1px solid"}
-      borderColor={"border.emphasized"}
-      aria-selected={isSelected}
-      _selected={{ bgColor: "orange.muted" }}
-      data-id={verse.key}
-    >
-      <VerseContainer>
-        {verse.versetext}{" "}
-        <ButtonVerse onClick={() => onClickVerseSuffix(verse.key)}>
-          ({verse.verseid})
-        </ButtonVerse>
-        <ButtonExpand onClick={setOpen} />
-      </VerseContainer>
-      <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verse.key} />
-    </Box>
+    <BaseVerseItem verseKey={verse.key} isSelected={isSelected}>
+      {verse.versetext}{" "}
+      <ButtonVerse onClick={() => onClickVerseSuffix(verse.key)}>
+        ({verse.verseid})
+      </ButtonVerse>
+    </BaseVerseItem>
   );
 };
 
