@@ -9,12 +9,17 @@ import type { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
-
 import TransComponent from "@/components/Pages/Translation/TransComponent";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, IconButton } from "@chakra-ui/react";
+
 import { ButtonVerse } from "@/components/Generic/Buttons";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
+
+import { useBoolean } from "usehooks-ts";
+
+import { AiOutlineTranslation } from "react-icons/ai";
 
 const DisplayPanel = () => {
   const quranService = useQuran();
@@ -38,7 +43,7 @@ const DisplayPanel = () => {
     });
 
     refDisplay.current.scrollTop = 0;
-  }, [currentChapter]);
+  }, [currentChapter, quranService]);
 
   // Handling scroll by using a callback ref with MutationObserver
   const handleVerseListRef = useCallback(
@@ -132,6 +137,7 @@ const ListTitle = () => {
       isOpenMobile={showSearchPanelMobile}
       isOpenDesktop={showSearchPanel}
       onTogglePanel={onTogglePanel}
+      versesOptions={true}
     />
   );
 };
@@ -142,6 +148,8 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
+  const { value: isOpen, toggle } = useBoolean(true);
+
   const dispatch = useAppDispatch();
 
   const onClickVerse = () => {
@@ -149,17 +157,18 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
   };
 
   return (
-    <Box
-      aria-selected={isSelected}
-      _selected={{ bgColor: "yellow.subtle" }}
-      data-id={verse.key}
+    <BaseVerseItem
+      verseKey={verse.key}
+      isSelected={isSelected}
+      rootProps={{ _selected: { bgColor: "yellow.subtle" } }}
+      outerEndElement={<TransComponent isOpen={isOpen} verseKey={verse.key} />}
     >
-      <VerseContainer dir="rtl">
-        {verse.versetext}{" "}
-        <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
-      </VerseContainer>
-      <TransComponent verseKey={verse.key} />
-    </Box>
+      {verse.versetext}{" "}
+      <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
+      <IconButton variant="ghost" aria-label="Expand" onClick={toggle}>
+        <AiOutlineTranslation />
+      </IconButton>
+    </BaseVerseItem>
   );
 };
 

@@ -14,9 +14,10 @@ import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 interface TransComponentProps {
   verseKey: string;
+  isOpen: boolean;
 }
 
-const TransComponent = memo(({ verseKey }: TransComponentProps) => {
+const TransComponent = memo(({ verseKey, isOpen }: TransComponentProps) => {
   const note = useNote({
     noteType: "translation",
     noteKey: verseKey,
@@ -39,7 +40,7 @@ const TransComponent = memo(({ verseKey }: TransComponentProps) => {
   };
 
   return (
-    <CollapsibleGeneric isOpen>
+    <CollapsibleGeneric isOpen={isOpen}>
       {isEditable === false ? (
         <NoteContainer
           isSynced={note.isSynced}
