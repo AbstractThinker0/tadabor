@@ -1,7 +1,19 @@
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from "@chakra-ui/react";
 
 export const dialogSlotRecipe = defineSlotRecipe({
-  slots: ["trigger", "backdrop", "positioner", "content", "title", "description", "closeTrigger", "header", "body", "footer", "backdrop"],
+  slots: [
+    "trigger",
+    "backdrop",
+    "positioner",
+    "content",
+    "title",
+    "description",
+    "closeTrigger",
+    "header",
+    "body",
+    "footer",
+    "backdrop",
+  ],
   className: "chakra-dialog",
   base: {
     backdrop: {
@@ -56,7 +68,7 @@ export const dialogSlotRecipe = defineSlotRecipe({
     header: {
       flex: 0,
       px: "6",
-      pt: "6",
+      pt: "4",
       pb: "4",
     },
     body: {
@@ -236,4 +248,4 @@ export const dialogSlotRecipe = defineSlotRecipe({
     placement: "top",
     motionPreset: "scale",
   },
-})
+});

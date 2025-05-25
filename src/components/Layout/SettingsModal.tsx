@@ -135,8 +135,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         </Dialog.Header>
 
         <Dialog.Body>
-          <Stack gap={"1rem"} separator={<Separator />}>
-            <Box colorPalette="blue" pt={2}>
+          <Stack gap={"0.8rem"} separator={<Separator />}>
+            <Box colorPalette="blue" pt={1}>
               <Heading as="span" size="md">
                 Language:{" "}
               </Heading>
@@ -155,7 +155,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 </Button>
               </ButtonGroup>
             </Box>
-            <Box colorPalette="blue" pt={2}>
+            <Box colorPalette="blue" pt={1}>
               <Heading as="span" size="md">
                 Theme:{" "}
               </Heading>
@@ -249,7 +249,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
           </Stack>
         </Dialog.Body>
         <Dialog.Footer
-          mt={5}
+          mt={3}
           justifyContent="center"
           borderTop="1px solid"
           borderColor={"border.emphasized"}
