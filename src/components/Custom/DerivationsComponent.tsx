@@ -27,6 +27,7 @@ const DerivationsComponent = ({
             fontSize="xl"
             fontWeight={"600"}
             variant="ghost"
+            userSelect={"text"}
             onClick={() => handleDerivationClick(root.key, index)}
           >{`${root.name}`}</Button>
         </Tooltip>
