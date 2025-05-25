@@ -56,6 +56,7 @@ const CollapsibleNote = ({
         <LoadingSpinner text="Fetching note.." />
       ) : (
         <FormText
+          preSaveText={note.preSaveText}
           inputValue={note.text}
           inputDirection={note.direction}
           inputSaved={note.isSaved}
@@ -77,6 +78,7 @@ const CollapsibleNote = ({
 };
 
 interface FormTextProps {
+  preSaveText?: string;
   isEditable: boolean;
   isSynced: boolean;
   isSyncing: boolean;
@@ -94,6 +96,7 @@ interface FormTextProps {
 }
 
 const FormText = ({
+  preSaveText,
   isEditable,
   isSynced,
   isSyncing,
@@ -135,6 +138,7 @@ const FormText = ({
         />
       ) : (
         <NoteForm
+          preSaveText={preSaveText}
           inputValue={inputValue}
           inputDirection={inputDirection}
           inputSaved={inputSaved}

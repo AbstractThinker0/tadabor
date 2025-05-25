@@ -1,4 +1,3 @@
-//
 import { useTranslation } from "react-i18next";
 import {
   selectCloudNote,
@@ -67,6 +66,7 @@ export const useNote = ({
   const [noteSplitType, noteSplitKey] = noteIndex.split(":");
 
   const noteText = note?.text ?? "";
+  const notePreSaveText = note?.preSave ?? "";
   const noteDirection = note?.dir ?? "";
   const noteSaved = note?.saved ?? false;
   const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
@@ -191,6 +191,7 @@ export const useNote = ({
   }, [isVisible, isLogged, isNoteLoading]);
 
   return {
+    preSaveText: notePreSaveText,
     text: noteText,
     direction: noteDirection,
     isSaved: noteSaved,
