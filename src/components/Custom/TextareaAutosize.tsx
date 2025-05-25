@@ -8,6 +8,7 @@ import { useAutosizeTextarea } from "@/hooks/useAutosizeTextarea";
 const TextareaAutosize = (props: TextareaProps) => {
   const refTextarea = useRef<HTMLTextAreaElement>(null);
 
+  const notesFont = useAppSelector((state) => state.settings.notesFont);
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   const height = useAutosizeTextarea(refTextarea, props.value as string);
@@ -16,7 +17,9 @@ const TextareaAutosize = (props: TextareaProps) => {
     <Textarea
       {...props}
       ref={refTextarea}
+      fontFamily={`${notesFont}, serif`}
       fontSize={`${notesFS}rem`}
+      lineHeight={"tall"}
       height={height}
     />
   );

@@ -1,5 +1,24 @@
 import type { selectedChaptersType } from "@/types";
 
+const fontsList = [
+  "Scheherazade New",
+  "Cairo",
+  "Amiri",
+  "Lateef",
+  "Noto Naskh Arabic",
+];
+
+/*
+    qf = Quran Font
+    nf = Notes Font
+*/
+
+const qfStored = "qfStored";
+const qfDefault = "Scheherazade New";
+
+const nfStored = "nfStored";
+const nfDefault = "Scheherazade New";
+
 /*
     qfs = Quran Font Size
     nfs = Notes Font Size
@@ -62,6 +81,11 @@ const arabicAlphabetDefault = [
 ];
 
 export {
+  fontsList,
+  qfDefault,
+  qfStored,
+  nfDefault,
+  nfStored,
   qfsStored,
   qfsDefault,
   nfsStored,

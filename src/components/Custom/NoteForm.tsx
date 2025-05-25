@@ -83,7 +83,6 @@ const NoteFormEditor = ({
       value={inputValue}
       dir={inputDirection}
       onChange={onChangeTextarea}
-      lineHeight={"tall"}
       placeholder={t("text_form")}
       required
       borderRadius={"2xl"}

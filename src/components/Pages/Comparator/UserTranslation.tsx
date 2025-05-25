@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppSelector } from "@/store";
-
 import { useNote } from "@/hooks/useNote";
 
 import { Box, Button } from "@chakra-ui/react";
 import TextareaAutosize from "@/components/Custom/TextareaAutosize";
 import { ButtonEdit } from "@/components/Generic/Buttons";
+import { NoteText } from "@/components/Custom/NoteText";
 
 interface UserTranslationProps {
   verseKey: string;
@@ -16,7 +15,6 @@ interface UserTranslationProps {
 const UserTranslation = ({ verseKey }: UserTranslationProps) => {
   const { t } = useTranslation();
 
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
   const [stateEditable, setStateEditable] = useState(false);
 
   const note = useNote({
@@ -59,8 +57,10 @@ const UserTranslation = ({ verseKey }: UserTranslationProps) => {
           </Button>
         </>
       ) : note.text ? (
-        <Box whiteSpace={"pre-wrap"}>
-          <Box fontSize={`${notesFS}rem`}>{note.text}</Box>
+        <Box>
+          <Box>
+            <NoteText>{note.text}</NoteText>
+          </Box>
           <ButtonEdit onClick={onClickAdd} />
         </Box>
       ) : (

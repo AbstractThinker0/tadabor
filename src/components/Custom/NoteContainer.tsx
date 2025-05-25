@@ -1,7 +1,10 @@
 import { useAppSelector } from "@/store";
 
 import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
+
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
+import { NoteText } from "@/components/Custom/NoteText";
+
 import { Tooltip } from "@/components/ui/tooltip-mobile";
 
 import { MdOutlineCheckCircle } from "react-icons/md";
@@ -140,8 +143,6 @@ const NoteContainerBody = ({
   inputValue,
   inputDirection,
 }: NoteContainerBodyProps) => {
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
-
   return (
     <Box
       pt={"0.1rem"}
@@ -150,16 +151,11 @@ const NoteContainerBody = ({
       border={"1px solid"}
       borderColor={inputSaved ? "green.solid" : "yellow.solid"}
       borderRadius={"2xl"}
+      dir={inputDirection}
     >
-      <Text
-        whiteSpace={"pre-wrap"}
-        fontSize={`${notesFS}rem`}
-        dir={inputDirection}
-        mb={"5.5rem"}
-        lineHeight={"tall"}
-      >
+      <NoteText dir={inputDirection} mb={"5.5rem"}>
         {inputValue}
-      </Text>
+      </NoteText>
     </Box>
   );
 };
