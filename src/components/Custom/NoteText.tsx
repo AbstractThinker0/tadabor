@@ -1,14 +1,14 @@
 import { useAppSelector } from "@/store";
-import { Span, type SpanProps } from "@chakra-ui/react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 
-const NoteText = (props: SpanProps) => {
+const NoteText = (props: BoxProps) => {
   const { children, ...rest } = props;
 
   const notesFont = useAppSelector((state) => state.settings.notesFont);
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   return (
-    <Span
+    <Box
       whiteSpace={"pre-wrap"}
       fontFamily={`${notesFont}, serif`}
       fontSize={`${notesFS}rem`}
@@ -16,7 +16,7 @@ const NoteText = (props: SpanProps) => {
       {...rest}
     >
       {children}
-    </Span>
+    </Box>
   );
 };
 

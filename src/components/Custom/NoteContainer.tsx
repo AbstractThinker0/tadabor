@@ -112,7 +112,7 @@ const NoteContainerHeader = ({
 
   return (
     <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
-      <Text fontSize="lg" fontWeight="bold" color={"gray.600"}>
+      <Text fontSize="lg" fontWeight="bold" color={"gray.600"} py={"6px"}>
         {getNoteTitle()}{" "}
       </Text>
       {isLogged && (
@@ -153,7 +153,7 @@ const NoteContainerBody = ({
       borderRadius={"2xl"}
       dir={inputDirection}
     >
-      <NoteText dir={inputDirection} mb={"5.5rem"}>
+      <NoteText dir={inputDirection} mb={"50px"}>
         {inputValue}
       </NoteText>
     </Box>
