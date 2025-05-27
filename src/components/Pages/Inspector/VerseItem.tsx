@@ -12,17 +12,15 @@ import type {
   searchIndexProps,
 } from "quran-tools";
 
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
-import VerseContainer from "@/components/Custom/VerseContainer";
-import { Box, Collapsible, Accordion, Span, Separator } from "@chakra-ui/react";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { Box, Collapsible, Accordion, Span, Separator } from "@chakra-ui/react";
 
 import { useBoolean } from "usehooks-ts";
 
@@ -161,7 +159,7 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   useEffect(() => {
     if (refVerses.current && scrollKey) {
       const verseToHighlight = refVerses.current.querySelector(
-        `[data-child-id="${scrollKey}"]`
+        `[data-id="sub-${scrollKey}"]`
       ) as HTMLDivElement;
 
       if (verseToHighlight) {
@@ -194,18 +192,11 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
       <Separator />
       <Box padding={3} ref={refVerses}>
         {rootVerses.slice(0, itemsCount).map((rootVerse) => (
-          <Box
+          <RootVerse
             key={rootVerse.key}
-            py={"4px"}
-            px={"5px"}
-            smDown={{ px: "1px" }}
-            borderBottom={"1.5px solid"}
-            borderColor={"border.emphasized"}
-            aria-selected={scrollKey === rootVerse.key}
-            _selected={{ bgColor: "orange.emphasized" }}
-          >
-            <RootVerse rootVerse={rootVerse} />
-          </Box>
+            rootVerse={rootVerse}
+            isSelected={scrollKey === rootVerse.key}
+          />
         ))}
       </Box>
     </Box>
@@ -214,12 +205,12 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
 
 interface RootVerseProps {
   rootVerse: verseMatchResult;
+  isSelected: boolean;
 }
 
-const RootVerse = ({ rootVerse }: RootVerseProps) => {
+const RootVerse = ({ rootVerse, isSelected }: RootVerseProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
-  const { value: isNoteOpen, toggle: setNoteOpen } = useBoolean();
 
   const verseChapter = quranService.getChapterName(rootVerse.suraid);
 
@@ -229,20 +220,16 @@ const RootVerse = ({ rootVerse }: RootVerseProps) => {
   }
 
   return (
-    <>
-      <VerseContainer data-child-id={rootVerse.key}>
-        <VerseHighlightMatches verse={rootVerse} />{" "}
-        <ButtonVerse onClick={onClickVerseChapter}>
-          ({`${verseChapter}:${rootVerse.verseid}`})
-        </ButtonVerse>
-        <ButtonExpand onClick={setNoteOpen} />
-      </VerseContainer>
-      <CollapsibleNote
-        isOpen={isNoteOpen}
-        noteType="verse"
-        noteKey={rootVerse.key}
-      />
-    </>
+    <BaseVerseItem
+      verseKey={rootVerse.key}
+      dataKey={`sub-${rootVerse.key}`}
+      isSelected={isSelected}
+    >
+      <VerseHighlightMatches verse={rootVerse} />{" "}
+      <ButtonVerse onClick={onClickVerseChapter}>
+        ({`${verseChapter}:${rootVerse.verseid}`})
+      </ButtonVerse>
+    </BaseVerseItem>
   );
 };
 

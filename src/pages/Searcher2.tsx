@@ -8,7 +8,7 @@ import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 import useQuran from "@/context/useQuran";
 import type { verseMatchResult } from "quran-tools";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
@@ -16,13 +16,12 @@ import { Box, Flex, HStack, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+import { ButtonVerse } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+
 import { InputString } from "@/components/Generic/Input";
 
-import { useBoolean } from "usehooks-ts";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Searcher2 = () => {
@@ -160,7 +159,13 @@ const Searcher2Tab = () => {
 
       setStateVerses(result || []);
     });
-  }, [searchString, searchIdentical, searchDiacritics, searchStart]);
+  }, [
+    searchString,
+    searchIdentical,
+    searchDiacritics,
+    searchStart,
+    quranService,
+  ]);
 
   return (
     <Flex
@@ -247,7 +252,6 @@ interface VerseItemProps {
 const VerseItem = ({ verseMatch }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
-  const { value: isOpen, toggle: setOpen } = useBoolean();
 
   const onClickVerse = () => {
     dispatch(searcher2PageActions.setVerseTab(verseMatch.key));
@@ -255,20 +259,12 @@ const VerseItem = ({ verseMatch }: VerseItemProps) => {
   };
 
   return (
-    <Box py={"4px"} borderBottom={"1px solid"} borderColor={"gray.emphasized"}>
-      <VerseContainer>
-        <VerseHighlightMatches verse={verseMatch} />
-        <ButtonVerse onClick={onClickVerse}>{` (${quranService.getChapterName(
-          verseMatch.suraid
-        )}:${verseMatch.verseid})`}</ButtonVerse>
-        <ButtonExpand onClick={setOpen} />
-      </VerseContainer>
-      <CollapsibleNote
-        isOpen={isOpen}
-        noteType="verse"
-        noteKey={verseMatch.key}
-      />
-    </Box>
+    <BaseVerseItem verseKey={verseMatch.key}>
+      <VerseHighlightMatches verse={verseMatch} />
+      <ButtonVerse onClick={onClickVerse}>{` (${quranService.getChapterName(
+        verseMatch.suraid
+      )}:${verseMatch.verseid})`}</ButtonVerse>{" "}
+    </BaseVerseItem>
   );
 };
 
