@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
-import { NoteText } from "@/components/Custom/NoteText";
+import { NoteText } from "@/components/Note/NoteText";
 
 import {
   fontsList,

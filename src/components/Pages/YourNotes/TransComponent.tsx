@@ -12,8 +12,8 @@ import {
   NoteFormContainer,
   NoteFormEditor,
   NoteFormFooter,
-} from "@/components/Custom/NoteForm";
-import NoteContainer from "@/components/Custom/NoteContainer";
+} from "@/components/Note/NoteForm";
+import NoteContainer from "@/components/Note/NoteContainer";
 
 interface TransComponentProps {
   noteID: string;

@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import NoteForm from "@/components/Custom/NoteForm";
-import NoteContainer from "@/components/Custom/NoteContainer";
+import NoteForm from "@/components/Note/NoteForm";
+import NoteContainer from "@/components/Note/NoteContainer";
 
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -151,4 +151,4 @@ const FormText = ({
   );
 };
 
-export { CollapsibleNote, CollapsibleGeneric, FormText };
+export { CollapsibleNote, FormText };

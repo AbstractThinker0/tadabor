@@ -12,7 +12,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
 import { Box, Flex } from "@chakra-ui/react";
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
 
 interface DisplayProps {

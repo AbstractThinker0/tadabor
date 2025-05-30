@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 
 import { Box } from "@chakra-ui/react";
 
-import TextareaToolbar from "@/components/Generic/TextareaToolbar";
+import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
-import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import TextareaAutosize from "@/components/Note/TextareaAutosize";
 import { ButtonSave } from "@/components/Generic/Buttons";
 
 interface NoteFormProps {

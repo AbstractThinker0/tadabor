@@ -25,7 +25,7 @@ import {
   Span,
 } from "@chakra-ui/react";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
 import { useBoolean } from "usehooks-ts";

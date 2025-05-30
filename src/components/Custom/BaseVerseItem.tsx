@@ -2,7 +2,7 @@ import { useAppSelector } from "@/store";
 
 import { Box, type BoxProps } from "@chakra-ui/react";
 
-import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import { ButtonCopyVerse } from "@/components/Custom/ButtonCopyVerse";
 

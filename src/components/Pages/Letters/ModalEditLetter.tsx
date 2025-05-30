@@ -7,7 +7,7 @@ import { lettersPageActions } from "@/store/slices/pages/letters";
 
 import { dbFuncs } from "@/util/db";
 
-import TextareaToolbar from "@/components/Generic/TextareaToolbar";
+import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
 import {
   Dialog,
@@ -19,7 +19,7 @@ import {
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { toaster } from "@/components/ui/toaster";
 
-import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import TextareaAutosize from "@/components/Note/TextareaAutosize";
 
 interface ModalEditLetterProps {
   isOpen: boolean;

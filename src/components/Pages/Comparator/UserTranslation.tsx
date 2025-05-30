@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useNote } from "@/hooks/useNote";
 
 import { Box, Button } from "@chakra-ui/react";
-import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import TextareaAutosize from "@/components/Note/TextareaAutosize";
 import { ButtonEdit } from "@/components/Generic/Buttons";
-import { NoteText } from "@/components/Custom/NoteText";
+import { NoteText } from "@/components/Note/NoteText";
 
 interface UserTranslationProps {
   verseKey: string;

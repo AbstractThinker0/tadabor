@@ -3,7 +3,7 @@ import { useAppSelector } from "@/store";
 import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 
 import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
-import { NoteText } from "@/components/Custom/NoteText";
+import { NoteText } from "@/components/Note/NoteText";
 
 import { Tooltip } from "@/components/ui/tooltip-mobile";
 

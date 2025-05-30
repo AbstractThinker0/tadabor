@@ -6,10 +6,10 @@ import {
   NoteFormContainer,
   NoteFormEditor,
   NoteFormFooter,
-} from "@/components/Custom/NoteForm";
+} from "@/components/Note/NoteForm";
 import NoteContainer, {
   NoteContainerHeader,
-} from "@/components/Custom/NoteContainer";
+} from "@/components/Note/NoteContainer";
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 interface TransComponentProps {

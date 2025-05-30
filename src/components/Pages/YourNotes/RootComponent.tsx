@@ -6,8 +6,8 @@ import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import NoteForm from "@/components/Custom/NoteForm";
-import NoteContainer from "@/components/Custom/NoteContainer";
+import NoteForm from "@/components/Note/NoteForm";
+import NoteContainer from "@/components/Note/NoteContainer";
 
 import { Box } from "@chakra-ui/react";
 
