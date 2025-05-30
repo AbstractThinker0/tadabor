@@ -184,6 +184,10 @@ function SelectedVerses({
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
+  const refVerses = useRef<HTMLDivElement>(null);
+
+  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
+
   const selectedVerses = Object.keys(versesTags).filter((verseKey) =>
     Object.keys(selectedTags).some((tagID) =>
       versesTags[verseKey].includes(tagID)
@@ -198,19 +202,36 @@ function SelectedVerses({
     else return Number(infoA[1]) - Number(infoB[1]);
   });
 
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
+
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [scrollKey]);
+
   return (
-    <Box p={1}>
+    <Box p={1} ref={refVerses}>
       {sortedVerses.length ? (
         <>
-          {sortedVerses.map((verseKey) => {
+          {sortedVerses.map((verseKey, index) => {
             const verse = quranService.getVerseByKey(verseKey)!;
             return (
               <SelectedVerseItem
+                index={index}
                 key={verseKey}
                 verse={verse}
                 versesTags={versesTags}
                 tags={tags}
                 onOpenVerseModal={onOpenVerseModal}
+                isSelected={verse.key == scrollKey}
               />
             );
           })}
@@ -268,7 +289,7 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [currentChapter]);
+  }, [currentChapter, quranService]);
 
   return (
     <>

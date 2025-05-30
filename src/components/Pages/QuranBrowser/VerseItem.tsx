@@ -8,6 +8,7 @@ import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { Span } from "@chakra-ui/react";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -32,9 +33,14 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
 interface SearchVerseItemProps {
   verse: verseMatchResult;
   isSelected: boolean;
+  index: number;
 }
 
-const SearchVerseItem = ({ verse, isSelected }: SearchVerseItemProps) => {
+const SearchVerseItem = ({
+  verse,
+  isSelected,
+  index,
+}: SearchVerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
@@ -43,15 +49,24 @@ const SearchVerseItem = ({ verse, isSelected }: SearchVerseItemProps) => {
     dispatch(qbPageActions.setScrollKey(verse.key));
   };
 
+  const onClickVerse = () => {
+    dispatch(qbPageActions.setScrollKey(verse.key));
+  };
+
   return (
-    <BaseVerseItem verseKey={verse.key} isSelected={isSelected}>
+    <BaseVerseItem
+      verseKey={verse.key}
+      isSelected={isSelected}
+      rootProps={{ paddingStart: "5px" }}
+    >
+      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+        {index + 1}.
+      </Span>{" "}
       <VerseHighlightMatches verse={verse} /> (
-      <ButtonVerse
-        onClick={onClickVerseChapter}
-      >{`${quranService.getChapterName(verse.suraid)}:${
-        verse.verseid
-      }`}</ButtonVerse>
-      )
+      <ButtonVerse onClick={onClickVerseChapter}>
+        {quranService.getChapterName(verse.suraid)}
+      </ButtonVerse>
+      :<ButtonVerse onClick={onClickVerse}>{verse.verseid}</ButtonVerse>)
     </BaseVerseItem>
   );
 };

@@ -68,7 +68,7 @@ const ListBody = () => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(selectChapter));
     });
-  }, [selectChapter]);
+  }, [selectChapter, quranService]);
 
   useEffect(() => {
     if (scrollKey && refVerses.current) {

@@ -22,6 +22,7 @@ import {
   Flex,
   Separator,
   Spacer,
+  Span,
 } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
@@ -62,7 +63,7 @@ const RootsList = memo(
           })
         );
       });
-    }, [searchString, searchInclusive, quranService]);
+    }, [searchString, searchInclusive, quranService, handleRoots]);
 
     return (
       <Flex flex={1} flexDirection={"column"}>
@@ -187,6 +188,10 @@ const RootOccurences = ({
     setScrollKey(verseKey);
   };
 
+  const handleVerseClick = (verseKey: string) => {
+    setScrollKey((prev) => (prev === verseKey ? "" : verseKey));
+  };
+
   // Handling scroll by using a callback ref
   const handleOccurencesRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -223,12 +228,14 @@ const RootOccurences = ({
             handleDerivationClick={handleDerivationClick}
           />
           <Separator />
-          {rootVerses.slice(0, itemsCount).map((verse) => (
+          {rootVerses.slice(0, itemsCount).map((verse, index) => (
             <RootVerse
+              index={index}
               key={verse.key}
               isSelected={scrollKey === verse.key}
               rootVerse={verse}
               handleVerseTab={handleVerseTab}
+              handleVerseClick={handleVerseClick}
             />
           ))}
         </Box>
@@ -238,15 +245,19 @@ const RootOccurences = ({
 };
 
 interface RootVerseProps {
+  index: number;
   isSelected: boolean;
   rootVerse: verseMatchResult;
   handleVerseTab: (verseKey: string) => void;
+  handleVerseClick: (verseKey: string) => void;
 }
 
 const RootVerse = ({
+  index,
   isSelected,
   rootVerse,
   handleVerseTab,
+  handleVerseClick,
 }: RootVerseProps) => {
   const quranService = useQuran();
 
@@ -256,6 +267,10 @@ const RootVerse = ({
     handleVerseTab(rootVerse.key);
   };
 
+  const onClickVerseID = () => {
+    handleVerseClick(rootVerse.key);
+  };
+
   return (
     <BaseVerseItem
       dataKey={`sub-${rootVerse.key}`}
@@ -263,11 +278,12 @@ const RootVerse = ({
       isSelected={isSelected}
       rootProps={{ px: "0.25rem" }}
     >
+      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+        {index + 1}.
+      </Span>{" "}
       <VerseHighlightMatches verse={rootVerse} /> (
-      <ButtonVerse
-        onClick={onClickChapter}
-      >{`${verseChapter}:${rootVerse.verseid}`}</ButtonVerse>
-      )
+      <ButtonVerse onClick={onClickChapter}>{verseChapter}</ButtonVerse>:
+      <ButtonVerse onClick={onClickVerseID}>{rootVerse.verseid}</ButtonVerse>)
     </BaseVerseItem>
   );
 };

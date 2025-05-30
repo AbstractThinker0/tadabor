@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useAppSelector, useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -147,6 +147,8 @@ function SelectedVerses({
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
+  const scrollKey = useAppSelector((state) => state.coloringPage.scrollKey);
+
   const selectedVerses = useMemo(
     () =>
       Object.keys(coloredVerses)
@@ -163,17 +165,38 @@ function SelectedVerses({
     [coloredVerses, selectedColors]
   );
 
+  // Handling scroll by using a callback ref
+  const handleVerseListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && scrollKey) {
+        const verseToHighlight = node.querySelector(
+          `[data-id="${scrollKey}"]`
+        ) as HTMLDivElement;
+
+        if (verseToHighlight) {
+          verseToHighlight.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    },
+    [scrollKey]
+  );
+
   return (
-    <Box px={2} dir="rtl">
+    <Box px={2} dir="rtl" ref={handleVerseListRef}>
       {selectedVerses.length ? (
-        selectedVerses.map((verseKey) => {
+        selectedVerses.map((verseKey, index) => {
           const verse = quranService.getVerseByKey(verseKey)!;
           return (
             <SelectedVerseItem
+              index={index}
               key={verse.key}
               verse={verse}
               verseColor={coloredVerses[verse.key]}
               openVerseModal={openVerseModal}
+              isSelected={scrollKey === verse.key}
             />
           );
         })

@@ -11,9 +11,9 @@ import { RiExpandLeftRightLine } from "react-icons/ri";
 
 interface ChapterHeaderProps {
   chapterID: number;
-  isOpenMobile: boolean;
-  isOpenDesktop: boolean;
-  onTogglePanel: (state: boolean) => void;
+  isOpenMobile?: boolean;
+  isOpenDesktop?: boolean;
+  onTogglePanel?: (state: boolean) => void;
   versesOptions?: boolean;
 }
 
@@ -49,11 +49,15 @@ const ChapterHeader = ({
       justifyContent={"space-between"}
       borderTopRadius={"l2"}
     >
-      <ButtonSidebar
-        isOpenMobile={isOpenMobile}
-        isOpenDesktop={isOpenDesktop}
-        onTogglePanel={onTogglePanel}
-      />
+      {onTogglePanel ? (
+        <ButtonSidebar
+          isOpenMobile={!!isOpenMobile}
+          isOpenDesktop={!!isOpenDesktop}
+          onTogglePanel={onTogglePanel}
+        />
+      ) : (
+        <div></div>
+      )}
 
       <Flex fontSize="3xl" fontWeight="medium" color="blue.focusRing">
         سورة {quranService.getChapterName(chapterID)}

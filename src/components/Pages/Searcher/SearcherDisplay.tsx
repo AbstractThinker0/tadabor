@@ -1,4 +1,4 @@
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import type { verseMatchResult } from "quran-tools";
 
@@ -15,7 +15,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { Flex, Tag } from "@chakra-ui/react";
+import { Flex, Span, Tag } from "@chakra-ui/react";
 
 const SearcherDisplay = () => {
   const search_roots = useAppSelector(
@@ -55,15 +55,7 @@ const SearcherDisplay = () => {
           ))}
         </Flex>
       </Flex>
-      <Flex
-        flexDir={"column"}
-        overflowY={"scroll"}
-        maxH={"100%"}
-        height={"100%"}
-        dir="rtl"
-      >
-        <VersesList />
-      </Flex>
+      <VersesList />
     </Flex>
   );
 };
@@ -95,9 +87,14 @@ const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
 };
 
 const VersesList = () => {
+  const refVerses = useRef<HTMLDivElement>(null);
+
   const search_roots = useAppSelector(
     (state) => state.searcherPage.search_roots
   );
+
+  const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
+
   const quranService = useQuran();
 
   const dispatch = useAppDispatch();
@@ -118,37 +115,78 @@ const VersesList = () => {
     });
   }, [search_roots, dispatch, quranService]);
 
+  useEffect(() => {
+    if (refVerses.current && scrollKey) {
+      const verseToHighlight = refVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
+
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [scrollKey]);
+
   if (isPending) return <LoadingSpinner text="Loading verses.." />;
 
   return (
-    <>
+    <Flex
+      flexDir={"column"}
+      overflowY={"scroll"}
+      maxH={"100%"}
+      height={"100%"}
+      dir="rtl"
+      ref={refVerses}
+    >
       {stateVerses.map((verseMatch, index) => (
-        <VerseItem key={index} verseMatch={verseMatch} />
+        <VerseItem
+          index={index}
+          key={verseMatch.key}
+          verseMatch={verseMatch}
+          isSelected={scrollKey === verseMatch.key}
+        />
       ))}
-    </>
+    </Flex>
   );
 };
 
 interface VerseItemProps {
+  index: number;
   verseMatch: verseMatchResult;
+  isSelected: boolean;
 }
 
-const VerseItem = ({ verseMatch }: VerseItemProps) => {
+const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
   const quranService = useQuran();
 
   const dispatch = useAppDispatch();
 
-  const onClickVerse = () => {
+  const onClickVerseChapter = () => {
     dispatch(searcherPageActions.setVerseTab(verseMatch.key));
     dispatch(searcherPageActions.setScrollKey(verseMatch.key));
   };
 
+  const onClickVerse = () => {
+    if (isSelected) {
+      dispatch(searcherPageActions.setScrollKey(""));
+    } else {
+      dispatch(searcherPageActions.setScrollKey(verseMatch.key));
+    }
+  };
+
   return (
-    <BaseVerseItem verseKey={verseMatch.key}>
-      <VerseHighlightMatches verse={verseMatch} />{" "}
-      <ButtonVerse onClick={onClickVerse}>{`(${quranService.getChapterName(
-        verseMatch.suraid
-      )}:${verseMatch.verseid})`}</ButtonVerse>
+    <BaseVerseItem verseKey={verseMatch.key} isSelected={isSelected}>
+      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+        {index + 1}.
+      </Span>{" "}
+      <VerseHighlightMatches verse={verseMatch} /> (
+      <ButtonVerse onClick={onClickVerseChapter}>
+        {quranService.getChapterName(verseMatch.suraid)}
+      </ButtonVerse>
+      :<ButtonVerse onClick={onClickVerse}>{verseMatch.verseid}</ButtonVerse>)
     </BaseVerseItem>
   );
 };

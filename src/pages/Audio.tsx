@@ -138,7 +138,7 @@ const Audio = () => {
 
     dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
     dispatch(audioPageActions.setIsPlaying(false));
-  }, [currentChapter]);
+  }, [currentChapter, dispatch, quranService]);
 
   const onChangeAutoPlay = (checked: boolean) => {
     dispatch(audioPageActions.setAutoPlaying(checked));

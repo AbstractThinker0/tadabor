@@ -11,7 +11,7 @@ import type {
   versesTagsProps,
 } from "@/components/Pages/Tags/consts";
 
-import { Button } from "@chakra-ui/react";
+import { Button, Span } from "@chakra-ui/react";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
@@ -66,23 +66,33 @@ const VerseItem = ({
 };
 
 interface SelectedVerseItemProps {
+  index: number;
   verse: verseProps;
   versesTags: versesTagsProps;
   tags: tagsProps;
   onOpenVerseModal: () => void;
+  isSelected: boolean;
 }
 
 const SelectedVerseItem = ({
+  index,
   verse,
   versesTags,
   tags,
   onOpenVerseModal,
+  isSelected,
 }: SelectedVerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  function onClickVerse(verse: verseProps) {
+  function onClickChapter(verse: verseProps) {
     dispatch(tagsPageActions.gotoChapter(verse.suraid));
+    if (!isSelected) {
+      dispatch(tagsPageActions.setScrollKey(verse.key));
+    }
+  }
+
+  function onClickVerse(verse: verseProps) {
     dispatch(tagsPageActions.setScrollKey(verse.key));
   }
 
@@ -93,6 +103,8 @@ const SelectedVerseItem = ({
 
   return (
     <BaseVerseItem
+      isSelected={isSelected}
+      rootProps={{ _selected: { bgColor: "blue.emphasized" } }}
       verseKey={verse.key}
       outerStartElement={
         <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
@@ -103,10 +115,18 @@ const SelectedVerseItem = ({
         </Button>
       }
     >
-      {verse.versetext}{" "}
-      <ButtonVerse onClick={() => onClickVerse(verse)}>
-        ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
+      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+        {index + 1}.
+      </Span>{" "}
+      {verse.versetext} (
+      <ButtonVerse onClick={() => onClickChapter(verse)}>
+        {quranService.getChapterName(verse.suraid)}
       </ButtonVerse>
+      :
+      <ButtonVerse onClick={() => onClickVerse(verse)}>
+        {verse.verseid}
+      </ButtonVerse>
+      )
     </BaseVerseItem>
   );
 };

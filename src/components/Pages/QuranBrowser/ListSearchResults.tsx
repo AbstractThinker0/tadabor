@@ -39,13 +39,16 @@ const ListSearchResults = ({
   searchError,
 }: ListSearchResultsProps) => {
   const { t } = useTranslation();
-  const [selectedVerse, setSelectedVerse] = useState("");
+
+  const dispatch = useAppDispatch();
 
   const [isPending, startTransition] = useTransition();
 
   const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
 
   const refListVerses = useRef<HTMLDivElement>(null);
+
+  const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
 
   const searchingChapters = useAppSelector(
     (state) => state.qbPage.searchingChapters
@@ -63,24 +66,24 @@ const ListSearchResults = ({
     });
   }, [versesArray]);
 
-  useEffect(() => {
-    setSelectedVerse("");
-  }, [searchIndexes]);
-
   const handleDerivationClick = (verse_key: string) => {
-    const verseToHighlight = refListVerses.current?.querySelector(
-      `[data-id="${verse_key}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      block: "center",
-      behavior: "smooth",
-    });
-
-    setSelectedVerse(verse_key);
+    dispatch(qbPageActions.setScrollKey(verse_key));
   };
+
+  useEffect(() => {
+    if (scrollKey && refListVerses.current) {
+      const verseToHighlight = refListVerses.current.querySelector(
+        `[data-id="${scrollKey}"]`
+      ) as HTMLDivElement;
+
+      if (!verseToHighlight) return;
+
+      verseToHighlight.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [scrollKey]);
 
   const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 
@@ -112,11 +115,12 @@ const ListSearchResults = ({
         <LoadingSpinner text="Loading verses..." />
       ) : (
         <Box dir="rtl" ref={refListVerses}>
-          {stateVerses.map((verse) => (
+          {stateVerses.map((verse, index) => (
             <SearchVerseItem
               key={verse.key}
               verse={verse}
-              isSelected={selectedVerse === verse.key}
+              isSelected={scrollKey === verse.key}
+              index={index}
             />
           ))}
 

@@ -8,9 +8,11 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
-import { BaseVerseItem } from "./BaseVerseItem";
+import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+
+import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 interface PanelQuranProps {
   verseKey: string;
@@ -74,9 +76,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       ref={refVerses}
       dir="rtl"
     >
-      <Heading textAlign={"center"} color="blue.fg" fontSize={"3xl"} pb={"4"}>
-        سورة {quranService.getChapterName(suraID)}
-      </Heading>
+      <ChapterHeader chapterID={Number(suraID)} versesOptions={true} />
       {isPending ? (
         <LoadingSpinner text="Loading verses.." />
       ) : (

@@ -183,6 +183,10 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
     });
   };
 
+  const handleVerseClick = (verseKey: string) => {
+    setScrollKey((prev) => (verseKey === prev ? "" : verseKey));
+  };
+
   return (
     <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
       <DerivationsComponent
@@ -191,11 +195,13 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
       />
       <Separator />
       <Box padding={3} ref={refVerses}>
-        {rootVerses.slice(0, itemsCount).map((rootVerse) => (
+        {rootVerses.slice(0, itemsCount).map((rootVerse, index) => (
           <RootVerse
+            index={index}
             key={rootVerse.key}
             rootVerse={rootVerse}
             isSelected={scrollKey === rootVerse.key}
+            handleVerseClick={handleVerseClick}
           />
         ))}
       </Box>
@@ -204,11 +210,18 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
 };
 
 interface RootVerseProps {
+  index: number;
   rootVerse: verseMatchResult;
   isSelected: boolean;
+  handleVerseClick: (verseKey: string) => void;
 }
 
-const RootVerse = ({ rootVerse, isSelected }: RootVerseProps) => {
+const RootVerse = ({
+  index,
+  rootVerse,
+  isSelected,
+  handleVerseClick,
+}: RootVerseProps) => {
   const quranService = useQuran();
   const dispatch = useAppDispatch();
 
@@ -219,16 +232,22 @@ const RootVerse = ({ rootVerse, isSelected }: RootVerseProps) => {
     dispatch(inspectorPageActions.setScrollKey(rootVerse.key));
   }
 
+  function onClickVerse() {
+    handleVerseClick(rootVerse.key);
+  }
+
   return (
     <BaseVerseItem
       verseKey={rootVerse.key}
       dataKey={`sub-${rootVerse.key}`}
       isSelected={isSelected}
     >
-      <VerseHighlightMatches verse={rootVerse} />{" "}
-      <ButtonVerse onClick={onClickVerseChapter}>
-        ({`${verseChapter}:${rootVerse.verseid}`})
-      </ButtonVerse>
+      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+        {index + 1}.
+      </Span>{" "}
+      <VerseHighlightMatches verse={rootVerse} /> (
+      <ButtonVerse onClick={onClickVerseChapter}>{verseChapter}</ButtonVerse>:
+      <ButtonVerse onClick={onClickVerse}>{rootVerse.verseid}</ButtonVerse>)
     </BaseVerseItem>
   );
 };

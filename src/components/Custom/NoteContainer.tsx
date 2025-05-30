@@ -153,7 +153,7 @@ const NoteContainerBody = ({
       borderRadius={"2xl"}
       dir={inputDirection}
     >
-      <NoteText dir={inputDirection} mb={"50px"}>
+      <NoteText dir={inputDirection} mb={"50px"} pt={"6px"}>
         {inputValue}
       </NoteText>
     </Box>

@@ -27,11 +27,11 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     window.document.dir = i18n.dir();
-  }, [i18n.resolvedLanguage]);
+  }, [i18n.resolvedLanguage, i18n]);
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
-  }, []);
+  }, [dispatch]);
 
   return (
     <UserProvider>
@@ -40,7 +40,7 @@ function Layout({ children }: PropsWithChildren) {
           ref={refMain}
           flexDirection="column"
           height="100vh"
-          fontFamily={`"Scheherazade New", serif`}
+          fontFamily={`Cairo, serif`}
           fontSize="larger"
           lineHeight="normal"
           color={"brand.text"}

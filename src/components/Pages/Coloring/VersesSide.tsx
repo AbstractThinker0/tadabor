@@ -67,7 +67,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
   // Handling scroll by using a callback ref
   const handleVerseListRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
+      if (node && scrollKey && !isPending) {
         const verseToHighlight = node.querySelector(
           `[data-id="${scrollKey}"]`
         ) as HTMLDivElement;
@@ -88,7 +88,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [currentChapter]);
+  }, [currentChapter, quranService]);
 
   return (
     <>
