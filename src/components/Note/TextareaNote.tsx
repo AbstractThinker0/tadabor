@@ -19,6 +19,7 @@ interface TextareaNoteProps {
 }
 
 const TextareaNote = ({
+  preSaveText,
   inputValue,
   inputDirection,
   inputSaved = true,
@@ -27,6 +28,8 @@ const TextareaNote = ({
   onSaveNote,
   onClickCancelButton,
 }: TextareaNoteProps) => {
+  const canCancel = preSaveText !== inputValue || inputValue.length > 0;
+
   return (
     <TextareaNoteContainer onSaveNote={onSaveNote}>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
@@ -36,7 +39,10 @@ const TextareaNote = ({
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
       />
-      <TextareaNoteFooter onClickCancelButton={onClickCancelButton} />
+      <TextareaNoteFooter
+        onClickCancelButton={onClickCancelButton}
+        canCancel={canCancel}
+      />
     </TextareaNoteContainer>
   );
 };
@@ -100,14 +106,16 @@ const TextareaNoteEditor = ({
 
 interface TextareaNoteFooterProps {
   onClickCancelButton?: () => void;
+  canCancel: boolean;
 }
 
 const TextareaNoteFooter = ({
   onClickCancelButton,
+  canCancel,
 }: TextareaNoteFooterProps) => {
   return (
     <Flex justifyContent={"center"} gap={"1rem"} pt={"0.5rem"}>
-      <ButtonCancel onClick={onClickCancelButton} />
+      <ButtonCancel onClick={onClickCancelButton} disabled={!canCancel} />
 
       <ButtonSave />
     </Flex>

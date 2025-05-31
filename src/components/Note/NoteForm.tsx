@@ -55,7 +55,12 @@ const NoteForm = ({
 
   const onClickCancelButton = () => {
     note.setText(note.preSaveText);
-    setEditable(false);
+
+    if (note.preSaveText) {
+      setEditable(false);
+    } else {
+      setEditable(true);
+    }
   };
 
   if (note.isLoading) {
