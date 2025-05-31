@@ -9,10 +9,10 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import { Box } from "@chakra-ui/react";
 
 import {
-  NoteFormContainer,
-  NoteFormEditor,
-  NoteFormFooter,
-} from "@/components/Note/NoteForm";
+  TextareaNoteContainer,
+  TextareaNoteEditor,
+  TextareaNoteFooter,
+} from "@/components/Note/TextareaNote";
 import NoteContainer from "@/components/Note/NoteContainer";
 
 interface TransComponentProps {
@@ -104,15 +104,15 @@ const Versearea = ({
   onSaveNote,
 }: VerseareaProps) => {
   return (
-    <NoteFormContainer onSaveNote={onSaveNote}>
-      <NoteFormEditor
+    <TextareaNoteContainer onSaveNote={onSaveNote}>
+      <TextareaNoteEditor
         inputDirection="ltr"
         inputValue={inputValue}
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
       />
-      <NoteFormFooter />
-    </NoteFormContainer>
+      <TextareaNoteFooter />
+    </TextareaNoteContainer>
   );
 };
 

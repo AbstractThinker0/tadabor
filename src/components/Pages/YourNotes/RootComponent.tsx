@@ -6,7 +6,7 @@ import { useNote } from "@/hooks/useNote";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
-import NoteForm from "@/components/Note/NoteForm";
+import TextareaNote from "@/components/Note/TextareaNote";
 import NoteContainer from "@/components/Note/NoteContainer";
 
 import { Box } from "@chakra-ui/react";
@@ -64,7 +64,7 @@ const RootComponent = ({ noteID }: RootComponentProps) => {
         </VerseContainer>
       </Box>
       {isEditable ? (
-        <NoteForm
+        <TextareaNote
           inputSaved={note.isSaved}
           inputValue={note.text}
           inputDirection={note.direction}

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import NoteForm from "@/components/Note/NoteForm";
+import TextareaNote from "@/components/Note/TextareaNote";
 import NoteContainer from "@/components/Note/NoteContainer";
 
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
@@ -137,7 +137,7 @@ const FormText = ({
           onSaveNote={onSaveNote}
         />
       ) : (
-        <NoteForm
+        <TextareaNote
           preSaveText={preSaveText}
           inputValue={inputValue}
           inputDirection={inputDirection}

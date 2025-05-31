@@ -7,7 +7,7 @@ import TextareaToolbar from "@/components/Note/TextareaToolbar";
 import TextareaAutosize from "@/components/Note/TextareaAutosize";
 import { ButtonSave } from "@/components/Generic/Buttons";
 
-interface NoteFormProps {
+interface TextareaNoteProps {
   preSaveText?: string;
   inputValue: string;
   inputDirection: string;
@@ -17,37 +17,37 @@ interface NoteFormProps {
   onSaveNote: () => void;
 }
 
-const NoteForm = ({
+const TextareaNote = ({
   inputValue,
   inputDirection,
   inputSaved = true,
   handleSetDirection,
   onChangeNote,
   onSaveNote,
-}: NoteFormProps) => {
+}: TextareaNoteProps) => {
   return (
-    <NoteFormContainer onSaveNote={onSaveNote}>
+    <TextareaNoteContainer onSaveNote={onSaveNote}>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
-      <NoteFormEditor
+      <TextareaNoteEditor
         inputValue={inputValue}
         inputDirection={inputDirection}
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
       />
-      <NoteFormFooter />
-    </NoteFormContainer>
+      <TextareaNoteFooter />
+    </TextareaNoteContainer>
   );
 };
 
-interface NoteFormContainerProps {
+interface TextareaNoteContainerProps {
   onSaveNote: () => void;
   children: React.ReactNode;
 }
 
-const NoteFormContainer = ({
+const TextareaNoteContainer = ({
   onSaveNote,
   children,
-}: NoteFormContainerProps) => {
+}: TextareaNoteContainerProps) => {
   const onSubmitNote = (event: React.FormEvent<HTMLDivElement>) => {
     event.preventDefault();
     onSaveNote();
@@ -59,19 +59,19 @@ const NoteFormContainer = ({
   );
 };
 
-interface NoteFormEditorProps {
+interface TextareaNoteEditorProps {
   inputValue: string;
   inputDirection?: string;
   inputSaved?: boolean;
   onChangeNote: (text: string) => void;
 }
 
-const NoteFormEditor = ({
+const TextareaNoteEditor = ({
   inputValue,
   inputDirection = "",
   inputSaved = true,
   onChangeNote,
-}: NoteFormEditorProps) => {
+}: TextareaNoteEditorProps) => {
   const { t } = useTranslation();
 
   const onChangeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -96,7 +96,7 @@ const NoteFormEditor = ({
   );
 };
 
-const NoteFormFooter = () => {
+const TextareaNoteFooter = () => {
   return (
     <Box textAlign={"center"}>
       <ButtonSave />
@@ -104,5 +104,5 @@ const NoteFormFooter = () => {
   );
 };
 
-export { NoteFormContainer, NoteFormEditor, NoteFormFooter };
-export default NoteForm;
+export { TextareaNoteContainer, TextareaNoteEditor, TextareaNoteFooter };
+export default TextareaNote;

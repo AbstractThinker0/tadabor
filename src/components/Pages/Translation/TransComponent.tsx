@@ -3,10 +3,10 @@ import { memo, useState } from "react";
 import { useNote } from "@/hooks/useNote";
 
 import {
-  NoteFormContainer,
-  NoteFormEditor,
-  NoteFormFooter,
-} from "@/components/Note/NoteForm";
+  TextareaNoteContainer,
+  TextareaNoteEditor,
+  TextareaNoteFooter,
+} from "@/components/Note/TextareaNote";
 import NoteContainer, {
   NoteContainerHeader,
 } from "@/components/Note/NoteContainer";
@@ -95,21 +95,21 @@ const Versearea = ({
   noteType,
 }: VerseareaProps) => {
   return (
-    <NoteFormContainer onSaveNote={onSaveNote}>
+    <TextareaNoteContainer onSaveNote={onSaveNote}>
       <NoteContainerHeader
         isSynced={isSynced}
         isSyncing={isSyncing}
         noteKey={noteKey}
         noteType={noteType}
       />
-      <NoteFormEditor
+      <TextareaNoteEditor
         inputDirection="ltr"
         inputValue={inputValue}
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
       />
-      <NoteFormFooter />
-    </NoteFormContainer>
+      <TextareaNoteFooter />
+    </TextareaNoteContainer>
   );
 };
 
