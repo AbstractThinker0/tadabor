@@ -56,7 +56,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
         const clNote: ICloudNote = fromBackendToDexie(fetchedNote);
 
-        dispatch(cloudNotesActions.cacheNote(clNote));
+        dispatch(cloudNotesActions.cacheNote({ ...clNote, isNew: false }));
         dbFuncs.saveCloudNote(clNote);
       } catch (err) {
         console.error("Fetch failed", err);
@@ -119,7 +119,9 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
           syncedNote.date_synced = result?.note.dateLastSynced;
           // if a guest note we need to cache it to cloud notes first
           if (guest) {
-            dispatch(cloudNotesActions.cacheNote(syncedNote));
+            dispatch(
+              cloudNotesActions.cacheNote({ ...syncedNote, isNew: false })
+            );
           } else {
             dispatch(
               cloudNotesActions.updateSyncDate({

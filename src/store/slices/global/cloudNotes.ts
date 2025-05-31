@@ -102,11 +102,23 @@ const cloudNotesSlice = createSlice({
   name: "cloudNotes",
   initialState,
   reducers: {
-    cacheNote: (state, action: PayloadAction<CloudNoteProps>) => {
-      const note = action.payload;
-      note.saved = true;
-      note.isSynced = true;
-      note.preSave = note.text;
+    cacheNote: (
+      state,
+      action: PayloadAction<CloudNoteProps & { isNew?: boolean }>
+    ) => {
+      const { isNew = true, ...note } = action.payload;
+
+      // A new note that just got created
+      if (isNew) {
+        note.saved = false;
+        note.isSynced = false;
+      } else {
+        // An old existing note
+        note.saved = true;
+        note.isSynced = true;
+        note.preSave = note.text;
+      }
+
       state.data[note.id] = note;
       state.dataLoading[note.id] = false;
 

@@ -96,8 +96,8 @@ const localNotesSlice = createSlice({
   reducers: {
     cacheNote: (state, action: PayloadAction<LocalNoteProps>) => {
       const note = action.payload;
-      note.saved = true;
-      note.preSave = note.text;
+
+      note.saved = false;
       state.data[note.id] = note;
       state.dataLoading[note.id] = false;
 
