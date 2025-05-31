@@ -29,7 +29,7 @@
     "@trpc/client": "^11.1.1",
     "@trpc/tanstack-react-query": "^11.1.1",
     "dexie": "^4.0.7",
-    "i18next": "^23.0.1",
+    "i18next": "^25.0.2",
     "i18next-browser-languagedetector": "^7.0.2",
     "next-themes": "^0.4.4",
     "quran-tools": "^0.0.9",
