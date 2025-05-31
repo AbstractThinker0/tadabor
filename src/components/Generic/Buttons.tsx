@@ -8,6 +8,16 @@ import { MdOutlineMenu } from "react-icons/md";
 
 import useScreenSize from "@/hooks/useScreenSize";
 
+const ButtonCancel = (props: ButtonProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <Button colorPalette="yellow" size="sm" fontWeight={"normal"} {...props}>
+      {t("text_cancel")}
+    </Button>
+  );
+};
+
 const ButtonSave = (props: ButtonProps) => {
   const { t } = useTranslation();
   const { ...rest } = props;
@@ -96,4 +106,11 @@ const ButtonSidebar = ({
   );
 };
 
-export { ButtonSave, ButtonEdit, ButtonExpand, ButtonVerse, ButtonSidebar };
+export {
+  ButtonSave,
+  ButtonEdit,
+  ButtonCancel,
+  ButtonExpand,
+  ButtonVerse,
+  ButtonSidebar,
+};

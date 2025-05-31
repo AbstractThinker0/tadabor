@@ -71,7 +71,7 @@ export const useNote = ({
   const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
   const noteValidType = note?.type ?? noteType ?? noteSplitType;
   const noteDirection =
-    note?.dir ?? noteValidType === "translation" ? "ltr" : "";
+    note?.dir ?? (noteValidType === "translation" ? "ltr" : "");
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
   const noteIsSyncing = uploadNote.isPending;
 
@@ -193,7 +193,7 @@ export const useNote = ({
         ? fetchSingleCloudNote(noteIndex)
         : fetchSingleLocalNote(noteIndex)
     );
-  }, [isVisible, isLogged, isNoteLoading]);
+  }, [isVisible, isLogged, isNoteLoading, dispatch]);
 
   return {
     preSaveText: notePreSaveText,

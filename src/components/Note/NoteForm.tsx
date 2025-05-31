@@ -53,6 +53,11 @@ const NoteForm = ({
     setEditable(true);
   };
 
+  const onClickCancelButton = () => {
+    note.setText(note.preSaveText);
+    setEditable(false);
+  };
+
   if (note.isLoading) {
     return <LoadingSpinner text="Fetching note.." />;
   }
@@ -92,6 +97,7 @@ const NoteForm = ({
           noteType={note.type}
           noteKey={note.key}
           onClickEditButton={onClickEditButton}
+          onClickCancelButton={onClickCancelButton}
           onSaveNote={onSaveNote}
         />
       ) : (
@@ -103,6 +109,7 @@ const NoteForm = ({
           handleSetDirection={handleSetDirection}
           onChangeNote={onChangeNote}
           onSaveNote={onSaveNote}
+          onClickCancelButton={onClickCancelButton}
         />
       )}
     </Box>

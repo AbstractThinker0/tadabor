@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
 import TextareaAutosize from "@/components/Note/TextareaAutosize";
-import { ButtonSave } from "@/components/Generic/Buttons";
+import { ButtonCancel, ButtonSave } from "@/components/Generic/Buttons";
 
 interface TextareaNoteProps {
   preSaveText?: string;
@@ -15,6 +15,7 @@ interface TextareaNoteProps {
   handleSetDirection: (dir: string) => void;
   onChangeNote: (text: string) => void;
   onSaveNote: () => void;
+  onClickCancelButton: () => void;
 }
 
 const TextareaNote = ({
@@ -24,6 +25,7 @@ const TextareaNote = ({
   handleSetDirection,
   onChangeNote,
   onSaveNote,
+  onClickCancelButton,
 }: TextareaNoteProps) => {
   return (
     <TextareaNoteContainer onSaveNote={onSaveNote}>
@@ -34,7 +36,7 @@ const TextareaNote = ({
         inputSaved={inputSaved}
         onChangeNote={onChangeNote}
       />
-      <TextareaNoteFooter />
+      <TextareaNoteFooter onClickCancelButton={onClickCancelButton} />
     </TextareaNoteContainer>
   );
 };
@@ -96,11 +98,19 @@ const TextareaNoteEditor = ({
   );
 };
 
-const TextareaNoteFooter = () => {
+interface TextareaNoteFooterProps {
+  onClickCancelButton?: () => void;
+}
+
+const TextareaNoteFooter = ({
+  onClickCancelButton,
+}: TextareaNoteFooterProps) => {
   return (
-    <Box textAlign={"center"}>
+    <Flex justifyContent={"center"} gap={"1rem"} pt={"0.5rem"}>
+      <ButtonCancel onClick={onClickCancelButton} />
+
       <ButtonSave />
-    </Box>
+    </Flex>
   );
 };
 

@@ -2,7 +2,11 @@ import { useAppSelector } from "@/store";
 
 import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 
-import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
+import {
+  ButtonCancel,
+  ButtonEdit,
+  ButtonSave,
+} from "@/components/Generic/Buttons";
 import { NoteText } from "@/components/Note/NoteText";
 
 import { Tooltip } from "@/components/ui/tooltip-mobile";
@@ -22,6 +26,7 @@ interface NoteContainerProps {
   noteType?: string;
   noteKey?: string;
   onClickEditButton: () => void;
+  onClickCancelButton: () => void;
   onSaveNote: () => void;
 }
 
@@ -36,6 +41,7 @@ const NoteContainer = ({
   noteType,
   noteKey,
   onClickEditButton,
+  onClickCancelButton,
   onSaveNote,
 }: NoteContainerProps) => {
   const onSubmitNote = (event: React.FormEvent<HTMLDivElement>) => {
@@ -68,6 +74,7 @@ const NoteContainer = ({
         dateCreated={dateCreated}
         dateModified={dateModified}
         onClickEditButton={onClickEditButton}
+        onClickCancelButton={onClickCancelButton}
       />
     </Box>
   );
@@ -166,6 +173,7 @@ interface NoteContainerFooterProps {
   dateCreated?: number;
   dateModified?: number;
   onClickEditButton: () => void;
+  onClickCancelButton: () => void;
 }
 
 const NoteContainerFooter = ({
@@ -174,6 +182,7 @@ const NoteContainerFooter = ({
   dateCreated,
   dateModified,
   onClickEditButton,
+  onClickCancelButton,
 }: NoteContainerFooterProps) => {
   const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
 
@@ -217,7 +226,12 @@ const NoteContainerFooter = ({
         </Flex>
       )}
       <Flex justifyContent={"center"} gap={"1rem"}>
+        {!inputSaved && !isSyncing && (
+          <ButtonCancel onClick={onClickCancelButton} />
+        )}
+
         <ButtonEdit onClick={onClickEditButton} loading={isSyncing} />
+
         {!inputSaved && !isSyncing && <ButtonSave />}
       </Flex>
     </>
