@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import RootComponent from "@/components/Pages/YourNotes/RootComponent";
+import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
 import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 
 import { Box, VStack } from "@chakra-ui/react";
@@ -30,7 +30,7 @@ const NotesList = () => {
           <BackupComponent noteType="root" />
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {rootNotesIDs.map((noteID) => (
-              <RootComponent noteID={noteID} key={noteID} />
+              <NoteComponent noteID={noteID} key={noteID} />
             ))}
           </VStack>
         </>

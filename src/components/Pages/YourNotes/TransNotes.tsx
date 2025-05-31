@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import TransComponent from "@/components/Pages/YourNotes/TransComponent";
+import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
 import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 
 import { Box, VStack } from "@chakra-ui/react";
@@ -19,7 +19,7 @@ const TransNotes = () => {
           <BackupComponent noteType="translation" />
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {translationNotesIDs.map((noteID) => (
-              <TransComponent noteID={noteID} key={noteID} />
+              <NoteComponent noteID={noteID} key={noteID} />
             ))}
           </VStack>
         </>

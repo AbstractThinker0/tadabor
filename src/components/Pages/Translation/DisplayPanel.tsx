@@ -9,7 +9,8 @@ import type { verseProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import TransComponent from "@/components/Pages/Translation/TransComponent";
+import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
+
 import { Box, Flex, IconButton } from "@chakra-ui/react";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
@@ -48,7 +49,7 @@ const DisplayPanel = () => {
   // Handling scroll by using a callback ref with MutationObserver
   const handleVerseListRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && scrollKey) {
+      if (node && scrollKey && !isPending) {
         const verseToHighlight = node.querySelector(
           `[data-id="${scrollKey}"]`
         ) as HTMLDivElement;
@@ -161,7 +162,13 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
       verseKey={verse.key}
       isSelected={isSelected}
       rootProps={{ _selected: { bgColor: "yellow.subtle" } }}
-      outerEndElement={<TransComponent isOpen={isOpen} verseKey={verse.key} />}
+      outerEndElement={
+        <CollapsibleNote
+          isOpen={isOpen}
+          noteKey={verse.key}
+          noteType={"translation"}
+        />
+      }
     >
       {verse.versetext}{" "}
       <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>

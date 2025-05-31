@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import VerseComponent from "@/components/Pages/YourNotes/VerseComponent";
+import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
 import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 
 import { Box, VStack } from "@chakra-ui/react";
@@ -19,7 +19,7 @@ const VerseNotes = () => {
           <BackupComponent noteType="verse" />
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
             {verseNotesIDs.map((noteID) => (
-              <VerseComponent noteID={noteID} key={noteID} />
+              <NoteComponent noteID={noteID} key={noteID} />
             ))}
           </VStack>
         </>

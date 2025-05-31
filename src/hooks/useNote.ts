@@ -67,10 +67,11 @@ export const useNote = ({
 
   const noteText = note?.text ?? "";
   const notePreSaveText = note?.preSave ?? "";
-  const noteDirection = note?.dir ?? "";
   const noteSaved = note?.saved ?? false;
   const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
   const noteValidType = note?.type ?? noteType ?? noteSplitType;
+  const noteDirection =
+    note?.dir ?? noteValidType === "translation" ? "ltr" : "";
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
   const noteIsSyncing = uploadNote.isPending;
 
@@ -79,7 +80,11 @@ export const useNote = ({
 
   const setText = (text: string) => {
     if (!note) {
-      dispatch(noteAction.cacheNote(createNewNote({ id: noteIndex, text })));
+      dispatch(
+        noteAction.cacheNote(
+          createNewNote({ id: noteIndex, text, dir: noteDirection })
+        )
+      );
     } else {
       dispatch(noteAction.changeNote({ name: noteIndex, value: text }));
     }

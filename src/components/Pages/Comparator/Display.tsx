@@ -10,10 +10,10 @@ import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import UserTranslation from "@/components/Pages/Comparator/UserTranslation";
 import { Box, Flex } from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
+import { NoteForm } from "@/components/Note/NoteForm";
 
 interface DisplayProps {
   currentChapter: string;
@@ -48,7 +48,7 @@ const Display = ({
   // Handling scroll by using a callback ref
   const handleVerseListRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && currentVerse) {
+      if (node && currentVerse && !isPending) {
         const verseToHighlight = node.querySelector(
           `[data-id="${currentVerse}"]`
         ) as HTMLDivElement;
@@ -145,7 +145,15 @@ const VerseItem = ({
           </Box>
         </Box>
       ))}
-      <UserTranslation verseKey={verse.key} />
+      <Box py={2} dir="ltr">
+        <Box color={"fg.muted"}>Your translation</Box>
+        <NoteForm
+          rootProps={{ bgColor: "inherit" }}
+          isOpen={true}
+          noteKey={verse.key}
+          noteType="translation"
+        />
+      </Box>
     </Box>
   );
 };
