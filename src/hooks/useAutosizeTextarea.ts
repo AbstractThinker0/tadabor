@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from "react";
 // Singleton hidden textarea
 let globalHiddenTextarea: HTMLTextAreaElement | null = null;
 
-// snippet below  is from https://github.com/Andarist/react-textarea-autosize
+// snippet below is from https://github.com/Andarist/react-textarea-autosize
 
 const HIDDEN_TEXTAREA_STYLE = {
   "min-height": "0",
@@ -28,7 +28,7 @@ const forceHiddenStyles = (node: HTMLElement) => {
   });
 };
 
-const cloneRef = (referenceElement: HTMLElement) => {
+const cloneRef = (referenceElement: HTMLTextAreaElement) => {
   if (globalHiddenTextarea) {
     if (globalHiddenTextarea.parentNode) {
       globalHiddenTextarea.parentNode.removeChild(globalHiddenTextarea);
@@ -41,11 +41,43 @@ const cloneRef = (referenceElement: HTMLElement) => {
   el.setAttribute("aria-hidden", "true");
   el.setAttribute("form", "none"); // Ensure it is not part of any form
   el.setAttribute("inert", ""); // Prevent focus and interaction
+
+  // Copy all computed styles from the original textarea
+  const computedStyle = window.getComputedStyle(referenceElement);
+
+  // Important styles that affect text wrapping and height calculation
+  const stylesToCopy = [
+    "width",
+    "font-family",
+    "font-size",
+    "font-weight",
+    "letter-spacing",
+    "line-height",
+    "text-transform",
+    "word-spacing",
+    "padding-left",
+    "padding-right",
+    "padding-top",
+    "padding-bottom",
+    "border-left-width",
+    "border-right-width",
+    "box-sizing",
+    "white-space",
+    "word-wrap",
+    "word-break",
+  ];
+
+  stylesToCopy.forEach((style) => {
+    el.style.setProperty(style, computedStyle.getPropertyValue(style));
+  });
+
   forceHiddenStyles(el);
   globalHiddenTextarea = el;
 };
 
-const getOrCreateGlobalHiddenTextarea = (referenceElement: HTMLElement) => {
+const getOrCreateGlobalHiddenTextarea = (
+  referenceElement: HTMLTextAreaElement
+) => {
   const parent = referenceElement.parentElement;
 
   if (!parent) return null;
@@ -74,6 +106,8 @@ export const useAutosizeTextarea = (
 
     if (!hidden) return;
 
+    // Ensure the hidden textarea has the same width as the original
+    hidden.style.width = `${textarea.clientWidth}px`;
     hidden.value = value;
     hidden.style.height = "auto";
 
@@ -83,7 +117,7 @@ export const useAutosizeTextarea = (
     )}px`;
 
     setHeight(newHeight);
-  }, [value]);
+  }, [value, ref]);
 
   return height;
 };
