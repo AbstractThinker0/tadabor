@@ -7,7 +7,7 @@ import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
-import { useSavedNotes } from "@/hooks/useSavedNote";
+import { useSavedNotes } from "@/hooks/useSavedNotes";
 
 const RootNotes = () => {
   const rootsLoaded = useRootsLoaded();

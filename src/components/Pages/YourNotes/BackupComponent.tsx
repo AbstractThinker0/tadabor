@@ -6,7 +6,7 @@ import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 
-import { useSavedNotes } from "@/hooks/useSavedNote";
+import { useSavedNotes } from "@/hooks/useSavedNotes";
 
 interface BackupComponentProps {
   noteType: "verse" | "translation" | "root";

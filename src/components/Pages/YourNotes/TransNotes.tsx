@@ -4,7 +4,7 @@ import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
 import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 
 import { Box, VStack } from "@chakra-ui/react";
-import { useSavedNotes } from "@/hooks/useSavedNote";
+import { useSavedNotes } from "@/hooks/useSavedNotes";
 
 const TransNotes = () => {
   const { t } = useTranslation();
