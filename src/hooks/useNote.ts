@@ -74,6 +74,9 @@ export const useNote = ({
     note?.dir ?? (noteValidType === "translation" ? "ltr" : "");
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
   const noteIsSyncing = uploadNote.isPending;
+  const noteSyncDate = (note as CloudNoteProps)?.date_synced ?? 0;
+  const noteModifiedDate = note?.date_modified ?? 0;
+  const isOutOfSync = noteSyncDate < noteModifiedDate;
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -205,6 +208,7 @@ export const useNote = ({
     isLoading: isNoteLoading !== false,
     isSynced: noteIsSynced,
     isSyncing: noteIsSyncing,
+    isOutOfSync,
     dateCreated: note?.date_created,
     dateModified: note?.date_modified,
     setText,

@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 interface NoteContainerProps {
   isSynced: boolean;
   isSyncing: boolean;
+  isOutOfSync: boolean;
   inputValue: string;
   inputDirection?: string;
   inputSaved?: boolean;
@@ -33,6 +34,7 @@ interface NoteContainerProps {
 const NoteContainer = ({
   isSynced,
   isSyncing,
+  isOutOfSync,
   inputValue,
   inputDirection = "",
   inputSaved = true,
@@ -62,6 +64,7 @@ const NoteContainer = ({
         noteType={noteType}
         isSynced={isSynced}
         isSyncing={isSyncing}
+        isOutOfSync={isOutOfSync}
       />
       <NoteContainerBody
         inputSaved={inputSaved}
@@ -85,6 +88,7 @@ interface NoteContainerHeaderProps {
   noteKey?: string;
   isSyncing: boolean;
   isSynced: boolean;
+  isOutOfSync: boolean;
 }
 
 const NoteContainerHeader = ({
@@ -92,6 +96,7 @@ const NoteContainerHeader = ({
   noteKey,
   isSyncing,
   isSynced,
+  isOutOfSync,
 }: NoteContainerHeaderProps) => {
   const { t } = useTranslation();
 
@@ -102,6 +107,7 @@ const NoteContainerHeader = ({
   const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
     if (isSyncing) return "Syncing note...";
     if (isSynced) return "Note is synced to the cloud.";
+    if (isOutOfSync) return "Note is out of sync.";
     return "Saved locally. Log in to enable cloud sync.";
   };
 
@@ -129,7 +135,9 @@ const NoteContainerHeader = ({
           ) : (
             <Icon
               as={MdOutlineCheckCircle}
-              color={isSynced ? "green.500" : "gray.500"}
+              color={
+                isOutOfSync ? "orange.500" : isSynced ? "green.500" : "gray.500"
+              }
               boxSize={4}
             />
           )}

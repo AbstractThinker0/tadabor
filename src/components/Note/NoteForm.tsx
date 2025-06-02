@@ -94,6 +94,7 @@ const NoteForm = ({
         <NoteContainer
           isSynced={note.isSynced}
           isSyncing={note.isSyncing}
+          isOutOfSync={note.isOutOfSync}
           inputValue={note.text}
           inputDirection={note.direction}
           inputSaved={note.isSaved}
