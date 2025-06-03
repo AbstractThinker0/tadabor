@@ -145,7 +145,9 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
     (state) => state.qbPage.searchingString
   );
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const direction = i18n.dir();
 
   const searchType =
     searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
@@ -161,11 +163,17 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   return (
     <Box>
-      <Flex alignItems={"center"}>
+      <Flex alignItems={"center"} justifyContent={"space-between"}>
         <ButtonSidebar />
-        <Span paddingInlineStart={"0.25rem"} fontSize={"2xl"} color="blue.fg">
+        <Span
+          dir={direction}
+          paddingInlineStart={"0.25rem"}
+          fontSize={"2xl"}
+          color="blue.fg"
+        >
           {searchText}
         </Span>
+        <div></div>
       </Flex>
       {searchChapters.length !== 114 && (
         <ChaptersTags searchChapters={searchChapters} />
