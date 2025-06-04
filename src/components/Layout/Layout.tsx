@@ -27,7 +27,7 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     window.document.dir = i18n.dir();
-  }, [i18n.resolvedLanguage, i18n]);
+  }, [i18n.resolvedLanguage]);
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
