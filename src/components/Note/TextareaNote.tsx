@@ -95,7 +95,7 @@ const TextareaNoteEditor = ({
       required
       borderRadius={"2xl"}
       colorPalette={"blue"}
-      data-incomplete={!inputSaved ? true : undefined}
+      data-incomplete={inputSaved === false ? true : undefined}
       _incomplete={{
         borderColor: "yellow.solid",
         outlineColor: "yellow.solid",

@@ -140,7 +140,10 @@ const cloudNotesSlice = createSlice({
         state.data[id].isSynced = false;
       }
 
-      if (state.data[id].preSave === state.data[id].text) {
+      if (
+        state.data[id].preSave === state.data[id].text &&
+        state.data[id].text
+      ) {
         state.data[id].saved = true;
         state.data[id].isSynced = true;
       }
