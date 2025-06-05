@@ -10,6 +10,7 @@ import type {
   ChangeNotePayload,
   CloudNoteProps,
   MarkSavedPayload,
+  NotesStateProps,
 } from "@/types";
 
 export interface SyncDatePayload {
@@ -17,18 +18,7 @@ export interface SyncDatePayload {
   value: number;
 }
 
-interface CloudNotesStateProps {
-  data: Record<string, CloudNoteProps>;
-  dataKeys: string[];
-  dataLoading: Record<string, boolean>;
-  dataComplete: Record<string, boolean>;
-
-  loading: boolean;
-  complete: boolean;
-  error: boolean;
-}
-
-const initialState: CloudNotesStateProps = {
+const initialState: NotesStateProps<CloudNoteProps> = {
   data: {},
   dataKeys: [],
   dataLoading: {},
@@ -42,7 +32,10 @@ const initialState: CloudNotesStateProps = {
 export const fetchSingleCloudNote = createAsyncThunk<
   CloudNoteProps | null,
   string,
-  { state: { cloudNotes: CloudNotesStateProps }; rejectValue: string }
+  {
+    state: { cloudNotes: NotesStateProps<CloudNoteProps> };
+    rejectValue: string;
+  }
 >("cloudNotes/fetchSingleCloudNote", async (noteId, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { dataComplete } = getState().cloudNotes;
@@ -69,7 +62,10 @@ export const fetchSingleCloudNote = createAsyncThunk<
 export const fetchCloudNotes = createAsyncThunk<
   false | Record<string, CloudNoteProps>,
   void,
-  { state: { cloudNotes: CloudNotesStateProps }; rejectValue: string }
+  {
+    state: { cloudNotes: NotesStateProps<CloudNoteProps> };
+    rejectValue: string;
+  }
 >("cloudNotes/fetchCloudNotes", async (_, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { complete } = getState().cloudNotes;

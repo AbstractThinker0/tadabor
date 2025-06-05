@@ -22,6 +22,17 @@ export interface CloudNoteProps extends ICloudNote, NoteSaveProps {
 
 export interface LocalNoteProps extends ILocalNote, NoteSaveProps {}
 
+export interface NotesStateProps<T> {
+  data: Record<string, T>;
+  dataKeys: string[];
+  dataLoading: Record<string, boolean>;
+  dataComplete: Record<string, boolean>;
+
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
+}
+
 export interface ChangeNotePayload {
   name: string;
   value: string;

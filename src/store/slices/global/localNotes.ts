@@ -10,20 +10,10 @@ import type {
   ChangeNotePayload,
   LocalNoteProps,
   MarkSavedPayload,
+  NotesStateProps,
 } from "@/types";
 
-interface LocalNotesStateProps {
-  data: Record<string, LocalNoteProps>;
-  dataKeys: string[];
-  dataLoading: Record<string, boolean>;
-  dataComplete: Record<string, boolean>;
-
-  loading: boolean;
-  complete: boolean;
-  error: boolean;
-}
-
-const initialState: LocalNotesStateProps = {
+const initialState: NotesStateProps<LocalNoteProps> = {
   data: {},
   dataKeys: [],
   dataLoading: {},
@@ -37,7 +27,10 @@ const initialState: LocalNotesStateProps = {
 export const fetchSingleLocalNote = createAsyncThunk<
   LocalNoteProps | null,
   string,
-  { state: { localNotes: LocalNotesStateProps }; rejectValue: string }
+  {
+    state: { localNotes: NotesStateProps<LocalNoteProps> };
+    rejectValue: string;
+  }
 >("localNotes/fetchSingleLocalNote", async (noteId, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { dataComplete } = getState().localNotes;
@@ -64,7 +57,10 @@ export const fetchSingleLocalNote = createAsyncThunk<
 export const fetchLocalNotes = createAsyncThunk<
   false | Record<string, LocalNoteProps>,
   void,
-  { state: { localNotes: LocalNotesStateProps }; rejectValue: string }
+  {
+    state: { localNotes: NotesStateProps<LocalNoteProps> };
+    rejectValue: string;
+  }
 >("localNotes/fetchLocalNotes", async (_, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { complete } = getState().localNotes;
