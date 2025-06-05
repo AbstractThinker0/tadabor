@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useTRPC, useTRPCClient } from "@/util/trpc";
@@ -11,6 +11,8 @@ import {
   fromDexieToBackend,
   fromReduxToDexie,
 } from "@/util/notes";
+
+import { useBeforeUnload } from "react-router";
 
 interface NotesProviderProps {
   children: React.ReactNode;
@@ -40,6 +42,29 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
   const trpcClient = useTRPCClient();
   const queryClient = useQueryClient();
+
+  useBeforeUnload((e) => {
+    if (hasUnsavedNotes()) {
+      e.preventDefault();
+      e.returnValue = "You have unsaved notes..";
+    }
+  });
+
+  const hasUnsavedNotes = useCallback(() => {
+    let hasUnsavedNotes = false;
+
+    if (isLogged && cloudNotes) {
+      hasUnsavedNotes = Object.values(cloudNotes).some(
+        (note) => note.saved === false && (note.preSave || note.text)
+      );
+    } else if (localNotes) {
+      hasUnsavedNotes = Object.values(localNotes).some(
+        (note) => note.saved === false && (note.preSave || note.text)
+      );
+    }
+
+    return hasUnsavedNotes;
+  }, [isLogged, cloudNotes, localNotes]);
 
   const fetchNoteById = async ({ noteID }: { noteID: string }) => {
     return await queryClient.fetchQuery({
