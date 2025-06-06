@@ -54,10 +54,7 @@ const RootsList = memo(
             .map((root) => (
               <RootComponent
                 key={root.id}
-                root_occurences={root.occurences}
-                root_name={root.name}
-                root_id={root.id.toString()}
-                root_count={root.count}
+                root={root}
                 handleVerseTab={handleVerseTab}
               />
             ))
