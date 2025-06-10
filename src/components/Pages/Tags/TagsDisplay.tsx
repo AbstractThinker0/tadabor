@@ -218,7 +218,7 @@ function SelectedVerses({
   }, [scrollKey]);
 
   return (
-    <Box p={1} ref={refVerses}>
+    <Box p={1} ref={refVerses} dir="rtl">
       {sortedVerses.length ? (
         <>
           {sortedVerses.map((verseKey, index) => {
