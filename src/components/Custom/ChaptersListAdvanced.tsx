@@ -27,7 +27,7 @@ const ChaptersListAdvanced = ({
 }: ChaptersListAdvancedProps) => {
   const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
-  const { t } = useTranslation();
+
   const refChapter = useRef<HTMLDivElement | null>(null);
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
@@ -107,84 +107,165 @@ const ChaptersListAdvanced = ({
 
   return (
     <Flex flexDir={"column"} minH={"45vh"} maxH={"45vh"}>
-      <InputString
-        inputElementProps={{
-          placeholder: quranService.getChapterName(currentChapter),
-          borderBottom: "none",
-          borderBottomRadius: "0",
-        }}
-        value={chapterToken}
-        onChange={onChangeChapterToken}
-        onClear={onClearInput}
-        dir="rtl"
+      <ChaptersListHeader
+        currentChapter={currentChapter}
+        chapterToken={chapterToken}
+        onChangeChapterToken={onChangeChapterToken}
+        onClearInput={onClearInput}
       />
-      <Box
-        flexGrow={1}
-        border={"1px solid"}
-        borderColor={"border.emphasized"}
-        overflowY={"scroll"}
-        w={"100%"}
-        fontSize={"medium"}
-      >
-        {quranService.chapterNames
-          .filter((chapter) => chapter.name.includes(chapterToken))
-          .map((chapter) => (
-            <Flex
-              key={chapter.id}
-              cursor={"pointer"}
-              px={"5px"}
-              py={"3px"}
-              mdDown={{ py: "8px" }}
-              aria-selected={currentChapter === chapter.id}
-              _selected={{ bgColor: "gray.emphasized" }}
-            >
-              <Box
-                flexGrow={1}
-                onClick={(event) => onClickChapter(event, chapter.id)}
-              >
-                {chapter.id}. {chapter.name}
-              </Box>
-              <Checkbox
-                colorPalette={"blue"}
-                checked={
-                  selectedChapters[chapter.id] !== undefined
-                    ? selectedChapters[chapter.id]
-                    : true
-                }
-                onChange={() => onChangeSelectChapter(chapter.id)}
-              />
-            </Flex>
-          ))}
-      </Box>
-      <Flex
-        justify={"center"}
-        gap={4}
-        padding={4}
-        bgColor={"bg.muted"}
-        border={"1px solid"}
-        borderBottomRadius={"0.275rem"}
-        borderColor={"border.emphasized"}
-        dir="ltr"
-      >
-        <Button
-          colorPalette="teal"
-          fontWeight="normal"
-          disabled={getSelectedCount === 114}
-          onClick={onClickSelectAll}
-        >
-          {t("all_chapters")}
-        </Button>
-        <Button
-          colorPalette="teal"
-          fontWeight="normal"
-          disabled={onlyCurrentSelected}
-          onClick={onClickDeselectAll}
-        >
-          {t("current_chapter")}
-        </Button>
-      </Flex>
+      <ChaptersListBody
+        chapterToken={chapterToken}
+        currentChapter={currentChapter}
+        onChangeSelectChapter={onChangeSelectChapter}
+        onClickChapter={onClickChapter}
+        selectedChapters={selectedChapters}
+      />
+      <ChaptersListFooter
+        getSelectedCount={getSelectedCount}
+        onlyCurrentSelected={onlyCurrentSelected}
+        onClickDeselectAll={onClickDeselectAll}
+        onClickSelectAll={onClickSelectAll}
+      />
     </Flex>
   );
 };
 
 export { ChaptersListAdvanced };
+
+interface ChaptersListHeaderProps {
+  currentChapter: number;
+  chapterToken: string;
+  onChangeChapterToken: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onClearInput: () => void;
+}
+
+const ChaptersListHeader = ({
+  chapterToken,
+  currentChapter,
+  onChangeChapterToken,
+  onClearInput,
+}: ChaptersListHeaderProps) => {
+  const quranService = useQuran();
+
+  return (
+    <InputString
+      inputElementProps={{
+        placeholder: quranService.getChapterName(currentChapter),
+        borderBottom: "none",
+        borderBottomRadius: "0",
+      }}
+      value={chapterToken}
+      onChange={onChangeChapterToken}
+      onClear={onClearInput}
+      dir="rtl"
+    />
+  );
+};
+
+interface ChaptersListBodyProps {
+  currentChapter: number;
+  chapterToken: string;
+  selectedChapters: selectedChaptersType;
+  onChangeSelectChapter: (chapterID: number) => void;
+  onClickChapter: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    chapterID: number
+  ) => void;
+}
+
+const ChaptersListBody = ({
+  currentChapter,
+  chapterToken,
+  selectedChapters,
+  onChangeSelectChapter,
+  onClickChapter,
+}: ChaptersListBodyProps) => {
+  const quranService = useQuran();
+
+  return (
+    <Box
+      flexGrow={1}
+      border={"1px solid"}
+      borderColor={"border.emphasized"}
+      overflowY={"scroll"}
+      w={"100%"}
+      fontSize={"medium"}
+    >
+      {quranService.chapterNames
+        .filter((chapter) => chapter.name.includes(chapterToken))
+        .map((chapter) => (
+          <Flex
+            key={chapter.id}
+            cursor={"pointer"}
+            px={"5px"}
+            py={"3px"}
+            mdDown={{ py: "8px" }}
+            aria-selected={currentChapter === chapter.id}
+            _selected={{ bgColor: "gray.emphasized" }}
+          >
+            <Box
+              flexGrow={1}
+              onClick={(event) => onClickChapter(event, chapter.id)}
+            >
+              {chapter.id}. {chapter.name}
+            </Box>
+            <Checkbox
+              colorPalette={"blue"}
+              checked={
+                selectedChapters[chapter.id] !== undefined
+                  ? selectedChapters[chapter.id]
+                  : true
+              }
+              onChange={() => onChangeSelectChapter(chapter.id)}
+            />
+          </Flex>
+        ))}
+    </Box>
+  );
+};
+
+interface ChaptersListFooterProps {
+  getSelectedCount: number;
+  onlyCurrentSelected: boolean;
+  onClickSelectAll: () => void;
+  onClickDeselectAll: () => void;
+}
+
+const ChaptersListFooter = ({
+  getSelectedCount,
+  onlyCurrentSelected,
+  onClickSelectAll,
+  onClickDeselectAll,
+}: ChaptersListFooterProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <Flex
+      justify={"center"}
+      gap={4}
+      padding={4}
+      bgColor={"bg.muted"}
+      border={"1px solid"}
+      borderBottomRadius={"0.275rem"}
+      borderColor={"border.emphasized"}
+      dir="ltr"
+    >
+      <Button
+        colorPalette="teal"
+        fontWeight="normal"
+        disabled={getSelectedCount === 114}
+        onClick={onClickSelectAll}
+      >
+        {t("all_chapters")}
+      </Button>
+      <Button
+        colorPalette="teal"
+        fontWeight="normal"
+        disabled={onlyCurrentSelected}
+        onClick={onClickDeselectAll}
+      >
+        {t("current_chapter")}
+      </Button>
+    </Flex>
+  );
+};
