@@ -28,67 +28,41 @@ const ChaptersListAdvanced = ({
   const [chapterToken, setChapterToken] = useState("");
   const quranService = useQuran();
 
-  const refChapter = useRef<HTMLDivElement | null>(null);
-
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
     setChapterToken(event.target.value);
   }
 
-  function onClickChapter(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) {
+  function handleCurrentChapter(chapterID: number) {
     setChapter(chapterID);
     setChapterToken("");
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-    refChapter.current = event.currentTarget;
   }
-
-  useEffect(() => {
-    const child = refChapter.current;
-    const parent = refChapter.current?.parentElement?.parentElement;
-
-    if (!child || !parent) return;
-
-    const parentOffsetTop = parent.offsetTop;
-
-    if (
-      parent.scrollTop + parentOffsetTop <
-        child.offsetTop - parent.clientHeight + child.clientHeight * 2.5 ||
-      parent.scrollTop + parentOffsetTop >
-        child.offsetTop - child.clientHeight * 2.5
-    ) {
-      parent.scrollTop =
-        child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
-    }
-  }, [currentChapter]);
 
   function onChangeSelectChapter(chapterID: number) {
     toggleSelectChapter(chapterID);
   }
 
   function onClickSelectAll() {
-    const selectedChapters: selectedChaptersType = {};
+    const newSelectedChapters: selectedChaptersType = {};
 
     quranService.chapterNames.forEach((chapter) => {
-      selectedChapters[chapter.id] = true;
+      newSelectedChapters[chapter.id] = true;
     });
 
-    setSelectedChapters(selectedChapters);
+    setSelectedChapters(newSelectedChapters);
   }
 
   function onClickDeselectAll() {
-    const selectedChapters: selectedChaptersType = {};
+    const newSelectedChapters: selectedChaptersType = {};
 
     quranService.chapterNames.forEach((chapter) => {
-      selectedChapters[chapter.id] = false;
+      newSelectedChapters[chapter.id] = false;
     });
 
-    selectedChapters[currentChapter] = true;
+    newSelectedChapters[currentChapter] = true;
 
-    setSelectedChapters(selectedChapters);
+    setSelectedChapters(newSelectedChapters);
   }
 
   const onClearInput = () => {
@@ -117,7 +91,7 @@ const ChaptersListAdvanced = ({
         chapterToken={chapterToken}
         currentChapter={currentChapter}
         onChangeSelectChapter={onChangeSelectChapter}
-        onClickChapter={onClickChapter}
+        handleCurrentChapter={handleCurrentChapter}
         selectedChapters={selectedChapters}
       />
       <ChaptersListFooter
@@ -166,57 +140,90 @@ interface ChaptersListBodyProps {
   currentChapter: number;
   chapterToken: string;
   selectedChapters: selectedChaptersType;
+  defaultSelected?: boolean;
   onChangeSelectChapter: (chapterID: number) => void;
-  onClickChapter: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) => void;
+  handleCurrentChapter: (chapterID: number) => void;
 }
 
 const ChaptersListBody = ({
   currentChapter,
   chapterToken,
   selectedChapters,
+  defaultSelected = true,
   onChangeSelectChapter,
-  onClickChapter,
+  handleCurrentChapter,
 }: ChaptersListBodyProps) => {
   const quranService = useQuran();
 
+  const refChaptersList = useRef<HTMLDivElement>(null);
+  const refChapter = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const selectedChapterElement = refChapter.current;
+    const chaptersListElement = refChaptersList.current;
+
+    if (!selectedChapterElement || !chaptersListElement) return;
+
+    const parentOffsetTop = chaptersListElement.offsetTop;
+
+    if (
+      chaptersListElement.scrollTop + parentOffsetTop <
+        selectedChapterElement.offsetTop -
+          chaptersListElement.clientHeight +
+          selectedChapterElement.clientHeight * 2.5 ||
+      chaptersListElement.scrollTop + parentOffsetTop >
+        selectedChapterElement.offsetTop -
+          selectedChapterElement.clientHeight * 2.5
+    ) {
+      chaptersListElement.scrollTop =
+        selectedChapterElement.offsetTop -
+        parentOffsetTop -
+        chaptersListElement.clientHeight / 2;
+    }
+  });
+
+  const onClickChapter = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    chapterID: number
+  ) => {
+    handleCurrentChapter(chapterID);
+
+    refChapter.current = event.currentTarget;
+  };
+
   return (
     <Box
-      flexGrow={1}
-      border={"1px solid"}
+      flexGrow="1"
+      border="1px solid"
       borderColor={"border.emphasized"}
-      overflowY={"scroll"}
-      w={"100%"}
+      overflowY="scroll"
+      bgColor={"brand.bg"}
       fontSize={"medium"}
+      padding="2px"
+      ref={refChaptersList}
     >
       {quranService.chapterNames
         .filter((chapter) => chapter.name.includes(chapterToken))
         .map((chapter) => (
           <Flex
             key={chapter.id}
-            cursor={"pointer"}
-            px={"5px"}
+            cursor="pointer"
+            px="5px"
             py={"3px"}
             mdDown={{ py: "8px" }}
-            aria-selected={currentChapter === chapter.id}
+            aria-selected={defaultSelected && currentChapter === chapter.id}
             _selected={{ bgColor: "gray.emphasized" }}
           >
             <Box
-              flexGrow={1}
+              flexGrow="1"
               onClick={(event) => onClickChapter(event, chapter.id)}
             >
               {chapter.id}. {chapter.name}
             </Box>
             <Checkbox
-              colorPalette={"blue"}
-              checked={
-                selectedChapters[chapter.id] !== undefined
-                  ? selectedChapters[chapter.id]
-                  : true
-              }
-              onChange={() => onChangeSelectChapter(chapter.id)}
+              colorPalette={"teal"}
+              checked={selectedChapters[chapter.id]}
+              onCheckedChange={() => onChangeSelectChapter(chapter.id)}
             />
           </Flex>
         ))}
@@ -241,31 +248,38 @@ const ChaptersListFooter = ({
 
   return (
     <Flex
-      justify={"center"}
-      gap={4}
-      padding={4}
+      alignItems="center"
+      flexWrap="wrap"
+      padding="5px"
       bgColor={"bg.muted"}
-      border={"1px solid"}
-      borderBottomRadius={"0.275rem"}
+      border="1px solid"
       borderColor={"border.emphasized"}
-      dir="ltr"
     >
-      <Button
-        colorPalette="teal"
-        fontWeight="normal"
-        disabled={getSelectedCount === 114}
-        onClick={onClickSelectAll}
-      >
-        {t("all_chapters")}
-      </Button>
-      <Button
-        colorPalette="teal"
-        fontWeight="normal"
-        disabled={onlyCurrentSelected}
-        onClick={onClickDeselectAll}
-      >
-        {t("current_chapter")}
-      </Button>
+      <Box fontWeight="bold" fontSize={"medium"} paddingEnd={"0.1rem"}>
+        {t("search_scope")}:
+      </Box>
+      <Flex justifyContent="center" gap="3px">
+        <Button
+          px={"0.25rem"}
+          colorPalette="teal"
+          fontWeight="normal"
+          disabled={getSelectedCount === 114}
+          onClick={onClickSelectAll}
+        >
+          {t("all_chapters")}
+        </Button>
+        <Button
+          px={"0.25rem"}
+          colorPalette="teal"
+          fontWeight="normal"
+          disabled={onlyCurrentSelected}
+          onClick={onClickDeselectAll}
+        >
+          {t("current_chapter")}
+        </Button>
+      </Flex>
     </Flex>
   );
 };
+
+export { ChaptersListHeader, ChaptersListBody, ChaptersListFooter };
