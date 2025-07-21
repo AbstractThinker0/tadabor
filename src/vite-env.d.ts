@@ -6,7 +6,7 @@ declare const APP_MODE: string;
 
 interface ImportMetaEnv {
   readonly VITE_API: string;
-  readonly HCAPTCHA_KEY: string;
+  readonly VITE_HCAPTCHA_KEY: string;
 }
 
 interface ImportMeta {

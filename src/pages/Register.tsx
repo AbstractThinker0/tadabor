@@ -159,7 +159,7 @@ const Register = () => {
 
         <Flex paddingTop={"10px"} justifyContent={"center"}>
           <HCaptcha
-            sitekey={import.meta.env.HCAPTCHA_KEY || ""}
+            sitekey={import.meta.env.VITE_HCAPTCHA_KEY || ""}
             onVerify={(token) => {
               setTokenCaptcha(token);
             }}
