@@ -11,12 +11,16 @@ import { PasswordInput } from "@/components/ui/password-input";
 
 import { useAuth } from "@/hooks/useAuth";
 
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+
 const Register = () => {
   usePageNav("auth.register");
 
   const { t } = useTranslation();
 
   const { signup } = useAuth();
+
+  const [tokenCaptcha, setTokenCaptcha] = useState("");
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -71,13 +75,23 @@ const Register = () => {
   };
 
   const onClickRegister = async () => {
+    if (!tokenCaptcha) {
+      setValidationError("Captcha required.");
+      return;
+    }
+
     if (!validateInputs()) return;
 
-    await signup.execute({
+    const result = await signup.execute({
       username,
       email,
       password,
+      captchaToken: tokenCaptcha,
     });
+
+    if (result === false) {
+      setValidationError("Captcha required.");
+    }
   };
 
   useEffect(() => {
@@ -91,6 +105,7 @@ const Register = () => {
       <Box
         bg="bg"
         p={8}
+        mdDown={{ p: 4 }}
         rounded="md"
         shadow="md"
         w={{ base: "90%", md: "400px" }}
@@ -142,11 +157,21 @@ const Register = () => {
           </Text>
         )}
 
+        <Flex paddingTop={"10px"} justifyContent={"center"}>
+          <HCaptcha
+            sitekey={import.meta.env.HCAPTCHA_KEY || ""}
+            onVerify={(token) => {
+              setTokenCaptcha(token);
+            }}
+          />
+        </Flex>
+
         <Button
           colorScheme="teal"
           w="full"
-          mt={6}
+          mt={5}
           onClick={onClickRegister}
+          disabled={!tokenCaptcha}
           loading={signup.isPending || signup.isSuccess} // <-- disable and show spinner
           loadingText={t("auth.attemptingRegister")}
         >

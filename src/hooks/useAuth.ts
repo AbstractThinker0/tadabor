@@ -118,17 +118,24 @@ export const useAuth = () => {
     email,
     username,
     password,
+    captchaToken,
   }: {
     email: string;
     username: string;
     password: string;
+    captchaToken: string;
   }) => {
     try {
       const result = await userCreate.mutateAsync({
         username,
         email,
         password,
+        captchaToken,
       });
+
+      if (result.success !== true) {
+        return false;
+      }
 
       confirmLogin({
         email,

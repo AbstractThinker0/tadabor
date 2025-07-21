@@ -110,6 +110,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             password: string;
             username: string;
             email: string;
+            captchaToken: string;
           };
           output: {
             success: boolean;
