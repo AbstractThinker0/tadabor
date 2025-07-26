@@ -108,10 +108,13 @@ export const useAuth = () => {
 
   const logout = ({
     message = "auth.loggedOut",
-  }: { message?: string } = {}) => {
+    clearOldNotes = false,
+  }: { message?: string; clearOldNotes?: boolean } = {}) => {
     dispatch(userActions.logout());
     dispatch(cloudNotesActions.reset());
-    dbFuncs.clearCloudNotes();
+    if (clearOldNotes) {
+      dbFuncs.clearCloudNotes();
+    }
     queueMicrotask(() =>
       toasterBottomCenter.create({
         description: t(message),

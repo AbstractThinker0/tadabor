@@ -28,7 +28,7 @@ const NavbarUser = () => {
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
 
   const onClickLogout = () => {
-    logout();
+    logout({ clearOldNotes: true });
   };
 
   if (!isBackendEnabled) return <></>;
