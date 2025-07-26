@@ -31,12 +31,12 @@ const initialState: NotesStateProps<CloudNoteProps> = {
 
 export const fetchSingleCloudNote = createAsyncThunk<
   CloudNoteProps | null,
-  string,
+  { noteId: string; userId: number },
   {
     state: { cloudNotes: NotesStateProps<CloudNoteProps> };
     rejectValue: string;
   }
->("cloudNotes/fetchSingleCloudNote", async (noteId, thunkAPI) => {
+>("cloudNotes/fetchSingleCloudNote", async ({ noteId, userId }, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { dataComplete } = getState().cloudNotes;
 
@@ -47,6 +47,8 @@ export const fetchSingleCloudNote = createAsyncThunk<
     const note = await dbFuncs.loadCloudNote(noteId);
 
     if (!note) return null;
+
+    if (note.authorId !== userId) return null;
 
     return {
       ...note,
@@ -61,12 +63,12 @@ export const fetchSingleCloudNote = createAsyncThunk<
 
 export const fetchCloudNotes = createAsyncThunk<
   false | Record<string, CloudNoteProps>,
-  void,
+  { userId: number },
   {
     state: { cloudNotes: NotesStateProps<CloudNoteProps> };
     rejectValue: string;
   }
->("cloudNotes/fetchCloudNotes", async (_, thunkAPI) => {
+>("cloudNotes/fetchCloudNotes", async ({ userId }, thunkAPI) => {
   const { getState, rejectWithValue } = thunkAPI;
   const { complete } = getState().cloudNotes;
 
@@ -80,6 +82,8 @@ export const fetchCloudNotes = createAsyncThunk<
     const notesData: Record<string, CloudNoteProps> = {};
 
     dbData.forEach((note) => {
+      if (note.authorId !== userId) return;
+
       notesData[note.id] = {
         ...note,
         saved: true,
@@ -202,11 +206,11 @@ const cloudNotesSlice = createSlice({
           }
         }
 
-        const noteId = action.meta.arg;
+        const { noteId } = action.meta.arg;
         state.dataLoading[noteId] = false;
       })
       .addCase(fetchSingleCloudNote.pending, (state, action) => {
-        const noteId = action.meta.arg;
+        const { noteId } = action.meta.arg;
         state.dataLoading[noteId] = true;
       })
       .addCase(fetchSingleCloudNote.rejected, (state, action) => {

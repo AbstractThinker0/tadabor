@@ -2,6 +2,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
   {
     ctx: {
       user: {
+        id: number;
         username: string;
         email: string;
       } | null;
@@ -26,6 +27,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
       {
         ctx: {
           user: {
+            id: number;
             username: string;
             email: string;
           } | null;
@@ -52,6 +54,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           };
           output: {
             user: {
+              id: number;
               username: string;
               email: string;
             };
@@ -70,6 +73,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
       {
         ctx: {
           user: {
+            id: number;
             username: string;
             email: string;
           } | null;
@@ -100,6 +104,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             message: string;
             token: string;
             user: {
+              id: number;
               username: string;
               email: string;
             };
@@ -112,17 +117,26 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             email: string;
             captchaToken: string;
           };
-          output: {
-            success: boolean;
-            message: string;
-            token: string;
-          };
+          output:
+            | {
+                success: boolean;
+                message: string;
+                token: string;
+                userid?: undefined;
+              }
+            | {
+                success: boolean;
+                message: string;
+                userid: number;
+                token: string;
+              };
         }>;
         refresh: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
           output: {
             success: boolean;
             user: {
+              id: number;
               username: string;
               email: string;
             };
@@ -145,6 +159,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
       {
         ctx: {
           user: {
+            id: number;
             username: string;
             email: string;
           } | null;
@@ -232,6 +247,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             note: {
               id: string;
               uuid: string;
+              noteId: number;
               authorId: number;
               key: string;
               type: string;
@@ -252,6 +268,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
       {
         ctx: {
           user: {
+            id: number;
             username: string;
             email: string;
           } | null;
@@ -291,6 +308,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             message: string;
             token: string;
             user: {
+              id: number;
               username: string;
               email: string;
             };
@@ -306,6 +324,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             message: string;
             token: string;
             user: {
+              id: number;
               username: string;
               email: string;
             };

@@ -1,10 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+export const keyId = "userId";
 const keyToken = "userToken";
 const keyEmail = "userEmail";
 const keyUsername = "userUsername";
 
 interface UserStateProps {
+  id: number;
+
   token: string;
   email: string;
   username: string;
@@ -15,6 +18,7 @@ interface UserStateProps {
 }
 
 const initialState: UserStateProps = {
+  id: Number(localStorage.getItem(keyId)) || -1,
   token: localStorage.getItem(keyToken) || "",
   email: localStorage.getItem(keyEmail) || "",
   username: localStorage.getItem(keyUsername) || "",
@@ -25,6 +29,7 @@ const initialState: UserStateProps = {
 };
 
 interface LoginPayload {
+  id: number;
   token: string;
   email: string;
   username: string;
@@ -40,7 +45,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<LoginPayload>) => {
-      const { token, email, username } = action.payload;
+      const { id, token, email, username } = action.payload;
+
+      state.id = id;
+      localStorage.setItem(keyId, id.toString());
 
       state.token = token;
       localStorage.setItem(keyToken, token);
@@ -54,11 +62,14 @@ const userSlice = createSlice({
       state.isPending = false;
     },
     loginOffline: (state) => {
+      const id = Number(localStorage.getItem(keyId)) || 0;
       const token = localStorage.getItem(keyToken);
       const email = localStorage.getItem(keyEmail);
       const username = localStorage.getItem(keyUsername);
 
-      if (token && email && username) {
+      if (token && email && username && id) {
+        state.id = id;
+
         state.token = token;
         state.email = email;
         state.username = username;
@@ -69,10 +80,12 @@ const userSlice = createSlice({
       }
     },
     logout: (state) => {
+      state.id = -1;
       state.token = "";
       state.email = "";
       state.username = "";
 
+      localStorage.removeItem(keyId);
       localStorage.removeItem(keyToken);
       localStorage.removeItem(keyEmail);
       localStorage.removeItem(keyUsername);

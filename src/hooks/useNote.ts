@@ -39,6 +39,7 @@ export const useNote = ({
   const noteIndex = noteID || `${noteType}:${noteKey}`;
 
   const isLogged = useAppSelector((state) => state.user.isLogged);
+  const userId = useAppSelector((state) => state.user.id);
 
   const selector = isLogged
     ? selectCloudNote(noteIndex)
@@ -191,12 +192,12 @@ export const useNote = ({
   useEffect(() => {
     if (!isVisible || isNoteLoading === false) return;
 
-    dispatch(
-      isLogged
-        ? fetchSingleCloudNote(noteIndex)
-        : fetchSingleLocalNote(noteIndex)
-    );
-  }, [isVisible, isLogged, isNoteLoading, dispatch]);
+    if (isLogged) {
+      dispatch(fetchSingleCloudNote({ noteId: noteIndex, userId }));
+    } else {
+      dispatch(fetchSingleLocalNote(noteIndex));
+    }
+  }, [isVisible, isLogged, isNoteLoading, userId, noteIndex, dispatch]);
 
   return {
     preSaveText: notePreSaveText,

@@ -50,12 +50,13 @@ const UserProvider = ({ children }: UserProviderProps) => {
       hasShownToast.current = true;
 
       confirmLogin({
+        id: userLogin.data.user.id,
         email: userLogin.data.user.email,
         username: userLogin.data.user.username,
         token: userToken,
       });
 
-      dispatch(fetchCloudNotes());
+      dispatch(fetchCloudNotes({ userId: userLogin.data.user.id }));
     }
 
     if (userLogin.isError) {
@@ -89,6 +90,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
     // If we successfully connected to the backend while in offline mode,
     // transition to regular logged in state
     confirmLogin({
+      id: connectionCheck.data.user.id,
       email: email,
       username: username,
       token: userToken,

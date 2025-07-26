@@ -3,7 +3,7 @@ import {
   cloudNotesActions,
   fetchCloudNotes,
 } from "@/store/slices/global/cloudNotes";
-import { userActions } from "@/store/slices/global/user";
+import { keyId, userActions } from "@/store/slices/global/user";
 
 import { useTRPC } from "@/util/trpc";
 import { useMutation } from "@tanstack/react-query";
@@ -47,12 +47,13 @@ export const useAuth = () => {
       const result = await userLogin.mutateAsync({ email, password });
 
       confirmLogin({
+        id: result.user.id,
         email,
         token: result.token,
         username: result.user.username,
       });
 
-      dispatch(fetchCloudNotes());
+      dispatch(fetchCloudNotes({ userId: result.user.id }));
 
       navigate("/");
     } catch (error) {
@@ -61,11 +62,13 @@ export const useAuth = () => {
   };
 
   const confirmLogin = ({
+    id,
     email,
     token,
     username,
     message = "auth.loggedIn",
   }: {
+    id: number;
     email: string;
     token: string;
     username: string;
@@ -73,6 +76,7 @@ export const useAuth = () => {
   }) => {
     dispatch(
       userActions.login({
+        id,
         email,
         token,
         username,
@@ -90,7 +94,9 @@ export const useAuth = () => {
   const loginOffline = () => {
     dispatch(userActions.loginOffline());
 
-    dispatch(fetchCloudNotes());
+    const userId = Number(localStorage.getItem(keyId)) || 0;
+
+    dispatch(fetchCloudNotes({ userId }));
 
     queueMicrotask(() =>
       toasterBottomCenter.create({
@@ -133,17 +139,18 @@ export const useAuth = () => {
         captchaToken,
       });
 
-      if (result.success !== true) {
+      if (result.success !== true || !("userid" in result)) {
         return false;
       }
 
       confirmLogin({
+        id: result.userid,
         email,
         token: result.token,
         username,
       });
 
-      dispatch(fetchCloudNotes());
+      dispatch(fetchCloudNotes({ userId: result.userid }));
 
       navigate("/");
     } catch (error) {
@@ -182,13 +189,14 @@ export const useAuth = () => {
 
       if (result.success) {
         confirmLogin({
+          id: result.user.id,
           token: result.token,
           email: result.user.email,
           username: result.user.username,
           message: "auth.passwordUpdated",
         });
 
-        dispatch(fetchCloudNotes());
+        dispatch(fetchCloudNotes({ userId: result.user.id }));
 
         navigate("/");
 
@@ -240,6 +248,7 @@ export const useAuth = () => {
 
       if (result.success) {
         confirmLogin({
+          id: result.user.id,
           token: result.token,
           email: result.user.email,
           username: result.user.username,
