@@ -137,8 +137,8 @@ export const useNote = ({
 
         const result = await uploadNote.mutateAsync(uploadData);
 
-        if (result?.success) {
-          syncDate = result?.note.dateLastSynced;
+        if (result && result.success) {
+          syncDate = result.note.dateLastSynced;
           dispatch(
             cloudNotesActions.updateSyncDate({
               name: note.id,
