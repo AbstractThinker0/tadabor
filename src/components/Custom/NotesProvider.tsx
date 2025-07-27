@@ -21,6 +21,7 @@ interface NotesProviderProps {
 const NotesProvider = ({ children }: NotesProviderProps) => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
+  const userId = useAppSelector((state) => state.user.id);
 
   const hasLoadedLocalNotes = useAppSelector(
     (state) => state.localNotes.complete
@@ -131,21 +132,31 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
         ? { ...localNotes[noteID] }
         : { ...cloudNotes[noteID] };
 
-      if (!clNote) continue;
+      if (!clNote) {
+        console.error(`Note with ID ${noteID} not found.`);
+        continue;
+      }
 
       try {
         const uploadData = fromDexieToBackend(clNote);
 
         const result = await uploadNote.mutateAsync(uploadData);
 
-        const syncedNote: CloudNoteProps = { ...clNote, date_synced: 0 };
+        const syncedNote: CloudNoteProps = {
+          ...clNote,
+          date_synced: 0,
+          authorId: userId,
+        };
 
-        if (result?.success) {
-          syncedNote.date_synced = result?.note.dateLastSynced;
+        if (result && result.success) {
+          syncedNote.date_synced = result.note.dateLastSynced;
           // if a guest note we need to cache it to cloud notes first
           if (guest) {
             dispatch(
-              cloudNotesActions.cacheNote({ ...syncedNote, isNew: false })
+              cloudNotesActions.cacheNote({
+                ...syncedNote,
+                isNew: false,
+              })
             );
           } else {
             dispatch(
@@ -159,11 +170,11 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
           try {
             await dbFuncs.saveCloudNote(fromReduxToDexie(syncedNote));
           } catch (error) {
-            console.error("error:", error);
+            console.error("Error saving note to local database:", error);
           }
         }
       } catch (err) {
-        console.error("Upload failed", err);
+        console.error("Upload failed for note ID:", noteID, err);
       }
     }
   };

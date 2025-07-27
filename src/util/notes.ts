@@ -7,14 +7,21 @@ interface CreateNewNoteParams {
   id: string;
   text?: string;
   dir?: string;
+  authorId?: number;
 }
 
-const createNewNote = ({ id, text = "", dir = "" }: CreateNewNoteParams) => {
+const createNewNote = ({
+  id,
+  text = "",
+  dir = "",
+  authorId,
+}: CreateNewNoteParams) => {
   const [type, key] = id.split(":");
   const now = Date.now();
   return {
     uuid: uuidv4(),
     id,
+    authorId,
     type,
     key,
     text,

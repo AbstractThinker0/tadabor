@@ -86,7 +86,12 @@ export const useNote = ({
     if (!note) {
       dispatch(
         noteAction.cacheNote(
-          createNewNote({ id: noteIndex, text, dir: noteDirection })
+          createNewNote({
+            id: noteIndex,
+            text,
+            dir: noteDirection,
+            authorId: userId ? userId : undefined,
+          })
         )
       );
     } else {
@@ -96,7 +101,15 @@ export const useNote = ({
 
   const setDirection = (dir: string) => {
     if (!note) {
-      dispatch(noteAction.cacheNote(createNewNote({ id: noteIndex, dir })));
+      dispatch(
+        noteAction.cacheNote(
+          createNewNote({
+            id: noteIndex,
+            dir,
+            authorId: userId ? userId : undefined,
+          })
+        )
+      );
     } else {
       dispatch(noteAction.changeNoteDir({ name: noteIndex, value: dir }));
     }
