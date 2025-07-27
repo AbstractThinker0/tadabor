@@ -53,7 +53,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
         id: userLogin.data.user.id,
         email: userLogin.data.user.email,
         username: userLogin.data.user.username,
-        token: userToken,
+        token: userLogin.data.newToken || userToken,
       });
 
       dispatch(fetchCloudNotes({ userId: userLogin.data.user.id }));
@@ -93,7 +93,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
       id: connectionCheck.data.user.id,
       email: email,
       username: username,
-      token: userToken,
+      token: connectionCheck.data.newToken || userToken,
     });
   }, [connectionCheck.isSuccess, connectionCheck.data, isLoggedOffline]);
 

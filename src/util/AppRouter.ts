@@ -141,6 +141,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               email: string;
             };
             message: string;
+            newToken: string;
           };
         }>;
         updateEmailOrUsername: import("@trpc/server").TRPCMutationProcedure<{
@@ -185,16 +186,16 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             clientNotes: {
               id: string;
               uuid: string;
-              key: string;
               type: string;
+              key: string;
               dateModified: number;
               dateLastSynced: number;
             }[];
             guestNotes: {
               id: string;
               uuid: string;
-              key: string;
               type: string;
+              key: string;
               dateModified: number;
               dateLastSynced: number;
             }[];
@@ -221,8 +222,8 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         uploadNote: import("@trpc/server").TRPCMutationProcedure<{
           input: {
             uuid: string;
-            key: string;
             type: string;
+            key: string;
             content: string | null;
             direction: string | null;
             dateModified: number;
@@ -247,10 +248,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             note: {
               id: string;
               uuid: string;
+              type: string;
               noteId: number;
               authorId: number;
               key: string;
-              type: string;
               content: string | null;
               direction: string | null;
               dateModified: number;
