@@ -150,6 +150,7 @@ const Profile = () => {
           value={username}
           onChange={onChangeUsername}
           placeholder="Enter your username"
+          bgColor={"bg"}
         />
         <Text>{t("auth.email")}</Text>
         <Input
@@ -158,6 +159,7 @@ const Profile = () => {
           value={email}
           onChange={onChangeEmail}
           placeholder="Enter your email"
+          bgColor={"bg"}
         />
         {validationError && (
           <Text color="red.500" textAlign="center" mt={2} direction={"ltr"}>
@@ -193,6 +195,7 @@ const Profile = () => {
           value={oldPassword}
           onChange={onChangeOldPassword}
           placeholder="Enter your old password"
+          bgColor={"bg"}
         />
 
         <Text>{t("auth.newPassword")}</Text>
@@ -200,12 +203,14 @@ const Profile = () => {
           value={newPassword}
           onChange={onChangeNewPassword}
           placeholder="Enter your new password"
+          bgColor={"bg"}
         />
         <Text>{t("auth.confirmNewPassword")}</Text>
         <PasswordInput
           value={confirmPassword}
           onChange={onChangeConfirmPassword}
           placeholder="Enter your new password"
+          bgColor={"bg"}
         />
         {validationErrorPassword && (
           <Text color="red.500" textAlign="center" mt={2} direction={"ltr"}>
