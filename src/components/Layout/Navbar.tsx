@@ -154,7 +154,7 @@ const NavMenu = () => {
           color={"fg"}
           _hover={{ bg: "bg.emphasized" }}
           _expanded={{ bg: "bg.emphasized" }}
-          px={"0.3rem"}
+          mdDown={{ px: "0.4rem" }}
         >
           <Image borderRadius="2xl" boxSize="34px" src="/pwa-192x192.png" />
           <MdMenu />
