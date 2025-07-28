@@ -38,6 +38,7 @@ const NavbarUser = () => {
       <Button
         colorPalette={"gray"}
         marginEnd={"0.5rem"}
+        smDown={{ marginInline: "0" }}
         size={"sm"}
         borderRadius={"l3"}
         boxShadow={"md"}
@@ -55,6 +56,7 @@ const NavbarUser = () => {
             <Button
               colorPalette={isLoggedOffline ? "orange" : "green"}
               marginEnd={"0.5rem"}
+              smDown={{ marginInline: "0" }}
               size={"sm"}
               borderRadius={"l3"}
               boxShadow={"md"}
@@ -89,7 +91,8 @@ const NavbarUser = () => {
           <Button
             variant="outline"
             size="sm"
-            marginEnd="0.5rem"
+            marginEnd={"0.5rem"}
+            smDown={{ marginInline: "0" }}
             backgroundColor={"bg"}
             _hover={{ backgroundColor: "bg.muted" }}
             height={!isMobile ? "fit" : undefined}
