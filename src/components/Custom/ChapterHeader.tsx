@@ -59,7 +59,7 @@ const ChapterHeader = ({
         <div></div>
       )}
 
-      <Flex fontSize="3xl" fontWeight="medium" color="blue.focusRing">
+      <Flex fontSize="2xl" fontWeight="medium" color="blue.focusRing">
         سورة {quranService.getChapterName(chapterID)}
       </Flex>
 
