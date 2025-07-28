@@ -22,7 +22,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@chakra-ui/react": "^3.19.1",
+    "@chakra-ui/react": "^3.23.0",
     "@emotion/react": "^11.14.0",
     "@hcaptcha/react-hcaptcha": "^1.12.0",
     "@reduxjs/toolkit": "^2.6.1",
