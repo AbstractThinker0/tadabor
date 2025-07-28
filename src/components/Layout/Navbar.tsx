@@ -9,6 +9,7 @@ import {
   useDisclosure,
   Menu,
   Portal,
+  Image,
 } from "@chakra-ui/react";
 
 import { MdMenu } from "react-icons/md";
@@ -76,7 +77,8 @@ const Navbar = () => {
       <Box
         as="nav"
         role="navigation"
-        _light={{ bgColor: "#f6f8fa" }}
+        //_light={{ bgColor: "#f6f8fa" }}
+        _light={{ bgColor: "#e5e7eb" }}
         _dark={{ bgColor: "#151a23" }}
         px={2}
         smDown={{ px: "4px" }}
@@ -86,7 +88,17 @@ const Navbar = () => {
       >
         <Flex justifyContent="space-between" alignItems="center">
           {/* NavMenu */}
-          <Flex flex={1} justifyContent="flex-start">
+          <Flex
+            flex={1}
+            gap={"5px"}
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <Image
+              borderRadius="2xl"
+              boxSize="34px"
+              src="/pwa-192x192.png"
+            ></Image>
             <NavMenu />
           </Flex>
 
@@ -97,7 +109,6 @@ const Navbar = () => {
               px="0.5px"
               py="0.5px"
               borderRadius="sm"
-              bgColor="border.emphasized"
               lineHeight="short"
             >
               <Flex
@@ -107,8 +118,9 @@ const Navbar = () => {
                 alignItems="center"
                 borderRadius="sm"
                 border="1px solid"
-                borderColor="fg.subtle"
+                borderColor="gray.400"
                 py="5px"
+                fontSize={"lg"}
               >
                 {t(currentPage)}
               </Flex>
