@@ -108,7 +108,7 @@ const NavbarUser = () => {
           <Button
             size="sm"
             marginEnd="0.25rem"
-            smDown={{
+            mdDown={{
               display: "none",
               marginEnd: 0,
               padding: "0.2rem",
