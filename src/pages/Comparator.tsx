@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 import { isTranslationsLoading, useAppDispatch, useAppSelector } from "@/store";
@@ -15,6 +15,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 function Comparator() {
   usePageNav("nav_comparator");
+  const refVerseList = useRef<HTMLDivElement>(null);
   const quranService = useQuran();
 
   const currentChapter = useAppSelector(
@@ -37,14 +38,32 @@ function Comparator() {
 
   useEffect(() => {
     dispatch(fetchAllTranslations());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setChapterVerses(quranService.getVerses(currentChapter));
-  }, [currentChapter]);
+  }, [quranService, currentChapter]);
 
   const selectVerse = (verseKey: string) => {
     dispatch(comparatorPageActions.setCurrentVerse(verseKey));
+
+    /* 
+    // To add once select onChange is called for the same value
+    const node = refVerseList.current;
+
+    if (!node || !currentVerse) return;
+
+    const verseToHighlight = node.querySelector(
+      `[data-id="${currentVerse}"]`
+    ) as HTMLDivElement;
+
+    if (verseToHighlight) {
+      verseToHighlight.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+    */
   };
 
   const setChapter = (chapterID: string) => {
@@ -62,6 +81,7 @@ function Comparator() {
       />
       <TransAlert />
       <Display
+        refVerseList={refVerseList}
         currentChapter={currentChapter}
         currentVerse={currentVerse}
         chapterVerses={chapterVerses}

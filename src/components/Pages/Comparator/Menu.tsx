@@ -28,13 +28,8 @@ const Menu = ({
     document.documentElement.scrollTop = 0;
   };
 
-  const onClickSelectVerse = (
-    e: React.MouseEvent<HTMLSelectElement, MouseEvent>
-  ) => {
-    // Only be concerned about an option click
-    if (e.detail !== 0) return;
-
-    const verseKey = e.currentTarget.value;
+  const onChangeVerse = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const verseKey = event.target.value;
 
     if (!verseKey) return;
 
@@ -70,8 +65,8 @@ const Menu = ({
       <div>
         <NativeSelect.Root>
           <NativeSelect.Field
-            onClick={onClickSelectVerse}
-            defaultValue={currentVerse}
+            onChange={onChangeVerse}
+            value={currentVerse}
             bgColor={"bg"}
           >
             {chapterVerses.map((verse) => (

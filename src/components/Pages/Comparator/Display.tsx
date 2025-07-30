@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, type RefObject } from "react";
 
 import useQuran from "@/context/useQuran";
 import { useAppSelector } from "@/store";
@@ -21,6 +21,7 @@ interface DisplayProps {
   chapterVerses: verseProps[];
   transVerses: translationsProps;
   handleSelectVerse: (verseKey: string) => void;
+  refVerseList: RefObject<HTMLDivElement | null>;
 }
 
 const Display = ({
@@ -29,6 +30,7 @@ const Display = ({
   chapterVerses,
   transVerses,
   handleSelectVerse,
+  refVerseList,
 }: DisplayProps) => {
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
   const quranService = useQuran();
@@ -45,24 +47,23 @@ const Display = ({
     });
   }, [chapterVerses]);
 
-  // Handling scroll by using a callback ref
-  const handleVerseListRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && currentVerse && !isPending) {
-        const verseToHighlight = node.querySelector(
-          `[data-id="${currentVerse}"]`
-        ) as HTMLDivElement;
+  // Handling scroll
+  useEffect(() => {
+    const node = refVerseList.current;
 
-        if (verseToHighlight) {
-          verseToHighlight.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }
-    },
-    [currentVerse, isPending]
-  );
+    if (!node || isPending || !currentVerse) return;
+
+    const verseToHighlight = node.querySelector(
+      `[data-id="${currentVerse}"]`
+    ) as HTMLDivElement;
+
+    if (verseToHighlight) {
+      verseToHighlight.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [refVerseList, currentVerse, isPending]);
 
   return (
     <Flex
@@ -80,7 +81,7 @@ const Display = ({
       >
         سورة {quranService.getChapterName(currentChapter)}
       </Box>
-      <Flex flexDirection={"column"} flex={1} ref={handleVerseListRef}>
+      <Flex flexDirection={"column"} flex={1} ref={refVerseList}>
         {isPending ? (
           <LoadingSpinner text="Loading verses.." />
         ) : (
