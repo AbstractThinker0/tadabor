@@ -14,6 +14,15 @@ import { VerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
+const ListVerses = () => {
+  return (
+    <>
+      <ListTitle />
+      <ListBody />
+    </>
+  );
+};
+
 const ListTitle = () => {
   const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
 
@@ -39,15 +48,6 @@ const ListTitle = () => {
       onTogglePanel={onTogglePanel}
       versesOptions={true}
     />
-  );
-};
-
-const ListVerses = () => {
-  return (
-    <>
-      <ListTitle />
-      <ListBody />
-    </>
   );
 };
 
