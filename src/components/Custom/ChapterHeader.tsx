@@ -1,20 +1,15 @@
 import useQuran from "@/context/useQuran";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { navigationActions } from "@/store/slices/global/navigation";
 
-import { Flex, Button } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ButtonSidebar } from "@/components/Generic/Buttons";
-import { MdFormatAlignRight } from "react-icons/md";
-import { MdFormatAlignCenter } from "react-icons/md";
-import { MdOutlineViewCompactAlt } from "react-icons/md";
-import { RiExpandLeftRightLine } from "react-icons/ri";
+
+import { DisplayOptionsPopover } from "@/components/Custom/DisplayOptionsPopover";
 
 interface ChapterHeaderProps {
   chapterID: number;
   isOpenMobile?: boolean;
   isOpenDesktop?: boolean;
   onTogglePanel?: (state: boolean) => void;
-  versesOptions?: boolean;
 }
 
 const ChapterHeader = ({
@@ -22,22 +17,8 @@ const ChapterHeader = ({
   isOpenMobile,
   isOpenDesktop,
   onTogglePanel,
-  versesOptions = false,
 }: ChapterHeaderProps) => {
   const quranService = useQuran();
-  const dispatch = useAppDispatch();
-  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
-  const compactVerses = useAppSelector(
-    (state) => state.navigation.compactVerses
-  );
-
-  const toggleCenterVerses = () => {
-    dispatch(navigationActions.toggleCenterVerses());
-  };
-
-  const toggleCompactVerses = () => {
-    dispatch(navigationActions.toggleCompactVerses());
-  };
 
   return (
     <Flex
@@ -63,19 +44,8 @@ const ChapterHeader = ({
         سورة {quranService.getChapterName(chapterID)}
       </Flex>
 
-      <Flex gap={"0.5rem"}>
-        <Button size="sm" onClick={toggleCenterVerses} colorPalette="blue">
-          {centerVerses ? <MdFormatAlignRight /> : <MdFormatAlignCenter />}
-        </Button>
-        {versesOptions && (
-          <Button size="sm" onClick={toggleCompactVerses} colorPalette="blue">
-            {compactVerses ? (
-              <RiExpandLeftRightLine />
-            ) : (
-              <MdOutlineViewCompactAlt />
-            )}
-          </Button>
-        )}
+      <Flex>
+        <DisplayOptionsPopover />
       </Flex>
     </Flex>
   );

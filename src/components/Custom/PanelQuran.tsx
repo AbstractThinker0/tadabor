@@ -76,7 +76,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
       ref={refVerses}
       dir="rtl"
     >
-      <ChapterHeader chapterID={Number(suraID)} versesOptions={true} />
+      <ChapterHeader chapterID={Number(suraID)} />
       {isPending ? (
         <LoadingSpinner text="Loading verses.." />
       ) : (
