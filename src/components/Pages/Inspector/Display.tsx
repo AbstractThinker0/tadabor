@@ -8,6 +8,35 @@ import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 import ListVerses from "@/components/Pages/Inspector/ListVerses";
 import { Box, Flex } from "@chakra-ui/react";
 
+const ListTitle = () => {
+  const selectChapter = useAppSelector(
+    (state) => state.inspectorPage.currentChapter
+  );
+
+  const showSearchPanel = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanel
+  );
+
+  const showSearchPanelMobile = useAppSelector(
+    (state) => state.inspectorPage.showSearchPanelMobile
+  );
+
+  const dispatch = useAppDispatch();
+
+  const onTogglePanel = (state: boolean) => {
+    dispatch(inspectorPageActions.setSearchPanel(state));
+  };
+
+  return (
+    <ChapterHeader
+      chapterID={Number(selectChapter)}
+      isOpenMobile={showSearchPanelMobile}
+      isOpenDesktop={showSearchPanel}
+      onTogglePanel={onTogglePanel}
+    />
+  );
+};
+
 interface DisplayProps {
   currentChapter: string;
 }
@@ -44,35 +73,6 @@ const Display = ({ currentChapter }: DisplayProps) => {
         <ListVerses currentChapter={currentChapter} />
       </Flex>
     </Box>
-  );
-};
-
-const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.inspectorPage.currentChapter
-  );
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanelMobile
-  );
-
-  const dispatch = useAppDispatch();
-
-  const onTogglePanel = (state: boolean) => {
-    dispatch(inspectorPageActions.setSearchPanel(state));
-  };
-
-  return (
-    <ChapterHeader
-      chapterID={Number(selectChapter)}
-      isOpenMobile={showSearchPanelMobile}
-      isOpenDesktop={showSearchPanel}
-      onTogglePanel={onTogglePanel}
-    />
   );
 };
 

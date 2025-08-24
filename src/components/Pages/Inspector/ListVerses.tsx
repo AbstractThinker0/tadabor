@@ -31,7 +31,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [currentChapter]);
+  }, [currentChapter, quranService]);
 
   // Handling scroll by using a callback ref
   useEffect(() => {
