@@ -7,7 +7,7 @@ import useQuran from "@/context/useQuran";
 import type { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { InputString } from "@/components/Generic/Input";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
@@ -71,6 +71,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
+  const [isPendingLoad, startLoadTransition] = useTransition();
 
   const [itemsCount, setItemsCount] = useState(80);
 
@@ -81,7 +82,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
   );
 
   useEffect(() => {
-    startTransition(() => {
+    startLoadTransition(() => {
       setStateRoots(
         quranService.searchRoots(searchString, {
           normalizeRoot: true,
@@ -90,13 +91,17 @@ const RootsList = ({ searchString }: RootsListProps) => {
         })
       );
     });
-  }, [searchString]);
+  }, [searchString, quranService]);
 
   const fetchMoreData = () => {
-    setItemsCount((state) => state + 15);
+    startTransition(() => {
+      setItemsCount((state) => Math.min(state + 15, stateRoots.length));
+    });
   };
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    if (itemsCount >= stateRoots.length || isPending) return;
+
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 10) {
@@ -118,7 +123,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
       onScroll={handleScroll}
       cursor={"pointer"}
     >
-      {isPending ? (
+      {isPendingLoad ? (
         <LoadingSpinner text="Loading roots.." />
       ) : (
         stateRoots
@@ -130,6 +135,12 @@ const RootsList = ({ searchString }: RootsListProps) => {
               isSelected={search_roots[root.id] ? true : false}
             />
           ))
+      )}
+
+      {isPending && (
+        <Box textAlign={"center"} py={5}>
+          <Spinner size="sm" borderWidth="2px" margin="auto" color="blue.500" />
+        </Box>
       )}
     </Box>
   );

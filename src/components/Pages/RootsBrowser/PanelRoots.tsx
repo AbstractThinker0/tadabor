@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
+
+import useQuran from "@/context/useQuran";
 
 import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
 import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
-import RootsList from "@/components/Pages/RootsBrowser/RootsList";
+
+import { RootComponent } from "@/components/Pages/RootsBrowser/RootComponent";
 
 import type { rootProps } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const PanelRoots = () => {
   const dispatch = useAppDispatch();
+
+  const quranService = useQuran();
+
+  const [isPending, startTransition] = useTransition();
 
   const searchString = useAppSelector((state) => state.rbPage.searchString);
 
@@ -28,26 +35,38 @@ const PanelRoots = () => {
 
   const rootsLoaded = useRootsLoaded();
 
-  const handleRoots = (roots: rootProps[]) => {
-    setStateRoots(roots);
-  };
-
   const handleVerseTab = (verseKey: string) => {
     dispatch(rbPageActions.setVerseTab(verseKey));
     dispatch(rbPageActions.setScrollKey(verseKey));
   };
 
   const fetchMoreData = () => {
-    setItemsCount((state) => state + 15);
+    startTransition(() => {
+      setItemsCount((state) => Math.min(state + 50, stateRoots.length));
+    });
   };
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    if (itemsCount >= stateRoots.length || isPending) return;
+
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-    if (scrollHeight - scrollTop <= clientHeight + 10) {
+    if (scrollHeight - scrollTop <= clientHeight + 100) {
       fetchMoreData();
     }
   }
+
+  useEffect(() => {
+    startTransition(() => {
+      setStateRoots(
+        quranService.searchRoots(searchString, {
+          normalizeToken: true,
+          normalizeRoot: true,
+          searchInclusive: searchInclusive,
+        })
+      );
+    });
+  }, [searchString, searchInclusive, quranService]);
 
   return (
     <Flex
@@ -66,14 +85,26 @@ const PanelRoots = () => {
       {!rootsLoaded ? (
         <LoadingSpinner text="Loading roots data.." />
       ) : (
-        <RootsList
-          searchString={searchString}
-          searchInclusive={searchInclusive}
-          handleVerseTab={handleVerseTab}
-          stateRoots={stateRoots}
-          handleRoots={handleRoots}
-          itemsCount={itemsCount}
-        />
+        <Flex flex={1} flexDirection={"column"}>
+          {stateRoots.slice(0, itemsCount).map((root) => (
+            <RootComponent
+              key={root.id}
+              root={root}
+              handleVerseTab={handleVerseTab}
+            />
+          ))}
+
+          {isPending && (
+            <Box width={"100%"} textAlign={"center"} py={5}>
+              <Spinner
+                size="sm"
+                borderWidth="2px"
+                margin="auto"
+                color="blue.500"
+              />
+            </Box>
+          )}
+        </Flex>
       )}
     </Flex>
   );

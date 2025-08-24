@@ -12,7 +12,7 @@ import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 
-import { Box, Flex, HStack, Span, Tabs } from "@chakra-ui/react";
+import { Box, Flex, HStack, Span, Spinner, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -98,6 +98,7 @@ const Searcher2Tab = () => {
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
+  const [isPendingLoad, startLoadTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseMatchResult[]>([]);
   const [itemsCount, setItemsCount] = useState(80);
 
@@ -134,10 +135,14 @@ const Searcher2Tab = () => {
   };
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    if (itemsCount >= stateVerses.length || isPending) return;
+
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 10) {
-      setItemsCount((state) => state + 15);
+      startTransition(() => {
+        setItemsCount((state) => Math.min(state + 15, stateVerses.length));
+      });
     }
   }
 
@@ -154,7 +159,7 @@ const Searcher2Tab = () => {
   };
 
   useEffect(() => {
-    startTransition(() => {
+    startLoadTransition(() => {
       const result = quranService.searchByWord(searchString, "all", {
         searchDiacritics,
         searchIdentical,
@@ -250,7 +255,7 @@ const Searcher2Tab = () => {
           onScroll={handleScroll}
           ref={refVerses}
         >
-          {isPending ? (
+          {isPendingLoad ? (
             <LoadingSpinner text="Loading verses.." />
           ) : (
             stateVerses
@@ -263,6 +268,16 @@ const Searcher2Tab = () => {
                   isSelected={scrollKey === verseMatch.key}
                 />
               ))
+          )}
+          {isPending && (
+            <Box width={"100%"} textAlign={"center"} py={5}>
+              <Spinner
+                size="sm"
+                borderWidth="2px"
+                margin="auto"
+                color="blue.500"
+              />
+            </Box>
           )}
         </Box>
       </Box>

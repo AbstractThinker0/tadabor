@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -8,7 +8,7 @@ import { RootVerse } from "@/components/Pages/RootsBrowser/RootVerse";
 
 import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
 
-import { Box, Collapsible, Separator } from "@chakra-ui/react";
+import { Box, Collapsible, Separator, Spinner } from "@chakra-ui/react";
 
 interface RootOccurencesProps {
   isOccurencesOpen: boolean;
@@ -23,6 +23,8 @@ const RootOccurences = ({
 }: RootOccurencesProps) => {
   const quranService = useQuran();
 
+  const [isPending, startTransition] = useTransition();
+
   const [itemsCount, setItemsCount] = useState(20);
   const [scrollKey, setScrollKey] = useState("");
 
@@ -30,10 +32,14 @@ const RootOccurences = ({
   const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
 
   const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
+    if (itemsCount >= rootVerses.length || isPending) return;
+
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
     if (scrollHeight - scrollTop <= clientHeight + 10) {
-      setItemsCount((state) => state + 10);
+      startTransition(() => {
+        setItemsCount((state) => Math.min(state + 10, rootVerses.length));
+      });
     }
   };
 
@@ -49,7 +55,7 @@ const RootOccurences = ({
   const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
     if (verseIndex) {
       if (itemsCount < verseIndex + 20) {
-        setItemsCount(verseIndex + 20);
+        setItemsCount(Math.min(verseIndex + 20, rootVerses.length));
       }
     }
 
@@ -106,6 +112,17 @@ const RootOccurences = ({
               handleVerseClick={handleVerseClick}
             />
           ))}
+
+          {isPending && (
+            <Box width={"100%"} textAlign={"center"} py={5}>
+              <Spinner
+                size="sm"
+                borderWidth="2px"
+                margin="auto"
+                color="blue.500"
+              />
+            </Box>
+          )}
         </Box>
       </Collapsible.Content>
     </Collapsible.Root>

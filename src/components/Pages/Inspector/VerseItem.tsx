@@ -20,7 +20,14 @@ import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
-import { Box, Collapsible, Accordion, Span, Separator } from "@chakra-ui/react";
+import {
+  Box,
+  Collapsible,
+  Accordion,
+  Span,
+  Separator,
+  Spinner,
+} from "@chakra-ui/react";
 
 import { useBoolean } from "usehooks-ts";
 
@@ -130,6 +137,7 @@ interface RootOccurencesProps {
 const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   const [itemsCount, setItemsCount] = useState(20);
   const [scrollKey, setScrollKey] = useState("");
+  const [selectedVerse, setSelectedVerse] = useState("");
 
   const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
   const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
@@ -140,11 +148,13 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   const refVerses = useRef<HTMLDivElement>(null);
 
   const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
+    if (itemsCount >= rootVerses.length || isPending) return;
+
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    // Reached the bottom, ( the +10 is needed since the scrollHeight - scrollTop doesn't seem to go to the very bottom for some reason )
-    if (scrollHeight - scrollTop <= clientHeight + 10) {
+    // Near the bottom
+    if (scrollHeight - scrollTop <= clientHeight + 200) {
       startTransition(() => {
-        setItemsCount((state) => state + 1);
+        setItemsCount((state) => Math.min(state + 5, rootVerses.length));
       });
     }
   };
@@ -167,6 +177,9 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
           behavior: "smooth",
           block: "center",
         });
+
+        setSelectedVerse(scrollKey);
+        setScrollKey("");
       }
     }
   }, [scrollKey, isPending]);
@@ -175,7 +188,7 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
     startTransition(() => {
       if (verseIndex) {
         if (itemsCount < verseIndex + 20) {
-          setItemsCount(verseIndex + 20);
+          setItemsCount(Math.min(verseIndex + 20, rootVerses.length));
         }
       }
 
@@ -184,7 +197,7 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
   };
 
   const handleVerseClick = (verseKey: string) => {
-    setScrollKey((prev) => (verseKey === prev ? "" : verseKey));
+    setSelectedVerse((prev) => (verseKey === prev ? "" : verseKey));
   };
 
   return (
@@ -194,17 +207,23 @@ const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
         handleDerivationClick={handleDerivationClick}
       />
       <Separator />
-      <Box padding={3} ref={refVerses}>
+      <Box padding={1} ref={refVerses}>
         {rootVerses.slice(0, itemsCount).map((rootVerse, index) => (
           <RootVerse
             index={index}
             key={rootVerse.key}
             rootVerse={rootVerse}
-            isSelected={scrollKey === rootVerse.key}
+            isSelected={selectedVerse === rootVerse.key}
             handleVerseClick={handleVerseClick}
           />
         ))}
       </Box>
+
+      {isPending && (
+        <Box width={"100%"} textAlign={"center"} py={5}>
+          <Spinner size="sm" borderWidth="2px" margin="auto" color="blue.500" />
+        </Box>
+      )}
     </Box>
   );
 };
