@@ -3,13 +3,26 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 const keyCenterVerses = "centerVerses";
 const defaultCenterVerses = localStorage.getItem(keyCenterVerses) === "true";
 
-const keyCompactVerses = "compactVerses";
-const defaultCompactVerses = localStorage.getItem(keyCompactVerses) === "true";
+const keyToolsMode = "toolsMode";
+const defaultToolsMode = (localStorage.getItem(keyToolsMode) ||
+  "expanded") as ToolsMode;
+
+export type ToolsMode = "expanded" | "collapsed" | "hidden";
+
+const keyToolCopy = "toolCopy";
+const defaultToolCopy = localStorage.getItem(keyToolCopy) !== "false";
+const keyToolNote = "toolNote";
+const defaultToolNote = localStorage.getItem(keyToolNote) !== "false";
+const keyToolInspect = "toolInspect";
+const defaultToolInspect = localStorage.getItem(keyToolInspect) === "true";
 
 interface NavigationState {
   currentPage: string;
   centerVerses: boolean;
-  compactVerses: boolean;
+  toolsMode: ToolsMode;
+  toolCopy: boolean;
+  toolNote: boolean;
+  toolInspect: boolean;
   isSmallScreen: boolean;
   isBetaVersion: boolean;
 }
@@ -17,7 +30,10 @@ interface NavigationState {
 const initialState: NavigationState = {
   currentPage: "",
   centerVerses: defaultCenterVerses,
-  compactVerses: defaultCompactVerses,
+  toolsMode: defaultToolsMode,
+  toolCopy: defaultToolCopy,
+  toolNote: defaultToolNote,
+  toolInspect: defaultToolInspect,
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
   isBetaVersion: localStorage.getItem("betaVersion") === "true",
 };
@@ -40,16 +56,21 @@ const navigationSlice = createSlice({
         state.centerVerses ? "true" : "false"
       );
     },
-    setCompactVerses: (state, action: PayloadAction<boolean>) => {
-      state.compactVerses = action.payload;
-      localStorage.setItem(keyCompactVerses, action.payload ? "true" : "false");
+    setVerseTools: (state, action: PayloadAction<string>) => {
+      state.toolsMode = action.payload as ToolsMode;
+      localStorage.setItem(keyToolsMode, action.payload);
     },
-    toggleCompactVerses: (state) => {
-      state.compactVerses = !state.compactVerses;
-      localStorage.setItem(
-        keyCompactVerses,
-        state.compactVerses ? "true" : "false"
-      );
+    setToolCopy: (state, action: PayloadAction<boolean>) => {
+      state.toolCopy = action.payload;
+      localStorage.setItem(keyToolCopy, action.payload ? "true" : "false");
+    },
+    setToolNote: (state, action: PayloadAction<boolean>) => {
+      state.toolNote = action.payload;
+      localStorage.setItem(keyToolNote, action.payload ? "true" : "false");
+    },
+    setToolInspect: (state, action: PayloadAction<boolean>) => {
+      state.toolInspect = action.payload;
+      localStorage.setItem(keyToolInspect, action.payload ? "true" : "false");
     },
     setSmallScreen: (state, action: PayloadAction<boolean>) => {
       state.isSmallScreen = action.payload;

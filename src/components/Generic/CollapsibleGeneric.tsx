@@ -10,7 +10,12 @@ export const CollapsibleGeneric = ({
   children,
 }: CollapsibleGenericProps) => {
   return (
-    <Collapsible.Root open={isOpen} lazyMount unmountOnExit>
+    <Collapsible.Root
+      open={isOpen}
+      pt={isOpen ? "4px" : undefined}
+      lazyMount
+      unmountOnExit
+    >
       <Collapsible.Content>{children}</Collapsible.Content>
     </Collapsible.Root>
   );

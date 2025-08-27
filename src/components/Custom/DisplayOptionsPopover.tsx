@@ -10,6 +10,8 @@ import {
   Separator,
   Heading,
   ButtonGroup,
+  Switch,
+  NativeSelect,
 } from "@chakra-ui/react";
 
 import { LiaToolsSolid } from "react-icons/lia";
@@ -23,16 +25,20 @@ const DisplayOptionsPopover = () => {
 
   const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
 
-  const compactVerses = useAppSelector(
-    (state) => state.navigation.compactVerses
-  );
+  const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
+
+  const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
+
+  const toolNote = useAppSelector((state) => state.navigation.toolNote);
+
+  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
 
   const toggleCenterVerses = () => {
     dispatch(navigationActions.toggleCenterVerses());
   };
 
-  const toggleCompactVerses = () => {
-    dispatch(navigationActions.toggleCompactVerses());
+  const setToolsMode = (mode: string) => {
+    dispatch(navigationActions.setVerseTools(mode));
   };
 
   return (
@@ -71,7 +77,7 @@ const DisplayOptionsPopover = () => {
                 <Box px={4}>
                   {/* */}
                   <Flex py={1} alignItems={"center"}>
-                    <Heading as="span" size="md" w="100px">
+                    <Heading as="span" size="md" w="150px">
                       Align:{" "}
                     </Heading>{" "}
                     <ButtonGroup attached colorPalette={"blue"}>
@@ -91,23 +97,70 @@ const DisplayOptionsPopover = () => {
                   </Flex>
 
                   <Flex py={1} alignItems={"center"}>
-                    <Heading as="span" size="md" w="100px">
-                      Tools:{" "}
+                    <Heading as="span" size="md" w="150px">
+                      Tools Display:{" "}
                     </Heading>{" "}
-                    <ButtonGroup attached colorPalette={"blue"}>
-                      <Button
-                        variant={!compactVerses ? "solid" : "outline"}
-                        onClick={toggleCompactVerses}
+                    <NativeSelect.Root bgColor={"bg"} width={"120px"}>
+                      <NativeSelect.Field
+                        onChange={(e) => setToolsMode(e.target.value)}
+                        value={toolsMode}
                       >
-                        Expanded
-                      </Button>
-                      <Button
-                        variant={compactVerses ? "solid" : "outline"}
-                        onClick={toggleCompactVerses}
-                      >
-                        Collapsed
-                      </Button>
-                    </ButtonGroup>
+                        <option value="expanded">Expanded</option>
+                        <option value="collapsed">Collapsed</option>
+                        <option value="hidden">Hidden</option>
+                      </NativeSelect.Field>
+                      <NativeSelect.Indicator />
+                    </NativeSelect.Root>
+                  </Flex>
+                  <Flex py={1} alignItems={"center"} colorPalette={"blue"}>
+                    <Heading as="span" size="md" w="150px">
+                      Enabled Tools:
+                    </Heading>
+                    <Box>
+                      {/* Copy Tool */}
+                      <Flex alignItems="center" gap={2} py={1}>
+                        <Switch.Root
+                          checked={toolCopy}
+                          onCheckedChange={(e) =>
+                            dispatch(navigationActions.setToolCopy(e.checked))
+                          }
+                        >
+                          <Switch.HiddenInput />
+                          <Switch.Control />
+                          <Switch.Label>Copy</Switch.Label>
+                        </Switch.Root>
+                      </Flex>
+
+                      {/* Note Tool */}
+                      <Flex alignItems="center" gap={2} py={1}>
+                        <Switch.Root
+                          checked={toolNote}
+                          onCheckedChange={(e) =>
+                            dispatch(navigationActions.setToolNote(e.checked))
+                          }
+                        >
+                          <Switch.HiddenInput />
+                          <Switch.Control />
+                          <Switch.Label>Note</Switch.Label>
+                        </Switch.Root>
+                      </Flex>
+
+                      {/* Inspect Tool */}
+                      <Flex alignItems="center" gap={2} py={1}>
+                        <Switch.Root
+                          checked={toolInspect}
+                          onCheckedChange={(e) =>
+                            dispatch(
+                              navigationActions.setToolInspect(e.checked)
+                            )
+                          }
+                        >
+                          <Switch.HiddenInput />
+                          <Switch.Control />
+                          <Switch.Label>Inspect</Switch.Label>
+                        </Switch.Root>
+                      </Flex>
+                    </Box>
                   </Flex>
                 </Box>
               </Box>

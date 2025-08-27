@@ -1,8 +1,11 @@
-import { Clipboard, Button } from "@chakra-ui/react";
+import { useClipboard, IconButton } from "@chakra-ui/react";
 
 import useQuran from "@/context/useQuran";
 
 import { toasterBottomCenter } from "@/components/ui/toaster";
+
+import { FaRegCopy } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
 
 interface ButtonCopyVerseProps {
   verseKey: string;
@@ -14,28 +17,27 @@ const ButtonCopyVerse = ({ verseKey }: ButtonCopyVerseProps) => {
 
   const verseRef = quranService.convertKeyToSuffix(verseKey);
 
-  const onCopyStatus = ({ copied }: { copied: boolean }) => {
-    if (copied) {
-      toasterBottomCenter.create({
-        type: "success",
-        description: "Copied verse to clipboard",
-        meta: { center: true },
-      });
-    }
+  const clipboard = useClipboard({ value: `${verseText} (${verseRef})` });
+
+  const onClickCopy = () => {
+    clipboard.copy();
+    toasterBottomCenter.create({
+      type: "success",
+      description: "Copied verse to clipboard",
+      meta: { center: true },
+    });
   };
 
   return (
-    <Clipboard.Root
-      value={`${verseText} (${verseRef})`}
-      display={"inline"}
-      onStatusChange={onCopyStatus}
+    <IconButton
+      colorPalette={clipboard.copied ? "teal" : undefined}
+      variant={clipboard.copied ? "solid" : "ghost"}
+      size="sm"
+      onClick={onClickCopy}
+      marginEnd={"3px"}
     >
-      <Clipboard.Trigger asChild>
-        <Button variant="ghost" size="sm">
-          <Clipboard.Indicator />
-        </Button>
-      </Clipboard.Trigger>
-    </Clipboard.Root>
+      {clipboard.copied ? <FaCheck /> : <FaRegCopy />}
+    </IconButton>
   );
 };
 

@@ -1,4 +1,4 @@
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from "@chakra-ui/react";
 
 export const switchSlotRecipe = defineSlotRecipe({
   slots: ["root", "label", "control", "thumb", "indicator"],
@@ -13,7 +13,7 @@ export const switchSlotRecipe = defineSlotRecipe({
       "--switch-diff": "calc(var(--switch-width) - var(--switch-height))",
       "--switch-x": {
         base: "var(--switch-diff)",
-        _rtl: "calc(var(--switch-diff) * -1)",
+        //_rtl: "calc(var(--switch-diff) * -1)",
       },
     },
     label: {
@@ -155,4 +155,4 @@ export const switchSlotRecipe = defineSlotRecipe({
     variant: "solid",
     size: "md",
   },
-})
+});

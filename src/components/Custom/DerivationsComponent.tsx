@@ -35,12 +35,13 @@ const DerivationsComponent = ({
       border={"1px solid"}
       dir="rtl"
       wrap="wrap"
-      padding={3}
-      margin={1}
+      padding={2.5}
+      margin={2}
       maxH={"400px"}
       overflowY={"scroll"}
       onScroll={onScrollOccs}
       separator={<StackSeparator border={"none"}>-</StackSeparator>}
+      borderRadius={"md"}
     >
       {searchIndexes
         .slice(0, itemsCount)

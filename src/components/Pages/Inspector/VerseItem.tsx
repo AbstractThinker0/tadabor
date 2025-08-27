@@ -1,35 +1,20 @@
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
 import { useAppDispatch } from "@/store";
 import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
-import type {
-  verseProps,
-  rootProps,
-  verseMatchResult,
-  searchIndexProps,
-} from "quran-tools";
+import type { verseProps, rootProps } from "quran-tools";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-
-import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
-
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
-import {
-  Box,
-  Collapsible,
-  Accordion,
-  Span,
-  Separator,
-  Spinner,
-} from "@chakra-ui/react";
+import { Collapsible, Accordion, Span } from "@chakra-ui/react";
 
 import { useBoolean } from "usehooks-ts";
+import { RootItem } from "@/components/Custom/RootItem";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -63,6 +48,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
     dispatch(inspectorPageActions.setScrollKey(verse.key));
   };
 
+  function onClickVerseChapter(verseKey: string) {
+    dispatch(inspectorPageActions.setCurrentChapter(verseKey.split("-")[0]));
+    dispatch(inspectorPageActions.setScrollKey(verseKey));
+  }
+
   return (
     <BaseVerseItem
       verseKey={verse.key}
@@ -79,7 +69,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
               lazyMount
             >
               {currentRoots.map((root) => (
-                <RootItem key={root.id} root={root} />
+                <RootItem
+                  key={root.id}
+                  root={root}
+                  onClickVerseChapter={onClickVerseChapter}
+                />
               ))}
             </Accordion.Root>
           </Collapsible.Content>
@@ -109,166 +103,5 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
 };
 
 VerseItem.displayName = "VerseItem";
-
-interface RootItemProps {
-  root: rootProps;
-}
-
-const RootItem = ({ root }: RootItemProps) => {
-  return (
-    <Accordion.Item value={root.name}>
-      <Accordion.ItemTrigger>
-        <Span flex="1">
-          {root.name} ({root.count})
-        </Span>
-        <Accordion.ItemIndicator />
-      </Accordion.ItemTrigger>
-      <Accordion.ItemContent pb={4}>
-        <RootOccurences rootOccs={root.occurences} />
-      </Accordion.ItemContent>
-    </Accordion.Item>
-  );
-};
-
-interface RootOccurencesProps {
-  rootOccs: string[];
-}
-
-const RootOccurences = ({ rootOccs }: RootOccurencesProps) => {
-  const [itemsCount, setItemsCount] = useState(20);
-  const [scrollKey, setScrollKey] = useState("");
-  const [selectedVerse, setSelectedVerse] = useState("");
-
-  const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
-  const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
-  const [isPending, startTransition] = useTransition();
-
-  const quranService = useQuran();
-
-  const refVerses = useRef<HTMLDivElement>(null);
-
-  const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
-    if (itemsCount >= rootVerses.length || isPending) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    // Near the bottom
-    if (scrollHeight - scrollTop <= clientHeight + 200) {
-      startTransition(() => {
-        setItemsCount((state) => Math.min(state + 5, rootVerses.length));
-      });
-    }
-  };
-
-  useEffect(() => {
-    const occurencesData = quranService.getOccurencesData(rootOccs);
-
-    setDerivations(occurencesData.rootDerivations);
-    setRootVerses(occurencesData.rootVerses);
-  }, [rootOccs, quranService]);
-
-  useEffect(() => {
-    if (refVerses.current && scrollKey) {
-      const verseToHighlight = refVerses.current.querySelector(
-        `[data-id="sub-${scrollKey}"]`
-      ) as HTMLDivElement;
-
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-
-        setSelectedVerse(scrollKey);
-        setScrollKey("");
-      }
-    }
-  }, [scrollKey, isPending]);
-
-  const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
-    startTransition(() => {
-      if (verseIndex) {
-        if (itemsCount < verseIndex + 20) {
-          setItemsCount(Math.min(verseIndex + 20, rootVerses.length));
-        }
-      }
-
-      setScrollKey(verseKey);
-    });
-  };
-
-  const handleVerseClick = (verseKey: string) => {
-    setSelectedVerse((prev) => (verseKey === prev ? "" : verseKey));
-  };
-
-  return (
-    <Box overflowY={"scroll"} maxH={"1000px"} onScroll={onScrollOccs}>
-      <DerivationsComponent
-        searchIndexes={derivations}
-        handleDerivationClick={handleDerivationClick}
-      />
-      <Separator />
-      <Box padding={1} ref={refVerses}>
-        {rootVerses.slice(0, itemsCount).map((rootVerse, index) => (
-          <RootVerse
-            index={index}
-            key={rootVerse.key}
-            rootVerse={rootVerse}
-            isSelected={selectedVerse === rootVerse.key}
-            handleVerseClick={handleVerseClick}
-          />
-        ))}
-      </Box>
-
-      {isPending && (
-        <Box width={"100%"} textAlign={"center"} py={5}>
-          <Spinner size="sm" borderWidth="2px" margin="auto" color="blue.500" />
-        </Box>
-      )}
-    </Box>
-  );
-};
-
-interface RootVerseProps {
-  index: number;
-  rootVerse: verseMatchResult;
-  isSelected: boolean;
-  handleVerseClick: (verseKey: string) => void;
-}
-
-const RootVerse = ({
-  index,
-  rootVerse,
-  isSelected,
-  handleVerseClick,
-}: RootVerseProps) => {
-  const quranService = useQuran();
-  const dispatch = useAppDispatch();
-
-  const verseChapter = quranService.getChapterName(rootVerse.suraid);
-
-  function onClickVerseChapter() {
-    dispatch(inspectorPageActions.setCurrentChapter(rootVerse.suraid));
-    dispatch(inspectorPageActions.setScrollKey(rootVerse.key));
-  }
-
-  function onClickVerse() {
-    handleVerseClick(rootVerse.key);
-  }
-
-  return (
-    <BaseVerseItem
-      verseKey={rootVerse.key}
-      dataKey={`sub-${rootVerse.key}`}
-      isSelected={isSelected}
-    >
-      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
-        {index + 1}.
-      </Span>{" "}
-      <VerseHighlightMatches verse={rootVerse} /> (
-      <ButtonVerse onClick={onClickVerseChapter}>{verseChapter}</ButtonVerse>:
-      <ButtonVerse onClick={onClickVerse}>{rootVerse.verseid}</ButtonVerse>)
-    </BaseVerseItem>
-  );
-};
 
 export { VerseItem };

@@ -39,11 +39,15 @@ const BaseVerseItem = ({
   const { value: isOpen, toggle } = useBoolean(defaultOpen);
   const [isHovered, setIsHovered] = useState(false);
 
-  const compactVerses = useAppSelector(
-    (state) => state.navigation.compactVerses
-  );
+  const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
 
-  const shouldShowButtons = !compactVerses || isSelected || isHovered || isOpen;
+  const shouldShowButtons =
+    isSelected ||
+    isOpen ||
+    (toolsMode !== "hidden" && (toolsMode === "expanded" || isHovered));
+
+  const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
+  const toolNote = useAppSelector((state) => state.navigation.toolNote);
 
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -72,8 +76,15 @@ const BaseVerseItem = ({
         {children}
         {shouldShowButtons && (
           <>
-            <ButtonExpand onClick={toggle} />
-            <ButtonCopyVerse verseKey={verseKey} />
+            {toolNote && (
+              <ButtonExpand
+                onClick={toggle}
+                variant={isOpen ? "solid" : "ghost"}
+                colorPalette={isOpen ? "teal" : undefined}
+                marginEnd={"3px"}
+              />
+            )}
+            {toolCopy && <ButtonCopyVerse verseKey={verseKey} />}
             {endElement}
           </>
         )}

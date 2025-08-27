@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { Button, type ButtonProps, IconButton } from "@chakra-ui/react";
+import {
+  Button,
+  type ButtonProps,
+  IconButton,
+  type IconButtonProps,
+} from "@chakra-ui/react";
 
 import { TbSelect } from "react-icons/tb";
 import { MdOutlineMenuOpen } from "react-icons/md";
@@ -46,7 +51,7 @@ const ButtonEdit = (props: ButtonProps) => {
   );
 };
 
-const ButtonExpand = (props: ButtonProps) => {
+const ButtonExpand = (props: IconButtonProps) => {
   return (
     <IconButton variant="ghost" aria-label="Expand" {...props}>
       <TbSelect />
