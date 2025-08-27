@@ -51,6 +51,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
     dispatch(qbPageActions.setScrollKey(verse.key));
   };
 
+  const onClickVerseChapter = (verseKey: string) => {
+    dispatch(qbPageActions.gotoChapter(verseKey.split("-")[0]));
+    dispatch(qbPageActions.setScrollKey(verseKey));
+  };
+
   return (
     <BaseVerseItem
       verseKey={verse.key}
@@ -81,7 +86,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
               lazyMount
             >
               {currentRoots.map((root) => (
-                <RootItem key={root.id} root={root} />
+                <RootItem
+                  key={root.id}
+                  root={root}
+                  onClickVerseChapter={onClickVerseChapter}
+                />
               ))}
             </Accordion.Root>
           </Collapsible.Content>
