@@ -69,6 +69,7 @@ const BaseVerseItem = ({
       _selected={{ bgColor: "orange.muted" }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      lineHeight={"normal"}
       {...rootProps}
     >
       {outerStartElement}

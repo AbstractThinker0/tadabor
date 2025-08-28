@@ -58,6 +58,9 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
 
   return (
     <BaseVerseItem
+      rootProps={{
+        lineHeight: toolInspect && isInspectorON ? "3.3rem" : "normal",
+      }}
       verseKey={verse.key}
       isSelected={isSelected}
       endElement={
