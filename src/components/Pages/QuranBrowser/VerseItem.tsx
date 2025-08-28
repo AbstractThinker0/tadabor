@@ -8,13 +8,16 @@ import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-import { Accordion, Collapsible, IconButton, Span } from "@chakra-ui/react";
-import { VscInspect } from "react-icons/vsc";
+import { Span } from "@chakra-ui/react";
 
 import { useBoolean } from "usehooks-ts";
 import { useState } from "react";
 
-import { RootItem } from "@/components/Custom/RootItem";
+import { ButtonInspect } from "@/components/Custom/ButtonInspect";
+import {
+  RootsAccordion,
+  VerseInspected,
+} from "@/components/Custom/VerseInspected";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -65,62 +68,29 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
       isSelected={isSelected}
       endElement={
         toolInspect && (
-          <IconButton
-            variant={isInspectorON ? "solid" : "ghost"}
-            aria-label="Inspect"
-            colorPalette={isInspectorON ? "teal" : undefined}
-            onClick={toggleInspector}
-          >
-            <VscInspect />
-          </IconButton>
+          <ButtonInspect
+            isActive={isInspectorON}
+            onClickInspect={toggleInspector}
+          />
         )
       }
       outerEndElement={
-        <Collapsible.Root
-          open={toolInspect && isInspectorON && isRootListOpen}
-          lazyMount
-        >
-          <Collapsible.Content>
-            <Accordion.Root
-              borderRadius={"0.3rem"}
-              mt={1}
-              bgColor={"bg"}
-              multiple
-              lazyMount
-            >
-              {currentRoots.map((root) => (
-                <RootItem
-                  key={root.id}
-                  root={root}
-                  onClickVerseChapter={onClickVerseChapter}
-                />
-              ))}
-            </Accordion.Root>
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <RootsAccordion
+          isOpen={toolInspect && isInspectorON && isRootListOpen}
+          rootsList={currentRoots}
+          onClickVerseChapter={onClickVerseChapter}
+        />
       }
     >
-      {toolInspect && isInspectorON
-        ? verse.versetext.split(" ").map((word, index) => (
-            <Span key={index}>
-              <Span
-                cursor={"pointer"}
-                p={"2px"}
-                border={"1px solid"}
-                borderRadius={"0.3rem"}
-                borderColor={"orange.fg"}
-                _hover={{ bgColor: "orange.emphasized" }}
-                aria-selected={selectedWord === index + 1}
-                _selected={{
-                  bgColor: "orange.emphasized",
-                }}
-                onClick={() => onClickWord(index + 1)}
-              >
-                {word}
-              </Span>{" "}
-            </Span>
-          ))
-        : verse.versetext}{" "}
+      {toolInspect && isInspectorON ? (
+        <VerseInspected
+          verseText={verse.versetext}
+          selectedWord={selectedWord}
+          onClickWord={onClickWord}
+        />
+      ) : (
+        verse.versetext
+      )}{" "}
       <ButtonVerse onClick={onClickVerse}>{`(${verse.verseid})`}</ButtonVerse>
     </BaseVerseItem>
   );

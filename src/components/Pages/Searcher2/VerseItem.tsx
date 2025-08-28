@@ -1,22 +1,24 @@
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useState } from "react";
+import { useBoolean } from "usehooks-ts";
 
+import { useAppDispatch, useAppSelector } from "@/store";
 import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
+
 import type { rootProps, verseMatchResult } from "quran-tools";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
-import { Accordion, Collapsible, IconButton, Span } from "@chakra-ui/react";
-
 import { ButtonVerse } from "@/components/Generic/Buttons";
-
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
-import { useBoolean } from "usehooks-ts";
-import { useState } from "react";
+import { Span } from "@chakra-ui/react";
 
-import { VscInspect } from "react-icons/vsc";
-import { RootItem } from "@/components/Custom/RootItem";
+import { ButtonInspect } from "@/components/Custom/ButtonInspect";
+import {
+  RootsAccordion,
+  VerseInspected,
+} from "@/components/Custom/VerseInspected";
 
 interface VerseItemProps {
   index: number;
@@ -27,16 +29,14 @@ interface VerseItemProps {
 const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
-
   const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
 
   const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
   const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
-
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
-  const [selectedWord, setSelectedWord] = useState(-1);
+  const [selectedWord, setSelectedWord] = useState<number>(-1);
 
-  const onClickWord = (wordIndex: number) => {
+  const onClickWord = (wordIndex: number): void => {
     const verseRank = quranService.getVerseByKey(verseMatch.key).rank;
     const wordRoots = quranService.getWordRoots(verseRank, wordIndex);
 
@@ -51,17 +51,16 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
     }
   };
 
-  const onClickVerseChapter = (verseKey: string) => {
-    dispatch(searcher2PageActions.setVerseTab(verseKey.split("-")[0]));
+  const onClickVerseChapter = (verseKey: string): void => {
+    const chapterId = verseKey.split("-")[0];
+    dispatch(searcher2PageActions.setVerseTab(chapterId));
     dispatch(searcher2PageActions.setScrollKey(verseKey));
   };
 
-  const onClickVerse = () => {
-    if (isSelected) {
-      dispatch(searcher2PageActions.setScrollKey(""));
-    } else {
-      dispatch(searcher2PageActions.setScrollKey(verseMatch.key));
-    }
+  const onClickVerse = (): void => {
+    dispatch(
+      searcher2PageActions.setScrollKey(isSelected ? "" : verseMatch.key)
+    );
   };
 
   return (
@@ -73,67 +72,29 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
       isSelected={isSelected}
       endElement={
         toolInspect && (
-          <IconButton
-            variant={isInspectorON ? "solid" : "ghost"}
-            aria-label="Inspect"
-            colorPalette={isInspectorON ? "teal" : undefined}
-            onClick={toggleInspector}
-          >
-            <VscInspect />
-          </IconButton>
+          <ButtonInspect
+            isActive={isInspectorON}
+            onClickInspect={toggleInspector}
+          />
         )
       }
       outerEndElement={
-        <Collapsible.Root
-          open={toolInspect && isInspectorON && isRootListOpen}
-          lazyMount
-        >
-          <Collapsible.Content>
-            <Accordion.Root
-              borderRadius={"0.3rem"}
-              mt={1}
-              bgColor={"bg"}
-              multiple
-              lazyMount
-            >
-              {currentRoots.map((root) => (
-                <RootItem
-                  key={root.id}
-                  root={root}
-                  onClickVerseChapter={onClickVerseChapter}
-                />
-              ))}
-            </Accordion.Root>
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <RootsAccordion
+          isOpen={toolInspect && isInspectorON && isRootListOpen}
+          rootsList={currentRoots}
+          onClickVerseChapter={onClickVerseChapter}
+        />
       }
     >
       <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
         {index + 1}.
       </Span>{" "}
       {toolInspect && isInspectorON ? (
-        quranService
-          .getVerseTextByKey(verseMatch.key)
-          .split(" ")
-          .map((word, index) => (
-            <Span key={index}>
-              <Span
-                cursor={"pointer"}
-                p={"2px"}
-                border={"1px solid"}
-                borderRadius={"0.3rem"}
-                borderColor={"orange.fg"}
-                _hover={{ bgColor: "orange.emphasized" }}
-                aria-selected={selectedWord === index + 1}
-                _selected={{
-                  bgColor: "orange.emphasized",
-                }}
-                onClick={() => onClickWord(index + 1)}
-              >
-                {word}
-              </Span>{" "}
-            </Span>
-          ))
+        <VerseInspected
+          verseText={quranService.getVerseTextByKey(verseMatch.key)}
+          selectedWord={selectedWord}
+          onClickWord={onClickWord}
+        />
       ) : (
         <VerseHighlightMatches verse={verseMatch} />
       )}{" "}

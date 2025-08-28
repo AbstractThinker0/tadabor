@@ -11,10 +11,11 @@ import { ButtonVerse } from "@/components/Generic/Buttons";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
-import { Collapsible, Accordion, Span } from "@chakra-ui/react";
+import { Span } from "@chakra-ui/react";
 
 import { useBoolean } from "usehooks-ts";
-import { RootItem } from "@/components/Custom/RootItem";
+
+import { RootsAccordion } from "@/components/Custom/VerseInspected";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -59,25 +60,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
       isSelected={isSelected}
       rootProps={{ _selected: { bgColor: "blue.subtle" } }}
       outerEndElement={
-        <Collapsible.Root open={isRootListOpen} lazyMount>
-          <Collapsible.Content>
-            <Accordion.Root
-              borderRadius={"0.3rem"}
-              mt={1}
-              bgColor={"bg"}
-              multiple
-              lazyMount
-            >
-              {currentRoots.map((root) => (
-                <RootItem
-                  key={root.id}
-                  root={root}
-                  onClickVerseChapter={onClickVerseChapter}
-                />
-              ))}
-            </Accordion.Root>
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <RootsAccordion
+          isOpen={isRootListOpen}
+          rootsList={currentRoots}
+          onClickVerseChapter={onClickVerseChapter}
+        />
       }
     >
       {verse.versetext.split(" ").map((word, index) => (
