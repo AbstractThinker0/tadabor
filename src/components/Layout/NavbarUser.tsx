@@ -12,6 +12,9 @@ import { useBackend } from "@/hooks/useBackend";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogout } from "react-icons/md";
 
+import { FaUserPlus } from "react-icons/fa";
+import { IoMdLogIn } from "react-icons/io";
+
 import { useAuth } from "@/hooks/useAuth";
 
 const NavbarUser = () => {
@@ -81,6 +84,41 @@ const NavbarUser = () => {
                 >
                   <MdOutlineLogout />
                   {t("auth.logout")}
+                </Menu.Item>
+              </Menu.Content>
+            </Menu.Positioner>
+          </Portal>
+        </Menu.Root>
+      ) : isMobile ? (
+        <Menu.Root>
+          <Menu.Trigger asChild>
+            <Button
+              bgColor={"white"}
+              color={"black"}
+              marginEnd={"0.5rem"}
+              smDown={{ marginInline: "0" }}
+              size={"sm"}
+              borderRadius={"l3"}
+              boxShadow={"md"}
+              _hover={{ bg: "bg.emphasized" }}
+              _expanded={{ bg: "bg.emphasized" }}
+            >
+              <TbUserX />
+            </Button>
+          </Menu.Trigger>
+          <Portal>
+            <Menu.Positioner>
+              <Menu.Content>
+                <Menu.Item value="user_login" asChild>
+                  <NavLink to={"/login"}>
+                    <IoMdLogIn /> {t("auth.login")}
+                  </NavLink>
+                </Menu.Item>
+                <Menu.Separator />
+                <Menu.Item value="user_register" asChild>
+                  <NavLink to={"/register"}>
+                    <FaUserPlus /> {t("auth.register")}
+                  </NavLink>
                 </Menu.Item>
               </Menu.Content>
             </Menu.Positioner>
