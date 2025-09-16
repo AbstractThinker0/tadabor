@@ -55,13 +55,13 @@ const ListVerses = () => {
 
   useEffect(() => {
     dispatch(fetchLettersData());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     startTransition(() => {
       setStateVerses(quranService.getVerses(currentChapter));
     });
-  }, [currentChapter]);
+  }, [currentChapter, quranService]);
 
   return (
     <Flex flexDirection={"column"} flex={1} px={3} dir="rtl">
