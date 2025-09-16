@@ -339,6 +339,8 @@ const VerseItem = ({ verse, isSelected, onClickAudio }: VerseItemProps) => {
           background="none"
           border="none"
           onClick={() => onClickAudio(verse)}
+          width={"6px"}
+          height={"36px"}
         >
           🔊
         </Button>

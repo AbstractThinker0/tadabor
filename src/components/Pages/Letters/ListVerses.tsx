@@ -147,38 +147,40 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   return (
     <>
       <VerseContainer>
-        {verse.versetext.split(" ").map((word, wordIndex) => (
-          <Fragment key={wordIndex}>
-            <Span
-              my={"1px"}
-              me={isSpace === true ? "4px" : undefined}
-              py={"5px"}
-              px={"8px"}
-              border={"none"}
-              borderRadius={"5px"}
-              cursor={"pointer"}
-              aria-selected={wordIndex === selectedWord}
-              _selected={{ bgColor: "purple.emphasized" }}
-              _hover={{ bgColor: "purple.emphasized" }}
-              onClick={() => handleClickWord(wordIndex)}
-            >
-              {splitArabicLetters(word).map((letter, letterIndex) => (
-                <Fragment key={letterIndex}>
-                  <SingleLetter
-                    letter={letter}
-                    letterKey={`${wordIndex}-${letterIndex}`}
-                    selectedLetter={selectedLetter}
-                    handleClickLetter={handleClickLetter}
-                  />
-                  {isSpace === true ? " " : ""}
-                </Fragment>
-              ))}
-            </Span>{" "}
-          </Fragment>
-        ))}
-        <ButtonVerse onClick={() => onClickVerseID(verse.key)}>
-          ({verse.verseid})
-        </ButtonVerse>
+        <Span>
+          {verse.versetext.split(" ").map((word, wordIndex) => (
+            <Fragment key={wordIndex}>
+              <Span
+                my={"1px"}
+                me={isSpace === true ? "4px" : undefined}
+                py={"5px"}
+                px={"8px"}
+                border={"none"}
+                borderRadius={"5px"}
+                cursor={"pointer"}
+                aria-selected={wordIndex === selectedWord}
+                _selected={{ bgColor: "purple.emphasized" }}
+                _hover={{ bgColor: "purple.emphasized" }}
+                onClick={() => handleClickWord(wordIndex)}
+              >
+                {splitArabicLetters(word).map((letter, letterIndex) => (
+                  <Fragment key={letterIndex}>
+                    <SingleLetter
+                      letter={letter}
+                      letterKey={`${wordIndex}-${letterIndex}`}
+                      selectedLetter={selectedLetter}
+                      handleClickLetter={handleClickLetter}
+                    />
+                    {isSpace === true ? " " : ""}
+                  </Fragment>
+                ))}
+              </Span>{" "}
+            </Fragment>
+          ))}
+          <ButtonVerse onClick={() => onClickVerseID(verse.key)}>
+            ({verse.verseid})
+          </ButtonVerse>
+        </Span>
         <Flex ps={1} pt={2}>
           <Checkbox
             checked={isSpace}

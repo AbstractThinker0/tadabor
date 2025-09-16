@@ -25,6 +25,8 @@ const DisplayOptionsPopover = () => {
 
   const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
 
+  const verseDisplay = useAppSelector((state) => state.navigation.verseDisplay);
+
   const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
 
   const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
@@ -35,6 +37,10 @@ const DisplayOptionsPopover = () => {
 
   const toggleCenterVerses = () => {
     dispatch(navigationActions.toggleCenterVerses());
+  };
+
+  const setVerseDisplay = (mode: string) => {
+    dispatch(navigationActions.setVerseDisplay(mode));
   };
 
   const setToolsMode = (mode: string) => {
@@ -98,6 +104,22 @@ const DisplayOptionsPopover = () => {
 
                   <Flex py={1} alignItems={"center"}>
                     <Heading as="span" size="md" w="150px">
+                      Verse Display:{" "}
+                    </Heading>{" "}
+                    <NativeSelect.Root bgColor={"bg"} width={"120px"}>
+                      <NativeSelect.Field
+                        onChange={(e) => setVerseDisplay(e.target.value)}
+                        value={verseDisplay}
+                      >
+                        <option value="line">Line</option>
+                        <option value="panel">Panel</option>
+                      </NativeSelect.Field>
+                      <NativeSelect.Indicator />
+                    </NativeSelect.Root>
+                  </Flex>
+
+                  <Flex py={1} alignItems={"center"}>
+                    <Heading as="span" size="md" w="150px">
                       Tools Display:{" "}
                     </Heading>{" "}
                     <NativeSelect.Root bgColor={"bg"} width={"120px"}>
@@ -112,6 +134,7 @@ const DisplayOptionsPopover = () => {
                       <NativeSelect.Indicator />
                     </NativeSelect.Root>
                   </Flex>
+
                   <Flex py={1} alignItems={"center"} colorPalette={"blue"}>
                     <Heading as="span" size="md" w="150px">
                       Enabled Tools:

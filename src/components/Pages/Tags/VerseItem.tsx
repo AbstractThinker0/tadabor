@@ -54,7 +54,12 @@ const VerseItem = ({
         )
       }
       endElement={
-        <Button variant={"ghost"} onClick={() => onClickTagVerse(verse)}>
+        <Button
+          variant={"ghost"}
+          onClick={() => onClickTagVerse(verse)}
+          width={"6px"}
+          height={"36px"}
+        >
           🏷️
         </Button>
       }

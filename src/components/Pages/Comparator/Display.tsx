@@ -10,7 +10,7 @@ import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Span } from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import { useBoolean } from "usehooks-ts";
 import { NoteForm } from "@/components/Note/NoteForm";
@@ -131,10 +131,12 @@ const VerseItem = ({
         borderColor={"border.emphasized"}
         data-id={verse.key}
       >
-        {verse.versetext}
-        <ButtonVerse onClick={() => onClickVerse(verse.key)}>
-          ({verse.verseid})
-        </ButtonVerse>
+        <Span>
+          {verse.versetext}
+          <ButtonVerse onClick={() => onClickVerse(verse.key)}>
+            ({verse.verseid})
+          </ButtonVerse>
+        </Span>
         <ButtonExpand onClick={setOpen} />
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} noteType="verse" noteKey={verse.key} />

@@ -53,7 +53,12 @@ const VerseItem = ({
         },
       }}
       endElement={
-        <Button variant={"ghost"} onClick={() => onClickVerseColor(verse)}>
+        <Button
+          variant={"ghost"}
+          onClick={() => onClickVerseColor(verse)}
+          width={"6px"}
+          height={"36px"}
+        >
           🎨
         </Button>
       }

@@ -15,27 +15,26 @@ const VerseInspected = ({
   onClickWord,
 }: VerseInspectedProps) => {
   return (
-    <>
+    <Span display={"inline-flex"} gap={"2px"} flexWrap={"wrap"}>
       {verseText.split(" ").map((word, index) => (
-        <Span key={index}>
-          <Span
-            cursor={"pointer"}
-            p={"2px"}
-            border={"1px solid"}
-            borderRadius={"0.3rem"}
-            borderColor={"orange.fg"}
-            _hover={{ bgColor: "orange.emphasized" }}
-            aria-selected={selectedWord === index + 1}
-            _selected={{
-              bgColor: "orange.emphasized",
-            }}
-            onClick={() => onClickWord(index + 1)}
-          >
-            {word}
-          </Span>{" "}
+        <Span
+          key={index}
+          cursor={"pointer"}
+          p={"2px"}
+          border={"1px solid"}
+          borderRadius={"0.3rem"}
+          borderColor={"orange.fg"}
+          _hover={{ bgColor: "orange.emphasized" }}
+          aria-selected={selectedWord === index + 1}
+          _selected={{
+            bgColor: "orange.emphasized",
+          }}
+          onClick={() => onClickWord(index + 1)}
+        >
+          {word}
         </Span>
       ))}
-    </>
+    </Span>
   );
 };
 

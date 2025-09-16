@@ -16,6 +16,12 @@ const defaultToolNote = localStorage.getItem(keyToolNote) !== "false";
 const keyToolInspect = "toolInspect";
 const defaultToolInspect = localStorage.getItem(keyToolInspect) === "true";
 
+export type VerseDisplay = "line" | "panel" | "continous";
+
+const keyVerseDisplay = "verseDisplay";
+const defaultVerseDisplay = (localStorage.getItem(keyVerseDisplay) ||
+  "line") as VerseDisplay;
+
 interface NavigationState {
   currentPage: string;
   centerVerses: boolean;
@@ -23,6 +29,7 @@ interface NavigationState {
   toolCopy: boolean;
   toolNote: boolean;
   toolInspect: boolean;
+  verseDisplay: VerseDisplay;
   isSmallScreen: boolean;
   isBetaVersion: boolean;
 }
@@ -34,6 +41,7 @@ const initialState: NavigationState = {
   toolCopy: defaultToolCopy,
   toolNote: defaultToolNote,
   toolInspect: defaultToolInspect,
+  verseDisplay: defaultVerseDisplay,
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
   isBetaVersion: localStorage.getItem("betaVersion") === "true",
 };
@@ -71,6 +79,10 @@ const navigationSlice = createSlice({
     setToolInspect: (state, action: PayloadAction<boolean>) => {
       state.toolInspect = action.payload;
       localStorage.setItem(keyToolInspect, action.payload ? "true" : "false");
+    },
+    setVerseDisplay: (state, action: PayloadAction<string>) => {
+      state.verseDisplay = action.payload as VerseDisplay;
+      localStorage.setItem(keyVerseDisplay, action.payload);
     },
     setSmallScreen: (state, action: PayloadAction<boolean>) => {
       state.isSmallScreen = action.payload;

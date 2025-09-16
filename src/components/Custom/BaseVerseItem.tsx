@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/store";
 
-import { Box, type BoxProps } from "@chakra-ui/react";
+import { Box, Span, type BoxProps } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 import VerseContainer from "@/components/Custom/VerseContainer";
@@ -39,6 +39,8 @@ const BaseVerseItem = ({
   const { value: isOpen, toggle } = useBoolean(defaultOpen);
   const [isHovered, setIsHovered] = useState(false);
 
+  const verseDisplay = useAppSelector((state) => state.navigation.verseDisplay);
+
   const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
 
   const shouldShowButtons =
@@ -48,6 +50,8 @@ const BaseVerseItem = ({
 
   const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
   const toolNote = useAppSelector((state) => state.navigation.toolNote);
+
+  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
 
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -74,9 +78,20 @@ const BaseVerseItem = ({
     >
       {outerStartElement}
       <VerseContainer>
-        {children}
+        <Span
+          display={verseDisplay === "panel" ? "inline-flex" : undefined}
+          alignItems={"center"}
+          justifyContent={centerVerses ? "center" : undefined}
+          flex={verseDisplay === "panel" ? 1 : undefined}
+        >
+          <Span>{children}</Span>
+        </Span>
         {shouldShowButtons && (
-          <>
+          <Span
+            display={verseDisplay === "panel" ? "inline-flex" : undefined}
+            flexDir={verseDisplay === "panel" ? "column" : undefined}
+            gap={"3px"}
+          >
             {toolNote && (
               <ButtonExpand
                 onClick={toggle}
@@ -86,8 +101,9 @@ const BaseVerseItem = ({
               />
             )}
             {toolCopy && <ButtonCopyVerse verseKey={verseKey} />}
+
             {endElement}
-          </>
+          </Span>
         )}
       </VerseContainer>
       <CollapsibleNote isOpen={isOpen} noteType={noteType} noteKey={verseKey} />

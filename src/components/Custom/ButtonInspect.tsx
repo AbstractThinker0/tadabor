@@ -13,6 +13,8 @@ const ButtonInspect = ({ isActive, onClickInspect }: ButtonInspectProps) => {
       aria-label="Inspect"
       colorPalette={isActive ? "teal" : undefined}
       onClick={onClickInspect}
+      width={"6px"}
+      height={"36px"}
     >
       <VscInspect />
     </IconButton>

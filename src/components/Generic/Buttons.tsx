@@ -7,9 +7,10 @@ import {
   type IconButtonProps,
 } from "@chakra-ui/react";
 
-import { TbSelect } from "react-icons/tb";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { MdOutlineMenu } from "react-icons/md";
+
+import { MdOutlineNoteAlt } from "react-icons/md";
 
 import useScreenSize from "@/hooks/useScreenSize";
 
@@ -53,8 +54,14 @@ const ButtonEdit = (props: ButtonProps) => {
 
 const ButtonExpand = (props: IconButtonProps) => {
   return (
-    <IconButton variant="ghost" aria-label="Expand" {...props}>
-      <TbSelect />
+    <IconButton
+      variant="ghost"
+      aria-label="Expand"
+      width={"6px"}
+      height={"36px"}
+      {...props}
+    >
+      <MdOutlineNoteAlt />
     </IconButton>
   );
 };

@@ -161,6 +161,18 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
       verseKey={verse.key}
       isSelected={isSelected}
       rootProps={{ _selected: { bgColor: "yellow.subtle" } }}
+      endElement={
+        <IconButton
+          aria-label="Expand"
+          onClick={toggle}
+          variant={isOpen ? "solid" : "ghost"}
+          colorPalette={isOpen ? "teal" : undefined}
+          width={"6px"}
+          height={"36px"}
+        >
+          <AiOutlineTranslation />
+        </IconButton>
+      }
       outerEndElement={
         <CollapsibleNote
           isOpen={isOpen}
@@ -171,9 +183,6 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
     >
       {verse.versetext}{" "}
       <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
-      <IconButton variant="ghost" aria-label="Expand" onClick={toggle}>
-        <AiOutlineTranslation />
-      </IconButton>
     </BaseVerseItem>
   );
 };
