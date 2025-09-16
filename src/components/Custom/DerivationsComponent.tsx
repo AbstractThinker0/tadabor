@@ -14,7 +14,7 @@ const DerivationsComponent = ({
   searchIndexes,
   handleDerivationClick,
 }: DerivationsComponentProps) => {
-  const [itemsCount, setItemsCount] = useState(150);
+  const [itemsCount, setItemsCount] = useState(200);
 
   const [isPending, startTransition] = useTransition();
 
