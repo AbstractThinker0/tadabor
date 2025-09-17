@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { colorProps } from "./consts";
+import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { useAppDispatch } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
 import { dbFuncs } from "@/util/db";

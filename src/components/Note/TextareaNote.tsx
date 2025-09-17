@@ -53,7 +53,7 @@ const TextareaNote = ({
       <TextareaNoteEditor
         inputValue={inputValue}
         inputDirection={inputDirection}
-        inputSaved={inputSaved}
+        inputSaved={inputSaved || !canCancel}
         onChangeNote={onChangeNote}
       />
       <TextareaNoteFooter
