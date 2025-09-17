@@ -125,7 +125,7 @@ const NoteContainerHeader = ({
 
   return (
     <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
-      <Text fontSize="lg" fontWeight="bold" color={"gray.600"} py={"6px"}>
+      <Text fontSize="sm" color={"gray.600"} py={"6px"}>
         {getNoteTitle()}{" "}
       </Text>
       {isLogged && (
@@ -246,4 +246,5 @@ const NoteContainerFooter = ({
   );
 };
 
+export { NoteContainerHeader };
 export default NoteContainer;

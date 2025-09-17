@@ -2,12 +2,16 @@ import { useTranslation } from "react-i18next";
 
 import { Box, Flex } from "@chakra-ui/react";
 
-import TextareaToolbar from "@/components/Note/TextareaToolbar";
-
 import TextareaAutosize from "@/components/Note/TextareaAutosize";
 import { ButtonCancel, ButtonSave } from "@/components/Generic/Buttons";
+import { TextareaHeader } from "@/components/Note/TextareaHeader";
 
 interface TextareaNoteProps {
+  isSynced: boolean;
+  isSyncing: boolean;
+  isOutOfSync: boolean;
+  noteType?: string;
+  noteKey?: string;
   preSaveText?: string;
   inputValue: string;
   inputDirection: string;
@@ -19,6 +23,11 @@ interface TextareaNoteProps {
 }
 
 const TextareaNote = ({
+  isSynced,
+  isSyncing,
+  isOutOfSync,
+  noteType,
+  noteKey,
   preSaveText,
   inputValue,
   inputDirection,
@@ -32,7 +41,15 @@ const TextareaNote = ({
 
   return (
     <TextareaNoteContainer onSaveNote={onSaveNote}>
-      <TextareaToolbar handleSetDirection={handleSetDirection} />
+      <TextareaHeader
+        handleSetDirection={handleSetDirection}
+        noteKey={noteKey}
+        noteType={noteType}
+        isSynced={isSynced}
+        isSyncing={isSyncing}
+        isOutOfSync={isOutOfSync}
+        inputValue={inputValue}
+      />
       <TextareaNoteEditor
         inputValue={inputValue}
         inputDirection={inputDirection}

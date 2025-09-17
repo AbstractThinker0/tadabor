@@ -32,6 +32,7 @@ interface NavigationState {
   verseDisplay: VerseDisplay;
   isSmallScreen: boolean;
   isBetaVersion: boolean;
+  pageDirection: string;
 }
 
 const initialState: NavigationState = {
@@ -44,6 +45,7 @@ const initialState: NavigationState = {
   verseDisplay: defaultVerseDisplay,
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
   isBetaVersion: localStorage.getItem("betaVersion") === "true",
+  pageDirection: localStorage.getItem("i18nextLng") === null ? "rtl" : "ltr",
 };
 
 const navigationSlice = createSlice({
@@ -91,6 +93,9 @@ const navigationSlice = createSlice({
       state.isBetaVersion = action.payload;
 
       localStorage.setItem("betaVersion", action.payload ? "true" : "false");
+    },
+    setPageDirection: (state, action: PayloadAction<string>) => {
+      state.pageDirection = action.payload;
     },
   },
 });

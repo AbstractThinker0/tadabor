@@ -108,6 +108,11 @@ const NoteForm = ({
         />
       ) : (
         <TextareaNote
+          isSynced={note.isSynced}
+          isSyncing={note.isSyncing}
+          isOutOfSync={note.isOutOfSync}
+          noteType={note.type}
+          noteKey={note.key}
           preSaveText={note.preSaveText}
           inputValue={note.text}
           inputDirection={note.direction}

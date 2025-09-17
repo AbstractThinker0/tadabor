@@ -19,6 +19,7 @@ import NotesProvider from "@/components/Custom/NotesProvider";
 import LoadingSpinner from "@/components//Generic/LoadingSpinner";
 
 import { HookResizeEvent } from "@/hooks/useScreenSize";
+import { navigationActions } from "@/store/slices/global/navigation";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
@@ -27,7 +28,8 @@ function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     window.document.dir = i18n.dir();
-  }, [i18n.resolvedLanguage]);
+    dispatch(navigationActions.setPageDirection(i18n.dir()));
+  }, [i18n, i18n.resolvedLanguage, dispatch]);
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
