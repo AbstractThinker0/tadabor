@@ -2,7 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 
 import { useAppSelector } from "@/store";
 
-import { NoteContainerHeader } from "@/components/Note/NoteContainer";
+import { NoteTitle } from "@/components/Note/NoteTitle";
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
 import { ButtonCopy } from "@/components/Custom/ButtonCopy";
@@ -38,7 +38,7 @@ const TextareaHeader = ({
       dir={pageDirection}
     >
       <Box position="absolute" insetInlineStart={0}>
-        <NoteContainerHeader
+        <NoteTitle
           noteKey={noteKey}
           noteType={noteType}
           isSynced={isSynced}

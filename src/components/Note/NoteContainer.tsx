@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/store";
 
-import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 import {
   ButtonCancel,
@@ -9,11 +9,9 @@ import {
 } from "@/components/Generic/Buttons";
 import { NoteText } from "@/components/Note/NoteText";
 
-import { Tooltip } from "@/components/ui/tooltip-mobile";
+import { NoteTitle } from "@/components/Note/NoteTitle";
 
-import { MdOutlineCheckCircle } from "react-icons/md";
-import useQuran from "@/context/useQuran";
-import { useTranslation } from "react-i18next";
+import { ButtonCopy } from "@/components/Custom/ButtonCopy";
 
 interface NoteContainerProps {
   isSynced: boolean;
@@ -65,6 +63,7 @@ const NoteContainer = ({
         isSynced={isSynced}
         isSyncing={isSyncing}
         isOutOfSync={isOutOfSync}
+        inputValue={inputValue}
       />
       <NoteContainerBody
         inputSaved={inputSaved}
@@ -89,6 +88,7 @@ interface NoteContainerHeaderProps {
   isSyncing: boolean;
   isSynced: boolean;
   isOutOfSync: boolean;
+  inputValue: string;
 }
 
 const NoteContainerHeader = ({
@@ -97,52 +97,23 @@ const NoteContainerHeader = ({
   isSyncing,
   isSynced,
   isOutOfSync,
+  inputValue,
 }: NoteContainerHeaderProps) => {
-  const { t } = useTranslation();
-
-  const quranService = useQuran();
-
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-
-  const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
-    if (isSyncing) return "Syncing note...";
-    if (isSynced) return "Note is synced to the cloud.";
-    if (isOutOfSync) return "Note is out of sync.";
-    return "Saved locally. Log in to enable cloud sync.";
-  };
-
-  const getNoteTitle = () => {
-    if (noteType === "verse") {
-      return `${t("noteVerse")} (${quranService.convertKeyToSuffix(noteKey!)})`;
-    } else if (noteType === "root") {
-      return `${t("noteRoot")} (${quranService.getRootNameByID(noteKey!)})`;
-    } else if (noteType === "translation") {
-      return `${t("translationVerse")} (${quranService.convertKeyToSuffix(
-        noteKey!
-      )})`;
-    }
-  };
+  const pageDirection = useAppSelector(
+    (state) => state.navigation.pageDirection
+  );
 
   return (
-    <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
-      <Text fontSize="sm" color={"gray.600"} py={"6px"}>
-        {getNoteTitle()}{" "}
-      </Text>
-      {isLogged && (
-        <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
-          {isSyncing ? (
-            <Spinner size="sm" color="blue.500" />
-          ) : (
-            <Icon
-              as={MdOutlineCheckCircle}
-              color={
-                isOutOfSync ? "orange.500" : isSynced ? "green.500" : "gray.500"
-              }
-              boxSize={4}
-            />
-          )}
-        </Tooltip>
-      )}
+    <Flex dir={pageDirection} justifyContent={"space-between"}>
+      <NoteTitle
+        noteKey={noteKey}
+        noteType={noteType}
+        isSynced={isSynced}
+        isSyncing={isSyncing}
+        isOutOfSync={isOutOfSync}
+      />
+
+      <ButtonCopy copyText={inputValue} copyNotice="Copied note to clipboard" />
     </Flex>
   );
 };
@@ -246,5 +217,4 @@ const NoteContainerFooter = ({
   );
 };
 
-export { NoteContainerHeader };
 export default NoteContainer;
