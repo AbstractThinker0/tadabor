@@ -29,7 +29,7 @@ function Layout({ children }: PropsWithChildren) {
   useEffect(() => {
     window.document.dir = i18n.dir();
     dispatch(navigationActions.setPageDirection(i18n.dir()));
-  }, [i18n, i18n.resolvedLanguage, dispatch]);
+  }, [i18n.resolvedLanguage, dispatch]);
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
