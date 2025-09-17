@@ -23,7 +23,7 @@ const VersesSide = () => {
   );
 
   return (
-    <Flex flexDir={"column"} flex={1} pt={2} ps={1}>
+    <Flex flexDir={"column"} flex={1} py={2} px={1}>
       <Flex
         flexDir={"column"}
         overflowY={"scroll"}

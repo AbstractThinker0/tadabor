@@ -91,7 +91,7 @@ function Coloring() {
     } else {
       fetchSavedColors();
     }
-  }, []);
+  }, [dispatch]);
 
   const showSearchPanel = useAppSelector(
     (state) => state.coloringPage.showSearchPanel
