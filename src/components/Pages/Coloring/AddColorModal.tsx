@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
@@ -38,7 +39,7 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
     }
 
     const newColor: colorProps = {
-      colorID: Date.now().toString(),
+      colorID: uuidv4(),
       colorCode: colorCode,
       colorDisplay: colorName,
     };

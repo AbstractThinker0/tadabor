@@ -116,6 +116,7 @@ export const useNote = ({
   };
 
   const saveNote = async () => {
+    if (!note) return; // Nothing to save yet
     let syncDate = 0;
     const now = Date.now();
 
@@ -151,12 +152,7 @@ export const useNote = ({
       }
     }
 
-    dispatch(
-      noteAction.markSaved({
-        id: noteIndex,
-        dateModified: newDateModified,
-      })
-    );
+    // We delay marking saved until after persistence completes
 
     type SaveDataProps = {
       id: string;
@@ -188,6 +184,12 @@ export const useNote = ({
 
     dbSave(saveData)
       .then(() => {
+        dispatch(
+          noteAction.markSaved({
+            id: noteIndex,
+            dateModified: newDateModified,
+          })
+        );
         toaster.create({
           description: t("save_success"),
           type: "success",

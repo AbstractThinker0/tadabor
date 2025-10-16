@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { dbFuncs } from "@/util/db";
 import type { tagProps } from "@/components/Pages/Tags/consts";
 
@@ -29,7 +30,7 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
     }
 
     const newTag: tagProps = {
-      tagID: Date.now().toString(),
+      tagID: uuidv4(),
       tagDisplay: tagName,
     };
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch } from "@/store";
@@ -41,7 +42,7 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
       return;
     }
 
-    const presetID = Date.now().toString();
+    const presetID = uuidv4();
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
     dbFuncs
       .saveLettersPreset(presetID, presetName)

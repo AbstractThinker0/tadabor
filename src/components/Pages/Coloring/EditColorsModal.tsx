@@ -77,7 +77,10 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
 
     const newColoredVerses: coloredProps = {};
     Object.keys(coloredVerses).forEach((verseKey) => {
-      newColoredVerses[verseKey] = listColors[coloredVerses[verseKey].colorID];
+      const mapped = listColors[coloredVerses[verseKey]?.colorID];
+      if (mapped) {
+        newColoredVerses[verseKey] = mapped;
+      }
     });
 
     dispatch(coloringPageActions.setColoredVerses(newColoredVerses));
