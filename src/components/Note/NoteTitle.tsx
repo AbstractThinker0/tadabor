@@ -14,6 +14,7 @@ interface NoteTitleProps {
   isSyncing: boolean;
   isSynced: boolean;
   isOutOfSync: boolean;
+  isPendingSave: boolean;
 }
 
 const NoteTitle = ({
@@ -22,6 +23,7 @@ const NoteTitle = ({
   isSyncing,
   isSynced,
   isOutOfSync,
+  isPendingSave
 }: NoteTitleProps) => {
   const { t } = useTranslation();
 
@@ -31,8 +33,9 @@ const NoteTitle = ({
 
   const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
     if (isSyncing) return "Syncing note...";
-    if (isSynced) return "Note is synced to the cloud.";
-    if (isOutOfSync) return "Note is out of sync.";
+    if (isSynced) return "Note synced to the cloud.";
+    if (isOutOfSync) return "Note out of sync.";
+    if (isPendingSave) return "Note pending save.";
     return "Saved locally. Log in to enable cloud sync.";
   };
 

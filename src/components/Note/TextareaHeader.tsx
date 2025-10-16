@@ -15,6 +15,7 @@ interface TextareaHeaderProps {
   isSyncing: boolean;
   isOutOfSync: boolean;
   inputValue: string;
+  inputSaved: boolean;
 }
 
 const TextareaHeader = ({
@@ -25,7 +26,10 @@ const TextareaHeader = ({
   noteType,
   noteKey,
   inputValue,
+  inputSaved
 }: TextareaHeaderProps) => {
+  const isPendingSave = !inputSaved || !inputValue;
+
   const pageDirection = useAppSelector(
     (state) => state.navigation.pageDirection
   );
@@ -44,6 +48,7 @@ const TextareaHeader = ({
           isSynced={isSynced}
           isSyncing={isSyncing}
           isOutOfSync={isOutOfSync}
+          isPendingSave={isPendingSave}
         />
       </Box>
       <TextareaToolbar handleSetDirection={handleSetDirection} />

@@ -64,6 +64,7 @@ const NoteContainer = ({
         isSyncing={isSyncing}
         isOutOfSync={isOutOfSync}
         inputValue={inputValue}
+        inputSaved={inputSaved}
       />
       <NoteContainerBody
         inputSaved={inputSaved}
@@ -89,6 +90,7 @@ interface NoteContainerHeaderProps {
   isSynced: boolean;
   isOutOfSync: boolean;
   inputValue: string;
+  inputSaved: boolean;
 }
 
 const NoteContainerHeader = ({
@@ -98,10 +100,13 @@ const NoteContainerHeader = ({
   isSynced,
   isOutOfSync,
   inputValue,
+  inputSaved
 }: NoteContainerHeaderProps) => {
   const pageDirection = useAppSelector(
     (state) => state.navigation.pageDirection
   );
+
+  const isPendingSave = !inputSaved || !inputValue;
 
   return (
     <Flex dir={pageDirection} justifyContent={"space-between"}>
@@ -111,6 +116,7 @@ const NoteContainerHeader = ({
         isSynced={isSynced}
         isSyncing={isSyncing}
         isOutOfSync={isOutOfSync}
+        isPendingSave={isPendingSave}
       />
 
       <ButtonCopy copyText={inputValue} copyNotice="Copied note to clipboard" />

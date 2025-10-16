@@ -49,6 +49,7 @@ const TextareaNote = ({
         isSyncing={isSyncing}
         isOutOfSync={isOutOfSync}
         inputValue={inputValue}
+        inputSaved={inputSaved}
       />
       <TextareaNoteEditor
         inputValue={inputValue}
