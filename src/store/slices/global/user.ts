@@ -4,6 +4,7 @@ export const keyId = "userId";
 const keyToken = "userToken";
 const keyEmail = "userEmail";
 const keyUsername = "userUsername";
+const keyRole = "userRole";
 
 interface UserStateProps {
   id: number;
@@ -11,6 +12,7 @@ interface UserStateProps {
   token: string;
   email: string;
   username: string;
+  role: number;
 
   isPending: boolean;
   isLogged: boolean;
@@ -22,6 +24,9 @@ const initialState: UserStateProps = {
   token: localStorage.getItem(keyToken) || "",
   email: localStorage.getItem(keyEmail) || "",
   username: localStorage.getItem(keyUsername) || "",
+  role: localStorage.getItem(keyRole)
+    ? Number(localStorage.getItem(keyRole))
+    : 0,
 
   isPending: localStorage.getItem(keyToken) ? true : false,
   isLogged: false,
@@ -33,11 +38,13 @@ interface LoginPayload {
   token: string;
   email: string;
   username: string;
+  role: number;
 }
 
 interface UpdatePayload {
   email: string;
   username: string;
+  role?: number;
 }
 
 const userSlice = createSlice({
@@ -45,7 +52,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<LoginPayload>) => {
-      const { id, token, email, username } = action.payload;
+      const { id, token, email, username, role } = action.payload;
 
       state.id = id;
       localStorage.setItem(keyId, id.toString());
@@ -56,6 +63,12 @@ const userSlice = createSlice({
       localStorage.setItem(keyEmail, email);
       state.username = username;
       localStorage.setItem(keyUsername, username);
+      state.role = role ?? null;
+      if (isNaN(role)) {
+        localStorage.setIItem(keyRole, "0");
+      } else {
+        localStorage.setItem(keyRole, String(role));
+      }
 
       state.isLogged = true;
       state.isLoggedOffline = false;
@@ -66,6 +79,8 @@ const userSlice = createSlice({
       const token = localStorage.getItem(keyToken);
       const email = localStorage.getItem(keyEmail);
       const username = localStorage.getItem(keyUsername);
+      const roleStr = localStorage.getItem(keyRole);
+      const role = roleStr !== null ? Number(roleStr) : 0;
 
       if (token && email && username && id) {
         state.id = id;
@@ -73,6 +88,7 @@ const userSlice = createSlice({
         state.token = token;
         state.email = email;
         state.username = username;
+        state.role = role;
 
         state.isPending = false;
         state.isLogged = true;
@@ -84,11 +100,13 @@ const userSlice = createSlice({
       state.token = "";
       state.email = "";
       state.username = "";
+      state.role = 0;
 
       localStorage.removeItem(keyId);
       localStorage.removeItem(keyToken);
       localStorage.removeItem(keyEmail);
       localStorage.removeItem(keyUsername);
+      localStorage.removeItem(keyRole);
 
       state.isLogged = false;
       state.isPending = false;
@@ -97,6 +115,10 @@ const userSlice = createSlice({
     update: (state, action: PayloadAction<UpdatePayload>) => {
       state.email = action.payload.email;
       state.username = action.payload.username;
+      if (action.payload.role !== undefined) {
+        state.role = action.payload.role;
+        localStorage.setItem(keyRole, String(action.payload.role));
+      }
     },
   },
 });

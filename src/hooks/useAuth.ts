@@ -51,6 +51,7 @@ export const useAuth = () => {
         email,
         token: result.token,
         username: result.user.username,
+        role: result.user.role,
       });
 
       dispatch(fetchCloudNotes({ userId: result.user.id }));
@@ -66,12 +67,14 @@ export const useAuth = () => {
     email,
     token,
     username,
+    role,
     message = "auth.loggedIn",
   }: {
     id: number;
     email: string;
     token: string;
     username: string;
+    role: number;
     message?: string;
   }) => {
     dispatch(
@@ -80,6 +83,7 @@ export const useAuth = () => {
         email,
         token,
         username,
+        role,
       })
     );
 
@@ -151,6 +155,7 @@ export const useAuth = () => {
         email,
         token: result.token,
         username,
+        role: 0,
       });
 
       dispatch(fetchCloudNotes({ userId: result.userid }));
@@ -196,6 +201,7 @@ export const useAuth = () => {
           token: result.token,
           email: result.user.email,
           username: result.user.username,
+          role: result.user.role,
           message: "auth.passwordUpdated",
         });
 
@@ -255,6 +261,7 @@ export const useAuth = () => {
           token: result.token,
           email: result.user.email,
           username: result.user.username,
+          role: result.user.role,
           message: "auth.passwordUpdated",
         });
 
