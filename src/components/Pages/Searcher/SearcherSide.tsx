@@ -58,7 +58,7 @@ const CountVerses = () => {
 
   return (
     <Box fontWeight={"bold"} color={"green"}>
-      {`${t("search_count")} ${verses_count}`}
+      {`${t("search.count")} ${verses_count}`}
     </Box>
   );
 };

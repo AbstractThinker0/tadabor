@@ -54,7 +54,7 @@ const SearchForm = ({
           </Flex>
 
           <Flex gap={1} alignSelf={"start"}>
-            <Box fontWeight={"bold"}>{t("search_options")}</Box>{" "}
+            <Box fontWeight={"bold"}>{t("search.options")}</Box>{" "}
             <Checkbox
               checked={searchInclusive}
               onCheckedChange={(e) => onChangeInclusive(!!e.checked)}

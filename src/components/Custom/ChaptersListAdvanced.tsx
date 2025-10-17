@@ -256,7 +256,7 @@ const ChaptersListFooter = ({
       borderColor={"border.emphasized"}
     >
       <Box fontWeight="bold" fontSize={"medium"} paddingEnd={"0.1rem"}>
-        {t("search_scope")}:
+        {t("search.scope")}:
       </Box>
       <Flex justifyContent="center" gap="3px">
         <Button
@@ -266,7 +266,7 @@ const ChaptersListFooter = ({
           disabled={getSelectedCount === 114}
           onClick={onClickSelectAll}
         >
-          {t("all_chapters")}
+          {t("search.all_quran")}
         </Button>
         <Button
           px={"0.25rem"}

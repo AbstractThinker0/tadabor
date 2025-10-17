@@ -209,7 +209,7 @@ const VersesCount = () => {
 
   return (
     <Text fontWeight={"bold"} color={"green.fg"}>
-      {`${t("search_count")} ${selectedCount}`}
+      {`${t("search.count")} ${selectedCount}`}
     </Text>
   );
 };

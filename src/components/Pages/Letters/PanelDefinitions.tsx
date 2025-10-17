@@ -94,7 +94,7 @@ const PanelDefinitions = () => {
         width={"50%"}
       >
         <Text as="span" fontWeight={"bold"} fontSize={"larger"}>
-          {t("letters_preset")}
+          {t("letters.preset")}
         </Text>
         <Box>
           <NativeSelect.Root>

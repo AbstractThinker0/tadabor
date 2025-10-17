@@ -109,7 +109,7 @@ const TextareaNoteEditor = ({
       value={inputValue}
       dir={inputDirection}
       onChange={onChangeTextarea}
-      placeholder={t("text_form")}
+      placeholder={t("notes.text_form")}
       required
       borderRadius={"2xl"}
       colorPalette={"blue"}

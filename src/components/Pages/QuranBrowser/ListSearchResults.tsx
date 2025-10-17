@@ -90,7 +90,7 @@ const ListSearchResults = ({
   if (searchingChapters.length === 0) {
     return (
       <Heading p={3} size="lg" dir="auto">
-        {t("select_notice")}
+        {t("search.select_notice")}
       </Heading>
     );
   }

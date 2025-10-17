@@ -36,7 +36,7 @@ const NotesList = () => {
         </>
       ) : (
         <Box textAlign={"center"} fontSize={"larger"}>
-          {t("no_notes")}
+          {t("notes.no_notes")}
         </Box>
       )}
     </>
