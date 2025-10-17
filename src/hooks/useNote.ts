@@ -191,14 +191,14 @@ export const useNote = ({
           })
         );
         toaster.create({
-          description: t("save_success"),
+          description: t("ui.messages.save_success"),
           type: "success",
         });
       })
       .catch((error) => {
         console.error("Failed to save note:", error);
         toaster.create({
-          description: t("save_failed"),
+          description: t("ui.messages.save_failed"),
           type: "error",
         });
       });

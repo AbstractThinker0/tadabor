@@ -11,7 +11,7 @@ import { Tabs } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Letters = memo(() => {
-  usePageNav("nav_letters");
+  usePageNav("nav.letters");
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
