@@ -12,7 +12,7 @@ import { Tabs } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const RootsBrowser = () => {
-  usePageNav("nav_roots");
+  usePageNav("nav.roots");
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 

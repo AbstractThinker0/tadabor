@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Audio = () => {
-  usePageNav("nav_audio");
+  usePageNav("nav.audio");
   const { i18n } = useTranslation();
   const direction = i18n.dir();
 

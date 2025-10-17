@@ -10,7 +10,7 @@ import { Sidebar } from "@/components/Generic/Sidebar";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function QuranBrowser() {
-  usePageNav("nav_browser");
+  usePageNav("nav.browser");
   const dispatch = useAppDispatch();
 
   const showSearchPanel = useAppSelector(

@@ -23,7 +23,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 import { VerseItem } from "@/components/Pages/Searcher2/VerseItem";
 
 const Searcher2 = () => {
-  usePageNav("nav_searcher2");
+  usePageNav("nav.searcher2");
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
@@ -209,26 +209,26 @@ const Searcher2Tab = () => {
         </Flex>
         <Flex p={1} gap={1}>
           <Flex fontWeight={"bold"} flexShrink={0} lineHeight={"short"}>
-            {t("search_options")}
+            {t("search.options")}
           </Flex>
           <HStack gap={3} flexWrap={"wrap"}>
             <Checkbox
               checked={searchDiacritics}
               onCheckedChange={(e) => handleCheckboxDiacritics(!!e.checked)}
             >
-              {t("search_diacritics")}
+              {t("search.diacritics")}
             </Checkbox>
             <Checkbox
               checked={searchIdentical}
               onCheckedChange={(e) => handleCheckboxIdentical(!!e.checked)}
             >
-              {t("search_identical")}
+              {t("search.identical")}
             </Checkbox>
             <Checkbox
               checked={searchStart}
               onCheckedChange={(e) => handleCheckboxStart(!!e.checked)}
             >
-              {t("search_start")}
+              {t("search.start")}
             </Checkbox>
           </HStack>
         </Flex>

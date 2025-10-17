@@ -20,7 +20,7 @@ import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Tags() {
-  usePageNav("nav_tags");
+  usePageNav("nav.tags");
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();

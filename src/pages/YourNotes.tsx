@@ -11,7 +11,7 @@ import TransNotes from "@/components/Pages/YourNotes/TransNotes";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const YourNotes = () => {
-  usePageNav("nav_notes");
+  usePageNav("nav.notes");
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 

@@ -17,7 +17,7 @@ import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Coloring() {
-  usePageNav("nav_coloring");
+  usePageNav("nav.coloring");
   const [loadingState, setLoadingState] = useState(true);
 
   const dispatch = useAppDispatch();

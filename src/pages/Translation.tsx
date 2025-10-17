@@ -12,7 +12,7 @@ import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Translation = () => {
-  usePageNav("nav_translation");
+  usePageNav("nav.translation");
   const dispatch = useAppDispatch();
 
   const currentChapter = useAppSelector(

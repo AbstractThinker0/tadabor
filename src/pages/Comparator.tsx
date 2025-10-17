@@ -14,7 +14,7 @@ import { Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 
 function Comparator() {
-  usePageNav("nav_comparator");
+  usePageNav("nav.comparator");
   const refVerseList = useRef<HTMLDivElement>(null);
   const quranService = useQuran();
 

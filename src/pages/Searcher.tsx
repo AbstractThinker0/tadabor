@@ -14,7 +14,7 @@ import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Searcher = () => {
-  usePageNav("nav_searcher");
+  usePageNav("nav.searcher");
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();

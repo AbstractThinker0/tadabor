@@ -92,7 +92,7 @@ const AboutContent = () => {
 };
 
 const About = () => {
-  usePageNav("nav_about");
+  usePageNav("nav.about");
 
   return <AboutContent />;
 };

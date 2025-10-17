@@ -14,7 +14,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 function Inspector() {
-  usePageNav("nav_inspector");
+  usePageNav("nav.inspector");
   const dispatch = useAppDispatch();
 
   const currentChapter = useAppSelector(
