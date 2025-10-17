@@ -30,6 +30,8 @@ import { SiGoogletranslate } from "react-icons/si";
 import { VscInspect } from "react-icons/vsc";
 import { LuFileVolume } from "react-icons/lu";
 
+import { LuShield } from "react-icons/lu";
+
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
@@ -146,6 +148,8 @@ const Navbar = () => {
 const NavMenu = () => {
   const { t } = useTranslation();
 
+  const role = useAppSelector((state) => state.user.role);
+
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
@@ -163,79 +167,88 @@ const NavMenu = () => {
       <Portal>
         <Menu.Positioner>
           <Menu.Content>
-            <MenuItem value="nav_browser" label={t("nav_browser")} to="/" />
+            <MenuItem value="nav_browser" label={t("nav.browser")} to="/" />
             <MenuItem
               value="nav_roots"
-              label={t("nav_roots")}
+              label={t("nav.roots")}
               to="/roots"
               icon={<LuGitFork />}
             />
             <MenuItem
               value="nav_translation"
-              label={t("nav_translation")}
+              label={t("nav.translation")}
               to="/translation"
               icon={<SiGoogletranslate />}
             />
             <MenuItem
               value="nav_notes"
-              label={t("nav_notes")}
+              label={t("nav.notes")}
               to="/notes"
               icon={<TfiWrite />}
             />
             <MenuItem
               value="nav_coloring"
-              label={t("nav_coloring")}
+              label={t("nav.coloring")}
               to="/coloring"
               icon={<LuPalette />}
             />
             <MenuItem
               value="nav_tags"
-              label={t("nav_tags")}
+              label={t("nav.tags")}
               to="/tags"
               icon={<LuTag />}
             />
             <MenuItem
               value="nav_inspector"
-              label={t("nav_inspector")}
+              label={t("nav.inspector")}
               to="/inspector"
               icon={<VscInspect />}
             />
             <MenuItem
               value="nav_comparator"
-              label={t("nav_comparator")}
+              label={t("nav.comparator")}
               to="/comparator"
               icon={<FaBalanceScale />}
             />
             <MenuItem
               value="nav_searcher"
-              label={t("nav_searcher")}
+              label={t("nav.searcher")}
               to="/searcher"
               icon={<LuScanSearch />}
             />
             <MenuItem
               value="nav_searcher2"
-              label={t("nav_searcher2")}
+              label={t("nav.searcher2")}
               to="/searcher2"
               icon={<LuTextSearch />}
             />
             <MenuItem
               value="nav_letters"
-              label={t("nav_letters")}
+              label={t("nav.letters")}
               to="/letters"
               icon={<FaRegPenToSquare />}
             />
             <MenuItem
               value="nav_audio"
-              label={t("nav_audio")}
+              label={t("nav.audio")}
               to="/audio"
               icon={<LuFileVolume />}
             />
             <MenuItem
               value="nav_about"
-              label={t("nav_about")}
+              label={t("nav.about")}
               to="/about"
               icon={<LuFileQuestion />}
             />
+
+            {role === 1 && (
+              <MenuItem
+                value="nav_admin"
+                label={t("nav.admin")}
+                to="/admin"
+                icon={<LuShield />}
+              />
+            )}
           </Menu.Content>
         </Menu.Positioner>
       </Portal>

@@ -20,10 +20,12 @@ const Register = lazy(() => import("@/pages/Register"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const PasswordReset = lazy(() => import("@/pages/PasswordReset"));
 const EnableBeta = lazy(() => import("@/pages/EnableBeta"));
+const Admin = lazy(() => import("@/pages/Admin"));
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import ProtectedRoute from "@/components/Custom/ProtectedRoute";
 import GuestRoute from "@/components/Custom/GuestRoute";
+import AdminRoute from "@/components/Custom/AdminRoute";
 
 const App = () => {
   return (
@@ -68,6 +70,14 @@ const App = () => {
           }
         />
         <Route path="/beta" element={<EnableBeta />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
         <Route path="*" element={<QuranBrowser />} />
       </Routes>
     </Suspense>
