@@ -57,6 +57,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               id: number;
               username: string;
               email: string;
+              role: number;
             };
           };
         }>;
@@ -107,6 +108,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               id: number;
               username: string;
               email: string;
+              role: number;
             };
           };
         }>;
@@ -139,6 +141,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               id: number;
               username: string;
               email: string;
+              role: number;
             };
             message: string;
             newToken: string;
@@ -224,10 +227,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
             uuid: string;
             type: string;
             key: string;
-            content: string | null;
-            direction: string | null;
             dateModified: number;
             dateCreated: number;
+            content?: string | null | undefined;
+            direction?: string | null | undefined;
           };
           output:
             | {
@@ -312,6 +315,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               id: number;
               username: string;
               email: string;
+              role: number;
             };
           };
         }>;
@@ -328,7 +332,122 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
               id: number;
               username: string;
               email: string;
+              role: number;
             };
+          };
+        }>;
+      }>
+    >;
+    admin: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+      {
+        ctx: {
+          user: {
+            id: number;
+            username: string;
+            email: string;
+          } | null;
+        };
+        meta: object;
+        errorShape: {
+          message: string;
+          data: {
+            stack: null;
+            zodError: import("zod").typeToFlattenedError<any, string> | null;
+            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
+            httpStatus: number;
+            path?: string;
+          };
+          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: false;
+      },
+      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+        getAnalytics: import("@trpc/server").TRPCQueryProcedure<{
+          input: {
+            userId?: number | undefined;
+            action?: string | undefined;
+            limit?: number | undefined;
+            offset?: number | undefined;
+            startDate?: number | undefined;
+            endDate?: number | undefined;
+          };
+          output: {
+            data: {
+              id: number;
+              userId: number;
+              action: string;
+              oldData: string | null;
+              newData: string | null;
+              timestamp: number;
+              ipAddress: string | null;
+              userAgent: string | null;
+              username: string | null;
+              email: string | null;
+            }[];
+            meta: {
+              total: number;
+              limit: number;
+              offset: number;
+            };
+          };
+        }>;
+        getActionStats: import("@trpc/server").TRPCQueryProcedure<{
+          input: void;
+          output: {
+            action: string;
+            count: unknown;
+          }[];
+        }>;
+        getUserStats: import("@trpc/server").TRPCQueryProcedure<{
+          input: void;
+          output: {
+            userId: number;
+            username: string | null;
+            count: unknown;
+          }[];
+        }>;
+        listUsers: import("@trpc/server").TRPCQueryProcedure<{
+          input: {
+            limit?: number | undefined;
+            offset?: number | undefined;
+          };
+          output: {
+            data: {
+              id: number;
+              uuid: string;
+              username: string;
+              email: string;
+              role: number;
+            }[];
+            meta: {
+              total: number;
+              limit: number;
+              offset: number;
+            };
+          };
+        }>;
+        updateUser: import("@trpc/server").TRPCMutationProcedure<{
+          input: {
+            id: number;
+            username?: string | undefined;
+            email?: string | undefined;
+            role?: number | undefined;
+          };
+          output: {
+            id: number;
+            uuid: string;
+            username: string;
+            email: string;
+            role: number;
+          };
+        }>;
+        deleteUser: import("@trpc/server").TRPCMutationProcedure<{
+          input: {
+            id: number;
+          };
+          output: {
+            success: boolean;
+            message: string;
           };
         }>;
       }>
