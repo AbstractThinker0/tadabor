@@ -14,12 +14,14 @@ export interface IBaseNote {
   date_modified?: number;
 }
 
-// Prefer a type alias with IBaseNote on the left so base fields show first in IntelliSense
-export type ICloudNote = IBaseNote & {
+export interface ICloudProps {
   date_synced?: number;
   isDeleted?: boolean;
   isPublished?: boolean;
-};
+}
+
+// Prefer a type alias with IBaseNote on the left so base fields show first in IntelliSense
+export type ICloudNote = IBaseNote & ICloudProps;
 
 export type ILocalNote = IBaseNote;
 
