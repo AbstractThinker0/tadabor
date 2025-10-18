@@ -19,7 +19,11 @@ import {
 } from "@/store/slices/global/cloudNotes";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
-import { createNewNote, type NoteUploadPayload } from "@/util/notes";
+import {
+  createNewNote,
+  computeDateModified,
+  type NoteUploadPayload,
+} from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
 import { useEffect } from "react";
 
@@ -118,10 +122,8 @@ export const useNote = ({
   const saveNote = async () => {
     if (!note) return; // Nothing to save yet
     let syncDate = 0;
-    const now = Date.now();
 
-    const shouldUpdate = note.text !== note.preSave;
-    const newDateModified = shouldUpdate ? now : note.date_modified!;
+    const newDateModified = computeDateModified(note);
 
     if (isLogged) {
       // upload the note to cloud
@@ -205,7 +207,9 @@ export const useNote = ({
   };
 
   useEffect(() => {
-    if (!isVisible || isNoteLoading === false) return;
+    if (!isVisible) return;
+
+    if (isNoteLoading === false) return;
 
     if (isLogged) {
       dispatch(fetchSingleCloudNote({ noteId: noteIndex, userId }));

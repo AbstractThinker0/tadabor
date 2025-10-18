@@ -1,4 +1,4 @@
-import type { CloudNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import type { ICloudNote } from "@/util/db";
 import type { BackendNote } from "@/util/AppRouter";
@@ -10,7 +10,7 @@ interface CreateNewNoteParams {
   authorId?: number;
 }
 
-const createNewNote = ({
+export const createNewNote = ({
   id,
   text = "",
   dir = "",
@@ -105,4 +105,13 @@ export const fromBackendToDexie = (note: BackendNote): ICloudNote => {
   };
 };
 
-export { createNewNote };
+/**
+ * Determine if the note's content changed compared to last persisted value.
+ * Returns the new dateModified to persist alongside.
+ */
+export const computeDateModified = (note: LocalNoteProps) => {
+  const now = Date.now();
+
+  const shouldUpdate = note.text !== note.preSave;
+  return shouldUpdate ? now : note.date_modified!;
+};
