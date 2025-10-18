@@ -37,6 +37,7 @@ export const fetchSingleLocalNote = createAsyncThunk<
 
   // If the note is already loading, don't fetch it again
   // TODO: verify if this null return will cause a bug
+  // TOD: check if we need to check for dataLoading[noteId] here
   if (dataComplete[noteId]) return null;
 
   try {
@@ -183,6 +184,8 @@ const localNotesSlice = createSlice({
       })
       .addCase(fetchSingleLocalNote.rejected, (state, action) => {
         state.error = true;
+        const noteId = action.meta.arg as string;
+        if (noteId) state.dataLoading[noteId] = false;
 
         // Log the custom error message passed with rejectWithValue
         if (action.payload) {

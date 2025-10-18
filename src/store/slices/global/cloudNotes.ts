@@ -41,6 +41,7 @@ export const fetchSingleCloudNote = createAsyncThunk<
   const { dataComplete } = getState().cloudNotes;
 
   // If the note is already is loading, don't fetch it again
+  // TOD: check if we need to check for dataLoading[noteId] here
   if (dataComplete[noteId]) return null;
 
   try {
@@ -215,6 +216,11 @@ const cloudNotesSlice = createSlice({
       })
       .addCase(fetchSingleCloudNote.rejected, (state, action) => {
         state.error = true;
+        const { noteId } = action.meta.arg as {
+          noteId: string;
+          userId: number;
+        };
+        if (noteId) state.dataLoading[noteId] = false;
 
         // Log the custom error message passed with rejectWithValue
         if (action.payload) {
