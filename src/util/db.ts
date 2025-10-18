@@ -2,7 +2,7 @@ import Dexie, { type EntityTable } from "dexie";
 import { LetterRole, type LetterRoleType } from "@/util/consts";
 import { v4 as uuidv4 } from "uuid";
 
-export interface ICloudNote {
+export interface IBaseNote {
   id: string;
   uuid: string;
   authorId?: number;
@@ -12,23 +12,16 @@ export interface ICloudNote {
   dir?: string;
   date_created?: number;
   date_modified?: number;
+}
 
+// Prefer a type alias with IBaseNote on the left so base fields show first in IntelliSense
+export type ICloudNote = IBaseNote & {
   date_synced?: number;
   isDeleted?: boolean;
   isPublished?: boolean;
-}
+};
 
-export interface ILocalNote {
-  id: string;
-  uuid: string;
-  authorId?: number;
-  key: string;
-  type: string;
-  text: string;
-  dir?: string;
-  date_created?: number;
-  date_modified?: number;
-}
+export type ILocalNote = IBaseNote;
 
 // Common fields
 export interface ISyncable {
