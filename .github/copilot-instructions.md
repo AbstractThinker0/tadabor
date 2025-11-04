@@ -195,7 +195,7 @@ npm run theme  # Regenerate Chakra theme types
 
 ## Common Pitfalls to Avoid
 
-1. **Don't mutate Redux state directly** — use immutable updates in reducers
+1. **Don't mutate Redux state directly** — use immutable updates in reducers ( already handled by Redux Toolkit )
 2. **Don't fetch notes without `isVisible` check** — wastes bandwidth; use lazy loading
 3. **Don't assume user is logged in** — always check `state.user.isLogged` before accessing cloud note
 4. **Don't forget to set `date_modified`** — needed for sync conflict detection
@@ -211,4 +211,4 @@ npm run theme  # Regenerate Chakra theme types
 
 ---
 
-**Last Updated**: October 2025 | **Version**: 0.45.0
+**Last Updated**: November 2025 | **Version**: 0.46.0
