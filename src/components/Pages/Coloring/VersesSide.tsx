@@ -23,10 +23,17 @@ const VersesSide = () => {
   );
 
   return (
-    <Flex flexDir={"column"} flex={1} py={2} px={1}>
+    <Flex
+      flexDir={"column"}
+      overflowY={"scroll"}
+      w={"100%"}
+      minH={"100%"}
+      flex={1}
+      py={2}
+      px={1}
+    >
       <Flex
         flexDir={"column"}
-        overflowY={"scroll"}
         flex={1}
         bgColor={"brand.contrast"}
         color={"inherit"}
