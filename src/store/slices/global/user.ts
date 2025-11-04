@@ -65,7 +65,7 @@ const userSlice = createSlice({
       localStorage.setItem(keyUsername, username);
       state.role = role ?? null;
       if (isNaN(role)) {
-        localStorage.setIItem(keyRole, "0");
+        localStorage.setItem(keyRole, "0");
       } else {
         localStorage.setItem(keyRole, String(role));
       }
