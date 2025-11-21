@@ -38,7 +38,6 @@ export const AnalyticsTab = ({ users }: { users: UserData[] }) => {
             <Flex gap={2} wrap="wrap" align="center" bg="bg.subtle" p={2} rounded="md">
                 <NativeSelect.Root size="sm" width="200px">
                     <NativeSelect.Field
-                        placeholder={t("admin.userId")}
                         value={userId}
                         onChange={(e) => setUserId(e.target.value)}
                     >
