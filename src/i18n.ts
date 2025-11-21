@@ -161,6 +161,7 @@ i18n
               refresh: "Refresh",
               delete: "Delete",
               reset: "Reset",
+              all: "All"
             },
             state: {
               loading: "Loading...",
@@ -310,6 +311,7 @@ i18n
               refresh: "تحديث",
               delete: "حذف",
               reset: "إعادة التعيين",
+              all: "الكل"
             },
             state: {
               loading: "جاري التحميل...",

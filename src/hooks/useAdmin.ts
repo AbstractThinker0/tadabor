@@ -1,6 +1,14 @@
 import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toasterBottomCenter } from "@/components/ui/toaster";
+import type {
+  AnalyticsResponse,
+  ActionStatsResponse,
+  UserStatsResponse,
+  UsersResponse,
+  UpdateUserResponse,
+  DeleteUserResponse,
+} from "@/types/admin";
 
 export const useAdmin = () => {
   const trpc = useTRPC();
@@ -44,7 +52,7 @@ export const useAdmin = () => {
     offset?: number;
     startDate?: number;
     endDate?: number;
-  }) => {
+  }): Promise<AnalyticsResponse | undefined> => {
     try {
       // Always go through React Query cache so observers (analyticsQuery) receive updates
       const { queryKey, queryFn } = trpc.admin.getAnalytics.queryOptions(
@@ -60,9 +68,10 @@ export const useAdmin = () => {
     }
   };
 
-  const fetchActionStats = async () => {
+  const fetchActionStats = async (): Promise<ActionStatsResponse | undefined> => {
     try {
-      return await actionStatsQuery.refetch();
+      const res = await actionStatsQuery.refetch();
+      return res.data as ActionStatsResponse | undefined;
     } catch (e) {
       toasterBottomCenter.create({
         type: "error",
@@ -71,9 +80,10 @@ export const useAdmin = () => {
     }
   };
 
-  const fetchUserStats = async () => {
+  const fetchUserStats = async (): Promise<UserStatsResponse | undefined> => {
     try {
-      return await userStatsQuery.refetch();
+      const res = await userStatsQuery.refetch();
+      return res.data as UserStatsResponse | undefined;
     } catch (e) {
       toasterBottomCenter.create({
         type: "error",
@@ -82,12 +92,16 @@ export const useAdmin = () => {
     }
   };
 
-  const fetchUsers = async (params?: { limit?: number; offset?: number }) => {
+  const fetchUsers = async (params?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<UsersResponse | undefined> => {
     try {
       if (params) {
         return await trpcClient.admin.listUsers.query(params);
       }
-      return await usersQuery.refetch();
+      const res = await usersQuery.refetch();
+      return res.data;
     } catch (e) {
       toasterBottomCenter.create({
         type: "error",
@@ -101,7 +115,7 @@ export const useAdmin = () => {
     username?: string;
     email?: string;
     role?: number;
-  }) => {
+  }): Promise<UpdateUserResponse | undefined> => {
     try {
       const res = await updateUserMutation.mutateAsync(payload);
       toasterBottomCenter.create({
@@ -117,7 +131,7 @@ export const useAdmin = () => {
     }
   };
 
-  const deleteUser = async (id: number) => {
+  const deleteUser = async (id: number): Promise<DeleteUserResponse | undefined> => {
     try {
       const res = await deleteUserMutation.mutateAsync({ id });
       if (res?.success) {
