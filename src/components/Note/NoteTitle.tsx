@@ -34,8 +34,8 @@ const NoteTitle = ({
   const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
     if (isSyncing) return "Syncing note...";
     if (isSynced) return "Note synced to the cloud.";
-    if (isOutOfSync) return "Note out of sync.";
     if (isPendingSave) return "Note pending save.";
+    if (isOutOfSync) return "Note out of sync.";
     return "Saved locally. Log in to enable cloud sync.";
   };
 
