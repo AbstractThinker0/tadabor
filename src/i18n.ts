@@ -203,6 +203,9 @@ i18n
             noteVerse: "Note for verse",
             noteRoot: "Note for root",
             translationVerse: "Translation for verse",
+            sort_by_date: "Sort by Create Date",
+            sort_by_rank: "Sort by Rank",
+            sort_by_status: "Sort by Modified Date",
           },
           panels: {
             definitions: "Definitions",
@@ -351,6 +354,9 @@ i18n
             noteVerse: "تدوينة لآية",
             noteRoot: "تدوينة للجذر",
             translationVerse: "ترجمة لآية",
+            sort_by_date: "ترتيب حسب تاريخ الإنشاء",
+            sort_by_rank: "ترتيب حسب الرتبة",
+            sort_by_status: "ترتيب حسب تاريخ التحديث",
           },
           panels: {
             definitions: "التعريفات",

@@ -4,10 +4,12 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
 import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
+import NoteSortSelect from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 import { useSavedNotes } from "@/hooks/useSavedNotes";
+import { useNoteSorting } from "@/hooks/useNoteSorting";
 
 const RootNotes = () => {
   const rootsLoaded = useRootsLoaded();
@@ -20,16 +22,31 @@ const RootNotes = () => {
 const NotesList = () => {
   const { t } = useTranslation();
 
-  const { getNotesIDsbyType } = useSavedNotes();
+  const { getNotesIDsbyType, userNotes } = useSavedNotes();
   const rootNotesIDs = getNotesIDsbyType("root");
+
+  const rankComparator = (a: string, b: string) => {
+    // Note ID format: root:rootString
+    // Simple string comparison for roots
+    return a.localeCompare(b);
+  };
+
+  const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+    noteIDs: rootNotesIDs,
+    userNotes,
+    rankComparator,
+  });
 
   return (
     <>
       {rootNotesIDs.length ? (
         <>
           <BackupComponent noteType="root" />
+
+          <NoteSortSelect sortBy={sortBy} onSortChange={setSortBy} />
+
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
-            {rootNotesIDs.map((noteID) => (
+            {sortedNotesIDs.map((noteID) => (
               <NoteComponent noteID={noteID} key={noteID} />
             ))}
           </VStack>
