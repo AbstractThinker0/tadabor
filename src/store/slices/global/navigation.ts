@@ -14,7 +14,7 @@ const defaultToolCopy = localStorage.getItem(keyToolCopy) !== "false";
 const keyToolNote = "toolNote";
 const defaultToolNote = localStorage.getItem(keyToolNote) !== "false";
 const keyToolInspect = "toolInspect";
-const defaultToolInspect = localStorage.getItem(keyToolInspect) === "true";
+const defaultToolInspect = localStorage.getItem(keyToolInspect) !== "false";
 
 export type VerseDisplay = "line" | "panel" | "continous";
 
