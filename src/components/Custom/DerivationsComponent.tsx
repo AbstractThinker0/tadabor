@@ -31,39 +31,43 @@ const DerivationsComponent = ({
   };
 
   return (
-    <HStack
+    <Box
       border={"1px solid"}
-      dir="rtl"
-      wrap="wrap"
-      padding={2.5}
-      margin={2}
-      maxH={"400px"}
-      overflowY={"scroll"}
-      onScroll={onScrollOccs}
-      separator={<StackSeparator border={"none"}>-</StackSeparator>}
       borderRadius={"md"}
+      margin={2}
+      overflow="hidden"
     >
-      {searchIndexes
-        .slice(0, itemsCount)
-        .map((root: searchIndexProps, index: number) => (
-          <Tooltip showArrow key={index} content={root.text}>
-            <Button
-              px={2}
-              fontSize="xl"
-              fontWeight={"600"}
-              variant="ghost"
-              userSelect={"text"}
-              onClick={() => handleDerivationClick(root.key, index)}
-            >{`${root.name}`}</Button>
-          </Tooltip>
-        ))}
+      <HStack
+        dir="rtl"
+        wrap="wrap"
+        padding={2.5}
+        maxH={"400px"}
+        overflowY={"scroll"}
+        onScroll={onScrollOccs}
+        separator={<StackSeparator border={"none"}>-</StackSeparator>}
+      >
+        {searchIndexes
+          .slice(0, itemsCount)
+          .map((root: searchIndexProps, index: number) => (
+            <Tooltip showArrow key={index} content={root.text}>
+              <Button
+                px={2}
+                fontSize="xl"
+                fontWeight={"600"}
+                variant="ghost"
+                userSelect={"text"}
+                onClick={() => handleDerivationClick(root.key, index)}
+              >{`${root.name}`}</Button>
+            </Tooltip>
+          ))}
 
-      {isPending && (
-        <Box width={"100%"} textAlign={"center"} py={5}>
-          <Spinner size="sm" borderWidth="2px" margin="auto" color="blue.500" />
-        </Box>
-      )}
-    </HStack>
+        {isPending && (
+          <Box width={"100%"} textAlign={"center"} py={5}>
+            <Spinner size="sm" borderWidth="2px" margin="auto" color="blue.500" />
+          </Box>
+        )}
+      </HStack>
+    </Box>
   );
 };
 
