@@ -110,9 +110,33 @@ const SearchVerseItem = ({
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  const onClickVerseChapter = () => {
-    dispatch(qbPageActions.gotoChapter(verse.suraid));
-    dispatch(qbPageActions.setScrollKey(verse.key));
+  const orgVerse = quranService.getVerseByKey(verse.key)
+
+  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
+
+  const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
+  const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
+
+  const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
+  const [selectedWord, setSelectedWord] = useState(-1);
+
+  const onClickWord = (wordIndex: number) => {
+    const wordRoots = quranService.getWordRoots(orgVerse.rank, wordIndex);
+
+    setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
+
+    if (selectedWord === wordIndex) {
+      setRootListOpen(false);
+      setSelectedWord(-1);
+    } else {
+      setRootListOpen(true);
+      setSelectedWord(wordIndex);
+    }
+  };
+
+  const onClickVerseChapter = (verseKey: string) => {
+    dispatch(qbPageActions.gotoChapter(verseKey.split("-")[0]));
+    dispatch(qbPageActions.setScrollKey(verseKey));
   };
 
   const onClickVerse = () => {
@@ -121,15 +145,40 @@ const SearchVerseItem = ({
 
   return (
     <BaseVerseItem
+      rootProps={{
+        paddingStart: "5px",
+        lineHeight: toolInspect && isInspectorON ? "3.3rem" : "normal",
+      }}
       verseKey={verse.key}
       isSelected={isSelected}
-      rootProps={{ paddingStart: "5px" }}
+      endElement={
+        toolInspect && (
+          <ButtonInspect
+            isActive={isInspectorON}
+            onClickInspect={toggleInspector}
+          />
+        )
+      }
+      outerEndElement={
+        <RootsAccordion
+          isOpen={toolInspect && isInspectorON && isRootListOpen}
+          rootsList={currentRoots}
+          onClickVerseChapter={onClickVerseChapter}
+        />
+      }
     >
       <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
         {index + 1}.
       </Span>{" "}
-      <VerseHighlightMatches verse={verse} /> (
-      <ButtonVerse onClick={onClickVerseChapter}>
+      {toolInspect && isInspectorON ? (
+        <VerseInspected
+          verseText={orgVerse.versetext}
+          selectedWord={selectedWord}
+          onClickWord={onClickWord}
+        />
+      ) : (
+        <VerseHighlightMatches verse={verse} />)} (
+      <ButtonVerse onClick={() => onClickVerseChapter(verse.key)}>
         {quranService.getChapterName(verse.suraid)}
       </ButtonVerse>
       :<ButtonVerse onClick={onClickVerse}>{verse.verseid}</ButtonVerse>)
