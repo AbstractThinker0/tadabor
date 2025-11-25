@@ -110,8 +110,6 @@ const SearchVerseItem = ({
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  const orgVerse = quranService.getVerseByKey(verse.key)
-
   const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
 
   const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
@@ -121,7 +119,7 @@ const SearchVerseItem = ({
   const [selectedWord, setSelectedWord] = useState(-1);
 
   const onClickWord = (wordIndex: number) => {
-    const wordRoots = quranService.getWordRoots(orgVerse.rank, wordIndex);
+    const wordRoots = quranService.getWordRoots(verse.rank, wordIndex);
 
     setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
@@ -172,7 +170,7 @@ const SearchVerseItem = ({
       </Span>{" "}
       {toolInspect && isInspectorON ? (
         <VerseInspected
-          verseText={orgVerse.versetext}
+          verseText={verse.versetext}
           selectedWord={selectedWord}
           onClickWord={onClickWord}
         />
