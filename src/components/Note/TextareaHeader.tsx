@@ -40,6 +40,7 @@ const TextareaHeader = ({
       alignItems={"center"}
       position={"relative"}
       dir={pageDirection}
+      pb={"6px"}
     >
       <Box position="absolute" insetInlineStart={0}>
         <NoteTitle

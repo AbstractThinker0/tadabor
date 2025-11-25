@@ -109,7 +109,7 @@ const NoteContainerHeader = ({
   const isPendingSave = !inputSaved || !inputValue;
 
   return (
-    <Flex dir={pageDirection} justifyContent={"space-between"}>
+    <Flex dir={pageDirection} justifyContent={"space-between"} alignItems={"center"}>
       <NoteTitle
         noteKey={noteKey}
         noteType={noteType}
