@@ -20,11 +20,12 @@ import {
 } from "@/components/Custom/VerseInspected";
 
 interface VerseItemProps {
-  verse: verseProps;
+  verse: verseProps | verseMatchResult;
   isSelected: boolean;
+  index?: number;
 }
 
-const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
+const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
@@ -35,6 +36,8 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
 
   const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
   const [selectedWord, setSelectedWord] = useState(-1);
+
+  const isSearchResult = typeof index === "number";
 
   const onClickWord = (wordIndex: number) => {
     const wordRoots = quranService.getWordRoots(verse.rank, wordIndex);
@@ -62,6 +65,7 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   return (
     <BaseVerseItem
       rootProps={{
+        paddingStart: isSearchResult ? "5px" : undefined,
         lineHeight: toolInspect && isInspectorON ? "3.3rem" : "normal",
       }}
       verseKey={verse.key}
@@ -82,106 +86,35 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
         />
       }
     >
+      {isSearchResult && (
+        <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
+          {index + 1}.
+        </Span>
+      )}{" "}
       {toolInspect && isInspectorON ? (
         <VerseInspected
           verseText={verse.versetext}
           selectedWord={selectedWord}
           onClickWord={onClickWord}
         />
+      ) : isSearchResult ? (
+        <VerseHighlightMatches verse={verse as verseMatchResult} />
       ) : (
         verse.versetext
       )}{" "}
-      <ButtonVerse onClick={onClickVerse}>{`(${verse.verseid})`}</ButtonVerse>
-    </BaseVerseItem>
-  );
-};
-
-interface SearchVerseItemProps {
-  verse: verseMatchResult;
-  isSelected: boolean;
-  index: number;
-}
-
-const SearchVerseItem = ({
-  verse,
-  isSelected,
-  index,
-}: SearchVerseItemProps) => {
-  const dispatch = useAppDispatch();
-  const quranService = useQuran();
-
-  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
-
-  const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
-  const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
-
-  const [currentRoots, setCurrentRoots] = useState<rootProps[]>([]);
-  const [selectedWord, setSelectedWord] = useState(-1);
-
-  const onClickWord = (wordIndex: number) => {
-    const wordRoots = quranService.getWordRoots(verse.rank, wordIndex);
-
-    setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
-
-    if (selectedWord === wordIndex) {
-      setRootListOpen(false);
-      setSelectedWord(-1);
-    } else {
-      setRootListOpen(true);
-      setSelectedWord(wordIndex);
-    }
-  };
-
-  const onClickVerseChapter = (verseKey: string) => {
-    dispatch(qbPageActions.gotoChapter(verseKey.split("-")[0]));
-    dispatch(qbPageActions.setScrollKey(verseKey));
-  };
-
-  const onClickVerse = () => {
-    dispatch(qbPageActions.setScrollKey(verse.key));
-  };
-
-  return (
-    <BaseVerseItem
-      rootProps={{
-        paddingStart: "5px",
-        lineHeight: toolInspect && isInspectorON ? "3.3rem" : "normal",
-      }}
-      verseKey={verse.key}
-      isSelected={isSelected}
-      endElement={
-        toolInspect && (
-          <ButtonInspect
-            isActive={isInspectorON}
-            onClickInspect={toggleInspector}
-          />
-        )
-      }
-      outerEndElement={
-        <RootsAccordion
-          isOpen={toolInspect && isInspectorON && isRootListOpen}
-          rootsList={currentRoots}
-          onClickVerseChapter={onClickVerseChapter}
-        />
-      }
-    >
-      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
-        {index + 1}.
-      </Span>{" "}
-      {toolInspect && isInspectorON ? (
-        <VerseInspected
-          verseText={verse.versetext}
-          selectedWord={selectedWord}
-          onClickWord={onClickWord}
-        />
+      {isSearchResult ? (
+        <>
+          (
+          <ButtonVerse onClick={() => onClickVerseChapter(verse.key)}>
+            {quranService.getChapterName(verse.suraid)}
+          </ButtonVerse>
+          :<ButtonVerse onClick={onClickVerse}>{verse.verseid}</ButtonVerse>)
+        </>
       ) : (
-        <VerseHighlightMatches verse={verse} />)} (
-      <ButtonVerse onClick={() => onClickVerseChapter(verse.key)}>
-        {quranService.getChapterName(verse.suraid)}
-      </ButtonVerse>
-      :<ButtonVerse onClick={onClickVerse}>{verse.verseid}</ButtonVerse>)
+        <ButtonVerse onClick={onClickVerse}>{`(${verse.verseid})`}</ButtonVerse>
+      )}
     </BaseVerseItem>
   );
 };
 
-export { VerseItem, SearchVerseItem };
+export { VerseItem };
