@@ -144,13 +144,14 @@ const ChaptersListHeader = ({
   };
 
   return (
-    <Flex>
+    <Flex dir="rtl">
       <Box w={"220px"} flexShrink={0}>
         <InputString
           inputElementProps={{
             placeholder: quranService.getChapterName(currentChapter),
             borderBottom: "none",
             borderBottomRadius: "0",
+            borderEndRadius: "0",
           }}
           value={chapterToken}
           onChange={onChangeChapterToken}
@@ -163,6 +164,7 @@ const ChaptersListHeader = ({
           inputElementProps={{
             borderBottom: "none",
             borderBottomRadius: "0",
+            borderStartRadius: "0",
           }}
           value={verseToken}
           onChange={onChangeVerseSearch}
@@ -250,7 +252,7 @@ const ChaptersListBody = ({
   };
 
   return (
-    <Flex flexGrow="1" minH={0}>
+    <Flex flexGrow="1" minH={0} dir="rtl">
       <Box
         w={"220px"}
         border="1px solid"

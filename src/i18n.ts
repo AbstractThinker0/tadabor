@@ -161,7 +161,7 @@ i18n
               refresh: "Refresh",
               delete: "Delete",
               reset: "Reset",
-              all: "All"
+              all: "All",
             },
             state: {
               loading: "Loading...",
@@ -179,7 +179,7 @@ i18n
             diacritics: "Diacritics",
             identical: "Identical",
             start: "Identical Start",
-            all_quran: "Search in all chapters",
+            all_quran: "all chapters",
             button: "Search",
             count: "Verses count:",
             fail: "This word doesn't exist.",
@@ -313,7 +313,7 @@ i18n
               refresh: "تحديث",
               delete: "حذف",
               reset: "إعادة التعيين",
-              all: "الكل"
+              all: "الكل",
             },
             state: {
               loading: "جاري التحميل...",
