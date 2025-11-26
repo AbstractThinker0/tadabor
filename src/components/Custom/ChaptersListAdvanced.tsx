@@ -136,11 +136,11 @@ const ChaptersListHeader = ({
   const quranService = useQuran();
 
   const onChangeVerseSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleSetVerseSearch && handleSetVerseSearch(event.target.value);
+    handleSetVerseSearch(event.target.value);
   };
 
   const onClearVerseSearch = () => {
-    handleSetVerseSearch && handleSetVerseSearch("");
+    handleSetVerseSearch("");
   };
 
   return (
@@ -201,8 +201,8 @@ const ChaptersListBody = ({
 }: ChaptersListBodyProps) => {
   const quranService = useQuran();
 
-  const refChaptersList = useRef<HTMLDivElement>(null);
   const refChapter = useRef<HTMLDivElement | null>(null);
+  const refVerse = useRef<HTMLDivElement | null>(null);
 
   // Get verses for the current chapter when verse mode is enabled
   const chapterVerses = quranService.getVerses(currentChapter);
@@ -213,42 +213,27 @@ const ChaptersListBody = ({
   );
 
   useEffect(() => {
-    const selectedChapterElement = refChapter.current;
-    const chaptersListElement = refChaptersList.current;
+    if (!refChapter.current) return;
 
-    if (!selectedChapterElement || !chaptersListElement) return;
+    refChapter.current.scrollIntoView({
+      block: "center",
+    });
+  }, [currentChapter, chapterToken]);
 
-    const parentOffsetTop = chaptersListElement.offsetTop;
+  useEffect(() => {
+    if (!refVerse.current) return;
 
-    if (
-      chaptersListElement.scrollTop + parentOffsetTop <
-        selectedChapterElement.offsetTop -
-          chaptersListElement.clientHeight +
-          selectedChapterElement.clientHeight * 2.5 ||
-      chaptersListElement.scrollTop + parentOffsetTop >
-        selectedChapterElement.offsetTop -
-          selectedChapterElement.clientHeight * 2.5
-    ) {
-      chaptersListElement.scrollTop =
-        selectedChapterElement.offsetTop -
-        parentOffsetTop -
-        chaptersListElement.clientHeight / 2;
-    }
-  });
+    refVerse.current.scrollIntoView({
+      block: "center",
+    });
+  }, [currentVerse, verseToken]);
 
-  const onClickChapter = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) => {
+  const onClickChapter = (chapterID: number) => {
     handleCurrentChapter(chapterID);
-
-    refChapter.current = event.currentTarget;
   };
 
   const handleClickVerse = (verseKey: string) => {
-    if (onClickVerse) {
-      onClickVerse(verseKey);
-    }
+    onClickVerse(verseKey);
   };
 
   return (
@@ -261,13 +246,13 @@ const ChaptersListBody = ({
         bgColor={"brand.bg"}
         fontSize={"medium"}
         paddingEnd="8px"
-        ref={refChaptersList}
       >
         {quranService.chapterNames
           .filter((chapter) => chapter.name.includes(chapterToken))
           .map((chapter) => (
             <Flex
               key={chapter.id}
+              ref={currentChapter === chapter.id ? refChapter : null}
               cursor="pointer"
               px="5px"
               py={"3px"}
@@ -275,10 +260,7 @@ const ChaptersListBody = ({
               aria-selected={defaultSelected && currentChapter === chapter.id}
               _selected={{ bgColor: "gray.emphasized" }}
             >
-              <Box
-                flexGrow="1"
-                onClick={(event) => onClickChapter(event, chapter.id)}
-              >
+              <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
@@ -302,6 +284,7 @@ const ChaptersListBody = ({
       >
         {filteredVerses.map((verse) => (
           <Box
+            ref={currentVerse === verse.key ? refVerse : null}
             key={verse.key}
             cursor="pointer"
             px="5px"
