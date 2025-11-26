@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 import { Box } from "@chakra-ui/react";
@@ -14,6 +14,9 @@ const ChaptersList = ({
   selectChapter,
 }: ChaptersListProps) => {
   const quranService = useQuran();
+
+  const refChapter = useRef<HTMLDivElement | null>(null);
+
   const [chapterSearch, setChapterSearch] = useState("");
 
   const filteredChapters = useMemo(() => {
@@ -22,34 +25,13 @@ const ChaptersList = ({
     );
   }, [chapterSearch]);
 
-  // Callback ref to handle the scroll behavior when the selected chapter changes
-  const handleChapterListRef = useCallback(
-    (parent: HTMLDivElement | null) => {
-      if (!parent) return;
+  useEffect(() => {
+    if (!refChapter.current) return;
 
-      const selectedChapter = parent.querySelector<HTMLDivElement>(
-        `[data-id="${selectChapter}"]`
-      );
-
-      if (!selectedChapter) return;
-
-      const isOutOfView =
-        parent.scrollTop + parent.offsetTop <
-          selectedChapter.offsetTop -
-            parent.clientHeight +
-            selectedChapter.clientHeight * 1.7 ||
-        parent.scrollTop + parent.offsetTop >
-          selectedChapter.offsetTop - selectedChapter.clientHeight * 1.1;
-
-      if (isOutOfView) {
-        parent.scrollTop =
-          selectedChapter.offsetTop -
-          parent.offsetTop -
-          parent.clientHeight / 2;
-      }
-    },
-    [selectChapter, filteredChapters]
-  );
+    refChapter.current.scrollIntoView({
+      block: "center",
+    });
+  }, [selectChapter, filteredChapters]);
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChapterSearch(event.target.value);
@@ -85,11 +67,11 @@ const ChaptersList = ({
         borderColor={"border.emphasized"}
         overflowY="scroll"
         padding="2px"
-        ref={handleChapterListRef}
       >
         {filteredChapters.map((chapter) => (
           <Box
             key={chapter.id}
+            ref={Number(selectChapter) === chapter.id ? refChapter : null}
             px="14px"
             py={"2px"}
             mdDown={{ py: "8px" }}
