@@ -29,6 +29,23 @@ export const globalCss = defineGlobalStyles({
     "--global-font-mono": "fonts.mono",
     "--global-font-body": "fonts.body",
     "--global-color-border": "colors.border",
+    // Firefox overlay-style scrollbars (slim, mostly invisible until hovered)
+    // Only applied on tablet and larger screens
+    "@media (min-width: 768px)": {
+      scrollbarColor: "transparent transparent",
+      "&:hover": {
+        scrollbarColor: "revert",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        background: "transparent",
+      },
+      "&:hover::-webkit-scrollbar-thumb": {
+        background: "var(--chakra-colors-gray-400)",
+      },
+      "&::-webkit-scrollbar-thumb:hover": {
+        background: "var(--chakra-colors-gray-500)",
+      },
+    },
   },
   html: {
     color: "fg",
