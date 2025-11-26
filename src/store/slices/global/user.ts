@@ -20,7 +20,7 @@ interface UserStateProps {
 }
 
 const initialState: UserStateProps = {
-  id: Number(localStorage.getItem(keyId)) || -1,
+  id: Number(localStorage.getItem(keyId)) || 0,
   token: localStorage.getItem(keyToken) || "",
   email: localStorage.getItem(keyEmail) || "",
   username: localStorage.getItem(keyUsername) || "",
