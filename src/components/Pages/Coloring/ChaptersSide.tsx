@@ -26,6 +26,10 @@ const ChaptersSide = () => {
     onClose: onCloseEditColor,
   } = useDisclosure();
 
+  const selectedVerse = useAppSelector(
+    (state) => state.coloringPage.selectedVerse
+  );
+
   const currentChapter = useAppSelector(
     (state) => state.coloringPage.currentChapter
   );
@@ -33,6 +37,10 @@ const ChaptersSide = () => {
   const selectedChapters = useAppSelector(
     (state) => state.coloringPage.selectedChapters
   );
+
+  const onClickVerse = (verseKey: string) => {
+    dispatch(coloringPageActions.setSelectedVerse(verseKey));
+  };
 
   const setChapter = (chapter: number) => {
     dispatch(coloringPageActions.setChapter(chapter));
@@ -60,6 +68,8 @@ const ChaptersSide = () => {
         setChapter={setChapter}
         setSelectedChapters={setSelectedChapters}
         toggleSelectChapter={toggleSelectChapter}
+        selectedVerse={selectedVerse}
+        setVerseToken={onClickVerse}
       />
       <Flex
         flexDir={"column"}

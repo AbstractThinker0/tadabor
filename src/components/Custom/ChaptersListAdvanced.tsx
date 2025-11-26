@@ -16,6 +16,8 @@ interface ChaptersListAdvancedProps {
   setChapter: (chapter: number) => void;
   toggleSelectChapter: (chapter: number) => void;
   setSelectedChapters: (chapters: selectedChaptersType) => void;
+  selectedVerse: string;
+  setVerseToken: (verseKey: string) => void;
 }
 
 const ChaptersListAdvanced = ({
@@ -24,8 +26,11 @@ const ChaptersListAdvanced = ({
   setChapter,
   toggleSelectChapter,
   setSelectedChapters,
+  selectedVerse,
+  setVerseToken,
 }: ChaptersListAdvancedProps) => {
   const [chapterToken, setChapterToken] = useState("");
+  const [verseSearch, setVerseSearch] = useState("");
   const quranService = useQuran();
 
   function onChangeChapterToken(event: React.ChangeEvent<HTMLInputElement>) {
@@ -86,6 +91,8 @@ const ChaptersListAdvanced = ({
         chapterToken={chapterToken}
         onChangeChapterToken={onChangeChapterToken}
         onClearInput={onClearInput}
+        verseToken={verseSearch}
+        handleSetVerseSearch={setVerseSearch}
       />
       <ChaptersListBody
         chapterToken={chapterToken}
@@ -93,6 +100,9 @@ const ChaptersListAdvanced = ({
         onChangeSelectChapter={onChangeSelectChapter}
         handleCurrentChapter={handleCurrentChapter}
         selectedChapters={selectedChapters}
+        verseToken={verseSearch}
+        currentVerse={selectedVerse}
+        onClickVerse={setVerseToken}
       />
       <ChaptersListFooter
         getSelectedCount={getSelectedCount}
@@ -111,8 +121,8 @@ interface ChaptersListHeaderProps {
   chapterToken: string;
   onChangeChapterToken: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClearInput: () => void;
-  verseToken?: string;
-  handleSetVerseSearch?: (verseID: string) => void;
+  verseToken: string;
+  handleSetVerseSearch: (verseID: string) => void;
 }
 
 const ChaptersListHeader = ({
@@ -171,9 +181,9 @@ interface ChaptersListBodyProps {
   defaultSelected?: boolean;
   onChangeSelectChapter: (chapterID: number) => void;
   handleCurrentChapter: (chapterID: number) => void;
-  verseToken?: string;
-  currentVerse?: string;
-  onClickVerse?: (verseKey: string) => void;
+  verseToken: string;
+  currentVerse: string;
+  onClickVerse: (verseKey: string) => void;
 }
 
 const ChaptersListBody = ({

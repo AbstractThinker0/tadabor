@@ -13,6 +13,7 @@ export interface stateProps {
   colorsList: coloredProps;
   selectedColors: coloredProps;
   coloredVerses: coloredProps;
+  selectedVerse: string;
   currentVerse: verseProps | null;
   currentColor: colorProps | null;
   selectedChapters: selectedChaptersType;
@@ -26,6 +27,7 @@ const initialState: stateProps = {
   colorsList: {},
   selectedColors: {},
   coloredVerses: {},
+  selectedVerse: "",
   currentVerse: null,
   currentColor: null,
   selectedChapters: initialSelectedChapters,
@@ -97,6 +99,10 @@ const coloringPageSlice = createSlice({
     toggleSelectChapter: (state, action: PayloadAction<number>) => {
       state.selectedChapters[action.payload] =
         !state.selectedChapters[action.payload];
+    },
+    setSelectedVerse: (state, action: PayloadAction<string>) => {
+      state.selectedVerse = action.payload;
+      state.scrollKey = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =

@@ -32,6 +32,8 @@ function TagsSide() {
     return countTags;
   };
 
+  const selectedVerse = useAppSelector((state) => state.tagsPage.selectedVerse);
+
   const currentChapter = useAppSelector(
     (state) => state.tagsPage.currentChapter
   );
@@ -39,6 +41,10 @@ function TagsSide() {
   const selectedChapters = useAppSelector(
     (state) => state.tagsPage.selectedChapters
   );
+
+  const onClickVerse = (verseKey: string) => {
+    dispatch(tagsPageActions.setSelectedVerse(verseKey));
+  };
 
   const setChapter = (chapter: number) => {
     dispatch(tagsPageActions.setChapter(chapter));
@@ -65,6 +71,8 @@ function TagsSide() {
         setChapter={setChapter}
         setSelectedChapters={setSelectedChapters}
         toggleSelectChapter={toggleSelectChapter}
+        setVerseToken={onClickVerse}
+        selectedVerse={selectedVerse}
       />
       <SideList
         onClickSelectTag={onClickSelectTag}

@@ -15,6 +15,7 @@ interface tagsStateProps {
   tags: tagsProps;
   currentTag: tagProps | null;
   versesTags: versesTagsProps;
+  selectedVerse: string;
   currentVerse: verseProps | null;
   selectedTags: tagsProps;
   scrollKey: string;
@@ -28,6 +29,7 @@ const initialState: tagsStateProps = {
   tags: {},
   currentTag: null,
   versesTags: {},
+  selectedVerse: "",
   currentVerse: null,
   selectedTags: {},
   scrollKey: "",
@@ -100,6 +102,10 @@ const tagsPageSlice = createSlice({
     gotoChapter: (state, action: PayloadAction<string>) => {
       state.selectedTags = {};
       state.currentChapter = Number(action.payload);
+    },
+    setSelectedVerse: (state, action: PayloadAction<string>) => {
+      state.selectedVerse = action.payload;
+      state.scrollKey = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
