@@ -36,7 +36,18 @@ const SelectionListChapters = ({
     (state) => state.qbPage.searchingString
   );
 
+  const selectedVerse = useAppSelector((state) => state.qbPage.selectedVerse);
+
   const [chapterSearch, setChapterSearch] = useState("");
+  const [verseSearch, setVerseSearch] = useState("");
+
+  const handleSetVerseSearch = (verseID: string) => {
+    setVerseSearch(verseID);
+  };
+
+  const onClickVerse = (verseKey: string) => {
+    dispatch(qbPageActions.setSelectedVerse(verseKey));
+  };
 
   const onClearInput = () => {
     setChapterSearch("");
@@ -89,6 +100,8 @@ const SelectionListChapters = ({
         chapterToken={chapterSearch}
         onChangeChapterToken={onChangeInput}
         onClearInput={onClearInput}
+        verseToken={verseSearch}
+        handleSetVerseSearch={handleSetVerseSearch}
       />
       <ChaptersListBody
         chapterToken={chapterSearch}
@@ -97,6 +110,9 @@ const SelectionListChapters = ({
         onChangeSelectChapter={onChangeSelectChapter}
         defaultSelected={!searchingString.length}
         selectedChapters={selectedChapters}
+        verseToken={verseSearch}
+        currentVerse={selectedVerse}
+        onClickVerse={onClickVerse}
       />
       <ChaptersListFooter
         getSelectedCount={getSelectedCount}

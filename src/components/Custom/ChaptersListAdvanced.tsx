@@ -111,6 +111,8 @@ interface ChaptersListHeaderProps {
   chapterToken: string;
   onChangeChapterToken: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClearInput: () => void;
+  verseToken?: string;
+  handleSetVerseSearch?: (verseID: string) => void;
 }
 
 const ChaptersListHeader = ({
@@ -118,21 +120,47 @@ const ChaptersListHeader = ({
   currentChapter,
   onChangeChapterToken,
   onClearInput,
+  verseToken,
+  handleSetVerseSearch,
 }: ChaptersListHeaderProps) => {
   const quranService = useQuran();
 
+  const onChangeVerseSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleSetVerseSearch && handleSetVerseSearch(event.target.value);
+  };
+
+  const onClearVerseSearch = () => {
+    handleSetVerseSearch && handleSetVerseSearch("");
+  };
+
   return (
-    <InputString
-      inputElementProps={{
-        placeholder: quranService.getChapterName(currentChapter),
-        borderBottom: "none",
-        borderBottomRadius: "0",
-      }}
-      value={chapterToken}
-      onChange={onChangeChapterToken}
-      onClear={onClearInput}
-      dir="rtl"
-    />
+    <Flex>
+      <Box w={"220px"} flexShrink={0}>
+        <InputString
+          inputElementProps={{
+            placeholder: quranService.getChapterName(currentChapter),
+            borderBottom: "none",
+            borderBottomRadius: "0",
+          }}
+          value={chapterToken}
+          onChange={onChangeChapterToken}
+          onClear={onClearInput}
+          dir="rtl"
+        />
+      </Box>
+      <Box w={"80px"} flexShrink={0}>
+        <InputString
+          inputElementProps={{
+            borderBottom: "none",
+            borderBottomRadius: "0",
+          }}
+          value={verseToken}
+          onChange={onChangeVerseSearch}
+          onClear={onClearVerseSearch}
+          dir="rtl"
+        />
+      </Box>
+    </Flex>
   );
 };
 
@@ -143,6 +171,9 @@ interface ChaptersListBodyProps {
   defaultSelected?: boolean;
   onChangeSelectChapter: (chapterID: number) => void;
   handleCurrentChapter: (chapterID: number) => void;
+  verseToken?: string;
+  currentVerse?: string;
+  onClickVerse?: (verseKey: string) => void;
 }
 
 const ChaptersListBody = ({
@@ -152,11 +183,22 @@ const ChaptersListBody = ({
   defaultSelected = true,
   onChangeSelectChapter,
   handleCurrentChapter,
+  verseToken,
+  currentVerse,
+  onClickVerse,
 }: ChaptersListBodyProps) => {
   const quranService = useQuran();
 
   const refChaptersList = useRef<HTMLDivElement>(null);
   const refChapter = useRef<HTMLDivElement | null>(null);
+
+  // Get verses for the current chapter when verse mode is enabled
+  const chapterVerses = quranService.getVerses(currentChapter);
+
+  // Filter verses based on verseToken
+  const filteredVerses = chapterVerses.filter((verse) =>
+    verseToken ? verse.verseid.toString().startsWith(verseToken) : true
+  );
 
   useEffect(() => {
     const selectedChapterElement = refChapter.current;
@@ -191,43 +233,78 @@ const ChaptersListBody = ({
     refChapter.current = event.currentTarget;
   };
 
+  const handleClickVerse = (verseKey: string) => {
+    if (onClickVerse) {
+      onClickVerse(verseKey);
+    }
+  };
+
   return (
-    <Box
-      flexGrow="1"
-      border="1px solid"
-      borderColor={"border.emphasized"}
-      overflowY="scroll"
-      bgColor={"brand.bg"}
-      fontSize={"medium"}
-      padding="2px"
-      ref={refChaptersList}
-    >
-      {quranService.chapterNames
-        .filter((chapter) => chapter.name.includes(chapterToken))
-        .map((chapter) => (
-          <Flex
-            key={chapter.id}
+    <Flex flexGrow="1" minH={0}>
+      <Box
+        w={"220px"}
+        border="1px solid"
+        borderColor={"border.emphasized"}
+        overflowY="scroll"
+        bgColor={"brand.bg"}
+        fontSize={"medium"}
+        paddingEnd="8px"
+        ref={refChaptersList}
+      >
+        {quranService.chapterNames
+          .filter((chapter) => chapter.name.includes(chapterToken))
+          .map((chapter) => (
+            <Flex
+              key={chapter.id}
+              cursor="pointer"
+              px="5px"
+              py={"3px"}
+              mdDown={{ py: "8px" }}
+              aria-selected={defaultSelected && currentChapter === chapter.id}
+              _selected={{ bgColor: "gray.emphasized" }}
+            >
+              <Box
+                flexGrow="1"
+                onClick={(event) => onClickChapter(event, chapter.id)}
+              >
+                {chapter.id}. {chapter.name}
+              </Box>
+              <Checkbox
+                colorPalette={"teal"}
+                checked={selectedChapters[chapter.id]}
+                onCheckedChange={() => onChangeSelectChapter(chapter.id)}
+              />
+            </Flex>
+          ))}
+      </Box>
+
+      <Box
+        w={"80px"}
+        flexShrink={0}
+        border="1px solid"
+        borderColor={"border.emphasized"}
+        overflowY="scroll"
+        bgColor={"brand.bg"}
+        fontSize={"medium"}
+        padding="2px"
+      >
+        {filteredVerses.map((verse) => (
+          <Box
+            key={verse.key}
             cursor="pointer"
             px="5px"
             py={"3px"}
             mdDown={{ py: "8px" }}
-            aria-selected={defaultSelected && currentChapter === chapter.id}
+            textAlign="center"
+            aria-selected={currentVerse === verse.key}
             _selected={{ bgColor: "gray.emphasized" }}
+            onClick={() => handleClickVerse(verse.key)}
           >
-            <Box
-              flexGrow="1"
-              onClick={(event) => onClickChapter(event, chapter.id)}
-            >
-              {chapter.id}. {chapter.name}
-            </Box>
-            <Checkbox
-              colorPalette={"teal"}
-              checked={selectedChapters[chapter.id]}
-              onCheckedChange={() => onChangeSelectChapter(chapter.id)}
-            />
-          </Flex>
+            {verse.verseid}
+          </Box>
         ))}
-    </Box>
+      </Box>
+    </Flex>
   );
 };
 
@@ -248,6 +325,7 @@ const ChaptersListFooter = ({
 
   return (
     <Flex
+      w={"300px"}
       alignItems="center"
       flexWrap="wrap"
       padding="5px"

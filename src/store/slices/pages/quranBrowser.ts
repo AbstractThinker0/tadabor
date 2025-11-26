@@ -14,6 +14,7 @@ import { initialSelectedChapters } from "@/util/consts";
 interface qbStateProps {
   selectChapter: number;
   selectedChapters: selectedChaptersType;
+  selectedVerse: string;
   searchString: string;
   searchingString: string;
   searchingChapters: string[];
@@ -33,6 +34,7 @@ interface qbStateProps {
 const initialState: qbStateProps = {
   selectChapter: 1,
   selectedChapters: initialSelectedChapters,
+  selectedVerse: "",
   searchString: "",
   searchingString: "",
   searchingChapters: [],
@@ -149,6 +151,11 @@ const qbPageSlice = createSlice({
       state.selectChapter = Number(action.payload);
       state.scrollKey = "";
       state.searchingString = "";
+      state.selectedVerse = "";
+    },
+    setSelectedVerse: (state, action: PayloadAction<string>) => {
+      state.selectedVerse = action.payload;
+      state.scrollKey = action.payload;
     },
     setScrollKey: (state, action: PayloadAction<string>) => {
       state.scrollKey =
