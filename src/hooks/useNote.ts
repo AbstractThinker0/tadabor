@@ -22,7 +22,7 @@ import { useTRPC } from "@/util/trpc";
 import {
   createNewNote,
   computeDateModified,
-  type NoteUploadPayload,
+  fromDexieToBackend,
 } from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
 import { useEffect } from "react";
@@ -128,15 +128,11 @@ export const useNote = ({
     if (isLogged) {
       // upload the note to cloud
       try {
-        const uploadData: NoteUploadPayload = {
+        const uploadData = fromDexieToBackend({
+          ...note,
           key: noteValidKey,
-          type: note.type,
-          uuid: note.uuid,
-          content: note.text,
-          dateCreated: note.date_created!,
-          dateModified: newDateModified,
-          direction: note.dir!,
-        };
+          date_modified: newDateModified,
+        });
 
         const result = await uploadNote.mutateAsync(uploadData);
 
