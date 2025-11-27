@@ -115,3 +115,27 @@ export const computeDateModified = (note: LocalNoteProps) => {
   const shouldUpdate = note.text !== note.preSave;
   return shouldUpdate ? now : note.date_modified!;
 };
+
+export interface NoteSyncMeta {
+  id: string;
+  uuid: string;
+  key: string;
+  type: string;
+  dateModified: number;
+  dateLastSynced: number;
+}
+
+/**
+ * Extracts sync metadata from a local or cloud note for the syncNotes API.
+ */
+export const buildNoteSyncPayload = (
+  note: LocalNoteProps | CloudNoteProps,
+  dateLastSynced: number
+): NoteSyncMeta => ({
+  id: note.id,
+  uuid: note.uuid,
+  key: note.key,
+  type: note.type,
+  dateModified: note.date_modified!,
+  dateLastSynced,
+});

@@ -10,6 +10,7 @@ import {
   fromBackendToDexie,
   fromDexieToBackend,
   fromReduxToDexie,
+  buildNoteSyncPayload,
 } from "@/util/notes";
 
 import { useBeforeUnload } from "react-router";
@@ -100,23 +101,11 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
     ) {
       const uniqueGuestNotes = Object.values(localNotes)
         .filter((note) => !cloudNotesIds.includes(note.id))
-        .map((note) => ({
-          id: note.id,
-          uuid: note.uuid,
-          key: note.key,
-          type: note.type,
-          dateModified: note.date_modified!,
-          dateLastSynced: 0,
-        }));
+        .map((note) => buildNoteSyncPayload(note, 0));
 
-      const notesArray = Object.values(cloudNotes).map((note) => ({
-        id: note.id,
-        uuid: note.uuid,
-        key: note.key,
-        type: note.type,
-        dateModified: note.date_modified!,
-        dateLastSynced: note.date_synced!,
-      }));
+      const notesArray = Object.values(cloudNotes).map((note) =>
+        buildNoteSyncPayload(note, note.date_synced!)
+      );
 
       syncNotes.mutateAsync({
         clientNotes: notesArray,
