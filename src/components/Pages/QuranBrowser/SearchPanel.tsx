@@ -44,8 +44,7 @@ const SearchPanel = () => {
       flexDirection="column"
       fontSize="medium"
       pt={2}
-      paddingLeft="min(0.5vw, 10px)"
-      paddingRight="min(0.5vw, 10px)"
+      paddingStart="min(0.5vw, 10px)"
     >
       <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
       <SearchOptions />

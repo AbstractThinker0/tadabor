@@ -145,7 +145,7 @@ const ChaptersListHeader = ({
 
   return (
     <Flex dir="rtl">
-      <Box w={"220px"} flexShrink={0}>
+      <Box w={"224px"} flexShrink={0}>
         <InputString
           inputElementProps={{
             placeholder: quranService.getChapterName(currentChapter),
@@ -159,7 +159,7 @@ const ChaptersListHeader = ({
           dir="rtl"
         />
       </Box>
-      <Box w={"80px"} flexShrink={0}>
+      <Box w={"70px"} flexShrink={0}>
         <InputString
           inputElementProps={{
             borderBottom: "none",
@@ -239,7 +239,7 @@ const ChaptersListBody = ({
   return (
     <Flex flexGrow="1" minH={0} dir="rtl">
       <Box
-        w={"220px"}
+        w={"224px"}
         border="1px solid"
         borderColor={"border.emphasized"}
         overflowY="scroll"
@@ -273,7 +273,7 @@ const ChaptersListBody = ({
       </Box>
 
       <Box
-        w={"80px"}
+        w={"70px"}
         flexShrink={0}
         border="1px solid"
         borderColor={"border.emphasized"}
@@ -320,7 +320,6 @@ const ChaptersListFooter = ({
 
   return (
     <Flex
-      w={"300px"}
       alignItems="center"
       flexWrap="wrap"
       padding="5px"

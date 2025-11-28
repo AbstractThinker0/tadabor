@@ -172,13 +172,7 @@ const FormWordSearch = ({
   };
 
   return (
-    <Box
-      as="form"
-      role="search"
-      onSubmit={handleSearchSubmit}
-      pt={2}
-      w={"300px"}
-    >
+    <Box as="form" role="search" onSubmit={handleSearchSubmit} pt={2}>
       <VStack>
         <Textarea
           required

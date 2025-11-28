@@ -22,7 +22,6 @@ const SelectionListRoots = memo(
 
     return (
       <Flex
-        w={"300px"}
         flexGrow="1"
         flexDirection="column"
         overflowY="hidden"

@@ -331,7 +331,7 @@ i18n
             diacritics: "بالتشكيل",
             identical: "مطابق",
             start: "مطابق للبداية",
-            all_quran: "بحث في كل السور",
+            all_quran: "كل السور",
             button: "إبحث",
             count: "عدد الآيات:",
             fail: "لا وجود لهذه الكلمة.",
