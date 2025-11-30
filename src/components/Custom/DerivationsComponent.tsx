@@ -103,7 +103,7 @@ const DerivationsComponent = ({
   };
 
   return (
-    <Box border={"1px solid"} borderRadius={"md"} margin={2} overflow="hidden">
+    <Box border={"1px solid"} borderRadius={"md"} margin={3} overflow="hidden">
       <HStack justifyContent="space-between" px={2} pt={1}>
         <Text fontSize="xs" color="fg.muted">
           {hideDuplicates
