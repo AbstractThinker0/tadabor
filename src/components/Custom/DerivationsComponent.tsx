@@ -106,9 +106,7 @@ const DerivationsComponent = ({
     <Box border={"1px solid"} borderRadius={"md"} margin={3} overflow="hidden">
       <HStack justifyContent="space-between" px={2} pt={1}>
         <Text fontSize="xs" color="fg.muted">
-          {hideDuplicates
-            ? `${uniqueCount} unique`
-            : `${searchIndexes.length} (${uniqueCount} unique)`}
+          {searchIndexes.length} ({uniqueCount} unique)
         </Text>
         <Switch.Root
           size="sm"
@@ -188,27 +186,22 @@ const DerivationsComponent = ({
                         borderColor="border.muted"
                       >
                         {group.items.map(({ derivation, originalIndex }) => (
-                          <Tooltip
-                            showArrow
+                          <Button
                             key={originalIndex}
-                            content={derivation.text}
+                            px={2}
+                            fontSize="md"
+                            fontWeight={"500"}
+                            variant="ghost"
+                            userSelect={"text"}
+                            onClick={() =>
+                              handleDerivationClick(
+                                derivation.key,
+                                originalIndex
+                              )
+                            }
                           >
-                            <Button
-                              px={2}
-                              fontSize="md"
-                              fontWeight={"500"}
-                              variant="ghost"
-                              userSelect={"text"}
-                              onClick={() =>
-                                handleDerivationClick(
-                                  derivation.key,
-                                  originalIndex
-                                )
-                              }
-                            >
-                              {derivation.text}
-                            </Button>
-                          </Tooltip>
+                            {derivation.text}
+                          </Button>
                         ))}
                       </VStack>
                     )}
