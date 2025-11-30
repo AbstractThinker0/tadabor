@@ -153,6 +153,9 @@ i18n
             admin: "Admin",
           },
           ui: {
+            hide_duplicates: "Hide duplicates",
+            occurrences: "{{count}} occurrences",
+            count_with_unique: "{{total}} ({{unique}} unique)",
             actions: {
               edit: "Edit",
               save: "Save",
@@ -305,6 +308,9 @@ i18n
             admin: "الإدارة",
           },
           ui: {
+            hide_duplicates: "إخفاء المكرر",
+            occurrences: "{{count}} مرات",
+            count_with_unique: "{{total}} ({{unique}} غير مكررة)",
             actions: {
               edit: "تعديل",
               save: "حفظ",

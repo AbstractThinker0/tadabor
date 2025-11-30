@@ -13,6 +13,7 @@ import {
 
 import { Tooltip } from "@/components/ui/tooltip";
 import { useMemo, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 interface DerivationsComponentProps {
   handleDerivationClick: (verseKey: string, verseIndex?: number) => void;
@@ -38,6 +39,7 @@ const DerivationsComponent = ({
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const [isPending, startTransition] = useTransition();
+  const { t } = useTranslation();
 
   // Create indexed list for non-grouped view
   const displayItems: IndexedDerivation[] = useMemo(() => {
@@ -106,7 +108,10 @@ const DerivationsComponent = ({
     <Box border={"1px solid"} borderRadius={"md"} margin={3} overflow="hidden">
       <HStack justifyContent="space-between" px={2} pt={1}>
         <Text fontSize="xs" color="fg.muted">
-          {searchIndexes.length} ({uniqueCount} unique)
+          {t("ui.count_with_unique", {
+            total: searchIndexes.length,
+            unique: uniqueCount,
+          })}
         </Text>
         <Switch.Root
           size="sm"
@@ -118,7 +123,7 @@ const DerivationsComponent = ({
             <Switch.Thumb />
           </Switch.Control>
           <Switch.Label>
-            <Text fontSize="xs">Hide duplicates</Text>
+            <Text fontSize="xs">{t("ui.hide_duplicates")}</Text>
           </Switch.Label>
         </Switch.Root>
       </HStack>
@@ -149,7 +154,7 @@ const DerivationsComponent = ({
                       showArrow
                       content={
                         hasMultiple
-                          ? `${group.items.length} occurrences`
+                          ? t("ui.occurrences", { count: group.items.length })
                           : firstItem.derivation.text
                       }
                     >
