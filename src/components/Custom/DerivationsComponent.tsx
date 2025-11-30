@@ -131,75 +131,89 @@ const DerivationsComponent = ({
         maxH={"400px"}
         overflowY={"scroll"}
         onScroll={onScrollOccs}
-        separator={<StackSeparator border={"none"}>-</StackSeparator>}
+        separator={
+          hideDuplicates ? undefined : (
+            <StackSeparator border={"none"}>-</StackSeparator>
+          )
+        }
       >
         {hideDuplicates
-          ? groupedItems.slice(0, itemsCount).map((group) => {
+          ? groupedItems.slice(0, itemsCount).map((group, groupIndex) => {
               const isExpanded = expandedGroups.has(group.name);
               const hasMultiple = group.items.length > 1;
               const firstItem = group.items[0];
 
               return (
-                <VStack key={group.name} gap={0} align="stretch">
-                  <Tooltip showArrow content={firstItem.derivation.text}>
-                    <Button
-                      px={2}
-                      fontSize="xl"
-                      fontWeight={"600"}
-                      variant="ghost"
-                      userSelect={"text"}
-                      onClick={() => {
-                        if (hasMultiple) {
-                          toggleGroup(group.name);
-                        } else {
-                          handleDerivationClick(
-                            firstItem.derivation.key,
-                            firstItem.originalIndex
-                          );
-                        }
-                      }}
+                <HStack key={group.name} gap={0}>
+                  {groupIndex > 0 && <Text color="fg.muted">-</Text>}
+                  <VStack gap={0} align="stretch">
+                    <Tooltip
+                      showArrow
+                      content={
+                        hasMultiple
+                          ? `${group.items.length} occurrences`
+                          : firstItem.derivation.text
+                      }
                     >
-                      {group.name}
-                      {hasMultiple && (
-                        <Text as="span" fontSize="xs" color="fg.muted" ms={1}>
-                          ({group.items.length})
-                        </Text>
-                      )}
-                    </Button>
-                  </Tooltip>
-                  {isExpanded && (
-                    <VStack
-                      gap={0}
-                      ps={2}
-                      borderStart="2px solid"
-                      borderColor="border.muted"
-                    >
-                      {group.items.map(({ derivation, originalIndex }) => (
-                        <Tooltip
-                          showArrow
-                          key={originalIndex}
-                          content={derivation.text}
-                        >
-                          <Button
-                            px={2}
-                            fontSize="md"
-                            fontWeight={"500"}
-                            variant="ghost"
-                            userSelect={"text"}
-                            onClick={() =>
-                              handleDerivationClick(
-                                derivation.key,
-                                originalIndex
-                              )
-                            }
+                      <Button
+                        px={2}
+                        fontSize="xl"
+                        fontWeight={"600"}
+                        variant="ghost"
+                        userSelect={"text"}
+                        onClick={() => {
+                          if (hasMultiple) {
+                            toggleGroup(group.name);
+                          } else {
+                            handleDerivationClick(
+                              firstItem.derivation.key,
+                              firstItem.originalIndex
+                            );
+                          }
+                        }}
+                      >
+                        {group.name}
+                        {hasMultiple && (
+                          <Text as="span" fontSize="xs" color="fg.muted" ms={1}>
+                            ({group.items.length})
+                          </Text>
+                        )}
+                      </Button>
+                    </Tooltip>
+                    {isExpanded && (
+                      <VStack
+                        gap={0}
+                        ps={2}
+                        borderStart="2px solid"
+                        borderColor="border.muted"
+                      >
+                        {group.items.map(({ derivation, originalIndex }) => (
+                          <Tooltip
+                            showArrow
+                            key={originalIndex}
+                            content={derivation.text}
                           >
-                            {derivation.text}
-                          </Button>
-                        </Tooltip>
-                      ))}
-                    </VStack>
-                  )}
-                </VStack>
+                            <Button
+                              px={2}
+                              fontSize="md"
+                              fontWeight={"500"}
+                              variant="ghost"
+                              userSelect={"text"}
+                              onClick={() =>
+                                handleDerivationClick(
+                                  derivation.key,
+                                  originalIndex
+                                )
+                              }
+                            >
+                              {derivation.text}
+                            </Button>
+                          </Tooltip>
+                        ))}
+                      </VStack>
+                    )}
+                  </VStack>
+                </HStack>
               );
             })
           : displayItems
