@@ -15,16 +15,18 @@ const VerseNotes = () => {
   const verseNotesIDs = getNotesIDsbyType("verse");
 
   const rankComparator = (a: string, b: string) => {
-    // Note ID format: verse:chapter:verse
-    const partsA = a.split(":");
-    const partsB = b.split(":");
+    // Note ID format: verse:chapter-verse
+    const keyA = a.split(":")[1];
+    const keyB = b.split(":")[1];
 
-    const chapterA = parseInt(partsA[1] || "0");
-    const verseA = parseInt(partsA[2] || "0");
+    const partsA = keyA.split("-");
+    const partsB = keyB.split("-");
 
-    const chapterB = parseInt(partsB[1] || "0");
-    const verseB = parseInt(partsB[2] || "0");
+    const chapterA = parseInt(partsA[0] || "0");
+    const verseA = parseInt(partsA[1] || "0");
 
+    const chapterB = parseInt(partsB[0] || "0");
+    const verseB = parseInt(partsB[1] || "0");
     if (chapterA !== chapterB) return chapterA - chapterB;
     return verseA - verseB;
   };
