@@ -59,7 +59,7 @@
     "eslint-import-resolver-alias": "1.1.2",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "6.0.0-rc.1",
+    "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-react-refresh": "0.4.20",
     "globals": "16.0.0",
     "typescript": "5.7.2",
