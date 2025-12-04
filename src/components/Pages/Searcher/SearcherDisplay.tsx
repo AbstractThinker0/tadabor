@@ -182,11 +182,14 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
       <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
         {index + 1}.
       </Span>{" "}
-      <VerseHighlightMatches verse={verseMatch} /> (
-      <ButtonVerse onClick={onClickVerseChapter}>
-        {quranService.getChapterName(verseMatch.suraid)}
-      </ButtonVerse>
-      :<ButtonVerse onClick={onClickVerse}>{verseMatch.verseid}</ButtonVerse>)
+      <VerseHighlightMatches verse={verseMatch} />{" "}
+      <Span whiteSpace="nowrap">
+        (
+        <ButtonVerse onClick={onClickVerseChapter}>
+          {quranService.getChapterName(verseMatch.suraid)}
+        </ButtonVerse>
+        :<ButtonVerse onClick={onClickVerse}>{verseMatch.verseid}</ButtonVerse>)
+      </Span>
     </BaseVerseItem>
   );
 };

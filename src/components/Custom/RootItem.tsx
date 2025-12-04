@@ -177,15 +177,18 @@ const RootVerse = ({
       <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
         {index + 1}.
       </Span>{" "}
-      <VerseHighlightMatches verse={rootVerse} /> (
-      <ButtonVerse
-        onClick={() =>
-          onClickVerseChapter && onClickVerseChapter(rootVerse.key)
-        }
-      >
-        {verseChapter}
-      </ButtonVerse>
-      :<ButtonVerse onClick={onClickVerse}>{rootVerse.verseid}</ButtonVerse>)
+      <VerseHighlightMatches verse={rootVerse} />{" "}
+      <Span whiteSpace="nowrap">
+        (
+        <ButtonVerse
+          onClick={() =>
+            onClickVerseChapter && onClickVerseChapter(rootVerse.key)
+          }
+        >
+          {verseChapter}
+        </ButtonVerse>
+        :<ButtonVerse onClick={onClickVerse}>{rootVerse.verseid}</ButtonVerse>)
+      </Span>
     </BaseVerseItem>
   );
 };

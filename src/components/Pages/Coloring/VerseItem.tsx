@@ -128,15 +128,18 @@ const SelectedVerseItem = ({
       <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
         {index + 1}.
       </Span>{" "}
-      {verse.versetext} (
-      <ButtonVerse color={"inherit"} onClick={() => onClickChapter(verse)}>
-        {quranService.getChapterName(verse.suraid)}
-      </ButtonVerse>
-      :
-      <ButtonVerse color={"inherit"} onClick={() => onClickVerse()}>
-        {verse.verseid}
-      </ButtonVerse>
-      )
+      {verse.versetext}{" "}
+      <Span whiteSpace="nowrap">
+        (
+        <ButtonVerse color={"inherit"} onClick={() => onClickChapter(verse)}>
+          {quranService.getChapterName(verse.suraid)}
+        </ButtonVerse>
+        :
+        <ButtonVerse color={"inherit"} onClick={() => onClickVerse()}>
+          {verse.verseid}
+        </ButtonVerse>
+        )
+      </Span>
     </BaseVerseItem>
   );
 };

@@ -103,13 +103,13 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
         verse.versetext
       )}{" "}
       {isSearchResult ? (
-        <>
+        <Span whiteSpace="nowrap">
           (
           <ButtonVerse onClick={() => onClickVerseChapter(verse.key)}>
             {quranService.getChapterName(verse.suraid)}
           </ButtonVerse>
           :<ButtonVerse onClick={onClickVerse}>{verse.verseid}</ButtonVerse>)
-        </>
+        </Span>
       ) : (
         <ButtonVerse onClick={onClickVerse}>{`(${verse.verseid})`}</ButtonVerse>
       )}

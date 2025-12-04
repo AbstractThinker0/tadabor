@@ -98,11 +98,13 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
       ) : (
         <VerseHighlightMatches verse={verseMatch} />
       )}{" "}
-      (
-      <ButtonVerse onClick={() => onClickVerseChapter(verseMatch.key)}>
-        {quranService.getChapterName(verseMatch.suraid)}
-      </ButtonVerse>
-      :<ButtonVerse onClick={onClickVerse}>{verseMatch.verseid}</ButtonVerse>)
+      <Span whiteSpace="nowrap">
+        (
+        <ButtonVerse onClick={() => onClickVerseChapter(verseMatch.key)}>
+          {quranService.getChapterName(verseMatch.suraid)}
+        </ButtonVerse>
+        :<ButtonVerse onClick={onClickVerse}>{verseMatch.verseid}</ButtonVerse>)
+      </Span>
     </BaseVerseItem>
   );
 };
