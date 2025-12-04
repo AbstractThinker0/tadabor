@@ -30,7 +30,11 @@ function NoteComponent({ noteID }: NoteComponentProps) {
     <NoteForm
       isOpen={true}
       noteID={noteID}
-      renderHeader={<VerseContainer>{renderNoteHeader()}</VerseContainer>}
+      renderHeader={
+        <VerseContainer displayMode="default" center>
+          {renderNoteHeader()}
+        </VerseContainer>
+      }
       rootProps={{ shadow: "sm" }}
     />
   );

@@ -135,7 +135,8 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
             )
           </Box>
           <VerseContainer
-            textAlign={"center"}
+            displayMode="default"
+            center
             bgColor={chosenColor ? chosenColor.colorCode : "bg.muted"}
             color={
               chosenColor ? getTextColor(chosenColor.colorCode) : undefined

@@ -127,6 +127,8 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
             )
           </Box>
           <VerseContainer
+            displayMode="default"
+            center
             bgColor={"gray.emphasized"}
             padding={"4px"}
             mb={"5px"}

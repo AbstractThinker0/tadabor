@@ -199,7 +199,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 padding={2}
                 lineHeight={"normal"}
               >
-                <VerseContainer>
+                <VerseContainer displayMode="default" center>
                   وَلَتَعْلَمُنَّ نَبَأَهُ بَعْدَ حِينٍ (ص:88)
                 </VerseContainer>
               </Box>
