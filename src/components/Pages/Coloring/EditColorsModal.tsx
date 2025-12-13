@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -38,14 +38,6 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
       ? colorsList[Object.keys(colorsList)[0]].colorID
       : undefined
   );
-
-  useEffect(() => {
-    setListColors({ ...colorsList });
-
-    if (Object.keys(colorsList)[0]) {
-      setCurrentColor(colorsList[Object.keys(colorsList)[0]].colorID);
-    }
-  }, [colorsList]);
 
   function onChangeColor(event: React.ChangeEvent<HTMLSelectElement>) {
     setCurrentColor(event.target.value);
