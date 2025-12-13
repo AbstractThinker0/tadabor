@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -10,14 +10,7 @@ import useQuran from "@/context/useQuran";
 import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import {
-  Dialog,
-  Button,
-  Box,
-  Flex,
-  ButtonGroup,
-  type DialogOpenChangeDetails,
-} from "@chakra-ui/react";
+import { Dialog, Button, Box, Flex, ButtonGroup } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
@@ -48,27 +41,8 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
       : null
   );
 
-  useEffect(() => {
-    if (!currentVerseKey) {
-      setChosenColor(null);
-      return;
-    }
-
-    if (!coloredVerses[currentVerseKey]) {
-      setChosenColor(null);
-      return;
-    }
-
-    setChosenColor(coloredVerses[currentVerseKey]);
-  }, [currentVerse]);
-
-  const onOpenChange = (details: DialogOpenChangeDetails) => {
-    if (!details.open) {
-      onCloseComplete();
-    }
-  };
-
-  const onCloseComplete = () => {
+  const onCloseModal = () => {
+    onClose();
     setChosenColor(null);
     dispatch(coloringPageActions.setCurrentVerse(null));
   };
@@ -111,9 +85,8 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
     <Dialog.Root
       size="xl"
       open={isOpen}
-      onInteractOutside={onClose}
+      onInteractOutside={onCloseModal}
       placement={"center"}
-      onOpenChange={onOpenChange}
     >
       <DialogContent dir="ltr">
         <Dialog.Header
@@ -185,13 +158,13 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onCloseModal}>Close</Button>
             <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
         </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
+        <DialogCloseTrigger onClick={onCloseModal} />
       </DialogContent>
     </Dialog.Root>
   );
