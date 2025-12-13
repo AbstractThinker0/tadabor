@@ -22,10 +22,13 @@ const PanelQuran = memo(
       (state) => state.lettersPage.currentChapter
     );
 
-    const handleSelectChapter = useCallback((chapterID: string) => {
-      dispatch(lettersPageActions.setCurrentChapter(chapterID));
-      dispatch(lettersPageActions.setScrollKey(""));
-    }, []);
+    const handleSelectChapter = useCallback(
+      (chapterID: string) => {
+        dispatch(lettersPageActions.setCurrentChapter(chapterID));
+        dispatch(lettersPageActions.setScrollKey(""));
+      },
+      [dispatch]
+    );
 
     const showSearchPanel = useAppSelector(
       (state) => state.lettersPage.showSearchPanel
