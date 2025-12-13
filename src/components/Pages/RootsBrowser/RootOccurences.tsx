@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
-
-import type { verseMatchResult, searchIndexProps } from "quran-tools";
 
 import { RootVerse } from "@/components/Pages/RootsBrowser/RootVerse";
 
@@ -28,8 +26,16 @@ const RootOccurences = ({
   const [itemsCount, setItemsCount] = useState(20);
   const [scrollKey, setScrollKey] = useState("");
 
-  const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
-  const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
+  const occurencesData = useMemo(
+    () =>
+      isOccurencesOpen
+        ? quranService.getOccurencesData(root_occurences)
+        : { rootDerivations: [], rootVerses: [] },
+    [isOccurencesOpen, root_occurences, quranService]
+  );
+
+  const derivations = occurencesData.rootDerivations;
+  const rootVerses = occurencesData.rootVerses;
 
   const onScrollOccs = (event: React.UIEvent<HTMLDivElement>) => {
     if (itemsCount >= rootVerses.length || isPending) return;
@@ -42,15 +48,6 @@ const RootOccurences = ({
       });
     }
   };
-
-  useEffect(() => {
-    if (!isOccurencesOpen) return;
-
-    const occurencesData = quranService.getOccurencesData(root_occurences);
-
-    setDerivations(occurencesData.rootDerivations);
-    setRootVerses(occurencesData.rootVerses);
-  }, [isOccurencesOpen, root_occurences, quranService]);
 
   const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
     if (verseIndex) {
