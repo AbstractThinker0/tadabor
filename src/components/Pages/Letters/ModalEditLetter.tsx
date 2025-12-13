@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -9,12 +9,7 @@ import { dbFuncs } from "@/util/db";
 
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
-import {
-  Dialog,
-  Button,
-  ButtonGroup,
-  type DialogOpenChangeDetails,
-} from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { toaster } from "@/components/ui/toaster";
@@ -45,8 +40,12 @@ const ModalEditLetter = ({
     (state) => state.lettersPage.lettersDefinitions[defKey]
   ) || { name: "", definition: "", dir: "" };
 
-  const [letterDef, setLetterDef] = useState(currentDef.definition);
-  const [letterDir, setLetterDir] = useState(currentDef.dir || "rtl");
+  const [editedDef, setEditedDef] = useState<string | null>(null);
+  const [editedDir, setEditedDir] = useState<string | null>(null);
+
+  // Derive effective values (uses edited if set, otherwise falls back to external state)
+  const letterDef = editedDef ?? currentDef.definition;
+  const letterDir = editedDir ?? (currentDef.dir || "rtl");
 
   const dispatch = useAppDispatch();
 
@@ -75,41 +74,28 @@ const ModalEditLetter = ({
       })
     );
 
-    onClose();
+    onCloseComplete();
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      setLetterDef(currentDef.definition);
-      setLetterDir(currentDef.dir || "rtl");
-    }
-  }, [isOpen]);
 
   const onCloseComplete = () => {
-    setLetterDef("");
-    setLetterDir("");
-  };
-
-  const onOpenChange = (details: DialogOpenChangeDetails) => {
-    if (!details.open) {
-      onCloseComplete();
-    }
+    onClose();
+    setEditedDef(null);
+    setEditedDir(null);
   };
 
   const handleSetDirection = (dir: string) => {
-    setLetterDir(dir);
+    setEditedDir(dir);
   };
 
   const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setLetterDef(event.target.value);
+    setEditedDef(event.target.value);
   };
 
   return (
     <Dialog.Root
       size="xl"
       open={isOpen}
-      onOpenChange={onOpenChange}
-      onInteractOutside={onClose}
+      onInteractOutside={onCloseComplete}
       placement={"center"}
     >
       <DialogContent dir="ltr">
@@ -138,13 +124,13 @@ const ModalEditLetter = ({
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onCloseComplete}>Cancel</Button>
             <Button colorPalette="blue" onClick={onClickSave}>
               Save changes
             </Button>
           </ButtonGroup>
         </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
+        <DialogCloseTrigger onClick={onCloseComplete} />
       </DialogContent>
     </Dialog.Root>
   );
