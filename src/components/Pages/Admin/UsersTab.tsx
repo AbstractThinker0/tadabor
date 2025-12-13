@@ -6,47 +6,41 @@ import {
   Text,
   NativeSelect,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/util/trpc";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Paginator } from "@/components/Generic/Paginator";
-import type { UsersResponse, UserData } from "@/types/admin";
+import type { UserData } from "@/types/admin";
 
 export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
   const { t } = useTranslation();
-  const { usersQuery, fetchUsers, updateUser, deleteUser } = useAdmin();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const { updateUser, deleteUser } = useAdmin();
+
   const [editing, setEditing] = useState<
     Record<number, { username: string; email: string; role: string }>
   >({});
+
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [usersPage, setUsersPage] = useState<UsersResponse | null>(null);
 
-  useEffect(() => {
-    if (initialUsers?.length && !usersPage) {
-      // Use initial users if available to populate first page
-      setUsersPage({
-        data: initialUsers,
-        meta: { total: initialUsers.length, limit: 100, offset: 0 },
-      });
-    } else if (!usersPage) {
-      load({ limit, offset });
-    }
-  }, [initialUsers]);
-
-  const load = async (params?: { limit?: number; offset?: number }) => {
-    const l = params?.limit ?? limit;
-    const o = params?.offset ?? offset;
-    setLoading(true);
-    const res = await fetchUsers({ limit: l, offset: o });
-    setLoading(false);
-    if (res) {
-      setUsersPage(res);
-      setLimit(res.meta?.limit ?? l);
-      setOffset(res.meta?.offset ?? o);
-    }
-  };
+  const {
+    data: usersPage,
+    isFetching,
+    refetch,
+  } = useQuery({
+    ...trpc.admin.listUsers.queryOptions({ limit, offset }),
+    initialData:
+      initialUsers?.length > 0
+        ? {
+            data: initialUsers,
+            meta: { total: initialUsers.length, limit: 100, offset: 0 },
+          }
+        : undefined,
+  });
 
   const startEdit = (u: UserData) => {
     setEditing((s) => ({
@@ -58,6 +52,7 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
       },
     }));
   };
+
   const cancelEdit = (id: number) => {
     setEditing((s) => {
       const n = { ...s };
@@ -65,6 +60,7 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
       return n;
     });
   };
+
   const saveEdit = async (id: number) => {
     const e = editing[id];
     if (!e) return;
@@ -74,18 +70,20 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
       email: e.email,
       role: Number(e.role),
     });
-    await load();
+    await queryClient.invalidateQueries({
+      queryKey: trpc.admin.listUsers.queryKey({ limit, offset }),
+    });
     cancelEdit(id);
   };
 
   return (
     <Flex direction="column" gap={2}>
       <Flex>
-        <Button size="sm" onClick={() => load()}>
+        <Button size="sm" onClick={() => refetch()}>
           {t("ui.actions.refresh")}
         </Button>
       </Flex>
-      {(loading || usersQuery.isFetching) && (
+      {isFetching && (
         <Text fontSize="sm" color="fg.muted">
           {t("ui.state.loading")}
         </Text>
@@ -190,7 +188,12 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
                           colorPalette="red"
                           onClick={async () => {
                             await deleteUser(u.id);
-                            await load();
+                            await queryClient.invalidateQueries({
+                              queryKey: trpc.admin.listUsers.queryKey({
+                                limit,
+                                offset,
+                              }),
+                            });
                           }}
                         >
                           {t("ui.actions.delete")}
@@ -217,7 +220,6 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
           onChange={({ limit: nl, offset: no }) => {
             setLimit(nl);
             setOffset(no);
-            load({ limit: nl, offset: no });
           }}
         />
       ) : null}
