@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import type {
-  rootProps,
-  verseMatchResult,
-  searchIndexProps,
-} from "quran-tools";
+import type { rootProps, verseMatchResult } from "quran-tools";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
@@ -52,14 +48,17 @@ const RootOccurences = ({
   onClickVerseChapter,
 }: RootOccurencesProps) => {
   const [itemsCount, setItemsCount] = useState(20);
-  const [scrollKey, setScrollKey] = useState("");
   const [selectedVerse, setSelectedVerse] = useState("");
 
-  const [derivations, setDerivations] = useState<searchIndexProps[]>([]);
-  const [rootVerses, setRootVerses] = useState<verseMatchResult[]>([]);
   const [isPending, startTransition] = useTransition();
-
   const quranService = useQuran();
+
+  const occurencesData = useMemo(
+    () => quranService.getOccurencesData(rootOccs),
+    [rootOccs, quranService]
+  );
+  const derivations = occurencesData.rootDerivations;
+  const rootVerses = occurencesData.rootVerses;
 
   const refVerses = useRef<HTMLDivElement>(null);
 
@@ -75,40 +74,28 @@ const RootOccurences = ({
     }
   };
 
+  // Scroll to the selected verse after render
   useEffect(() => {
-    const occurencesData = quranService.getOccurencesData(rootOccs);
+    if (isPending) return;
 
-    setDerivations(occurencesData.rootDerivations);
-    setRootVerses(occurencesData.rootVerses);
-  }, [rootOccs, quranService]);
-
-  useEffect(() => {
-    if (refVerses.current && scrollKey) {
-      const verseToHighlight = refVerses.current.querySelector(
-        `[data-id="sub-${scrollKey}"]`
+    if (selectedVerse && refVerses.current) {
+      const node = refVerses.current.querySelector(
+        `[data-id="sub-${selectedVerse}"]`
       ) as HTMLDivElement;
 
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-
-        setSelectedVerse(scrollKey);
-        setScrollKey("");
-      }
+      if (node) node.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [scrollKey, isPending]);
+  }, [selectedVerse, isPending]);
 
   const handleDerivationClick = (verseKey: string, verseIndex?: number) => {
     startTransition(() => {
       if (verseIndex) {
-        if (itemsCount < verseIndex + 20) {
-          setItemsCount(Math.min(verseIndex + 20, rootVerses.length));
-        }
+        const nextCount = Math.min(verseIndex + 20, rootVerses.length);
+        if (itemsCount < nextCount) setItemsCount(nextCount);
       }
 
-      setScrollKey(verseKey);
+      // Select immediately (no effect needed)
+      setSelectedVerse(verseKey);
     });
   };
 
