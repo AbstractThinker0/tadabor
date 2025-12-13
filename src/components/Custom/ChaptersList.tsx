@@ -23,7 +23,7 @@ const ChaptersList = ({
     return quranService.chapterNames.filter((chapter) =>
       chapter.name.includes(chapterSearch)
     );
-  }, [chapterSearch]);
+  }, [quranService.chapterNames, chapterSearch]);
 
   useEffect(() => {
     if (!refChapter.current) return;
