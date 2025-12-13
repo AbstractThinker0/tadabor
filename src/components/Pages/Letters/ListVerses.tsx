@@ -189,6 +189,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
         </Flex>
       </VerseContainer>
       <InfoBox
+        key={`${verse.key}:${selectedLetter}`} // Add this to reset state on letter change
         isOpen={isOpenWordBox}
         verseKey={verse.key}
         verseText={verse.versetext}
@@ -376,14 +377,6 @@ const InfoBox = ({
       })
     );
   };
-
-  useEffect(() => {
-    setLetterRole(verseLetterData.letter_role);
-  }, [selectedLetter, verseLetterData.letter_role]);
-
-  useEffect(() => {
-    setLetterDefinitionID(verseLetterData.def_id);
-  }, [selectedLetter, verseLetterData.def_id]);
 
   const renderLetterDefinitionOptions = () => {
     const letter = selectedLetter
