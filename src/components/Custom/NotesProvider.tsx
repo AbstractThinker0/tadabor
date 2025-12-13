@@ -45,13 +45,6 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
   const trpcClient = useTRPCClient();
   const queryClient = useQueryClient();
 
-  useBeforeUnload((e) => {
-    if (hasUnsavedNotes()) {
-      e.preventDefault();
-      e.returnValue = "You have unsaved notes..";
-    }
-  });
-
   const hasUnsavedNotes = useCallback(() => {
     let hasUnsavedNotes = false;
 
@@ -67,6 +60,13 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
     return hasUnsavedNotes;
   }, [isLogged, cloudNotes, localNotes]);
+
+  useBeforeUnload((e) => {
+    if (hasUnsavedNotes()) {
+      e.preventDefault();
+      e.returnValue = "You have unsaved notes..";
+    }
+  });
 
   const fetchNoteById = async ({ noteID }: { noteID: string }) => {
     return await queryClient.fetchQuery({
