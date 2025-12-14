@@ -1,4 +1,4 @@
-export declare const appRouter: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
   {
     ctx: {
       user: {
@@ -9,21 +9,11 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
       clientVersion: string | undefined;
     };
     meta: object;
-    errorShape: {
-      message: string;
-      data: {
-        stack: null;
-        zodError: import("zod").typeToFlattenedError<any, string> | null;
-        code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-        httpStatus: number;
-        path?: string;
-      };
-      code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-    };
+    errorShape: import("@trpc/server").TRPCDefaultErrorShape;
     transformer: false;
   },
-  import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
-    user: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+  import("@trpc/server").TRPCDecorateCreateRouterOptions<{
+    user: import("@trpc/server").TRPCBuiltRouter<
       {
         ctx: {
           user: {
@@ -34,20 +24,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           clientVersion: string | undefined;
         };
         meta: object;
-        errorShape: {
-          message: string;
-          data: {
-            stack: null;
-            zodError: import("zod").typeToFlattenedError<any, string> | null;
-            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-            httpStatus: number;
-            path?: string;
-          };
-          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-        };
+        errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
       },
-      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+      import("@trpc/server").TRPCDecorateCreateRouterOptions<{
         getUser: import("@trpc/server").TRPCQueryProcedure<{
           input: {
             username: string;
@@ -70,7 +50,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
       }>
     >;
-    auth: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+    auth: import("@trpc/server").TRPCBuiltRouter<
       {
         ctx: {
           user: {
@@ -81,24 +61,14 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           clientVersion: string | undefined;
         };
         meta: object;
-        errorShape: {
-          message: string;
-          data: {
-            stack: null;
-            zodError: import("zod").typeToFlattenedError<any, string> | null;
-            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-            httpStatus: number;
-            path?: string;
-          };
-          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-        };
+        errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
       },
-      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+      import("@trpc/server").TRPCDecorateCreateRouterOptions<{
         login: import("@trpc/server").TRPCMutationProcedure<{
           input: {
-            password: string;
             email: string;
+            password: string;
           };
           output: {
             success: boolean;
@@ -114,9 +84,9 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
         signUp: import("@trpc/server").TRPCMutationProcedure<{
           input: {
-            password: string;
             username: string;
             email: string;
+            password: string;
             captchaToken: string;
           };
           output:
@@ -159,7 +129,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
       }>
     >;
-    notes: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+    notes: import("@trpc/server").TRPCBuiltRouter<
       {
         ctx: {
           user: {
@@ -170,35 +140,25 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           clientVersion: string | undefined;
         };
         meta: object;
-        errorShape: {
-          message: string;
-          data: {
-            stack: null;
-            zodError: import("zod").typeToFlattenedError<any, string> | null;
-            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-            httpStatus: number;
-            path?: string;
-          };
-          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-        };
+        errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
       },
-      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+      import("@trpc/server").TRPCDecorateCreateRouterOptions<{
         syncNotes: import("@trpc/server").TRPCMutationProcedure<{
           input: {
             clientNotes: {
               id: string;
               uuid: string;
-              type: string;
               key: string;
+              type: string;
               dateModified: number;
               dateLastSynced: number;
             }[];
             guestNotes: {
               id: string;
               uuid: string;
-              type: string;
               key: string;
+              type: string;
               dateModified: number;
               dateLastSynced: number;
             }[];
@@ -225,10 +185,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         uploadNote: import("@trpc/server").TRPCMutationProcedure<{
           input: {
             uuid: string;
-            type: string;
             key: string;
-            dateModified: number;
+            type: string;
             dateCreated: number;
+            dateModified: number;
             content?: string | null | undefined;
             direction?: string | null | undefined;
           };
@@ -268,7 +228,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
       }>
     >;
-    password: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+    password: import("@trpc/server").TRPCBuiltRouter<
       {
         ctx: {
           user: {
@@ -279,20 +239,10 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           clientVersion: string | undefined;
         };
         meta: object;
-        errorShape: {
-          message: string;
-          data: {
-            stack: null;
-            zodError: import("zod").typeToFlattenedError<any, string> | null;
-            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-            httpStatus: number;
-            path?: string;
-          };
-          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-        };
+        errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
       },
-      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+      import("@trpc/server").TRPCDecorateCreateRouterOptions<{
         requestPasswordReset: import("@trpc/server").TRPCMutationProcedure<{
           input: {
             email: string;
@@ -321,8 +271,8 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
         updatePassword: import("@trpc/server").TRPCMutationProcedure<{
           input: {
-            newPassword: string;
             oldPassword: string;
+            newPassword: string;
           };
           output: {
             success: boolean;
@@ -338,7 +288,7 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
         }>;
       }>
     >;
-    admin: import("@trpc/server/unstable-core-do-not-import").BuiltRouter<
+    admin: import("@trpc/server").TRPCBuiltRouter<
       {
         ctx: {
           user: {
@@ -348,26 +298,16 @@ export declare const appRouter: import("@trpc/server/unstable-core-do-not-import
           } | null;
         };
         meta: object;
-        errorShape: {
-          message: string;
-          data: {
-            stack: null;
-            zodError: import("zod").typeToFlattenedError<any, string> | null;
-            code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_KEY;
-            httpStatus: number;
-            path?: string;
-          };
-          code: import("@trpc/server/unstable-core-do-not-import").TRPC_ERROR_CODE_NUMBER;
-        };
+        errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
       },
-      import("@trpc/server/unstable-core-do-not-import").DecorateCreateRouterOptions<{
+      import("@trpc/server").TRPCDecorateCreateRouterOptions<{
         getAnalytics: import("@trpc/server").TRPCQueryProcedure<{
           input: {
-            userId?: number | undefined;
-            action?: string | undefined;
             limit?: number | undefined;
             offset?: number | undefined;
+            action?: string | undefined;
+            userId?: number | undefined;
             startDate?: number | undefined;
             endDate?: number | undefined;
           };
