@@ -39,7 +39,20 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
 
   const trpc = useTRPC();
 
-  const syncNotes = useMutation(trpc.notes.syncNotes.mutationOptions());
+  const syncNotes = useMutation(
+    trpc.notes.syncNotes.mutationOptions({
+      onSuccess: (data) => {
+        const serverNotes = data.notesToSendToClient;
+        fetchNotes(serverNotes);
+
+        const clientNotesKeys = data.notesToRequestFromClient;
+        const guestNotesKeys = data.notesToRequestFromGuest;
+
+        uploadNotes(clientNotesKeys);
+        uploadNotes(guestNotesKeys, true);
+      },
+    })
+  );
   const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
 
   const trpcClient = useTRPCClient();
@@ -167,20 +180,6 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
       });
     }
   }, [isLogged, isLoggedOffline, hasLoadedCloudNotes, hasLoadedLocalNotes]);
-
-  useEffect(() => {
-    if (syncNotes.isSuccess) {
-      const serverNotes = syncNotes.data.notesToSendToClient;
-
-      fetchNotes(serverNotes);
-
-      const clientNotesKeys = syncNotes.data.notesToRequestFromClient;
-      const guestNotesKeys = syncNotes.data.notesToRequestFromGuest;
-
-      uploadNotes(clientNotesKeys);
-      uploadNotes(guestNotesKeys, true);
-    }
-  }, [syncNotes.isSuccess]);
 
   useEffect(() => {
     if (!isLogged && syncNotes.isPending) {
