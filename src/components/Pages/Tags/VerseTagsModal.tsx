@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { dbFuncs } from "@/util/db";
 
@@ -6,15 +6,9 @@ import useQuran from "@/context/useQuran";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
+import { selectVerseTags } from "@/store";
 
-import {
-  Dialog,
-  Button,
-  ButtonGroup,
-  Box,
-  Flex,
-  type DialogOpenChangeDetails,
-} from "@chakra-ui/react";
+import { Dialog, Button, ButtonGroup, Box, Flex } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
@@ -30,19 +24,17 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
 
   const tags = useAppSelector((state) => state.tagsPage.tags);
 
-  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
-
   const currentVerse = useAppSelector((state) => state.tagsPage.currentVerse);
+
+  const verseTags = useAppSelector((state) =>
+    selectVerseTags(state, currentVerse?.key)
+  );
 
   const quranService = useQuran();
 
-  const [chosenTags, setChosenTags] = useState(() =>
-    currentVerse
-      ? versesTags[currentVerse.key]
-        ? versesTags[currentVerse.key]
-        : []
-      : []
-  );
+  const [editedTags, setEditedTags] = useState<string[] | null>(null);
+
+  const currentTags = editedTags ?? verseTags;
 
   const setVerseTags = (verseKey: string, tags: string[] | null) => {
     if (tags === null) {
@@ -54,28 +46,16 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
     dispatch(tagsPageActions.setVerseTags({ verseKey, tags }));
   };
 
-  useEffect(() => {
-    if (!currentVerse) return;
-
-    setChosenTags(
-      versesTags[currentVerse.key] ? versesTags[currentVerse.key] : []
-    );
-  }, [currentVerse]);
-
   const onCloseComplete = () => {
-    setChosenTags([]);
+    onClose();
+
+    setEditedTags(null);
 
     dispatch(tagsPageActions.setCurrentVerse(null));
   };
 
-  const onOpenChange = (details: DialogOpenChangeDetails) => {
-    if (!details.open) {
-      onCloseComplete();
-    }
-  };
-
   const canFindTag = (tagID: string) => {
-    return chosenTags.includes(tagID);
+    return currentTags.includes(tagID);
   };
 
   function onClickTag(tagID: string) {
@@ -84,28 +64,27 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
     let newTags: string[] = [];
 
     if (canFindTag(tagID)) {
-      newTags = chosenTags.filter((nTag) => {
+      newTags = currentTags.filter((nTag) => {
         return nTag !== tagID;
       });
     } else {
-      newTags = [...chosenTags, tagID];
+      newTags = [...currentTags, tagID];
     }
 
-    setChosenTags(newTags);
+    setEditedTags(newTags);
   }
 
   function onClickSave() {
-    if (currentVerse?.key) setVerseTags(currentVerse.key, chosenTags);
+    if (currentVerse?.key) setVerseTags(currentVerse.key, currentTags);
 
-    onClose();
+    onCloseComplete();
   }
 
   return (
     <Dialog.Root
       size="xl"
       open={isOpen}
-      onOpenChange={onOpenChange}
-      onInteractOutside={onClose}
+      onInteractOutside={onCloseComplete}
       placement={"center"}
     >
       <DialogContent dir="ltr">
@@ -165,7 +144,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button colorPalette="blue" onClick={onClose}>
+            <Button colorPalette="blue" onClick={onCloseComplete}>
               Close
             </Button>
             <Button colorPalette="green" onClick={onClickSave}>
@@ -173,7 +152,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
             </Button>
           </ButtonGroup>
         </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
+        <DialogCloseTrigger onClick={onCloseComplete} />
       </DialogContent>
     </Dialog.Root>
   );

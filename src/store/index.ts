@@ -84,4 +84,15 @@ export const selectCloudNote = (id: string) => {
 export const isTranslationsLoading = (state: RootState) =>
   state.translations.loading;
 
+const EMPTY_ARRAY = Object.freeze([]) as unknown as string[];
+
+export const selectVerseTags = createSelector(
+  [
+    (_state: RootState, verseKey?: string) => verseKey,
+    (state: RootState) => state.tagsPage.versesTags,
+  ],
+  (verseKey, versesTags) =>
+    verseKey ? versesTags[verseKey] || EMPTY_ARRAY : EMPTY_ARRAY
+);
+
 export default store;
