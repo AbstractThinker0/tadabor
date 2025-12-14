@@ -52,7 +52,7 @@ const Audio = () => {
 
   const handleChapterChange = (chapter: string) => {
     dispatch(audioPageActions.setCurrentChapter(chapter));
-    dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
+    setDisplayVerses(quranService.getVerses(chapter));
   };
 
   const onClickAudio = (verse: verseProps) => {
@@ -129,7 +129,6 @@ const Audio = () => {
   };
 
   useEffect(() => {
-    setDisplayVerses(quranService.getVerses(currentChapter));
     if (!refAudio.current) return;
 
     const verseRank = quranService.getVerses(currentChapter)[0].rank;
