@@ -91,29 +91,6 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
     }
   };
 
-  useEffect(() => {
-    if (
-      isLogged &&
-      !isLoggedOffline &&
-      hasLoadedCloudNotes &&
-      hasLoadedLocalNotes &&
-      !syncNotes.isPending
-    ) {
-      const uniqueGuestNotes = Object.values(localNotes)
-        .filter((note) => !cloudNotesIds.includes(note.id))
-        .map((note) => buildNoteSyncPayload(note, 0));
-
-      const notesArray = Object.values(cloudNotes).map((note) =>
-        buildNoteSyncPayload(note, note.date_synced!)
-      );
-
-      syncNotes.mutateAsync({
-        clientNotes: notesArray,
-        guestNotes: uniqueGuestNotes,
-      });
-    }
-  }, [isLogged, isLoggedOffline, hasLoadedCloudNotes, hasLoadedLocalNotes]);
-
   const uploadNotes = async (notesKeys: string[], guest: boolean = false) => {
     // Uploading notes to the cloud
     for (const noteID of notesKeys) {
@@ -167,6 +144,29 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      isLogged &&
+      !isLoggedOffline &&
+      hasLoadedCloudNotes &&
+      hasLoadedLocalNotes &&
+      !syncNotes.isPending
+    ) {
+      const uniqueGuestNotes = Object.values(localNotes)
+        .filter((note) => !cloudNotesIds.includes(note.id))
+        .map((note) => buildNoteSyncPayload(note, 0));
+
+      const notesArray = Object.values(cloudNotes).map((note) =>
+        buildNoteSyncPayload(note, note.date_synced!)
+      );
+
+      syncNotes.mutateAsync({
+        clientNotes: notesArray,
+        guestNotes: uniqueGuestNotes,
+      });
+    }
+  }, [isLogged, isLoggedOffline, hasLoadedCloudNotes, hasLoadedLocalNotes]);
 
   useEffect(() => {
     if (syncNotes.isSuccess) {
