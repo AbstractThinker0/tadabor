@@ -38,7 +38,7 @@ export const useNoteSorting = ({
       }
       return 0;
     });
-  }, [userNotes, sortBy, rankComparator]);
+  }, [userNotes, sortBy, rankComparator, noteIDs]);
 
   return {
     sortBy,
