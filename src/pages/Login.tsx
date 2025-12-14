@@ -2,7 +2,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router";
 
 import { validator } from "@/util/validators";
@@ -27,10 +27,10 @@ const Login = () => {
     const passwordValidation = validator.password.safeParse(password);
 
     if (!emailValidation.success) {
-      setValidationError(emailValidation.error.errors[0].message);
+      setValidationError(emailValidation.error.issues[0].message);
       return false;
     } else if (!passwordValidation.success) {
-      setValidationError(passwordValidation.error.errors[0].message);
+      setValidationError(passwordValidation.error.issues[0].message);
       return false;
     }
 
@@ -48,16 +48,16 @@ const Login = () => {
   };
 
   const onClickLogin = async () => {
+    setValidationError("");
+
     if (!validateInputs()) return;
 
     await login.execute({ email, password });
-  };
 
-  useEffect(() => {
     if (login.isError) {
       setValidationError(login.error ? login.error.message : "Error");
     }
-  }, [login.isError]);
+  };
 
   return (
     <Flex flex={1} align="center" justify="center" bg="gray.subtle">

@@ -2,7 +2,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router";
 
 import { validator } from "@/util/validators";
@@ -39,13 +39,13 @@ const Register = () => {
     const passwordValidation = validator.password.safeParse(password);
 
     if (!usernameValidation.success) {
-      setValidationError(usernameValidation.error.errors[0].message);
+      setValidationError(usernameValidation.error.issues[0].message);
       return false;
     } else if (!emailValidation.success) {
-      setValidationError(emailValidation.error.errors[0].message);
+      setValidationError(emailValidation.error.issues[0].message);
       return false;
     } else if (!passwordValidation.success) {
-      setValidationError(passwordValidation.error.errors[0].message);
+      setValidationError(passwordValidation.error.issues[0].message);
       return false;
     }
 
@@ -89,16 +89,14 @@ const Register = () => {
       captchaToken: tokenCaptcha,
     });
 
+    if (signup.isError) {
+      setValidationError(signup.error ? signup.error.message : "Error");
+    }
+
     if (result === false) {
       setValidationError("Captcha required.");
     }
   };
-
-  useEffect(() => {
-    if (signup.isError) {
-      setValidationError(signup.error ? signup.error.message : "Error");
-    }
-  }, [signup.isError]);
 
   return (
     <Flex flex={1} align="center" justify="center" bg="gray.subtle">

@@ -2,7 +2,7 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, NavLink } from "react-router";
 
 import { validator } from "@/util/validators";
@@ -37,10 +37,10 @@ const PasswordReset = () => {
     const passwordValidation = validator.password.safeParse(password);
 
     if (!tokenValidation.success) {
-      setValidationError(tokenValidation.error.errors[0].message);
+      setValidationError(tokenValidation.error.issues[0].message);
       return false;
     } else if (!passwordValidation.success) {
-      setValidationError(passwordValidation.error.errors[0].message);
+      setValidationError(passwordValidation.error.issues[0].message);
       return false;
     }
 
@@ -75,7 +75,7 @@ const PasswordReset = () => {
     const emailValidation = validator.email.safeParse(email);
 
     if (!emailValidation.success) {
-      setValidationError(emailValidation.error.errors[0].message);
+      setValidationError(emailValidation.error.issues[0].message);
       return;
     }
 
@@ -83,6 +83,10 @@ const PasswordReset = () => {
 
     if (result?.success) {
       setEmailSent(true);
+    } else if (resetPassword.isError) {
+      setValidationError(
+        resetPassword.error ? resetPassword.error.message : "Error"
+      );
     }
   };
 
@@ -95,24 +99,12 @@ const PasswordReset = () => {
 
     if (result?.success) {
       setEmailSent(true);
-    }
-  };
-
-  useEffect(() => {
-    if (resetPassword.isError) {
-      setValidationError(
-        resetPassword.error ? resetPassword.error.message : "Error"
-      );
-    }
-  }, [resetPassword.isError]);
-
-  useEffect(() => {
-    if (updatePassword.isError) {
+    } else if (updatePassword.isError) {
       setValidationError(
         updatePassword.error ? updatePassword.error.message : "Error"
       );
     }
-  }, [updatePassword.isError]);
+  };
 
   if (!isBackendEnabled) {
     return (

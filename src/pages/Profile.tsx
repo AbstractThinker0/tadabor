@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flex, Button, Input, Box, Text, Link } from "@chakra-ui/react";
 import { useAppSelector } from "@/store";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -52,14 +52,20 @@ const Profile = () => {
     const emailValidation = validator.email.safeParse(email);
 
     if (!usernameValidation.success) {
-      setValidationError(usernameValidation.error.errors[0].message);
+      setValidationError(usernameValidation.error.issues[0].message);
       return;
     } else if (!emailValidation.success) {
-      setValidationError(emailValidation.error.errors[0].message);
+      setValidationError(emailValidation.error.issues[0].message);
       return;
     }
 
     await updateProfile.execute({ email, username });
+
+    if (updateProfile.isError) {
+      setValidationError(
+        updateProfile.error ? updateProfile.error.message : "Error"
+      );
+    }
   };
 
   const onClickReset = () => {
@@ -89,10 +95,10 @@ const Profile = () => {
     const newPasswordValidation = validator.password.safeParse(newPassword);
 
     if (!oldPasswordValidation.success) {
-      setValidationErrorPassword(oldPasswordValidation.error.errors[0].message);
+      setValidationErrorPassword(oldPasswordValidation.error.issues[0].message);
       return;
     } else if (!newPasswordValidation.success) {
-      setValidationErrorPassword(newPasswordValidation.error.errors[0].message);
+      setValidationErrorPassword(newPasswordValidation.error.issues[0].message);
       return;
     }
 
@@ -109,17 +115,7 @@ const Profile = () => {
     }
 
     await updateProfilePassword.execute({ oldPassword, newPassword });
-  };
 
-  useEffect(() => {
-    if (updateProfile.isError) {
-      setValidationError(
-        updateProfile.error ? updateProfile.error.message : "Error"
-      );
-    }
-  }, [updateProfile.isError]);
-
-  useEffect(() => {
     if (updateProfilePassword.isError) {
       setValidationErrorPassword(
         updateProfilePassword.error
@@ -127,7 +123,7 @@ const Profile = () => {
           : "Error"
       );
     }
-  }, [updateProfilePassword.isError]);
+  };
 
   return (
     <Flex
