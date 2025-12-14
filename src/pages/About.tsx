@@ -1,20 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Heading, Text, Link, List, Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useAppSelector } from "@/store";
 
 const AboutContent = () => {
-  const { i18n, t } = useTranslation();
-  const [buildDate, setBuildDate] = useState("");
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    setBuildDate(
-      new Date(Number(APP_BUILD_DATE)).toLocaleString(
-        i18n.dir() === "rtl" ? "ar" : "en",
-        { hour12: false }
-      )
+  const pageDirection = useAppSelector(
+    (state) => state.navigation.pageDirection
+  );
+
+  const buildDate = useMemo(() => {
+    return new Date(Number(APP_BUILD_DATE)).toLocaleString(
+      pageDirection === "rtl" ? "ar" : "en",
+      { hour12: false }
     );
-  }, [i18n.resolvedLanguage]);
+  }, [pageDirection]);
 
   return (
     <Flex flexDir={"column"} flex={1} overflowY={"auto"}>
