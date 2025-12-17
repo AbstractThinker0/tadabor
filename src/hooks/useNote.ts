@@ -151,7 +151,6 @@ export const useNote = ({
     }
 
     // We delay marking saved until after persistence completes
-
     type SaveDataProps = {
       id: string;
       key: string;
@@ -162,6 +161,7 @@ export const useNote = ({
       date_created: number | undefined;
       date_modified: number | undefined;
       date_synced?: number; // Optional property
+      authorId?: number; // Optional property
     };
 
     const saveData: SaveDataProps = {
@@ -175,8 +175,9 @@ export const useNote = ({
       date_modified: newDateModified,
     };
 
-    // Add date_synced only for cloud notes
-    if (syncDate) {
+    // Add authorId and date_synced only for cloud notes
+    if (isLogged) {
+      saveData.authorId = userId;
       saveData.date_synced = syncDate;
     }
 

@@ -171,7 +171,7 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
         .map((note) => buildNoteSyncPayload(note, 0));
 
       const notesArray = Object.values(cloudNotes).map((note) =>
-        buildNoteSyncPayload(note, note.date_synced!)
+        buildNoteSyncPayload(note, note.date_synced ?? 0)
       );
 
       syncNotes.mutateAsync({
