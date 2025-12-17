@@ -53,7 +53,6 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
       },
     })
   );
-  const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
 
   const trpcClient = useTRPCClient();
   const queryClient = useQueryClient();
@@ -116,45 +115,46 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
         continue;
       }
 
-      try {
-        const uploadData = fromDexieToBackend(clNote);
+      const syncedNote: CloudNoteProps = {
+        ...clNote,
+        date_synced: 0,
+        authorId: userId,
+      };
 
-        const result = await uploadNote.mutateAsync(uploadData);
+      const uploadData = fromDexieToBackend(clNote);
 
-        const syncedNote: CloudNoteProps = {
-          ...clNote,
-          date_synced: 0,
-          authorId: userId,
-        };
+      trpcClient.notes.uploadNote
+        .mutate(uploadData)
+        .then((result) => {
+          if (result && result.success) {
+            syncedNote.date_synced = result.note.dateLastSynced;
+            // if a guest note we need to cache it to cloud notes first
+            if (guest) {
+              dispatch(
+                cloudNotesActions.cacheNote({
+                  ...syncedNote,
+                  isNew: false,
+                })
+              );
+            } else {
+              dispatch(
+                cloudNotesActions.updateSyncDate({
+                  name: clNote.id!,
+                  value: syncedNote.date_synced,
+                })
+              );
+            }
 
-        if (result && result.success) {
-          syncedNote.date_synced = result.note.dateLastSynced;
-          // if a guest note we need to cache it to cloud notes first
-          if (guest) {
-            dispatch(
-              cloudNotesActions.cacheNote({
-                ...syncedNote,
-                isNew: false,
-              })
-            );
-          } else {
-            dispatch(
-              cloudNotesActions.updateSyncDate({
-                name: clNote.id!,
-                value: syncedNote.date_synced,
-              })
-            );
+            dbFuncs
+              .saveCloudNote(fromReduxToDexie(syncedNote))
+              .catch((error) => {
+                console.error("Error saving note to local database:", error);
+              });
           }
-
-          try {
-            await dbFuncs.saveCloudNote(fromReduxToDexie(syncedNote));
-          } catch (error) {
-            console.error("Error saving note to local database:", error);
-          }
-        }
-      } catch (err) {
-        console.error("Upload failed for note ID:", noteID, err);
-      }
+        })
+        .catch((err) => {
+          console.error("Upload failed for note ID:", noteID, err);
+        });
     }
   };
 
