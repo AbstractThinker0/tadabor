@@ -24,7 +24,7 @@ const initialState: NotesStateProps<CloudNoteProps> = {
   dataLoading: {},
   dataComplete: {},
 
-  loading: true,
+  loading: false,
   complete: false,
   error: false,
 };

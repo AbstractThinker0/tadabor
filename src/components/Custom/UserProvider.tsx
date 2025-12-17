@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchCloudNotes } from "@/store/slices/global/cloudNotes";
+import { useAppSelector } from "@/store";
 
 import { useTRPC } from "@/util/trpc";
 import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@/hooks/useAuth";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 interface UserProviderProps {
   children: React.ReactNode;
@@ -15,13 +15,12 @@ interface UserProviderProps {
 const UserProvider = ({ children }: UserProviderProps) => {
   const { confirmLogin, logout, loginOffline } = useAuth();
 
+  const isLoginPending = useAppSelector((state) => state.user.isPending);
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
   const userToken = useAppSelector((state) => state.user.token);
   const email = useAppSelector((state) => state.user.email);
   const username = useAppSelector((state) => state.user.username);
-
-  const dispatch = useAppDispatch();
 
   const hasShownToast = useRef(false);
 
@@ -56,8 +55,6 @@ const UserProvider = ({ children }: UserProviderProps) => {
         token: userLogin.data.newToken || userToken,
         role: userLogin.data.user.role,
       });
-
-      dispatch(fetchCloudNotes({ userId: userLogin.data.user.id }));
     }
 
     if (userLogin.isError) {
@@ -109,6 +106,10 @@ const UserProvider = ({ children }: UserProviderProps) => {
       }
     }
   }, [connectionCheck.isError]);
+
+  if (isLoginPending) {
+    return <LoadingSpinner text="Pending login.." />;
+  }
 
   return <>{children}</>;
 };

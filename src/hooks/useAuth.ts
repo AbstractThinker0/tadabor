@@ -1,9 +1,6 @@
 import { useAppDispatch } from "@/store";
-import {
-  cloudNotesActions,
-  fetchCloudNotes,
-} from "@/store/slices/global/cloudNotes";
-import { keyId, userActions } from "@/store/slices/global/user";
+import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
+import { userActions } from "@/store/slices/global/user";
 
 import { useTRPC } from "@/util/trpc";
 import { useMutation } from "@tanstack/react-query";
@@ -54,8 +51,6 @@ export const useAuth = () => {
         role: result.user.role,
       });
 
-      dispatch(fetchCloudNotes({ userId: result.user.id }));
-
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -98,10 +93,6 @@ export const useAuth = () => {
   const loginOffline = () => {
     dispatch(userActions.loginOffline());
 
-    const userId = Number(localStorage.getItem(keyId)) || 0;
-
-    dispatch(fetchCloudNotes({ userId }));
-
     queueMicrotask(() =>
       toasterBottomCenter.create({
         description: t("auth.loggedOffline"),
@@ -119,6 +110,7 @@ export const useAuth = () => {
     if (clearOldNotes) {
       dbFuncs.clearCloudNotes();
     }
+
     queueMicrotask(() =>
       toasterBottomCenter.create({
         description: t(message),
@@ -157,8 +149,6 @@ export const useAuth = () => {
         username,
         role: 0,
       });
-
-      dispatch(fetchCloudNotes({ userId: result.userid }));
 
       navigate("/");
     } catch (error) {
@@ -204,8 +194,6 @@ export const useAuth = () => {
           role: result.user.role,
           message: "auth.passwordUpdated",
         });
-
-        dispatch(fetchCloudNotes({ userId: result.user.id }));
 
         navigate("/");
 
