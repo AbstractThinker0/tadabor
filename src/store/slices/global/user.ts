@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export const keyId = "userId";
-const keyToken = "userToken";
+export const keyToken = "userToken";
 const keyEmail = "userEmail";
 const keyUsername = "userUsername";
 const keyRole = "userRole";

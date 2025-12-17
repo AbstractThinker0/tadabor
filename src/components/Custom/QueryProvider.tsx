@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { useMemo } from "react";
+
 import { TRPCProvider } from "@/util/trpc";
 import type { AppRouter } from "@/util/AppRouter";
-import { useAppSelector } from "@/store";
+import { keyToken } from "@/store/slices/global/user";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -29,36 +29,37 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+let browserTrpcClient:
+  | ReturnType<typeof createTRPCClient<AppRouter>>
+  | undefined;
+export function getTrpcClient() {
+  if (!browserTrpcClient) {
+    browserTrpcClient = createTRPCClient<AppRouter>({
+      links: [
+        httpBatchLink({
+          url: import.meta.env.VITE_API || "",
+          headers() {
+            const headers: Record<string, string> = {};
+            const token = localStorage.getItem(keyToken);
+            if (token) headers.Authorization = `Bearer ${token}`;
+            headers["X-App-Version"] = APP_VERSION;
+            return headers;
+          },
+        }),
+      ],
+    });
+  }
+  return browserTrpcClient;
+}
+
 interface QueryProviderProps {
   children: React.ReactNode;
 }
 
 export function QueryProvider({ children }: QueryProviderProps) {
-  const token = useAppSelector((state) => state.user.token);
-
   const queryClient = getQueryClient();
 
-  const trpcClient = useMemo(
-    () =>
-      createTRPCClient<AppRouter>({
-        links: [
-          httpBatchLink({
-            url: import.meta.env.VITE_API || "",
-            headers() {
-              const headers: Record<string, string> = {};
-
-              if (token) {
-                headers.Authorization = `Bearer ${token}`;
-              }
-
-              headers["X-App-Version"] = APP_VERSION; // Custom header for client version
-              return headers;
-            },
-          }),
-        ],
-      }),
-    [token]
-  );
+  const trpcClient = getTrpcClient();
 
   return (
     <QueryClientProvider client={queryClient}>
