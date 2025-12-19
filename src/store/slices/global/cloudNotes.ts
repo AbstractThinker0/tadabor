@@ -54,7 +54,10 @@ export const fetchSingleCloudNote = createAsyncThunk<
     return {
       ...note,
       saved: true,
-      isSynced: true,
+      isSynced:
+        note.date_synced && note.date_modified
+          ? note.date_synced >= note.date_modified
+          : !note.date_modified,
       preSave: note.text,
     };
   } catch (error) {
@@ -88,7 +91,10 @@ export const fetchCloudNotes = createAsyncThunk<
       notesData[note.id] = {
         ...note,
         saved: true,
-        isSynced: true,
+        isSynced:
+          note.date_synced && note.date_modified
+            ? note.date_synced >= note.date_modified
+            : !note.date_modified,
         preSave: note.text,
       };
     });
@@ -116,7 +122,10 @@ const cloudNotesSlice = createSlice({
       } else {
         // An old existing note
         note.saved = true;
-        note.isSynced = true;
+        note.isSynced =
+          note.date_synced && note.date_modified
+            ? note.date_synced >= note.date_modified
+            : !note.date_modified;
         note.preSave = note.text;
       }
 
@@ -146,7 +155,16 @@ const cloudNotesSlice = createSlice({
         state.data[id].text
       ) {
         state.data[id].saved = true;
-        state.data[id].isSynced = true;
+
+        // Only restore isSynced if the preSave state was actually synced
+        const note = state.data[id];
+        if (
+          note.date_synced &&
+          note.date_modified &&
+          note.date_synced >= note.date_modified
+        ) {
+          state.data[id].isSynced = true;
+        }
       }
     },
     changeNoteDir: (state, action: PayloadAction<ChangeNoteDirPayload>) => {
