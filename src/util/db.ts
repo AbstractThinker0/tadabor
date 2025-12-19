@@ -340,8 +340,13 @@ export const dbFuncs = {
     return db.cloud_notes.clear();
   },
 
-  saveColor: (data: IColor) => {
-    return db.colors.put({ ...data, uuid: uuidv4() });
+  saveColor: async (data: IColor) => {
+    const { id, ...rest } = data;
+    const updated = await db.colors.update(id, rest);
+
+    if (updated) return true;
+
+    return db.colors.add({ ...data, uuid: uuidv4() });
   },
   loadColors: () => {
     return db.colors.toArray();
@@ -349,8 +354,13 @@ export const dbFuncs = {
   deleteColor: (id: string) => {
     return db.colors.delete(id);
   },
-  saveVerseColor: (data: IVerseColor) => {
-    return db.verses_color.put({ ...data, uuid: uuidv4() });
+  saveVerseColor: async (data: IVerseColor) => {
+    const { verse_key, ...rest } = data;
+    const updated = await db.verses_color.update(verse_key, rest);
+
+    if (updated) return true;
+
+    return db.verses_color.add({ ...data, uuid: uuidv4() });
   },
   deleteVerseColor: (verse_key: string) => {
     return db.verses_color.delete(verse_key);
@@ -359,8 +369,13 @@ export const dbFuncs = {
     return db.verses_color.toArray();
   },
 
-  saveTag: (data: ITag) => {
-    return db.tags.put({ ...data, uuid: uuidv4() });
+  saveTag: async (data: ITag) => {
+    const { id, ...rest } = data;
+    const updated = await db.tags.update(id, rest);
+
+    if (updated) return true;
+
+    return db.tags.add({ ...data, uuid: uuidv4() });
   },
   deleteTag: (id: string) => {
     db.tags.delete(id);
@@ -375,8 +390,13 @@ export const dbFuncs = {
   loadTags: () => {
     return db.tags.toArray();
   },
-  saveVerseTags: (data: IVerseTags) => {
-    return db.verses_tags.put({ ...data, uuid: uuidv4() });
+  saveVerseTags: async (data: IVerseTags) => {
+    const { verse_key, ...rest } = data;
+    const updated = await db.verses_tags.update(verse_key, rest);
+
+    if (updated) return true;
+
+    return db.verses_tags.add({ ...data, uuid: uuidv4() });
   },
   deleteVerseTags: (verse_key: string) => {
     return db.verses_tags.delete(verse_key);
