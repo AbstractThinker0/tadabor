@@ -10,20 +10,27 @@ export const UserStatsTab = () => {
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
 
-  const max = useMemo(() => {
-    if (!userStatsQuery.data?.length) return 0;
-    return userStatsQuery.data.reduce(
+  const { data, total, pageSlice, max } = useMemo(() => {
+    const safeData = userStatsQuery.data ?? [];
+    const safeTotal = safeData.length;
+
+    const safeMax = safeData.reduce(
       (m: number, r) => Math.max(m, Number(r.count) || 0),
       0
     );
-  }, [userStatsQuery.data]);
 
-  const data = userStatsQuery.data ?? [];
-  const total = data.length;
-  const pageSlice = useMemo(
-    () => data.slice(offset, Math.min(offset + limit, total)),
-    [data, offset, limit, total]
-  );
+    const safePageSlice = safeData.slice(
+      offset,
+      Math.min(offset + limit, safeTotal)
+    );
+
+    return {
+      data: safeData,
+      total: safeTotal,
+      pageSlice: safePageSlice,
+      max: safeMax,
+    };
+  }, [userStatsQuery.data, offset, limit]);
 
   return (
     <Flex direction="column" gap={2}>
