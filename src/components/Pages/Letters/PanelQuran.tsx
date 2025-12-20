@@ -16,7 +16,7 @@ interface PanelQuranProps {
 }
 
 const PanelQuran = memo(
-  ({ isVisible }: PanelQuranProps) => {
+  (_props: PanelQuranProps) => {
     const dispatch = useAppDispatch();
     const currentChapter = useAppSelector(
       (state) => state.lettersPage.currentChapter
