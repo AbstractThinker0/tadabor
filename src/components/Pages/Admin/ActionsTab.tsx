@@ -10,12 +10,15 @@ export const ActionsTab = () => {
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
 
-  const data = actionStatsQuery.data ?? [];
-  const total = data.length;
-  const pageSlice = useMemo(
-    () => data.slice(offset, Math.min(offset + limit, total)),
-    [data, offset, limit, total]
-  );
+  const { data, total, pageSlice } = useMemo(() => {
+    const safeData = actionStatsQuery.data ?? [];
+    const safeTotal = safeData.length;
+    const safePageSlice = safeData.slice(
+      offset,
+      Math.min(offset + limit, safeTotal)
+    );
+    return { data: safeData, total: safeTotal, pageSlice: safePageSlice };
+  }, [actionStatsQuery.data, offset, limit]);
 
   return (
     <Flex direction="column" gap={2}>
