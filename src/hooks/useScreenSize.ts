@@ -1,9 +1,14 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { navigationActions } from "@/store/slices/global/navigation";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 const HookResizeEvent = () => {
   const dispatch = useAppDispatch();
+
+  const updateScreenSize = useEffectEvent(() => {
+    const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
+    dispatch(navigationActions.setSmallScreen(isSmall));
+  });
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -12,8 +17,7 @@ const HookResizeEvent = () => {
     const handleResize = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
-        dispatch(navigationActions.setSmallScreen(isSmall));
+        updateScreenSize();
       }, 150); // Adjust debounce delay as needed
     };
 
@@ -28,7 +32,7 @@ const HookResizeEvent = () => {
       clearTimeout(timeoutId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [dispatch]);
+  }, []);
 
   return null;
 };

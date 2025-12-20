@@ -14,7 +14,7 @@ const EnableBeta = () => {
 
   useEffect(() => {
     dispatch(navigationActions.setBetaStatus(true));
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

@@ -73,7 +73,7 @@ const PanelDefinitions = () => {
   useEffect(() => {
     dispatch(fetchLettersDefinitions());
     dispatch(fetchLettersPresets());
-  }, []);
+  }, [dispatch]);
 
   if (definitionsLoading || presetsLoading)
     return <LoadingSpinner text="Loading definitions" />;
