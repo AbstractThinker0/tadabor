@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 import { useAppSelector } from "@/store";
 
@@ -19,35 +19,23 @@ const UserProvider = ({ children }: UserProviderProps) => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
   const userToken = useAppSelector((state) => state.user.token);
-  const email = useAppSelector((state) => state.user.email);
-  const username = useAppSelector((state) => state.user.username);
-
-  const hasShownToast = useRef(false);
 
   const trpc = useTRPC();
 
   // Query for initial login attempt
   const userLogin = useQuery({
     ...trpc.auth.refresh.queryOptions(),
-    enabled: !isLogged && userToken.length > 0, // Only fetch if needed
+    enabled: (!isLogged || isLoggedOffline) && userToken.length > 0, // Only fetch if needed
     retry: false,
+    refetchInterval: isLoggedOffline ? 60000 : false, // Retry every 60 seconds when offline
   });
 
-  // Query for checking connection when offline
-  const connectionCheck = useQuery({
-    ...trpc.auth.refresh.queryOptions(),
-    enabled: isLoggedOffline && userToken.length > 0,
-    retry: false,
-    refetchInterval: 60000, // Check every 60 seconds
-  });
-
-  // Handle initial login attempt
-  useEffect(() => {
-    if (hasShownToast.current) return;
-
-    if (userLogin.isSuccess && userLogin.data.user && !isLogged) {
-      hasShownToast.current = true;
-
+  const onUserSuccess = useEffectEvent(() => {
+    if (
+      userLogin.isSuccess &&
+      userLogin.data.user &&
+      (!isLogged || isLoggedOffline)
+    ) {
       confirmLogin({
         id: userLogin.data.user.id,
         email: userLogin.data.user.email,
@@ -56,56 +44,31 @@ const UserProvider = ({ children }: UserProviderProps) => {
         role: userLogin.data.user.role,
       });
     }
+  });
 
+  useEffect(() => {
+    if (userLogin.isSuccess) {
+      onUserSuccess();
+    }
+  }, [userLogin.isSuccess]);
+
+  const onUserError = useEffectEvent(() => {
     if (userLogin.isError) {
-      hasShownToast.current = true;
-
       const isUnauthorized = userLogin.error.data?.code === "UNAUTHORIZED";
 
       if (isUnauthorized) {
         logout({ message: "auth.sessionExpired" });
-      } else {
+      } else if (!isLoggedOffline && userToken.length > 0) {
         loginOffline();
       }
     }
-  }, [
-    userLogin.isSuccess,
-    userLogin.isError,
-    userLogin.data,
-    isLogged,
-    userToken,
-  ]);
-
-  // Handle connection check results
-  useEffect(() => {
-    if (
-      !isLoggedOffline ||
-      !connectionCheck.isSuccess ||
-      !connectionCheck.data?.user
-    )
-      return;
-
-    // If we successfully connected to the backend while in offline mode,
-    // transition to regular logged in state
-    confirmLogin({
-      id: connectionCheck.data.user.id,
-      email: email,
-      username: username,
-      token: connectionCheck.data.newToken || userToken,
-      role: connectionCheck.data.user.role,
-    });
-  }, [connectionCheck.isSuccess, connectionCheck.data, isLoggedOffline]);
+  });
 
   useEffect(() => {
-    if (connectionCheck.isError) {
-      const isUnauthorized =
-        connectionCheck.error.data?.code === "UNAUTHORIZED";
-
-      if (isUnauthorized) {
-        logout({ message: "auth.sessionExpired" });
-      }
+    if (userLogin.isError) {
+      onUserError();
     }
-  }, [connectionCheck.isError]);
+  }, [userLogin.isError]);
 
   if (isLoginPending) {
     return <LoadingSpinner text="Pending login.." />;
