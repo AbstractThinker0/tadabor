@@ -25,7 +25,7 @@ import {
   fromDexieToBackend,
 } from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 interface useNoteParams {
   noteID?: string;
@@ -203,9 +203,8 @@ export const useNote = ({
       });
   };
 
-  useEffect(() => {
-    if (!isVisible) return;
-
+  const fetchNoteIfNeeded = useEffectEvent(() => {
+    // TODO: this is a wrong check, it's just here because we already bulk fetch all notes on login, this will be reverted when we switch to a per note fetch system
     if (isNoteLoading === false) return;
 
     if (isLogged) {
@@ -213,7 +212,13 @@ export const useNote = ({
     } else {
       dispatch(fetchSingleLocalNote(noteIndex));
     }
-  }, [isVisible, isLogged, isNoteLoading, userId, noteIndex, dispatch]);
+  });
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    fetchNoteIfNeeded();
+  }, [isVisible, isLogged]);
 
   return {
     preSaveText: notePreSaveText,
