@@ -15,7 +15,7 @@ import {
 } from "@/util/notes";
 import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, type PropsWithChildren } from "react";
+import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
 const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const dispatch = useAppDispatch();
@@ -42,18 +42,27 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const trpc = useTRPC();
   const syncNotes = useMutation(trpc.notes.syncNotes.mutationOptions());
 
-  useEffect(() => {
-    // If user is already logged in when component mounts
-    if (isLogged) {
-      // Fetch cloud notes on login
-      if (!isCloudNotesLoading && !isCloudNotesComplete) {
-        dispatch(fetchCloudNotes({ userId }));
-      }
-    } else if (syncNotes.isPending) {
-      // cancel mutation on logout ?
+  const onLoginEvent = useEffectEvent(() => {
+    // Fetch cloud notes on login
+    if (!isCloudNotesLoading && !isCloudNotesComplete) {
+      dispatch(fetchCloudNotes({ userId }));
+    }
+  });
+
+  const onLogoutEvent = useEffectEvent(() => {
+    // cancel mutation on logout ?
+    if (syncNotes.isPending) {
       syncNotes.reset();
     }
-  }, [isLogged, dispatch]);
+  });
+
+  useEffect(() => {
+    if (isLogged) {
+      onLoginEvent();
+    } else {
+      onLogoutEvent();
+    }
+  }, [isLogged]);
 
   const fetchNoteById = async ({ noteID }: { noteID: string }) => {
     return await queryClient.fetchQuery({
@@ -133,7 +142,7 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const OnCloudNotesLoad = () => {
+  const onCloudNotesLoaded = useEffectEvent(() => {
     if (isLogged && !isLoggedOffline && !syncNotes.isPending) {
       const uniqueGuestNotes = Object.values(localNotes)
         .filter((note) => !cloudNotesIds.includes(note.id)) // This check skips notes that are already cloud notes expecting users to not have the same note in both local and cloud
@@ -165,12 +174,12 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
         }
       );
     }
-  };
+  });
 
   useEffect(() => {
     if (isCloudNotesComplete) {
       // Cloud notes have finished loading
-      OnCloudNotesLoad();
+      onCloudNotesLoaded();
     }
   }, [isCloudNotesComplete]);
 
