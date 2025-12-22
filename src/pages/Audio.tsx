@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
@@ -128,7 +128,7 @@ const Audio = () => {
     dispatch(audioPageActions.setIsPlaying(false));
   };
 
-  useEffect(() => {
+  const onChapterChange = useEffectEvent(() => {
     if (!refAudio.current) return;
 
     const verseRank = quranService.getVerses(currentChapter)[0].rank;
@@ -137,7 +137,11 @@ const Audio = () => {
 
     dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
     dispatch(audioPageActions.setIsPlaying(false));
-  }, [currentChapter, dispatch, quranService]);
+  });
+
+  useEffect(() => {
+    onChapterChange();
+  }, [currentChapter]);
 
   const onChangeAutoPlay = (checked: boolean) => {
     dispatch(audioPageActions.setAutoPlaying(checked));
