@@ -16,6 +16,7 @@ interface PanelQuranProps {
 }
 
 const PanelQuran = memo(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (_props: PanelQuranProps) => {
     const dispatch = useAppDispatch();
     const currentChapter = useAppSelector(
