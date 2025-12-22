@@ -1,4 +1,9 @@
-import { type PropsWithChildren, useEffect, useRef } from "react";
+import {
+  type PropsWithChildren,
+  useEffect,
+  useEffectEvent,
+  useRef,
+} from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -26,10 +31,15 @@ function Layout({ children }: PropsWithChildren) {
   const { i18n } = useTranslation();
   const dispatch = useAppDispatch();
 
+  const setDirection = useEffectEvent(() => {
+    const dir = i18n.dir();
+    window.document.dir = dir;
+    dispatch(navigationActions.setPageDirection(dir));
+  });
+
   useEffect(() => {
-    window.document.dir = i18n.dir();
-    dispatch(navigationActions.setPageDirection(i18n.dir()));
-  }, [i18n.resolvedLanguage, dispatch]);
+    setDirection();
+  }, [i18n.resolvedLanguage]);
 
   useEffect(() => {
     dispatch(fetchLocalNotes());
