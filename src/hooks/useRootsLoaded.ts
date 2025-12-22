@@ -18,7 +18,7 @@ export const useRootsLoaded = () => {
     return () => {
       quranService.onRootsLoaded(() => {}); // Reset callback
     };
-  }, []);
+  }, [quranService]);
 
   return rootsLoaded;
 };

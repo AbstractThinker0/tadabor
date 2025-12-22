@@ -69,7 +69,7 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
     return () => {
       clientLeft = true;
     };
-  }, []);
+  }, [quranInstance]);
 
   const handleRefresh = () => {
     setIsLoading(true);

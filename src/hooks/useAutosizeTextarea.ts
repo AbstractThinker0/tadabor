@@ -117,7 +117,7 @@ export const useAutosizeTextarea = (
     )}px`;
 
     setHeight(newHeight);
-  }, [value, ref]);
+  }, [value, ref, extraSize, minHeight]);
 
   return height;
 };

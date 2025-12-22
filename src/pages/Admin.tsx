@@ -24,7 +24,7 @@ const Admin = () => {
       }
     };
     loadUsers();
-  }, []);
+  }, [fetchUsers]);
 
   return (
     <Flex direction="column" flex={1} overflowY="auto" p={4} gap={4}>
