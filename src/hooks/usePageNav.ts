@@ -6,5 +6,5 @@ export function usePageNav(navKey: string) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(navigationActions.setCurrentPage(navKey));
-  }, []);
+  }, [dispatch, navKey]);
 }
