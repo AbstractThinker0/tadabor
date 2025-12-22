@@ -7,7 +7,7 @@ interface QueryProviderProps {
   children: React.ReactNode;
 }
 
-export function QueryProvider({ children }: QueryProviderProps) {
+export const QueryProvider = ({ children }: QueryProviderProps) => {
   const queryClient = getQueryClient();
 
   const trpcClient = getTrpcClient();
@@ -19,4 +19,4 @@ export function QueryProvider({ children }: QueryProviderProps) {
       </TRPCProvider>
     </QueryClientProvider>
   );
-}
+};
