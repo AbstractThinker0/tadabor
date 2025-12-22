@@ -80,7 +80,7 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
         normalizeToken: true,
         searchInclusive: false,
       }),
-    [searchString, isDisabled, quranService]
+    [searchString, quranService]
   );
 
   const handleRootSelect = (rootName: string) => {
