@@ -61,6 +61,7 @@ export const useAdmin = () => {
       const data = await queryClient.fetchQuery({ queryKey, queryFn });
       return data;
     } catch (e) {
+      console.error("Failed to fetch analytics:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to fetch analytics",
@@ -68,11 +69,14 @@ export const useAdmin = () => {
     }
   };
 
-  const fetchActionStats = async (): Promise<ActionStatsResponse | undefined> => {
+  const fetchActionStats = async (): Promise<
+    ActionStatsResponse | undefined
+  > => {
     try {
       const res = await actionStatsQuery.refetch();
       return res.data as ActionStatsResponse | undefined;
     } catch (e) {
+      console.error("Failed to fetch action stats:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to fetch action stats",
@@ -85,6 +89,7 @@ export const useAdmin = () => {
       const res = await userStatsQuery.refetch();
       return res.data as UserStatsResponse | undefined;
     } catch (e) {
+      console.error("Failed to fetch user stats:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to fetch user stats",
@@ -103,6 +108,7 @@ export const useAdmin = () => {
       const res = await usersQuery.refetch();
       return res.data;
     } catch (e) {
+      console.error("Failed to fetch users:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to fetch users",
@@ -124,6 +130,7 @@ export const useAdmin = () => {
       });
       return res;
     } catch (e) {
+      console.error("Failed to update user:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to update user",
@@ -131,7 +138,9 @@ export const useAdmin = () => {
     }
   };
 
-  const deleteUser = async (id: number): Promise<DeleteUserResponse | undefined> => {
+  const deleteUser = async (
+    id: number
+  ): Promise<DeleteUserResponse | undefined> => {
     try {
       const res = await deleteUserMutation.mutateAsync({ id });
       if (res?.success) {
@@ -147,6 +156,7 @@ export const useAdmin = () => {
       }
       return res;
     } catch (e) {
+      console.error("Failed to delete user:", e);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to delete user",
