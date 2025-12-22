@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { coloringPageActions } from "@/store/slices/pages/coloring";
@@ -33,13 +33,18 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  const currentVerseKey = currentVerse?.key;
+  const [chosenColor, setChosenColor] = useState<colorProps | null>(null);
 
-  const [chosenColor, setChosenColor] = useState(
-    currentVerseKey && coloredVerses[currentVerseKey]
-      ? coloredVerses[currentVerseKey]
-      : null
-  );
+  const onVerseChange = useEffectEvent(() => {
+    if (currentVerse?.key && coloredVerses[currentVerse.key]) {
+      setChosenColor(coloredVerses[currentVerse.key]);
+    }
+  });
+
+  // Sync chosenColor with the current verse's color when modal opens
+  useEffect(() => {
+    onVerseChange();
+  }, [currentVerse]);
 
   const onCloseModal = () => {
     onClose();
