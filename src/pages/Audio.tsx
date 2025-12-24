@@ -21,6 +21,49 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 
+/**
+ * Custom hook to prefetch audio for upcoming verses
+ * @param currentRank - The rank of the currently playing verse
+ * @param maxRank - The maximum rank in the current chapter (to avoid prefetching across chapters)
+ * @param count - Number of verses to prefetch ahead (default: 5)
+ */
+const useAudioPrefetch = (
+  currentRank: number,
+  maxRank: number,
+  count: number = 5
+) => {
+  const prefetchedAudio = useRef<Map<number, HTMLAudioElement>>(new Map());
+
+  useEffect(() => {
+    if (currentRank < 0) return;
+
+    // Clamp count to not exceed chapter boundary
+    const effectiveCount = Math.min(count, maxRank - currentRank);
+
+    // Prefetch audio for upcoming verses
+    for (let i = 1; i <= effectiveCount; i++) {
+      const rank = currentRank + i;
+      if (!prefetchedAudio.current.has(rank)) {
+        const audio = new window.Audio();
+        audio.preload = "auto";
+        audio.src = getVerseAudioURL(rank);
+        prefetchedAudio.current.set(rank, audio);
+      }
+    }
+
+    // Cleanup: remove audio that's too far behind or ahead
+    const minKeep = currentRank - 2;
+    const maxKeep = currentRank + count + 2;
+
+    prefetchedAudio.current.forEach((audio, rank) => {
+      if (rank < minKeep || rank > maxKeep) {
+        audio.src = "";
+        prefetchedAudio.current.delete(rank);
+      }
+    });
+  }, [currentRank, maxRank, count]);
+};
+
 const Audio = () => {
   usePageNav("nav.audio");
   const { i18n } = useTranslation();
@@ -49,6 +92,13 @@ const Audio = () => {
   const [displayVerses, setDisplayVerses] = useState(
     quranService.getVerses(currentChapter)
   );
+
+  // Calculate max rank for current chapter (last verse rank)
+  const maxRankInChapter =
+    displayVerses.length > 0 ? displayVerses[displayVerses.length - 1].rank : 0;
+
+  // Prefetch next 5 verses audio
+  useAudioPrefetch(currentVerse?.rank ?? -1, maxRankInChapter);
 
   const handleChapterChange = (chapter: string) => {
     dispatch(audioPageActions.setCurrentChapter(chapter));
