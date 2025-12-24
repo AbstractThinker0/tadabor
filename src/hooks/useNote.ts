@@ -124,37 +124,11 @@ export const useNote = ({
   };
 
   const saveNote = async () => {
-    if (!note) return; // Nothing to save yet
-    let syncDate = 0;
+    if (!note) return;
 
     const newDateModified = computeDateModified(note);
+    let syncDate = 0;
 
-    if (isLogged) {
-      // upload the note to cloud
-      try {
-        const uploadData = fromDexieToBackend({
-          ...note,
-          key: noteValidKey,
-          date_modified: newDateModified,
-        });
-
-        const result = await uploadNote.mutateAsync(uploadData);
-
-        if (result && result.success) {
-          syncDate = result.note.dateLastSynced;
-          dispatch(
-            cloudNotesActions.updateSyncDate({
-              name: note.id,
-              value: syncDate,
-            })
-          );
-        }
-      } catch (err) {
-        console.error("Upload failed", err);
-      }
-    }
-
-    // We delay marking saved until after persistence completes
     type SaveDataProps = {
       id: string;
       key: string;
@@ -164,8 +138,8 @@ export const useNote = ({
       dir: string;
       date_created: number | undefined;
       date_modified: number | undefined;
-      date_synced?: number; // Optional property
-      authorId?: number; // Optional property
+      date_synced?: number;
+      authorId?: number;
     };
 
     const saveData: SaveDataProps = {
@@ -179,13 +153,13 @@ export const useNote = ({
       date_modified: newDateModified,
     };
 
-    // Add authorId and date_synced only for cloud notes
     if (isLogged) {
       saveData.authorId = userId;
       saveData.date_synced = syncDate;
     }
 
     setIsLocalSaving(true);
+
     dbSave(saveData)
       .then(() => {
         dispatch(
@@ -205,10 +179,46 @@ export const useNote = ({
           description: t("ui.messages.save_failed"),
           type: "error",
         });
-      })
-      .finally(() => {
-        setIsLocalSaving(false);
       });
+
+    if (isLogged) {
+      const uploadData = fromDexieToBackend({
+        ...note,
+        key: noteValidKey,
+        date_modified: newDateModified,
+      });
+
+      uploadNote
+        .mutateAsync(uploadData)
+        .then((result) => {
+          if (result && result.success) {
+            syncDate = result.note.dateLastSynced;
+            dispatch(
+              cloudNotesActions.updateSyncDate({
+                name: note.id,
+                value: syncDate,
+              })
+            );
+
+            dbFuncs
+              .saveCloudNote({
+                ...saveData,
+                date_synced: syncDate,
+              })
+              .catch((err) => {
+                console.error("Failed to update sync date in local DB:", err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error("Cloud sync failed:", err);
+        })
+        .finally(() => {
+          setIsLocalSaving(false);
+        });
+    } else {
+      setIsLocalSaving(false);
+    }
   };
 
   const fetchNoteIfNeeded = useEffectEvent(() => {
