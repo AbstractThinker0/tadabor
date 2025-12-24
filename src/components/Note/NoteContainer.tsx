@@ -100,7 +100,7 @@ const NoteContainerHeader = ({
   isSynced,
   isOutOfSync,
   inputValue,
-  inputSaved
+  inputSaved,
 }: NoteContainerHeaderProps) => {
   const pageDirection = useAppSelector(
     (state) => state.navigation.pageDirection
@@ -109,7 +109,11 @@ const NoteContainerHeader = ({
   const isPendingSave = !inputSaved || !inputValue;
 
   return (
-    <Flex dir={pageDirection} justifyContent={"space-between"} alignItems={"center"}>
+    <Flex
+      dir={pageDirection}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+    >
       <NoteTitle
         noteKey={noteKey}
         noteType={noteType}
@@ -171,6 +175,9 @@ const NoteContainerFooter = ({
 }: NoteContainerFooterProps) => {
   const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
 
+  // Show Cancel/Save only when there are unsaved changes AND not currently syncing
+  const showCancelSave = !inputSaved && !isSyncing;
+
   return (
     <>
       {/* Date output */}
@@ -211,13 +218,11 @@ const NoteContainerFooter = ({
         </Flex>
       )}
       <Flex justifyContent={"center"} gap={"1rem"}>
-        {!inputSaved && !isSyncing && (
-          <ButtonCancel onClick={onClickCancelButton} />
-        )}
+        {showCancelSave && <ButtonCancel onClick={onClickCancelButton} />}
 
         <ButtonEdit onClick={onClickEditButton} loading={isSyncing} />
 
-        {!inputSaved && !isSyncing && <ButtonSave />}
+        {showCancelSave && <ButtonSave />}
       </Flex>
     </>
   );

@@ -25,7 +25,7 @@ import {
   fromDexieToBackend,
 } from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
-import { useEffect, useEffectEvent } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 interface useNoteParams {
   noteID?: string;
@@ -68,6 +68,9 @@ export const useNote = ({
   const trpc = useTRPC();
   const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
 
+  // Track local save state (dbSave is async and not tracked by uploadNote.isPending)
+  const [isLocalSaving, setIsLocalSaving] = useState(false);
+
   const [noteSplitType, noteSplitKey] = noteIndex.split(":");
 
   const noteText = note?.text ?? "";
@@ -78,7 +81,8 @@ export const useNote = ({
   const noteDirection =
     note?.dir ?? (noteValidType === "translation" ? "ltr" : "");
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
-  const noteIsSyncing = uploadNote.isPending;
+  // isSyncing is true if either cloud upload OR local db save is in progress
+  const noteIsSyncing = uploadNote.isPending || isLocalSaving;
   const noteSyncDate = (note as CloudNoteProps)?.date_synced ?? 0;
   const noteModifiedDate = note?.date_modified ?? 0;
   const isOutOfSync = noteSyncDate < noteModifiedDate;
@@ -181,6 +185,7 @@ export const useNote = ({
       saveData.date_synced = syncDate;
     }
 
+    setIsLocalSaving(true);
     dbSave(saveData)
       .then(() => {
         dispatch(
@@ -200,6 +205,9 @@ export const useNote = ({
           description: t("ui.messages.save_failed"),
           type: "error",
         });
+      })
+      .finally(() => {
+        setIsLocalSaving(false);
       });
   };
 
