@@ -1,12 +1,19 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useAdmin } from "@/hooks/useAdmin";
 import { Paginator } from "@/components/Generic/Paginator";
 
-export const UserStatsTab = () => {
+interface UserStatsTabProps {
+  userStatsQuery: {
+    data:
+      | { userId: number; username: string | null; count?: unknown }[]
+      | undefined;
+    isFetching: boolean;
+  };
+}
+
+export const UserStatsTab = ({ userStatsQuery }: UserStatsTabProps) => {
   const { t } = useTranslation();
-  const { userStatsQuery, fetchUserStats } = useAdmin();
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
 
@@ -34,16 +41,11 @@ export const UserStatsTab = () => {
 
   return (
     <Flex direction="column" gap={2}>
-      <Button
-        size="sm"
-        alignSelf="flex-start"
-        onClick={async () => {
-          await fetchUserStats();
-          setOffset(0);
-        }}
-      >
-        {t("ui.actions.load")}
-      </Button>
+      {userStatsQuery.isFetching && (
+        <Text fontSize="sm" color="fg.muted">
+          {t("ui.state.loading")}
+        </Text>
+      )}
       {data?.length ? (
         <Flex direction="column" gap={2}>
           <Paginator

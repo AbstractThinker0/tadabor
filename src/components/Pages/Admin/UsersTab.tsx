@@ -8,17 +8,34 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/util/trpc";
-import { useAdmin } from "@/hooks/useAdmin";
+import { toasterBottomCenter } from "@/components/ui/toaster";
 import { Paginator } from "@/components/Generic/Paginator";
 import type { UserData } from "@/types/admin";
 
-export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
+const ROLE_LABELS: Record<number, string> = {
+  0: "User",
+  1: "Moderator",
+  2: "Admin",
+};
+
+const getRoleLabel = (role: number | null | undefined): string => {
+  return ROLE_LABELS[role ?? 0] ?? "User";
+};
+
+export const UsersTab = () => {
   const { t } = useTranslation();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const { updateUser, deleteUser } = useAdmin();
+
+  // Mutations
+  const updateUserMutation = useMutation(
+    trpc.admin.updateUser.mutationOptions()
+  );
+  const deleteUserMutation = useMutation(
+    trpc.admin.deleteUser.mutationOptions()
+  );
 
   const [editing, setEditing] = useState<
     Record<number, { username: string; email: string; role: string }>
@@ -27,20 +44,16 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
 
+  const listUsersQueryOptions = trpc.admin.listUsers.queryOptions({
+    limit,
+    offset,
+  });
+
   const {
     data: usersPage,
     isFetching,
     refetch,
-  } = useQuery({
-    ...trpc.admin.listUsers.queryOptions({ limit, offset }),
-    initialData:
-      initialUsers?.length > 0
-        ? {
-            data: initialUsers,
-            meta: { total: initialUsers.length, limit: 100, offset: 0 },
-          }
-        : undefined,
-  });
+  } = useQuery(listUsersQueryOptions);
 
   const startEdit = (u: UserData) => {
     setEditing((s) => ({
@@ -64,16 +77,54 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
   const saveEdit = async (id: number) => {
     const e = editing[id];
     if (!e) return;
-    await updateUser({
-      id,
-      username: e.username,
-      email: e.email,
-      role: Number(e.role),
-    });
-    await queryClient.invalidateQueries({
-      queryKey: trpc.admin.listUsers.queryKey({ limit, offset }),
-    });
-    cancelEdit(id);
+    try {
+      await updateUserMutation.mutateAsync({
+        id,
+        username: e.username,
+        email: e.email,
+        role: Number(e.role),
+      });
+      toasterBottomCenter.create({
+        type: "success",
+        description: "User updated",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: listUsersQueryOptions.queryKey,
+      });
+      cancelEdit(id);
+    } catch (err) {
+      console.error("Failed to update user:", err);
+      toasterBottomCenter.create({
+        type: "error",
+        description: "Failed to update user",
+      });
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await deleteUserMutation.mutateAsync({ id });
+      if (res?.success) {
+        toasterBottomCenter.create({
+          type: "success",
+          description: "User deleted",
+        });
+      } else {
+        toasterBottomCenter.create({
+          type: "error",
+          description: res?.message || "Failed to delete user",
+        });
+      }
+      await queryClient.invalidateQueries({
+        queryKey: listUsersQueryOptions.queryKey,
+      });
+    } catch (err) {
+      console.error("Failed to delete user:", err);
+      toasterBottomCenter.create({
+        type: "error",
+        description: "Failed to delete user",
+      });
+    }
   };
 
   return (
@@ -149,14 +200,14 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
                             }))
                           }
                         >
-                          <option value="0">0</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
+                          <option value="0">{ROLE_LABELS[0]}</option>
+                          <option value="1">{ROLE_LABELS[1]}</option>
+                          <option value="2">{ROLE_LABELS[2]}</option>
                         </NativeSelect.Field>
                         <NativeSelect.Indicator />
                       </NativeSelect.Root>
                     ) : (
-                      String(u.role ?? "0")
+                      getRoleLabel(u.role)
                     )}
                   </Table.Cell>
                   <Table.Cell textAlign="right">
@@ -186,15 +237,7 @@ export const UsersTab = ({ initialUsers }: { initialUsers: UserData[] }) => {
                           size="xs"
                           variant="ghost"
                           colorPalette="red"
-                          onClick={async () => {
-                            await deleteUser(u.id);
-                            await queryClient.invalidateQueries({
-                              queryKey: trpc.admin.listUsers.queryKey({
-                                limit,
-                                offset,
-                              }),
-                            });
-                          }}
+                          onClick={() => handleDelete(u.id)}
                         >
                           {t("ui.actions.delete")}
                         </Button>
