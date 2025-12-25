@@ -23,7 +23,11 @@ export const InputString = React.forwardRef<HTMLDivElement, InputGroupProps>(
     return (
       <InputGroup
         ref={ref}
-        endElement={<CloseButton size="xs" onClick={onClearDefault} me="-2" />}
+        endElement={
+          value ? (
+            <CloseButton size="xs" onClick={onClearDefault} me="-2" />
+          ) : null
+        }
         {...rest}
       >
         <Input
