@@ -9,8 +9,6 @@ import { useTranslation } from "react-i18next";
 
 import { useAppDispatch } from "@/store";
 
-import { fetchLocalNotes } from "@/store/slices/global/localNotes";
-
 import { QuranProvider } from "@/context/QuranProvider";
 
 import Navbar from "@/components/Layout/Navbar";
@@ -41,10 +39,6 @@ function Layout({ children }: PropsWithChildren) {
     setDirection();
   }, [i18n.resolvedLanguage]);
 
-  useEffect(() => {
-    dispatch(fetchLocalNotes());
-  }, [dispatch]);
-
   return (
     <Flex
       ref={refMain}
@@ -59,11 +53,11 @@ function Layout({ children }: PropsWithChildren) {
       <AlertMessage />
       <UserProvider>
         <LocalNotesProvider>
-          <NotesProvider>
-            <QuranProvider>
-              <CloudNotesProvider>{children}</CloudNotesProvider>
-            </QuranProvider>
-          </NotesProvider>
+          <CloudNotesProvider>
+            <NotesProvider>
+              <QuranProvider>{children}</QuranProvider>
+            </NotesProvider>
+          </CloudNotesProvider>
         </LocalNotesProvider>
       </UserProvider>
       <HookResizeEvent />
