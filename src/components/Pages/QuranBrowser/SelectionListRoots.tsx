@@ -24,10 +24,12 @@ const SelectionListRoots = memo(
       <Flex
         flexGrow="1"
         flexDirection="column"
-        overflowY="hidden"
+        overflow="hidden"
         border="1px solid"
         borderColor={"border.emphasized"}
-        borderRadius={6}
+        borderRadius="md"
+        bgColor={"brand.bg"}
+        boxShadow="sm"
         mt="8px"
         mb="2px"
         minH="15vh"
@@ -130,10 +132,14 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
   return (
     <Box
       px="12px"
-      py={"3px"}
-      mdDown={{ py: "8px" }}
+      py={"8px"}
+      transition="all 0.2s"
+      _hover={{ bgColor: "bg.muted" }}
       aria-selected={isSelected}
-      _selected={{ bgColor: "gray.emphasized" }}
+      _selected={{
+        bgColor: "blue.subtle",
+        color: "blue.fg",
+      }}
       onClick={() => onClickRoot(root.name)}
     >
       {root.name}
