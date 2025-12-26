@@ -52,7 +52,7 @@ function Inspector() {
         isOpenDesktop={showSearchPanel}
         setOpenState={setOpenState}
       >
-        <Box px={"10px"} paddingTop={"5px"}>
+        <Box px={"5px"} paddingTop={"8px"}>
           <ChaptersList
             selectChapter={currentChapter}
             handleChapterChange={handleSelectChapter}
