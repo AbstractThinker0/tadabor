@@ -85,7 +85,17 @@ const ChaptersListAdvanced = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDir={"column"} minH={"45vh"} maxH={"45vh"}>
+    <Flex
+      flexDir={"column"}
+      minH={"45vh"}
+      maxH={"45vh"}
+      border="1px solid"
+      borderColor={"border.emphasized"}
+      borderRadius="md"
+      overflow="hidden"
+      bgColor={"brand.bg"}
+      boxShadow="sm"
+    >
       <ChaptersListHeader
         currentChapter={currentChapter}
         chapterToken={chapterToken}
@@ -144,14 +154,18 @@ const ChaptersListHeader = ({
   };
 
   return (
-    <Flex dir="rtl">
-      <Box w={"224px"} flexShrink={0}>
+    <Flex
+      dir="rtl"
+      borderBottom="1px solid"
+      borderColor="border.emphasized"
+      width="100%"
+    >
+      <Box flexGrow={1} flexShrink={1}>
         <InputString
           inputElementProps={{
             placeholder: quranService.getChapterName(currentChapter),
-            borderBottom: "none",
-            borderBottomRadius: "0",
-            borderEndRadius: "0",
+            border: "none",
+            borderRadius: "0",
           }}
           value={chapterToken}
           onChange={onChangeChapterToken}
@@ -159,12 +173,16 @@ const ChaptersListHeader = ({
           dir="rtl"
         />
       </Box>
-      <Box w={"70px"} flexShrink={0}>
+      <Box
+        w={"70px"}
+        flexShrink={0}
+        borderStart="1px solid"
+        borderColor="border.emphasized"
+      >
         <InputString
           inputElementProps={{
-            borderBottom: "none",
-            borderBottomRadius: "0",
-            borderStartRadius: "0",
+            border: "none",
+            borderRadius: "0",
           }}
           value={verseToken}
           onChange={onChangeVerseSearch}
@@ -237,16 +255,8 @@ const ChaptersListBody = ({
   };
 
   return (
-    <Flex flexGrow="1" minH={0} dir="rtl">
-      <Box
-        w={"224px"}
-        border="1px solid"
-        borderColor={"border.emphasized"}
-        overflowY="scroll"
-        bgColor={"brand.bg"}
-        fontSize={"medium"}
-        paddingEnd="8px"
-      >
+    <Flex flexGrow="1" minH={0} dir="rtl" width={"100%"}>
+      <Box flexGrow={1} flexShrink={1} overflowY="scroll" fontSize={"sm"}>
         {quranService.chapterNames
           .filter((chapter) => chapter.name.includes(chapterToken))
           .map((chapter) => (
@@ -254,17 +264,22 @@ const ChaptersListBody = ({
               key={chapter.id}
               ref={currentChapter === chapter.id ? refChapter : null}
               cursor="pointer"
-              px="5px"
-              py={"3px"}
-              mdDown={{ py: "8px" }}
+              px="12px"
+              py={"8px"}
+              transition="all 0.2s"
+              _hover={{ bgColor: "bg.muted" }}
               aria-selected={defaultSelected && currentChapter === chapter.id}
-              _selected={{ bgColor: "gray.emphasized" }}
+              _selected={{
+                bgColor: "blue.subtle",
+                color: "blue.fg",
+              }}
             >
               <Box flexGrow="1" onClick={() => onClickChapter(chapter.id)}>
                 {chapter.id}. {chapter.name}
               </Box>
               <Checkbox
-                colorPalette={"teal"}
+                colorPalette={"blue"}
+                size="sm"
                 checked={selectedChapters[chapter.id]}
                 onCheckedChange={() => onChangeSelectChapter(chapter.id)}
               />
@@ -275,12 +290,10 @@ const ChaptersListBody = ({
       <Box
         w={"70px"}
         flexShrink={0}
-        border="1px solid"
+        borderStart="1px solid"
         borderColor={"border.emphasized"}
         overflowY="scroll"
-        bgColor={"brand.bg"}
-        fontSize={"medium"}
-        padding="2px"
+        fontSize={"sm"}
       >
         {filteredVerses.map((verse) => (
           <Box
@@ -288,11 +301,12 @@ const ChaptersListBody = ({
             key={verse.key}
             cursor="pointer"
             px="5px"
-            py={"3px"}
-            mdDown={{ py: "8px" }}
+            py={"8px"}
             textAlign="center"
+            transition="all 0.2s"
+            _hover={{ bgColor: "bg.muted" }}
             aria-selected={currentVerse === verse.key}
-            _selected={{ bgColor: "gray.emphasized" }}
+            _selected={{ bgColor: "blue.emphasized", color: "white" }}
             onClick={() => handleClickVerse(verse.key)}
           >
             {verse.verseid}
@@ -321,19 +335,18 @@ const ChaptersListFooter = ({
   return (
     <Flex
       alignItems="center"
-      flexWrap="wrap"
-      padding="5px"
+      padding="8px"
       bgColor={"bg.muted"}
-      border="1px solid"
+      borderTop="1px solid"
       borderColor={"border.emphasized"}
     >
-      <Box fontWeight="bold" fontSize={"medium"} paddingEnd={"0.1rem"}>
+      <Box fontWeight="bold" fontSize={"medium"} paddingEnd={"0.2rem"}>
         {t("search.scope")}:
       </Box>
-      <Flex justifyContent="center" gap="3px">
+      <Flex gap="6px">
         <Button
-          px={"0.25rem"}
-          colorPalette="teal"
+          size="xs"
+          colorPalette="blue"
           fontWeight="normal"
           disabled={getSelectedCount === 114}
           onClick={onClickSelectAll}
@@ -341,8 +354,8 @@ const ChaptersListFooter = ({
           {t("search.all_quran")}
         </Button>
         <Button
-          px={"0.25rem"}
-          colorPalette="teal"
+          size="xs"
+          colorPalette="blue"
           fontWeight="normal"
           disabled={onlyCurrentSelected}
           onClick={onClickDeselectAll}

@@ -94,7 +94,17 @@ const SelectionListChapters = ({
     Number(currentSelectedChapters[0]) === currentChapter;
 
   return (
-    <Flex flexDirection="column" h="38vh">
+    <Flex
+      flexDirection="column"
+      h="38vh"
+      border="1px solid"
+      borderColor={"border.emphasized"}
+      borderRadius="md"
+      overflow="hidden"
+      bgColor={"brand.bg"}
+      boxShadow="sm"
+      mb={4}
+    >
       <ChaptersListHeader
         currentChapter={currentChapter}
         chapterToken={chapterSearch}
