@@ -46,12 +46,20 @@ const ChaptersList = ({
   };
 
   return (
-    <Box height={"80vh"}>
+    <Box
+      height={"80vh"}
+      border="1px solid"
+      borderColor={"border.emphasized"}
+      borderRadius="md"
+      overflow="hidden"
+      bgColor={"brand.bg"}
+      boxShadow="sm"
+    >
       <InputString
         inputElementProps={{
           placeholder: quranService.getChapterName(selectChapter),
-          borderBottom: "none",
-          borderBottomRadius: "0",
+          border: "none",
+          borderRadius: "0",
         }}
         value={chapterSearch}
         onChange={onChangeInput}
@@ -59,28 +67,26 @@ const ChaptersList = ({
         dir="rtl"
       />
       <Box
-        maxH="60%"
-        height={"60%"}
+        maxH="calc(100% - 40px)"
         aria-label="Chapters select"
-        bgColor={"brand.bg"}
-        border="1px solid"
+        borderTop="1px solid"
         borderColor={"border.emphasized"}
         overflowY="scroll"
-        padding="2px"
+        fontSize={"sm"}
       >
         {filteredChapters.map((chapter) => (
           <Box
             key={chapter.id}
             ref={Number(selectChapter) === chapter.id ? refChapter : null}
-            px="14px"
-            py={"2px"}
-            mdDown={{ py: "8px" }}
+            px="12px"
+            py={"8px"}
             cursor="pointer"
-            data-id={chapter.id}
+            transition="all 0.2s"
+            _hover={{ bgColor: "bg.muted" }}
             aria-selected={Number(selectChapter) === chapter.id}
             _selected={{
-              color: "white",
-              bgColor: "fg.muted",
+              color: "blue.fg",
+              bgColor: "blue.subtle",
             }}
             onClick={() => onClickChapter(chapter.id)}
           >
