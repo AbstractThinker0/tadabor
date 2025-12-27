@@ -2,36 +2,36 @@ import { useAppDispatch } from "@/store";
 import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
 import { userActions } from "@/store/slices/global/user";
 
-import { useTRPC } from "@/util/trpc";
-import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { toasterBottomCenter } from "@/components/ui/toaster";
 import { dbFuncs } from "@/util/db";
+import {
+  usePasswordRequestReset,
+  usePasswordReset,
+  usePasswordUpdate,
+  useUserLogin,
+  useUserSignup,
+  useUserUpdateProfile,
+} from "@/services/backend";
 
 export const useAuth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const trpc = useTRPC();
-  const userLogin = useMutation(trpc.auth.login.mutationOptions());
-  const userCreate = useMutation(trpc.auth.signUp.mutationOptions());
-  const sendEmail = useMutation(
-    trpc.password.requestPasswordReset.mutationOptions()
-  );
-  const sendPassword = useMutation(
-    trpc.password.resetPassword.mutationOptions()
-  );
+  const userLogin = useUserLogin();
 
-  const updateEmailOrUsername = useMutation(
-    trpc.auth.updateEmailOrUsername.mutationOptions()
-  );
+  const userCreate = useUserSignup();
 
-  const updatePasswordProfile = useMutation(
-    trpc.password.updatePassword.mutationOptions()
-  );
+  const updateEmailOrUsername = useUserUpdateProfile();
+
+  const sendEmail = usePasswordRequestReset();
+
+  const sendPassword = usePasswordReset();
+
+  const updatePasswordProfile = usePasswordUpdate();
 
   const login = async ({
     email,
@@ -154,6 +154,9 @@ export const useAuth = () => {
     } catch (error) {
       console.error("Sign Up failed:", error);
       // Also userCreate.error will be set?
+      if (!userCreate.isError) {
+        throw error;
+      }
     }
   };
 

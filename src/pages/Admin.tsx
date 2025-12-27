@@ -2,46 +2,34 @@ import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Tabs } from "@chakra-ui/react";
 import { useEffect, useState, useCallback, useEffectEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/util/trpc";
+
 import { AnalyticsTab } from "@/components/Pages/Admin/AnalyticsTab";
 import { ActionsTab } from "@/components/Pages/Admin/ActionsTab";
 import { UserStatsTab } from "@/components/Pages/Admin/UserStatsTab";
 import { UsersTab } from "@/components/Pages/Admin/UsersTab";
+import {
+  useFetchUsers,
+  useQueryActionStats,
+  useQueryAnalytics,
+  useQueryUserStats,
+} from "@/services/backend";
 
 const Admin = () => {
   usePageNav("nav.admin");
   const { t } = useTranslation();
-  const trpc = useTRPC();
 
   const [activeTab, setActiveTab] = useState("analytics");
   const [loadedTabs, setLoadedTabs] = useState<Set<string>>(new Set());
 
   // Shared users query for dropdowns
-  const listUsersQueryOptions = trpc.admin.listUsers.queryOptions({
-    limit: 100,
-    offset: 0,
-  });
-  const { data: users } = useQuery({
-    ...listUsersQueryOptions,
-    initialData: { data: [], meta: { total: 0, limit: 100, offset: 0 } },
-  });
+  const { data: users } = useFetchUsers({ limit: 100, offset: 0 });
 
   // Shared queries - disabled by default, manually triggered
-  const analyticsQuery = useQuery({
-    ...trpc.admin.getAnalytics.queryOptions({ limit: 20, offset: 0 }),
-    enabled: false,
-  });
+  const analyticsQuery = useQueryAnalytics({ limit: 20, offset: 0 });
 
-  const actionStatsQuery = useQuery({
-    ...trpc.admin.getActionStats.queryOptions(),
-    enabled: false,
-  });
+  const actionStatsQuery = useQueryActionStats();
 
-  const userStatsQuery = useQuery({
-    ...trpc.admin.getUserStats.queryOptions(),
-    enabled: false,
-  });
+  const userStatsQuery = useQueryUserStats();
 
   const handleTabChange = useCallback((details: { value: string }) => {
     setActiveTab(details.value);
@@ -81,7 +69,7 @@ const Admin = () => {
         </Tabs.List>
         <Tabs.ContentGroup paddingTop={1}>
           <Tabs.Content value="analytics">
-            <AnalyticsTab users={users.data} analyticsQuery={analyticsQuery} />
+            <AnalyticsTab users={users!.data} analyticsQuery={analyticsQuery} />
           </Tabs.Content>
           <Tabs.Content value="actions">
             <ActionsTab actionStatsQuery={actionStatsQuery} />

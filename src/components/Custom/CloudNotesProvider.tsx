@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
@@ -13,8 +14,7 @@ import {
   fromDexieToBackend,
   fromReduxToDexie,
 } from "@/util/notes";
-import { useTRPC, useTRPCClient } from "@/util/trpc";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
 const CloudNotesProvider = ({ children }: PropsWithChildren) => {
@@ -36,11 +36,9 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const cloudNotesIds = useAppSelector((state) => state.cloudNotes.dataKeys);
   const cloudNotes = useAppSelector((state) => state.cloudNotes.data);
 
-  const trpcClient = useTRPCClient();
-  const queryClient = useQueryClient();
+  const syncNotes = useSyncNotes();
 
-  const trpc = useTRPC();
-  const syncNotes = useMutation(trpc.notes.syncNotes.mutationOptions());
+  const uploadNoteMutation = useUploadNote();
 
   const onLoginEvent = useEffectEvent(() => {
     // Fetch cloud notes on login
@@ -64,18 +62,13 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
     }
   }, [isLogged]);
 
-  const fetchNoteById = async ({ noteID }: { noteID: string }) => {
-    return await queryClient.fetchQuery({
-      queryKey: ["notes.fetchNote", { noteID }],
-      queryFn: () => trpcClient.notes.fetchNote.query({ id: noteID }),
-    });
-  };
+  const fetchNoteById = useFetchNote();
 
   const fetchNotes = async (noteIDs: string[]) => {
     // Fetching notes from the cloud
     for (const noteID of noteIDs) {
       try {
-        const fetchedNote = (await fetchNoteById({ noteID })).note;
+        const fetchedNote = (await fetchNoteById(noteID)).note;
 
         const clNote = fromBackendToDexie(fetchedNote);
 
@@ -107,8 +100,8 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
 
       const uploadData = fromDexieToBackend(clNote);
 
-      trpcClient.notes.uploadNote
-        .mutate(uploadData)
+      uploadNoteMutation
+        .mutateAsync(uploadData)
         .then((result) => {
           if (result && result.success) {
             syncedNote.date_synced = result.note.dateLastSynced;

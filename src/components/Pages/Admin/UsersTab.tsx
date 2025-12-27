@@ -8,11 +8,15 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/util/trpc";
+
 import { toasterBottomCenter } from "@/components/ui/toaster";
 import { Paginator } from "@/components/Generic/Paginator";
 import type { UserData } from "@/types/admin";
+import {
+  useDeleteUser,
+  useFetchUsers,
+  useUpdateUser,
+} from "@/services/backend";
 
 const ROLE_LABELS: Record<number, string> = {
   0: "User",
@@ -26,34 +30,24 @@ const getRoleLabel = (role: number | null | undefined): string => {
 
 export const UsersTab = () => {
   const { t } = useTranslation();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+
+  const [limit, setLimit] = useState<number>(20);
+  const [offset, setOffset] = useState<number>(0);
 
   // Mutations
-  const updateUserMutation = useMutation(
-    trpc.admin.updateUser.mutationOptions()
-  );
-  const deleteUserMutation = useMutation(
-    trpc.admin.deleteUser.mutationOptions()
-  );
+  const updateUserMutation = useUpdateUser();
+
+  const deleteUserMutation = useDeleteUser();
 
   const [editing, setEditing] = useState<
     Record<number, { username: string; email: string; role: string }>
   >({});
 
-  const [limit, setLimit] = useState<number>(20);
-  const [offset, setOffset] = useState<number>(0);
-
-  const listUsersQueryOptions = trpc.admin.listUsers.queryOptions({
-    limit,
-    offset,
-  });
-
   const {
     data: usersPage,
     isFetching,
     refetch,
-  } = useQuery(listUsersQueryOptions);
+  } = useFetchUsers({ limit, offset });
 
   const startEdit = (u: UserData) => {
     setEditing((s) => ({
@@ -88,9 +82,6 @@ export const UsersTab = () => {
         type: "success",
         description: "User updated",
       });
-      await queryClient.invalidateQueries({
-        queryKey: listUsersQueryOptions.queryKey,
-      });
       cancelEdit(id);
     } catch (err) {
       console.error("Failed to update user:", err);
@@ -115,9 +106,6 @@ export const UsersTab = () => {
           description: res?.message || "Failed to delete user",
         });
       }
-      await queryClient.invalidateQueries({
-        queryKey: listUsersQueryOptions.queryKey,
-      });
     } catch (err) {
       console.error("Failed to delete user:", err);
       toasterBottomCenter.create({

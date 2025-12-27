@@ -17,8 +17,7 @@ import {
   cloudNotesActions,
   fetchSingleCloudNote,
 } from "@/store/slices/global/cloudNotes";
-import { useMutation } from "@tanstack/react-query";
-import { useTRPC } from "@/util/trpc";
+
 import {
   createNewNote,
   computeDateModified,
@@ -26,6 +25,7 @@ import {
 } from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
 import { useEffect, useEffectEvent, useState } from "react";
+import { useUploadNote } from "@/services/backend";
 
 interface useNoteParams {
   noteID?: string;
@@ -65,8 +65,7 @@ export const useNote = ({
 
   const dbSave = isLogged ? dbFuncs.saveCloudNote : dbFuncs.saveLocalNote;
 
-  const trpc = useTRPC();
-  const uploadNote = useMutation(trpc.notes.uploadNote.mutationOptions());
+  const uploadNote = useUploadNote();
 
   // Track local save state (dbSave is async and not tracked by uploadNote.isPending)
   const [isLocalSaving, setIsLocalSaving] = useState(false);

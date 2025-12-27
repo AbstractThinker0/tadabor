@@ -1,10 +1,10 @@
 import { Box, Button, Flex, Input, Text, NativeSelect } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/util/trpc";
+
 import { Paginator } from "@/components/Generic/Paginator";
 import type { AnalyticsResponse, UserData } from "@/types/admin";
+import { useFetchAnalytics } from "@/services/backend";
 
 interface AnalyticsTabProps {
   users: UserData[];
@@ -16,8 +16,6 @@ interface AnalyticsTabProps {
 
 export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
   const { t } = useTranslation();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
 
   const [action, setAction] = useState("");
   const [userId, setUserId] = useState<string>("");
@@ -29,20 +27,20 @@ export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
   const [pageData, setPageData] = useState<AnalyticsResponse | null>(null);
   const displayData = pageData ?? analyticsQuery.data ?? null;
 
+  const fetchAnalytics = useFetchAnalytics();
+
   const load = async (params?: { limit?: number; offset?: number }) => {
     const l = params?.limit ?? limit;
     const o = params?.offset ?? offset;
     setLoading(true);
 
-    const { queryKey, queryFn } = trpc.admin.getAnalytics.queryOptions({
-      userId: userId ? Number(userId) : undefined,
-      action: action || undefined,
-      limit: l,
-      offset: o,
-    });
-
     try {
-      const res = await queryClient.fetchQuery({ queryKey, queryFn });
+      const res = await fetchAnalytics({
+        userId: userId ? Number(userId) : undefined,
+        action: action || undefined,
+        limit: l,
+        offset: o,
+      });
       if (res) {
         setPageData(res);
         setLimit(res.meta?.limit ?? l);
