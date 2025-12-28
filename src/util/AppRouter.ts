@@ -89,19 +89,12 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             password: string;
             captchaToken: string;
           };
-          output:
-            | {
-                success: boolean;
-                message: string;
-                token: string;
-                userid?: undefined;
-              }
-            | {
-                success: boolean;
-                message: string;
-                userid: number;
-                token: string;
-              };
+          output: {
+            success: boolean;
+            message: string;
+            userid: number;
+            token: string;
+          };
         }>;
         refresh: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
@@ -192,16 +185,14 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             content?: string | null | undefined;
             direction?: string | null | undefined;
           };
-          output:
-            | {
-                success: boolean;
-                note: {
-                  uuid: string;
-                  key: string;
-                  dateLastSynced: number;
-                };
-              }
-            | undefined;
+          output: {
+            success: boolean;
+            note: {
+              uuid: string;
+              key: string;
+              dateLastSynced: number;
+            };
+          };
         }>;
         fetchNote: import("@trpc/server").TRPCQueryProcedure<{
           input: {
