@@ -8,7 +8,7 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         // For now we only save Offline First Data so we don't refetching
-        staleTime: Infinity,
+        staleTime: 60000,
         refetchOnMount: false,
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
