@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
-import { Flex, Heading, Text, Link, List, Box } from "@chakra-ui/react";
+import { Flex, Heading, Text, Link, List, Box, Span } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useAppSelector } from "@/store";
 
@@ -83,7 +83,7 @@ const AboutContent = () => {
         alignItems={"center"}
       >
         <Box>
-          {t("about.appVersion")}: {APP_VERSION}
+          {t("about.appVersion")}: <Span dir="ltr">{APP_VERSION}</Span>
         </Box>
         <Box>
           {t("about.appDate")}: {buildDate}
