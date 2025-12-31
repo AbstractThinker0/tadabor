@@ -40,6 +40,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               role: number;
             };
           };
+          meta: object;
         }>;
         getProfile: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
@@ -47,6 +48,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             email: string;
             username: string;
           };
+          meta: object;
         }>;
       }>
     >;
@@ -81,6 +83,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               role: number;
             };
           };
+          meta: object;
         }>;
         signUp: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -95,6 +98,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             userid: number;
             token: string;
           };
+          meta: object;
         }>;
         refresh: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
@@ -109,6 +113,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             message: string;
             newToken: string;
           };
+          meta: object;
         }>;
         updateEmailOrUsername: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -119,6 +124,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             success: boolean;
             message: string;
           };
+          meta: object;
         }>;
       }>
     >;
@@ -161,19 +167,20 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             notesToRequestFromClient: string[];
             notesToRequestFromGuest: string[];
           };
+          meta: object;
         }>;
         getNotesIndexes: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
-          output: Map<
-            string,
-            {
+          output: {
+            [k: string]: {
               id: string;
               uuid: string;
               key: string;
               type: string;
               dateModified: number;
-            }
-          >;
+            };
+          };
+          meta: object;
         }>;
         uploadNote: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -193,6 +200,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               dateLastSynced: number;
             };
           };
+          meta: object;
         }>;
         fetchNote: import("@trpc/server").TRPCQueryProcedure<{
           input: {
@@ -216,6 +224,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             };
             success: boolean;
           };
+          meta: object;
         }>;
       }>
     >;
@@ -242,6 +251,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             success: boolean;
             message: string;
           };
+          meta: object;
         }>;
         resetPassword: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -259,6 +269,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               role: number;
             };
           };
+          meta: object;
         }>;
         updatePassword: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -276,6 +287,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               role: number;
             };
           };
+          meta: object;
         }>;
       }>
     >;
@@ -321,6 +333,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               offset: number;
             };
           };
+          meta: object;
         }>;
         getActionStats: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
@@ -328,6 +341,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             action: string;
             count: unknown;
           }[];
+          meta: object;
         }>;
         getUserStats: import("@trpc/server").TRPCQueryProcedure<{
           input: void;
@@ -336,6 +350,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             username: string | null;
             count: unknown;
           }[];
+          meta: object;
         }>;
         listUsers: import("@trpc/server").TRPCQueryProcedure<{
           input: {
@@ -356,6 +371,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               offset: number;
             };
           };
+          meta: object;
         }>;
         updateUser: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -371,6 +387,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             email: string;
             role: number;
           };
+          meta: object;
         }>;
         deleteUser: import("@trpc/server").TRPCMutationProcedure<{
           input: {
@@ -380,6 +397,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             success: boolean;
             message: string;
           };
+          meta: object;
         }>;
       }>
     >;
