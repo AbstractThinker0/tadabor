@@ -7,6 +7,7 @@ import { NavLink } from "react-router";
 import { validator } from "@/util/validators";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
+import { tryCatch } from "@/util/trycatch";
 
 const Profile = () => {
   usePageNav("auth.profile");
@@ -43,6 +44,8 @@ const Profile = () => {
   const onClickUpdateProfile = async () => {
     // Add logic to save the updated information (e.g., API call)
 
+    setValidationError("");
+
     if (sameEmail && sameUsername) {
       setValidationError("Idential to old email and username");
       return;
@@ -59,12 +62,12 @@ const Profile = () => {
       return;
     }
 
-    await updateProfile.execute({ email, username });
+    const { error } = await tryCatch(
+      updateProfile.execute({ email, username })
+    );
 
-    if (updateProfile.isError) {
-      setValidationError(
-        updateProfile.error ? updateProfile.error.message : "Error"
-      );
+    if (error) {
+      setValidationError(error?.message ?? "Error");
     }
   };
 
@@ -91,6 +94,8 @@ const Profile = () => {
   };
 
   const onClickUpdatePassword = async () => {
+    setValidationErrorPassword("");
+
     const oldPasswordValidation = validator.password.safeParse(oldPassword);
     const newPasswordValidation = validator.password.safeParse(newPassword);
 
@@ -114,14 +119,12 @@ const Profile = () => {
       return;
     }
 
-    await updateProfilePassword.execute({ oldPassword, newPassword });
+    const { error } = await tryCatch(
+      updateProfilePassword.execute({ oldPassword, newPassword })
+    );
 
-    if (updateProfilePassword.isError) {
-      setValidationErrorPassword(
-        updateProfilePassword.error
-          ? updateProfilePassword.error.message
-          : "Error"
-      );
+    if (error) {
+      setValidationErrorPassword(error?.message ?? "Error");
     }
   };
 

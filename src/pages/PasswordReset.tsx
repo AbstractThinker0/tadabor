@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useAuth } from "@/hooks/useAuth";
 import { useBackend } from "@/hooks/useBackend";
+import { tryCatch } from "@/util/trycatch";
 
 const PasswordReset = () => {
   usePageNav("auth.resetPassword");
@@ -79,14 +80,15 @@ const PasswordReset = () => {
       return;
     }
 
-    const result = await resetPassword.execute({ email });
+    const { result, error } = await tryCatch(resetPassword.execute({ email }));
+
+    if (error) {
+      setValidationError(error?.message ?? "Error");
+      return;
+    }
 
     if (result?.success) {
       setEmailSent(true);
-    } else if (resetPassword.isError) {
-      setValidationError(
-        resetPassword.error ? resetPassword.error.message : "Error"
-      );
     }
   };
 
@@ -95,14 +97,17 @@ const PasswordReset = () => {
 
     if (!validatePasswordInputs()) return;
 
-    const result = await updatePassword.execute({ token, password });
+    const { result, error } = await tryCatch(
+      updatePassword.execute({ token, password })
+    );
+
+    if (error) {
+      setValidationError(error?.message ?? "Error");
+      return;
+    }
 
     if (result?.success) {
       setEmailSent(true);
-    } else if (updatePassword.isError) {
-      setValidationError(
-        updatePassword.error ? updatePassword.error.message : "Error"
-      );
     }
   };
 

@@ -164,18 +164,19 @@ export const useAuth = () => {
   };
 
   const requestResetPassword = async ({ email }: { email: string }) => {
-    try {
-      const result = await sendEmail.mutateAsync({ email });
+    const { result, error } = await tryCatch(sendEmail.mutateAsync({ email }));
 
-      toasterBottomCenter.create({
-        description: t("auth.sendTokenDone"),
-        type: "success",
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Login failed:", error);
+    if (error) {
+      console.error("requestResetPassword failed:", error);
+      throw error;
     }
+
+    toasterBottomCenter.create({
+      description: t("auth.sendTokenDone"),
+      type: "success",
+    });
+
+    return result;
   };
 
   const updatePassword = async ({
@@ -185,28 +186,31 @@ export const useAuth = () => {
     token: string;
     password: string;
   }) => {
-    try {
-      const result = await sendPassword.mutateAsync({
+    const { result, error } = await tryCatch(
+      sendPassword.mutateAsync({
         token,
         newPassword: password,
+      })
+    );
+
+    if (error) {
+      console.error("updatePassword failed:", error);
+      throw error;
+    }
+
+    if (result.success) {
+      confirmLogin({
+        id: result.user.id,
+        token: result.token,
+        email: result.user.email,
+        username: result.user.username,
+        role: result.user.role,
+        message: "auth.passwordUpdated",
       });
 
-      if (result.success) {
-        confirmLogin({
-          id: result.user.id,
-          token: result.token,
-          email: result.user.email,
-          username: result.user.username,
-          role: result.user.role,
-          message: "auth.passwordUpdated",
-        });
+      navigate("/");
 
-        navigate("/");
-
-        return result;
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
+      return result;
     }
   };
 
@@ -217,22 +221,25 @@ export const useAuth = () => {
     email: string;
     username: string;
   }) => {
-    try {
-      const result = await updateEmailOrUsername.mutateAsync({
+    const { result, error } = await tryCatch(
+      updateEmailOrUsername.mutateAsync({
         email,
         username,
-      });
+      })
+    );
 
-      if (result) {
-        dispatch(userActions.update({ email, username }));
-        toasterBottomCenter.create({
-          description: t("auth.profileUpdate"),
-          type: "success",
-        });
-        return true;
-      }
-    } catch (error) {
+    if (error) {
       console.error("updateProfile failed:", error);
+      throw error;
+    }
+
+    if (result) {
+      dispatch(userActions.update({ email, username }));
+      toasterBottomCenter.create({
+        description: t("auth.profileUpdate"),
+        type: "success",
+      });
+      return true;
     }
   };
 
@@ -243,26 +250,29 @@ export const useAuth = () => {
     oldPassword: string;
     newPassword: string;
   }) => {
-    try {
-      const result = await updatePasswordProfile.mutateAsync({
+    const { result, error } = await tryCatch(
+      updatePasswordProfile.mutateAsync({
         oldPassword,
         newPassword,
+      })
+    );
+
+    if (error) {
+      console.error("updateProfilePassword failed:", error);
+      throw error;
+    }
+
+    if (result.success) {
+      confirmLogin({
+        id: result.user.id,
+        token: result.token,
+        email: result.user.email,
+        username: result.user.username,
+        role: result.user.role,
+        message: "auth.passwordUpdated",
       });
 
-      if (result.success) {
-        confirmLogin({
-          id: result.user.id,
-          token: result.token,
-          email: result.user.email,
-          username: result.user.username,
-          role: result.user.role,
-          message: "auth.passwordUpdated",
-        });
-
-        return result;
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
+      return result;
     }
   };
 
