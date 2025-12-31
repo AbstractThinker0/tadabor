@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
 
 import { useAuth } from "@/hooks/useAuth";
+import { tryCatch } from "@/util/trycatch";
 
 const Login = () => {
   usePageNav("auth.login");
@@ -52,10 +53,10 @@ const Login = () => {
 
     if (!validateInputs()) return;
 
-    await login.execute({ email, password });
+    const { error } = await tryCatch(login.execute({ email, password }));
 
-    if (login.isError) {
-      setValidationError(login.error ? login.error.message : "Error");
+    if (error) {
+      setValidationError(error?.message ?? "Error");
     }
   };
 

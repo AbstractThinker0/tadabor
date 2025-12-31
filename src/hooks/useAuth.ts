@@ -15,6 +15,7 @@ import {
   useUserSignup,
   useUserUpdateProfile,
 } from "@/services/backend";
+import { tryCatch } from "@/util/trycatch";
 
 export const useAuth = () => {
   const { t } = useTranslation();
@@ -40,21 +41,24 @@ export const useAuth = () => {
     email: string;
     password: string;
   }) => {
-    try {
-      const result = await userLogin.mutateAsync({ email, password });
+    const { result, error } = await tryCatch(
+      userLogin.mutateAsync({ email, password })
+    );
 
-      confirmLogin({
-        id: result.user.id,
-        email,
-        token: result.token,
-        username: result.user.username,
-        role: result.user.role,
-      });
-
-      navigate("/");
-    } catch (error) {
+    if (error) {
       console.error("Login failed:", error);
+      throw error;
     }
+
+    confirmLogin({
+      id: result.user.id,
+      email,
+      token: result.token,
+      username: result.user.username,
+      role: result.user.role,
+    });
+
+    navigate("/");
   };
 
   const confirmLogin = ({
