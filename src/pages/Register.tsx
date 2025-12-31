@@ -12,6 +12,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useAuth } from "@/hooks/useAuth";
 
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { tryCatch } from "@/util/trycatch";
 
 const Register = () => {
   usePageNav("auth.register");
@@ -82,15 +83,17 @@ const Register = () => {
 
     if (!validateInputs()) return;
 
-    const result = await signup.execute({
-      username,
-      email,
-      password,
-      captchaToken: tokenCaptcha,
-    });
+    const { result, error } = await tryCatch(
+      signup.execute({
+        username,
+        email,
+        password,
+        captchaToken: tokenCaptcha,
+      })
+    );
 
-    if (signup.isError) {
-      setValidationError(signup.error ? signup.error.message : "Error");
+    if (error) {
+      setValidationError(error?.message ?? "Error");
     }
 
     if (result === false) {

@@ -134,34 +134,33 @@ export const useAuth = () => {
     password: string;
     captchaToken: string;
   }) => {
-    try {
-      const result = await userCreate.mutateAsync({
+    const { result, error } = await tryCatch(
+      userCreate.mutateAsync({
         username,
         email,
         password,
         captchaToken,
-      });
+      })
+    );
 
-      if (result.success !== true || !("userid" in result)) {
-        return false;
-      }
-
-      confirmLogin({
-        id: result.userid,
-        email,
-        token: result.token,
-        username,
-        role: 0,
-      });
-
-      navigate("/");
-    } catch (error) {
+    if (error) {
       console.error("Sign Up failed:", error);
-      // Also userCreate.error will be set?
-      if (!userCreate.isError) {
-        throw error;
-      }
+      throw error;
     }
+
+    if (result.success !== true || !("userid" in result)) {
+      return false;
+    }
+
+    confirmLogin({
+      id: result.userid,
+      email,
+      token: result.token,
+      username,
+      role: 0,
+    });
+
+    navigate("/");
   };
 
   const requestResetPassword = async ({ email }: { email: string }) => {
