@@ -7,9 +7,6 @@ import {
 
 import translationsReducer from "@/store/slices/global/translations";
 
-import cloudNotesReducer from "@/store/slices/global/cloudNotes";
-import localNotesReducer from "@/store/slices/global/localNotes";
-
 import settingsReducer from "@/store/slices/global/settings";
 import navigationReducer from "@/store/slices/global/navigation";
 import userReducer from "@/store/slices/global/user";
@@ -31,9 +28,6 @@ const store = configureStore({
   devTools: APP_MODE === "development",
   reducer: {
     translations: translationsReducer,
-
-    cloudNotes: cloudNotesReducer,
-    localNotes: localNotesReducer,
 
     settings: settingsReducer,
     navigation: navigationReducer,
@@ -64,22 +58,6 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook that can be reused to resolve types
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
-export const selectLocalNote = (id: string) => {
-  return (state: RootState) => state.localNotes.data[id];
-};
-
-const selectDataKeys = (guest?: boolean) => (state: RootState) =>
-  guest ? state.localNotes.dataKeys : state.cloudNotes.dataKeys;
-
-export const getNotesKeys = (type?: string, guest?: boolean) =>
-  createSelector(selectDataKeys(guest), (keys) =>
-    type ? keys.filter((id) => id.startsWith(type)) : keys.slice()
-  );
-
-export const selectCloudNote = (id: string) => {
-  return (state: RootState) => state.cloudNotes.data[id];
-};
 
 export const isTranslationsLoading = (state: RootState) =>
   state.translations.loading;

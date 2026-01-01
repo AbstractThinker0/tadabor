@@ -16,10 +16,12 @@ interface NoteSaveProps {
   preSave?: string;
 }
 
+// used for state
 export interface CloudNoteProps extends ICloudNote, NoteSaveProps {
   isSynced?: boolean;
 }
 
+// used for state
 export interface LocalNoteProps extends ILocalNote, NoteSaveProps {}
 
 export interface NotesStateProps<T> {

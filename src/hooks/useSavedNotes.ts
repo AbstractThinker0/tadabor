@@ -1,13 +1,7 @@
-import { useAppSelector, getNotesKeys } from "@/store";
+import { useNotesStore } from "@/hooks/useNotesStore";
 
 export const useSavedNotes = () => {
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-
-  const userNotes = useAppSelector((state) =>
-    isLogged ? state.cloudNotes.data : state.localNotes.data
-  );
-
-  const userNotesIDs = useAppSelector(getNotesKeys(undefined, !isLogged));
+  const { data: userNotes, dataKeys: userNotesIDs } = useNotesStore();
 
   const getNotesIDsbyType = (type: "verse" | "root" | "translation") =>
     userNotesIDs.filter((id) => id.startsWith(type));

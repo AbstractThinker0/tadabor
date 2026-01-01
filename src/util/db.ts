@@ -316,14 +316,18 @@ export const dbFuncs = {
   loadLocalNotes: () => {
     return db.local_notes.toArray();
   },
-  loadCloudNotes: () => {
-    return db.cloud_notes.toArray();
+  loadCloudNotes: (userid: number) => {
+    return db.cloud_notes.where("authorId").equals(userid).toArray();
   },
   loadLocalNote: (id: string) => {
     return db.local_notes.get(id);
   },
-  loadCloudNote: (id: string) => {
-    return db.cloud_notes.get(id);
+  loadCloudNote: (id: string, userid: number) => {
+    return db.cloud_notes
+      .where("id")
+      .equals(id)
+      .and((note) => note.authorId === userid)
+      .first();
   },
   saveCloudNote: async (note: ICloudNote) => {
     const updated = await db.cloud_notes.update(note.id, {

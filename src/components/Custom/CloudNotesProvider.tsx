@@ -1,11 +1,10 @@
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import {
-  cloudNotesActions,
-  fetchCloudNotes,
-} from "@/store/slices/global/cloudNotes";
+import { useAppSelector } from "@/store";
+
+import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
+import { useLocalNotesStore } from "@/store/zustand/localNotes";
 import type { CloudNoteProps } from "@/types";
 import { dbFuncs } from "@/util/db";
 import {
@@ -18,23 +17,22 @@ import {
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
 const CloudNotesProvider = ({ children }: PropsWithChildren) => {
-  const dispatch = useAppDispatch();
-
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
   const userId = useAppSelector((state) => state.user.id);
 
-  const isCloudNotesComplete = useAppSelector(
-    (state) => state.cloudNotes.complete
-  );
+  const isCloudNotesComplete = useCloudNotesStore((state) => state.complete);
+  const isCloudNotesLoading = useCloudNotesStore((state) => state.loading);
 
-  const isCloudNotesLoading = useAppSelector(
-    (state) => state.cloudNotes.loading
-  );
+  const localNotes = useLocalNotesStore((state) => state.data);
+  const cloudNotesIds = useCloudNotesStore((state) => state.dataKeys);
+  const cloudNotes = useCloudNotesStore((state) => state.data);
 
-  const localNotes = useAppSelector((state) => state.localNotes.data);
-  const cloudNotesIds = useAppSelector((state) => state.cloudNotes.dataKeys);
-  const cloudNotes = useAppSelector((state) => state.cloudNotes.data);
+  const fetchCloudNotes = useCloudNotesStore((state) => state.fetchCloudNotes);
+  const cacheCloudNote = useCloudNotesStore((state) => state.cacheNote);
+  const updateCloudSyncDate = useCloudNotesStore(
+    (state) => state.updateSyncDate
+  );
 
   const syncNotes = useSyncNotes();
 
@@ -42,8 +40,9 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
 
   const onLoginEvent = useEffectEvent(() => {
     // Fetch cloud notes on login
+    if (!userId) return;
     if (!isCloudNotesLoading && !isCloudNotesComplete) {
-      dispatch(fetchCloudNotes({ userId }));
+      fetchCloudNotes(userId);
     }
   });
 
@@ -72,7 +71,7 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
 
         const clNote = fromBackendToDexie(fetchedNote);
 
-        dispatch(cloudNotesActions.cacheNote({ ...clNote, isNew: false }));
+        cacheCloudNote({ ...clNote, isNew: false });
         dbFuncs.saveCloudNote(clNote);
       } catch (err) {
         console.error("Fetch failed", err);
@@ -107,19 +106,15 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
             syncedNote.date_synced = result.note.dateLastSynced;
             // if a guest note we need to cache it to cloud notes first
             if (guest) {
-              dispatch(
-                cloudNotesActions.cacheNote({
-                  ...syncedNote,
-                  isNew: false,
-                })
-              );
+              cacheCloudNote({
+                ...syncedNote,
+                isNew: false,
+              });
             } else {
-              dispatch(
-                cloudNotesActions.updateSyncDate({
-                  name: clNote.id!,
-                  value: syncedNote.date_synced,
-                })
-              );
+              updateCloudSyncDate({
+                name: clNote.id,
+                value: syncedNote.date_synced,
+              });
             }
 
             dbFuncs

@@ -2,6 +2,9 @@ import { useCallback } from "react";
 
 import { useAppSelector } from "@/store";
 
+import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
+import { useLocalNotesStore } from "@/store/zustand/localNotes";
+
 import { useBeforeUnload } from "react-router";
 
 interface NotesProviderProps {
@@ -11,9 +14,8 @@ interface NotesProviderProps {
 const NotesProvider = ({ children }: NotesProviderProps) => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
 
-  const localNotes = useAppSelector((state) => state.localNotes.data);
-
-  const cloudNotes = useAppSelector((state) => state.cloudNotes.data);
+  const localNotes = useLocalNotesStore((state) => state.data);
+  const cloudNotes = useCloudNotesStore((state) => state.data);
 
   const hasUnsavedNotes = useCallback(() => {
     let hasUnsavedNotes = false;

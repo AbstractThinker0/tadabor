@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/store";
-import { cloudNotesActions } from "@/store/slices/global/cloudNotes";
+
 import { userActions } from "@/store/slices/global/user";
 
 import { useTranslation } from "react-i18next";
@@ -16,11 +16,14 @@ import {
   useUserUpdateProfile,
 } from "@/services/backend";
 import { tryCatch } from "@/util/trycatch";
+import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 
 export const useAuth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const resetCloudNotes = useCloudNotesStore((state) => state.reset);
 
   const userLogin = useUserLogin();
 
@@ -110,7 +113,7 @@ export const useAuth = () => {
     clearOldNotes = false,
   }: { message?: string; clearOldNotes?: boolean } = {}) => {
     dispatch(userActions.logout());
-    dispatch(cloudNotesActions.reset());
+    resetCloudNotes();
     if (clearOldNotes) {
       dbFuncs.clearCloudNotes();
     }

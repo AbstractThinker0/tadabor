@@ -7,7 +7,7 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 ### Core Tech Stack
 
 - **Frontend**: React 19, TypeScript, Vite (dev server), React Router 7
-- **State Management**: Redux Toolkit + React Query for async operations
+- **State Management**: Redux Toolkit for global UI state + Zustand for notes + React Query for async operations
 - **Backend**: tRPC (type-safe RPC framework) with authentication
 - **UI**: Chakra UI v3 (theming, components)
 - **Data**: Dexie (IndexedDB), quran-tools (Quran data manipulation)
@@ -28,14 +28,20 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 
 - **QuranProvider** (`src/context/QuranProvider.tsx`): Loads and caches Quran text, chapters, and roots via `quran-tools` class. Fetches from `/res/quran_v2.json`, `/res/chapters.json`, `/res/quranRoots-0.0.18.json` with retry logic (3 attempts, exponential backoff).
 - **UserProvider** (`src/components/Custom/UserProvider.tsx`): Manages authentication, token refresh via tRPC auth mutations.
-- **NotesProvider** (`src/components/Custom/NotesProvider.tsx`): Syncs local/cloud notes using Redux slices.
+- **NotesProvider** (`src/components/Custom/NotesProvider.tsx`): Syncs local/cloud notes using Zustand stores.
 
 ### Redux Store Structure (`src/store/index.ts`)
 
+**Global Slices**: settings, navigation, user, translations
+
+**Page-Specific Slices** (e.g., `qbPage`, `rbPage`): Store UI state like selected chapters, search filters, scroll positions.
+
+### Notes State Management (Zustand)
+
 Two separate note stores with identical structure:
 
-- **localNotes** (`src/store/slices/global/localNotes.ts`): Browser-only, uses `dbFuncs.saveLocalNote()` (IndexedDB)
-- **cloudNotes** (`src/store/slices/global/cloudNotes.ts`): Synced to backend, uses `dbFuncs.saveCloudNote()` + tRPC `uploadNote` mutation
+- **localNotes** (`src/store/zustand/localNotes.ts`): Browser-only, uses `dbFuncs.saveLocalNote()` (IndexedDB)
+- **cloudNotes** (`src/store/zustand/cloudNotes.ts`): Synced to backend, uses `dbFuncs.saveCloudNote()` + tRPC `uploadNote` mutation
 
 Both follow pattern:
 
@@ -46,10 +52,6 @@ dataLoading: { [noteId]: boolean }
 dataComplete: { [noteId]: boolean }  // Has note been fetched?
 loading: boolean  // Initial load state
 ```
-
-**Global Slices**: settings, navigation, user, translations
-
-**Page-Specific Slices** (e.g., `qbPage`, `rbPage`): Store UI state like selected chapters, search filters, scroll positions.
 
 ### Critical Custom Hooks
 
@@ -111,7 +113,7 @@ npm run theme  # Regenerate Chakra theme types
 
 1. Open DevTools → Application → IndexedDB → tadaborDatabase
 2. Inspect `local_notes` or `cloud_notes` table
-3. Use Redux DevTools to track `localNotes`/`cloudNotes` slice changes
+3. Use Zustand devtools or console logs to track `localNotes`/`cloudNotes` store changes
 4. Check browser Console for `useNote` hooks logging (`note.save()` calls)
 
 ## Project-Specific Patterns & Conventions
@@ -121,14 +123,15 @@ npm run theme  # Regenerate Chakra theme types
 - `src/pages/`: Page components (lazy-loaded via React Router)
 - `src/components/`: Organized by responsibility (Custom, Generic, Layout, Note, Pages, ui)
 - `src/store/slices/`: Redux slices split into global/ (shared) and pages/ (UI state)
+- `src/store/zustand/`: Zustand stores for notes (local and cloud)
 - `src/hooks/`: Custom React hooks (auth, notes, page nav, screen size)
 - `src/util/`: Utilities (db.ts for Dexie, trpc.ts client, fetchData.ts for static data)
 - `src/context/`: React Context providers (Quran, User)
 
 ### Redux Usage Conventions
 
-- **Selectors**: Use `useAppSelector()` not `useSelector()`. Create selector functions for reusable queries (e.g., `selectLocalNote(id)`, `selectCloudNote(id)`).
-- **Async Thunks**: Used in notes slices (`fetchSingleLocalNote`, `fetchCloudNotes`). Check `dataComplete[noteId]` to avoid duplicate fetches.
+- **Selectors**: Use `useAppSelector()` not `useSelector()`. Create selector functions for reusable queries.
+- **Async Thunks**: Used in slices for async operations. Check completion flags to avoid duplicate fetches.
 - **Actions**: Dispatched via `useAppDispatch()`. Page actions (e.g., `qbPageActions.setSearchPanel()`) manage UI state.
 
 ### Component Patterns
@@ -141,7 +144,7 @@ npm run theme  # Regenerate Chakra theme types
 ### State Management Patterns
 
 - **Dual-Mode App**: Check `state.user.isLogged` to decide local vs. cloud operations
-- **Optimistic UI**: Don't wait for backend; update Redux immediately, handle sync errors gracefully
+- **Optimistic UI**: Don't wait for backend; update Zustand immediately, handle sync errors gracefully
 - **Lazy Loading Notes**: `useNote()` uses `useEffect()` with `isVisible` dependency; fetches on mount if not cached
 - **Pagination**: Page-specific slices track `currentChapter`, `scrollKey`. Use `usePageNav()` to restore scroll on page re-entry
 
@@ -186,7 +189,7 @@ npm run theme  # Regenerate Chakra theme types
 ## Key Files to Reference
 
 - **App Entry**: `src/index.tsx`, `src/App.tsx` (route definitions)
-- **State**: `src/store/index.ts` (Redux setup), `src/store/slices/global/localNotes.ts` (notes pattern)
+- **State**: `src/store/index.ts` (Redux setup), `src/store/zustand/localNotes.ts` (notes pattern)
 - **Core Hooks**: `src/hooks/useNote.ts`, `src/hooks/useAuth.ts`
 - **Quran Data**: `src/context/QuranProvider.tsx`, `src/util/fetchData.ts`
 - **UI Components**: `src/components/Custom/BaseVerseItem.tsx`, `src/components/Note/NoteForm.tsx`
@@ -195,7 +198,7 @@ npm run theme  # Regenerate Chakra theme types
 
 ## Common Pitfalls to Avoid
 
-1. **Don't mutate Redux state directly** — use immutable updates in reducers ( already handled by Redux Toolkit )
+1. **Don't mutate Zustand state directly** — use immer updates (handled by middleware)
 2. **Don't fetch notes without `isVisible` check** — wastes bandwidth; use lazy loading
 3. **Don't assume user is logged in** — always check `state.user.isLogged` before accessing cloud note
 4. **Don't forget to set `date_modified`** — needed for sync conflict detection
@@ -206,9 +209,9 @@ npm run theme  # Regenerate Chakra theme types
 
 - **Type Safety**: All external data validated with Zod in backend; use strict TypeScript
 - **Component Testing**: Manual testing in dev mode; PWA caching behavior tested by disabling network
-- **Note Sync**: Manual verification using Redux DevTools + IndexedDB inspector
+- **Note Sync**: Manual verification using Zustand devtools + IndexedDB inspector
 - **i18n**: Test RTL layout in Arabic; use `i18n.dir()` in components
 
 ---
 
-**Last Updated**: November 2025 | **Version**: 0.46.0
+**Last Updated**: January 2026 | **Version**: 0.47.5

@@ -1,20 +1,16 @@
 import { useEffect } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchLocalNotes } from "@/store/slices/global/localNotes";
+import { useLocalNotesStore } from "@/store/zustand/localNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 const LocalNotesProvider = ({ children }: { children: React.ReactNode }) => {
-  const isLocalNotesLoading = useAppSelector(
-    (state) => state.localNotes.loading
-  );
-
-  const dispatch = useAppDispatch();
+  const isLocalNotesLoading = useLocalNotesStore((state) => state.loading);
+  const fetchLocalNotes = useLocalNotesStore((state) => state.fetchLocalNotes);
 
   useEffect(() => {
-    dispatch(fetchLocalNotes());
-  }, [dispatch]);
+    fetchLocalNotes();
+  }, [fetchLocalNotes]);
 
   if (isLocalNotesLoading) {
     return <LoadingSpinner text="Loading local notes.." />;
