@@ -160,5 +160,31 @@ export const useSyncNotes = () => {
 
 export const useUploadNote = () => {
   const trpc = useTRPC();
-  return useMutation(trpc.notes.uploadNote.mutationOptions());
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    trpc.notes.uploadNote.mutationOptions({
+      onSuccess(data, variables) {
+        const noteId = `${variables.type}:${variables.key}`;
+
+        const queryKey = trpc.notes.fetchNote.queryOptions({
+          id: noteId,
+        }).queryKey;
+
+        // Check if the note is already cached; skip update if not
+        const oldData = queryClient.getQueryData(queryKey);
+        if (!oldData) return;
+
+        // Update the cache by merging
+        queryClient.setQueryData(queryKey, {
+          success: true,
+          note: {
+            ...oldData.note,
+            ...variables,
+            ...data.note,
+          },
+        });
+      },
+    })
+  );
 };
