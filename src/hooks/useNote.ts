@@ -117,20 +117,17 @@ export const useNote = ({
 
     setIsDbSaving(true);
 
-    await performLocalSave(saveData, newDateModified);
+    await performLocalSave(saveData);
 
     if (isLogged) {
-      await performCloudSync(note, saveData, newDateModified);
+      await performCloudSync(saveData);
     }
 
     setIsDbSaving(false);
   };
 
   // Helper: Perform local DB save and update state
-  const performLocalSave = async (
-    saveData: ICloudNote,
-    newDateModified: number
-  ) => {
+  const performLocalSave = async (saveData: ICloudNote) => {
     const { error } = await tryCatch(dbSave(saveData));
 
     if (error) {
@@ -142,7 +139,7 @@ export const useNote = ({
       return { success: false };
     }
 
-    markSaved({ id: noteIndex, dateModified: newDateModified });
+    markSaved({ saveData });
     toaster.create({
       description: t("ui.messages.save_success"),
       type: "success",
@@ -151,16 +148,8 @@ export const useNote = ({
   };
 
   // Helper: Perform cloud upload and update sync date
-  const performCloudSync = async (
-    userNote: CloudNoteProps,
-    saveData: ICloudNote,
-    newDateModified: number
-  ) => {
-    const uploadData = fromDexieToBackend({
-      ...userNote,
-      key: noteValidKey,
-      date_modified: newDateModified,
-    });
+  const performCloudSync = async (saveData: ICloudNote) => {
+    const uploadData = fromDexieToBackend(saveData);
 
     const { error: uploadError, result } = await tryCatch(
       uploadNote.mutateAsync(uploadData)
@@ -175,7 +164,7 @@ export const useNote = ({
       const syncDate = result.note.dateLastSynced;
 
       updateSyncDate({
-        name: userNote.id,
+        name: saveData.id,
         value: syncDate,
       });
 

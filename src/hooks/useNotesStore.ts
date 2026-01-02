@@ -5,6 +5,7 @@ import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useLocalNotesStore } from "@/store/zustand/localNotes";
 
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { ICloudNote, ILocalNote } from "@/util/db";
 
 export type ActiveNote = LocalNoteProps | CloudNoteProps;
 
@@ -124,7 +125,7 @@ export const useNotesStore = (noteId?: string) => {
   );
 
   const markSaved = useCallback(
-    (payload: { id: string; dateModified: number }) => {
+    (payload: { saveData: ICloudNote | ILocalNote }) => {
       if (isLogged) {
         useCloudNotesStore.getState().markSaved(payload);
       } else {

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { dbFuncs } from "@/util/db";
+import { dbFuncs, type ICloudNote } from "@/util/db";
 import type {
   ChangeNoteDirPayload,
   ChangeNotePayload,
@@ -217,18 +217,18 @@ export const useCloudNotesStore = create(
         });
       },
 
-      markSaved: (payload: MarkSavedPayload) => {
-        const { id, dateModified } = payload;
+      markSaved: (payload: MarkSavedPayload<ICloudNote>) => {
+        const { saveData } = payload;
 
         set((state) => {
-          const note = state.data[id];
+          const note = state.data[saveData.id];
           if (!note) return;
 
           note.saved = true;
 
           if (note.text !== note.preSave) {
             note.preSave = note.text;
-            note.date_modified = dateModified;
+            note.date_modified = saveData.date_modified;
           }
         });
       },
