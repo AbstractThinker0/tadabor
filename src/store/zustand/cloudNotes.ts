@@ -180,11 +180,17 @@ export const useCloudNotesStore = create(
 
       updateSyncDate: (payload: SyncDatePayload) => {
         const { name, value } = payload;
+
         set((state) => {
           const note = state.data[name];
           if (!note) return;
           note.date_synced = value;
           note.isSynced = true;
+        });
+
+        // Update local DB with sync date (non-blocking)
+        dbFuncs.updateCloudNoteSyncDate(name, value).catch((err) => {
+          console.error("Failed to update sync date in local DB:", err);
         });
       },
 

@@ -3,7 +3,7 @@ import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useNotesStore } from "@/hooks/useNotesStore";
 
 import { toaster } from "@/components/ui/toaster";
-import { dbFuncs, type ICloudNote } from "@/util/db";
+import { type ICloudNote } from "@/util/db";
 
 import {
   createNewNote,
@@ -160,11 +160,6 @@ export const useNote = ({
       updateSyncDate({
         name: saveData.id,
         value: syncDate,
-      });
-
-      // Update local DB with sync date (non-blocking)
-      dbFuncs.updateCloudNoteSyncDate(saveData.id, syncDate).catch((err) => {
-        console.error("Failed to update sync date in local DB:", err);
       });
     }
   };
