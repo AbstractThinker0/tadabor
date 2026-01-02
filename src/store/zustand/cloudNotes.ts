@@ -217,12 +217,19 @@ export const useCloudNotesStore = create(
         });
       },
 
-      markSaved: (payload: MarkSavedPayload<ICloudNote>) => {
+      markSaved: async (payload: MarkSavedPayload<ICloudNote>) => {
         const { saveData } = payload;
+
+        const { error } = await tryCatch(dbFuncs.saveCloudNote(saveData));
+
+        if (error) {
+          console.error("Failed to save note locally:", error);
+          return false;
+        }
 
         set((state) => {
           const note = state.data[saveData.id];
-          if (!note) return;
+          if (!note) return false;
 
           note.saved = true;
 
@@ -231,6 +238,8 @@ export const useCloudNotesStore = create(
             note.date_modified = saveData.date_modified;
           }
         });
+
+        return true;
       },
 
       reset: () => {

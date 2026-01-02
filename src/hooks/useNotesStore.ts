@@ -127,9 +127,9 @@ export const useNotesStore = (noteId?: string) => {
   const markSaved = useCallback(
     (payload: { saveData: ICloudNote | ILocalNote }) => {
       if (isLogged) {
-        useCloudNotesStore.getState().markSaved(payload);
+        return useCloudNotesStore.getState().markSaved(payload);
       } else {
-        useLocalNotesStore.getState().markSaved(payload);
+        return useLocalNotesStore.getState().markSaved(payload);
       }
     },
     [isLogged]

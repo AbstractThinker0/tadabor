@@ -44,8 +44,6 @@ export const useNote = ({
 
   const updateSyncDate = useCloudNotesStore((state) => state.updateSyncDate);
 
-  const dbSave = isLogged ? dbFuncs.saveCloudNote : dbFuncs.saveLocalNote;
-
   const uploadNote = useUploadNote();
 
   // Track local save state (dbSave is async and not tracked by uploadNote.isPending)
@@ -128,23 +126,19 @@ export const useNote = ({
 
   // Helper: Perform local DB save and update state
   const performLocalSave = async (saveData: ICloudNote) => {
-    const { error } = await tryCatch(dbSave(saveData));
+    const { result } = await tryCatch(markSaved({ saveData }));
 
-    if (error) {
-      console.error("Failed to save note locally:", error);
+    if (!result) {
       toaster.create({
         description: t("ui.messages.save_failed"),
         type: "error",
       });
-      return { success: false };
+    } else {
+      toaster.create({
+        description: t("ui.messages.save_success"),
+        type: "success",
+      });
     }
-
-    markSaved({ saveData });
-    toaster.create({
-      description: t("ui.messages.save_success"),
-      type: "success",
-    });
-    return { success: true };
   };
 
   // Helper: Perform cloud upload and update sync date

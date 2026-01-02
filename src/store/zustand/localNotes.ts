@@ -174,12 +174,19 @@ export const useLocalNotesStore = create(
         });
       },
 
-      markSaved: (payload: MarkSavedPayload<ILocalNote>) => {
+      markSaved: async (payload: MarkSavedPayload<ILocalNote>) => {
         const { saveData } = payload;
+
+        const { error } = await tryCatch(dbFuncs.saveLocalNote(saveData));
+
+        if (error) {
+          console.error("Failed to save note locally:", error);
+          return false;
+        }
 
         set((state) => {
           const note = state.data[saveData.id];
-          if (!note) return;
+          if (!note) return false;
 
           note.saved = true;
 
@@ -188,6 +195,8 @@ export const useLocalNotesStore = create(
             note.date_modified = saveData.date_modified;
           }
         });
+
+        return true;
       },
 
       reset: () => {
