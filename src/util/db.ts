@@ -340,6 +340,9 @@ export const dbFuncs = {
 
     return true;
   },
+  updateCloudNoteSyncDate: async (id: string, date_synced: number) => {
+    return db.cloud_notes.update(id, { date_synced });
+  },
   clearCloudNotes: () => {
     return db.cloud_notes.clear();
   },

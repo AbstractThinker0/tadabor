@@ -180,11 +180,9 @@ export const useNote = ({
       });
 
       // Update local DB with sync date (non-blocking)
-      dbFuncs
-        .saveCloudNote({ ...saveData, date_synced: syncDate })
-        .catch((err) => {
-          console.error("Failed to update sync date in local DB:", err);
-        });
+      dbFuncs.updateCloudNoteSyncDate(saveData.id, syncDate).catch((err) => {
+        console.error("Failed to update sync date in local DB:", err);
+      });
     }
   };
 
