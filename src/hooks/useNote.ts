@@ -103,20 +103,7 @@ export const useNote = ({
 
     const newDateModified = computeDateModified(note);
 
-    type SaveDataProps = {
-      id: string;
-      key: string;
-      text: string;
-      type: string;
-      uuid: string;
-      dir: string;
-      date_created: number | undefined;
-      date_modified: number | undefined;
-      date_synced?: number;
-      authorId?: number;
-    };
-
-    const saveData: SaveDataProps = {
+    const saveData = {
       id: noteIndex,
       key: noteValidKey,
       text: noteText,
