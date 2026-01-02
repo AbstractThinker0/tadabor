@@ -110,10 +110,8 @@ export const fromBackendToDexie = (note: BackendNote): ICloudNote => {
  * Returns the new dateModified to persist alongside.
  */
 export const computeDateModified = (note: LocalNoteProps) => {
-  const now = Date.now();
-
   const shouldUpdate = note.text !== note.preSave;
-  return shouldUpdate ? now : note.date_modified!;
+  return shouldUpdate ? Date.now() : note.date_modified!;
 };
 
 export interface NoteSyncMeta {
