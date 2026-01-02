@@ -10,6 +10,7 @@ import type {
   MarkSavedPayload,
   NotesStateProps,
 } from "@/types";
+import { fromReduxToDexie } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 
 export interface SyncDatePayload {
@@ -176,6 +177,14 @@ export const useCloudNotesStore = create(
             state.dataKeys.push(note.id);
           }
         });
+
+        // Persist cached notes coming from backend/sync flows.
+        // Avoid persisting new (draft) notes created by typing before an explicit save.
+        if (!isNew) {
+          dbFuncs.saveCloudNote(fromReduxToDexie(note)).catch((err) => {
+            console.error("Failed to persist cached cloud note:", err);
+          });
+        }
       },
 
       updateSyncDate: (payload: SyncDatePayload) => {

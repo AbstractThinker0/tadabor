@@ -6,12 +6,10 @@ import { useAppSelector } from "@/store";
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useLocalNotesStore } from "@/store/zustand/localNotes";
 import type { CloudNoteProps } from "@/types";
-import { dbFuncs } from "@/util/db";
 import {
   buildNoteSyncPayload,
   fromBackendToDexie,
   fromDexieToBackend,
-  fromReduxToDexie,
 } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 
@@ -76,7 +74,6 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
         const clNote = fromBackendToDexie(fetchedNote);
 
         cacheCloudNote({ ...clNote, isNew: false });
-        dbFuncs.saveCloudNote(clNote);
       }
     }
   };
@@ -118,12 +115,6 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
                 value: syncedNote.date_synced,
               });
             }
-
-            dbFuncs
-              .saveCloudNote(fromReduxToDexie(syncedNote))
-              .catch((error) => {
-                console.error("Error saving note to local database:", error);
-              });
           }
         })
         .catch((err) => {
