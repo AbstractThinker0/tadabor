@@ -2,6 +2,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { useRegisterSW } from "virtual:pwa-register/react";
+import { tryCatch } from "@/util/trycatch";
 
 const LAST_SW_CHECK_KEY = "lastSWCheck";
 const SW_CHECK_INTERVAL_MS = 120 * 60000; // 2 hours
@@ -43,21 +44,21 @@ function ReloadPrompt() {
             return;
           }
 
-          try {
-            const resp = await fetch(swUrl, {
+          const { error, result } = await tryCatch(
+            fetch(swUrl, {
               cache: "no-store",
               headers: {
                 cache: "no-store",
                 "cache-control": "no-cache",
               },
-            });
+            })
+          );
 
-            if (resp?.status === 200) {
-              console.log("✅ we are online. Attempting update...");
-              await r.update();
-            }
-          } catch (e) {
-            console.warn("⚠️ SW update check failed: ", e);
+          if (error) {
+            console.warn("⚠️ SW update check failed: ", error);
+          } else if (result.status === 200) {
+            console.log("✅ we are online. Attempting update...");
+            await r.update();
           }
         }, UPDATE_CHECK_INTERVAL_MS);
       }

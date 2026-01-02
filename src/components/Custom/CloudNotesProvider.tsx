@@ -13,6 +13,7 @@ import {
   fromDexieToBackend,
   fromReduxToDexie,
 } from "@/util/notes";
+import { tryCatch } from "@/util/trycatch";
 
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
@@ -66,15 +67,16 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const fetchNotes = async (noteIDs: string[]) => {
     // Fetching notes from the cloud
     for (const noteID of noteIDs) {
-      try {
-        const fetchedNote = (await fetchNoteById(noteID)).note;
+      const { result, error } = await tryCatch(fetchNoteById(noteID));
+      if (error) {
+        console.error("Fetch failed", error);
+      } else {
+        const fetchedNote = result.note;
 
         const clNote = fromBackendToDexie(fetchedNote);
 
         cacheCloudNote({ ...clNote, isNew: false });
         dbFuncs.saveCloudNote(clNote);
-      } catch (err) {
-        console.error("Fetch failed", err);
       }
     }
   };

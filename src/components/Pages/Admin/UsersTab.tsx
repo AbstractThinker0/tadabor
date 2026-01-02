@@ -17,6 +17,7 @@ import {
   useFetchUsers,
   useUpdateUser,
 } from "@/services/backend";
+import { tryCatch } from "@/util/trycatch";
 
 const ROLE_LABELS: Record<number, string> = {
   0: "User",
@@ -71,46 +72,48 @@ export const UsersTab = () => {
   const saveEdit = async (id: number) => {
     const e = editing[id];
     if (!e) return;
-    try {
-      await updateUserMutation.mutateAsync({
+    const { error } = await tryCatch(
+      updateUserMutation.mutateAsync({
         id,
         username: e.username,
         email: e.email,
         role: Number(e.role),
+      })
+    );
+    if (error) {
+      console.error("Failed to update user:", error);
+      toasterBottomCenter.create({
+        type: "error",
+        description: "Failed to update user",
       });
+    } else {
       toasterBottomCenter.create({
         type: "success",
         description: "User updated",
       });
       cancelEdit(id);
-    } catch (err) {
-      console.error("Failed to update user:", err);
-      toasterBottomCenter.create({
-        type: "error",
-        description: "Failed to update user",
-      });
     }
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      const res = await deleteUserMutation.mutateAsync({ id });
-      if (res?.success) {
-        toasterBottomCenter.create({
-          type: "success",
-          description: "User deleted",
-        });
-      } else {
-        toasterBottomCenter.create({
-          type: "error",
-          description: res?.message || "Failed to delete user",
-        });
-      }
-    } catch (err) {
-      console.error("Failed to delete user:", err);
+    const { result: res, error } = await tryCatch(
+      deleteUserMutation.mutateAsync({ id })
+    );
+    if (error) {
+      console.error("Failed to delete user:", error);
       toasterBottomCenter.create({
         type: "error",
         description: "Failed to delete user",
+      });
+    } else if (res.success) {
+      toasterBottomCenter.create({
+        type: "success",
+        description: "User deleted",
+      });
+    } else {
+      toasterBottomCenter.create({
+        type: "error",
+        description: res.message || "Failed to delete user",
       });
     }
   };
