@@ -11,7 +11,6 @@ import {
   fromBackendToDexie,
   fromDexieToBackend,
 } from "@/util/notes";
-import { tryCatch } from "@/util/trycatch";
 
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
@@ -63,62 +62,54 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const fetchNoteById = useFetchNote();
 
   const fetchNotes = async (noteIDs: string[]) => {
-    // Fetching notes from the cloud
     for (const noteID of noteIDs) {
-      const { result, error } = await tryCatch(fetchNoteById(noteID));
-      if (error) {
-        console.error("Fetch failed", error);
-      } else {
-        const fetchedNote = result.note;
-
-        const clNote = fromBackendToDexie(fetchedNote);
-
-        cacheCloudNote({ ...clNote, isNew: false });
-      }
+      fetchNoteById(noteID)
+        .then((result) => {
+          const cloudNote = fromBackendToDexie(result.note);
+          cacheCloudNote({ ...cloudNote, isNew: false });
+        })
+        .catch((error) => {
+          console.error("Failed to fetch note:", noteID, error);
+        });
     }
   };
 
-  const uploadNotes = async (notesKeys: string[], guest: boolean = false) => {
-    // Uploading notes to the cloud
+  const uploadNotes = async (notesKeys: string[], isGuest: boolean = false) => {
     for (const noteID of notesKeys) {
-      const clNote = guest
-        ? { ...localNotes[noteID] }
-        : { ...cloudNotes[noteID] };
-
-      if (!clNote) {
+      const note = isGuest ? localNotes[noteID] : cloudNotes[noteID];
+      if (!note) {
         console.error(`Note with ID ${noteID} not found.`);
         continue;
       }
 
       const syncedNote: CloudNoteProps = {
-        ...clNote,
+        ...note,
         date_synced: 0,
         authorId: userId,
       };
 
-      const uploadData = fromDexieToBackend(clNote);
+      const uploadData = fromDexieToBackend(note);
 
       uploadNoteMutation
         .mutateAsync(uploadData)
         .then((result) => {
-          if (result && result.success) {
+          if (result.success) {
             syncedNote.date_synced = result.note.dateLastSynced;
-            // if a guest note we need to cache it to cloud notes first
-            if (guest) {
+            if (isGuest) {
               cacheCloudNote({
                 ...syncedNote,
                 isNew: false,
               });
             } else {
               updateCloudSyncDate({
-                name: clNote.id,
+                name: note.id,
                 value: syncedNote.date_synced,
               });
             }
           }
         })
-        .catch((err) => {
-          console.error("Upload failed for note ID:", noteID, err);
+        .catch((error) => {
+          console.error("Upload mutation failed for note ID:", noteID, error);
         });
     }
   };
@@ -129,10 +120,12 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
         .filter((note) => !cloudNotesIds.includes(note.id)) // This check skips notes that are already cloud notes expecting users to not have the same note in both local and cloud
         .map((note) => buildNoteSyncPayload(note, 0));
 
+      // Prepare existing cloud notes
       const notesArray = Object.values(cloudNotes).map((note) =>
         buildNoteSyncPayload(note, note.date_synced ?? 0)
       );
 
+      // Initiate sync
       syncNotes.mutate(
         {
           clientNotes: notesArray,
@@ -140,14 +133,12 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
         },
         {
           onSuccess(data) {
-            const serverNotes = data.notesToSendToClient;
-            fetchNotes(serverNotes);
+            // Fetch notes sent from server
+            fetchNotes(data.notesToSendToClient);
 
-            const clientNotesKeys = data.notesToRequestFromClient;
-            const guestNotesKeys = data.notesToRequestFromGuest;
-
-            uploadNotes(clientNotesKeys);
-            uploadNotes(guestNotesKeys, true);
+            // Upload notes requested by server
+            uploadNotes(data.notesToRequestFromClient);
+            uploadNotes(data.notesToRequestFromGuest, true);
           },
           onError(error) {
             console.error("Error during notes synchronization:", error);
