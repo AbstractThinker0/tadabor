@@ -202,6 +202,7 @@ export const dbFuncs = {
   deleteTag: (id: string) => {
     db.tags.delete(id);
 
+    // Uses multi-entry index on tags_ids
     db.verses_tags
       .where("tags_ids")
       .equals(id)
