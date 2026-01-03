@@ -66,7 +66,7 @@ function Tags() {
     return () => {
       clientLeft = true;
     };
-  }, [dispatch, tags]);
+  }, [dispatch]);
 
   const showSearchPanel = useAppSelector(
     (state) => state.tagsPage.showSearchPanel
