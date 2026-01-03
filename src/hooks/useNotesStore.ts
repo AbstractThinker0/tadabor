@@ -48,13 +48,6 @@ export const useNotesStore = (noteId?: string) => {
     noteId ? state.dataLoading[noteId] : undefined
   );
 
-  const localNoteComplete = useLocalNotesStore((state) =>
-    noteId ? state.dataComplete[noteId] : undefined
-  );
-  const cloudNoteComplete = useCloudNotesStore((state) =>
-    noteId ? state.dataComplete[noteId] : undefined
-  );
-
   const data = isLogged ? cloudData : localData;
   const dataKeys = isLogged ? cloudKeys : localKeys;
   const loading = isLogged ? cloudLoading : localLoading;
@@ -66,17 +59,8 @@ export const useNotesStore = (noteId?: string) => {
   const isNoteLoading = useMemo(() => {
     if (!noteId) return undefined;
 
-    return isLogged
-      ? cloudNoteLoading || !cloudNoteComplete
-      : localNoteLoading || !localNoteComplete;
-  }, [
-    noteId,
-    isLogged,
-    cloudNoteLoading,
-    cloudNoteComplete,
-    localNoteLoading,
-    localNoteComplete,
-  ]);
+    return isLogged ? cloudNoteLoading : localNoteLoading;
+  }, [noteId, isLogged, cloudNoteLoading, localNoteLoading]);
 
   const fetchSingleNoteIfNeeded = useCallback(() => {
     if (!noteId) return null;
