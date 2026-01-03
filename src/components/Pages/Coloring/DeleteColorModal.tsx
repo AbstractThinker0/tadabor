@@ -1,5 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { dbFuncs } from "@/util/db";
 
@@ -15,17 +14,13 @@ interface DeleteColorModalProps {
 }
 
 const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
-  );
-  const currentColor = useAppSelector(
-    (state) => state.coloringPage.currentColor
-  );
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
+  const currentColor = useColoringPageStore((state) => state.currentColor);
 
-  const dispatch = useAppDispatch();
+  const deleteColor = useColoringPageStore((state) => state.deleteColor);
 
-  function deleteColor(colorID: string) {
-    dispatch(coloringPageActions.deleteColor(colorID));
+  function deleteColorHandler(colorID: string) {
+    deleteColor(colorID);
     dbFuncs.deleteColor(colorID);
 
     for (const verseKey in coloredVerses) {
@@ -38,7 +33,7 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   function onClickDelete() {
     if (!currentColor) return;
 
-    deleteColor(currentColor.colorID);
+    deleteColorHandler(currentColor.colorID);
     onClose();
   }
 

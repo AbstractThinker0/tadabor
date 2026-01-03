@@ -1,7 +1,6 @@
 import type { verseProps } from "quran-tools";
 
-import { useAppDispatch } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { Button, Span } from "@chakra-ui/react";
 
@@ -27,15 +26,18 @@ const VerseItem = ({
   isSelected,
   openVerseModal,
 }: VerseItemProps) => {
-  const dispatch = useAppDispatch();
+  const setCurrentVerse = useColoringPageStore(
+    (state) => state.setCurrentVerse
+  );
+  const setScrollKey = useColoringPageStore((state) => state.setScrollKey);
 
   const onClickVerseColor = (verse: verseProps) => {
-    dispatch(coloringPageActions.setCurrentVerse(verse));
+    setCurrentVerse(verse);
     openVerseModal();
   };
 
   function onClickVerse() {
-    dispatch(coloringPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   }
 
   return (
@@ -86,22 +88,26 @@ const SelectedVerseItem = ({
   openVerseModal,
   isSelected,
 }: SelectedVerseItemProps) => {
-  const dispatch = useAppDispatch();
+  const gotoChapter = useColoringPageStore((state) => state.gotoChapter);
+  const setScrollKey = useColoringPageStore((state) => state.setScrollKey);
+  const setCurrentVerse = useColoringPageStore(
+    (state) => state.setCurrentVerse
+  );
   const quranService = useQuran();
 
   const onClickChapter = (verse: verseProps) => {
-    dispatch(coloringPageActions.gotoChapter(Number(verse.suraid)));
+    gotoChapter(Number(verse.suraid));
     if (!isSelected) {
-      dispatch(coloringPageActions.setScrollKey(verse.key));
+      setScrollKey(verse.key);
     }
   };
 
   function onClickVerse() {
-    dispatch(coloringPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   }
 
   const onClickVerseColor = (verse: verseProps) => {
-    dispatch(coloringPageActions.setCurrentVerse(verse));
+    setCurrentVerse(verse);
     openVerseModal();
   };
 

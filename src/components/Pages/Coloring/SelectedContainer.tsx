@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { useAppSelector, useAppDispatch } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import useQuran from "@/context/useQuran";
 
@@ -17,21 +16,20 @@ interface SelectedContainerProps {
 }
 
 const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
-  const selectedChapters = useAppSelector(
-    (state) => state.coloringPage.selectedChapters
+  const selectedChapters = useColoringPageStore(
+    (state) => state.selectedChapters
   );
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
-  );
-  const selectedColors = useAppSelector(
-    (state) => state.coloringPage.selectedColors
-  );
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
+  const selectedColors = useColoringPageStore((state) => state.selectedColors);
 
-  const dispatch = useAppDispatch();
+  const deselectColor = useColoringPageStore((state) => state.deselectColor);
+  const toggleSelectChapter = useColoringPageStore(
+    (state) => state.toggleSelectChapter
+  );
   const quranService = useQuran();
 
   function onClickDeleteSelected(colorID: string) {
-    dispatch(coloringPageActions.deselectColor(colorID));
+    deselectColor(colorID);
   }
 
   const chaptersScope = Object.keys(selectedChapters).filter(
@@ -50,7 +48,7 @@ const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
   };
 
   const onClickCloseChapter = (chapterID: string) => {
-    dispatch(coloringPageActions.toggleSelectChapter(Number(chapterID)));
+    toggleSelectChapter(Number(chapterID));
   };
 
   return (
@@ -147,7 +145,7 @@ function SelectedVerses({
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
-  const scrollKey = useAppSelector((state) => state.coloringPage.scrollKey);
+  const scrollKey = useColoringPageStore((state) => state.scrollKey);
 
   const selectedVerses = useMemo(
     () =>

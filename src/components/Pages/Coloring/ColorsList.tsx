@@ -1,5 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
@@ -12,20 +11,20 @@ import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
 const ColorsList = () => {
   const { open: isOpen, onOpen, onClose } = useDisclosure();
 
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
+
+  const colorsList = useColoringPageStore((state) => state.colorsList);
+  const selectColor = useColoringPageStore((state) => state.selectColor);
+  const setCurrentColor = useColoringPageStore(
+    (state) => state.setCurrentColor
   );
 
-  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
-
-  const dispatch = useAppDispatch();
-
   function onClickSelectColor(color: colorProps) {
-    dispatch(coloringPageActions.selectColor(color));
+    selectColor(color);
   }
 
   function onClickDeleteColor(color: colorProps) {
-    dispatch(coloringPageActions.setCurrentColor(color));
+    setCurrentColor(color);
     onOpen();
   }
 

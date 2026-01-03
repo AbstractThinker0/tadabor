@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 
 import { type IColor, type IVerseColor, dbFuncs } from "@/util/db";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
@@ -20,9 +18,11 @@ function Coloring() {
   usePageNav("nav.coloring");
   const [loadingState, setLoadingState] = useState(true);
 
-  const dispatch = useAppDispatch();
-
-  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
+  const colorsList = useColoringPageStore((state) => state.colorsList);
+  const setColorsList = useColoringPageStore((state) => state.setColorsList);
+  const setColoredVerses = useColoringPageStore(
+    (state) => state.setColoredVerses
+  );
 
   useEffect(() => {
     async function fetchSavedColors() {
@@ -44,7 +44,7 @@ function Coloring() {
         };
       });
 
-      dispatch(coloringPageActions.setColorsList(initialColors));
+      setColorsList(initialColors);
 
       const savedVersesColor: IVerseColor[] = await dbFuncs.loadVersesColor();
 
@@ -55,7 +55,7 @@ function Coloring() {
           initialColors[verseColor.color_id];
       });
 
-      dispatch(coloringPageActions.setColoredVerses(initialColoredVerses));
+      setColoredVerses(initialColoredVerses);
 
       setLoadingState(false);
     }
@@ -71,7 +71,7 @@ function Coloring() {
         "2": { colorID: "2", colorCode: "#da5252", colorDisplay: "Unexplored" },
       };
 
-      dispatch(coloringPageActions.setColorsList(initialColors));
+      setColorsList(initialColors);
 
       Object.keys(initialColors).forEach((colorID) => {
         dbFuncs.saveColor({
@@ -91,18 +91,20 @@ function Coloring() {
     } else {
       fetchSavedColors();
     }
-  }, [dispatch, colorsList]);
+  }, [colorsList, setColorsList, setColoredVerses]);
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.coloringPage.showSearchPanel
+  const showSearchPanel = useColoringPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.coloringPage.showSearchPanelMobile
+  const showSearchPanelMobile = useColoringPageStore(
+    (state) => state.showSearchPanelMobile
   );
+
+  const setSearchPanel = useColoringPageStore((state) => state.setSearchPanel);
 
   const setOpenState = (state: boolean) => {
-    dispatch(coloringPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   if (loadingState) return <LoadingSpinner text="Loading colors data.." />;

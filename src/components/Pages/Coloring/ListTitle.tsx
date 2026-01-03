@@ -1,25 +1,22 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.coloringPage.currentChapter
+  const selectChapter = useColoringPageStore((state) => state.currentChapter);
+
+  const showSearchPanel = useColoringPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.coloringPage.showSearchPanel
+  const showSearchPanelMobile = useColoringPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.coloringPage.showSearchPanelMobile
-  );
-
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useColoringPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(coloringPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

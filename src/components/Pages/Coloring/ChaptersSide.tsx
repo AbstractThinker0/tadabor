@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
 
@@ -12,8 +11,6 @@ import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 import type { selectedChaptersType } from "@/types";
 
 const ChaptersSide = () => {
-  const dispatch = useAppDispatch();
-
   const {
     open: isOpenAddColor,
     onOpen: onOpenAddColor,
@@ -26,32 +23,39 @@ const ChaptersSide = () => {
     onClose: onCloseEditColor,
   } = useDisclosure();
 
-  const selectedVerse = useAppSelector(
-    (state) => state.coloringPage.selectedVerse
+  const selectedVerse = useColoringPageStore((state) => state.selectedVerse);
+
+  const currentChapter = useColoringPageStore((state) => state.currentChapter);
+
+  const selectedChapters = useColoringPageStore(
+    (state) => state.selectedChapters
   );
 
-  const currentChapter = useAppSelector(
-    (state) => state.coloringPage.currentChapter
+  const setSelectedVerse = useColoringPageStore(
+    (state) => state.setSelectedVerse
   );
-
-  const selectedChapters = useAppSelector(
-    (state) => state.coloringPage.selectedChapters
+  const setChapter = useColoringPageStore((state) => state.setChapter);
+  const setSelectedChaptersStore = useColoringPageStore(
+    (state) => state.setSelectedChapters
+  );
+  const toggleSelectChapterStore = useColoringPageStore(
+    (state) => state.toggleSelectChapter
   );
 
   const onClickVerse = (verseKey: string) => {
-    dispatch(coloringPageActions.setSelectedVerse(verseKey));
+    setSelectedVerse(verseKey);
   };
 
-  const setChapter = (chapter: number) => {
-    dispatch(coloringPageActions.setChapter(chapter));
+  const setChapterHandler = (chapter: number) => {
+    setChapter(chapter);
   };
 
-  const setSelectedChapters = (chapters: selectedChaptersType) => {
-    dispatch(coloringPageActions.setSelectedChapters(chapters));
+  const setSelectedChaptersHandler = (chapters: selectedChaptersType) => {
+    setSelectedChaptersStore(chapters);
   };
 
-  const toggleSelectChapter = (chapter: number) => {
-    dispatch(coloringPageActions.toggleSelectChapter(chapter));
+  const toggleSelectChapterHandler = (chapter: number) => {
+    toggleSelectChapterStore(chapter);
   };
 
   return (
@@ -65,9 +69,9 @@ const ChaptersSide = () => {
       <ChaptersListAdvanced
         currentChapter={currentChapter}
         selectedChapters={selectedChapters}
-        setChapter={setChapter}
-        setSelectedChapters={setSelectedChapters}
-        toggleSelectChapter={toggleSelectChapter}
+        setChapter={setChapterHandler}
+        setSelectedChapters={setSelectedChaptersHandler}
+        toggleSelectChapter={toggleSelectChapterHandler}
         selectedVerse={selectedVerse}
         setVerseToken={onClickVerse}
       />
@@ -105,15 +109,11 @@ const ChaptersSide = () => {
 
 const VersesCount = () => {
   const { t } = useTranslation();
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
+  const selectedChapters = useColoringPageStore(
+    (state) => state.selectedChapters
   );
-  const selectedChapters = useAppSelector(
-    (state) => state.coloringPage.selectedChapters
-  );
-  const selectedColors = useAppSelector(
-    (state) => state.coloringPage.selectedColors
-  );
+  const selectedColors = useColoringPageStore((state) => state.selectedColors);
 
   const getColoredVersesCount = () => {
     const asArray = Object.entries(coloredVerses);

@@ -1,19 +1,19 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 const ButtonSidebar = () => {
-  const dispatch = useAppDispatch();
-  const showSearchPanel = useAppSelector(
-    (state) => state.coloringPage.showSearchPanel
+  const showSearchPanel = useColoringPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.coloringPage.showSearchPanelMobile
+  const showSearchPanelMobile = useColoringPageStore(
+    (state) => state.showSearchPanelMobile
   );
+
+  const setSearchPanel = useColoringPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(coloringPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

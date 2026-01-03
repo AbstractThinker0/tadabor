@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { dbFuncs } from "@/util/db";
 
@@ -25,12 +24,13 @@ interface EditColorModalProps {
 }
 
 const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
-  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
-  );
+  const colorsList = useColoringPageStore((state) => state.colorsList);
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
 
-  const dispatch = useAppDispatch();
+  const setColorsList = useColoringPageStore((state) => state.setColorsList);
+  const setColoredVerses = useColoringPageStore(
+    (state) => state.setColoredVerses
+  );
 
   const [listColors, setListColors] = useState({ ...colorsList });
   const [currentColor, setCurrentColor] = useState(
@@ -57,7 +57,7 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
   }
 
   function onClickSave() {
-    dispatch(coloringPageActions.setColorsList(listColors));
+    setColorsList(listColors);
 
     Object.keys(listColors).forEach((colorID) => {
       dbFuncs.saveColor({
@@ -75,7 +75,7 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
       }
     });
 
-    dispatch(coloringPageActions.setColoredVerses(newColoredVerses));
+    setColoredVerses(newColoredVerses);
     onClose();
   }
 

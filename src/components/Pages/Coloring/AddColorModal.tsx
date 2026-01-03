@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
-import { useAppDispatch } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 import { dbFuncs } from "@/util/db";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
@@ -18,7 +17,7 @@ interface AddColorModalProps {
 
 const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const addColor = useColoringPageStore((state) => state.addColor);
   const [colorName, setColorName] = useState("");
   const [colorCode, setColorCode] = useState("#000000");
 
@@ -44,7 +43,7 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
       colorDisplay: colorName,
     };
 
-    dispatch(coloringPageActions.addColor(newColor));
+    addColor(newColor);
 
     dbFuncs
       .saveColor({

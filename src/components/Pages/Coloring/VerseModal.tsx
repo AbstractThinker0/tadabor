@@ -1,7 +1,6 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { coloringPageActions } from "@/store/slices/pages/coloring";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import { dbFuncs } from "@/util/db";
 
@@ -22,15 +21,14 @@ interface VerseModalProps {
 }
 
 const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
-  const currentVerse = useAppSelector(
-    (state) => state.coloringPage.currentVerse
-  );
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
-  );
-  const colorsList = useAppSelector((state) => state.coloringPage.colorsList);
+  const currentVerse = useColoringPageStore((state) => state.currentVerse);
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
+  const colorsList = useColoringPageStore((state) => state.colorsList);
 
-  const dispatch = useAppDispatch();
+  const setVerseColor = useColoringPageStore((state) => state.setVerseColor);
+  const setCurrentVerse = useColoringPageStore(
+    (state) => state.setCurrentVerse
+  );
   const quranService = useQuran();
 
   const [chosenColor, setChosenColor] = useState<colorProps | null>(null);
@@ -49,10 +47,10 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
   const onCloseModal = () => {
     onClose();
     setChosenColor(null);
-    dispatch(coloringPageActions.setCurrentVerse(null));
+    setCurrentVerse(null);
   };
 
-  const setVerseColor = (verseKey: string, color: colorProps | null) => {
+  const updateVerseColor = (verseKey: string, color: colorProps | null) => {
     if (color === null) {
       dbFuncs.deleteVerseColor(verseKey);
     } else {
@@ -62,17 +60,12 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
       });
     }
 
-    dispatch(
-      coloringPageActions.setVerseColor({
-        verseKey: verseKey,
-        color: color,
-      })
-    );
+    setVerseColor(verseKey, color);
   };
 
   const onClickSave = () => {
     if (currentVerse?.key) {
-      setVerseColor(currentVerse.key, chosenColor);
+      updateVerseColor(currentVerse.key, chosenColor);
     }
     onClose();
   };

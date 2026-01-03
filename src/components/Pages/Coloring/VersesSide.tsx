@@ -3,7 +3,7 @@ import { useEffect, useTransition, useState, useCallback } from "react";
 import useQuran from "@/context/useQuran";
 import type { verseProps } from "quran-tools";
 
-import { useAppSelector } from "@/store";
+import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
@@ -18,9 +18,7 @@ import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 const VersesSide = () => {
   const { open: isOpen, onOpen, onClose } = useDisclosure();
 
-  const selectedColors = useAppSelector(
-    (state) => state.coloringPage.selectedColors
-  );
+  const selectedColors = useColoringPageStore((state) => state.selectedColors);
 
   return (
     <Flex
@@ -57,13 +55,9 @@ interface VersesListProps {
 }
 
 const VersesList = ({ openVerseModal }: VersesListProps) => {
-  const scrollKey = useAppSelector((state) => state.coloringPage.scrollKey);
-  const currentChapter = useAppSelector(
-    (state) => state.coloringPage.currentChapter
-  );
-  const coloredVerses = useAppSelector(
-    (state) => state.coloringPage.coloredVerses
-  );
+  const scrollKey = useColoringPageStore((state) => state.scrollKey);
+  const currentChapter = useColoringPageStore((state) => state.currentChapter);
+  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
 
   const quranService = useQuran();
 
