@@ -202,21 +202,13 @@ export const useColoringPageStore = create(
 
       // Async action: Delete a color with persistence
       deleteColor: async (colorID: string) => {
-        const { coloredVerses } = get();
 
-        // Delete color from Dexie
+        // Delete color and all associated verse colors from Dexie
         const { error: colorError } = await tryCatch(dbColors.delete(colorID));
 
         if (colorError) {
-          console.error("Failed to delete color:", colorError);
+          console.error("Failed to delete color and its verses:", colorError);
           return false;
-        }
-
-        // Delete all verse colors with this color
-        for (const verseKey in coloredVerses) {
-          if (coloredVerses[verseKey].colorID === colorID) {
-            await dbColors.deleteVerse(verseKey);
-          }
         }
 
         set((state) => {

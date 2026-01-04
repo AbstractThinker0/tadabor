@@ -137,7 +137,8 @@ export const dbColors = {
   loadAll: () => {
     return db.colors.toArray();
   },
-  delete: (id: string) => {
+  delete: async (id: string) => {
+    await db.verses_color.where("color_id").equals(id).delete();
     return db.colors.delete(id);
   },
   saveVerse: async (data: IVerseColor) => {
