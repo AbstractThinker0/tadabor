@@ -10,7 +10,10 @@ import type {
   colorProps,
 } from "@/components/Pages/Coloring/consts";
 import { initialSelectedChapters } from "@/util/consts";
-import { dbFuncs, type IColor, type IVerseColor } from "@/util/db";
+
+import type { IColor, IVerseColor } from "@/types/db";
+import { dbColors } from "@/util/dbFuncs";
+
 import { tryCatch } from "@/util/trycatch";
 
 interface ColoringPageState {
@@ -71,7 +74,7 @@ export const useColoringPageStore = create(
           // First time: create default colors
           for (const colorID of Object.keys(DEFAULT_COLORS)) {
             const color = DEFAULT_COLORS[colorID];
-            await dbFuncs.saveColor({
+            await dbColors.save({
               id: color.colorID,
               name: color.colorDisplay,
               code: color.colorCode,
@@ -90,7 +93,7 @@ export const useColoringPageStore = create(
 
         // Load saved colors from Dexie
         const { result: savedColors, error: colorsError } = await tryCatch(
-          dbFuncs.loadColors()
+          dbColors.loadAll()
         );
 
         if (colorsError) {
@@ -113,7 +116,7 @@ export const useColoringPageStore = create(
 
         // Load saved verse colors from Dexie
         const { result: savedVersesColor, error: versesError } = await tryCatch(
-          dbFuncs.loadVersesColor()
+          dbColors.loadVerses()
         );
 
         if (versesError) {
@@ -166,7 +169,7 @@ export const useColoringPageStore = create(
         };
 
         const { error } = await tryCatch(
-          dbFuncs.saveColor({
+          dbColors.save({
             id: color.colorID,
             name: color.colorDisplay,
             code: color.colorCode,
@@ -202,9 +205,7 @@ export const useColoringPageStore = create(
         const { coloredVerses } = get();
 
         // Delete color from Dexie
-        const { error: colorError } = await tryCatch(
-          dbFuncs.deleteColor(colorID)
-        );
+        const { error: colorError } = await tryCatch(dbColors.delete(colorID));
 
         if (colorError) {
           console.error("Failed to delete color:", colorError);
@@ -214,7 +215,7 @@ export const useColoringPageStore = create(
         // Delete all verse colors with this color
         for (const verseKey in coloredVerses) {
           if (coloredVerses[verseKey].colorID === colorID) {
-            await dbFuncs.deleteVerseColor(verseKey);
+            await dbColors.deleteVerse(verseKey);
           }
         }
 
@@ -236,14 +237,14 @@ export const useColoringPageStore = create(
       // Async action: Set verse color with persistence
       setVerseColor: async (verseKey: string, color: colorProps | null) => {
         if (color === null) {
-          const { error } = await tryCatch(dbFuncs.deleteVerseColor(verseKey));
+          const { error } = await tryCatch(dbColors.deleteVerse(verseKey));
           if (error) {
             console.error("Failed to delete verse color:", error);
             return false;
           }
         } else {
           const { error } = await tryCatch(
-            dbFuncs.saveVerseColor({
+            dbColors.saveVerse({
               verse_key: verseKey,
               color_id: color.colorID,
             })
@@ -277,7 +278,7 @@ export const useColoringPageStore = create(
         for (const colorID of Object.keys(colorsList)) {
           const color = colorsList[colorID];
           const { error } = await tryCatch(
-            dbFuncs.saveColor({
+            dbColors.save({
               id: color.colorID,
               name: color.colorDisplay,
               code: color.colorCode,

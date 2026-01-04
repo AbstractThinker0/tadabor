@@ -87,35 +87,6 @@ export const dbFuncs = {
     return db.letters_presets.toArray();
   },
 
-  saveColor: async (data: IColor) => {
-    const { id, ...rest } = data;
-    const updated = await db.colors.update(id, rest);
-
-    if (updated) return true;
-
-    return db.colors.add({ ...data, uuid: uuidv4() });
-  },
-  loadColors: () => {
-    return db.colors.toArray();
-  },
-  deleteColor: (id: string) => {
-    return db.colors.delete(id);
-  },
-  saveVerseColor: async (data: IVerseColor) => {
-    const { verse_key, ...rest } = data;
-    const updated = await db.verses_color.update(verse_key, rest);
-
-    if (updated) return true;
-
-    return db.verses_color.add({ ...data, uuid: uuidv4() });
-  },
-  deleteVerseColor: (verse_key: string) => {
-    return db.verses_color.delete(verse_key);
-  },
-  loadVersesColor: () => {
-    return db.verses_color.toArray();
-  },
-
   saveTag: async (data: ITag) => {
     const { id, ...rest } = data;
     const updated = await db.tags.update(id, rest);
@@ -151,6 +122,37 @@ export const dbFuncs = {
   },
   loadVersesTags: () => {
     return db.verses_tags.toArray();
+  },
+};
+
+export const dbColors = {
+  save: async (data: IColor) => {
+    const { id, ...rest } = data;
+    const updated = await db.colors.update(id, rest);
+
+    if (updated) return true;
+
+    return db.colors.add({ ...data, uuid: uuidv4() });
+  },
+  loadAll: () => {
+    return db.colors.toArray();
+  },
+  delete: (id: string) => {
+    return db.colors.delete(id);
+  },
+  saveVerse: async (data: IVerseColor) => {
+    const { verse_key, ...rest } = data;
+    const updated = await db.verses_color.update(verse_key, rest);
+
+    if (updated) return true;
+
+    return db.verses_color.add({ ...data, uuid: uuidv4() });
+  },
+  deleteVerse: (verse_key: string) => {
+    return db.verses_color.delete(verse_key);
+  },
+  loadVerses: () => {
+    return db.verses_color.toArray();
   },
 };
 
