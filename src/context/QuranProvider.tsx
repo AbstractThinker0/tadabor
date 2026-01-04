@@ -6,8 +6,8 @@ import { quranClass } from "quran-tools";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { QuranContext } from "@/context/QuranContext";
-import { Button, Flex, Text, VStack } from "@chakra-ui/react";
-import { TbReload } from "react-icons/tb";
+
+import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 const MAX_RETRIES = 3;
 
@@ -74,7 +74,6 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   const handleRefresh = () => {
     setIsLoading(true);
     setError(false);
-    window.location.reload();
   };
 
   if (isLoading) {
@@ -83,16 +82,10 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
   if (error) {
     return (
-      <Flex justify="center" align="center" height="100%">
-        <VStack gap={4}>
-          <Text fontSize="lg">
-            Failed to load Quran data after multiple attempts
-          </Text>
-          <Button colorScheme="blue" onClick={handleRefresh}>
-            <TbReload /> Refresh Page
-          </Button>
-        </VStack>
-      </Flex>
+      <ErrorRefresh
+        message="Failed to load Quran data after multiple attempts."
+        handleRefresh={handleRefresh}
+      />
     );
   }
 
