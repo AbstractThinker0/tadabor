@@ -132,7 +132,7 @@ export const dbColors = {
 
     if (updated) return true;
 
-    return db.colors.add({ ...data, uuid: uuidv4() });
+    return db.colors.add({ ...data });
   },
   loadAll: () => {
     return db.colors.toArray();
@@ -141,13 +141,16 @@ export const dbColors = {
     await db.verses_color.where("color_id").equals(id).delete();
     return db.colors.delete(id);
   },
+  saveBulk: async (data: IColor[]) => {
+    return db.colors.bulkPut(data);
+  },
   saveVerse: async (data: IVerseColor) => {
     const { verse_key, ...rest } = data;
     const updated = await db.verses_color.update(verse_key, rest);
 
     if (updated) return true;
 
-    return db.verses_color.add({ ...data, uuid: uuidv4() });
+    return db.verses_color.add({ ...data });
   },
   deleteVerse: (verse_key: string) => {
     return db.verses_color.delete(verse_key);

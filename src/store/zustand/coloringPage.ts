@@ -51,9 +51,21 @@ const initialState: ColoringPageState = {
 };
 
 const DEFAULT_COLORS: coloredProps = {
-  "0": { colorID: "0", colorCode: "#3dc23d", colorDisplay: "Studied" },
-  "1": { colorID: "1", colorCode: "#dfdf58", colorDisplay: "In progress" },
-  "2": { colorID: "2", colorCode: "#da5252", colorDisplay: "Unexplored" },
+  "0": {
+    colorID: "0",
+    colorCode: "#3dc23d",
+    colorDisplay: "Studied",
+  },
+  "1": {
+    colorID: "1",
+    colorCode: "#dfdf58",
+    colorDisplay: "In progress",
+  },
+  "2": {
+    colorID: "2",
+    colorCode: "#da5252",
+    colorDisplay: "Unexplored",
+  },
 };
 
 export const useColoringPageStore = create(
@@ -72,13 +84,25 @@ export const useColoringPageStore = create(
         // Check if first time opening colors page
         if (localStorage.getItem("defaultColorsInitiated") === null) {
           // First time: create default colors
-          for (const colorID of Object.keys(DEFAULT_COLORS)) {
-            const color = DEFAULT_COLORS[colorID];
-            await dbColors.save({
-              id: color.colorID,
-              name: color.colorDisplay,
-              code: color.colorCode,
+          const defaultColorsToSave: IColor[] = Object.values(
+            DEFAULT_COLORS
+          ).map((color) => ({
+            id: color.colorID,
+            name: color.colorDisplay,
+            code: color.colorCode,
+          }));
+
+          const { error } = await tryCatch(
+            dbColors.saveBulk(defaultColorsToSave)
+          );
+
+          if (error) {
+            console.error("Failed to save default colors:", error);
+            set((state) => {
+              state.loading = false;
+              state.error = true;
             });
+            return;
           }
 
           localStorage.setItem("defaultColorsInitiated", "true");
@@ -253,21 +277,20 @@ export const useColoringPageStore = create(
 
       // Async action: Save all colors (used by EditColorsModal)
       saveColorsList: async (colorsList: coloredProps) => {
-        // Save each color to Dexie
-        for (const colorID of Object.keys(colorsList)) {
-          const color = colorsList[colorID];
-          const { error } = await tryCatch(
-            dbColors.save({
-              id: color.colorID,
-              name: color.colorDisplay,
-              code: color.colorCode,
-            })
-          );
+        // Save all colors to Dexie in bulk
+        const colorsToSave: IColor[] = Object.values(colorsList).map(
+          (color) => ({
+            id: color.colorID,
+            name: color.colorDisplay,
+            code: color.colorCode,
+          })
+        );
 
-          if (error) {
-            console.error("Failed to save color:", error);
-            return false;
-          }
+        const { error } = await tryCatch(dbColors.saveBulk(colorsToSave));
+
+        if (error) {
+          console.error("Failed to save colors in bulk:", error);
+          return false;
         }
 
         // Update colored verses with new color data
