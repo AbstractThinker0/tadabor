@@ -152,12 +152,6 @@ export const useColoringPageStore = create(
         });
       },
 
-      setColorsList: (colorsList: coloredProps) => {
-        set((state) => {
-          state.colorsList = colorsList;
-        });
-      },
-
       // Async action: Add a new color with persistence
       addColor: async (
         colorInput: Omit<colorProps, "colorID"> | colorProps
@@ -202,7 +196,6 @@ export const useColoringPageStore = create(
 
       // Async action: Delete a color with persistence
       deleteColor: async (colorID: string) => {
-
         // Delete color and all associated verse colors from Dexie
         const { error: colorError } = await tryCatch(dbColors.delete(colorID));
 
@@ -256,12 +249,6 @@ export const useColoringPageStore = create(
         });
 
         return true;
-      },
-
-      setColoredVerses: (coloredVerses: coloredProps) => {
-        set((state) => {
-          state.coloredVerses = coloredVerses;
-        });
       },
 
       // Async action: Save all colors (used by EditColorsModal)
