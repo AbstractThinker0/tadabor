@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { toasterBottomCenter } from "@/components/ui/toaster";
-import { dbFuncs } from "@/util/db";
+import { dbNotes } from "@/util/dbFuncs";
 import {
   usePasswordRequestReset,
   usePasswordReset,
@@ -115,7 +115,7 @@ export const useAuth = () => {
     dispatch(userActions.logout());
     resetCloudNotes();
     if (clearOldNotes) {
-      dbFuncs.clearCloudNotes();
+      dbNotes.clearAllCloud();
     }
 
     queueMicrotask(() =>

@@ -2,7 +2,9 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { dbFuncs, type ILocalNote } from "@/util/db";
+import type { ILocalNote } from "@/types/db";
+import { dbNotes } from "@/util/dbFuncs";
+
 import type {
   ChangeNoteDirPayload,
   ChangeNotePayload,
@@ -37,7 +39,7 @@ export const useLocalNotesStore = create(
           state.error = false;
         });
 
-        const { result, error } = await tryCatch(dbFuncs.loadLocalNotes());
+        const { result, error } = await tryCatch(dbNotes.loadAllLocal());
 
         if (error) {
           console.error("Failed to load notes:", error);
@@ -89,7 +91,7 @@ export const useLocalNotesStore = create(
             });
 
             const { result: note, error } = await tryCatch(
-              dbFuncs.loadLocalNote(noteId)
+              dbNotes.loadLocal(noteId)
             );
 
             if (error) {
@@ -177,7 +179,7 @@ export const useLocalNotesStore = create(
       markSaved: async (payload: MarkSavedPayload<ILocalNote>) => {
         const { saveData } = payload;
 
-        const { error } = await tryCatch(dbFuncs.saveLocalNote(saveData));
+        const { error } = await tryCatch(dbNotes.saveLocal(saveData));
 
         if (error) {
           console.error("Failed to save note locally:", error);

@@ -87,81 +87,6 @@ export const dbFuncs = {
     return db.letters_presets.toArray();
   },
 
-  // New unified APIs
-  saveLocalNote: async ({
-    key,
-    type,
-    uuid,
-    id,
-    text,
-    dir = "",
-    date_created,
-    date_modified,
-  }: {
-    type: "verse" | "root" | "translation" | string;
-    uuid: string;
-    id: string;
-    key: string;
-    text: string;
-    dir?: string;
-    date_created?: number;
-    date_modified?: number;
-  }) => {
-    const updated = await db.local_notes.update(id, {
-      text,
-      dir,
-      date_modified,
-    });
-
-    if (updated) return true;
-
-    await db.local_notes.add({
-      id,
-      uuid,
-      key,
-      type,
-      text,
-      dir,
-      date_created,
-      date_modified,
-    });
-
-    return true;
-  },
-  loadLocalNotes: () => {
-    return db.local_notes.toArray();
-  },
-  loadCloudNotes: (userid: number) => {
-    return db.cloud_notes.where("authorId").equals(userid).toArray();
-  },
-  loadLocalNote: (id: string) => {
-    return db.local_notes.get(id);
-  },
-  loadCloudNote: (id: string, userid: number) => {
-    return db.cloud_notes
-      .where("id")
-      .equals(id)
-      .and((note) => note.authorId === userid)
-      .first();
-  },
-  saveCloudNote: async (note: ICloudNote) => {
-    const updated = await db.cloud_notes.update(note.id, {
-      ...note,
-    });
-
-    if (updated) return true;
-
-    await db.cloud_notes.add(note);
-
-    return true;
-  },
-  updateCloudNoteSyncDate: async (id: string, date_synced: number) => {
-    return db.cloud_notes.update(id, { date_synced });
-  },
-  clearCloudNotes: () => {
-    return db.cloud_notes.clear();
-  },
-
   saveColor: async (data: IColor) => {
     const { id, ...rest } = data;
     const updated = await db.colors.update(id, rest);
@@ -226,5 +151,81 @@ export const dbFuncs = {
   },
   loadVersesTags: () => {
     return db.verses_tags.toArray();
+  },
+};
+
+export const dbNotes = {
+  saveLocal: async ({
+    key,
+    type,
+    uuid,
+    id,
+    text,
+    dir = "",
+    date_created,
+    date_modified,
+  }: {
+    type: "verse" | "root" | "translation" | string;
+    uuid: string;
+    id: string;
+    key: string;
+    text: string;
+    dir?: string;
+    date_created?: number;
+    date_modified?: number;
+  }) => {
+    const updated = await db.local_notes.update(id, {
+      text,
+      dir,
+      date_modified,
+    });
+
+    if (updated) return true;
+
+    await db.local_notes.add({
+      id,
+      uuid,
+      key,
+      type,
+      text,
+      dir,
+      date_created,
+      date_modified,
+    });
+
+    return true;
+  },
+  loadAllLocal: () => {
+    return db.local_notes.toArray();
+  },
+  loadAllCloud: (userid: number) => {
+    return db.cloud_notes.where("authorId").equals(userid).toArray();
+  },
+  loadLocal: (id: string) => {
+    return db.local_notes.get(id);
+  },
+  loadCloud: (id: string, userid: number) => {
+    return db.cloud_notes
+      .where("id")
+      .equals(id)
+      .and((note) => note.authorId === userid)
+      .first();
+  },
+  saveCloud: async (note: ICloudNote) => {
+    const updated = await db.cloud_notes.update(note.id, {
+      ...note,
+    });
+
+    if (updated) return true;
+
+    await db.cloud_notes.add(note);
+
+    return true;
+  },
+  updateCloudSyncDate: async (id: string, date_synced: number) => {
+    return db.cloud_notes.update(id, { date_synced });
+  },
+  clearAllCloud: () => {
+    return db.cloud_notes.clear();
   },
 };
