@@ -3,7 +3,7 @@ import { TbReload } from "react-icons/tb";
 
 interface ErrorRefreshProps {
   message?: string;
-  handleRefresh: () => void;
+  handleRefresh?: () => void;
 }
 
 const ErrorRefresh = ({
@@ -11,7 +11,7 @@ const ErrorRefresh = ({
   handleRefresh,
 }: ErrorRefreshProps) => {
   const onClickRefresh = () => {
-    handleRefresh();
+    handleRefresh?.();
     window.location.reload();
   };
 
