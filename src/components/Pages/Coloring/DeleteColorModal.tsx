@@ -1,7 +1,5 @@
 import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
-import { dbFuncs } from "@/util/db";
-
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { Dialog, Button, ButtonGroup, Text, Span } from "@chakra-ui/react";
@@ -16,24 +14,12 @@ interface DeleteColorModalProps {
 const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
   const currentColor = useColoringPageStore((state) => state.currentColor);
-
   const deleteColor = useColoringPageStore((state) => state.deleteColor);
 
-  function deleteColorHandler(colorID: string) {
-    deleteColor(colorID);
-    dbFuncs.deleteColor(colorID);
-
-    for (const verseKey in coloredVerses) {
-      if (coloredVerses[verseKey].colorID === colorID) {
-        dbFuncs.deleteVerseColor(verseKey);
-      }
-    }
-  }
-
-  function onClickDelete() {
+  async function onClickDelete() {
     if (!currentColor) return;
 
-    deleteColorHandler(currentColor.colorID);
+    await deleteColor(currentColor.colorID);
     onClose();
   }
 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { v4 as uuidv4 } from "uuid";
 
 import type { selectedChaptersType } from "@/types";
 import type { verseProps } from "quran-tools";
@@ -9,6 +10,8 @@ import type {
   colorProps,
 } from "@/components/Pages/Coloring/consts";
 import { initialSelectedChapters } from "@/util/consts";
+import { dbFuncs, type IColor, type IVerseColor } from "@/util/db";
+import { tryCatch } from "@/util/trycatch";
 
 interface ColoringPageState {
   currentChapter: number;
@@ -22,6 +25,9 @@ interface ColoringPageState {
   scrollKey: string;
   showSearchPanel: boolean;
   showSearchPanelMobile: boolean;
+  loading: boolean;
+  complete: boolean;
+  error: boolean;
 }
 
 const initialState: ColoringPageState = {
@@ -36,11 +42,106 @@ const initialState: ColoringPageState = {
   scrollKey: "",
   showSearchPanel: true,
   showSearchPanelMobile: false,
+  loading: false,
+  complete: false,
+  error: false,
+};
+
+const DEFAULT_COLORS: coloredProps = {
+  "0": { colorID: "0", colorCode: "#3dc23d", colorDisplay: "Studied" },
+  "1": { colorID: "1", colorCode: "#dfdf58", colorDisplay: "In progress" },
+  "2": { colorID: "2", colorCode: "#da5252", colorDisplay: "Unexplored" },
 };
 
 export const useColoringPageStore = create(
   immer(
-    combine(initialState, (set) => ({
+    combine(initialState, (set, get) => ({
+      // Async action: Initialize colors from Dexie or create defaults
+      initializeColors: async () => {
+        const { complete, loading } = get();
+        if (complete || loading) return;
+
+        set((state) => {
+          state.loading = true;
+          state.error = false;
+        });
+
+        // Check if first time opening colors page
+        if (localStorage.getItem("defaultColorsInitiated") === null) {
+          // First time: create default colors
+          for (const colorID of Object.keys(DEFAULT_COLORS)) {
+            const color = DEFAULT_COLORS[colorID];
+            await dbFuncs.saveColor({
+              id: color.colorID,
+              name: color.colorDisplay,
+              code: color.colorCode,
+            });
+          }
+
+          localStorage.setItem("defaultColorsInitiated", "true");
+
+          set((state) => {
+            state.colorsList = { ...DEFAULT_COLORS };
+            state.loading = false;
+            state.complete = true;
+          });
+          return;
+        }
+
+        // Load saved colors from Dexie
+        const { result: savedColors, error: colorsError } = await tryCatch(
+          dbFuncs.loadColors()
+        );
+
+        if (colorsError) {
+          console.error("Failed to load colors:", colorsError);
+          set((state) => {
+            state.loading = false;
+            state.error = true;
+          });
+          return;
+        }
+
+        const loadedColors: coloredProps = {};
+        savedColors.forEach((color: IColor) => {
+          loadedColors[color.id] = {
+            colorID: color.id,
+            colorDisplay: color.name,
+            colorCode: color.code,
+          };
+        });
+
+        // Load saved verse colors from Dexie
+        const { result: savedVersesColor, error: versesError } = await tryCatch(
+          dbFuncs.loadVersesColor()
+        );
+
+        if (versesError) {
+          console.error("Failed to load verse colors:", versesError);
+          set((state) => {
+            state.colorsList = loadedColors;
+            state.loading = false;
+            state.error = true;
+          });
+          return;
+        }
+
+        const loadedColoredVerses: coloredProps = {};
+        savedVersesColor.forEach((verseColor: IVerseColor) => {
+          if (loadedColors[verseColor.color_id]) {
+            loadedColoredVerses[verseColor.verse_key] =
+              loadedColors[verseColor.color_id];
+          }
+        });
+
+        set((state) => {
+          state.colorsList = loadedColors;
+          state.coloredVerses = loadedColoredVerses;
+          state.loading = false;
+          state.complete = true;
+        });
+      },
+
       setChapter: (chapter: number) => {
         set((state) => {
           state.currentChapter = chapter;
@@ -54,10 +155,34 @@ export const useColoringPageStore = create(
         });
       },
 
-      addColor: (color: colorProps) => {
+      // Async action: Add a new color with persistence
+      addColor: async (
+        colorInput: Omit<colorProps, "colorID"> | colorProps
+      ) => {
+        const color: colorProps = {
+          colorID: "colorID" in colorInput ? colorInput.colorID : uuidv4(),
+          colorCode: colorInput.colorCode,
+          colorDisplay: colorInput.colorDisplay,
+        };
+
+        const { error } = await tryCatch(
+          dbFuncs.saveColor({
+            id: color.colorID,
+            name: color.colorDisplay,
+            code: color.colorCode,
+          })
+        );
+
+        if (error) {
+          console.error("Failed to save color:", error);
+          return false;
+        }
+
         set((state) => {
           state.colorsList[color.colorID] = color;
         });
+
+        return true;
       },
 
       selectColor: (color: colorProps) => {
@@ -72,7 +197,27 @@ export const useColoringPageStore = create(
         });
       },
 
-      deleteColor: (colorID: string) => {
+      // Async action: Delete a color with persistence
+      deleteColor: async (colorID: string) => {
+        const { coloredVerses } = get();
+
+        // Delete color from Dexie
+        const { error: colorError } = await tryCatch(
+          dbFuncs.deleteColor(colorID)
+        );
+
+        if (colorError) {
+          console.error("Failed to delete color:", colorError);
+          return false;
+        }
+
+        // Delete all verse colors with this color
+        for (const verseKey in coloredVerses) {
+          if (coloredVerses[verseKey].colorID === colorID) {
+            await dbFuncs.deleteVerseColor(verseKey);
+          }
+        }
+
         set((state) => {
           delete state.colorsList[colorID];
 
@@ -84,9 +229,31 @@ export const useColoringPageStore = create(
 
           delete state.selectedColors[colorID];
         });
+
+        return true;
       },
 
-      setVerseColor: (verseKey: string, color: colorProps | null) => {
+      // Async action: Set verse color with persistence
+      setVerseColor: async (verseKey: string, color: colorProps | null) => {
+        if (color === null) {
+          const { error } = await tryCatch(dbFuncs.deleteVerseColor(verseKey));
+          if (error) {
+            console.error("Failed to delete verse color:", error);
+            return false;
+          }
+        } else {
+          const { error } = await tryCatch(
+            dbFuncs.saveVerseColor({
+              verse_key: verseKey,
+              color_id: color.colorID,
+            })
+          );
+          if (error) {
+            console.error("Failed to save verse color:", error);
+            return false;
+          }
+        }
+
         set((state) => {
           if (color == null) {
             delete state.coloredVerses[verseKey];
@@ -94,12 +261,52 @@ export const useColoringPageStore = create(
             state.coloredVerses[verseKey] = color;
           }
         });
+
+        return true;
       },
 
       setColoredVerses: (coloredVerses: coloredProps) => {
         set((state) => {
           state.coloredVerses = coloredVerses;
         });
+      },
+
+      // Async action: Save all colors (used by EditColorsModal)
+      saveColorsList: async (colorsList: coloredProps) => {
+        // Save each color to Dexie
+        for (const colorID of Object.keys(colorsList)) {
+          const color = colorsList[colorID];
+          const { error } = await tryCatch(
+            dbFuncs.saveColor({
+              id: color.colorID,
+              name: color.colorDisplay,
+              code: color.colorCode,
+            })
+          );
+
+          if (error) {
+            console.error("Failed to save color:", error);
+            return false;
+          }
+        }
+
+        // Update colored verses with new color data
+        const { coloredVerses } = get();
+        const updatedColoredVerses: coloredProps = {};
+
+        for (const verseKey of Object.keys(coloredVerses)) {
+          const mappedColor = colorsList[coloredVerses[verseKey]?.colorID];
+          if (mappedColor) {
+            updatedColoredVerses[verseKey] = mappedColor;
+          }
+        }
+
+        set((state) => {
+          state.colorsList = colorsList;
+          state.coloredVerses = updatedColoredVerses;
+        });
+
+        return true;
       },
 
       setCurrentVerse: (verse: verseProps | null) => {

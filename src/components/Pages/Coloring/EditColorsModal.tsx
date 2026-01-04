@@ -2,9 +2,6 @@ import { useState } from "react";
 
 import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
-import { dbFuncs } from "@/util/db";
-
-import type { coloredProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import {
@@ -25,12 +22,7 @@ interface EditColorModalProps {
 
 const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
   const colorsList = useColoringPageStore((state) => state.colorsList);
-  const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
-
-  const setColorsList = useColoringPageStore((state) => state.setColorsList);
-  const setColoredVerses = useColoringPageStore(
-    (state) => state.setColoredVerses
-  );
+  const saveColorsList = useColoringPageStore((state) => state.saveColorsList);
 
   const [listColors, setListColors] = useState({ ...colorsList });
   const [currentColor, setCurrentColor] = useState(
@@ -56,26 +48,8 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
     setListColors(newColorsList);
   }
 
-  function onClickSave() {
-    setColorsList(listColors);
-
-    Object.keys(listColors).forEach((colorID) => {
-      dbFuncs.saveColor({
-        id: listColors[colorID].colorID,
-        name: listColors[colorID].colorDisplay,
-        code: listColors[colorID].colorCode,
-      });
-    });
-
-    const newColoredVerses: coloredProps = {};
-    Object.keys(coloredVerses).forEach((verseKey) => {
-      const mapped = listColors[coloredVerses[verseKey]?.colorID];
-      if (mapped) {
-        newColoredVerses[verseKey] = mapped;
-      }
-    });
-
-    setColoredVerses(newColoredVerses);
+  async function onClickSave() {
+    await saveColorsList(listColors);
     onClose();
   }
 

@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { useColoringPageStore } from "@/store/zustand/coloringPage";
-import { dbFuncs } from "@/util/db";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
@@ -31,38 +29,30 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
     setColorCode(event.currentTarget.value);
   }
 
-  function onClickSave() {
+  async function onClickSave() {
     if (!colorName) {
       alert("Please enter the color display name");
       return;
     }
 
-    const newColor: colorProps = {
-      colorID: uuidv4(),
+    const newColor: Omit<colorProps, "colorID"> = {
       colorCode: colorCode,
       colorDisplay: colorName,
     };
 
-    addColor(newColor);
+    const success = await addColor(newColor);
 
-    dbFuncs
-      .saveColor({
-        id: newColor.colorID,
-        name: newColor.colorDisplay,
-        code: newColor.colorCode,
-      })
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
       });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
 
     setColorName("");
     setColorCode("#000000");

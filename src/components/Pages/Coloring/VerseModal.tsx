@@ -2,8 +2,6 @@ import { useEffect, useEffectEvent, useState } from "react";
 
 import { useColoringPageStore } from "@/store/zustand/coloringPage";
 
-import { dbFuncs } from "@/util/db";
-
 import useQuran from "@/context/useQuran";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
@@ -50,24 +48,11 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
     setCurrentVerse(null);
   };
 
-  const updateVerseColor = (verseKey: string, color: colorProps | null) => {
-    if (color === null) {
-      dbFuncs.deleteVerseColor(verseKey);
-    } else {
-      dbFuncs.saveVerseColor({
-        verse_key: verseKey,
-        color_id: color.colorID,
-      });
-    }
-
-    setVerseColor(verseKey, color);
-  };
-
-  const onClickSave = () => {
+  const onClickSave = async () => {
     if (currentVerse?.key) {
-      updateVerseColor(currentVerse.key, chosenColor);
+      await setVerseColor(currentVerse.key, chosenColor);
     }
-    onClose();
+    onCloseModal();
   };
 
   const onClickColor = (color: colorProps) => {
@@ -99,9 +84,8 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
           <Box textAlign={"center"}>
             (
             {currentVerse
-              ? `${quranService.getChapterName(currentVerse.suraid)}:${
-                  currentVerse.verseid
-                }`
+              ? `${quranService.getChapterName(currentVerse.suraid)}:${currentVerse.verseid
+              }`
               : ""}
             )
           </Box>
@@ -137,10 +121,10 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
                 style={
                   chosenColor?.colorID === colorID
                     ? {
-                        border: "5px solid",
-                        borderImage:
-                          "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
-                      }
+                      border: "5px solid",
+                      borderImage:
+                        "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
+                    }
                     : {}
                 }
               >
