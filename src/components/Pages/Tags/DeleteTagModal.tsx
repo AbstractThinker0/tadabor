@@ -1,10 +1,9 @@
-import { dbFuncs } from "@/util/db";
-
-import { useAppDispatch, useAppSelector } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTranslation } from "react-i18next";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Span } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { toaster } from "@/components/ui/toaster";
 
 interface DeleteTagModalProps {
   isOpen: boolean;
@@ -17,18 +16,30 @@ const DeleteTagModal = ({
   onClose,
   getTaggedVerses,
 }: DeleteTagModalProps) => {
-  const dispatch = useAppDispatch();
-
-  const currentTag = useAppSelector((state) => state.tagsPage.currentTag);
+  const { t } = useTranslation();
+  const currentTag = useTagsPageStore((state) => state.currentTag);
+  const deleteTag = useTagsPageStore((state) => state.deleteTag);
 
   const versesCount = currentTag ? getTaggedVerses(currentTag.tagID) : 0;
 
-  function onClickDelete() {
+  async function onClickDelete() {
     if (!currentTag) return;
 
-    dispatch(tagsPageActions.deleteTag(currentTag.tagID));
+    // Async action handles DB deletion
+    const success = await deleteTag(currentTag.tagID);
 
-    dbFuncs.deleteTag(currentTag.tagID);
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
+      });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
+
     onClose();
   }
 

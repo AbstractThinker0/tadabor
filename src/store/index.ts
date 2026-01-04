@@ -1,4 +1,4 @@
-import { configureStore, createSelector } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import {
   type TypedUseSelectorHook,
   useDispatch,
@@ -15,7 +15,7 @@ import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
 import searcherPageReducer from "@/store/slices/pages/searcher";
 import searcher2PageReducer from "@/store/slices/pages/searcher2";
-import tagsPageReducer from "@/store/slices/pages/tags";
+
 import inspectorPageReducer from "@/store/slices/pages/inspector";
 import translationPageReducer from "@/store/slices/pages/translation";
 import comparatorPageReducer from "@/store/slices/pages/comparator";
@@ -36,7 +36,7 @@ const store = configureStore({
     rbPage: rbPageReducer,
     searcherPage: searcherPageReducer,
     searcher2Page: searcher2PageReducer,
-    tagsPage: tagsPageReducer,
+
     inspectorPage: inspectorPageReducer,
     translationPage: translationPageReducer,
     comparatorPage: comparatorPageReducer,
@@ -59,16 +59,5 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const isTranslationsLoading = (state: RootState) =>
   state.translations.loading;
-
-const EMPTY_ARRAY = Object.freeze([]) as unknown as string[];
-
-export const selectVerseTags = createSelector(
-  [
-    (_state: RootState, verseKey?: string) => verseKey,
-    (state: RootState) => state.tagsPage.versesTags,
-  ],
-  (verseKey, versesTags) =>
-    verseKey ? versesTags[verseKey] || EMPTY_ARRAY : EMPTY_ARRAY
-);
 
 export default store;

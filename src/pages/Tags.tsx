@@ -1,86 +1,40 @@
-import { useEffect, useState } from "react";
-
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { tagsPageActions } from "@/store/slices/pages/tags";
-
-import { dbFuncs } from "@/util/db";
+import { useEffect } from "react";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Sidebar } from "@/components/Generic/Sidebar";
 
-import type {
-  tagsProps,
-  versesTagsProps,
-} from "@/components/Pages/Tags/consts";
 import TagsSide from "@/components/Pages/Tags/TagsSide";
 import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
 import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 function Tags() {
   usePageNav("nav.tags");
-  const [loadingState, setLoadingState] = useState(true);
 
-  const dispatch = useAppDispatch();
+  const complete = useTagsPageStore((state) => state.complete);
+  const error = useTagsPageStore((state) => state.error);
+  const initializeTags = useTagsPageStore((state) => state.initializeTags);
 
-  const tags = useAppSelector((state) => state.tagsPage.tags);
+  const showSearchPanel = useTagsPageStore((state) => state.showSearchPanel);
+  const showSearchPanelMobile = useTagsPageStore(
+    (state) => state.showSearchPanelMobile
+  );
+  const setSearchPanel = useTagsPageStore((state) => state.setSearchPanel);
 
   useEffect(() => {
-    let clientLeft = false;
-
-    async function fetchSavedTags() {
-      // Check if we already fetched tags
-      if (Object.keys(tags).length) {
-        setLoadingState(false);
-        return;
-      }
-
-      const savedTags = await dbFuncs.loadTags();
-      const versesTags = await dbFuncs.loadVersesTags();
-
-      if (clientLeft) return;
-
-      const initialTags: tagsProps = {};
-
-      savedTags.forEach((tag) => {
-        initialTags[tag.id] = { tagDisplay: tag.name, tagID: tag.id };
-      });
-
-      dispatch(tagsPageActions.setTags(initialTags));
-
-      const initialVersesTags: versesTagsProps = {};
-
-      versesTags.forEach((verseTag) => {
-        initialVersesTags[verseTag.verse_key] = verseTag.tags_ids;
-      });
-
-      dispatch(tagsPageActions.setVersesTags(initialVersesTags));
-
-      setLoadingState(false);
-    }
-
-    fetchSavedTags();
-
-    return () => {
-      clientLeft = true;
-    };
-  }, [dispatch]);
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.tagsPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.tagsPage.showSearchPanelMobile
-  );
+    initializeTags();
+  }, [initializeTags]);
 
   const setOpenState = (state: boolean) => {
-    dispatch(tagsPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
-  if (loadingState) return <LoadingSpinner text="Loading tags.." />;
+  if (error) return <ErrorRefresh message="Failed to load tags data." />;
+
+  if (!complete) return <LoadingSpinner text="Loading tags.." />;
 
   return (
     <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>

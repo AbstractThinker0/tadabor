@@ -1,25 +1,24 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.tagsPage.currentChapter
+  const selectChapter = useTagsPageStore(
+    (state) => state.currentChapter
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.tagsPage.showSearchPanel
+  const showSearchPanel = useTagsPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.tagsPage.showSearchPanelMobile
+  const showSearchPanelMobile = useTagsPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useTagsPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(tagsPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

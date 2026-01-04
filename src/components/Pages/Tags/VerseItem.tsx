@@ -1,5 +1,4 @@
-import { useAppDispatch } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import type { verseProps } from "quran-tools";
 
@@ -32,15 +31,16 @@ const VerseItem = ({
   tags,
   onOpenVerseModal,
 }: VerseItemProps) => {
-  const dispatch = useAppDispatch();
+  const setCurrentVerse = useTagsPageStore((state) => state.setCurrentVerse);
+  const setScrollKey = useTagsPageStore((state) => state.setScrollKey);
 
   function onClickTagVerse(verse: verseProps) {
-    dispatch(tagsPageActions.setCurrentVerse(verse));
+    setCurrentVerse(verse);
     onOpenVerseModal();
   }
 
   function onClickVerse() {
-    dispatch(tagsPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   }
 
   return (
@@ -87,22 +87,25 @@ const SelectedVerseItem = ({
   onOpenVerseModal,
   isSelected,
 }: SelectedVerseItemProps) => {
-  const dispatch = useAppDispatch();
   const quranService = useQuran();
 
+  const gotoChapter = useTagsPageStore((state) => state.gotoChapter);
+  const setScrollKey = useTagsPageStore((state) => state.setScrollKey);
+  const setCurrentVerse = useTagsPageStore((state) => state.setCurrentVerse);
+
   function onClickChapter(verse: verseProps) {
-    dispatch(tagsPageActions.gotoChapter(verse.suraid));
+    gotoChapter(Number(verse.suraid));
     if (!isSelected) {
-      dispatch(tagsPageActions.setScrollKey(verse.key));
+      setScrollKey(verse.key);
     }
   }
 
   function onClickVerse(verse: verseProps) {
-    dispatch(tagsPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   }
 
   function onClickTagVerse(verse: verseProps) {
-    dispatch(tagsPageActions.setCurrentVerse(verse));
+    setCurrentVerse(verse);
     onOpenVerseModal();
   }
 

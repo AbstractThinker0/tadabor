@@ -1,12 +1,8 @@
 import { useState } from "react";
 
-import { dbFuncs } from "@/util/db";
-
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
-import { selectVerseTags } from "@/store";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Flex } from "@chakra-ui/react";
 
@@ -20,30 +16,26 @@ interface VerseTagModalProps {
 }
 
 function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
-  const dispatch = useAppDispatch();
+  const tags = useTagsPageStore((state) => state.tags);
 
-  const tags = useAppSelector((state) => state.tagsPage.tags);
+  const currentVerse = useTagsPageStore((state) => state.currentVerse);
 
-  const currentVerse = useAppSelector((state) => state.tagsPage.currentVerse);
+  // We need to look up the tags for the current verse
+  const versesTags = useTagsPageStore((state) => state.versesTags);
+  const currentVerseTags = currentVerse ? versesTags[currentVerse.key] || [] : [];
 
-  const verseTags = useAppSelector((state) =>
-    selectVerseTags(state, currentVerse?.key)
-  );
+  const setVerseTagsStore = useTagsPageStore((state) => state.setVerseTags);
+  const setCurrentVerse = useTagsPageStore((state) => state.setCurrentVerse);
 
   const quranService = useQuran();
 
   const [editedTags, setEditedTags] = useState<string[] | null>(null);
 
-  const currentTags = editedTags ?? verseTags;
+  const currentTags = editedTags ?? currentVerseTags;
 
   const setVerseTags = (verseKey: string, tags: string[] | null) => {
-    if (tags === null) {
-      dbFuncs.deleteVerseTags(verseKey);
-    } else {
-      dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
-    }
-
-    dispatch(tagsPageActions.setVerseTags({ verseKey, tags }));
+    // The store action handles dbFuncs internally
+    setVerseTagsStore(verseKey, tags);
   };
 
   const onCloseComplete = () => {
@@ -51,7 +43,7 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
 
     setEditedTags(null);
 
-    dispatch(tagsPageActions.setCurrentVerse(null));
+    setCurrentVerse(null);
   };
 
   const canFindTag = (tagID: string) => {
@@ -99,9 +91,8 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
           <Box textAlign={"center"} fontSize={"large"} pb={2}>
             (
             {currentVerse
-              ? `${quranService.getChapterName(currentVerse.suraid)}:${
-                  currentVerse.verseid
-                }`
+              ? `${quranService.getChapterName(currentVerse.suraid)}:${currentVerse.verseid
+              }`
               : ""}
             )
           </Box>

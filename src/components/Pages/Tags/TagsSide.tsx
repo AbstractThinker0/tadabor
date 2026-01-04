@@ -1,7 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import type { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
@@ -12,12 +10,11 @@ import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 import type { selectedChaptersType } from "@/types";
 
 function TagsSide() {
-  const dispatch = useAppDispatch();
-
-  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+  const versesTags = useTagsPageStore((state) => state.versesTags);
+  const selectTag = useTagsPageStore((state) => state.selectTag);
 
   function onClickSelectTag(tag: tagProps) {
-    dispatch(tagsPageActions.selectTag(tag));
+    selectTag(tag);
   }
 
   const getTaggedVerses = (tagID: string) => {
@@ -32,30 +29,33 @@ function TagsSide() {
     return countTags;
   };
 
-  const selectedVerse = useAppSelector((state) => state.tagsPage.selectedVerse);
+  const selectedVerse = useTagsPageStore((state) => state.selectedVerse);
 
-  const currentChapter = useAppSelector(
-    (state) => state.tagsPage.currentChapter
+  const currentChapter = useTagsPageStore((state) => state.currentChapter);
+
+  const selectedChapters = useTagsPageStore(
+    (state) => state.selectedChapters
   );
 
-  const selectedChapters = useAppSelector(
-    (state) => state.tagsPage.selectedChapters
-  );
+  const setSelectedVerse = useTagsPageStore((state) => state.setSelectedVerse);
+  const setChapterAction = useTagsPageStore((state) => state.setChapter);
+  const setSelectedChaptersAction = useTagsPageStore((state) => state.setSelectedChapters);
+  const toggleSelectChapterAction = useTagsPageStore((state) => state.toggleSelectChapter);
 
   const onClickVerse = (verseKey: string) => {
-    dispatch(tagsPageActions.setSelectedVerse(verseKey));
+    setSelectedVerse(verseKey);
   };
 
   const setChapter = (chapter: number) => {
-    dispatch(tagsPageActions.setChapter(chapter));
+    setChapterAction(chapter);
   };
 
   const setSelectedChapters = (chapters: selectedChaptersType) => {
-    dispatch(tagsPageActions.setSelectedChapters(chapters));
+    setSelectedChaptersAction(chapters);
   };
 
   const toggleSelectChapter = (chapter: number) => {
-    dispatch(tagsPageActions.toggleSelectChapter(chapter));
+    toggleSelectChapterAction(chapter);
   };
 
   return (
@@ -106,14 +106,13 @@ const SideList = ({
     onClose: onCloseDeleteModal,
   } = useDisclosure();
 
-  const dispatch = useAppDispatch();
+  const tags = useTagsPageStore((state) => state.tags);
 
-  const tags = useAppSelector((state) => state.tagsPage.tags);
-
-  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+  const selectedTags = useTagsPageStore((state) => state.selectedTags);
+  const setCurrentTag = useTagsPageStore((state) => state.setCurrentTag);
 
   const onClickDeleteTag = (tag: tagProps) => {
-    dispatch(tagsPageActions.setCurrentTag(tag));
+    setCurrentTag(tag);
     onOpenDeleteModal();
   };
 
@@ -191,11 +190,11 @@ const SideList = ({
 const VersesCount = () => {
   const { t } = useTranslation();
 
-  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
-  const selectedChapters = useAppSelector(
-    (state) => state.tagsPage.selectedChapters
+  const versesTags = useTagsPageStore((state) => state.versesTags);
+  const selectedChapters = useTagsPageStore(
+    (state) => state.selectedChapters
   );
-  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+  const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
   const getSelectedVerses = () => {
     const asArray = Object.entries(versesTags);

@@ -95,11 +95,11 @@ export const dbFuncs = {
 
     return db.tags.add({ ...data, uuid: uuidv4() });
   },
-  deleteTag: (id: string) => {
-    db.tags.delete(id);
+  deleteTag: async (id: string) => {
+    await db.tags.delete(id);
 
     // Uses multi-entry index on tags_ids
-    db.verses_tags
+    return db.verses_tags
       .where("tags_ids")
       .equals(id)
       .modify((verseTag) => {

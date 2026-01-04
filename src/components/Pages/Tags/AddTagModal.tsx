@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
-import { dbFuncs } from "@/util/db";
 import type { tagProps } from "@/components/Pages/Tags/consts";
 
-import { useAppDispatch } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { toaster } from "@/components/ui/toaster";
 
 interface AddTagModalProps {
   isOpen: boolean;
@@ -15,7 +15,8 @@ interface AddTagModalProps {
 }
 
 const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
-  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+  const addTag = useTagsPageStore((state) => state.addTag);
 
   const [tagName, setTagName] = useState("");
 
@@ -23,7 +24,7 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
     setTagName(event.target.value);
   }
 
-  function onClickSave() {
+  async function onClickSave() {
     if (!tagName) {
       alert("Please enter the tag display name");
       return;
@@ -34,12 +35,20 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
       tagDisplay: tagName,
     };
 
-    dispatch(tagsPageActions.addTag(newTag));
+    // Async action handles DB persistence
+    const success = await addTag(newTag);
 
-    dbFuncs.saveTag({
-      id: newTag.tagID,
-      name: newTag.tagDisplay,
-    });
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
+      });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
 
     setTagName("");
     onClose();

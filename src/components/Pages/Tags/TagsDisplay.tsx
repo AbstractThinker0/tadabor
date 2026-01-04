@@ -1,7 +1,6 @@
 import { memo, useEffect, useRef, useState, useTransition } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { tagsPageActions } from "@/store/slices/pages/tags";
+import { useTagsPageStore } from "@/store/zustand/tagsPage";
 
 import type { verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
@@ -22,7 +21,7 @@ import { SelectedVerseItem } from "@/components/Pages/Tags/VerseItem";
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 
 function TagsDisplay() {
-  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+  const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
   const { open, onOpen, onClose } = useDisclosure();
 
@@ -59,20 +58,22 @@ interface SelectedContainerProps {
 
 const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
   const quranService = useQuran();
-  const dispatch = useAppDispatch();
 
-  const selectedTags = useAppSelector((state) => state.tagsPage.selectedTags);
+  const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
-  const selectedChapters = useAppSelector(
-    (state) => state.tagsPage.selectedChapters
+  const selectedChapters = useTagsPageStore(
+    (state) => state.selectedChapters
   );
 
-  const tags = useAppSelector((state) => state.tagsPage.tags);
+  const tags = useTagsPageStore((state) => state.tags);
 
-  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+  const versesTags = useTagsPageStore((state) => state.versesTags);
+
+  const deselectTag = useTagsPageStore((state) => state.deselectTag);
+  const toggleSelectChapter = useTagsPageStore((state) => state.toggleSelectChapter);
 
   function onClickDeleteSelected(tagID: string) {
-    dispatch(tagsPageActions.deselectTag(tagID));
+    deselectTag(tagID);
   }
 
   const chaptersScope = Object.keys(selectedChapters).filter(
@@ -91,7 +92,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
   };
 
   const onClickCloseChapter = (chapterID: string) => {
-    dispatch(tagsPageActions.toggleSelectChapter(Number(chapterID)));
+    toggleSelectChapter(Number(chapterID));
   };
 
   return (
@@ -186,7 +187,7 @@ function SelectedVerses({
 
   const refVerses = useRef<HTMLDivElement>(null);
 
-  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
+  const scrollKey = useTagsPageStore((state) => state.scrollKey);
 
   const selectedVerses = Object.keys(versesTags).filter((verseKey) =>
     Object.keys(selectedTags).some((tagID) =>
@@ -256,15 +257,15 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const tags = useAppSelector((state) => state.tagsPage.tags);
+  const tags = useTagsPageStore((state) => state.tags);
 
-  const versesTags = useAppSelector((state) => state.tagsPage.versesTags);
+  const versesTags = useTagsPageStore((state) => state.versesTags);
 
-  const currentChapter = useAppSelector(
-    (state) => state.tagsPage.currentChapter
+  const currentChapter = useTagsPageStore(
+    (state) => state.currentChapter
   );
 
-  const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
+  const scrollKey = useTagsPageStore((state) => state.scrollKey);
 
   const refVerses = useRef<HTMLDivElement>(null);
 
