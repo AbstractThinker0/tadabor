@@ -13,7 +13,7 @@ import type {
 import { initialSelectedChapters } from "@/util/consts";
 
 import type { ITag, IVerseTags } from "@/types/db";
-import { dbFuncs } from "@/util/dbFuncs";
+import { dbTags } from "@/util/dbFuncs";
 
 import { tryCatch } from "@/util/trycatch";
 
@@ -66,7 +66,7 @@ export const useTagsPageStore = create(
 
         // Load saved tags from Dexie
         const { result: savedTags, error: tagsError } = await tryCatch(
-          dbFuncs.loadTags()
+          dbTags.loadAll()
         );
 
         if (tagsError) {
@@ -88,7 +88,7 @@ export const useTagsPageStore = create(
 
         // Load saved verse tags from Dexie
         const { result: savedVersesTags, error: versesError } = await tryCatch(
-          dbFuncs.loadVersesTags()
+          dbTags.loadVerses()
         );
 
         if (versesError) {
@@ -141,7 +141,7 @@ export const useTagsPageStore = create(
         };
 
         const { error } = await tryCatch(
-          dbFuncs.saveTag({
+          dbTags.save({
             id: tag.tagID,
             name: tag.tagDisplay,
           })
@@ -168,8 +168,8 @@ export const useTagsPageStore = create(
       // Async action: Delete a tag with persistence
       deleteTag: async (tagID: string) => {
         // Delete tag and associated updates in Dexie
-        // dbFuncs.deleteTag handles removing the tag from verses_tags as well
-        const { error: tagError } = await tryCatch(dbFuncs.deleteTag(tagID));
+        // handles removing the tag from verses_tags as well
+        const { error: tagError } = await tryCatch(dbTags.delete(tagID));
 
         if (tagError) {
           console.error("Failed to delete tag:", tagError);
@@ -200,15 +200,14 @@ export const useTagsPageStore = create(
       // Async action: Set verse tags with persistence
       setVerseTags: async (verseKey: string, tags: string[] | null) => {
         if (tags === null) {
-          const { error } = await tryCatch(dbFuncs.deleteVerseTags(verseKey));
+          const { error } = await tryCatch(dbTags.deleteVerse(verseKey));
           if (error) {
             console.error("Failed to delete verse tags:", error);
             return false;
           }
         } else {
-          // Assuming dbFuncs.saveVerseTags handles existing records (upsert)
           const { error } = await tryCatch(
-            dbFuncs.saveVerseTags({
+            dbTags.saveVerse({
               verse_key: verseKey,
               tags_ids: tags,
             })

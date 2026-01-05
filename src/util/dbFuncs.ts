@@ -86,8 +86,10 @@ export const dbFuncs = {
   loadLettersPresets: () => {
     return db.letters_presets.toArray();
   },
+};
 
-  saveTag: async (data: ITag) => {
+export const dbTags = {
+  save: async (data: ITag) => {
     const { id, ...rest } = data;
     const updated = await db.tags.update(id, rest);
 
@@ -95,7 +97,7 @@ export const dbFuncs = {
 
     return db.tags.add({ ...data, uuid: uuidv4() });
   },
-  deleteTag: async (id: string) => {
+  delete: async (id: string) => {
     await db.tags.delete(id);
 
     // Uses multi-entry index on tags_ids
@@ -106,10 +108,10 @@ export const dbFuncs = {
         verseTag.tags_ids = verseTag.tags_ids.filter((tagID) => tagID !== id);
       });
   },
-  loadTags: () => {
+  loadAll: () => {
     return db.tags.toArray();
   },
-  saveVerseTags: async (data: IVerseTags) => {
+  saveVerse: async (data: IVerseTags) => {
     const { verse_key, ...rest } = data;
     const updated = await db.verses_tags.update(verse_key, rest);
 
@@ -117,10 +119,10 @@ export const dbFuncs = {
 
     return db.verses_tags.add({ ...data, uuid: uuidv4() });
   },
-  deleteVerseTags: (verse_key: string) => {
+  deleteVerse: (verse_key: string) => {
     return db.verses_tags.delete(verse_key);
   },
-  loadVersesTags: () => {
+  loadVerses: () => {
     return db.verses_tags.toArray();
   },
 };
