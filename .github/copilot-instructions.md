@@ -7,7 +7,7 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 ### Core Tech Stack
 
 - **Frontend**: React 19, TypeScript, Vite (dev server), React Router 7
-- **State Management**: Redux Toolkit for global UI state + Zustand for notes + React Query for async operations
+- **State Management**: Redux Toolkit for global UI state + Zustand for notes + TanStack Query for async operations
 - **Backend**: tRPC (type-safe RPC framework) with authentication
 - **UI**: Chakra UI v3 (theming, components)
 - **Data**: Dexie (IndexedDB), quran-tools (Quran data manipulation)
@@ -40,8 +40,8 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 
 Two separate note stores with identical structure:
 
-- **localNotes** (`src/store/zustand/localNotes.ts`): Browser-only, uses `dbFuncs.saveLocalNote()` (IndexedDB)
-- **cloudNotes** (`src/store/zustand/cloudNotes.ts`): Synced to backend, uses `dbFuncs.saveCloudNote()` + tRPC `uploadNote` mutation
+- **localNotes** (`src/store/zustand/localNotes.ts`): Browser-only, uses `dbNotes.saveLocal()` (IndexedDB)
+- **cloudNotes** (`src/store/zustand/cloudNotes.ts`): Synced to backend, uses `dbNotes.saveCloud()` + tRPC `uploadNote` mutation
 
 Both follow pattern:
 
@@ -106,7 +106,7 @@ npm run theme  # Regenerate Chakra theme types
 ### Common Commands
 
 - **Type Check**: Run `npm run build` or `tsc` (tsconfig.json enforces strict mode)
-- **Reset Data**: Clear IndexedDB in DevTools (Application tab) or call `dbFuncs.clearAll()`
+- **Reset Data**: Clear IndexedDB in DevTools (Application tab)
 - **PWA Test**: Disable network in DevTools Network tab; app should still work offline
 
 ### Debugging Notes Workflow
@@ -151,13 +151,13 @@ npm run theme  # Regenerate Chakra theme types
 ### tRPC Integration
 
 - Client: `useTRPC()` hook from `src/util/trpc.ts` returns typed router proxy
-- Mutations wrapped in `useMutation()` from React Query (e.g., `uploadNote.mutateAsync()`)
+- Mutations wrapped in `useMutation()` from TanStack Query (e.g., `uploadNote.mutateAsync()`)
 - Error handling: Watch for Zod validation errors in `AppRouter` error shape
 
 ### Database (Dexie)
 
 - **File**: `src/util/db.ts` defines schema (`ILocalNote`, `ICloudNote`, `IColor`, etc.)
-- **Access**: Use `dbFuncs.*` utilities (not Dexie directly in components)
+- **Access**: Use `dbNotes.*`, `dbLetters.*`, `dbTags.*`, `dbColors.*` utilities from `src/util/dbFuncs.ts` (not Dexie directly in components)
 - **Indexing**: Verse key = `chapter:verse`. Root key = root index. Use these for fast lookups.
 
 ### i18n
@@ -193,7 +193,7 @@ npm run theme  # Regenerate Chakra theme types
 - **Core Hooks**: `src/hooks/useNote.ts`, `src/hooks/useAuth.ts`
 - **Quran Data**: `src/context/QuranProvider.tsx`, `src/util/fetchData.ts`
 - **UI Components**: `src/components/Custom/BaseVerseItem.tsx`, `src/components/Note/NoteForm.tsx`
-- **Database**: `src/util/db.ts`, `src/util/trpc.ts`
+- **Database**: `src/util/db.ts`, `src/util/dbFuncs.ts`, `src/util/trpc.ts`
 - **Config**: `vite.config.ts` (build setup), `tsconfig.json` (strict mode), `eslint.config.js`
 
 ## Common Pitfalls to Avoid
@@ -214,4 +214,4 @@ npm run theme  # Regenerate Chakra theme types
 
 ---
 
-**Last Updated**: January 2026 | **Version**: 0.47.5
+**Last Updated**: January 5, 2026 | **Version**: 0.47.5
