@@ -10,8 +10,8 @@ import type {
 } from "@/types/db";
 import { LetterRole, type LetterRoleType } from "@/util/consts";
 
-export const dbFuncs = {
-  saveLetterDefinition: async (
+export const dbLetters = {
+  saveDefinition: async (
     preset_id: string,
     name: string,
     definition: string,
@@ -39,10 +39,10 @@ export const dbFuncs = {
 
     return true;
   },
-  loadLettersDefinition: () => {
+  loadDefinitions: () => {
     return db.letters_def.toArray();
   },
-  saveLetterData: async ({
+  saveData: async ({
     letter_key,
     letter_role = LetterRole.Unit,
     def_id = "",
@@ -67,10 +67,10 @@ export const dbFuncs = {
 
     return true;
   },
-  loadLettersData: () => {
+  loadData: () => {
     return db.letters_data.toArray();
   },
-  saveLettersPreset: async (id: string, name: string) => {
+  savePreset: async (id: string, name: string) => {
     const updated = await db.letters_presets.update(id, { name });
 
     if (updated) return true;
@@ -83,7 +83,7 @@ export const dbFuncs = {
 
     return true;
   },
-  loadLettersPresets: () => {
+  loadPresets: () => {
     return db.letters_presets.toArray();
   },
 };

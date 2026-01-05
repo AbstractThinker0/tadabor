@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/store";
 
 import { lettersPageActions } from "@/store/slices/pages/letters";
 
-import { dbFuncs } from "@/util/db";
+import { dbLetters } from "@/util/dbFuncs";
 import { onlySpaces } from "@/util/util";
 
 import {
@@ -44,8 +44,8 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
 
     const presetID = uuidv4();
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
-    dbFuncs
-      .saveLettersPreset(presetID, presetName)
+    dbLetters
+      .savePreset(presetID, presetName)
       .then(() => {
         toaster.create({
           description: t("save_success"),

@@ -138,5 +138,4 @@ class tadaborDatabase extends Dexie {
 
 export const db = new tadaborDatabase();
 
-export { dbFuncs } from "./dbFuncs";
 export * from "@/types/db";

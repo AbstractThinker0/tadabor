@@ -9,8 +9,9 @@ import type {
   LettersDataByVerseType,
   LettersPresetsType,
 } from "@/types";
-import { dbFuncs, type ILetterData } from "@/util/db";
-import { type LetterRoleType } from "@/util/consts";
+import { dbLetters } from "@/util/dbFuncs";
+import type { LetterRoleType } from "@/util/consts";
+import type { ILetterData } from "@/types/db";
 
 interface LettersPageState {
   currentChapter: string;
@@ -64,7 +65,7 @@ export const fetchLettersDefinitions = createAsyncThunk<
     return false;
   }
 
-  const dbData = await dbFuncs.loadLettersDefinition();
+  const dbData = await dbLetters.loadDefinitions();
 
   const notesData: LettersDefinitionType = {};
 
@@ -95,7 +96,7 @@ export const fetchLettersData = createAsyncThunk<
     return false;
   }
 
-  const dbData = await dbFuncs.loadLettersData();
+  const dbData = await dbLetters.loadData();
 
   return dbData;
 });
@@ -110,7 +111,7 @@ export const fetchLettersPresets = createAsyncThunk<
     return false;
   }
 
-  const dbData = await dbFuncs.loadLettersPresets();
+  const dbData = await dbLetters.loadPresets();
 
   const presetsData: LettersPresetsType = {};
 

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 
 import { lettersPageActions } from "@/store/slices/pages/letters";
 
-import { dbFuncs } from "@/util/db";
+import { dbLetters } from "@/util/dbFuncs";
 
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
@@ -50,8 +50,8 @@ const ModalEditLetter = ({
   const dispatch = useAppDispatch();
 
   const onClickSave = () => {
-    dbFuncs
-      .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
+    dbLetters
+      .saveDefinition(currentPreset, currentLetter, letterDef, letterDir)
       .then(() => {
         toaster.create({
           description: t("save_success"),

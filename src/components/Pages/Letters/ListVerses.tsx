@@ -18,7 +18,7 @@ import {
   type verseProps,
 } from "quran-tools";
 
-import { dbFuncs } from "@/util/db";
+import { dbLetters } from "@/util/dbFuncs";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -350,8 +350,8 @@ const InfoBox = ({
   };
 
   const onClickSave = () => {
-    dbFuncs
-      .saveLetterData({
+    dbLetters
+      .saveData({
         letter_key: `${verseKey}:${selectedLetter}`,
         letter_role: letterRole,
         def_id: letterDefinitionID,
