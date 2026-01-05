@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { lettersPageActions } from "@/store/slices/pages/letters";
-
-import { dbLetters } from "@/util/dbFuncs";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
 
@@ -36,9 +32,11 @@ const ModalEditLetter = ({
       ? currentLetter
       : `${currentLetter}:${currentPreset}`;
 
-  const currentDef = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions[defKey]
+  const currentDef = useLettersPageStore(
+    (state) => state.lettersDefinitions[defKey]
   ) || { name: "", definition: "", dir: "" };
+
+  const saveDefinition = useLettersPageStore((state) => state.saveDefinition);
 
   const [editedDef, setEditedDef] = useState<string | null>(null);
   const [editedDir, setEditedDir] = useState<string | null>(null);
@@ -47,32 +45,25 @@ const ModalEditLetter = ({
   const letterDef = editedDef ?? currentDef.definition;
   const letterDir = editedDir ?? (currentDef.dir || "rtl");
 
-  const dispatch = useAppDispatch();
-
-  const onClickSave = () => {
-    dbLetters
-      .saveDefinition(currentPreset, currentLetter, letterDef, letterDir)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
-
-    dispatch(
-      lettersPageActions.setLetterDefinition({
-        name: currentLetter,
-        definition: letterDef,
-        dir: letterDir,
-        preset_id: currentPreset,
-      })
+  const onClickSave = async () => {
+    const success = await saveDefinition(
+      currentPreset,
+      currentLetter,
+      letterDef,
+      letterDir
     );
+
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
+      });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
 
     onCloseComplete();
   };

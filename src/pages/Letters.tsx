@@ -1,8 +1,7 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { lettersPageActions } from "@/store/slices/pages/letters";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import PanelDefinitions from "@/components/Pages/Letters/PanelDefinitions";
 import PanelQuran from "@/components/Pages/Letters/PanelQuran";
@@ -13,12 +12,12 @@ import { usePageNav } from "@/hooks/usePageNav";
 const Letters = memo(() => {
   usePageNav("nav.letters");
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
 
-  const tabIndex = useAppSelector((state) => state.lettersPage.tabIndex);
+  const tabIndex = useLettersPageStore((state) => state.tabIndex);
+  const setTabIndex = useLettersPageStore((state) => state.setTabIndex);
 
   const onChangeTab = (index: string) => {
-    dispatch(lettersPageActions.setTabIndex(index));
+    setTabIndex(index);
   };
 
   return (

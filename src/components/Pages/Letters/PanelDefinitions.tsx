@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import {
-  fetchLettersDefinitions,
-  fetchLettersPresets,
-  lettersPageActions,
-} from "@/store/slices/pages/letters";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import { arabicAlphabetDefault } from "@/util/consts";
 
@@ -41,23 +35,27 @@ const PanelDefinitions = () => {
     onClose: onCloseEditLetter,
   } = useDisclosure();
 
-  const definitionsLoading = useAppSelector(
-    (state) => state.lettersPage.definitionsLoading
+  const definitionsLoading = useLettersPageStore(
+    (state) => state.definitionsLoading
   );
 
-  const presetsLoading = useAppSelector(
-    (state) => state.lettersPage.presetsLoading
+  const presetsLoading = useLettersPageStore((state) => state.presetsLoading);
+
+  const currentPreset = useLettersPageStore((state) => state.currentPreset);
+
+  const letterPresets = useLettersPageStore((state) => state.letterPresets);
+
+  const setCurrentPreset = useLettersPageStore(
+    (state) => state.setCurrentPreset
   );
 
-  const currentPreset = useAppSelector(
-    (state) => state.lettersPage.currentPreset
+  const initializeDefinitions = useLettersPageStore(
+    (state) => state.initializeDefinitions
   );
 
-  const letterPresets = useAppSelector(
-    (state) => state.lettersPage.letterPresets
+  const initializePresets = useLettersPageStore(
+    (state) => state.initializePresets
   );
-
-  const dispatch = useAppDispatch();
 
   const [currentLetter, setCurrentLetter] = useState("");
 
@@ -67,13 +65,13 @@ const PanelDefinitions = () => {
   };
 
   const onChangePreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(lettersPageActions.setCurrentPreset(event.target.value));
+    setCurrentPreset(event.target.value);
   };
 
   useEffect(() => {
-    dispatch(fetchLettersDefinitions());
-    dispatch(fetchLettersPresets());
-  }, [dispatch]);
+    initializeDefinitions();
+    initializePresets();
+  }, [initializeDefinitions, initializePresets]);
 
   if (definitionsLoading || presetsLoading)
     return <LoadingSpinner text="Loading definitions" />;
@@ -157,8 +155,8 @@ const ItemLetter = ({
 }: ItemLetterProps) => {
   const defKey = currentPreset === "-1" ? letter : `${letter}:${currentPreset}`;
 
-  const letterDef = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions[defKey]
+  const letterDef = useLettersPageStore(
+    (state) => state.lettersDefinitions[defKey]
   ) || { name: "", definition: "" };
 
   const onClickEdit = (letter: string) => {

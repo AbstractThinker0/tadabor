@@ -20,7 +20,6 @@ import inspectorPageReducer from "@/store/slices/pages/inspector";
 import translationPageReducer from "@/store/slices/pages/translation";
 import comparatorPageReducer from "@/store/slices/pages/comparator";
 import ynPageReducer from "@/store/slices/pages/yourNotes";
-import lettersPageReducer from "@/store/slices/pages/letters";
 import audioPageReducer from "@/store/slices/pages/audio";
 
 const store = configureStore({
@@ -41,7 +40,6 @@ const store = configureStore({
     translationPage: translationPageReducer,
     comparatorPage: comparatorPageReducer,
     ynPage: ynPageReducer,
-    lettersPage: lettersPageReducer,
     audioPage: audioPageReducer,
   },
   middleware: (getDefaultMiddleware) =>

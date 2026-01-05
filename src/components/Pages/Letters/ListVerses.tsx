@@ -3,11 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppSelector, useAppDispatch } from "@/store";
-import {
-  fetchLettersData,
-  lettersPageActions,
-} from "@/store/slices/pages/letters";
+import { useAppSelector } from "@/store";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import type { LetterDataType } from "@/types";
 import { LetterRole, type LetterRoleType } from "@/util/consts";
@@ -17,8 +14,6 @@ import {
   normalizeAlif,
   type verseProps,
 } from "quran-tools";
-
-import { dbLetters } from "@/util/dbFuncs";
 
 import VerseContainer from "@/components/Custom/VerseContainer";
 
@@ -42,20 +37,17 @@ import { useBoolean } from "usehooks-ts";
 const ListVerses = () => {
   const quranService = useQuran();
 
-  const dispatch = useAppDispatch();
-
-  const currentChapter = useAppSelector(
-    (state) => state.lettersPage.currentChapter
-  );
-  const dataLoading = useAppSelector((state) => state.lettersPage.dataLoading);
+  const currentChapter = useLettersPageStore((state) => state.currentChapter);
+  const dataLoading = useLettersPageStore((state) => state.dataLoading);
+  const initializeData = useLettersPageStore((state) => state.initializeData);
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    dispatch(fetchLettersData());
-  }, [dispatch]);
+    initializeData();
+  }, [initializeData]);
 
   useEffect(() => {
     startTransition(() => {
@@ -79,7 +71,7 @@ interface VerseItemProps {
 }
 
 const VerseItem = memo(({ verse }: VerseItemProps) => {
-  const scrollKey = useAppSelector((state) => state.lettersPage.scrollKey);
+  const scrollKey = useLettersPageStore((state) => state.scrollKey);
 
   return (
     <Box
@@ -102,7 +94,7 @@ interface VerseWordsProps {
 }
 
 const VerseWords = ({ verse }: VerseWordsProps) => {
-  const dispatch = useAppDispatch();
+  const setScrollKey = useLettersPageStore((state) => state.setScrollKey);
 
   const { value: isOpenWordBox, setValue: setOpenWordBox } = useBoolean();
   const [isSpace, setSpace] = useState(false);
@@ -110,8 +102,8 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   const [selectedLetter, setSelectedLetter] = useState("");
   const [selectedWord, setSelectedWord] = useState(-1);
 
-  const verseLetterData = useAppSelector(
-    (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
+  const verseLetterData = useLettersPageStore(
+    (state) => state.lettersData[verse.key]?.[selectedLetter]
   ) ?? {
     letter_key: selectedLetter,
     letter_role: LetterRole.Unit,
@@ -141,7 +133,7 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
   };
 
   const onClickVerseID = (verseKey: string) => {
-    dispatch(lettersPageActions.setScrollKey(verseKey));
+    setScrollKey(verseKey);
   };
 
   return (
@@ -251,13 +243,12 @@ const InfoBox = ({
   verseLetterData,
 }: InfoBoxProps) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
 
   const quranService = useQuran();
 
-  const letterPresets = useAppSelector(
-    (state) => state.lettersPage.letterPresets
-  );
+  const letterPresets = useLettersPageStore((state) => state.letterPresets);
+
+  const saveData = useLettersPageStore((state) => state.saveData);
 
   const [letterRole, setLetterRole] = useState<LetterRoleType>(
     verseLetterData.letter_role
@@ -270,10 +261,10 @@ const InfoBox = ({
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
   const verseLettersData =
-    useAppSelector((state) => state.lettersPage.lettersData[verseKey]) || {};
+    useLettersPageStore((state) => state.lettersData[verseKey]) || {};
 
-  const lettersDefinitions = useAppSelector(
-    (state) => state.lettersPage.lettersDefinitions
+  const lettersDefinitions = useLettersPageStore(
+    (state) => state.lettersDefinitions
   );
 
   const getLetter = (
@@ -290,11 +281,10 @@ const InfoBox = ({
         lettersDefinitions[key].preset_id &&
         verseLettersData[letterKey]?.def_id &&
         normalizeAlif(lettersDefinitions[key].name) ===
-          normalizeAlif(currentLetter) &&
+        normalizeAlif(currentLetter) &&
         (lettersDefinitions[key].preset_id ===
           verseLettersData[letterKey].def_id ||
-          `${normalizeAlif(currentLetter, false, true)}:${
-            lettersDefinitions[key].preset_id
+          `${normalizeAlif(currentLetter, false, true)}:${lettersDefinitions[key].preset_id
           }` === verseLettersData[letterKey].def_id)
     );
 
@@ -349,33 +339,24 @@ const InfoBox = ({
     setLetterDefinitionID(event.target.value);
   };
 
-  const onClickSave = () => {
-    dbLetters
-      .saveData({
-        letter_key: `${verseKey}:${selectedLetter}`,
-        letter_role: letterRole,
-        def_id: letterDefinitionID,
-      })
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
-      });
+  const onClickSave = async () => {
+    const success = await saveData({
+      letter_key: `${verseKey}:${selectedLetter}`,
+      letter_role: letterRole,
+      def_id: letterDefinitionID,
+    });
 
-    dispatch(
-      lettersPageActions.setLetterData({
-        letter: `${verseKey}:${selectedLetter}`,
-        role: letterRole,
-        def_id: letterDefinitionID,
-      })
-    );
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
+      });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
   };
 
   const renderLetterDefinitionOptions = () => {

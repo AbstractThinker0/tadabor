@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useAppSelector } from "@/store";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import { ListTitle } from "@/components/Pages/Letters/ListTitle";
 import ListVerses from "@/components/Pages/Letters/ListVerses";
@@ -9,9 +9,7 @@ import { Box, Flex } from "@chakra-ui/react";
 const Display = () => {
   const refDisplay = useRef<HTMLDivElement>(null);
 
-  const currentChapter = useAppSelector(
-    (state) => state.lettersPage.currentChapter
-  );
+  const currentChapter = useLettersPageStore((state) => state.currentChapter);
 
   // Reset scroll whenever we switch from one chapter to another
   useEffect(() => {

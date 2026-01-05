@@ -2,11 +2,8 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "@/store";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
-import { lettersPageActions } from "@/store/slices/pages/letters";
-
-import { dbLetters } from "@/util/dbFuncs";
 import { onlySpaces } from "@/util/util";
 
 import {
@@ -30,34 +27,33 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
 
   const [presetName, setPresetName] = useState("");
 
-  const dispatch = useAppDispatch();
+  const savePreset = useLettersPageStore((state) => state.savePreset);
 
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPresetName(event.target.value);
   };
 
-  const onClickSave = () => {
+  const onClickSave = async () => {
     if (onlySpaces(presetName)) {
       alert("Preset name can't be empty.");
       return;
     }
 
     const presetID = uuidv4();
-    dispatch(lettersPageActions.setPreset({ presetID, presetName }));
-    dbLetters
-      .savePreset(presetID, presetName)
-      .then(() => {
-        toaster.create({
-          description: t("save_success"),
-          type: "success",
-        });
-      })
-      .catch(() => {
-        toaster.create({
-          description: t("save_failed"),
-          type: "error",
-        });
+
+    const success = await savePreset(presetID, presetName);
+
+    if (success) {
+      toaster.create({
+        description: t("save_success"),
+        type: "success",
       });
+    } else {
+      toaster.create({
+        description: t("save_failed"),
+        type: "error",
+      });
+    }
 
     onClose();
   };

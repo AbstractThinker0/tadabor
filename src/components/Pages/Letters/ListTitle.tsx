@@ -1,25 +1,20 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { lettersPageActions } from "@/store/slices/pages/letters";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.lettersPage.currentChapter
+  const selectChapter = useLettersPageStore((state) => state.currentChapter);
+
+  const showSearchPanel = useLettersPageStore((state) => state.showSearchPanel);
+
+  const showSearchPanelMobile = useLettersPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.lettersPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.lettersPage.showSearchPanelMobile
-  );
-
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useLettersPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(lettersPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

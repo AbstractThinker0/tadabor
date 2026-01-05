@@ -1,8 +1,6 @@
 import { memo, useCallback } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { lettersPageActions } from "@/store/slices/pages/letters";
+import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import Display from "@/components/Pages/Letters/Display";
 import ChaptersList from "@/components/Custom/ChaptersList";
@@ -18,29 +16,32 @@ interface PanelQuranProps {
 const PanelQuran = memo(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (_props: PanelQuranProps) => {
-    const dispatch = useAppDispatch();
-    const currentChapter = useAppSelector(
-      (state) => state.lettersPage.currentChapter
+    const currentChapter = useLettersPageStore((state) => state.currentChapter);
+    const setCurrentChapter = useLettersPageStore(
+      (state) => state.setCurrentChapter
     );
+    const setScrollKey = useLettersPageStore((state) => state.setScrollKey);
 
     const handleSelectChapter = useCallback(
       (chapterID: string) => {
-        dispatch(lettersPageActions.setCurrentChapter(chapterID));
-        dispatch(lettersPageActions.setScrollKey(""));
+        setCurrentChapter(chapterID);
+        setScrollKey("");
       },
-      [dispatch]
+      [setCurrentChapter, setScrollKey]
     );
 
-    const showSearchPanel = useAppSelector(
-      (state) => state.lettersPage.showSearchPanel
+    const showSearchPanel = useLettersPageStore(
+      (state) => state.showSearchPanel
     );
 
-    const showSearchPanelMobile = useAppSelector(
-      (state) => state.lettersPage.showSearchPanelMobile
+    const showSearchPanelMobile = useLettersPageStore(
+      (state) => state.showSearchPanelMobile
     );
+
+    const setSearchPanel = useLettersPageStore((state) => state.setSearchPanel);
 
     const setOpenState = (state: boolean) => {
-      dispatch(lettersPageActions.setSearchPanel(state));
+      setSearchPanel(state);
     };
 
     return (
