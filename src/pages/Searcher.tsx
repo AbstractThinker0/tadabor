@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useSearcherPageStore } from "@/store/zustand/searcherPage";
+import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 import { Sidebar } from "@/components/Generic/Sidebar";

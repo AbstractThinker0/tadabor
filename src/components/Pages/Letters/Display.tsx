@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useLettersPageStore } from "@/store/zustand/lettersPage";
+import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import { ListTitle } from "@/components/Pages/Letters/ListTitle";
 import ListVerses from "@/components/Pages/Letters/ListVerses";

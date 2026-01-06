@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
+import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
 import type { verseProps } from "quran-tools";
 

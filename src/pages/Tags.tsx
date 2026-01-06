@@ -8,7 +8,7 @@ import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
 
 import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 function Tags() {

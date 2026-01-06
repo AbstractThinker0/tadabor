@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import useQuran from "@/context/useQuran";
 
 import { useSettingsStore } from "@/store/zustand/settingsStore";
-import { useLettersPageStore } from "@/store/zustand/lettersPage";
+import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import type { LetterDataType } from "@/types";
 import { LetterRole, type LetterRoleType } from "@/util/consts";

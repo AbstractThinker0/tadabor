@@ -1,4 +1,4 @@
-import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
+import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 

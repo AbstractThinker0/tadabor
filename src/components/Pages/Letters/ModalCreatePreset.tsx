@@ -2,7 +2,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
-import { useLettersPageStore } from "@/store/zustand/lettersPage";
+import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import { onlySpaces } from "@/util/util";
 

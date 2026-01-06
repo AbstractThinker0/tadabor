@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Span } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";

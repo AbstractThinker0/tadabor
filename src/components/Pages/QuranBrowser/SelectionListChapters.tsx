@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 import type { selectedChaptersType } from "@/types";
 

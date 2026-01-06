@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Flex } from "@chakra-ui/react";
 
@@ -22,7 +22,9 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
 
   // We need to look up the tags for the current verse
   const versesTags = useTagsPageStore((state) => state.versesTags);
-  const currentVerseTags = currentVerse ? versesTags[currentVerse.key] || [] : [];
+  const currentVerseTags = currentVerse
+    ? versesTags[currentVerse.key] || []
+    : [];
 
   const setVerseTagsStore = useTagsPageStore((state) => state.setVerseTags);
   const setCurrentVerse = useTagsPageStore((state) => state.setCurrentVerse);
@@ -91,8 +93,9 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
           <Box textAlign={"center"} fontSize={"large"} pb={2}>
             (
             {currentVerse
-              ? `${quranService.getChapterName(currentVerse.suraid)}:${currentVerse.verseid
-              }`
+              ? `${quranService.getChapterName(currentVerse.suraid)}:${
+                  currentVerse.verseid
+                }`
               : ""}
             )
           </Box>

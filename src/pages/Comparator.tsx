@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
 import { useTranslationsStore } from "@/store/zustand/translations";
-import { useComparatorPageStore } from "@/store/zustand/comparatorPage";
+import { useComparatorPageStore } from "@/store/pages/comparatorPage";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";

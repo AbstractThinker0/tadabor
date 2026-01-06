@@ -1,4 +1,4 @@
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 import { Flex } from "@chakra-ui/react";
 
 import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";

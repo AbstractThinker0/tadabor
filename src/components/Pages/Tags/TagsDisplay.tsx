@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState, useTransition } from "react";
 
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
@@ -61,16 +61,16 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
 
   const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
-  const selectedChapters = useTagsPageStore(
-    (state) => state.selectedChapters
-  );
+  const selectedChapters = useTagsPageStore((state) => state.selectedChapters);
 
   const tags = useTagsPageStore((state) => state.tags);
 
   const versesTags = useTagsPageStore((state) => state.versesTags);
 
   const deselectTag = useTagsPageStore((state) => state.deselectTag);
-  const toggleSelectChapter = useTagsPageStore((state) => state.toggleSelectChapter);
+  const toggleSelectChapter = useTagsPageStore(
+    (state) => state.toggleSelectChapter
+  );
 
   function onClickDeleteSelected(tagID: string) {
     deselectTag(tagID);
@@ -261,9 +261,7 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
 
   const versesTags = useTagsPageStore((state) => state.versesTags);
 
-  const currentChapter = useTagsPageStore(
-    (state) => state.currentChapter
-  );
+  const currentChapter = useTagsPageStore((state) => state.currentChapter);
 
   const scrollKey = useTagsPageStore((state) => state.scrollKey);
 

@@ -1,5 +1,5 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 const ButtonSidebar = () => {
   const showSearchPanel = useQuranBrowserPageStore(

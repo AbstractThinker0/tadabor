@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 
-import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
+import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
 import useQuran from "@/context/useQuran";
 

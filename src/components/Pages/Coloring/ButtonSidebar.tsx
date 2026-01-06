@@ -1,5 +1,5 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 const ButtonSidebar = () => {
   const showSearchPanel = useColoringPageStore(

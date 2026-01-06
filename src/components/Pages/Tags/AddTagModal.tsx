@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
 import type { tagProps } from "@/components/Pages/Tags/consts";
 
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";

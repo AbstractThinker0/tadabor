@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
+import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 

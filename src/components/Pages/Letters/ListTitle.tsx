@@ -1,4 +1,4 @@
-import { useLettersPageStore } from "@/store/zustand/lettersPage";
+import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 

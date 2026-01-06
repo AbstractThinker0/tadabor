@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
 

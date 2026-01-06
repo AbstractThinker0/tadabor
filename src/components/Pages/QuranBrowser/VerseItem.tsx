@@ -1,7 +1,7 @@
 import type { rootProps, verseMatchResult, verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";

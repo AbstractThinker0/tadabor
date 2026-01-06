@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { rootProps } from "quran-tools";
 
-import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
+import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
 import { arabicAlpha } from "quran-tools";
 

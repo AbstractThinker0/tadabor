@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { tagProps } from "@/components/Pages/Tags/consts";
 import AddTagModal from "@/components/Pages/Tags/AddTagModal";
@@ -33,14 +33,16 @@ function TagsSide() {
 
   const currentChapter = useTagsPageStore((state) => state.currentChapter);
 
-  const selectedChapters = useTagsPageStore(
-    (state) => state.selectedChapters
-  );
+  const selectedChapters = useTagsPageStore((state) => state.selectedChapters);
 
   const setSelectedVerse = useTagsPageStore((state) => state.setSelectedVerse);
   const setChapterAction = useTagsPageStore((state) => state.setChapter);
-  const setSelectedChaptersAction = useTagsPageStore((state) => state.setSelectedChapters);
-  const toggleSelectChapterAction = useTagsPageStore((state) => state.toggleSelectChapter);
+  const setSelectedChaptersAction = useTagsPageStore(
+    (state) => state.setSelectedChapters
+  );
+  const toggleSelectChapterAction = useTagsPageStore(
+    (state) => state.toggleSelectChapter
+  );
 
   const onClickVerse = (verseKey: string) => {
     setSelectedVerse(verseKey);
@@ -191,9 +193,7 @@ const VersesCount = () => {
   const { t } = useTranslation();
 
   const versesTags = useTagsPageStore((state) => state.versesTags);
-  const selectedChapters = useTagsPageStore(
-    (state) => state.selectedChapters
-  );
+  const selectedChapters = useTagsPageStore((state) => state.selectedChapters);
   const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
   const getSelectedVerses = () => {

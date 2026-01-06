@@ -1,7 +1,7 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
 
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 

@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { useAudioPageStore } from "@/store/zustand/audioPage";
+import { useAudioPageStore } from "@/store/pages/audioPage";
 
 import { getVerseAudioURL } from "@/util/audioData";
 import type { verseProps } from "quran-tools";

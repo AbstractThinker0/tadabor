@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
+import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
 import PanelRoots from "@/components/Pages/RootsBrowser/PanelRoots";
 

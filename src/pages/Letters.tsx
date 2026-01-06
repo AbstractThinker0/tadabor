@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useLettersPageStore } from "@/store/zustand/lettersPage";
+import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import PanelDefinitions from "@/components/Pages/Letters/PanelDefinitions";
 import PanelQuran from "@/components/Pages/Letters/PanelQuran";

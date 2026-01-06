@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useYourNotesPageStore } from "@/store/zustand/yourNotesPage";
+import { useYourNotesPageStore } from "@/store/pages/yourNotesPage";
 
 import { Tabs } from "@chakra-ui/react";
 

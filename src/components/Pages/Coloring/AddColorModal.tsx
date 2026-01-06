@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";

@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearcherPageStore } from "@/store/zustand/searcherPage";
+import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 import useQuran from "@/context/useQuran";
 import type { rootProps } from "quran-tools";

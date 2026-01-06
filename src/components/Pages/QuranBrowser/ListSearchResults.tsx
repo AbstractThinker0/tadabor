@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
+import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 import useQuran from "@/context/useQuran";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 

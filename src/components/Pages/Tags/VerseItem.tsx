@@ -1,4 +1,4 @@
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { verseProps } from "quran-tools";
 

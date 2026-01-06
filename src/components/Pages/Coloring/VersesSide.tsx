@@ -3,7 +3,7 @@ import { useEffect, useTransition, useState, useCallback } from "react";
 import useQuran from "@/context/useQuran";
 import type { verseProps } from "quran-tools";
 
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

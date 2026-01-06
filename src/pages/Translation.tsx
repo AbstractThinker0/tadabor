@@ -1,4 +1,4 @@
-import { useTranslationPageStore } from "@/store/zustand/translationPage";
+import { useTranslationPageStore } from "@/store/pages/translationPage";
 
 import { Box, Flex } from "@chakra-ui/react";
 

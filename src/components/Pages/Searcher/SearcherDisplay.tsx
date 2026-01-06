@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import type { verseMatchResult } from "quran-tools";
 
 import useQuran from "@/context/useQuran";
-import { useSearcherPageStore } from "@/store/zustand/searcherPage";
+import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 

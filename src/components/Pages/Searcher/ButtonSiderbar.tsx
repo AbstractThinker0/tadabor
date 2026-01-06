@@ -1,5 +1,5 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useSearcherPageStore } from "@/store/zustand/searcherPage";
+import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 const ButtonSidebar = () => {
   const setSearchPanel = useSearcherPageStore((state) => state.setSearchPanel);

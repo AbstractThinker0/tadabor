@@ -1,11 +1,9 @@
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
 
 const ButtonSidebar = () => {
-  const showSearchPanel = useTagsPageStore(
-    (state) => state.showSearchPanel
-  );
+  const showSearchPanel = useTagsPageStore((state) => state.showSearchPanel);
 
   const showSearchPanelMobile = useTagsPageStore(
     (state) => state.showSearchPanelMobile

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useSearcher2PageStore } from "@/store/zustand/searcher2Page";
+import { useSearcher2PageStore } from "@/store/pages/searcher2Page";
 
 import useQuran from "@/context/useQuran";
 import type { verseMatchResult } from "quran-tools";

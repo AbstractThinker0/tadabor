@@ -1,15 +1,11 @@
-import { useTagsPageStore } from "@/store/zustand/tagsPage";
+import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListTitle = () => {
-  const selectChapter = useTagsPageStore(
-    (state) => state.currentChapter
-  );
+  const selectChapter = useTagsPageStore((state) => state.currentChapter);
 
-  const showSearchPanel = useTagsPageStore(
-    (state) => state.showSearchPanel
-  );
+  const showSearchPanel = useTagsPageStore((state) => state.showSearchPanel);
 
   const showSearchPanelMobile = useTagsPageStore(
     (state) => state.showSearchPanelMobile

@@ -1,6 +1,6 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import useQuran from "@/context/useQuran";
 
@@ -84,8 +84,9 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
           <Box textAlign={"center"}>
             (
             {currentVerse
-              ? `${quranService.getChapterName(currentVerse.suraid)}:${currentVerse.verseid
-              }`
+              ? `${quranService.getChapterName(currentVerse.suraid)}:${
+                  currentVerse.verseid
+                }`
               : ""}
             )
           </Box>
@@ -121,10 +122,10 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
                 style={
                   chosenColor?.colorID === colorID
                     ? {
-                      border: "5px solid",
-                      borderImage:
-                        "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
-                    }
+                        border: "5px solid",
+                        borderImage:
+                          "linear-gradient(to right, #3acfd5 0%, yellow 25%, #3a4ed5 100%) 1",
+                      }
                     : {}
                 }
               >

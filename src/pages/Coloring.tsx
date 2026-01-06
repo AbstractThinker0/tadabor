@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 

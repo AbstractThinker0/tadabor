@@ -1,6 +1,6 @@
 import type { verseProps } from "quran-tools";
 
-import { useColoringPageStore } from "@/store/zustand/coloringPage";
+import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { Button, Span } from "@chakra-ui/react";
 

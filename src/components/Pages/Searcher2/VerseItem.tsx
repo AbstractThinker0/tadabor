@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
 
-import { useSearcher2PageStore } from "@/store/zustand/searcher2Page";
+import { useSearcher2PageStore } from "@/store/pages/searcher2Page";
 import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import useQuran from "@/context/useQuran";
