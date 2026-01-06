@@ -16,15 +16,7 @@ import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
 
-import {
-  Box,
-  HStack,
-  Heading,
-  Text,
-  Span,
-  Flex,
-  Separator,
-} from "@chakra-ui/react";
+import { Box, HStack, Text, Span, Flex, Separator } from "@chakra-ui/react";
 
 import { Tag } from "@/components/ui/tag";
 
@@ -37,8 +29,6 @@ const ListSearchResults = ({
   versesArray,
   searchError,
 }: ListSearchResultsProps) => {
-  const { t } = useTranslation();
-
   const [isPending, startTransition] = useTransition();
 
   const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
@@ -87,47 +77,43 @@ const ListSearchResults = ({
 
   const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 
-  if (searchingChapters.length === 0) {
-    return (
-      <Heading p={3} size="lg" dir="auto">
-        {t("search.select_notice")}
-      </Heading>
-    );
-  }
-
   return (
     <Flex flex={1} flexDirection={"column"} p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
       />
-      {isRootSearch && (
+      {searchingChapters.length > 0 && (
         <>
-          <Separator pb={1} borderColor={"border.emphasized"} />
-          <DerivationsComponent
-            handleDerivationClick={handleDerivationClick}
-            searchIndexes={searchIndexes}
-          />
-          <Separator mb={2} borderColor={"border.emphasized"} />
-        </>
-      )}
-      {isPending ? (
-        <LoadingSpinner text="Loading verses..." />
-      ) : (
-        <Box dir="rtl" ref={refListVerses}>
-          {stateVerses.map((verse, index) => (
-            <VerseItem
-              key={verse.key}
-              verse={verse}
-              isSelected={scrollKey === verse.key}
-              index={index}
-            />
-          ))}
-
-          {searchError && (
-            <SearchErrorsComponent searchMethod={searchingMethod} />
+          {isRootSearch && (
+            <>
+              <Separator pb={1} borderColor={"border.emphasized"} />
+              <DerivationsComponent
+                handleDerivationClick={handleDerivationClick}
+                searchIndexes={searchIndexes}
+              />
+              <Separator mb={2} borderColor={"border.emphasized"} />
+            </>
           )}
-        </Box>
+          {isPending ? (
+            <LoadingSpinner text="Loading verses..." />
+          ) : (
+            <Box dir="rtl" ref={refListVerses}>
+              {stateVerses.map((verse, index) => (
+                <VerseItem
+                  key={verse.key}
+                  verse={verse}
+                  isSelected={scrollKey === verse.key}
+                  index={index}
+                />
+              ))}
+
+              {searchError && (
+                <SearchErrorsComponent searchMethod={searchingMethod} />
+              )}
+            </Box>
+          )}
+        </>
       )}
     </Flex>
   );
@@ -145,9 +131,7 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
     (state) => state.searchingString
   );
 
-  const { t, i18n } = useTranslation();
-
-  const direction = i18n.dir();
+  const { t } = useTranslation();
 
   const searchType =
     searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
@@ -166,16 +150,15 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
       <Flex alignItems={"center"} justifyContent={"space-between"}>
         <ButtonSidebar />
         <Span
-          dir={direction}
           paddingInlineStart={"0.25rem"}
           fontSize={"2xl"}
-          color="blue.fg"
+          color={searchChapters.length === 0 ? "red.solid" : "blue.fg"}
         >
-          {searchText}
+          {searchChapters.length === 0 ? t("search.select_notice") : searchText}
         </Span>
         <div></div>
       </Flex>
-      {searchChapters.length !== 114 && (
+      {searchChapters.length !== 0 && searchChapters.length !== 114 && (
         <ChaptersTags searchChapters={searchChapters} />
       )}
     </Box>
@@ -206,7 +189,7 @@ const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
   };
 
   return (
-    <HStack py={1} wrap={"wrap"}>
+    <HStack py={1} wrap={"wrap"} justifyContent={"center"}>
       {searchChapters.map((chapterID, index) => (
         <Tag
           colorPalette="teal"
