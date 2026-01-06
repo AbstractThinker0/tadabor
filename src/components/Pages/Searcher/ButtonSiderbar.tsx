@@ -1,19 +1,18 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { searcherPageActions } from "@/store/slices/pages/searcher";
+import { useSearcherPageStore } from "@/store/zustand/searcherPage";
 
 const ButtonSidebar = () => {
-  const dispatch = useAppDispatch();
-  const showSearchPanel = useAppSelector(
-    (state) => state.searcherPage.showSearchPanel
+  const setSearchPanel = useSearcherPageStore((state) => state.setSearchPanel);
+  const showSearchPanel = useSearcherPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.searcherPage.showSearchPanelMobile
+  const showSearchPanelMobile = useSearcherPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(searcherPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

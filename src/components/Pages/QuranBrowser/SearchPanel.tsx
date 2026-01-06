@@ -1,5 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import useQuran from "@/context/useQuran";
 
@@ -19,24 +18,30 @@ import { Flex } from "@chakra-ui/react";
 const SearchPanel = () => {
   const quranService = useQuran();
 
-  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+  const searchMethod = useQuranBrowserPageStore((state) => state.searchMethod);
 
-  const searchString = useAppSelector((state) => state.qbPage.searchString);
+  const searchString = useQuranBrowserPageStore((state) => state.searchString);
 
-  const dispatch = useAppDispatch();
+  const submitRootSearch = useQuranBrowserPageStore(
+    (state) => state.submitRootSearch
+  );
+  const submitWordSearch = useQuranBrowserPageStore(
+    (state) => state.submitWordSearch
+  );
+  const gotoChapter = useQuranBrowserPageStore((state) => state.gotoChapter);
 
   const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
   const onSearchSubmit = () => {
     if (isRootSearch) {
-      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+      submitRootSearch(quranService);
     } else {
-      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
+      submitWordSearch(quranService);
     }
   };
 
   const handleCurrentChapter = (chapterID: number) => {
-    dispatch(qbPageActions.gotoChapter(chapterID.toString()));
+    gotoChapter(chapterID.toString());
   };
 
   return (

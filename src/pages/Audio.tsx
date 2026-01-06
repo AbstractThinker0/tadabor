@@ -1,9 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-
-import { useAppSelector, useAppDispatch } from "@/store";
-import { audioPageActions } from "@/store/slices/pages/audio";
+import { useAudioPageStore } from "@/store/zustand/audioPage";
 
 import { getVerseAudioURL } from "@/util/audioData";
 import type { verseProps } from "quran-tools";
@@ -69,23 +67,21 @@ const Audio = () => {
   const { i18n } = useTranslation();
   const direction = i18n.dir();
 
-  const dispatch = useAppDispatch();
-
   const quranService = useQuran();
-
-  const currentChapter = useAppSelector(
-    (state) => state.audioPage.currentChapter
+  const currentChapter = useAudioPageStore((state) => state.currentChapter);
+  const currentVerse = useAudioPageStore((state) => state.currentVerse);
+  const isPlaying = useAudioPageStore((state) => state.isPlaying);
+  const autoPlay = useAudioPageStore((state) => state.autoPlay);
+  const duration = useAudioPageStore((state) => state.duration);
+  const currentTime = useAudioPageStore((state) => state.currentTime);
+  const setCurrentChapter = useAudioPageStore(
+    (state) => state.setCurrentChapter
   );
-
-  const currentVerse = useAppSelector((state) => state.audioPage.currentVerse);
-
-  const isPlaying = useAppSelector((state) => state.audioPage.isPlaying);
-
-  const autoPlay = useAppSelector((state) => state.audioPage.autoPlay);
-
-  const duration = useAppSelector((state) => state.audioPage.duration);
-
-  const currentTime = useAppSelector((state) => state.audioPage.currentTime);
+  const setCurrentVerse = useAudioPageStore((state) => state.setCurrentVerse);
+  const setIsPlaying = useAudioPageStore((state) => state.setIsPlaying);
+  const setDuration = useAudioPageStore((state) => state.setDuration);
+  const setCurrentTime = useAudioPageStore((state) => state.setCurrentTime);
+  const setAutoPlaying = useAudioPageStore((state) => state.setAutoPlaying);
 
   const refAudio = useRef<HTMLAudioElement>(null);
 
@@ -101,7 +97,7 @@ const Audio = () => {
   useAudioPrefetch(currentVerse?.rank ?? -1, maxRankInChapter);
 
   const handleChapterChange = (chapter: string) => {
-    dispatch(audioPageActions.setCurrentChapter(chapter));
+    setCurrentChapter(chapter);
     setDisplayVerses(quranService.getVerses(chapter));
   };
 
@@ -109,21 +105,21 @@ const Audio = () => {
     if (!refAudio.current) return;
 
     refAudio.current.src = getVerseAudioURL(verse.rank);
-    dispatch(audioPageActions.setCurrentVerse(verse));
+    setCurrentVerse(verse);
     refAudio.current.play();
-    dispatch(audioPageActions.setIsPlaying(true));
+    setIsPlaying(true);
   };
 
   const onLoadedMetadata = () => {
     if (!refAudio.current) return;
 
-    dispatch(audioPageActions.setDuration(refAudio.current.duration));
+    setDuration(refAudio.current.duration);
   };
 
   const onTimeUpdate = () => {
     if (!refAudio.current) return;
 
-    dispatch(audioPageActions.setCurrentTime(refAudio.current.currentTime));
+    setCurrentTime(refAudio.current.currentTime);
   };
 
   const togglePlayPause = () => {
@@ -135,7 +131,7 @@ const Audio = () => {
       refAudio.current.play();
     }
 
-    dispatch(audioPageActions.setIsPlaying(!isPlaying));
+    setIsPlaying(!isPlaying);
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +139,7 @@ const Audio = () => {
 
     const value = Number(e.target.value);
     refAudio.current.currentTime = value;
-    dispatch(audioPageActions.setCurrentTime(value));
+    setCurrentTime(value);
   };
 
   const playNextVerse = (reverse: boolean = false) => {
@@ -157,9 +153,9 @@ const Audio = () => {
       if (nextVerse && nextVerse.suraid === currentVerse?.suraid) {
         if (refAudio.current) {
           refAudio.current.src = getVerseAudioURL(nextRank);
-          dispatch(audioPageActions.setCurrentVerse(nextVerse));
+          setCurrentVerse(nextVerse);
           refAudio.current.play();
-          dispatch(audioPageActions.setIsPlaying(true));
+          setIsPlaying(true);
           return true;
         }
       }
@@ -175,7 +171,7 @@ const Audio = () => {
       }
     }
 
-    dispatch(audioPageActions.setIsPlaying(false));
+    setIsPlaying(false);
   };
 
   const onChapterChange = useEffectEvent(() => {
@@ -185,8 +181,8 @@ const Audio = () => {
 
     refAudio.current.src = getVerseAudioURL(verseRank);
 
-    dispatch(audioPageActions.setCurrentVerse(displayVerses[0]));
-    dispatch(audioPageActions.setIsPlaying(false));
+    setCurrentVerse(displayVerses[0]);
+    setIsPlaying(false);
   });
 
   useEffect(() => {
@@ -194,7 +190,7 @@ const Audio = () => {
   }, [currentChapter]);
 
   const onChangeAutoPlay = (checked: boolean) => {
-    dispatch(audioPageActions.setAutoPlaying(checked));
+    setAutoPlaying(checked);
     localStorage.setItem("audioAutoPlay", checked ? "true" : "false");
   };
 
@@ -206,17 +202,13 @@ const Audio = () => {
     playNextVerse();
   };
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.audioPage.showSearchPanel
+  const showSearchPanel = useAudioPageStore((state) => state.showSearchPanel);
+
+  const showSearchPanelMobile = useAudioPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.audioPage.showSearchPanelMobile
-  );
-
-  const setOpenState = (state: boolean) => {
-    dispatch(audioPageActions.setSearchPanel(state));
-  };
+  const setSearchPanel = useAudioPageStore((state) => state.setSearchPanel);
 
   return (
     <Flex
@@ -229,7 +221,7 @@ const Audio = () => {
       <Sidebar
         isOpenMobile={showSearchPanelMobile}
         isOpenDesktop={showSearchPanel}
-        setOpenState={setOpenState}
+        setOpenState={setSearchPanel}
       >
         <Box paddingTop="8px" paddingInlineStart="8px" paddingInlineEnd="4px">
           <ChaptersList
@@ -303,22 +295,18 @@ const Audio = () => {
 };
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.audioPage.currentChapter
+  const selectChapter = useAudioPageStore((state) => state.currentChapter);
+
+  const showSearchPanel = useAudioPageStore((state) => state.showSearchPanel);
+
+  const showSearchPanelMobile = useAudioPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.audioPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.audioPage.showSearchPanelMobile
-  );
-
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useAudioPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(audioPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

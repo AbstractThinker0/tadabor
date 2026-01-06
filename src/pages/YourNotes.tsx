@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { ynPageActions } from "@/store/slices/pages/yourNotes";
+import { useYourNotesPageStore } from "@/store/zustand/yourNotesPage";
 
 import { Tabs } from "@chakra-ui/react";
 
@@ -13,12 +12,11 @@ import { usePageNav } from "@/hooks/usePageNav";
 const YourNotes = () => {
   usePageNav("nav.notes");
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const currentTab = useAppSelector((state) => state.ynPage.currentTab);
+  const currentTab = useYourNotesPageStore((state) => state.currentTab);
+  const setCurrentTab = useYourNotesPageStore((state) => state.setCurrentTab);
 
   const onChangeTab = (index: string) => {
-    dispatch(ynPageActions.setCurrentTab(index));
+    setCurrentTab(index);
   };
 
   return (

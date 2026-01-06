@@ -1,5 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 import { Flex } from "@chakra-ui/react";
 
 import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
@@ -11,26 +10,24 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 function QuranBrowser() {
   usePageNav("nav.browser");
-  const dispatch = useAppDispatch();
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.qbPage.showSearchPanel
+  const showSearchPanel = useQuranBrowserPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.qbPage.showSearchPanelMobile
+  const showSearchPanelMobile = useQuranBrowserPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const setOpenState = (state: boolean) => {
-    dispatch(qbPageActions.setSearchPanel(state));
-  };
+  const setSearchPanel = useQuranBrowserPageStore(
+    (state) => state.setSearchPanel
+  );
 
   return (
     <Flex bgColor="brand.bg" overflow="hidden" maxH="100%" h="100%">
       <Sidebar
         isOpenMobile={showSearchPanelMobile}
         isOpenDesktop={showSearchPanel}
-        setOpenState={setOpenState}
+        setOpenState={setSearchPanel}
       >
         <SearchPanel />
       </Sidebar>

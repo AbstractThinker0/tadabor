@@ -1,5 +1,5 @@
 import useQuran from "@/context/useQuran";
-import { useAppSelector } from "@/store";
+import { useComparatorPageStore } from "@/store/zustand/comparatorPage";
 import type { verseProps } from "quran-tools";
 import { Box, Flex, NativeSelect } from "@chakra-ui/react";
 
@@ -16,12 +16,10 @@ const Menu = ({
 }: MenuProps) => {
   const quranService = useQuran();
 
-  const currentChapter = useAppSelector(
-    (state) => state.comparatorPage.currentChapter
+  const currentChapter = useComparatorPageStore(
+    (state) => state.currentChapter
   );
-  const currentVerse = useAppSelector(
-    (state) => state.comparatorPage.currentVerse
-  );
+  const currentVerse = useComparatorPageStore((state) => state.currentVerse);
 
   const onChangeChapter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     handleSetChapter(event.target.value);

@@ -3,8 +3,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import type { verseMatchResult } from "quran-tools";
 
 import useQuran from "@/context/useQuran";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { searcherPageActions } from "@/store/slices/pages/searcher";
+import { useSearcherPageStore } from "@/store/zustand/searcherPage";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
@@ -18,9 +17,7 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { Flex, Span, Tag } from "@chakra-ui/react";
 
 const SearcherDisplay = () => {
-  const search_roots = useAppSelector(
-    (state) => state.searcherPage.search_roots
-  );
+  const search_roots = useSearcherPageStore((state) => state.search_roots);
 
   const rootsArray = Object.keys(search_roots);
 
@@ -67,10 +64,10 @@ interface RootItemProps {
 }
 
 const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
-  const dispatch = useAppDispatch();
+  const deleteRoot = useSearcherPageStore((state) => state.deleteRoot);
 
   const onClickRemove = (root_id: string) => {
-    dispatch(searcherPageActions.deleteRoot({ root_id: root_id }));
+    deleteRoot(root_id);
   };
 
   return (
@@ -89,15 +86,14 @@ const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
 const VersesList = () => {
   const refVerses = useRef<HTMLDivElement>(null);
 
-  const search_roots = useAppSelector(
-    (state) => state.searcherPage.search_roots
-  );
+  const search_roots = useSearcherPageStore((state) => state.search_roots);
 
-  const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
+  const scrollKey = useSearcherPageStore((state) => state.scrollKey);
 
   const quranService = useQuran();
 
-  const dispatch = useAppDispatch();
+  const setVersesCount = useSearcherPageStore((state) => state.setVersesCount);
+
   const [stateVerses, setStateVerses] = useState<verseMatchResult[]>([]);
 
   const [isPending, startTransition] = useTransition();
@@ -111,9 +107,9 @@ const VersesList = () => {
       );
 
       setStateVerses(sortedVerses);
-      dispatch(searcherPageActions.setVersesCount(sortedVerses.length));
+      setVersesCount(sortedVerses.length);
     });
-  }, [search_roots, dispatch, quranService]);
+  }, [search_roots, setVersesCount, quranService]);
 
   useEffect(() => {
     if (refVerses.current && scrollKey) {
@@ -161,19 +157,19 @@ interface VerseItemProps {
 
 const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
   const quranService = useQuran();
-
-  const dispatch = useAppDispatch();
+  const setScrollKey = useSearcherPageStore((state) => state.setScrollKey);
+  const setVerseTab = useSearcherPageStore((state) => state.setVerseTab);
 
   const onClickVerseChapter = () => {
-    dispatch(searcherPageActions.setVerseTab(verseMatch.key));
-    dispatch(searcherPageActions.setScrollKey(verseMatch.key));
+    setVerseTab(verseMatch.key);
+    setScrollKey(verseMatch.key);
   };
 
   const onClickVerse = () => {
     if (isSelected) {
-      dispatch(searcherPageActions.setScrollKey(""));
+      setScrollKey("");
     } else {
-      dispatch(searcherPageActions.setScrollKey(verseMatch.key));
+      setScrollKey(verseMatch.key);
     }
   };
 

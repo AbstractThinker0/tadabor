@@ -1,19 +1,21 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 const ButtonSidebar = () => {
-  const dispatch = useAppDispatch();
-  const showSearchPanel = useAppSelector(
-    (state) => state.qbPage.showSearchPanel
+  const showSearchPanel = useQuranBrowserPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.qbPage.showSearchPanelMobile
+  const showSearchPanelMobile = useQuranBrowserPageStore(
+    (state) => state.showSearchPanelMobile
+  );
+
+  const setSearchPanel = useQuranBrowserPageStore(
+    (state) => state.setSearchPanel
   );
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(qbPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

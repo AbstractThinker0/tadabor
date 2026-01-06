@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { inspectorPageActions } from "@/store/slices/pages/inspector";
+import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
@@ -9,22 +8,20 @@ import ListVerses from "@/components/Pages/Inspector/ListVerses";
 import { Box, Flex } from "@chakra-ui/react";
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.inspectorPage.currentChapter
+  const selectChapter = useInspectorPageStore((state) => state.currentChapter);
+
+  const showSearchPanel = useInspectorPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanel
+  const showSearchPanelMobile = useInspectorPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanelMobile
-  );
-
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useInspectorPageStore((state) => state.setSearchPanel);
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(inspectorPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

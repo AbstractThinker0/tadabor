@@ -2,8 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import type { verseProps } from "quran-tools";
 
@@ -24,20 +23,24 @@ const ListVerses = () => {
 };
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.qbPage.showSearchPanel
+  const selectChapter = useQuranBrowserPageStore(
+    (state) => state.selectChapter
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.qbPage.showSearchPanelMobile
+  const showSearchPanel = useQuranBrowserPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const dispatch = useAppDispatch();
+  const showSearchPanelMobile = useQuranBrowserPageStore(
+    (state) => state.showSearchPanelMobile
+  );
+
+  const setSearchPanel = useQuranBrowserPageStore(
+    (state) => state.setSearchPanel
+  );
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(qbPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (
@@ -57,9 +60,11 @@ const ListBody = () => {
 
   const [isPending, startTransition] = useTransition();
 
-  const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
+  const scrollKey = useQuranBrowserPageStore((state) => state.scrollKey);
 
-  const selectChapter = useAppSelector((state) => state.qbPage.selectChapter);
+  const selectChapter = useQuranBrowserPageStore(
+    (state) => state.selectChapter
+  );
 
   const refVerses = useRef<HTMLDivElement>(null);
 

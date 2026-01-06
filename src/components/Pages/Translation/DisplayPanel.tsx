@@ -2,8 +2,7 @@ import { useRef, useState, useTransition, useEffect, useCallback } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { translationPageActions } from "@/store/slices/pages/translation";
+import { useTranslationPageStore } from "@/store/zustand/translationPage";
 
 import type { verseProps } from "quran-tools";
 
@@ -24,11 +23,11 @@ import { AiOutlineTranslation } from "react-icons/ai";
 
 const DisplayPanel = () => {
   const quranService = useQuran();
-  const currentChapter = useAppSelector(
-    (state) => state.translationPage.currentChapter
+  const currentChapter = useTranslationPageStore(
+    (state) => state.currentChapter
   );
 
-  const scrollKey = useAppSelector((state) => state.translationPage.scrollKey);
+  const scrollKey = useTranslationPageStore((state) => state.scrollKey);
 
   const refDisplay = useRef<HTMLDivElement>(null);
 
@@ -114,22 +113,24 @@ const DisplayPanel = () => {
 };
 
 const ListTitle = () => {
-  const selectChapter = useAppSelector(
-    (state) => state.translationPage.currentChapter
+  const selectChapter = useTranslationPageStore(
+    (state) => state.currentChapter
   );
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.translationPage.showSearchPanel
+  const showSearchPanel = useTranslationPageStore(
+    (state) => state.showSearchPanel
   );
 
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.translationPage.showSearchPanelMobile
+  const showSearchPanelMobile = useTranslationPageStore(
+    (state) => state.showSearchPanelMobile
   );
 
-  const dispatch = useAppDispatch();
+  const setSearchPanel = useTranslationPageStore(
+    (state) => state.setSearchPanel
+  );
 
   const onTogglePanel = (state: boolean) => {
-    dispatch(translationPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (
@@ -150,10 +151,10 @@ interface VerseItemProps {
 const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
   const { value: isOpen, toggle } = useBoolean(true);
 
-  const dispatch = useAppDispatch();
+  const setScrollKey = useTranslationPageStore((state) => state.setScrollKey);
 
   const onClickVerse = () => {
-    dispatch(translationPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   };
 
   return (

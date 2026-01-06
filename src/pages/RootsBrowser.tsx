@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
+import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
 
 import PanelRoots from "@/components/Pages/RootsBrowser/PanelRoots";
 
@@ -14,27 +12,17 @@ import { usePageNav } from "@/hooks/usePageNav";
 const RootsBrowser = () => {
   usePageNav("nav.roots");
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const verseTab = useAppSelector((state) => state.rbPage.verseTab);
-
-  const scrollKey = useAppSelector((state) => state.rbPage.scrollKey);
-
-  const tabIndex = useAppSelector((state) => state.rbPage.tabIndex);
-
-  const setScrollKey = (key: string) => {
-    dispatch(rbPageActions.setScrollKey(key));
-  };
-
-  const onChangeTab = (index: string) => {
-    dispatch(rbPageActions.setTabIndex(index));
-  };
+  const verseTab = useRootsBrowserPageStore((state) => state.verseTab);
+  const scrollKey = useRootsBrowserPageStore((state) => state.scrollKey);
+  const tabIndex = useRootsBrowserPageStore((state) => state.tabIndex);
+  const setScrollKey = useRootsBrowserPageStore((state) => state.setScrollKey);
+  const setTabIndex = useRootsBrowserPageStore((state) => state.setTabIndex);
 
   return (
     <Tabs.Root
       colorPalette={"blue"}
       value={tabIndex}
-      onValueChange={(e) => onChangeTab(e.value)}
+      onValueChange={(e) => setTabIndex(e.value)}
       bgColor={"brand.bg"}
       overflow="hidden"
       maxH="100%"

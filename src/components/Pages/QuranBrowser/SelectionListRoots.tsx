@@ -1,8 +1,7 @@
 import { memo, useMemo, useState } from "react";
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import type { rootProps } from "quran-tools";
 
@@ -65,7 +64,9 @@ interface RootsListProps {
 const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
   const quranService = useQuran();
   const [itemsCount, setItemsCount] = useState(50);
-  const dispatch = useAppDispatch();
+  const setSearchString = useQuranBrowserPageStore(
+    (state) => state.setSearchString
+  );
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
@@ -88,7 +89,7 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
   const handleRootSelect = (rootName: string) => {
     if (isDisabled) return;
 
-    dispatch(qbPageActions.setSearchString(rootName));
+    setSearchString(rootName);
   };
 
   return (

@@ -1,7 +1,7 @@
+import type React from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
@@ -24,37 +24,32 @@ import { MdSearch } from "react-icons/md";
 const SearchOptions = () => {
   const { t } = useTranslation();
 
-  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+  const searchMethod = useQuranBrowserPageStore((state) => state.searchMethod);
 
-  const searchDiacritics = useAppSelector(
-    (state) => state.qbPage.searchDiacritics
+  const searchDiacritics = useQuranBrowserPageStore(
+    (state) => state.searchDiacritics
   );
 
-  const searchIdentical = useAppSelector(
-    (state) => state.qbPage.searchIdentical
+  const searchIdentical = useQuranBrowserPageStore(
+    (state) => state.searchIdentical
   );
 
-  const searchStart = useAppSelector((state) => state.qbPage.searchStart);
+  const searchStart = useQuranBrowserPageStore((state) => state.searchStart);
 
-  const dispatch = useAppDispatch();
+  const setSearchDiacritics = useQuranBrowserPageStore(
+    (state) => state.setSearchDiacritics
+  );
+  const setSearchIdentical = useQuranBrowserPageStore(
+    (state) => state.setSearchIdentical
+  );
+  const setSearchStart = useQuranBrowserPageStore(
+    (state) => state.setSearchStart
+  );
+  const setSearchMethod = useQuranBrowserPageStore(
+    (state) => state.setSearchMethod
+  );
 
   const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
-
-  const setSearchDiacritics = (status: boolean) => {
-    dispatch(qbPageActions.setSearchDiacritics(status));
-  };
-
-  const setSearchIdentical = (status: boolean) => {
-    dispatch(qbPageActions.setSearchIdentical(status));
-  };
-
-  const setSearchStart = (status: boolean) => {
-    dispatch(qbPageActions.setSearchStart(status));
-  };
-
-  const setSearchMethod = (method: SEARCH_METHOD) => {
-    dispatch(qbPageActions.setSearchMethod(method));
-  };
 
   const onChangeDiacritics = (checked: boolean) => {
     setSearchDiacritics(checked);
@@ -157,12 +152,15 @@ const FormWordSearch = ({
   searchString,
 }: FormWordSearchProps) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+
+  const setSearchString = useQuranBrowserPageStore(
+    (state) => state.setSearchString
+  );
 
   const searchStringHandle = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    dispatch(qbPageActions.setSearchString(event.target.value));
+    setSearchString(event.target.value);
   };
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLDivElement>) => {
@@ -198,7 +196,7 @@ const FormWordSearch = ({
 
 const SearchSuccessComponent = () => {
   const { t } = useTranslation();
-  const searchResult = useAppSelector((state) => state.qbPage.searchResult);
+  const searchResult = useQuranBrowserPageStore((state) => state.searchResult);
 
   if (searchResult.length === 0) return null;
 

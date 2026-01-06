@@ -2,8 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import useQuran from "@/context/useQuran";
 
@@ -40,25 +39,26 @@ const ListSearchResults = ({
 }: ListSearchResultsProps) => {
   const { t } = useTranslation();
 
-  const dispatch = useAppDispatch();
-
   const [isPending, startTransition] = useTransition();
 
   const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
 
   const refListVerses = useRef<HTMLDivElement>(null);
 
-  const scrollKey = useAppSelector((state) => state.qbPage.scrollKey);
+  const scrollKey = useQuranBrowserPageStore((state) => state.scrollKey);
 
-  const searchingChapters = useAppSelector(
-    (state) => state.qbPage.searchingChapters
+  const searchingChapters = useQuranBrowserPageStore(
+    (state) => state.searchingChapters
   );
 
-  const searchingMethod = useAppSelector(
-    (state) => state.qbPage.searchingMethod
+  const searchingMethod = useQuranBrowserPageStore(
+    (state) => state.searchingMethod
   );
 
-  const searchIndexes = useAppSelector((state) => state.qbPage.searchIndexes);
+  const searchIndexes = useQuranBrowserPageStore(
+    (state) => state.searchIndexes
+  );
+  const setScrollKey = useQuranBrowserPageStore((state) => state.setScrollKey);
 
   useEffect(() => {
     startTransition(() => {
@@ -67,7 +67,7 @@ const ListSearchResults = ({
   }, [versesArray]);
 
   const handleDerivationClick = (verse_key: string) => {
-    dispatch(qbPageActions.setScrollKey(verse_key));
+    setScrollKey(verse_key);
   };
 
   useEffect(() => {
@@ -141,8 +141,8 @@ interface SearchTitleProps {
 }
 
 const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
-  const searchingString = useAppSelector(
-    (state) => state.qbPage.searchingString
+  const searchingString = useQuranBrowserPageStore(
+    (state) => state.searchingString
   );
 
   const { t, i18n } = useTranslation();
@@ -184,17 +184,24 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
 const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
   const quranService = useQuran();
-  const dispatch = useAppDispatch();
-
-  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+  const searchMethod = useQuranBrowserPageStore((state) => state.searchMethod);
+  const toggleSelectChapter = useQuranBrowserPageStore(
+    (state) => state.toggleSelectChapter
+  );
+  const submitRootSearch = useQuranBrowserPageStore(
+    (state) => state.submitRootSearch
+  );
+  const submitWordSearch = useQuranBrowserPageStore(
+    (state) => state.submitWordSearch
+  );
 
   const onClickClose = (chapterID: string) => {
-    dispatch(qbPageActions.toggleSelectChapter(Number(chapterID)));
+    toggleSelectChapter(Number(chapterID));
 
     if (searchMethod === SEARCH_METHOD.ROOT) {
-      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+      submitRootSearch(quranService);
     } else {
-      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
+      submitWordSearch(quranService);
     }
   };
 

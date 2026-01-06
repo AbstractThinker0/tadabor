@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch } from "@/store";
-import { inspectorPageActions } from "@/store/slices/pages/inspector";
+import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
 
 import type { verseProps, rootProps } from "quran-tools";
 
@@ -24,7 +23,10 @@ interface VerseItemProps {
 
 const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   const quranService = useQuran();
-  const dispatch = useAppDispatch();
+  const setScrollKey = useInspectorPageStore((state) => state.setScrollKey);
+  const setCurrentChapter = useInspectorPageStore(
+    (state) => state.setCurrentChapter
+  );
 
   const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
 
@@ -46,12 +48,12 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   };
 
   const onClickVerse = () => {
-    dispatch(inspectorPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   };
 
   function onClickVerseChapter(verseKey: string) {
-    dispatch(inspectorPageActions.setCurrentChapter(verseKey.split("-")[0]));
-    dispatch(inspectorPageActions.setScrollKey(verseKey));
+    setCurrentChapter(verseKey.split("-")[0]);
+    setScrollKey(verseKey);
   }
 
   return (

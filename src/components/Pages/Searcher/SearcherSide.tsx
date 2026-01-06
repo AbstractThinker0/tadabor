@@ -1,7 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { searcherPageActions } from "@/store/slices/pages/searcher";
+import { useSearcherPageStore } from "@/store/zustand/searcherPage";
 
 import useQuran from "@/context/useQuran";
 import type { rootProps } from "quran-tools";
@@ -50,9 +49,7 @@ const SearcherSide = () => {
 
 const CountVerses = () => {
   const { t } = useTranslation();
-  const verses_count = useAppSelector(
-    (state) => state.searcherPage.verses_count
-  );
+  const verses_count = useSearcherPageStore((state) => state.verses_count);
 
   if (!verses_count) return null;
 
@@ -77,9 +74,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
-  const search_roots = useAppSelector(
-    (state) => state.searcherPage.search_roots
-  );
+  const search_roots = useSearcherPageStore((state) => state.search_roots);
 
   useEffect(() => {
     startLoadTransition(() => {
@@ -152,13 +147,14 @@ interface RootItemProps {
 }
 
 const RootItem = ({ root, isSelected }: RootItemProps) => {
-  const dispatch = useAppDispatch();
+  const addRoot = useSearcherPageStore((state) => state.addRoot);
+  const deleteRoot = useSearcherPageStore((state) => state.deleteRoot);
 
   const onClickRoot = (root: rootProps) => {
     if (isSelected) {
-      dispatch(searcherPageActions.deleteRoot({ root_id: root.id.toString() }));
+      deleteRoot(root.id.toString());
     } else {
-      dispatch(searcherPageActions.addRoot({ root }));
+      addRoot(root);
     }
   };
 

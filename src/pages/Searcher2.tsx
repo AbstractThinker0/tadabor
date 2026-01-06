@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { searcher2PageActions } from "@/store/slices/pages/searcher2";
+import { useSearcher2PageStore } from "@/store/zustand/searcher2Page";
 
 import useQuran from "@/context/useQuran";
 import type { verseMatchResult } from "quran-tools";
@@ -25,28 +23,17 @@ import { VerseItem } from "@/components/Pages/Searcher2/VerseItem";
 const Searcher2 = () => {
   usePageNav("nav.searcher2");
   const { t } = useTranslation();
-
-  const dispatch = useAppDispatch();
-
-  const verseTab = useAppSelector((state) => state.searcher2Page.verseTab);
-
-  const tabIndex = useAppSelector((state) => state.searcher2Page.tabIndex);
-
-  const scrollKey = useAppSelector((state) => state.searcher2Page.scrollKey);
-
-  const setScrollKey = (key: string) => {
-    dispatch(searcher2PageActions.setScrollKey(key));
-  };
-
-  const onChangeTab = (index: string) => {
-    dispatch(searcher2PageActions.setTabIndex(index));
-  };
+  const verseTab = useSearcher2PageStore((state) => state.verseTab);
+  const tabIndex = useSearcher2PageStore((state) => state.tabIndex);
+  const scrollKey = useSearcher2PageStore((state) => state.scrollKey);
+  const setScrollKey = useSearcher2PageStore((state) => state.setScrollKey);
+  const setTabIndex = useSearcher2PageStore((state) => state.setTabIndex);
 
   return (
     <Tabs.Root
       colorPalette={"blue"}
       value={tabIndex}
-      onValueChange={(e) => onChangeTab(e.value)}
+      onValueChange={(e) => setTabIndex(e.value)}
       bgColor={"brand.bg"}
       overflow="hidden"
       maxH="100%"
@@ -103,33 +90,32 @@ const Searcher2Tab = () => {
   const refVerses = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
-
-  const dispatch = useAppDispatch();
-
-  const scrollKey = useAppSelector((state) => state.searcher2Page.scrollKey);
-
-  const searchString = useAppSelector(
-    (state) => state.searcher2Page.searchString
+  const scrollKey = useSearcher2PageStore((state) => state.scrollKey);
+  const searchString = useSearcher2PageStore((state) => state.searchString);
+  const searchIdentical = useSearcher2PageStore(
+    (state) => state.searchIdentical
   );
-
-  const searchIdentical = useAppSelector(
-    (state) => state.searcher2Page.searchIdentical
+  const searchDiacritics = useSearcher2PageStore(
+    (state) => state.searchDiacritics
   );
-
-  const searchDiacritics = useAppSelector(
-    (state) => state.searcher2Page.searchDiacritics
+  const searchStart = useSearcher2PageStore((state) => state.searchStart);
+  const setSearchString = useSearcher2PageStore(
+    (state) => state.setSearchString
   );
-
-  const searchStart = useAppSelector(
-    (state) => state.searcher2Page.searchStart
+  const setSearchDiacritics = useSearcher2PageStore(
+    (state) => state.setSearchDiacritics
   );
+  const setSearchIdentical = useSearcher2PageStore(
+    (state) => state.setSearchIdentical
+  );
+  const setSearchStart = useSearcher2PageStore((state) => state.setSearchStart);
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(searcher2PageActions.setSearchString(event.target.value));
+    setSearchString(event.target.value);
   };
 
   const onClearInput = () => {
-    dispatch(searcher2PageActions.setSearchString(""));
+    setSearchString("");
   };
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -145,15 +131,15 @@ const Searcher2Tab = () => {
   }
 
   const handleCheckboxDiacritics = (checked: boolean) => {
-    dispatch(searcher2PageActions.setSearchDiacritics(checked));
+    setSearchDiacritics(checked);
   };
 
   const handleCheckboxIdentical = (checked: boolean) => {
-    dispatch(searcher2PageActions.setSearchIdentical(checked));
+    setSearchIdentical(checked);
   };
 
   const handleCheckboxStart = (checked: boolean) => {
-    dispatch(searcher2PageActions.setSearchStart(checked));
+    setSearchStart(checked);
   };
 
   useEffect(() => {

@@ -1,6 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { translationPageActions } from "@/store/slices/pages/translation";
+import { useTranslationPageStore } from "@/store/zustand/translationPage";
 
 import { Box, Flex } from "@chakra-ui/react";
 
@@ -13,26 +11,28 @@ import { usePageNav } from "@/hooks/usePageNav";
 
 const Translation = () => {
   usePageNav("nav.translation");
-  const dispatch = useAppDispatch();
-
-  const currentChapter = useAppSelector(
-    (state) => state.translationPage.currentChapter
+  const currentChapter = useTranslationPageStore(
+    (state) => state.currentChapter
+  );
+  const setCurrentChapter = useTranslationPageStore(
+    (state) => state.setCurrentChapter
+  );
+  const showSearchPanel = useTranslationPageStore(
+    (state) => state.showSearchPanel
+  );
+  const showSearchPanelMobile = useTranslationPageStore(
+    (state) => state.showSearchPanelMobile
+  );
+  const setSearchPanel = useTranslationPageStore(
+    (state) => state.setSearchPanel
   );
 
   const handleChapterChange = (chapter: string) => {
-    dispatch(translationPageActions.setCurrentChapter(chapter));
+    setCurrentChapter(chapter);
   };
 
-  const showSearchPanel = useAppSelector(
-    (state) => state.translationPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.translationPage.showSearchPanelMobile
-  );
-
   const setOpenState = (state: boolean) => {
-    dispatch(translationPageActions.setSearchPanel(state));
+    setSearchPanel(state);
   };
 
   return (

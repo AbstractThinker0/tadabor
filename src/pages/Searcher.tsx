@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { searcherPageActions } from "@/store/slices/pages/searcher";
+import { useSearcherPageStore } from "@/store/zustand/searcherPage";
 
 import PanelQuran from "@/components/Custom/PanelQuran";
 import { Sidebar } from "@/components/Generic/Sidebar";
@@ -16,40 +14,24 @@ import { usePageNav } from "@/hooks/usePageNav";
 const Searcher = () => {
   usePageNav("nav.searcher");
   const { t } = useTranslation();
-
-  const dispatch = useAppDispatch();
-
-  const tabIndex = useAppSelector((state) => state.searcherPage.tabIndex);
-
-  const verseTab = useAppSelector((state) => state.searcherPage.verseTab);
-
-  const scrollKey = useAppSelector((state) => state.searcherPage.scrollKey);
-
-  const setScrollKey = (key: string) => {
-    dispatch(searcherPageActions.setScrollKey(key));
-  };
-
-  const onChangeTab = (index: string) => {
-    dispatch(searcherPageActions.setTabIndex(index));
-  };
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.searcherPage.showSearchPanel
+  const tabIndex = useSearcherPageStore((state) => state.tabIndex);
+  const verseTab = useSearcherPageStore((state) => state.verseTab);
+  const scrollKey = useSearcherPageStore((state) => state.scrollKey);
+  const setScrollKey = useSearcherPageStore((state) => state.setScrollKey);
+  const setTabIndex = useSearcherPageStore((state) => state.setTabIndex);
+  const showSearchPanel = useSearcherPageStore(
+    (state) => state.showSearchPanel
   );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.searcherPage.showSearchPanelMobile
+  const showSearchPanelMobile = useSearcherPageStore(
+    (state) => state.showSearchPanelMobile
   );
-
-  const setOpenState = (state: boolean) => {
-    dispatch(searcherPageActions.setSearchPanel(state));
-  };
+  const setSearchPanel = useSearcherPageStore((state) => state.setSearchPanel);
 
   return (
     <Tabs.Root
       colorPalette={"blue"}
       value={tabIndex}
-      onValueChange={(e) => onChangeTab(e.value)}
+      onValueChange={(e) => setTabIndex(e.value)}
       bgColor={"brand.bg"}
       overflow="hidden"
       maxH="100%"
@@ -79,7 +61,7 @@ const Searcher = () => {
           <Sidebar
             isOpenMobile={showSearchPanelMobile}
             isOpenDesktop={showSearchPanel}
-            setOpenState={setOpenState}
+            setOpenState={setSearchPanel}
           >
             <SearcherSide />
           </Sidebar>

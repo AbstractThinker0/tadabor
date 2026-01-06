@@ -1,8 +1,7 @@
 import type { rootProps, verseMatchResult, verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
@@ -27,8 +26,9 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
-  const dispatch = useAppDispatch();
   const quranService = useQuran();
+  const setScrollKey = useQuranBrowserPageStore((state) => state.setScrollKey);
+  const gotoChapter = useQuranBrowserPageStore((state) => state.gotoChapter);
 
   const toolInspect = useNavigationStore((state) => state.toolInspect);
 
@@ -55,12 +55,12 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
   };
 
   const onClickVerse = () => {
-    dispatch(qbPageActions.setScrollKey(verse.key));
+    setScrollKey(verse.key);
   };
 
   const onClickVerseChapter = (verseKey: string) => {
-    dispatch(qbPageActions.gotoChapter(verseKey.split("-")[0]));
-    dispatch(qbPageActions.setScrollKey(verseKey));
+    gotoChapter(verseKey.split("-")[0]);
+    setScrollKey(verseKey);
   };
 
   return (

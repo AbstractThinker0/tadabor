@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 
-import { useAppSelector } from "@/store";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
 import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
 import { Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
-  const searchResult = useAppSelector((state) => state.qbPage.searchResult);
-  const searchError = useAppSelector((state) => state.qbPage.searchError);
+  const searchResult = useQuranBrowserPageStore((state) => state.searchResult);
+  const searchError = useQuranBrowserPageStore((state) => state.searchError);
 
   // memorize the Div element of the results list to use it later on to reset scrolling when a new search is submitted
   const refListVerses = useRef<HTMLDivElement>(null);

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppSelector } from "@/store";
+import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
 
 import type { verseProps } from "quran-tools";
 
@@ -23,7 +23,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const scrollKey = useAppSelector((state) => state.inspectorPage.scrollKey);
+  const scrollKey = useInspectorPageStore((state) => state.scrollKey);
 
   const refVerses = useRef<HTMLDivElement>(null);
 

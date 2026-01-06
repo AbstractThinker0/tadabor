@@ -1,10 +1,8 @@
 import { useEffect, useState, useTransition } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
 
 import useQuran from "@/context/useQuran";
-
-import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
 import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
 
@@ -18,17 +16,17 @@ import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const PanelRoots = () => {
-  const dispatch = useAppDispatch();
-
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
 
-  const searchString = useAppSelector((state) => state.rbPage.searchString);
+  const searchString = useRootsBrowserPageStore((state) => state.searchString);
 
-  const searchInclusive = useAppSelector(
-    (state) => state.rbPage.searchInclusive
+  const searchInclusive = useRootsBrowserPageStore(
+    (state) => state.searchInclusive
   );
+  const setVerseTab = useRootsBrowserPageStore((state) => state.setVerseTab);
+  const setScrollKey = useRootsBrowserPageStore((state) => state.setScrollKey);
 
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
   const [itemsCount, setItemsCount] = useState(60);
@@ -36,8 +34,8 @@ const PanelRoots = () => {
   const rootsLoaded = useRootsLoaded();
 
   const handleVerseTab = (verseKey: string) => {
-    dispatch(rbPageActions.setVerseTab(verseKey));
-    dispatch(rbPageActions.setScrollKey(verseKey));
+    setVerseTab(verseKey);
+    setScrollKey(verseKey);
   };
 
   const fetchMoreData = () => {

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
 
-import { useAppDispatch } from "@/store";
-import { searcher2PageActions } from "@/store/slices/pages/searcher2";
+import { useSearcher2PageStore } from "@/store/zustand/searcher2Page";
 import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import useQuran from "@/context/useQuran";
@@ -28,7 +27,8 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
-  const dispatch = useAppDispatch();
+  const setVerseTab = useSearcher2PageStore((state) => state.setVerseTab);
+  const setScrollKey = useSearcher2PageStore((state) => state.setScrollKey);
   const quranService = useQuran();
   const toolInspect = useNavigationStore((state) => state.toolInspect);
 
@@ -54,14 +54,12 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
 
   const onClickVerseChapter = (verseKey: string): void => {
     const chapterId = verseKey.split("-")[0];
-    dispatch(searcher2PageActions.setVerseTab(chapterId));
-    dispatch(searcher2PageActions.setScrollKey(verseKey));
+    setVerseTab(chapterId);
+    setScrollKey(verseKey);
   };
 
   const onClickVerse = (): void => {
-    dispatch(
-      searcher2PageActions.setScrollKey(isSelected ? "" : verseMatch.key)
-    );
+    setScrollKey(isSelected ? "" : verseMatch.key);
   };
 
   return (

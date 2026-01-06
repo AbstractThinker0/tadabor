@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useQuranBrowserPageStore } from "@/store/zustand/quranBrowserPage";
 
 import type { selectedChaptersType } from "@/types";
 
@@ -24,19 +23,30 @@ const SelectionListChapters = ({
 }: SelectionListChaptersProps) => {
   const quranService = useQuran();
 
-  const dispatch = useAppDispatch();
-
-  const currentChapter = useAppSelector((state) => state.qbPage.selectChapter);
-
-  const selectedChapters = useAppSelector(
-    (state) => state.qbPage.selectedChapters
+  const currentChapter = useQuranBrowserPageStore(
+    (state) => state.selectChapter
   );
 
-  const searchingString = useAppSelector(
-    (state) => state.qbPage.searchingString
+  const selectedChapters = useQuranBrowserPageStore(
+    (state) => state.selectedChapters
   );
 
-  const selectedVerse = useAppSelector((state) => state.qbPage.selectedVerse);
+  const searchingString = useQuranBrowserPageStore(
+    (state) => state.searchingString
+  );
+
+  const selectedVerse = useQuranBrowserPageStore(
+    (state) => state.selectedVerse
+  );
+  const setSelectedVerse = useQuranBrowserPageStore(
+    (state) => state.setSelectedVerse
+  );
+  const setSelectedChapters = useQuranBrowserPageStore(
+    (state) => state.setSelectedChapters
+  );
+  const toggleSelectChapter = useQuranBrowserPageStore(
+    (state) => state.toggleSelectChapter
+  );
 
   const [chapterSearch, setChapterSearch] = useState("");
   const [verseSearch, setVerseSearch] = useState("");
@@ -46,7 +56,7 @@ const SelectionListChapters = ({
   };
 
   const onClickVerse = (verseKey: string) => {
-    dispatch(qbPageActions.setSelectedVerse(verseKey));
+    setSelectedVerse(verseKey);
   };
 
   const onClearInput = () => {
@@ -64,7 +74,7 @@ const SelectionListChapters = ({
       newSelectionChapters[chapter.id] = true;
     });
 
-    dispatch(qbPageActions.setSelectedChapters(newSelectionChapters));
+    setSelectedChapters(newSelectionChapters);
   };
 
   const onClickDeselectAll = () => {
@@ -76,11 +86,11 @@ const SelectionListChapters = ({
 
     newSelectionChapters[currentChapter] = true;
 
-    dispatch(qbPageActions.setSelectedChapters(newSelectionChapters));
+    setSelectedChapters(newSelectionChapters);
   };
 
   const onChangeSelectChapter = (chapterID: number) => {
-    dispatch(qbPageActions.toggleSelectChapter(chapterID));
+    toggleSelectChapter(chapterID);
   };
 
   const currentSelectedChapters = Object.keys(selectedChapters).filter(

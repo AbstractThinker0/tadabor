@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { useAppDispatch, useAppSelector } from "@/store";
 import { useTranslationsStore } from "@/store/zustand/translations";
-
-import { comparatorPageActions } from "@/store/slices/pages/comparator";
+import { useComparatorPageStore } from "@/store/zustand/comparatorPage";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
@@ -19,13 +17,11 @@ function Comparator() {
   const refVerseList = useRef<HTMLDivElement>(null);
   const quranService = useQuran();
 
-  const currentChapter = useAppSelector(
-    (state) => state.comparatorPage.currentChapter
+  const currentChapter = useComparatorPageStore(
+    (state) => state.currentChapter
   );
 
-  const currentVerse = useAppSelector(
-    (state) => state.comparatorPage.currentVerse
-  );
+  const currentVerse = useComparatorPageStore((state) => state.currentVerse);
 
   const {
     data: transData,
@@ -34,7 +30,12 @@ function Comparator() {
     fetchTranslations,
   } = useTranslationsStore();
 
-  const dispatch = useAppDispatch();
+  const setCurrentVerse = useComparatorPageStore(
+    (state) => state.setCurrentVerse
+  );
+  const setCurrentChapter = useComparatorPageStore(
+    (state) => state.setCurrentChapter
+  );
 
   const [chapterVerses, setChapterVerses] = useState(() => {
     return quranService.getVerses(currentChapter);
@@ -49,7 +50,7 @@ function Comparator() {
   }, [quranService, currentChapter]);
 
   const selectVerse = (verseKey: string) => {
-    dispatch(comparatorPageActions.setCurrentVerse(verseKey));
+    setCurrentVerse(verseKey);
 
     /* 
     // To add once select onChange is called for the same value
@@ -71,7 +72,7 @@ function Comparator() {
   };
 
   const setChapter = (chapterID: string) => {
-    dispatch(comparatorPageActions.setCurrentChapter(chapterID));
+    setCurrentChapter(chapterID);
   };
 
   if (error) return <ErrorRefresh message="Failed to load translations." />;

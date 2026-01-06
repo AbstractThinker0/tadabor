@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { rootProps } from "quran-tools";
 
-import { useAppDispatch } from "@/store";
-import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
+import { useRootsBrowserPageStore } from "@/store/zustand/rootsBrowserPage";
 
 import { arabicAlpha } from "quran-tools";
 
@@ -24,18 +23,23 @@ const SearchForm = ({
   stateRoots,
 }: SearchFormProps) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const setSearchString = useRootsBrowserPageStore(
+    (state) => state.setSearchString
+  );
+  const setSearchInclusive = useRootsBrowserPageStore(
+    (state) => state.setSearchInclusive
+  );
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(rbPageActions.setSearchString(event.target.value));
+    setSearchString(event.target.value);
   };
 
   const onChangeInclusive = (checked: boolean) => {
-    dispatch(rbPageActions.setSearchInclusive(checked));
+    setSearchInclusive(checked);
   };
 
   const onClearInput = () => {
-    dispatch(rbPageActions.setSearchString(""));
+    setSearchString("");
   };
 
   return (
@@ -70,10 +74,12 @@ const SearchForm = ({
 };
 
 const AlphabetsComponent = () => {
-  const dispatch = useAppDispatch();
+  const setSearchString = useRootsBrowserPageStore(
+    (state) => state.setSearchString
+  );
 
   const onLetterClick = (letter: string) => {
-    dispatch(rbPageActions.setSearchString(letter));
+    setSearchString(letter);
   };
 
   return (

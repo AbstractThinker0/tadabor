@@ -1,6 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-
-import { inspectorPageActions } from "@/store/slices/pages/inspector";
+import { useInspectorPageStore } from "@/store/zustand/inspectorPage";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 
@@ -15,30 +13,25 @@ import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 function Inspector() {
   usePageNav("nav.inspector");
-  const dispatch = useAppDispatch();
-
-  const currentChapter = useAppSelector(
-    (state) => state.inspectorPage.currentChapter
+  const currentChapter = useInspectorPageStore((state) => state.currentChapter);
+  const setCurrentChapter = useInspectorPageStore(
+    (state) => state.setCurrentChapter
   );
+  const setScrollKey = useInspectorPageStore((state) => state.setScrollKey);
+  const showSearchPanel = useInspectorPageStore(
+    (state) => state.showSearchPanel
+  );
+  const showSearchPanelMobile = useInspectorPageStore(
+    (state) => state.showSearchPanelMobile
+  );
+  const setSearchPanel = useInspectorPageStore((state) => state.setSearchPanel);
 
   const rootsLoaded = useRootsLoaded();
 
   function handleSelectChapter(chapterID: string) {
-    dispatch(inspectorPageActions.setCurrentChapter(chapterID));
-    dispatch(inspectorPageActions.setScrollKey(""));
+    setCurrentChapter(chapterID);
+    setScrollKey("");
   }
-
-  const showSearchPanel = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useAppSelector(
-    (state) => state.inspectorPage.showSearchPanelMobile
-  );
-
-  const setOpenState = (state: boolean) => {
-    dispatch(inspectorPageActions.setSearchPanel(state));
-  };
 
   return (
     <Flex
@@ -50,7 +43,7 @@ function Inspector() {
       <Sidebar
         isOpenMobile={showSearchPanelMobile}
         isOpenDesktop={showSearchPanel}
-        setOpenState={setOpenState}
+        setOpenState={setSearchPanel}
       >
         <Box px={"5px"} paddingTop={"8px"}>
           <ChaptersList
