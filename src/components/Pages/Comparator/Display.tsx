@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition, type RefObject } from "react";
 
 import useQuran from "@/context/useQuran";
-import { useAppSelector } from "@/store";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 import type { translationsProps } from "@/types";
 import type { verseProps } from "quran-tools";
 
@@ -113,7 +113,7 @@ const VerseItem = ({
   transVerses,
   onClickVerse,
 }: VerseItemProps) => {
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+  const notesFS = useSettingsStore((state) => state.notesFontSize);
 
   const { value: isOpen, toggle: setOpen } = useBoolean();
 

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { useAppSelector } from "@/store";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 
 import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import { useAutosizeTextarea } from "@/hooks/useAutosizeTextarea";
@@ -8,8 +8,8 @@ import { useAutosizeTextarea } from "@/hooks/useAutosizeTextarea";
 const TextareaAutosize = (props: TextareaProps) => {
   const refTextarea = useRef<HTMLTextAreaElement>(null);
 
-  const notesFont = useAppSelector((state) => state.settings.notesFont);
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+  const notesFont = useSettingsStore((state) => state.notesFont);
+  const notesFS = useSettingsStore((state) => state.notesFontSize);
 
   const height = useAutosizeTextarea(refTextarea, props.value as string);
 

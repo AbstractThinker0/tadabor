@@ -1,3 +1,6 @@
+import { create } from "zustand";
+import { combine } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import {
   fontsList,
   qfDefault,
@@ -9,7 +12,6 @@ import {
   qfsDefault,
   qfsStored,
 } from "@/util/consts";
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 const getInitialQFS = () => {
   const stored = parseFloat(localStorage.getItem(qfsStored) || "");
@@ -69,25 +71,29 @@ const initialState: SettingsState = {
   notesFont: getInitialNF(),
 };
 
-const settingsSlice = createSlice({
-  name: "settings",
-  initialState,
-  reducers: {
-    setQuranFS: (state, action: PayloadAction<number>) => {
-      state.quranFontSize = action.payload;
-    },
-    setNotesFS: (state, action: PayloadAction<number>) => {
-      state.notesFontSize = action.payload;
-    },
-    setQuranFont: (state, action: PayloadAction<string>) => {
-      state.quranFont = action.payload;
-    },
-    setNotesFont: (state, action: PayloadAction<string>) => {
-      state.notesFont = action.payload;
-    },
-  },
-});
-
-export const settingsActions = settingsSlice.actions;
-
-export default settingsSlice.reducer;
+export const useSettingsStore = create(
+  immer(
+    combine(initialState, (set) => ({
+      setQuranFS: (size: number) => {
+        set((state) => {
+          state.quranFontSize = size;
+        });
+      },
+      setNotesFS: (size: number) => {
+        set((state) => {
+          state.notesFontSize = size;
+        });
+      },
+      setQuranFont: (font: string) => {
+        set((state) => {
+          state.quranFont = font;
+        });
+      },
+      setNotesFont: (font: string) => {
+        set((state) => {
+          state.notesFont = font;
+        });
+      },
+    }))
+  )
+);

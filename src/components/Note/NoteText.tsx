@@ -1,11 +1,11 @@
-import { useAppSelector } from "@/store";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 import { Box, type BoxProps } from "@chakra-ui/react";
 
 const NoteText = (props: BoxProps) => {
   const { children, ...rest } = props;
 
-  const notesFont = useAppSelector((state) => state.settings.notesFont);
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+  const notesFont = useSettingsStore((state) => state.notesFont);
+  const notesFS = useSettingsStore((state) => state.notesFontSize);
 
   return (
     <Box

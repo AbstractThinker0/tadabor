@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { useAppSelector } from "@/store";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 import { useLettersPageStore } from "@/store/zustand/lettersPage";
 
 import type { LetterDataType } from "@/types";
@@ -258,7 +258,7 @@ const InfoBox = ({
     verseLetterData.def_id
   );
 
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+  const notesFS = useSettingsStore((state) => state.notesFontSize);
 
   const verseLettersData =
     useLettersPageStore((state) => state.lettersData[verseKey]) || {};
@@ -281,10 +281,11 @@ const InfoBox = ({
         lettersDefinitions[key].preset_id &&
         verseLettersData[letterKey]?.def_id &&
         normalizeAlif(lettersDefinitions[key].name) ===
-        normalizeAlif(currentLetter) &&
+          normalizeAlif(currentLetter) &&
         (lettersDefinitions[key].preset_id ===
           verseLettersData[letterKey].def_id ||
-          `${normalizeAlif(currentLetter, false, true)}:${lettersDefinitions[key].preset_id
+          `${normalizeAlif(currentLetter, false, true)}:${
+            lettersDefinitions[key].preset_id
           }` === verseLettersData[letterKey].def_id)
     );
 

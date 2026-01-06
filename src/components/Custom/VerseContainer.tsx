@@ -1,5 +1,5 @@
 import { Box, type BoxProps } from "@chakra-ui/react";
-import { useAppSelector } from "@/store";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 interface VerseContainerProps extends BoxProps {
@@ -13,8 +13,8 @@ const VerseContainer = ({
   displayMode,
   ...rest
 }: VerseContainerProps) => {
-  const quranFont = useAppSelector((state) => state.settings.quranFont);
-  const quranFS = useAppSelector((state) => state.settings.quranFontSize);
+  const quranFont = useSettingsStore((state) => state.quranFont);
+  const quranFS = useSettingsStore((state) => state.quranFontSize);
   const centerVerses = useNavigationStore((state) => state.centerVerses);
   const verseDisplay = useNavigationStore((state) => state.verseDisplay);
 

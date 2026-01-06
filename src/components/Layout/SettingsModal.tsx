@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "@/store";
-import { settingsActions } from "@/store/slices/global/settings";
+import { useSettingsStore } from "@/store/zustand/settingsStore";
 
 import {
   Button,
@@ -46,11 +45,14 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const { i18n } = useTranslation();
   const resolvedLang = i18n.resolvedLanguage;
 
-  const dispatch = useAppDispatch();
-  const quranFont = useAppSelector((state) => state.settings.quranFont);
-  const notesFont = useAppSelector((state) => state.settings.notesFont);
-  const quranFS = useAppSelector((state) => state.settings.quranFontSize);
-  const notesFS = useAppSelector((state) => state.settings.notesFontSize);
+  const quranFont = useSettingsStore((state) => state.quranFont);
+  const notesFont = useSettingsStore((state) => state.notesFont);
+  const quranFS = useSettingsStore((state) => state.quranFontSize);
+  const notesFS = useSettingsStore((state) => state.notesFontSize);
+  const setQuranFont = useSettingsStore((state) => state.setQuranFont);
+  const setNotesFont = useSettingsStore((state) => state.setNotesFont);
+  const setQuranFS = useSettingsStore((state) => state.setQuranFS);
+  const setNotesFS = useSettingsStore((state) => state.setNotesFS);
 
   const [orgQuranFont, setOrgQuranFont] = useState(quranFont);
   const [orgNotesFont, setOrgNotesFont] = useState(notesFont);
@@ -65,19 +67,19 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   };
 
   const onChangeQuranFont = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(settingsActions.setQuranFont(event.target.value));
+    setQuranFont(event.target.value);
   };
 
   const onChangeNotesFont = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(settingsActions.setNotesFont(event.target.value));
+    setNotesFont(event.target.value);
   };
 
   const onChangeQFS = (val: number[]) => {
-    dispatch(settingsActions.setQuranFS(val[0]));
+    setQuranFS(val[0]);
   };
 
   const onChangeNFS = (val: number[]) => {
-    dispatch(settingsActions.setNotesFS(val[0]));
+    setNotesFS(val[0]);
   };
 
   const onClickSave = () => {
@@ -95,19 +97,19 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   };
 
   const onCloseComplete = () => {
-    dispatch(settingsActions.setQuranFont(orgQuranFont));
-    dispatch(settingsActions.setNotesFont(orgNotesFont));
-    dispatch(settingsActions.setQuranFS(orgQuranFS));
-    dispatch(settingsActions.setNotesFS(orgNotesFS));
+    setQuranFont(orgQuranFont);
+    setNotesFont(orgNotesFont);
+    setQuranFS(orgQuranFS);
+    setNotesFS(orgNotesFS);
     i18n.changeLanguage(orgLang);
     setTheme(orgColor!);
   };
 
   const onClickReset = () => {
-    dispatch(settingsActions.setQuranFont(qfDefault));
-    dispatch(settingsActions.setNotesFont(nfDefault));
-    dispatch(settingsActions.setQuranFS(qfsDefault));
-    dispatch(settingsActions.setNotesFS(nfsDefault));
+    setQuranFont(qfDefault);
+    setNotesFont(nfDefault);
+    setQuranFS(qfsDefault);
+    setNotesFS(nfsDefault);
     i18n.changeLanguage("ar");
   };
 

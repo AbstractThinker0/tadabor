@@ -5,8 +5,6 @@ import {
   useSelector,
 } from "react-redux";
 
-import settingsReducer from "@/store/slices/global/settings";
-
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
 import searcherPageReducer from "@/store/slices/pages/searcher";
@@ -21,8 +19,6 @@ import audioPageReducer from "@/store/slices/pages/audio";
 const store = configureStore({
   devTools: APP_MODE === "development",
   reducer: {
-    settings: settingsReducer,
-
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,
     searcherPage: searcherPageReducer,
