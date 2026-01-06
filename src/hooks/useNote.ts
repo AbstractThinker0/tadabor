@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useSingleNote } from "@/hooks/useNotesStore";
+import { useSingleNote } from "@/hooks/useSingleNote";
 import { useUserStore } from "@/store/zustand/userStore";
 
 import { toaster } from "@/components/ui/toaster";
