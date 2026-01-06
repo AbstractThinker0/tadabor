@@ -6,7 +6,6 @@ import {
 } from "react-redux";
 
 import settingsReducer from "@/store/slices/global/settings";
-import navigationReducer from "@/store/slices/global/navigation";
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
@@ -23,7 +22,6 @@ const store = configureStore({
   devTools: APP_MODE === "development",
   reducer: {
     settings: settingsReducer,
-    navigation: navigationReducer,
 
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,

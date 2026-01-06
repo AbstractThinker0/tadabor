@@ -35,7 +35,7 @@ import { LuShield } from "react-icons/lu";
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 import { useUserStore } from "@/store/zustand/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
@@ -44,7 +44,7 @@ const Navbar = () => {
 
   const isBackendEnabled = useBackend();
 
-  const currentPage = useAppSelector((state) => state.navigation.currentPage);
+  const currentPage = useNavigationStore((state) => state.currentPage);
 
   const { open, onOpen, onClose } = useDisclosure();
 

@@ -2,14 +2,12 @@ import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Heading, Text, Link, List, Box, Span } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 const AboutContent = () => {
   const { t } = useTranslation();
 
-  const pageDirection = useAppSelector(
-    (state) => state.navigation.pageDirection
-  );
+  const pageDirection = useNavigationStore((state) => state.pageDirection);
 
   const buildDate = useMemo(() => {
     return new Date(Number(APP_BUILD_DATE)).toLocaleString(

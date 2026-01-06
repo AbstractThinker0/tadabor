@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { Box, Span, type BoxProps } from "@chakra-ui/react";
 
@@ -39,19 +39,19 @@ const BaseVerseItem = ({
   const { value: isOpen, toggle } = useBoolean(defaultOpen);
   const [isHovered, setIsHovered] = useState(false);
 
-  const verseDisplay = useAppSelector((state) => state.navigation.verseDisplay);
+  const verseDisplay = useNavigationStore((state) => state.verseDisplay);
 
-  const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
+  const toolsMode = useNavigationStore((state) => state.toolsMode);
 
   const shouldShowButtons =
     isSelected ||
     isOpen ||
     (toolsMode !== "hidden" && (toolsMode === "expanded" || isHovered));
 
-  const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
-  const toolNote = useAppSelector((state) => state.navigation.toolNote);
+  const toolCopy = useNavigationStore((state) => state.toolCopy);
+  const toolNote = useNavigationStore((state) => state.toolNote);
 
-  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
+  const centerVerses = useNavigationStore((state) => state.centerVerses);
 
   const onMouseEnter = () => {
     setIsHovered(true);

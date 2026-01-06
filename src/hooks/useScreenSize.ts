@@ -1,13 +1,12 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { navigationActions } from "@/store/slices/global/navigation";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 import { useEffect, useEffectEvent } from "react";
 
 const HookResizeEvent = () => {
-  const dispatch = useAppDispatch();
+  const setSmallScreen = useNavigationStore((state) => state.setSmallScreen);
 
   const updateScreenSize = useEffectEvent(() => {
     const isSmall = window.innerWidth <= 768 || window.innerHeight <= 480;
-    dispatch(navigationActions.setSmallScreen(isSmall));
+    setSmallScreen(isSmall);
   });
 
   useEffect(() => {
@@ -38,10 +37,8 @@ const HookResizeEvent = () => {
 };
 
 const useScreenSize = () => {
-  // Get the screen size state from Redux
-  const isSmallScreen = useAppSelector(
-    (state) => state.navigation.isSmallScreen
-  );
+  // Get the screen size state from Zustand
+  const isSmallScreen = useNavigationStore((state) => state.isSmallScreen);
 
   return isSmallScreen;
 };

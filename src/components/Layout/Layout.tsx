@@ -7,8 +7,6 @@ import {
 
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "@/store";
-
 import { QuranProvider } from "@/context/QuranProvider";
 
 import Navbar from "@/components/Layout/Navbar";
@@ -20,19 +18,21 @@ import UserProvider from "@/components/Custom/UserProvider";
 import NotesProvider from "@/components/Custom/NotesProvider";
 
 import { HookResizeEvent } from "@/hooks/useScreenSize";
-import { navigationActions } from "@/store/slices/global/navigation";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 import LocalNotesProvider from "@/components/Custom/LocalNotesProvider";
 import CloudNotesProvider from "@/components/Custom/CloudNotesProvider";
 
 function Layout({ children }: PropsWithChildren) {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
-  const dispatch = useAppDispatch();
+  const setPageDirection = useNavigationStore(
+    (state) => state.setPageDirection
+  );
 
   const setDirection = useEffectEvent(() => {
     const dir = i18n.dir();
     window.document.dir = dir;
-    dispatch(navigationActions.setPageDirection(dir));
+    setPageDirection(dir);
   });
 
   useEffect(() => {

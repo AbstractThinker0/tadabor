@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { Tooltip as DefaultTooltip } from "@/components/ui/tooltip";
 import { ToggleTip } from "@/components/ui/toggle-tip";
@@ -9,7 +9,7 @@ interface TooltipProps {
 }
 
 const Tooltip = ({ children, content }: TooltipProps) => {
-  const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
+  const isMobile = useNavigationStore((state) => state.isSmallScreen);
 
   if (isMobile) {
     return <ToggleTip content={content}>{children}</ToggleTip>;

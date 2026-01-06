@@ -1,9 +1,7 @@
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 const useBackend = () => {
-  const isBetaVersion = useAppSelector(
-    (state) => state.navigation.isBetaVersion
-  );
+  const isBetaVersion = useNavigationStore((state) => state.isBetaVersion);
 
   const isBackendEnabled = import.meta.env.VITE_API && isBetaVersion;
 

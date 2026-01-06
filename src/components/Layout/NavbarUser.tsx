@@ -6,7 +6,7 @@ import { Button, Menu, Portal } from "@chakra-ui/react";
 import { TbUserX } from "react-icons/tb";
 import { TbUserCheck } from "react-icons/tb";
 
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 import { useUserStore } from "@/store/zustand/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
@@ -25,7 +25,7 @@ const NavbarUser = () => {
 
   const { logout } = useAuth();
 
-  const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
+  const isMobile = useNavigationStore((state) => state.isSmallScreen);
 
   const isPending = useUserStore((state) => state.isPending);
   const isLogged = useUserStore((state) => state.isLogged);

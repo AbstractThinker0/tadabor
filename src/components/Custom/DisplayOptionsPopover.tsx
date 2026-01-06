@@ -1,5 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
-import { navigationActions } from "@/store/slices/global/navigation";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import {
   Flex,
@@ -19,32 +18,38 @@ import { CloseButton } from "@/components/ui/close-button";
 import { useState } from "react";
 
 const DisplayOptionsPopover = () => {
-  const dispatch = useAppDispatch();
-
   const [open, setOpen] = useState(false);
 
-  const centerVerses = useAppSelector((state) => state.navigation.centerVerses);
+  const centerVerses = useNavigationStore((state) => state.centerVerses);
+  const verseDisplay = useNavigationStore((state) => state.verseDisplay);
+  const toolsMode = useNavigationStore((state) => state.toolsMode);
+  const toolCopy = useNavigationStore((state) => state.toolCopy);
+  const toolNote = useNavigationStore((state) => state.toolNote);
+  const toolInspect = useNavigationStore((state) => state.toolInspect);
 
-  const verseDisplay = useAppSelector((state) => state.navigation.verseDisplay);
-
-  const toolsMode = useAppSelector((state) => state.navigation.toolsMode);
-
-  const toolCopy = useAppSelector((state) => state.navigation.toolCopy);
-
-  const toolNote = useAppSelector((state) => state.navigation.toolNote);
-
-  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
+  const toggleCenterVersesAction = useNavigationStore(
+    (state) => state.toggleCenterVerses
+  );
+  const setVerseDisplayAction = useNavigationStore(
+    (state) => state.setVerseDisplay
+  );
+  const setToolsAction = useNavigationStore((state) => state.setVerseTools);
+  const setToolCopyAction = useNavigationStore((state) => state.setToolCopy);
+  const setToolNoteAction = useNavigationStore((state) => state.setToolNote);
+  const setToolInspectAction = useNavigationStore(
+    (state) => state.setToolInspect
+  );
 
   const toggleCenterVerses = () => {
-    dispatch(navigationActions.toggleCenterVerses());
+    toggleCenterVersesAction();
   };
 
   const setVerseDisplay = (mode: string) => {
-    dispatch(navigationActions.setVerseDisplay(mode));
+    setVerseDisplayAction(mode);
   };
 
   const setToolsMode = (mode: string) => {
-    dispatch(navigationActions.setVerseTools(mode));
+    setToolsAction(mode);
   };
 
   return (
@@ -144,9 +149,7 @@ const DisplayOptionsPopover = () => {
                       <Flex alignItems="center" gap={2} py={1}>
                         <Switch.Root
                           checked={toolCopy}
-                          onCheckedChange={(e) =>
-                            dispatch(navigationActions.setToolCopy(e.checked))
-                          }
+                          onCheckedChange={(e) => setToolCopyAction(e.checked)}
                         >
                           <Switch.HiddenInput />
                           <Switch.Control />
@@ -158,9 +161,7 @@ const DisplayOptionsPopover = () => {
                       <Flex alignItems="center" gap={2} py={1}>
                         <Switch.Root
                           checked={toolNote}
-                          onCheckedChange={(e) =>
-                            dispatch(navigationActions.setToolNote(e.checked))
-                          }
+                          onCheckedChange={(e) => setToolNoteAction(e.checked)}
                         >
                           <Switch.HiddenInput />
                           <Switch.Control />
@@ -173,9 +174,7 @@ const DisplayOptionsPopover = () => {
                         <Switch.Root
                           checked={toolInspect}
                           onCheckedChange={(e) =>
-                            dispatch(
-                              navigationActions.setToolInspect(e.checked)
-                            )
+                            setToolInspectAction(e.checked)
                           }
                         >
                           <Switch.HiddenInput />

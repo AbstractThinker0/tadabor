@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { useAppDispatch } from "@/store";
-import { navigationActions } from "@/store/slices/global/navigation";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 export function usePageNav(navKey: string) {
-  const dispatch = useAppDispatch();
+  const setCurrentPage = useNavigationStore((state) => state.setCurrentPage);
   useEffect(() => {
-    dispatch(navigationActions.setCurrentPage(navKey));
-  }, [dispatch, navKey]);
+    setCurrentPage(navKey);
+  }, [setCurrentPage, navKey]);
 }

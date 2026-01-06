@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { Box, Flex, Text } from "@chakra-ui/react";
 
@@ -102,9 +102,7 @@ const NoteContainerHeader = ({
   inputValue,
   inputSaved,
 }: NoteContainerHeaderProps) => {
-  const pageDirection = useAppSelector(
-    (state) => state.navigation.pageDirection
-  );
+  const pageDirection = useNavigationStore((state) => state.pageDirection);
 
   const isPendingSave = !inputSaved || !inputValue;
 
@@ -173,7 +171,7 @@ const NoteContainerFooter = ({
   onClickEditButton,
   onClickCancelButton,
 }: NoteContainerFooterProps) => {
-  const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
+  const isMobile = useNavigationStore((state) => state.isSmallScreen);
 
   // Show Cancel/Save only when there are unsaved changes AND not currently syncing
   const showCancelSave = !inputSaved && !isSyncing;

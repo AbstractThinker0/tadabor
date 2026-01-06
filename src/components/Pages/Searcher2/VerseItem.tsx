@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
 
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch } from "@/store";
 import { searcher2PageActions } from "@/store/slices/pages/searcher2";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import useQuran from "@/context/useQuran";
 
@@ -29,7 +30,7 @@ interface VerseItemProps {
 const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
-  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
+  const toolInspect = useNavigationStore((state) => state.toolInspect);
 
   const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
   const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();

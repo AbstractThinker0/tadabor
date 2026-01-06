@@ -1,8 +1,9 @@
 import type { rootProps, verseMatchResult, verseProps } from "quran-tools";
 import useQuran from "@/context/useQuran";
 
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch } from "@/store";
 import { qbPageActions } from "@/store/slices/pages/quranBrowser";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
@@ -29,7 +30,7 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
   const dispatch = useAppDispatch();
   const quranService = useQuran();
 
-  const toolInspect = useAppSelector((state) => state.navigation.toolInspect);
+  const toolInspect = useNavigationStore((state) => state.toolInspect);
 
   const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
   const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();

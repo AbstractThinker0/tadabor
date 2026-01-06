@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 
-import { useAppSelector } from "@/store";
+import { useNavigationStore } from "@/store/zustand/navigationStore";
 
 import { NoteTitle } from "@/components/Note/NoteTitle";
 import TextareaToolbar from "@/components/Note/TextareaToolbar";
@@ -26,13 +26,11 @@ const TextareaHeader = ({
   noteType,
   noteKey,
   inputValue,
-  inputSaved
+  inputSaved,
 }: TextareaHeaderProps) => {
   const isPendingSave = !inputSaved || !inputValue;
 
-  const pageDirection = useAppSelector(
-    (state) => state.navigation.pageDirection
-  );
+  const pageDirection = useNavigationStore((state) => state.pageDirection);
 
   return (
     <Flex
