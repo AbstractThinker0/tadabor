@@ -1,7 +1,7 @@
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useLocalNotesStore } from "@/store/zustand/localNotes";
@@ -15,9 +15,9 @@ import {
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
 
 const CloudNotesProvider = ({ children }: PropsWithChildren) => {
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
-  const userId = useAppSelector((state) => state.user.id);
+  const isLogged = useUserStore((state) => state.isLogged);
+  const isLoggedOffline = useUserStore((state) => state.isLoggedOffline);
+  const userId = useUserStore((state) => state.id);
 
   const isCloudNotesComplete = useCloudNotesStore((state) => state.complete);
   const isCloudNotesLoading = useCloudNotesStore((state) => state.loading);

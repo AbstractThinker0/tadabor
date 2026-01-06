@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
@@ -13,9 +13,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { t } = useTranslation();
 
-  const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLogged = useUserStore((state) => state.isLogged);
 
-  const isPending = useAppSelector((state) => state.user.isPending);
+  const isPending = useUserStore((state) => state.isPending);
 
   const isBackendEnabled = useBackend();
 

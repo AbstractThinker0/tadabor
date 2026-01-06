@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Flex, Button, Input, Box, Text, Link } from "@chakra-ui/react";
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 import { PasswordInput } from "@/components/ui/password-input";
 import { usePageNav } from "@/hooks/usePageNav";
 import { NavLink } from "react-router";
@@ -19,8 +19,8 @@ const Profile = () => {
   const [validationError, setValidationError] = useState("");
   const [validationErrorPassword, setValidationErrorPassword] = useState("");
 
-  const oldEmail = useAppSelector((state) => state.user.email);
-  const oldUsername = useAppSelector((state) => state.user.username);
+  const oldEmail = useUserStore((state) => state.email);
+  const oldUsername = useUserStore((state) => state.username);
   const [username, setUsername] = useState(oldUsername);
   const [email, setEmail] = useState(oldEmail);
 

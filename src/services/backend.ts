@@ -1,6 +1,6 @@
 import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 export const useUserRefresh = () => {
   const trpc = useTRPC();
@@ -8,7 +8,7 @@ export const useUserRefresh = () => {
     isLogged,
     isLoggedOffline,
     token: userToken,
-  } = useAppSelector((state) => state.user);
+  } = useUserStore((state) => state);
 
   return useQuery({
     ...trpc.auth.refresh.queryOptions(),

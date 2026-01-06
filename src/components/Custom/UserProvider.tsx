@@ -1,6 +1,6 @@
 import { useEffect, useEffectEvent } from "react";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { useAuth } from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
@@ -13,10 +13,10 @@ interface UserProviderProps {
 const UserProvider = ({ children }: UserProviderProps) => {
   const { confirmLogin, logout, loginOffline } = useAuth();
 
-  const isLoginPending = useAppSelector((state) => state.user.isPending);
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
-  const userToken = useAppSelector((state) => state.user.token);
+  const isLoginPending = useUserStore((state) => state.isPending);
+  const isLogged = useUserStore((state) => state.isLogged);
+  const isLoggedOffline = useUserStore((state) => state.isLoggedOffline);
+  const userToken = useUserStore((state) => state.token);
 
   // Query for initial login attempt
   const userRefresh = useUserRefresh();

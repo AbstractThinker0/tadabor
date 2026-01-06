@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useLocalNotesStore } from "@/store/zustand/localNotes";
@@ -12,7 +12,7 @@ interface NotesProviderProps {
 }
 
 const NotesProvider = ({ children }: NotesProviderProps) => {
-  const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLogged = useUserStore((state) => state.isLogged);
 
   const localNotes = useLocalNotesStore((state) => state.data);
   const cloudNotes = useCloudNotesStore((state) => state.data);

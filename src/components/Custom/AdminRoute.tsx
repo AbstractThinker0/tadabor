@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
@@ -13,9 +13,9 @@ interface AdminRouteProps {
 const AdminRoute: React.FC<AdminRouteProps> = ({ children, minRole = 1 }) => {
   const { t } = useTranslation();
 
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const isPending = useAppSelector((state) => state.user.isPending);
-  const role = useAppSelector((state) => state.user.role);
+  const isLogged = useUserStore((state) => state.isLogged);
+  const isPending = useUserStore((state) => state.isPending);
+  const role = useUserStore((state) => state.role);
 
   if (isPending) {
     return <LoadingSpinner text={t("auth.attemptingLogin")} />;

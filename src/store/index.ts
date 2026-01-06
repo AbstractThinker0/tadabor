@@ -9,7 +9,7 @@ import translationsReducer from "@/store/slices/global/translations";
 
 import settingsReducer from "@/store/slices/global/settings";
 import navigationReducer from "@/store/slices/global/navigation";
-import userReducer from "@/store/slices/global/user";
+
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
@@ -29,7 +29,7 @@ const store = configureStore({
 
     settings: settingsReducer,
     navigation: navigationReducer,
-    user: userReducer,
+
 
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,

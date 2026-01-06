@@ -1,4 +1,4 @@
-import { keyToken } from "@/store/slices/global/user";
+import { keyToken } from "@/store/zustand/userStore";
 import type { AppRouter } from "@/util/AppRouter";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { QueryClient } from "@tanstack/react-query";

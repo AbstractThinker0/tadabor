@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 
@@ -29,7 +29,7 @@ const NoteTitle = ({
 
   const quranService = useQuran();
 
-  const isLogged = useAppSelector((state) => state.user.isLogged);
+  const isLogged = useUserStore((state) => state.isLogged);
 
   const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
     if (isSyncing) return "Syncing note...";

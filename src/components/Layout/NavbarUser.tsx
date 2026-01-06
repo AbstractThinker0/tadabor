@@ -7,6 +7,7 @@ import { TbUserX } from "react-icons/tb";
 import { TbUserCheck } from "react-icons/tb";
 
 import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
 import { CgProfile } from "react-icons/cg";
@@ -26,9 +27,9 @@ const NavbarUser = () => {
 
   const isMobile = useAppSelector((state) => state.navigation.isSmallScreen);
 
-  const isPending = useAppSelector((state) => state.user.isPending);
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const isLoggedOffline = useAppSelector((state) => state.user.isLoggedOffline);
+  const isPending = useUserStore((state) => state.isPending);
+  const isLogged = useUserStore((state) => state.isLogged);
+  const isLoggedOffline = useUserStore((state) => state.isLoggedOffline);
 
   const onClickLogout = () => {
     logout({ clearOldNotes: true });

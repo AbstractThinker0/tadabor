@@ -1,6 +1,6 @@
-import { useAppDispatch } from "@/store";
 
-import { userActions } from "@/store/slices/global/user";
+
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -21,7 +21,7 @@ import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 export const useAuth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
 
   const resetCloudNotes = useCloudNotesStore((state) => state.reset);
 
@@ -79,15 +79,13 @@ export const useAuth = () => {
     role: number;
     message?: string;
   }) => {
-    dispatch(
-      userActions.login({
-        id,
-        email,
-        token,
-        username,
-        role,
-      })
-    );
+    useUserStore.getState().login({
+      id,
+      email,
+      token,
+      username,
+      role,
+    });
 
     queueMicrotask(() =>
       toasterBottomCenter.create({
@@ -98,7 +96,7 @@ export const useAuth = () => {
   };
 
   const loginOffline = () => {
-    dispatch(userActions.loginOffline());
+    useUserStore.getState().loginOffline();
 
     queueMicrotask(() =>
       toasterBottomCenter.create({
@@ -112,7 +110,7 @@ export const useAuth = () => {
     message = "auth.loggedOut",
     clearOldNotes = false,
   }: { message?: string; clearOldNotes?: boolean } = {}) => {
-    dispatch(userActions.logout());
+    useUserStore.getState().logout();
     resetCloudNotes();
     if (clearOldNotes) {
       dbNotes.clearAllCloud();
@@ -237,7 +235,7 @@ export const useAuth = () => {
     }
 
     if (result) {
-      dispatch(userActions.update({ email, username }));
+      useUserStore.getState().update({ email, username });
       toasterBottomCenter.create({
         description: t("auth.profileUpdate"),
         type: "success",

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
 import { useLocalNotesStore } from "@/store/zustand/localNotes";
 
@@ -16,8 +16,8 @@ export type ActiveNote = LocalNoteProps | CloudNoteProps;
  * so it does not violate React's rules of hooks when login state changes.
  */
 export const useNotesStore = (noteId?: string) => {
-  const isLogged = useAppSelector((state) => state.user.isLogged);
-  const userId = useAppSelector((state) => state.user.id);
+  const isLogged = useUserStore((state) => state.isLogged);
+  const userId = useUserStore((state) => state.id);
 
   const localData = useLocalNotesStore((state) => state.data);
   const cloudData = useCloudNotesStore((state) => state.data);

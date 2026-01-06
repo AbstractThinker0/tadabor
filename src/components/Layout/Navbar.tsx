@@ -36,6 +36,7 @@ import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
 import { useAppSelector } from "@/store";
+import { useUserStore } from "@/store/zustand/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
 const Navbar = () => {
@@ -148,7 +149,7 @@ const Navbar = () => {
 const NavMenu = () => {
   const { t } = useTranslation();
 
-  const role = useAppSelector((state) => state.user.role);
+  const role = useUserStore((state) => state.role);
 
   return (
     <Menu.Root>
