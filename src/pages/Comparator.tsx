@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { isTranslationsLoading, useAppDispatch, useAppSelector } from "@/store";
-import { fetchAllTranslations } from "@/store/slices/global/translations";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { useTranslationsStore } from "@/store/zustand/translations";
 
 import { comparatorPageActions } from "@/store/slices/pages/comparator";
 
@@ -12,6 +12,7 @@ import Menu from "@/components/Pages/Comparator/Menu";
 
 import { Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
+import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 function Comparator() {
   usePageNav("nav.comparator");
@@ -26,9 +27,12 @@ function Comparator() {
     (state) => state.comparatorPage.currentVerse
   );
 
-  const transData = useAppSelector((state) => state.translations.data);
-
-  const isTransLoading = useAppSelector(isTranslationsLoading);
+  const {
+    data: transData,
+    complete,
+    error,
+    fetchTranslations,
+  } = useTranslationsStore();
 
   const dispatch = useAppDispatch();
 
@@ -37,8 +41,8 @@ function Comparator() {
   });
 
   useEffect(() => {
-    dispatch(fetchAllTranslations());
-  }, [dispatch]);
+    fetchTranslations();
+  }, [fetchTranslations]);
 
   useEffect(() => {
     setChapterVerses(quranService.getVerses(currentChapter));
@@ -70,7 +74,9 @@ function Comparator() {
     dispatch(comparatorPageActions.setCurrentChapter(chapterID));
   };
 
-  if (isTransLoading) return <LoadingSpinner text="Loading translations.." />;
+  if (error) return <ErrorRefresh message="Failed to load translations." />;
+
+  if (!complete) return <LoadingSpinner text="Loading translations.." />;
 
   return (
     <Flex flexDirection={"column"} flex={1} bgColor={"brand.bg"}>

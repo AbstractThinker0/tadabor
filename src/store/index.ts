@@ -5,11 +5,8 @@ import {
   useSelector,
 } from "react-redux";
 
-import translationsReducer from "@/store/slices/global/translations";
-
 import settingsReducer from "@/store/slices/global/settings";
 import navigationReducer from "@/store/slices/global/navigation";
-
 
 import qbPageReducer from "@/store/slices/pages/quranBrowser";
 import rbPageReducer from "@/store/slices/pages/rootsBrowser";
@@ -25,11 +22,8 @@ import audioPageReducer from "@/store/slices/pages/audio";
 const store = configureStore({
   devTools: APP_MODE === "development",
   reducer: {
-    translations: translationsReducer,
-
     settings: settingsReducer,
     navigation: navigationReducer,
-
 
     qbPage: qbPageReducer,
     rbPage: rbPageReducer,
@@ -54,8 +48,5 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch; // Export a hook that can be reused to resolve types
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
-export const isTranslationsLoading = (state: RootState) =>
-  state.translations.loading;
 
 export default store;
