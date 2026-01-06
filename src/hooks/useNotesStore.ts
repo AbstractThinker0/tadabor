@@ -1,6 +1,6 @@
-import { useUserStore } from "@/store/zustand/userStore";
-import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useLocalNotesStore } from "@/store/zustand/localNotes";
+import { useUserStore } from "@/store/global/userStore";
+import { useCloudNotesStore } from "@/store/global/cloudNotes";
+import { useLocalNotesStore } from "@/store/global/localNotes";
 
 /**
  * Hook for global notes list and metadata.

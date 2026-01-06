@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import useQuran from "@/context/useQuran";
 
-import { useSettingsStore } from "@/store/zustand/settingsStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import type { LetterDataType } from "@/types";

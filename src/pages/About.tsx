@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Heading, Text, Link, List, Box, Span } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 
 const AboutContent = () => {
   const { t } = useTranslation();

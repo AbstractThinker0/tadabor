@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { useTranslationsStore } from "@/store/zustand/translations";
+import { useTranslationsStore } from "@/store/global/translations";
 import { useComparatorPageStore } from "@/store/pages/comparatorPage";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";

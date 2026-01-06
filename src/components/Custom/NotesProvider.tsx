@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
-import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useLocalNotesStore } from "@/store/zustand/localNotes";
+import { useCloudNotesStore } from "@/store/global/cloudNotes";
+import { useLocalNotesStore } from "@/store/global/localNotes";
 
 import { useBeforeUnload } from "react-router";
 

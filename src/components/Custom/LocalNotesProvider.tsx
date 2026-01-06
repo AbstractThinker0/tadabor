@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useLocalNotesStore } from "@/store/zustand/localNotes";
+import { useLocalNotesStore } from "@/store/global/localNotes";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 

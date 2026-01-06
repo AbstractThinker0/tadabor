@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useSettingsStore } from "@/store/zustand/settingsStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
 
 import {
   Button,

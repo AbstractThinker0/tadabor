@@ -18,7 +18,7 @@ import UserProvider from "@/components/Custom/UserProvider";
 import NotesProvider from "@/components/Custom/NotesProvider";
 
 import { HookResizeEvent } from "@/hooks/useScreenSize";
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 import LocalNotesProvider from "@/components/Custom/LocalNotesProvider";
 import CloudNotesProvider from "@/components/Custom/CloudNotesProvider";
 

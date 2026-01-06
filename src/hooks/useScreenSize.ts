@@ -1,4 +1,4 @@
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 import { useEffect, useEffectEvent } from "react";
 
 const HookResizeEvent = () => {

@@ -1,6 +1,6 @@
 import { Box, type BoxProps } from "@chakra-ui/react";
-import { useSettingsStore } from "@/store/zustand/settingsStore";
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 
 interface VerseContainerProps extends BoxProps {
   center?: boolean;

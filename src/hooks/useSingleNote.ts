@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 
-import { useUserStore } from "@/store/zustand/userStore";
-import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useLocalNotesStore } from "@/store/zustand/localNotes";
+import { useUserStore } from "@/store/global/userStore";
+import { useCloudNotesStore } from "@/store/global/cloudNotes";
+import { useLocalNotesStore } from "@/store/global/localNotes";
 
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
 import type { ICloudNote, ILocalNote } from "@/util/db";

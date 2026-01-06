@@ -1,4 +1,4 @@
-import { useSettingsStore } from "@/store/zustand/settingsStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
 import { Box, type BoxProps } from "@chakra-ui/react";
 
 const NoteText = (props: BoxProps) => {

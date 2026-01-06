@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Flex, Button, Input, Box, Text, Link } from "@chakra-ui/react";
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 import { PasswordInput } from "@/components/ui/password-input";
 import { usePageNav } from "@/hooks/usePageNav";
 import { NavLink } from "react-router";

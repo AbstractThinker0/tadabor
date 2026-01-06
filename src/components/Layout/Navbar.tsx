@@ -35,8 +35,8 @@ import { LuShield } from "react-icons/lu";
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
-import { useNavigationStore } from "@/store/zustand/navigationStore";
-import { useUserStore } from "@/store/zustand/userStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
+import { useUserStore } from "@/store/global/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
 const Navbar = () => {

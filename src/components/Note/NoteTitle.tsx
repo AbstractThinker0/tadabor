@@ -1,4 +1,4 @@
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
 import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 
@@ -23,7 +23,7 @@ const NoteTitle = ({
   isSyncing,
   isSynced,
   isOutOfSync,
-  isPendingSave
+  isPendingSave,
 }: NoteTitleProps) => {
   const { t } = useTranslation();
 

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { useSettingsStore } from "@/store/zustand/settingsStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
 
 import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import { useAutosizeTextarea } from "@/hooks/useAutosizeTextarea";

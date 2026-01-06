@@ -1,6 +1,6 @@
 import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
 export const useUserRefresh = () => {
   const trpc = useTRPC();

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 
 export function usePageNav(navKey: string) {
   const setCurrentPage = useNavigationStore((state) => state.setCurrentPage);

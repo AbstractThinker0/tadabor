@@ -1,6 +1,6 @@
 import { useEffect, useEffectEvent } from "react";
 
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
 import { useAuth } from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";

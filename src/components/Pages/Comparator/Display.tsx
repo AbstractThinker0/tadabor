@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition, type RefObject } from "react";
 
 import useQuran from "@/context/useQuran";
-import { useSettingsStore } from "@/store/zustand/settingsStore";
+import { useSettingsStore } from "@/store/global/settingsStore";
 import type { translationsProps } from "@/types";
 import type { verseProps } from "quran-tools";
 

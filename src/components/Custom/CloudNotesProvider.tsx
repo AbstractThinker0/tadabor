@@ -1,10 +1,10 @@
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
-import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useLocalNotesStore } from "@/store/zustand/localNotes";
+import { useCloudNotesStore } from "@/store/global/cloudNotes";
+import { useLocalNotesStore } from "@/store/global/localNotes";
 import type { CloudNoteProps } from "@/types";
 import {
   buildNoteSyncPayload,

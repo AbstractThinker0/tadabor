@@ -6,8 +6,8 @@ import { Button, Menu, Portal } from "@chakra-ui/react";
 import { TbUserX } from "react-icons/tb";
 import { TbUserCheck } from "react-icons/tb";
 
-import { useNavigationStore } from "@/store/zustand/navigationStore";
-import { useUserStore } from "@/store/zustand/userStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
+import { useUserStore } from "@/store/global/userStore";
 import { useBackend } from "@/hooks/useBackend";
 
 import { CgProfile } from "react-icons/cg";

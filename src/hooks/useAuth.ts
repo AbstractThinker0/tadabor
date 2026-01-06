@@ -1,6 +1,4 @@
-
-
-import { useUserStore } from "@/store/zustand/userStore";
+import { useUserStore } from "@/store/global/userStore";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -16,12 +14,11 @@ import {
   useUserUpdateProfile,
 } from "@/services/backend";
 import { tryCatch } from "@/util/trycatch";
-import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
+import { useCloudNotesStore } from "@/store/global/cloudNotes";
 
 export const useAuth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
 
   const resetCloudNotes = useCloudNotesStore((state) => state.reset);
 

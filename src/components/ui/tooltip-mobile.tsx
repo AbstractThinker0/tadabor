@@ -1,4 +1,4 @@
-import { useNavigationStore } from "@/store/zustand/navigationStore";
+import { useNavigationStore } from "@/store/global/navigationStore";
 
 import { Tooltip as DefaultTooltip } from "@/components/ui/tooltip";
 import { ToggleTip } from "@/components/ui/toggle-tip";
