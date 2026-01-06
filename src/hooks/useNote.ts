@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useCloudNotesStore } from "@/store/zustand/cloudNotes";
-import { useNotesStore } from "@/hooks/useNotesStore";
+import { useSingleNote } from "@/hooks/useNotesStore";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { toaster } from "@/components/ui/toaster";
 import { type ICloudNote } from "@/util/db";
@@ -28,11 +29,11 @@ export const useNote = ({
   noteKey,
   isVisible = true,
 }: useNoteParams) => {
+  const isLogged = useUserStore((state) => state.isLogged);
+  const userId = useUserStore((state) => state.id);
   const noteIndex = noteID || `${noteType}:${noteKey}`;
 
   const {
-    isLogged,
-    userId,
     note,
     isNoteLoading,
     cacheNote,
@@ -40,7 +41,7 @@ export const useNote = ({
     changeNoteDir,
     markSaved,
     fetchSingleNoteIfNeeded,
-  } = useNotesStore(noteIndex);
+  } = useSingleNote(noteIndex);
 
   const updateSyncDate = useCloudNotesStore((state) => state.updateSyncDate);
 

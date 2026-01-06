@@ -10,29 +10,15 @@ import type { ICloudNote, ILocalNote } from "@/util/db";
 export type ActiveNote = LocalNoteProps | CloudNoteProps;
 
 /**
- * Unifies local/cloud notes behind a single hook.
+ * Hook for single note operations.
+ * Subscribes only to the specific note's state to avoid unnecessary rerenders.
  *
  * Important: This calls BOTH stores every render and selects based on `isLogged`,
  * so it does not violate React's rules of hooks when login state changes.
  */
-export const useNotesStore = (noteId?: string) => {
+export const useSingleNote = (noteId?: string) => {
   const isLogged = useUserStore((state) => state.isLogged);
   const userId = useUserStore((state) => state.id);
-
-  const localData = useLocalNotesStore((state) => state.data);
-  const cloudData = useCloudNotesStore((state) => state.data);
-
-  const localKeys = useLocalNotesStore((state) => state.dataKeys);
-  const cloudKeys = useCloudNotesStore((state) => state.dataKeys);
-
-  const localLoading = useLocalNotesStore((state) => state.loading);
-  const cloudLoading = useCloudNotesStore((state) => state.loading);
-
-  const localComplete = useLocalNotesStore((state) => state.complete);
-  const cloudComplete = useCloudNotesStore((state) => state.complete);
-
-  const localError = useLocalNotesStore((state) => state.error);
-  const cloudError = useCloudNotesStore((state) => state.error);
 
   const localNote = useLocalNotesStore((state) =>
     noteId ? state.data[noteId] : undefined
@@ -47,12 +33,6 @@ export const useNotesStore = (noteId?: string) => {
   const cloudNoteLoading = useCloudNotesStore((state) =>
     noteId ? state.dataLoading[noteId] : undefined
   );
-
-  const data = isLogged ? cloudData : localData;
-  const dataKeys = isLogged ? cloudKeys : localKeys;
-  const loading = isLogged ? cloudLoading : localLoading;
-  const complete = isLogged ? cloudComplete : localComplete;
-  const error = isLogged ? cloudError : localError;
 
   const note = isLogged ? cloudNote : localNote;
 
@@ -120,22 +100,52 @@ export const useNotesStore = (noteId?: string) => {
   );
 
   return {
-    isLogged,
-    userId,
-
-    data,
-    dataKeys,
-    loading,
-    complete,
-    error,
-
     note,
     isNoteLoading,
-
     fetchSingleNoteIfNeeded,
     cacheNote,
     changeNote,
     changeNoteDir,
     markSaved,
+  };
+};
+
+/**
+ * Hook for global notes list and metadata.
+ * Subscribes to all notes, loading states, and global settings.
+ *
+ * Important: This calls BOTH stores every render and selects based on `isLogged`,
+ * so it does not violate React's rules of hooks when login state changes.
+ */
+export const useNotesStore = () => {
+  const isLogged = useUserStore((state) => state.isLogged);
+
+  const localData = useLocalNotesStore((state) => state.data);
+  const cloudData = useCloudNotesStore((state) => state.data);
+
+  const localKeys = useLocalNotesStore((state) => state.dataKeys);
+  const cloudKeys = useCloudNotesStore((state) => state.dataKeys);
+
+  const localLoading = useLocalNotesStore((state) => state.loading);
+  const cloudLoading = useCloudNotesStore((state) => state.loading);
+
+  const localComplete = useLocalNotesStore((state) => state.complete);
+  const cloudComplete = useCloudNotesStore((state) => state.complete);
+
+  const localError = useLocalNotesStore((state) => state.error);
+  const cloudError = useCloudNotesStore((state) => state.error);
+
+  const data = isLogged ? cloudData : localData;
+  const dataKeys = isLogged ? cloudKeys : localKeys;
+  const loading = isLogged ? cloudLoading : localLoading;
+  const complete = isLogged ? cloudComplete : localComplete;
+  const error = isLogged ? cloudError : localError;
+
+  return {
+    data,
+    dataKeys,
+    loading,
+    complete,
+    error,
   };
 };
