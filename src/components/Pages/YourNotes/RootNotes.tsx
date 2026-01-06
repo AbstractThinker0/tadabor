@@ -8,7 +8,7 @@ import NoteSortSelect from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
-import { useSavedNotes } from "@/hooks/useSavedNotes";
+import { useNotesStore } from "@/hooks/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
 
 const RootNotes = () => {
@@ -22,7 +22,7 @@ const RootNotes = () => {
 const NotesList = () => {
   const { t } = useTranslation();
 
-  const { getNotesIDsbyType, userNotes } = useSavedNotes();
+  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
   const rootNotesIDs = getNotesIDsbyType("root");
 
   const rankComparator = (a: string, b: string) => {

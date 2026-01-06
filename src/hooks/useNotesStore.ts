@@ -33,11 +33,15 @@ export const useNotesStore = () => {
   const complete = isLogged ? cloudComplete : localComplete;
   const error = isLogged ? cloudError : localError;
 
+  const getNotesIDsbyType = (type: "verse" | "root" | "translation") =>
+    dataKeys.filter((id) => id.startsWith(type));
+
   return {
     data,
     dataKeys,
     loading,
     complete,
     error,
+    getNotesIDsbyType,
   };
 };

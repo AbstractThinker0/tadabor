@@ -6,7 +6,7 @@ import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
 
 import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 
-import { useSavedNotes } from "@/hooks/useSavedNotes";
+import { useNotesStore } from "@/hooks/useNotesStore";
 
 interface BackupComponentProps {
   noteType: "verse" | "translation" | "root";
@@ -17,7 +17,7 @@ const BackupComponent: React.FC<BackupComponentProps> = ({ noteType }) => {
   const [currentFormat, setFormat] = useState("1");
 
   const quranService = useQuran();
-  const { getNotesIDsbyType, userNotes } = useSavedNotes();
+  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
   const noteIDs = getNotesIDsbyType(noteType);
 
   const notesBackup = () => {

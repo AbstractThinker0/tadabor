@@ -5,13 +5,13 @@ import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
 import NoteSortSelect from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
-import { useSavedNotes } from "@/hooks/useSavedNotes";
+import { useNotesStore } from "@/hooks/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
 
 const VerseNotes = () => {
   const { t } = useTranslation();
 
-  const { getNotesIDsbyType, userNotes } = useSavedNotes();
+  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
   const verseNotesIDs = getNotesIDsbyType("verse");
 
   const rankComparator = (a: string, b: string) => {
