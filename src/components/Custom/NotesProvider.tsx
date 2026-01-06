@@ -12,26 +12,29 @@ interface NotesProviderProps {
 }
 
 const NotesProvider = ({ children }: NotesProviderProps) => {
-  const isLogged = useUserStore((state) => state.isLogged);
-
-  const localNotes = useLocalNotesStore((state) => state.data);
-  const cloudNotes = useCloudNotesStore((state) => state.data);
-
   const hasUnsavedNotes = useCallback(() => {
-    let hasUnsavedNotes = false;
+    const userStore = useUserStore;
+    const localNotesStore = useLocalNotesStore;
+    const cloudNotesStore = useCloudNotesStore;
+
+    const isLogged = userStore.getState().isLogged;
+    const localNotes = localNotesStore.getState().data;
+    const cloudNotes = cloudNotesStore.getState().data;
+
+    let hasUnsaved = false;
 
     if (isLogged && cloudNotes) {
-      hasUnsavedNotes = Object.values(cloudNotes).some(
+      hasUnsaved = Object.values(cloudNotes).some(
         (note) => note.saved === false && (note.preSave || note.text)
       );
     } else if (localNotes) {
-      hasUnsavedNotes = Object.values(localNotes).some(
+      hasUnsaved = Object.values(localNotes).some(
         (note) => note.saved === false && (note.preSave || note.text)
       );
     }
 
-    return hasUnsavedNotes;
-  }, [isLogged, cloudNotes, localNotes]);
+    return hasUnsaved;
+  }, []); // No dependencies needed
 
   useBeforeUnload((e) => {
     if (hasUnsavedNotes()) {
