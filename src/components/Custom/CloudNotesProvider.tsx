@@ -22,10 +22,6 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   const isCloudNotesComplete = useCloudNotesStore((state) => state.complete);
   const isCloudNotesLoading = useCloudNotesStore((state) => state.loading);
 
-  const localNotes = useLocalNotesStore((state) => state.data);
-  const cloudNotesIds = useCloudNotesStore((state) => state.dataKeys);
-  const cloudNotes = useCloudNotesStore((state) => state.data);
-
   const fetchCloudNotes = useCloudNotesStore((state) => state.fetchCloudNotes);
   const cacheCloudNote = useCloudNotesStore((state) => state.cacheNote);
   const updateCloudSyncDate = useCloudNotesStore(
@@ -75,6 +71,9 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   };
 
   const uploadNotes = async (notesKeys: string[], isGuest: boolean = false) => {
+    const localNotes = useLocalNotesStore.getState().data;
+    const cloudNotes = useCloudNotesStore.getState().data;
+
     for (const noteID of notesKeys) {
       const note = isGuest ? localNotes[noteID] : cloudNotes[noteID];
       if (!note) {
@@ -116,6 +115,10 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
 
   const onCloudNotesLoaded = useEffectEvent(() => {
     if (isLogged && !isLoggedOffline && !syncNotes.isPending) {
+      const localNotes = useLocalNotesStore.getState().data;
+      const cloudNotes = useCloudNotesStore.getState().data;
+
+      const cloudNotesIds = Object.keys(cloudNotes);
       const uniqueGuestNotes = Object.values(localNotes)
         .filter((note) => !cloudNotesIds.includes(note.id)) // This check skips notes that are already cloud notes expecting users to not have the same note in both local and cloud
         .map((note) => buildNoteSyncPayload(note, 0));
