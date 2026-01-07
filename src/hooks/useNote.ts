@@ -12,7 +12,7 @@ import {
   fromDexieToBackend,
 } from "@/util/notes";
 import type { CloudNoteProps } from "@/types";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useState } from "react";
 import { useUploadNote } from "@/services/backend";
 import { tryCatch } from "@/util/trycatch";
 
@@ -23,12 +23,7 @@ interface useNoteParams {
   isVisible?: boolean;
 }
 
-export const useNote = ({
-  noteID,
-  noteType,
-  noteKey,
-  isVisible = true,
-}: useNoteParams) => {
+export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   const isLogged = useUserStore((state) => state.isLogged);
   const userId = useUserStore((state) => state.id);
   const noteIndex = noteID || `${noteType}:${noteKey}`;
@@ -40,7 +35,6 @@ export const useNote = ({
     changeNote,
     changeNoteDir,
     markSaved,
-    fetchSingleNoteIfNeeded,
   } = useSingleNote(noteIndex);
 
   const updateSyncDate = useCloudNotesStore((state) => state.updateSyncDate);
@@ -165,6 +159,8 @@ export const useNote = ({
     }
   };
 
+  // For now we don't use this since we bulk fetch notes on login ( might be needed again later for multi tabs usage )
+  /*
   const fetchNoteIfNeeded = useEffectEvent(() => {
     fetchSingleNoteIfNeeded();
   });
@@ -174,6 +170,7 @@ export const useNote = ({
 
     fetchNoteIfNeeded();
   }, [isVisible, isLogged]);
+  */
 
   return {
     preSaveText: notePreSaveText,
@@ -182,7 +179,7 @@ export const useNote = ({
     isSaved: noteSaved,
     type: noteValidType,
     key: noteValidKey,
-    isLoading: isNoteLoading !== false,
+    isLoading: isNoteLoading,
     isSynced: noteIsSynced,
     isSyncing: noteIsSyncing,
     isOutOfSync,
