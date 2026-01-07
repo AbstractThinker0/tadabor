@@ -31,11 +31,11 @@ const NoteTitle = ({
 
   const isLogged = useUserStore((state) => state.isLogged);
 
-  const getSyncTooltip = (isSyncing: boolean, isSynced: boolean): string => {
+  const getSyncTooltip = (): string => {
     if (isSyncing) return "Syncing note...";
+    if (isOutOfSync) return "Note out of sync.";
     if (isSynced) return "Note synced to the cloud.";
     if (isPendingSave) return "Note pending save.";
-    if (isOutOfSync) return "Note out of sync.";
     return "Saved locally. Log in to enable cloud sync.";
   };
 
@@ -57,7 +57,7 @@ const NoteTitle = ({
         {getNoteTitle()}{" "}
       </Text>
       {isLogged && (
-        <Tooltip content={getSyncTooltip(isSyncing, isSynced)}>
+        <Tooltip content={getSyncTooltip()}>
           {isSyncing ? (
             <Spinner size="sm" color="blue.500" />
           ) : (
