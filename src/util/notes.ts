@@ -33,8 +33,8 @@ export const createNewNote = ({
   };
 };
 
-// Converts from Redux (CloudNoteProps) to IndexDB (ICloudNote)
-export const fromReduxToDexie = (note: CloudNoteProps): ICloudNote => {
+// Converts from Zustand (CloudNoteProps) to IndexDB (ICloudNote)
+export const fromZustandToDexie = (note: CloudNoteProps): ICloudNote => {
   const {
     id,
     uuid,
