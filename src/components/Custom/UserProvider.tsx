@@ -33,6 +33,10 @@ const UserProvider = ({ children }: UserProviderProps) => {
         username: userRefresh.data.user.username,
         token: userRefresh.data.newToken || userToken,
         role: userRefresh.data.user.role,
+        avatarSeed:
+          userRefresh.data.user.avatarSeed ||
+          userRefresh.data.user.id.toString(),
+        description: userRefresh.data.user.description || "",
       });
     }
   });

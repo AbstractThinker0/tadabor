@@ -50,12 +50,16 @@ export const useAuth = () => {
       throw error;
     }
 
+    const avatarSeed = result.user.avatarSeed || result.user.id.toString();
+
     confirmLogin({
       id: result.user.id,
       email,
       token: result.token,
       username: result.user.username,
       role: result.user.role,
+      avatarSeed,
+      description: result.user.description || "",
     });
 
     navigate("/");
@@ -67,6 +71,8 @@ export const useAuth = () => {
     token,
     username,
     role,
+    avatarSeed,
+    description,
     message = "auth.loggedIn",
   }: {
     id: number;
@@ -74,6 +80,8 @@ export const useAuth = () => {
     token: string;
     username: string;
     role: number;
+    avatarSeed: string;
+    description: string;
     message?: string;
   }) => {
     useUserStore.getState().login({
@@ -82,6 +90,8 @@ export const useAuth = () => {
       token,
       username,
       role,
+      avatarSeed,
+      description,
     });
 
     queueMicrotask(() =>
@@ -150,12 +160,16 @@ export const useAuth = () => {
       return false;
     }
 
+    const avatarSeed = result.userid.toString();
+
     confirmLogin({
       id: result.userid,
       email,
       token: result.token,
       username,
       role: 0,
+      avatarSeed,
+      description: "",
     });
 
     navigate("/");
@@ -203,6 +217,8 @@ export const useAuth = () => {
         email: result.user.email,
         username: result.user.username,
         role: result.user.role,
+        avatarSeed: result.user.avatarSeed || result.user.id.toString(),
+        description: result.user.description || "",
         message: "auth.passwordUpdated",
       });
 
@@ -267,6 +283,8 @@ export const useAuth = () => {
         email: result.user.email,
         username: result.user.username,
         role: result.user.role,
+        avatarSeed: result.user.avatarSeed || result.user.id.toString(),
+        description: result.user.description || "",
         message: "auth.passwordUpdated",
       });
 

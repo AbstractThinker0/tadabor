@@ -33,6 +33,11 @@ export const useUserUpdateProfile = () => {
   return useMutation(trpc.auth.updateEmailOrUsername.mutationOptions());
 };
 
+export const useUserUpdateBio = () => {
+  const trpc = useTRPC();
+  return useMutation(trpc.user.updateProfileMeta.mutationOptions());
+};
+
 export const usePasswordRequestReset = () => {
   const trpc = useTRPC();
   return useMutation(trpc.password.requestPasswordReset.mutationOptions());
