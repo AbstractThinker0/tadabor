@@ -3,8 +3,12 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
     ctx: {
       user: {
         id: number;
+        uuid: string;
         username: string;
         email: string;
+        role: number;
+        description: string | null;
+        avatarSeed: string | null;
       } | null;
       clientVersion: string | undefined;
     };
@@ -20,6 +24,10 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             id: number;
             username: string;
             email: string;
+            password: string;
+            role: number;
+            description: string | null;
+            avatarSeed: string | null;
           } | null;
           clientVersion: string | undefined;
         };
@@ -38,6 +46,8 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               username: string;
               email: string;
               role: number;
+              description: string | null;
+              avatarSeed: string | null;
             };
           };
           meta: object;
@@ -47,6 +57,19 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
           output: {
             email: string;
             username: string;
+            description: string | null;
+            avatarSeed: string | null;
+          };
+          meta: object;
+        }>;
+        updateProfileMeta: import("@trpc/server").TRPCMutationProcedure<{
+          input: {
+            description?: string | null | undefined;
+            avatarSeed?: string | null | undefined;
+          };
+          output: {
+            success: boolean;
+            message: string;
           };
           meta: object;
         }>;
@@ -59,6 +82,9 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             id: number;
             username: string;
             email: string;
+            role: number;
+            description: string | null;
+            avatarSeed: string | null;
           } | null;
           clientVersion: string | undefined;
         };
@@ -81,6 +107,8 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               username: string;
               email: string;
               role: number;
+              description: string | null;
+              avatarSeed: string | null;
             };
           };
           meta: object;
@@ -109,6 +137,8 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               username: string;
               email: string;
               role: number;
+              description: string | null;
+              avatarSeed: string | null;
             };
             message: string;
             newToken: string;
@@ -135,6 +165,9 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             id: number;
             username: string;
             email: string;
+            role: number;
+            description: string | null;
+            avatarSeed: string | null;
           } | null;
           clientVersion: string | undefined;
         };
@@ -235,6 +268,9 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             id: number;
             username: string;
             email: string;
+            role: number;
+            description: string | null;
+            avatarSeed: string | null;
           } | null;
           clientVersion: string | undefined;
         };
@@ -267,6 +303,8 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               username: string;
               email: string;
               role: number;
+              description: string | null;
+              avatarSeed: string | null;
             };
           };
           meta: object;
@@ -285,6 +323,8 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
               username: string;
               email: string;
               role: number;
+              description: string | null;
+              avatarSeed: string | null;
             };
           };
           meta: object;
@@ -298,6 +338,9 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
             id: number;
             username: string;
             email: string;
+            role: number;
+            description: string | null;
+            avatarSeed: string | null;
           } | null;
         };
         meta: object;
