@@ -64,7 +64,7 @@ const SearchOptions = () => {
   };
 
   return (
-    <Box paddingInlineStart="6px">
+    <Box>
       <RadioSearchMethod
         searchMethod={searchMethod}
         setSearchMethod={setSearchMethod}
