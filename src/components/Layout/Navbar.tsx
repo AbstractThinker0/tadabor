@@ -80,8 +80,7 @@ const Navbar = () => {
       <Box
         as="nav"
         role="navigation"
-        //_light={{ bgColor: "#f6f8fa" }}
-        _light={{ bgColor: "#e5e7eb" }}
+        _light={{ bgColor: "#f2f3f5" }}
         _dark={{ bgColor: "#151a23" }}
         px={2}
         smDown={{ px: "4px" }}
@@ -116,9 +115,11 @@ const Navbar = () => {
                 alignItems="center"
                 borderRadius="sm"
                 border="1px solid"
-                borderColor="gray.400"
+                //borderColor="gray.400"
+                borderColor={"#e5e7eb"}
                 py="5px"
                 fontSize={"lg"}
+                shadow={"sm"}
               >
                 {t(currentPage)}
               </Flex>
