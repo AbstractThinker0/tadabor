@@ -15,12 +15,12 @@ const TextareaAutosize = (props: TextareaProps) => {
 
   return (
     <Textarea
-      {...props}
       ref={refTextarea}
       fontFamily={`${notesFont}, serif`}
       fontSize={`${notesFS}rem`}
       lineHeight={"tall"}
       height={height}
+      {...props}
     />
   );
 };
