@@ -637,6 +637,7 @@ export const colors = defineSemanticTokens.colors({
     bg: {
       value: {
         _light: "{colors.brand.50}",
+        //_light: "#f9fafb",
         _dark: "{colors.brand.950}",
       },
     },

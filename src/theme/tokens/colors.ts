@@ -435,7 +435,8 @@ export const colors = defineTokens.colors({
   },
   brand: {
     "50": {
-      value: "#eff4f9",
+      //value: "#eff4f9",
+      value: "#f0f4f9",
     },
     "100": {
       value: "#f7fafc",
