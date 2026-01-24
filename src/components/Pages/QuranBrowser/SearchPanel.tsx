@@ -52,11 +52,22 @@ const SearchPanel = () => {
       paddingStart="min(0.5vw, 10px)"
     >
       <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
-      <SearchOptions />
-      <FormWordSearch
-        onSearchSubmit={onSearchSubmit}
-        searchString={searchString}
-      />
+
+      <Flex
+        flexDir={"column"}
+        borderStyle={"solid"}
+        borderWidth={"1px"}
+        borderRadius={"md"}
+        boxShadow={"sm"}
+        padding={"5px"}
+        marginBottom={"8px"}
+      >
+        <SearchOptions />
+        <FormWordSearch
+          onSearchSubmit={onSearchSubmit}
+          searchString={searchString}
+        />
+      </Flex>
       <SelectionListRoots
         isDisabled={!isRootSearch}
         searchString={searchString}
