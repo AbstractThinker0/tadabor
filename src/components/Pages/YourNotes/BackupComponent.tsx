@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useQuran from "@/context/useQuran";
 
-import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/backup";
+import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/exportUtils";
 
 import BackupForm from "@/components/Pages/YourNotes/BackupForm";
 

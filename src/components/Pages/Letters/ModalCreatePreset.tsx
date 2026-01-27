@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
-import { onlySpaces } from "@/util/util";
-
 import {
   Dialog,
   type DialogOpenChangeDetails,
@@ -34,7 +32,7 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
   };
 
   const onClickSave = async () => {
-    if (onlySpaces(presetName)) {
+    if (presetName.trim().length === 0) {
       alert("Preset name can't be empty.");
       return;
     }
