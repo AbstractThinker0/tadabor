@@ -17,7 +17,7 @@ export const useNoteSorting = ({
   const [sortBy, setSortBy] = useState<SortOption>("date");
 
   const sortedNotesIDs = useMemo(() => {
-    return noteIDs.sort((a, b) => {
+    return [...noteIDs].sort((a, b) => {
       const noteA = userNotes[a];
       const noteB = userNotes[b];
 
