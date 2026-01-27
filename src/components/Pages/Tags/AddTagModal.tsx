@@ -5,9 +5,10 @@ import type { tagProps } from "@/components/Pages/Tags/consts";
 
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
-import { Dialog, Button, ButtonGroup, Box, Input } from "@chakra-ui/react";
-import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { Box, Input } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+
+import FormModal from "@/components/Generic/FormModal";
 
 interface AddTagModalProps {
   isOpen: boolean;
@@ -55,47 +56,23 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
   }
 
   return (
-    <Dialog.Root
+    <FormModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onClickSave}
+      title="Add a new tag"
       size="xl"
-      open={isOpen}
-      onInteractOutside={onClose}
-      placement={"center"}
     >
-      <DialogContent dir="ltr">
-        <Dialog.Header
-          borderBottom="1px solid"
-          borderColor={"border.emphasized"}
-        >
-          Add a new tag
-        </Dialog.Header>
-
-        <Dialog.Body>
-          <Box pb={1}>
-            <span>Display name: </span>
-            <Input
-              type="text"
-              placeholder="display name"
-              value={tagName}
-              onChange={onChangeName}
-            />
-          </Box>
-        </Dialog.Body>
-        <Dialog.Footer
-          mt={5}
-          justifyContent="center"
-          borderTop="1px solid"
-          borderColor={"border.emphasized"}
-        >
-          <ButtonGroup>
-            <Button onClick={onClose}>Close</Button>
-            <Button colorPalette="blue" onClick={onClickSave}>
-              Save changes
-            </Button>
-          </ButtonGroup>
-        </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
-      </DialogContent>
-    </Dialog.Root>
+      <Box pb={1}>
+        <span>Display name: </span>
+        <Input
+          type="text"
+          placeholder="display name"
+          value={tagName}
+          onChange={onChangeName}
+        />
+      </Box>
+    </FormModal>
   );
 };
 

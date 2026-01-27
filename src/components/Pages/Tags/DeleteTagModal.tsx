@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
-import { Dialog, Button, ButtonGroup, Box, Span } from "@chakra-ui/react";
-import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import { Box, Span } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+
+import ConfirmationModal from "@/components/Generic/ConfirmationModal";
 
 interface DeleteTagModalProps {
   isOpen: boolean;
@@ -44,51 +45,27 @@ const DeleteTagModal = ({
   }
 
   return (
-    <Dialog.Root
-      size="xl"
-      open={isOpen}
-      onInteractOutside={onClose}
-      placement={"center"}
+    <ConfirmationModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onClickDelete}
+      title="Delete tag confirmation"
+      confirmText="Yes, delete"
     >
-      <DialogContent dir="ltr">
-        <Dialog.Header
-          borderBottom="1px solid"
-          borderColor={"border.emphasized"}
+      <Box>
+        Are you sure you want to delete{" "}
+        <Span
+          padding={"3px"}
+          bgColor={"yellow.emphasized"}
+          wordBreak={"break-all"}
+          borderRadius={"0.375rem"}
         >
-          Delete tag confirmation
-        </Dialog.Header>
-
-        <Dialog.Body>
-          <Box>
-            Are you sure you want to delete{" "}
-            <Span
-              padding={"3px"}
-              bgColor={"yellow.emphasized"}
-              wordBreak={"break-all"}
-              borderRadius={"0.375rem"}
-            >
-              {currentTag?.tagDisplay}
-            </Span>{" "}
-            tag? All verses tagged with this tag will lose it.
-          </Box>
-          <p>Number of verses affected: {versesCount}</p>
-        </Dialog.Body>
-        <Dialog.Footer
-          mt={5}
-          justifyContent="center"
-          borderTop="1px solid"
-          borderColor={"border.emphasized"}
-        >
-          <ButtonGroup>
-            <Button onClick={onClose}>No, Cancel</Button>
-            <Button colorPalette="red" onClick={onClickDelete}>
-              Yes, delete
-            </Button>
-          </ButtonGroup>
-        </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
-      </DialogContent>
-    </Dialog.Root>
+          {currentTag?.tagDisplay}
+        </Span>{" "}
+        tag? All verses tagged with this tag will lose it.
+      </Box>
+      <p>Number of verses affected: {versesCount}</p>
+    </ConfirmationModal>
   );
 };
 

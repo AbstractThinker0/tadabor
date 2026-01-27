@@ -2,9 +2,9 @@ import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { Dialog, Button, ButtonGroup, Text, Span } from "@chakra-ui/react";
+import { Text, Span } from "@chakra-ui/react";
 
-import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
+import ConfirmationModal from "@/components/Generic/ConfirmationModal";
 
 interface DeleteColorModalProps {
   isOpen: boolean;
@@ -32,59 +32,33 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   };
 
   return (
-    <Dialog.Root
-      size="xl"
-      open={isOpen}
-      onInteractOutside={onClose}
-      placement={"center"}
+    <ConfirmationModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onClickDelete}
+      title="Delete color confirmation"
+      confirmText="Yes, delete"
     >
-      <DialogContent dir="ltr">
-        <Dialog.Header
-          borderBottom="1px solid"
-          borderColor={"border.emphasized"}
+      <Text>
+        Are you sure you want to delete{" "}
+        <Span
+          p={1}
+          fontFamily={"initial"}
+          overflowWrap={"break-word"}
+          borderRadius={4}
+          bgColor={currentColor?.colorCode}
+          color={
+            currentColor ? getTextColor(currentColor.colorCode) : undefined
+          }
         >
-          Delete color confirmation
-        </Dialog.Header>
-        <Dialog.Body>
-          <Text>
-            Are you sure you want to delete{" "}
-            <Span
-              p={1}
-              fontFamily={"initial"}
-              overflowWrap={"break-word"}
-              borderRadius={4}
-              bgColor={currentColor?.colorCode}
-              color={
-                currentColor ? getTextColor(currentColor.colorCode) : undefined
-              }
-            >
-              {currentColor?.colorDisplay}
-            </Span>{" "}
-            color? All verses colored with this color will be uncolored.
-          </Text>
-          <Text>
-            Number of verses affected: {getColoredVerses(currentColor?.colorID)}
-          </Text>
-        </Dialog.Body>
-        <Dialog.Footer
-          mt={5}
-          justifyContent="center"
-          borderTop="1px solid"
-          borderColor={"border.emphasized"}
-        >
-          <ButtonGroup>
-            <Button colorPalette="gray" onClick={onClose}>
-              No, Cancel
-            </Button>
-
-            <Button colorPalette="red" onClick={onClickDelete}>
-              Yes, delete
-            </Button>
-          </ButtonGroup>
-        </Dialog.Footer>
-        <DialogCloseTrigger onClick={onClose} />
-      </DialogContent>
-    </Dialog.Root>
+          {currentColor?.colorDisplay}
+        </Span>{" "}
+        color? All verses colored with this color will be uncolored.
+      </Text>
+      <Text>
+        Number of verses affected: {getColoredVerses(currentColor?.colorID)}
+      </Text>
+    </ConfirmationModal>
   );
 };
 
