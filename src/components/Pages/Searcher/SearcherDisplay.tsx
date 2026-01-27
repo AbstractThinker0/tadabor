@@ -7,7 +7,7 @@ import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
-import { ButtonSidebar } from "@/components/Pages/Searcher/ButtonSiderbar";
+import { ButtonSidebar } from "@/components/Pages/Searcher/ButtonSidebar";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
