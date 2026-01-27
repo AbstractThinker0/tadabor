@@ -8,6 +8,7 @@ import type { verseProps } from "quran-tools";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+import ReciterSelect from "@/components/Pages/Audio/ReciterSelect";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
@@ -23,14 +24,16 @@ import { usePageNav } from "@/hooks/usePageNav";
  * Custom hook to prefetch audio for upcoming verses
  * @param currentRank - The rank of the currently playing verse
  * @param maxRank - The maximum rank in the current chapter (to avoid prefetching across chapters)
+ * @param reciterId - The ID of the current reciter
  * @param count - Number of verses to prefetch ahead (default: 5)
  */
 const useAudioPrefetch = (
   currentRank: number,
   maxRank: number,
+  reciterId: string,
   count: number = 5
 ) => {
-  const prefetchedAudio = useRef<Map<number, HTMLAudioElement>>(new Map());
+  const prefetchedAudio = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   useEffect(() => {
     if (currentRank < 0) return;
@@ -41,25 +44,28 @@ const useAudioPrefetch = (
     // Prefetch audio for upcoming verses
     for (let i = 1; i <= effectiveCount; i++) {
       const rank = currentRank + i;
-      if (!prefetchedAudio.current.has(rank)) {
+      const cacheKey = `${reciterId}-${rank}`;
+      if (!prefetchedAudio.current.has(cacheKey)) {
         const audio = new window.Audio();
         audio.preload = "auto";
-        audio.src = getVerseAudioURL(rank);
-        prefetchedAudio.current.set(rank, audio);
+        audio.src = getVerseAudioURL(rank, reciterId);
+        prefetchedAudio.current.set(cacheKey, audio);
       }
     }
 
-    // Cleanup: remove audio that's too far behind or ahead
+    // Cleanup: remove audio that's too far behind or ahead or different reciter
     const minKeep = currentRank - 2;
     const maxKeep = currentRank + count + 2;
 
-    prefetchedAudio.current.forEach((audio, rank) => {
-      if (rank < minKeep || rank > maxKeep) {
+    prefetchedAudio.current.forEach((audio, cacheKey) => {
+      const [cachedReciter, rankStr] = cacheKey.split("-");
+      const rank = parseInt(rankStr, 10);
+      if (cachedReciter !== reciterId || rank < minKeep || rank > maxKeep) {
         audio.src = "";
-        prefetchedAudio.current.delete(rank);
+        prefetchedAudio.current.delete(cacheKey);
       }
     });
-  }, [currentRank, maxRank, count]);
+  }, [currentRank, maxRank, reciterId, count]);
 };
 
 const Audio = () => {
@@ -70,6 +76,7 @@ const Audio = () => {
   const quranService = useQuran();
   const currentChapter = useAudioPageStore((state) => state.currentChapter);
   const currentVerse = useAudioPageStore((state) => state.currentVerse);
+  const currentReciter = useAudioPageStore((state) => state.currentReciter);
   const isPlaying = useAudioPageStore((state) => state.isPlaying);
   const autoPlay = useAudioPageStore((state) => state.autoPlay);
   const duration = useAudioPageStore((state) => state.duration);
@@ -94,7 +101,7 @@ const Audio = () => {
     displayVerses.length > 0 ? displayVerses[displayVerses.length - 1].rank : 0;
 
   // Prefetch next 5 verses audio
-  useAudioPrefetch(currentVerse?.rank ?? -1, maxRankInChapter);
+  useAudioPrefetch(currentVerse?.rank ?? -1, maxRankInChapter, currentReciter);
 
   const handleChapterChange = (chapter: string) => {
     setCurrentChapter(chapter);
@@ -104,7 +111,7 @@ const Audio = () => {
   const onClickAudio = (verse: verseProps) => {
     if (!refAudio.current) return;
 
-    refAudio.current.src = getVerseAudioURL(verse.rank);
+    refAudio.current.src = getVerseAudioURL(verse.rank, currentReciter);
     setCurrentVerse(verse);
     refAudio.current.play();
     setIsPlaying(true);
@@ -152,7 +159,7 @@ const Audio = () => {
 
       if (nextVerse && nextVerse.suraid === currentVerse?.suraid) {
         if (refAudio.current) {
-          refAudio.current.src = getVerseAudioURL(nextRank);
+          refAudio.current.src = getVerseAudioURL(nextRank, currentReciter);
           setCurrentVerse(nextVerse);
           refAudio.current.play();
           setIsPlaying(true);
@@ -179,7 +186,7 @@ const Audio = () => {
 
     const verseRank = quranService.getVerses(currentChapter)[0].rank;
 
-    refAudio.current.src = getVerseAudioURL(verseRank);
+    refAudio.current.src = getVerseAudioURL(verseRank, currentReciter);
 
     setCurrentVerse(displayVerses[0]);
     setIsPlaying(false);
@@ -188,6 +195,22 @@ const Audio = () => {
   useEffect(() => {
     onChapterChange();
   }, [currentChapter]);
+
+  // Update audio source when reciter changes
+  const onReciterChange = useEffectEvent(() => {
+    if (!refAudio.current || !currentVerse) return;
+
+    const wasPlaying = isPlaying;
+    refAudio.current.src = getVerseAudioURL(currentVerse.rank, currentReciter);
+
+    if (wasPlaying) {
+      refAudio.current.play();
+    }
+  });
+
+  useEffect(() => {
+    onReciterChange();
+  }, [currentReciter]);
 
   const onChangeAutoPlay = (checked: boolean) => {
     setAutoPlaying(checked);
@@ -251,7 +274,7 @@ const Audio = () => {
         >
           <audio
             ref={refAudio}
-            src={getVerseAudioURL(0)}
+            src={getVerseAudioURL(0, currentReciter)}
             onLoadedMetadata={onLoadedMetadata}
             onTimeUpdate={onTimeUpdate}
             onEnded={onEnded}
@@ -276,7 +299,7 @@ const Audio = () => {
               🔁
             </Checkbox>
           </HStack>
-          <Flex mt={1} gap="4px" paddingBottom="5px">
+          <HStack mt={1} gap="4px" paddingBottom="5px">
             <Button fontWeight="normal" onClick={onClickPrev}>
               prev
             </Button>
@@ -287,7 +310,8 @@ const Audio = () => {
             <Button fontWeight="normal" onClick={onClickNext}>
               next
             </Button>
-          </Flex>
+            <ReciterSelect />
+          </HStack>
         </Flex>
       </Flex>
     </Flex>

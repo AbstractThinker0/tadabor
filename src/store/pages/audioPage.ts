@@ -3,6 +3,7 @@ import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import type { verseProps } from "quran-tools";
+import { DEFAULT_RECITER_ID } from "@/util/reciters";
 
 const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
   ? localStorage.getItem("audioAutoPlay") === "true"
@@ -10,9 +11,13 @@ const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
 
 const defaultChapter = localStorage.getItem("audioChapter") || "1";
 
+const defaultReciter =
+  localStorage.getItem("audioReciter") || DEFAULT_RECITER_ID;
+
 interface AudioPageState {
   currentChapter: string;
   currentVerse: verseProps | null;
+  currentReciter: string;
   duration: number;
   currentTime: number;
   isPlaying: boolean;
@@ -24,6 +29,7 @@ interface AudioPageState {
 const initialState: AudioPageState = {
   currentChapter: defaultChapter,
   currentVerse: null,
+  currentReciter: defaultReciter,
   duration: 0,
   currentTime: 0,
   isPlaying: defaultAutoPlay,
@@ -65,6 +71,12 @@ export const useAudioPageStore = create(
         set((state) => {
           state.autoPlay = autoPlay;
         });
+      },
+      setCurrentReciter: (reciterId: string) => {
+        set((state) => {
+          state.currentReciter = reciterId;
+        });
+        localStorage.setItem("audioReciter", reciterId);
       },
       setSearchPanel: (isOpen: boolean) => {
         set((state) => {
