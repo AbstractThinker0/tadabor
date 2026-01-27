@@ -8,16 +8,13 @@ import type { verseProps } from "quran-tools";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
-import ReciterSelect from "@/components/Pages/Audio/ReciterSelect";
+import AudioPlayer from "@/components/Pages/Audio/AudioPlayer";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
-import { Box, HStack, Flex, Button } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 
 /**
@@ -70,8 +67,6 @@ const useAudioPrefetch = (
 
 const Audio = () => {
   usePageNav("nav.audio");
-  const { i18n } = useTranslation();
-  const direction = i18n.dir();
 
   const quranService = useQuran();
   const currentChapter = useAudioPageStore((state) => state.currentChapter);
@@ -264,55 +259,23 @@ const Audio = () => {
           displayVerses={displayVerses}
           onClickAudio={onClickAudio}
         />
-        <Flex
-          flexDirection="column"
-          alignSelf="center"
-          justifyContent="center"
-          alignItems="center"
-          dir="ltr"
-          pt={1}
-        >
-          <audio
-            ref={refAudio}
-            src={getVerseAudioURL(0, currentReciter)}
-            onLoadedMetadata={onLoadedMetadata}
-            onTimeUpdate={onTimeUpdate}
-            onEnded={onEnded}
-            preload="auto"
-          />
-          <HStack>
-            <input
-              type="range"
-              min="0"
-              step={0.1}
-              max={duration}
-              value={currentTime}
-              onChange={handleSliderChange}
-            />
-
-            <Checkbox
-              direction={direction}
-              gap="0.1rem"
-              checked={autoPlay}
-              onCheckedChange={(e) => onChangeAutoPlay(!!e.checked)}
-            >
-              🔁
-            </Checkbox>
-          </HStack>
-          <HStack mt={1} gap="4px" paddingBottom="5px">
-            <Button fontWeight="normal" onClick={onClickPrev}>
-              prev
-            </Button>
-            <Button fontWeight="normal" onClick={togglePlayPause}>
-              {isPlaying ? "Pause" : "Play"} [{currentVerse?.suraid}:
-              {currentVerse?.verseid}]
-            </Button>
-            <Button fontWeight="normal" onClick={onClickNext}>
-              next
-            </Button>
-            <ReciterSelect />
-          </HStack>
-        </Flex>
+        <AudioPlayer
+          refAudio={refAudio}
+          currentVerse={currentVerse}
+          currentReciter={currentReciter}
+          isPlaying={isPlaying}
+          duration={duration}
+          currentTime={currentTime}
+          autoPlay={autoPlay}
+          onLoadedMetadata={onLoadedMetadata}
+          onTimeUpdate={onTimeUpdate}
+          onEnded={onEnded}
+          onClickPrev={onClickPrev}
+          onClickNext={onClickNext}
+          onTogglePlayPause={togglePlayPause}
+          onSliderChange={handleSliderChange}
+          onChangeAutoPlay={onChangeAutoPlay}
+        />
       </Flex>
     </Flex>
   );
