@@ -193,3 +193,31 @@ export const useUploadNote = () => {
     })
   );
 };
+
+export const useConnectedDevices = () => {
+  const trpc = useTRPC();
+  return useQuery(trpc.user.getConnectedDevices.queryOptions());
+};
+
+export const useRevokeDevice = () => {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const devicesQueryOptions = trpc.user.getConnectedDevices.queryOptions();
+
+  return useMutation(
+    trpc.user.revokeDevice.mutationOptions({
+      onSuccess: (_, variables) => {
+        queryClient.setQueryData(devicesQueryOptions.queryKey, (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            devices: oldData.devices.filter(
+              (device) => device.id !== variables.tokenId
+            ),
+          };
+        });
+      },
+    })
+  );
+};

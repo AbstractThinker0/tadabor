@@ -8,6 +8,7 @@ import {
   Link,
   Tabs,
   Heading,
+  Badge,
 } from "@chakra-ui/react";
 import { useUserStore } from "@/store/global/userStore";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -20,7 +21,11 @@ import { useTranslation } from "react-i18next";
 import { tryCatch } from "@/util/trycatch";
 
 import TextareaAutosize from "@/components/Note/TextareaAutosize";
-import { useUserUpdateBio } from "@/services/backend";
+import {
+  useUserUpdateBio,
+  useConnectedDevices,
+  useRevokeDevice,
+} from "@/services/backend";
 import { toaster } from "@/components/ui/toaster";
 
 import { FaRegUser } from "react-icons/fa6";
@@ -30,6 +35,13 @@ import { MdOutlineRestore } from "react-icons/md";
 import { MdOutlineAutoAwesome } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
+import { FaDesktop } from "react-icons/fa";
+import { FaTabletAlt } from "react-icons/fa";
+import { FaMobileAlt } from "react-icons/fa";
+import { IoLogOutOutline } from "react-icons/io5";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
+import { useNavigationStore } from "@/store/global/navigationStore";
 
 const Profile = () => {
   usePageNav("auth.profile");
@@ -38,7 +50,7 @@ const Profile = () => {
   const isSmallScreen = useScreenSize();
 
   return (
-    <Flex flex={1} overflow={"hidden"}>
+    <Flex flex={1} overflow={"hidden"} dir="ltr">
       <Tabs.Root
         value={currentTab}
         onValueChange={(e) => setCurrentTab(e.value)}
@@ -94,9 +106,7 @@ const Profile = () => {
             <UpdateProfile />
           </Tabs.Content>
           <Tabs.Content value="Connected">
-            <Flex flex={1} justifyContent={"center"} alignItems={"center"}>
-              <Text fontSize={"lg"}>Coming soon..</Text>
-            </Flex>
+            <ConnectedDevices />
           </Tabs.Content>
         </Tabs.ContentGroup>
       </Tabs.Root>
@@ -246,6 +256,8 @@ const UserBio = () => {
 const UpdateProfile = () => {
   const { t } = useTranslation();
 
+  const appDir = useNavigationStore((state) => state.pageDirection);
+
   const { updateProfile, updateProfilePassword } = useAuth();
 
   const [validationError, setValidationError] = useState("");
@@ -368,6 +380,7 @@ const UpdateProfile = () => {
       flexDirection="column"
       p={4}
       fontSize={"small"}
+      dir={appDir}
     >
       <Flex flexDirection="column" mb={4}>
         <Text>{t("auth.username")}</Text>
@@ -392,7 +405,7 @@ const UpdateProfile = () => {
             {validationError}
           </Text>
         )}
-        <Box pt={"1rem"}>
+        <Box pt={"1rem"} textAlign={"center"}>
           <Button
             colorPalette="blue"
             onClick={onClickUpdateProfile}
@@ -443,7 +456,7 @@ const UpdateProfile = () => {
             {validationErrorPassword}
           </Text>
         )}
-        <Box pt={"1rem"}>
+        <Box pt={"1rem"} textAlign={"center"}>
           <Button
             colorPalette="blue"
             onClick={onClickUpdatePassword}
@@ -454,6 +467,117 @@ const UpdateProfile = () => {
             {t("auth.updatePassword")}
           </Button>
         </Box>
+      </Flex>
+    </Flex>
+  );
+};
+
+const getDeviceIcon = (deviceType: string) => {
+  switch (deviceType) {
+    case "mobile":
+      return <FaMobileAlt />;
+    case "tablet":
+      return <FaTabletAlt />;
+    default:
+      return <FaDesktop />;
+  }
+};
+
+const ConnectedDevices = () => {
+  const { data, isLoading, error } = useConnectedDevices();
+  const revokeDevice = useRevokeDevice();
+
+  const onClickRevoke = async (tokenId: number) => {
+    const { error } = await tryCatch(revokeDevice.mutateAsync({ tokenId }));
+
+    if (error) {
+      toaster.create({
+        description: error.message || "Failed to sign out device",
+        type: "error",
+      });
+    } else {
+      toaster.create({
+        description: "Device signed out successfully",
+        type: "success",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner text="Loading devices..." />;
+  }
+
+  if (error) {
+    return <ErrorRefresh message="Failed to load connected devices." />;
+  }
+
+  const devices = data?.devices || [];
+
+  if (devices.length === 0) {
+    return (
+      <Flex flex={1} justifyContent="center" alignItems="center" p={8}>
+        <Text>No connected devices found</Text>
+      </Flex>
+    );
+  }
+
+  return (
+    <Flex flexDirection="column" p={4} gap={4}>
+      <Heading size="lg">Connected Devices</Heading>
+      <Text fontSize="sm" color="fg.muted">
+        These are the devices currently logged into your account.
+      </Text>
+      <Flex flexDirection="column" gap={3}>
+        {devices.map((device) => (
+          <Flex
+            key={device.id}
+            p={4}
+            borderWidth="1px"
+            borderRadius="lg"
+            alignItems="center"
+            gap={4}
+            bg={device.isCurrent ? "green.subtle" : "bg"}
+            borderColor={device.isCurrent ? "green.emphasized" : "border"}
+          >
+            <Box
+              fontSize="2xl"
+              color={device.isCurrent ? "green.fg" : "fg.muted"}
+            >
+              {getDeviceIcon(device.deviceType)}
+            </Box>
+            <Flex flex={1} flexDirection="column" gap={1}>
+              <Flex alignItems="center" gap={2}>
+                <Text fontWeight="medium">{device.browser}</Text>
+                {device.isCurrent && (
+                  <Badge colorPalette="green" size="sm">
+                    Current
+                  </Badge>
+                )}
+              </Flex>
+              <Text fontSize="sm" color="fg.muted">
+                {device.os}
+              </Text>
+              <Flex fontSize="xs" color="fg.muted" gap={4}>
+                <Text>IP: {device.ipAddress || "Unknown"}</Text>
+                <Text>
+                  Logged in: {new Date(device.loginTime).toLocaleDateString()}
+                </Text>
+              </Flex>
+            </Flex>
+            {!device.isCurrent && (
+              <Button
+                size="sm"
+                variant="outline"
+                colorPalette="red"
+                onClick={() => onClickRevoke(device.id)}
+                loading={revokeDevice.isPending}
+              >
+                <IoLogOutOutline />
+                Sign out
+              </Button>
+            )}
+          </Flex>
+        ))}
       </Flex>
     </Flex>
   );
