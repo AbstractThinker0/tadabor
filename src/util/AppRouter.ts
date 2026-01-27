@@ -186,6 +186,13 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
           };
           meta: object;
         }>;
+        logout: import("@trpc/server").TRPCMutationProcedure<{
+          input: void;
+          output: {
+            success: boolean;
+          };
+          meta: object;
+        }>;
         updateEmailOrUsername: import("@trpc/server").TRPCMutationProcedure<{
           input: {
             username: string;

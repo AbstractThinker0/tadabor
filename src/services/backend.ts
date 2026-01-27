@@ -28,6 +28,11 @@ export const useUserSignup = () => {
   return useMutation(trpc.auth.signUp.mutationOptions());
 };
 
+export const useUserLogout = () => {
+  const trpc = useTRPC();
+  return useMutation(trpc.auth.logout.mutationOptions());
+};
+
 export const useUserUpdateProfile = () => {
   const trpc = useTRPC();
   return useMutation(trpc.auth.updateEmailOrUsername.mutationOptions());

@@ -10,6 +10,7 @@ import {
   usePasswordReset,
   usePasswordUpdate,
   useUserLogin,
+  useUserLogout,
   useUserSignup,
   useUserUpdateProfile,
 } from "@/services/backend";
@@ -33,6 +34,8 @@ export const useAuth = () => {
   const sendPassword = usePasswordReset();
 
   const updatePasswordProfile = usePasswordUpdate();
+
+  const userLogout = useUserLogout();
 
   const login = async ({
     email,
@@ -117,6 +120,11 @@ export const useAuth = () => {
     message = "auth.loggedOut",
     clearOldNotes = false,
   }: { message?: string; clearOldNotes?: boolean } = {}) => {
+    // Best-effort server-side token revocation (fire-and-forget)
+    userLogout.mutateAsync().catch(() => {
+      // Silently ignore errors - logout locally regardless
+    });
+
     useUserStore.getState().logout();
     resetCloudNotes();
     if (clearOldNotes) {
