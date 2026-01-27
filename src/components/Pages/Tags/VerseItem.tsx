@@ -2,19 +2,17 @@ import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { verseProps } from "quran-tools";
 
-import { ButtonVerse } from "@/components/Generic/Buttons";
-
 import { VerseTags } from "@/components/Pages/Tags/VerseTags";
 import type {
   tagsProps,
   versesTagsProps,
 } from "@/components/Pages/Tags/consts";
 
-import { Button, Span } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
-
-import useQuran from "@/context/useQuran";
+import { VerseIndex } from "@/components/Custom/VerseIndex";
+import { VerseRef } from "@/components/Custom/VerseRef";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -65,7 +63,11 @@ const VerseItem = ({
       }
     >
       {verse.versetext}{" "}
-      <ButtonVerse onClick={onClickVerse}>({verse.verseid})</ButtonVerse>
+      <VerseRef
+        suraid={verse.suraid}
+        verseid={verse.verseid}
+        onClickVerse={onClickVerse}
+      />
     </BaseVerseItem>
   );
 };
@@ -87,20 +89,18 @@ const SelectedVerseItem = ({
   onOpenVerseModal,
   isSelected,
 }: SelectedVerseItemProps) => {
-  const quranService = useQuran();
-
   const gotoChapter = useTagsPageStore((state) => state.gotoChapter);
   const setScrollKey = useTagsPageStore((state) => state.setScrollKey);
   const setCurrentVerse = useTagsPageStore((state) => state.setCurrentVerse);
 
-  function onClickChapter(verse: verseProps) {
+  function onClickChapter() {
     gotoChapter(Number(verse.suraid));
     if (!isSelected) {
       setScrollKey(verse.key);
     }
   }
 
-  function onClickVerse(verse: verseProps) {
+  function onClickVerse() {
     setScrollKey(verse.key);
   }
 
@@ -123,21 +123,13 @@ const SelectedVerseItem = ({
         </Button>
       }
     >
-      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
-        {index + 1}.
-      </Span>{" "}
-      {verse.versetext}{" "}
-      <Span whiteSpace="nowrap">
-        (
-        <ButtonVerse onClick={() => onClickChapter(verse)}>
-          {quranService.getChapterName(verse.suraid)}
-        </ButtonVerse>
-        :
-        <ButtonVerse onClick={() => onClickVerse(verse)}>
-          {verse.verseid}
-        </ButtonVerse>
-        )
-      </Span>
+      <VerseIndex index={index} /> {verse.versetext}{" "}
+      <VerseRef
+        suraid={verse.suraid}
+        verseid={verse.verseid}
+        onClickChapter={onClickChapter}
+        onClickVerse={onClickVerse}
+      />
     </BaseVerseItem>
   );
 };

@@ -2,16 +2,14 @@ import type { verseProps } from "quran-tools";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
-import { Button, Span } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
-import { ButtonVerse } from "@/components/Generic/Buttons";
-
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
-
-import useQuran from "@/context/useQuran";
+import { VerseIndex } from "@/components/Custom/VerseIndex";
+import { VerseRef } from "@/components/Custom/VerseRef";
 
 interface VerseItemProps {
   verse: verseProps;
@@ -66,9 +64,12 @@ const VerseItem = ({
       }
     >
       {verse.versetext}{" "}
-      <ButtonVerse color={"inherit"} onClick={onClickVerse}>
-        ({verse.verseid})
-      </ButtonVerse>
+      <VerseRef
+        suraid={verse.suraid}
+        verseid={verse.verseid}
+        onClickVerse={onClickVerse}
+        color="inherit"
+      />
     </BaseVerseItem>
   );
 };
@@ -93,9 +94,8 @@ const SelectedVerseItem = ({
   const setCurrentVerse = useColoringPageStore(
     (state) => state.setCurrentVerse
   );
-  const quranService = useQuran();
 
-  const onClickChapter = (verse: verseProps) => {
+  const onClickChapter = () => {
     gotoChapter(Number(verse.suraid));
     if (!isSelected) {
       setScrollKey(verse.key);
@@ -131,21 +131,14 @@ const SelectedVerseItem = ({
         </Button>
       }
     >
-      <Span color={"gray.400"} fontSize={"md"} paddingInlineEnd={"5px"}>
-        {index + 1}.
-      </Span>{" "}
-      {verse.versetext}{" "}
-      <Span whiteSpace="nowrap">
-        (
-        <ButtonVerse color={"inherit"} onClick={() => onClickChapter(verse)}>
-          {quranService.getChapterName(verse.suraid)}
-        </ButtonVerse>
-        :
-        <ButtonVerse color={"inherit"} onClick={() => onClickVerse()}>
-          {verse.verseid}
-        </ButtonVerse>
-        )
-      </Span>
+      <VerseIndex index={index} /> {verse.versetext}{" "}
+      <VerseRef
+        suraid={verse.suraid}
+        verseid={verse.verseid}
+        onClickChapter={onClickChapter}
+        onClickVerse={onClickVerse}
+        color="inherit"
+      />
     </BaseVerseItem>
   );
 };

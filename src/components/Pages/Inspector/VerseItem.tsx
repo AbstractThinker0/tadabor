@@ -6,9 +6,8 @@ import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
 import type { verseProps, rootProps } from "quran-tools";
 
-import { ButtonVerse } from "@/components/Generic/Buttons";
-
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
+import { VerseRef } from "@/components/Custom/VerseRef";
 
 import { Span } from "@chakra-ui/react";
 
@@ -86,7 +85,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
           </Span>{" "}
         </Span>
       ))}{" "}
-      <ButtonVerse onClick={onClickVerse}>{`(${verse.verseid})`}</ButtonVerse>
+      <VerseRef
+        suraid={verse.suraid}
+        verseid={verse.verseid}
+        onClickVerse={onClickVerse}
+      />
     </BaseVerseItem>
   );
 };
