@@ -1,22 +1,10 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
+import { usePageSidebarPanel } from "@/hooks/usePageSidebarPanel";
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 const ButtonSidebar = () => {
-  const showSearchPanel = useQuranBrowserPageStore(
-    (state) => state.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useQuranBrowserPageStore(
-    (state) => state.showSearchPanelMobile
-  );
-
-  const setSearchPanel = useQuranBrowserPageStore(
-    (state) => state.setSearchPanel
-  );
-
-  const onTogglePanel = (state: boolean) => {
-    setSearchPanel(state);
-  };
+  const { showSearchPanel, showSearchPanelMobile, onTogglePanel } =
+    usePageSidebarPanel(useQuranBrowserPageStore);
 
   return (
     <ButtonSidebarGeneric

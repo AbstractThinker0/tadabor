@@ -1,20 +1,10 @@
 import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
+import { usePageSidebarPanel } from "@/hooks/usePageSidebarPanel";
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 const ButtonSidebar = () => {
-  const showSearchPanel = useColoringPageStore(
-    (state) => state.showSearchPanel
-  );
-
-  const showSearchPanelMobile = useColoringPageStore(
-    (state) => state.showSearchPanelMobile
-  );
-
-  const setSearchPanel = useColoringPageStore((state) => state.setSearchPanel);
-
-  const onTogglePanel = (state: boolean) => {
-    setSearchPanel(state);
-  };
+  const { showSearchPanel, showSearchPanelMobile, onTogglePanel } =
+    usePageSidebarPanel(useColoringPageStore);
 
   return (
     <ButtonSidebarGeneric

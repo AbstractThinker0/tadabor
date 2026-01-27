@@ -1,19 +1,10 @@
+import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
+import { usePageSidebarPanel } from "@/hooks/usePageSidebarPanel";
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
-import { ButtonSidebar as ButtonSidebarGeneric } from "@/components/Generic/Buttons";
-
 const ButtonSidebar = () => {
-  const showSearchPanel = useTagsPageStore((state) => state.showSearchPanel);
-
-  const showSearchPanelMobile = useTagsPageStore(
-    (state) => state.showSearchPanelMobile
-  );
-
-  const setSearchPanel = useTagsPageStore((state) => state.setSearchPanel);
-
-  const onTogglePanel = (state: boolean) => {
-    setSearchPanel(state);
-  };
+  const { showSearchPanel, showSearchPanelMobile, onTogglePanel } =
+    usePageSidebarPanel(useTagsPageStore);
 
   return (
     <ButtonSidebarGeneric
