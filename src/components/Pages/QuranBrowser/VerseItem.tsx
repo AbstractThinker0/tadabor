@@ -36,6 +36,7 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
   const gotoChapter = useQuranBrowserPageStore((state) => state.gotoChapter);
 
   const toolInspect = useNavigationStore((state) => state.toolInspect);
+  const toolAudio = useNavigationStore((state) => state.toolAudio);
 
   const { value: isInspectorON, toggle: toggleInspector } = useBoolean();
   const { value: isRootListOpen, setValue: setRootListOpen } = useBoolean();
@@ -88,7 +89,9 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
               onClickInspect={toggleInspector}
             />
           )}
-          <ButtonAudio verseKey={verse.key} onClickAudio={onClickAudio} />
+          {toolAudio && (
+            <ButtonAudio verseKey={verse.key} onClickAudio={onClickAudio} />
+          )}
         </>
       }
       outerEndElement={

@@ -19,6 +19,7 @@ interface NavigationState {
   toolCopy: boolean;
   toolNote: boolean;
   toolInspect: boolean;
+  toolAudio: boolean;
   verseDisplay: VerseDisplay;
   isSmallScreen: boolean;
   isBetaVersion: boolean;
@@ -35,6 +36,7 @@ const getDefaultToolInspect = () =>
   localStorage.getItem(keyToolInspect) !== "false";
 const getDefaultVerseDisplay = () =>
   (localStorage.getItem(keyVerseDisplay) || "line") as VerseDisplay;
+const getDefaultToolAudio = () => localStorage.getItem("toolAudio") !== "false";
 
 const initialState: NavigationState = {
   currentPage: "",
@@ -44,6 +46,7 @@ const initialState: NavigationState = {
   toolNote: getDefaultToolNote(),
   toolInspect: getDefaultToolInspect(),
   verseDisplay: getDefaultVerseDisplay(),
+  toolAudio: getDefaultToolAudio(),
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
   isBetaVersion: localStorage.getItem("betaVersion") === "true",
   pageDirection: localStorage.getItem("i18nextLng") === null ? "rtl" : "ltr",
@@ -102,7 +105,12 @@ export const useNavigationStore = create(
         });
         localStorage.setItem(keyToolInspect, toolInspect ? "true" : "false");
       },
-
+      setToolAudio: (toolAudio: boolean) => {
+        set((state) => {
+          state.toolAudio = toolAudio;
+        });
+        localStorage.setItem("toolAudio", toolAudio ? "true" : "false");
+      },
       setVerseDisplay: (verseDisplay: string) => {
         set((state) => {
           state.verseDisplay = verseDisplay as VerseDisplay;

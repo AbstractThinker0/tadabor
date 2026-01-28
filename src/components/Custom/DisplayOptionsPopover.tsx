@@ -26,6 +26,7 @@ const DisplayOptionsPopover = () => {
   const toolCopy = useNavigationStore((state) => state.toolCopy);
   const toolNote = useNavigationStore((state) => state.toolNote);
   const toolInspect = useNavigationStore((state) => state.toolInspect);
+  const toolAudio = useNavigationStore((state) => state.toolAudio);
 
   const toggleCenterVersesAction = useNavigationStore(
     (state) => state.toggleCenterVerses
@@ -39,6 +40,8 @@ const DisplayOptionsPopover = () => {
   const setToolInspectAction = useNavigationStore(
     (state) => state.setToolInspect
   );
+
+  const setToolAudioAction = useNavigationStore((state) => state.setToolAudio);
 
   const toggleCenterVerses = () => {
     toggleCenterVersesAction();
@@ -180,6 +183,18 @@ const DisplayOptionsPopover = () => {
                           <Switch.HiddenInput />
                           <Switch.Control />
                           <Switch.Label>Inspect</Switch.Label>
+                        </Switch.Root>
+                      </Flex>
+
+                      {/* Audio Tool */}
+                      <Flex alignItems="center" gap={2} py={1}>
+                        <Switch.Root
+                          checked={toolAudio}
+                          onCheckedChange={(e) => setToolAudioAction(e.checked)}
+                        >
+                          <Switch.HiddenInput />
+                          <Switch.Control />
+                          <Switch.Label>Audio</Switch.Label>
                         </Switch.Root>
                       </Flex>
                     </Box>
