@@ -33,7 +33,7 @@ const RootComponent = memo(({ root, handleVerseTab }: RootComponentProps) => {
           <Button
             w={"7rem"}
             colorPalette="teal"
-            variant={"outline"}
+            variant={isOccurencesOpen ? "solid" : "outline"}
             onClick={setOccurencesOpen}
           >
             {t("derivations")} ({root.count})
