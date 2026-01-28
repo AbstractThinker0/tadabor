@@ -11,7 +11,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import { useBoolean } from "usehooks-ts";
 import { useState } from "react";
-import { Button } from "@chakra-ui/react";
+
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 import { ButtonInspect } from "@/components/Custom/ButtonInspect";
@@ -20,6 +20,7 @@ import {
   VerseInspected,
 } from "@/components/Custom/VerseInspected";
 import useQuran from "@/context/useQuran";
+import { ButtonAudio } from "@/components/Custom/ButtonAudio";
 
 interface VerseItemProps {
   verse: verseProps | verseMatchResult;
@@ -81,23 +82,13 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
       isSelected={isSelected}
       endElement={
         <>
-          <Button
-            background="none"
-            border="none"
-            onClick={onClickAudio}
-            width="6px"
-            height="36px"
-            fontSize="20px"
-            padding={0}
-          >
-            🔊
-          </Button>
           {toolInspect && (
             <ButtonInspect
               isActive={isInspectorON}
               onClickInspect={toggleInspector}
             />
           )}
+          <ButtonAudio verseKey={verse.key} onClickAudio={onClickAudio} />
         </>
       }
       outerEndElement={
