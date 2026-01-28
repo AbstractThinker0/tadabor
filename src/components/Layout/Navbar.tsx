@@ -10,6 +10,7 @@ import {
   Menu,
   Portal,
   Image,
+  IconButton,
 } from "@chakra-ui/react";
 
 import { MdMenu } from "react-icons/md";
@@ -31,6 +32,8 @@ import { VscInspect } from "react-icons/vsc";
 import { LuFileVolume } from "react-icons/lu";
 
 import { LuShield } from "react-icons/lu";
+
+import { IoMdSettings } from "react-icons/io";
 
 import SettingsModal from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
@@ -130,15 +133,17 @@ const Navbar = () => {
           <Flex flex={1} justifyContent="flex-end" alignItems="center">
             {isBackendEnabled && <NavbarUser />}
 
-            <Button
+            <IconButton
               aria-label="Settings"
               onClick={onOpen}
               variant="ghost"
               fontSize="large"
+              colorPalette={"blue"}
+              color="gray.400"
               padding={0}
             >
-              ⚙️
-            </Button>
+              <IoMdSettings />
+            </IconButton>
           </Flex>
         </Flex>
       </Box>
