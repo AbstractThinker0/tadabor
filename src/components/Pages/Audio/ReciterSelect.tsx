@@ -2,14 +2,14 @@ import { NativeSelect } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { reciters } from "@/util/reciters";
-import { useAudioPageStore } from "@/store/pages/audioPage";
+import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
 
 const ReciterSelect = () => {
   const { i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
 
-  const currentReciter = useAudioPageStore((state) => state.currentReciter);
-  const setCurrentReciter = useAudioPageStore(
+  const currentReciter = useAudioPlayerStore((state) => state.currentReciter);
+  const setCurrentReciter = useAudioPlayerStore(
     (state) => state.setCurrentReciter
   );
 

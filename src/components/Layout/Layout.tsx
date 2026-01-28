@@ -8,6 +8,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { QuranProvider } from "@/context/QuranProvider";
+import { AudioPlayerProvider } from "@/context/AudioPlayerProvider";
 
 import Navbar from "@/components/Layout/Navbar";
 import AlertMessage from "@/components/Layout/AlertMessage";
@@ -55,7 +56,9 @@ function Layout({ children }: PropsWithChildren) {
         <LocalNotesProvider>
           <CloudNotesProvider>
             <NotesProvider>
-              <QuranProvider>{children}</QuranProvider>
+              <QuranProvider>
+                <AudioPlayerProvider>{children}</AudioPlayerProvider>
+              </QuranProvider>
             </NotesProvider>
           </CloudNotesProvider>
         </LocalNotesProvider>

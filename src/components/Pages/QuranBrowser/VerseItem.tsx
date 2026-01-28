@@ -11,6 +11,8 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 import { useBoolean } from "usehooks-ts";
 import { useState } from "react";
+import { Button } from "@chakra-ui/react";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 import { ButtonInspect } from "@/components/Custom/ButtonInspect";
 import {
@@ -27,6 +29,8 @@ interface VerseItemProps {
 
 const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
   const quranService = useQuran();
+  const audioPlayer = useAudioPlayer();
+
   const setScrollKey = useQuranBrowserPageStore((state) => state.setScrollKey);
   const gotoChapter = useQuranBrowserPageStore((state) => state.gotoChapter);
 
@@ -63,6 +67,10 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
     setScrollKey(verse.key);
   };
 
+  const onClickAudio = () => {
+    audioPlayer.playVerse(verse);
+  };
+
   return (
     <BaseVerseItem
       rootProps={{
@@ -72,12 +80,25 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
       verseKey={verse.key}
       isSelected={isSelected}
       endElement={
-        toolInspect && (
-          <ButtonInspect
-            isActive={isInspectorON}
-            onClickInspect={toggleInspector}
-          />
-        )
+        <>
+          <Button
+            background="none"
+            border="none"
+            onClick={onClickAudio}
+            width="6px"
+            height="36px"
+            fontSize="20px"
+            padding={0}
+          >
+            🔊
+          </Button>
+          {toolInspect && (
+            <ButtonInspect
+              isActive={isInspectorON}
+              onClickInspect={toggleInspector}
+            />
+          )}
+        </>
       }
       outerEndElement={
         <RootsAccordion
