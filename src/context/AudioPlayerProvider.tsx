@@ -1,4 +1,9 @@
-import { useRef, useEffect, type PropsWithChildren } from "react";
+import {
+  useRef,
+  useEffect,
+  type PropsWithChildren,
+  useEffectEvent,
+} from "react";
 
 import { AudioPlayerContext } from "@/context/AudioPlayerContext";
 import useQuran from "@/context/useQuran";
@@ -90,7 +95,10 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
           const nextRank = verseRank + 1;
           const nextVerse = quranService.absoluteQuran[nextRank];
           if (nextVerse) {
+            // Pause and reset to prevent "aborted fetch" errors
+            audio.pause();
             audio.src = getVerseAudioURL(nextRank, currentReciter);
+            audio.load(); // Explicitly load the new source
             setCurrentVerse(nextVerse);
             audio.play();
             setIsPlaying(true);
@@ -122,17 +130,24 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
     setIsPlaying,
   ]);
 
-  // Update audio source when reciter changes
-  useEffect(() => {
+  const onReciterChange = useEffectEvent(() => {
     if (!currentVerse) return;
 
     const wasPlaying = isPlaying;
+    // Pause and reset to prevent "aborted fetch" errors
+    audio.pause();
     audio.src = getVerseAudioURL(currentVerse.rank, currentReciter);
+    audio.load(); // Explicitly load the new source
 
     if (wasPlaying) {
       audio.play();
     }
-  }, [audio, currentReciter, currentVerse, isPlaying]);
+  });
+
+  // Update audio source when reciter changes
+  useEffect(() => {
+    onReciterChange();
+  }, [currentReciter]);
 
   return (
     <AudioPlayerContext.Provider value={{ audioElement: audio }}>
