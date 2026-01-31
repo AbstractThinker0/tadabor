@@ -15,6 +15,7 @@ import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
 import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
+import { DisplayOptionsPopover } from "@/components/Custom/DisplayOptionsPopover";
 
 import { Box, HStack, Text, Span, Flex, Separator } from "@chakra-ui/react";
 
@@ -78,7 +79,7 @@ const ListSearchResults = ({
   const isRootSearch = searchingMethod === SEARCH_METHOD.ROOT ? true : false;
 
   return (
-    <Flex flex={1} flexDirection={"column"} p={1}>
+    <Flex flex={1} flexDirection={"column"}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
@@ -98,7 +99,7 @@ const ListSearchResults = ({
           {isPending ? (
             <LoadingSpinner text="Loading verses..." />
           ) : (
-            <Box dir="rtl" ref={refListVerses}>
+            <Box dir="rtl" ref={refListVerses} p={1}>
               {stateVerses.map((verse, index) => (
                 <VerseItem
                   key={verse.key}
@@ -147,7 +148,7 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   return (
     <Box>
-      <Flex alignItems={"center"} justifyContent={"space-between"}>
+      <Flex alignItems={"center"} justifyContent={"space-between"} px={1}>
         <ButtonSidebar />
         <Span
           paddingInlineStart={"0.25rem"}
@@ -156,7 +157,9 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
         >
           {searchChapters.length === 0 ? t("search.select_notice") : searchText}
         </Span>
-        <div></div>
+        <div>
+          <DisplayOptionsPopover />
+        </div>
       </Flex>
       {searchChapters.length !== 0 && searchChapters.length !== 114 && (
         <ChaptersTags searchChapters={searchChapters} />
