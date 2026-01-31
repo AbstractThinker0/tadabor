@@ -1,22 +1,6 @@
 export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
   {
-    ctx: {
-      user: {
-        id: number;
-        uuid: string;
-        username: string;
-        email: string;
-        password: string;
-        role: number;
-        description: string | null;
-        avatarSeed: string | null;
-      } | null;
-      clientVersion: string | undefined;
-      ipAddress: string;
-      userAgent: string;
-      newToken: string;
-      currentTokenId: number | null;
-    };
+    ctx: import("../types").TRPCContext;
     meta: object;
     errorShape: import("@trpc/server").TRPCDefaultErrorShape;
     transformer: false;
@@ -24,23 +8,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
   import("@trpc/server").TRPCDecorateCreateRouterOptions<{
     user: import("@trpc/server").TRPCBuiltRouter<
       {
-        ctx: {
-          user: {
-            id: number;
-            uuid: string;
-            username: string;
-            email: string;
-            password: string;
-            role: number;
-            description: string | null;
-            avatarSeed: string | null;
-          } | null;
-          clientVersion: string | undefined;
-          ipAddress: string;
-          userAgent: string;
-          newToken: string;
-          currentTokenId: number | null;
-        };
+        ctx: import("../types").TRPCContext;
         meta: object;
         errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
@@ -112,23 +80,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
     >;
     auth: import("@trpc/server").TRPCBuiltRouter<
       {
-        ctx: {
-          user: {
-            id: number;
-            uuid: string;
-            username: string;
-            email: string;
-            password: string;
-            role: number;
-            description: string | null;
-            avatarSeed: string | null;
-          } | null;
-          clientVersion: string | undefined;
-          ipAddress: string;
-          userAgent: string;
-          newToken: string;
-          currentTokenId: number | null;
-        };
+        ctx: import("../types").TRPCContext;
         meta: object;
         errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
@@ -208,23 +160,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
     >;
     notes: import("@trpc/server").TRPCBuiltRouter<
       {
-        ctx: {
-          user: {
-            id: number;
-            uuid: string;
-            username: string;
-            email: string;
-            password: string;
-            role: number;
-            description: string | null;
-            avatarSeed: string | null;
-          } | null;
-          clientVersion: string | undefined;
-          ipAddress: string;
-          userAgent: string;
-          newToken: string;
-          currentTokenId: number | null;
-        };
+        ctx: import("../types").TRPCContext;
         meta: object;
         errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
@@ -317,23 +253,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
     >;
     password: import("@trpc/server").TRPCBuiltRouter<
       {
-        ctx: {
-          user: {
-            id: number;
-            uuid: string;
-            username: string;
-            email: string;
-            password: string;
-            role: number;
-            description: string | null;
-            avatarSeed: string | null;
-          } | null;
-          clientVersion: string | undefined;
-          ipAddress: string;
-          userAgent: string;
-          newToken: string;
-          currentTokenId: number | null;
-        };
+        ctx: import("../types").TRPCContext;
         meta: object;
         errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
@@ -393,23 +313,7 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
     >;
     admin: import("@trpc/server").TRPCBuiltRouter<
       {
-        ctx: {
-          user: {
-            id: number;
-            uuid: string;
-            username: string;
-            email: string;
-            password: string;
-            role: number;
-            description: string | null;
-            avatarSeed: string | null;
-          } | null;
-          clientVersion: string | undefined;
-          ipAddress: string;
-          userAgent: string;
-          newToken: string;
-          currentTokenId: number | null;
-        };
+        ctx: import("../types").TRPCContext;
         meta: object;
         errorShape: import("@trpc/server").TRPCDefaultErrorShape;
         transformer: false;
@@ -492,10 +396,11 @@ export declare const appRouter: import("@trpc/server").TRPCBuiltRouter<
           };
           output: {
             id: number;
-            uuid: string;
             username: string;
             email: string;
             role: number;
+            description: string | null;
+            avatarSeed: string | null;
           };
           meta: object;
         }>;

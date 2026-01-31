@@ -77,3 +77,20 @@ export interface LettersDataByVerseType {
 export interface LettersPresetsType {
   [key: string]: string;
 }
+
+// Context types
+export interface TRPCContext {
+  user: User | null;
+  clientVersion: string | undefined;
+  userAgent: string;
+}
+
+type User = {
+  id: number;
+  uuid: string;
+  username: string;
+  email: string;
+  role: number;
+  description: string | null;
+  avatarSeed: string | null;
+};
