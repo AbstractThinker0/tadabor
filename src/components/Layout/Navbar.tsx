@@ -4,13 +4,15 @@ import { NavLink } from "react-router";
 
 import {
   Box,
+  Badge,
   Flex,
   Button,
   useDisclosure,
-  Menu,
   Portal,
   Image,
   IconButton,
+  Drawer,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import { MdMenu } from "react-icons/md";
@@ -104,29 +106,22 @@ const Navbar = () => {
 
           {/* Centered currentPage */}
           <Flex flex={1} justifyContent="center" alignItems="center">
-            <Box
-              textAlign="center"
-              px="0.5px"
-              py="0.5px"
+            <Flex
+              minW={"8rem"}
+              bgColor="bg"
+              justifyContent={"center"}
+              alignItems="center"
               borderRadius="sm"
+              border="1px solid"
+              borderColor="border.emphasized"
+              py="5px"
+              px={4}
+              fontSize={"lg"}
+              shadow={"sm"}
               lineHeight="short"
             >
-              <Flex
-                minW={"8rem"}
-                bgColor="bg"
-                justifyContent={"center"}
-                alignItems="center"
-                borderRadius="sm"
-                border="1px solid"
-                //borderColor="gray.400"
-                borderColor={"#e5e7eb"}
-                py="5px"
-                fontSize={"lg"}
-                shadow={"sm"}
-              >
-                {t(currentPage)}
-              </Flex>
-            </Box>
+              {t(currentPage)}
+            </Flex>
           </Flex>
 
           {/* Buttons */}
@@ -137,9 +132,10 @@ const Navbar = () => {
               aria-label="Settings"
               onClick={onOpen}
               variant="ghost"
-              fontSize="large"
+              size="md"
+              fontSize="2xl"
               colorPalette={"blue"}
-              color="gray.400"
+              color="fg.muted"
               padding={0}
             >
               <IoMdSettings />
@@ -158,134 +154,171 @@ const NavMenu = () => {
   const role = useUserStore((state) => state.role);
 
   return (
-    <Menu.Root>
-      <Menu.Trigger asChild>
-        <Button
-          bgColor={"bg"}
-          color={"fg"}
-          _hover={{ bg: "bg.emphasized" }}
-          _expanded={{ bg: "bg.emphasized" }}
-          px={1}
-        >
-          <MdMenu />
-          <Image borderRadius="2xl" boxSize="34px" src="/pwa-192x192.png" />
+    <Drawer.Root placement={"start"}>
+      <Drawer.Trigger asChild dir="inherit">
+        <Button variant="ghost" px={2} gap={2} _hover={{ bg: "bg.emphasized" }}>
+          <MdMenu size={24} />
+          <Box>
+            <Image borderRadius="2xl" boxSize="34px" src="/pwa-192x192.png" />
+            <Badge
+              position="absolute"
+              top="0"
+              insetEnd="-6"
+              size="xs"
+              colorPalette="orange"
+              textTransform="lowercase"
+            >
+              beta
+            </Badge>
+          </Box>
         </Button>
-      </Menu.Trigger>
+      </Drawer.Trigger>
       <Portal>
-        <Menu.Positioner>
-          <Menu.Content>
-            <MenuItem value="nav_browser" label={t("nav.browser")} to="/" />
-            <MenuItem
-              value="nav_roots"
-              label={t("nav.roots")}
-              to="/roots"
-              icon={<LuGitFork />}
-            />
-            <MenuItem
-              value="nav_translation"
-              label={t("nav.translation")}
-              to="/translation"
-              icon={<SiGoogletranslate />}
-            />
-            <MenuItem
-              value="nav_notes"
-              label={t("nav.notes")}
-              to="/notes"
-              icon={<TfiWrite />}
-            />
-            <MenuItem
-              value="nav_coloring"
-              label={t("nav.coloring")}
-              to="/coloring"
-              icon={<LuPalette />}
-            />
-            <MenuItem
-              value="nav_tags"
-              label={t("nav.tags")}
-              to="/tags"
-              icon={<LuTag />}
-            />
-            <MenuItem
-              value="nav_inspector"
-              label={t("nav.inspector")}
-              to="/inspector"
-              icon={<VscInspect />}
-            />
-            <MenuItem
-              value="nav_comparator"
-              label={t("nav.comparator")}
-              to="/comparator"
-              icon={<FaBalanceScale />}
-            />
-            <MenuItem
-              value="nav_searcher"
-              label={t("nav.searcher")}
-              to="/searcher"
-              icon={<LuScanSearch />}
-            />
-            <MenuItem
-              value="nav_searcher2"
-              label={t("nav.searcher2")}
-              to="/searcher2"
-              icon={<LuTextSearch />}
-            />
-            <MenuItem
-              value="nav_letters"
-              label={t("nav.letters")}
-              to="/letters"
-              icon={<FaRegPenToSquare />}
-            />
-            <MenuItem
-              value="nav_audio"
-              label={t("nav.audio")}
-              to="/audio"
-              icon={<LuFileVolume />}
-            />
-            <MenuItem
-              value="nav_about"
-              label={t("nav.about")}
-              to="/about"
-              icon={<LuFileQuestion />}
-            />
+        <Drawer.Backdrop />
+        <Drawer.Positioner>
+          <Drawer.Content>
+            <Drawer.Header
+              padding={4}
+              borderBottomWidth="1px"
+              borderColor="border.emphasized"
+            >
+              <Flex justifyContent={"space-between"} alignItems="center">
+                <Flex alignItems="center" gap={3}>
+                  <Image
+                    borderRadius="2xl"
+                    boxSize="34px"
+                    src="/pwa-192x192.png"
+                  />
+                  <Box
+                    position="relative"
+                    fontFamily={"Scheherazade New"}
+                    fontWeight="bold"
+                    fontSize="2xl"
+                    color={"#0088aa"}
+                  >
+                    تدبر
+                    <Badge
+                      position="absolute"
+                      top="-1"
+                      insetEnd="-6"
+                      size="xs"
+                      colorPalette="orange"
+                      textTransform="lowercase"
+                    >
+                      beta
+                    </Badge>
+                  </Box>
+                </Flex>
+                <Drawer.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Drawer.CloseTrigger>
+              </Flex>
+            </Drawer.Header>
+            <Drawer.Body padding={2}>
+              <Flex flexDirection={"column"} gap={1}>
+                <MenuItem label={t("nav.browser")} to="/" />
+                <MenuItem
+                  label={t("nav.roots")}
+                  to="/roots"
+                  icon={<LuGitFork />}
+                />
+                <MenuItem
+                  label={t("nav.translation")}
+                  to="/translation"
+                  icon={<SiGoogletranslate />}
+                />
+                <MenuItem
+                  label={t("nav.notes")}
+                  to="/notes"
+                  icon={<TfiWrite />}
+                />
+                <MenuItem
+                  label={t("nav.coloring")}
+                  to="/coloring"
+                  icon={<LuPalette />}
+                />
+                <MenuItem label={t("nav.tags")} to="/tags" icon={<LuTag />} />
+                <MenuItem
+                  label={t("nav.inspector")}
+                  to="/inspector"
+                  icon={<VscInspect />}
+                />
+                <MenuItem
+                  label={t("nav.comparator")}
+                  to="/comparator"
+                  icon={<FaBalanceScale />}
+                />
+                <MenuItem
+                  label={t("nav.searcher")}
+                  to="/searcher"
+                  icon={<LuScanSearch />}
+                />
+                <MenuItem
+                  label={t("nav.searcher2")}
+                  to="/searcher2"
+                  icon={<LuTextSearch />}
+                />
+                <MenuItem
+                  label={t("nav.letters")}
+                  to="/letters"
+                  icon={<FaRegPenToSquare />}
+                />
+                <MenuItem
+                  label={t("nav.audio")}
+                  to="/audio"
+                  icon={<LuFileVolume />}
+                />
+                <MenuItem
+                  label={t("nav.about")}
+                  to="/about"
+                  icon={<LuFileQuestion />}
+                />
 
-            {role === 1 && (
-              <MenuItem
-                value="nav_admin"
-                label={t("nav.admin")}
-                to="/admin"
-                icon={<LuShield />}
-              />
-            )}
-          </Menu.Content>
-        </Menu.Positioner>
+                {role === 1 && (
+                  <MenuItem
+                    label={t("nav.admin")}
+                    to="/admin"
+                    icon={<LuShield />}
+                  />
+                )}
+              </Flex>
+            </Drawer.Body>
+            <Drawer.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Drawer.CloseTrigger>
+          </Drawer.Content>
+        </Drawer.Positioner>
       </Portal>
-    </Menu.Root>
+    </Drawer.Root>
   );
 };
 
 interface MenuItemProps {
-  value: string;
   label: string;
   to: string;
   icon?: React.ReactNode;
 }
 
-const MenuItem = ({ value, label, to, icon }: MenuItemProps) => {
+const MenuItem = ({ label, to, icon }: MenuItemProps) => {
   const displayIcon = icon ? icon : <TbTableDashed />;
 
   return (
-    <Menu.Item
+    <Button
       _currentPage={{ bgColor: "bg.emphasized" }}
       lineHeight={"normal"}
       fontSize="large"
-      value={value}
+      gap={3}
+      justifyContent="flex-start"
+      alignItems={"center"}
+      padding={2}
+      variant={"ghost"}
       asChild
     >
       <NavLink to={to}>
         {displayIcon}
         {label}
       </NavLink>
-    </Menu.Item>
+    </Button>
   );
 };
 
