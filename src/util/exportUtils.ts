@@ -44,28 +44,26 @@ const htmlContainer = (data: string) => {
   return `<html><head>${htmlStyle}</head><body><div dir='rtl'>${data}</div></body></html>`;
 };
 
-export const downloadNotesFile = (data: any, filename: string) => {
-  const blob = new Blob([JSON.stringify(data)], {
-    type: "application/json;charset=utf-8",
-  });
+const downloadBlob = (blob: Blob, filename: string) => {
   const downloadLink = document.createElement("a");
   downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = `${filename}.json`;
+  downloadLink.download = filename;
   document.body.appendChild(downloadLink);
   downloadLink.click();
   URL.revokeObjectURL(downloadLink.href);
   document.body.removeChild(downloadLink);
 };
 
+export const downloadNotesFile = (data: any, filename: string) => {
+  const blob = new Blob([JSON.stringify(data)], {
+    type: "application/json;charset=utf-8",
+  });
+  downloadBlob(blob, `${filename}.json`);
+};
+
 export const downloadHtmlFile = (data: string, filename: string) => {
   const blob = new Blob([htmlContainer(data)], {
     type: "text/html;charset=utf-8",
   });
-  const downloadLink = document.createElement("a");
-  downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = `${filename}.html`;
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  URL.revokeObjectURL(downloadLink.href);
-  document.body.removeChild(downloadLink);
+  downloadBlob(blob, `${filename}.html`);
 };
