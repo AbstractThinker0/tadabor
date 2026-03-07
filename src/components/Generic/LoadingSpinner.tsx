@@ -22,4 +22,4 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => {
   );
 };
 
-export default LoadingSpinner;
+export { LoadingSpinner };

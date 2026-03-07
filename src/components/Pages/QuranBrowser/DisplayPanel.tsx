@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
-import ListSearchResults from "@/components/Pages/QuranBrowser/ListSearchResults";
-import ListVerses from "@/components/Pages/QuranBrowser/ListVerses";
+import { ListSearchResults } from "@/components/Pages/QuranBrowser/ListSearchResults";
+import { ListVerses } from "@/components/Pages/QuranBrowser/ListVerses";
 import { Flex } from "@chakra-ui/react";
 
 const DisplayPanel = () => {
@@ -52,4 +52,4 @@ const DisplayPanel = () => {
 
 DisplayPanel.displayName = "DisplayPanel";
 
-export default DisplayPanel;
+export { DisplayPanel };

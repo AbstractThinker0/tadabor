@@ -13,14 +13,14 @@ import {
 import { useUserStore } from "@/store/global/userStore";
 import { PasswordInput } from "@/components/ui/password-input";
 import { usePageNav } from "@/hooks/usePageNav";
-import useScreenSize from "@/hooks/useScreenSize";
+import { useScreenSize } from "@/hooks/useScreenSize";
 import { NavLink } from "react-router";
 import { validator } from "@/util/validators";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { tryCatch } from "@/util/trycatch";
 
-import TextareaAutosize from "@/components/Note/TextareaAutosize";
+import { TextareaAutosize } from "@/components/Note/TextareaAutosize";
 import {
   useUserUpdateBio,
   useConnectedDevices,
@@ -39,7 +39,7 @@ import { FaDesktop } from "react-icons/fa";
 import { FaTabletAlt } from "react-icons/fa";
 import { FaMobileAlt } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 import { useNavigationStore } from "@/store/global/navigationStore";
 

@@ -2,13 +2,13 @@ import { useTranslation } from "react-i18next";
 
 import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
-import PanelQuran from "@/components/Custom/PanelQuran";
+import { PanelQuran } from "@/components/Custom/PanelQuran";
 import { Sidebar } from "@/components/Generic/Sidebar";
 
 import { Flex, Tabs } from "@chakra-ui/react";
 
-import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
-import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
+import { SearcherDisplay } from "@/components/Pages/Searcher/SearcherDisplay";
+import { SearcherSide } from "@/components/Pages/Searcher/SearcherSide";
 import { usePageNav } from "@/hooks/usePageNav";
 
 const Searcher = () => {

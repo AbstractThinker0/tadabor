@@ -108,4 +108,4 @@ const AlphabetsComponent = () => {
   );
 };
 
-export default SearchForm;
+export { SearchForm };

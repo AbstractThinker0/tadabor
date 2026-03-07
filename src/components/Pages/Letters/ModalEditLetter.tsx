@@ -3,14 +3,14 @@ import { useTranslation } from "react-i18next";
 
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
-import TextareaToolbar from "@/components/Note/TextareaToolbar";
+import { TextareaToolbar } from "@/components/Note/TextareaToolbar";
 
 import { Dialog, Button, ButtonGroup } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { toaster } from "@/components/ui/toaster";
 
-import TextareaAutosize from "@/components/Note/TextareaAutosize";
+import { TextareaAutosize } from "@/components/Note/TextareaAutosize";
 
 interface ModalEditLetterProps {
   isOpen: boolean;
@@ -127,4 +127,4 @@ const ModalEditLetter = ({
   );
 };
 
-export default ModalEditLetter;
+export { ModalEditLetter };

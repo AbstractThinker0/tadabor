@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useNavigationStore } from "@/store/global/navigationStore";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 const EnableBeta = () => {
   const { t } = useTranslation();

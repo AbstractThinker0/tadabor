@@ -2,10 +2,10 @@ import { useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import type { rootProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { InputString } from "@/components/Generic/Input";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
@@ -171,4 +171,4 @@ const RootItem = ({ root, isSelected }: RootItemProps) => {
   );
 };
 
-export default SearcherSide;
+export { SearcherSide };

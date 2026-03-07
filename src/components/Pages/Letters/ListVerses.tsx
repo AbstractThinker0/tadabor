@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState, useTransition, memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useSettingsStore } from "@/store/global/settingsStore";
 import { useLettersPageStore } from "@/store/pages/lettersPage";
@@ -15,9 +15,9 @@ import {
   type verseProps,
 } from "quran-tools";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import {
   Box,
@@ -473,4 +473,4 @@ const InfoBox = ({
   );
 };
 
-export default ListVerses;
+export { ListVerses };

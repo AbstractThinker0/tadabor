@@ -114,4 +114,4 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
   );
 };
 
-export default ModalCreatePreset;
+export { ModalCreatePreset };

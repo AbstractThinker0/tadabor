@@ -1,17 +1,17 @@
 import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
-import ChaptersList from "@/components/Custom/ChaptersList";
+import { ChaptersList } from "@/components/Custom/ChaptersList";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
-import Display from "@/components/Pages/Inspector/Display";
+import { Display } from "@/components/Pages/Inspector/Display";
 
 import { Box, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
-function Inspector() {
+const Inspector = () => {
   usePageNav("nav.inspector");
   const currentChapter = useInspectorPageStore((state) => state.currentChapter);
   const setCurrentChapter = useInspectorPageStore(
@@ -59,6 +59,6 @@ function Inspector() {
       )}
     </Flex>
   );
-}
+};
 
 export default Inspector;

@@ -3,7 +3,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useNavigationStore } from "@/store/global/navigationStore";
 
 import { NoteTitle } from "@/components/Note/NoteTitle";
-import TextareaToolbar from "@/components/Note/TextareaToolbar";
+import { TextareaToolbar } from "@/components/Note/TextareaToolbar";
 
 import { ButtonCopy } from "@/components/Custom/ButtonCopy";
 

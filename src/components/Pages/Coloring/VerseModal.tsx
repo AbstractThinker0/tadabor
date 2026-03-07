@@ -2,7 +2,7 @@ import { useEffect, useEffectEvent, useState } from "react";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { colorProps } from "@/components/Pages/Coloring/consts";
 import { getTextColor } from "@/components/Pages/Coloring/util";
@@ -11,7 +11,7 @@ import { Dialog, Button, Box, Flex, ButtonGroup } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 
 interface VerseModalProps {
   isOpen: boolean;
@@ -153,4 +153,4 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
   );
 };
 
-export default VerseModal;
+export { VerseModal };

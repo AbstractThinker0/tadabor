@@ -7,7 +7,7 @@ import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 import { VerseIndex } from "@/components/Custom/VerseIndex";
 import { VerseRef } from "@/components/Custom/VerseRef";
 
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { VerseHighlightMatches } from "@/components/Generic/VerseHighlightMatches";
 
 import { useBoolean } from "usehooks-ts";
 import { useState } from "react";
@@ -19,7 +19,7 @@ import {
   RootsAccordion,
   VerseInspected,
 } from "@/components/Custom/VerseInspected";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { ButtonAudio } from "@/components/Custom/ButtonAudio";
 
 interface VerseItemProps {

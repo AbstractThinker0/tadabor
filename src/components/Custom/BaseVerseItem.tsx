@@ -3,7 +3,7 @@ import { useNavigationStore } from "@/store/global/navigationStore";
 import { Box, Span, type BoxProps } from "@chakra-ui/react";
 
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 import { ButtonCopyVerse } from "@/components/Custom/ButtonCopyVerse";
 
 import { ButtonExpand } from "@/components/Generic/Buttons";

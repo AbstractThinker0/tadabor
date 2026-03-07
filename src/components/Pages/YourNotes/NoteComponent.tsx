@@ -1,6 +1,6 @@
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 
 import { NoteForm } from "@/components/Note/NoteForm";
 
@@ -8,7 +8,7 @@ interface NoteComponentProps {
   noteID: string;
 }
 
-function NoteComponent({ noteID }: NoteComponentProps) {
+const NoteComponent = ({ noteID }: NoteComponentProps) => {
   const quranService = useQuran();
 
   const [noteType, noteKey] = noteID.split(":");
@@ -28,7 +28,6 @@ function NoteComponent({ noteID }: NoteComponentProps) {
 
   return (
     <NoteForm
-      isOpen={true}
       noteID={noteID}
       renderHeader={
         <VerseContainer displayMode="default" center>
@@ -38,6 +37,6 @@ function NoteComponent({ noteID }: NoteComponentProps) {
       rootProps={{ shadow: "sm" }}
     />
   );
-}
+};
 
-export default NoteComponent;
+export { NoteComponent };

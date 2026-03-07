@@ -6,7 +6,7 @@ import type { colorProps } from "@/components/Pages/Coloring/consts";
 
 import { Box, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 
-import DeleteColorModal from "@/components/Pages/Coloring/DeleteColorModal";
+import { DeleteColorModal } from "@/components/Pages/Coloring/DeleteColorModal";
 
 const ColorsList = () => {
   const { open: isOpen, onOpen, onClose } = useDisclosure();
@@ -87,4 +87,4 @@ const ColorsList = () => {
   );
 };
 
-export default ColorsList;
+export { ColorsList };

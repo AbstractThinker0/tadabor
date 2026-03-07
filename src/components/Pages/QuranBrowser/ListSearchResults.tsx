@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { verseMatchResult } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { VerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 import { ButtonSidebar } from "@/components/Pages/QuranBrowser/ButtonSidebar";
@@ -228,4 +228,4 @@ const SearchErrorsComponent = ({
   );
 };
 
-export default ListSearchResults;
+export { ListSearchResults };

@@ -6,10 +6,10 @@ import {
 } from "react";
 
 import { AudioPlayerContext } from "@/context/AudioPlayerContext";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
 import { getVerseAudioURL } from "@/util/audioData";
-import AudioPlayer from "@/components/Pages/Audio/AudioPlayer";
+import { AudioPlayer } from "@/components/Pages/Audio/AudioPlayer";
 
 /**
  * Custom hook to prefetch audio for upcoming verses

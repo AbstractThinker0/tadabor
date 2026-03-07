@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import { Box, Flex } from "@chakra-ui/react";
 
-import TextareaAutosize from "@/components/Note/TextareaAutosize";
+import { TextareaAutosize } from "@/components/Note/TextareaAutosize";
 import { ButtonCancel, ButtonSave } from "@/components/Generic/Buttons";
 import { TextareaHeader } from "@/components/Note/TextareaHeader";
 
@@ -141,4 +141,4 @@ const TextareaNoteFooter = ({
 };
 
 export { TextareaNoteContainer, TextareaNoteEditor, TextareaNoteFooter };
-export default TextareaNote;
+export { TextareaNote };

@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 
 import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
-import PanelRoots from "@/components/Pages/RootsBrowser/PanelRoots";
+import { PanelRoots } from "@/components/Pages/RootsBrowser/PanelRoots";
 
-import PanelQuran from "@/components/Custom/PanelQuran";
+import { PanelQuran } from "@/components/Custom/PanelQuran";
 
 import { Tabs } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";

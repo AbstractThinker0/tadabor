@@ -4,8 +4,8 @@ import { Box, Flex } from "@chakra-ui/react";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
-import ChaptersList from "@/components/Custom/ChaptersList";
-import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
+import { ChaptersList } from "@/components/Custom/ChaptersList";
+import { DisplayPanel } from "@/components/Pages/Translation/DisplayPanel";
 
 import { usePageNav } from "@/hooks/usePageNav";
 

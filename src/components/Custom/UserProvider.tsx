@@ -3,7 +3,7 @@ import { useEffect, useEffectEvent } from "react";
 import { useUserStore } from "@/store/global/userStore";
 
 import { useAuth } from "@/hooks/useAuth";
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { useUserRefresh } from "@/services/backend";
 
 interface UserProviderProps {
@@ -72,4 +72,4 @@ const UserProvider = ({ children }: UserProviderProps) => {
   return <>{children}</>;
 };
 
-export default UserProvider;
+export { UserProvider };

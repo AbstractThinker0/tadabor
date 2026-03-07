@@ -1,4 +1,4 @@
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useComparatorPageStore } from "@/store/pages/comparatorPage";
 import type { verseProps } from "quran-tools";
 import { Box, Flex, NativeSelect } from "@chakra-ui/react";
@@ -80,4 +80,4 @@ const Menu = ({
   );
 };
 
-export default Menu;
+export { Menu };

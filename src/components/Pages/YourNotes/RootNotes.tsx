@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
-import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
-import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
-import NoteSortSelect from "@/components/Pages/YourNotes/NoteSortSelect";
+import { NoteComponent } from "@/components/Pages/YourNotes/NoteComponent";
+import { BackupComponent } from "@/components/Pages/YourNotes/BackupComponent";
+import { NoteSortSelect } from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
@@ -60,4 +60,4 @@ const NotesList = () => {
   );
 };
 
-export default RootNotes;
+export { RootNotes };

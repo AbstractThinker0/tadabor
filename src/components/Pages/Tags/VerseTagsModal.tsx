@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
@@ -8,14 +8,14 @@ import { Dialog, Button, ButtonGroup, Box, Flex } from "@chakra-ui/react";
 
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 
 interface VerseTagModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
+const VerseTagsModal = ({ isOpen, onClose }: VerseTagModalProps) => {
   const tags = useTagsPageStore((state) => state.tags);
 
   const currentVerse = useTagsPageStore((state) => state.currentVerse);
@@ -150,6 +150,6 @@ function VerseTagsModal({ isOpen, onClose }: VerseTagModalProps) {
       </DialogContent>
     </Dialog.Root>
   );
-}
+};
 
-export default VerseTagsModal;
+export { VerseTagsModal };

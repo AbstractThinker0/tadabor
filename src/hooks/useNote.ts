@@ -20,7 +20,6 @@ interface useNoteParams {
   noteID?: string;
   noteType?: "verse" | "root" | "translation";
   noteKey?: string;
-  isVisible?: boolean;
 }
 
 export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {

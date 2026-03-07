@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 

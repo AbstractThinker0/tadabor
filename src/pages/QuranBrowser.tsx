@@ -1,14 +1,14 @@
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 import { Flex } from "@chakra-ui/react";
 
-import SearchPanel from "@/components/Pages/QuranBrowser/SearchPanel";
-import DisplayPanel from "@/components/Pages/QuranBrowser/DisplayPanel";
+import { SearchPanel } from "@/components/Pages/QuranBrowser/SearchPanel";
+import { DisplayPanel } from "@/components/Pages/QuranBrowser/DisplayPanel";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
 import { usePageNav } from "@/hooks/usePageNav";
 
-function QuranBrowser() {
+const QuranBrowser = () => {
   usePageNav("nav.browser");
   const showSearchPanel = useQuranBrowserPageStore(
     (state) => state.showSearchPanel
@@ -34,6 +34,6 @@ function QuranBrowser() {
       <DisplayPanel />
     </Flex>
   );
-}
+};
 
 export default QuranBrowser;

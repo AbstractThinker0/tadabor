@@ -2,15 +2,15 @@ import { useEffect, useState, useTransition } from "react";
 
 import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
-import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
+import { SearchForm } from "@/components/Pages/RootsBrowser/SearchForm";
 
 import { RootComponent } from "@/components/Pages/RootsBrowser/RootComponent";
 
 import type { rootProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
@@ -108,4 +108,4 @@ const PanelRoots = () => {
   );
 };
 
-export default PanelRoots;
+export { PanelRoots };

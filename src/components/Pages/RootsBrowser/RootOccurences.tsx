@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, useTransition } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { RootVerse } from "@/components/Pages/RootsBrowser/RootVerse";
 

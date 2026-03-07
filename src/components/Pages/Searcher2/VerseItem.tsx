@@ -4,14 +4,14 @@ import { useBoolean } from "usehooks-ts";
 import { useSearcher2PageStore } from "@/store/pages/searcher2Page";
 import { useNavigationStore } from "@/store/global/navigationStore";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { rootProps, verseMatchResult } from "quran-tools";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { VerseHighlightMatches } from "@/components/Generic/VerseHighlightMatches";
 import { Span } from "@chakra-ui/react";
 
 import { ButtonInspect } from "@/components/Custom/ButtonInspect";

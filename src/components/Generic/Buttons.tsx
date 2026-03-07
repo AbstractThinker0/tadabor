@@ -12,7 +12,7 @@ import { MdOutlineMenu } from "react-icons/md";
 
 import { MdOutlineNoteAlt } from "react-icons/md";
 
-import useScreenSize from "@/hooks/useScreenSize";
+import { useScreenSize } from "@/hooks/useScreenSize";
 
 const ButtonCancel = (props: ButtonProps) => {
   const { t } = useTranslation();

@@ -24,4 +24,4 @@ const VerseHighlightMatches = ({ verse }: VerseHighlightMatchesProps) => {
   );
 };
 
-export default VerseHighlightMatches;
+export { VerseHighlightMatches };

@@ -28,4 +28,4 @@ const NoteSortSelect = ({ sortBy, onSortChange }: NoteSortSelectProps) => {
     );
 };
 
-export default NoteSortSelect;
+export { NoteSortSelect };

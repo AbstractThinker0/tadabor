@@ -16,6 +16,8 @@ import { dbColors } from "@/util/dbFuncs";
 
 import { tryCatch } from "@/util/trycatch";
 
+const keyDefaultColorsInitiated = "defaultColorsInitiated";
+
 interface ColoringPageState {
   currentChapter: number;
   colorsList: coloredProps;
@@ -82,7 +84,7 @@ export const useColoringPageStore = create(
         });
 
         // Check if first time opening colors page
-        if (localStorage.getItem("defaultColorsInitiated") === null) {
+        if (localStorage.getItem(keyDefaultColorsInitiated) === null) {
           // First time: create default colors
           const defaultColorsToSave: IColor[] = Object.values(
             DEFAULT_COLORS
@@ -105,7 +107,7 @@ export const useColoringPageStore = create(
             return;
           }
 
-          localStorage.setItem("defaultColorsInitiated", "true");
+          localStorage.setItem(keyDefaultColorsInitiated, "true");
 
           set((state) => {
             state.colorsList = { ...DEFAULT_COLORS };

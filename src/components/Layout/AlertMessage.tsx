@@ -36,4 +36,4 @@ const AlertMessage = () => {
   );
 };
 
-export default AlertMessage;
+export { AlertMessage };

@@ -8,7 +8,7 @@ const LAST_SW_CHECK_KEY = "lastSWCheck";
 const SW_CHECK_INTERVAL_MS = 120 * 60000; // 2 hours
 const UPDATE_CHECK_INTERVAL_MS = 15 * 60000; // 15 minute
 
-function ReloadPrompt() {
+const ReloadPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(true);
   const [updatePending, setUpdatePending] = useState(false);
 
@@ -132,6 +132,6 @@ function ReloadPrompt() {
       )}
     </Box>
   );
-}
+};
 
-export default ReloadPrompt;
+export { ReloadPrompt };

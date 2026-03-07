@@ -8,7 +8,7 @@ import { useTagsPageStore } from "@/store/pages/tagsPage";
 import { Box, Input } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 
-import FormModal from "@/components/Generic/FormModal";
+import { FormModal } from "@/components/Generic/FormModal";
 
 interface AddTagModalProps {
   isOpen: boolean;
@@ -76,4 +76,4 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
   );
 };
 
-export default AddTagModal;
+export { AddTagModal };

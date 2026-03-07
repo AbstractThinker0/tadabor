@@ -25,4 +25,4 @@ const TextareaAutosize = (props: TextareaProps) => {
   );
 };
 
-export default TextareaAutosize;
+export { TextareaAutosize };

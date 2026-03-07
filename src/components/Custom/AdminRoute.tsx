@@ -2,7 +2,7 @@ import { Navigate } from "react-router";
 
 import { useUserStore } from "@/store/global/userStore";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
 
 interface AdminRouteProps {
@@ -33,4 +33,4 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children, minRole = 1 }) => {
   return <>{children}</>;
 };
 
-export default AdminRoute;
+export { AdminRoute };

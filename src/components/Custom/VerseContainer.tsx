@@ -41,4 +41,4 @@ const VerseContainer = ({
   );
 };
 
-export default VerseContainer;
+export { VerseContainer };

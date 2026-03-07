@@ -28,4 +28,4 @@ const TextareaToolbar = ({ handleSetDirection }: TextareaToolbarProps) => {
   );
 };
 
-export default TextareaToolbar;
+export { TextareaToolbar };

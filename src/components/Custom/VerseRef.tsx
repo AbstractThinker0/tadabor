@@ -1,6 +1,6 @@
 import { Span } from "@chakra-ui/react";
 import { ButtonVerse } from "@/components/Generic/Buttons";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 interface VerseRefProps {
   suraid: string;

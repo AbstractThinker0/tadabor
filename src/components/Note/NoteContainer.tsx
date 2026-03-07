@@ -226,4 +226,4 @@ const NoteContainerFooter = ({
   );
 };
 
-export default NoteContainer;
+export { NoteContainer };

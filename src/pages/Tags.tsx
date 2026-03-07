@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { Sidebar } from "@/components/Generic/Sidebar";
 
-import TagsSide from "@/components/Pages/Tags/TagsSide";
-import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
+import { TagsSide } from "@/components/Pages/Tags/TagsSide";
+import { TagsDisplay } from "@/components/Pages/Tags/TagsDisplay";
 
 import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
-function Tags() {
+const Tags = () => {
   usePageNav("nav.tags");
 
   const complete = useTagsPageStore((state) => state.complete);
@@ -48,6 +48,6 @@ function Tags() {
       <TagsDisplay />
     </Flex>
   );
-}
+};
 
 export default Tags;

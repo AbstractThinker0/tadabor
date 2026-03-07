@@ -1,14 +1,14 @@
 import { useEffect, useState, useTransition, type RefObject } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useSettingsStore } from "@/store/global/settingsStore";
 import type { translationsProps } from "@/types";
 import type { verseProps } from "quran-tools";
 
 import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { Box, Flex, Span } from "@chakra-ui/react";
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
@@ -152,7 +152,6 @@ const VerseItem = ({
         <Box color={"fg.muted"}>Your translation</Box>
         <NoteForm
           rootProps={{ bgColor: "inherit" }}
-          isOpen={true}
           noteKey={verse.key}
           noteType="translation"
         />
@@ -161,4 +160,4 @@ const VerseItem = ({
   );
 };
 
-export default Display;
+export { Display };

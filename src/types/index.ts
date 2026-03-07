@@ -40,11 +40,6 @@ export interface ChangeNotePayload {
   value: string;
 }
 
-export interface ChangeNoteDirPayload {
-  name: string;
-  value: string;
-}
-
 export interface MarkSavedPayload<T> {
   saveData: T;
 }

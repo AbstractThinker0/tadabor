@@ -1,7 +1,7 @@
 import { useNavigationStore } from "@/store/global/navigationStore";
 import { useEffect, useEffectEvent } from "react";
 
-const HookResizeEvent = () => {
+const ResizeListener = () => {
   const setSmallScreen = useNavigationStore((state) => state.setSmallScreen);
 
   const updateScreenSize = useEffectEvent(() => {
@@ -43,5 +43,5 @@ const useScreenSize = () => {
   return isSmallScreen;
 };
 
-export { HookResizeEvent };
-export default useScreenSize;
+export { ResizeListener };
+export { useScreenSize };

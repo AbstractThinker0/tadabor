@@ -1,8 +1,8 @@
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { verseMatchResult } from "quran-tools";
 
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { VerseHighlightMatches } from "@/components/Generic/VerseHighlightMatches";
 
 import { Span } from "@chakra-ui/react";
 

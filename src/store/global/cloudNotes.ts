@@ -6,7 +6,6 @@ import type { ICloudNote } from "@/types/db";
 import { dbNotes } from "@/util/dbFuncs";
 
 import type {
-  ChangeNoteDirPayload,
   ChangeNotePayload,
   CloudNoteProps,
   MarkSavedPayload,
@@ -223,7 +222,7 @@ export const useCloudNotesStore = create(
         });
       },
 
-      changeNoteDir: (payload: ChangeNoteDirPayload) => {
+      changeNoteDir: (payload: ChangeNotePayload) => {
         const { name: id, value } = payload;
         set((state) => {
           const note = state.data[id];

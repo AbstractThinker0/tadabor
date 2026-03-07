@@ -4,7 +4,7 @@ import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 
 import { quranClass } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { QuranContext } from "@/context/QuranContext";
 
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";

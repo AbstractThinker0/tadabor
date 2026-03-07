@@ -1,10 +1,10 @@
 import { useEffect, useState, useTransition, useRef } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { verseProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
@@ -114,4 +114,4 @@ const VerseItem = ({
   );
 };
 
-export default PanelQuran;
+export { PanelQuran };

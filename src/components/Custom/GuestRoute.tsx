@@ -2,7 +2,7 @@ import { Navigate } from "react-router";
 
 import { useUserStore } from "@/store/global/userStore";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { useTranslation } from "react-i18next";
 
 import { useBackend } from "@/hooks/useBackend";
@@ -44,4 +44,4 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default GuestRoute;
+export { GuestRoute };

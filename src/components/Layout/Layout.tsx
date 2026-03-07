@@ -10,20 +10,20 @@ import { useTranslation } from "react-i18next";
 import { QuranProvider } from "@/context/QuranProvider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerProvider";
 
-import Navbar from "@/components/Layout/Navbar";
-import AlertMessage from "@/components/Layout/AlertMessage";
+import { Navbar } from "@/components/Layout/Navbar";
+import { AlertMessage } from "@/components/Layout/AlertMessage";
 
 import { Flex } from "@chakra-ui/react";
 
-import UserProvider from "@/components/Custom/UserProvider";
-import NotesProvider from "@/components/Custom/NotesProvider";
+import { UserProvider } from "@/components/Custom/UserProvider";
+import { NotesProvider } from "@/components/Custom/NotesProvider";
 
-import { HookResizeEvent } from "@/hooks/useScreenSize";
+import { ResizeListener } from "@/hooks/useScreenSize";
 import { useNavigationStore } from "@/store/global/navigationStore";
-import LocalNotesProvider from "@/components/Custom/LocalNotesProvider";
-import CloudNotesProvider from "@/components/Custom/CloudNotesProvider";
+import { LocalNotesProvider } from "@/components/Custom/LocalNotesProvider";
+import { CloudNotesProvider } from "@/components/Custom/CloudNotesProvider";
 
-function Layout({ children }: PropsWithChildren) {
+const Layout = ({ children }: PropsWithChildren) => {
   const refMain = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
   const setPageDirection = useNavigationStore(
@@ -63,9 +63,9 @@ function Layout({ children }: PropsWithChildren) {
           </CloudNotesProvider>
         </LocalNotesProvider>
       </UserProvider>
-      <HookResizeEvent />
+      <ResizeListener />
     </Flex>
   );
-}
+};
 
-export default Layout;
+export { Layout };

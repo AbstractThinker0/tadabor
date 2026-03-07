@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 
 import { useUserStore } from "@/store/global/userStore";
@@ -165,4 +165,4 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   return <>{children}</>;
 };
 
-export default CloudNotesProvider;
+export { CloudNotesProvider };

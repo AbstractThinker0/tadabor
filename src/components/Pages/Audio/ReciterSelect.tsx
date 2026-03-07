@@ -31,4 +31,4 @@ const ReciterSelect = () => {
   );
 };
 
-export default ReciterSelect;
+export { ReciterSelect };

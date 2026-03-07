@@ -1,11 +1,11 @@
 import { memo, useMemo, useState } from "react";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
 import type { rootProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { Box, Flex } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
@@ -148,4 +148,4 @@ const RootItem = ({ root, isSelected, handleRootSelect }: RootItemProps) => {
   );
 };
 
-export default SelectionListRoots;
+export { SelectionListRoots };

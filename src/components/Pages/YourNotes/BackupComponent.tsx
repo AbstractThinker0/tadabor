@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { downloadHtmlFile, downloadNotesFile, htmlNote } from "@/util/exportUtils";
 
-import BackupForm from "@/components/Pages/YourNotes/BackupForm";
+import { BackupForm } from "@/components/Pages/YourNotes/BackupForm";
 
 import { useNotesStore } from "@/hooks/useNotesStore";
 
@@ -100,4 +100,4 @@ const BackupComponent: React.FC<BackupComponentProps> = ({ noteType }) => {
   );
 };
 
-export default BackupComponent;
+export { BackupComponent };

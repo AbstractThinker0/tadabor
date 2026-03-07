@@ -1,16 +1,16 @@
 import { useEffect, useTransition, useState, useCallback } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import type { verseProps } from "quran-tools";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { ListTitle } from "@/components/Pages/Coloring/ListTitle";
 import { SelectedContainer } from "@/components/Pages/Coloring/SelectedContainer";
 
-import VerseModal from "@/components/Pages/Coloring/VerseModal";
+import { VerseModal } from "@/components/Pages/Coloring/VerseModal";
 import { VerseItem } from "@/components/Pages/Coloring/VerseItem";
 
 import { Box, Flex, useDisclosure } from "@chakra-ui/react";
@@ -113,4 +113,4 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
   );
 };
 
-export default VersesSide;
+export { VersesSide };

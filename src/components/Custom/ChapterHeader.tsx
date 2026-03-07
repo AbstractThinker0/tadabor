@@ -1,4 +1,4 @@
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { Flex } from "@chakra-ui/react";
 import { ButtonSidebar } from "@/components/Generic/Buttons";

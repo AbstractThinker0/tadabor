@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import { ListTitle } from "@/components/Pages/Letters/ListTitle";
-import ListVerses from "@/components/Pages/Letters/ListVerses";
+import { ListVerses } from "@/components/Pages/Letters/ListVerses";
 import { Box, Flex } from "@chakra-ui/react";
 
 const Display = () => {
@@ -42,4 +42,4 @@ const Display = () => {
   );
 };
 
-export default Display;
+export { Display };

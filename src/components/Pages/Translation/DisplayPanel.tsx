@@ -1,12 +1,12 @@
 import { useRef, useState, useTransition, useEffect, useCallback } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useTranslationPageStore } from "@/store/pages/translationPage";
 
 import type { verseProps } from "quran-tools";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { CollapsibleNote } from "@/components/Note/CollapsibleNote";
 
@@ -188,4 +188,4 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
   );
 };
 
-export default DisplayPanel;
+export { DisplayPanel };

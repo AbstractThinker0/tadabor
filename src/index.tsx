@@ -5,11 +5,11 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import "@/i18n";
 
-import App from "@/App";
+import { App } from "@/App";
 
-import Layout from "@/components/Layout/Layout";
+import { Layout } from "@/components/Layout/Layout";
 
-import AppProviders from "@/components/Custom/AppProviders";
+import { AppProviders } from "@/components/Custom/AppProviders";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

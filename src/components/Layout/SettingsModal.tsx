@@ -16,7 +16,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
-import VerseContainer from "@/components/Custom/VerseContainer";
+import { VerseContainer } from "@/components/Custom/VerseContainer";
 import { NoteText } from "@/components/Note/NoteText";
 
 import {
@@ -276,4 +276,4 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   );
 };
 
-export default SettingsModal;
+export { SettingsModal };

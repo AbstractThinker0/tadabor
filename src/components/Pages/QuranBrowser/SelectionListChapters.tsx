@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
@@ -146,4 +146,4 @@ const SelectionListChapters = ({
 
 SelectionListChapters.displayName = "SelectionListChapters";
 
-export default SelectionListChapters;
+export { SelectionListChapters };

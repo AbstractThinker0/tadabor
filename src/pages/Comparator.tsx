@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useTranslationsStore } from "@/store/global/translations";
 import { useComparatorPageStore } from "@/store/pages/comparatorPage";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import Display from "@/components/Pages/Comparator/Display";
-import Menu from "@/components/Pages/Comparator/Menu";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
+import { Display } from "@/components/Pages/Comparator/Display";
+import { Menu } from "@/components/Pages/Comparator/Menu";
 
 import { Alert, CloseButton, Spacer, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
-function Comparator() {
+const Comparator = () => {
   usePageNav("nav.comparator");
   const refVerseList = useRef<HTMLDivElement>(null);
   const quranService = useQuran();
@@ -97,7 +97,7 @@ function Comparator() {
       />
     </Flex>
   );
-}
+};
 
 const TransAlert = () => {
   const localStorageTransKey = "transNotified";

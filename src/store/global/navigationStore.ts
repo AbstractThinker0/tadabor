@@ -8,6 +8,9 @@ const keyToolCopy = "toolCopy";
 const keyToolNote = "toolNote";
 const keyToolInspect = "toolInspect";
 const keyVerseDisplay = "verseDisplay";
+const keyToolAudio = "toolAudio";
+const keyBetaVersion = "betaVersion";
+const keyI18nextLng = "i18nextLng";
 
 export type ToolsMode = "expanded" | "collapsed" | "hidden";
 export type VerseDisplay = "line" | "panel" | "continous";
@@ -36,7 +39,8 @@ const getDefaultToolInspect = () =>
   localStorage.getItem(keyToolInspect) !== "false";
 const getDefaultVerseDisplay = () =>
   (localStorage.getItem(keyVerseDisplay) || "line") as VerseDisplay;
-const getDefaultToolAudio = () => localStorage.getItem("toolAudio") !== "false";
+const getDefaultToolAudio = () =>
+  localStorage.getItem(keyToolAudio) !== "false";
 
 const initialState: NavigationState = {
   currentPage: "",
@@ -48,8 +52,8 @@ const initialState: NavigationState = {
   verseDisplay: getDefaultVerseDisplay(),
   toolAudio: getDefaultToolAudio(),
   isSmallScreen: window.innerWidth <= 768 || window.innerHeight <= 480,
-  isBetaVersion: localStorage.getItem("betaVersion") === "true",
-  pageDirection: localStorage.getItem("i18nextLng") === null ? "rtl" : "ltr",
+  isBetaVersion: localStorage.getItem(keyBetaVersion) === "true",
+  pageDirection: localStorage.getItem(keyI18nextLng) === null ? "rtl" : "ltr",
 };
 
 export const useNavigationStore = create(
@@ -109,7 +113,7 @@ export const useNavigationStore = create(
         set((state) => {
           state.toolAudio = toolAudio;
         });
-        localStorage.setItem("toolAudio", toolAudio ? "true" : "false");
+        localStorage.setItem(keyToolAudio, toolAudio ? "true" : "false");
       },
       setVerseDisplay: (verseDisplay: string) => {
         set((state) => {
@@ -128,7 +132,7 @@ export const useNavigationStore = create(
         set((state) => {
           state.isBetaVersion = isBetaVersion;
         });
-        localStorage.setItem("betaVersion", isBetaVersion ? "true" : "false");
+        localStorage.setItem(keyBetaVersion, isBetaVersion ? "true" : "false");
       },
 
       setPageDirection: (pageDirection: string) => {

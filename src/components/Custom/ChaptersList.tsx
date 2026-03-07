@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { Box } from "@chakra-ui/react";
 import { InputString } from "@/components/Generic/Input";
 
@@ -98,4 +98,4 @@ const ChaptersList = ({
   );
 };
 
-export default ChaptersList;
+export { ChaptersList };

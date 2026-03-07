@@ -12,4 +12,4 @@ const useQuran = () => {
   return quranInstance;
 };
 
-export default useQuran;
+export { useQuran };

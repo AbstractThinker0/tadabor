@@ -7,7 +7,7 @@ import { useColoringPageStore } from "@/store/pages/coloringPage";
 import { Box, Input } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 
-import FormModal from "@/components/Generic/FormModal";
+import { FormModal } from "@/components/Generic/FormModal";
 
 interface AddColorModalProps {
   isOpen: boolean;
@@ -84,4 +84,4 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
   );
 };
 
-export default AddColorModal;
+export { AddColorModal };

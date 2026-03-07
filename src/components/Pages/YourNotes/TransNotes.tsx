@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 
-import NoteComponent from "@/components/Pages/YourNotes/NoteComponent";
-import BackupComponent from "@/components/Pages/YourNotes/BackupComponent";
-import NoteSortSelect from "@/components/Pages/YourNotes/NoteSortSelect";
+import { NoteComponent } from "@/components/Pages/YourNotes/NoteComponent";
+import { BackupComponent } from "@/components/Pages/YourNotes/BackupComponent";
+import { NoteSortSelect } from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useNotesStore } from "@/hooks/useNotesStore";
@@ -60,4 +60,4 @@ const TransNotes = () => {
   );
 };
 
-export default TransNotes;
+export { TransNotes };

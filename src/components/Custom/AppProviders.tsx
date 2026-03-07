@@ -7,7 +7,7 @@ import { QueryProvider } from "@/components/Custom/QueryProvider";
 import { UIProvider } from "@/components/ui/provider";
 import { Toaster, ToasterBottom } from "@/components/ui/ToasterProvider";
 
-import ReloadPrompt from "@/components/Generic/ReloadPrompt";
+import { ReloadPrompt } from "@/components/Generic/ReloadPrompt";
 
 const AppProviders = ({ children }: { children: React.ReactNode }) => (
   <UIProvider>
@@ -22,4 +22,4 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => (
   </UIProvider>
 );
 
-export default AppProviders;
+export { AppProviders };

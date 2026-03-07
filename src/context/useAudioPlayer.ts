@@ -14,4 +14,4 @@ const useAudioPlayerContext = () => {
   return context;
 };
 
-export default useAudioPlayerContext;
+export { useAudioPlayerContext };

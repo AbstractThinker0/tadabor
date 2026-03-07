@@ -4,15 +4,15 @@ import { useColoringPageStore } from "@/store/pages/coloringPage";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
-import VersesSide from "@/components/Pages/Coloring/VersesSide";
-import ChaptersSide from "@/components/Pages/Coloring/ChaptersSide";
+import { VersesSide } from "@/components/Pages/Coloring/VersesSide";
+import { ChaptersSide } from "@/components/Pages/Coloring/ChaptersSide";
 import { Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
 import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
-function Coloring() {
+const Coloring = () => {
   usePageNav("nav.coloring");
 
   const complete = useColoringPageStore((state) => state.complete);
@@ -55,6 +55,6 @@ function Coloring() {
       <VersesSide />
     </Flex>
   );
-}
+};
 
 export default Coloring;

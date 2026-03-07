@@ -5,7 +5,7 @@ import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip-mobile";
 
 import { MdOutlineCheckCircle } from "react-icons/md";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useTranslation } from "react-i18next";
 
 interface NoteTitleProps {

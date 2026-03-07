@@ -1,12 +1,12 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useAudioPageStore } from "@/store/pages/audioPage";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 import type { verseProps } from "quran-tools";
 
-import ChaptersList from "@/components/Custom/ChaptersList";
+import { ChaptersList } from "@/components/Custom/ChaptersList";
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { Sidebar } from "@/components/Generic/Sidebar";

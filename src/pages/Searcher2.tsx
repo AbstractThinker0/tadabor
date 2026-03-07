@@ -3,16 +3,16 @@ import { useTranslation } from "react-i18next";
 
 import { useSearcher2PageStore } from "@/store/pages/searcher2Page";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import type { verseMatchResult } from "quran-tools";
 
-import PanelQuran from "@/components/Custom/PanelQuran";
+import { PanelQuran } from "@/components/Custom/PanelQuran";
 
 import { Box, Flex, HStack, Spinner, Tabs } from "@chakra-ui/react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { InputString } from "@/components/Generic/Input";
 

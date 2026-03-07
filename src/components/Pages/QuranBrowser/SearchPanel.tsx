@@ -1,9 +1,9 @@
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
-import SelectionListChapters from "@/components/Pages/QuranBrowser/SelectionListChapters";
-import SelectionListRoots from "@/components/Pages/QuranBrowser/SelectionListRoots";
+import { SelectionListChapters } from "@/components/Pages/QuranBrowser/SelectionListChapters";
+import { SelectionListRoots } from "@/components/Pages/QuranBrowser/SelectionListRoots";
 
 import {
   SearchOptions,
@@ -79,4 +79,4 @@ const SearchPanel = () => {
 
 SearchPanel.displayName = "SearchPanel";
 
-export default SearchPanel;
+export { SearchPanel };

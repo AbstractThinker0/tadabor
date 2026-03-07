@@ -1,6 +1,6 @@
 import { CloseButton, Collapsible, Drawer, Portal } from "@chakra-ui/react";
 
-import useScreenSize from "@/hooks/useScreenSize";
+import { useScreenSize } from "@/hooks/useScreenSize";
 
 interface SidebarProps {
   isOpenMobile: boolean;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
 
@@ -10,7 +10,7 @@ import { Box } from "@chakra-ui/react";
 
 import { VerseItem } from "@/components/Pages/QuranBrowser/VerseItem";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 const ListVerses = () => {
@@ -110,4 +110,4 @@ const ListBody = () => {
   );
 };
 
-export default ListVerses;
+export { ListVerses };

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import type { verseMatchResult } from "quran-tools";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useSearcherPageStore } from "@/store/pages/searcherPage";
 
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
@@ -10,9 +10,9 @@ import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 import { ButtonSidebar } from "@/components/Pages/Searcher/ButtonSidebar";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { VerseHighlightMatches } from "@/components/Generic/VerseHighlightMatches";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { Flex, Span, Tag } from "@chakra-ui/react";
 
@@ -190,4 +190,4 @@ const VerseItem = ({ verseMatch, isSelected, index }: VerseItemProps) => {
   );
 };
 
-export default SearcherDisplay;
+export { SearcherDisplay };

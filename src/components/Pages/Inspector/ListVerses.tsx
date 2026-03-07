@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
@@ -8,7 +8,7 @@ import type { verseProps } from "quran-tools";
 
 import { VerseItem } from "@/components/Pages/Inspector/VerseItem";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { Flex } from "@chakra-ui/react";
 
@@ -73,4 +73,4 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
   );
 };
 
-export default ListVerses;
+export { ListVerses };

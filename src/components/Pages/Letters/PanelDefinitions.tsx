@@ -5,10 +5,10 @@ import { useLettersPageStore } from "@/store/pages/lettersPage";
 
 import { arabicAlphabetDefault } from "@/util/consts";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
-import ModalEditLetter from "@/components/Pages/Letters/ModalEditLetter";
-import ModalCreatePreset from "@/components/Pages/Letters/ModalCreatePreset";
+import { ModalEditLetter } from "@/components/Pages/Letters/ModalEditLetter";
+import { ModalCreatePreset } from "@/components/Pages/Letters/ModalCreatePreset";
 
 import {
   Box,
@@ -189,4 +189,4 @@ const ItemLetter = ({
   );
 };
 
-export default PanelDefinitions;
+export { PanelDefinitions };

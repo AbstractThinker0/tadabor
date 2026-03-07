@@ -17,12 +17,7 @@ const CollapsibleNote = ({
 }: CollapsibleNoteProps) => {
   return (
     <CollapsibleGeneric isOpen={isOpen}>
-      <NoteForm
-        isOpen={isOpen}
-        noteID={noteID}
-        noteKey={noteKey}
-        noteType={noteType}
-      />
+      <NoteForm noteID={noteID} noteKey={noteKey} noteType={noteType} />
     </CollapsibleGeneric>
   );
 };

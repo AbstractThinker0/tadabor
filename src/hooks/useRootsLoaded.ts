@@ -1,4 +1,4 @@
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 import { useEffect, useState } from "react";
 
 export const useRootsLoaded = () => {

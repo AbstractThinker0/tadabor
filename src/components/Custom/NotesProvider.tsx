@@ -46,4 +46,4 @@ const NotesProvider = ({ children }: NotesProviderProps) => {
   return <>{children}</>;
 };
 
-export default NotesProvider;
+export { NotesProvider };

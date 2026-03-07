@@ -4,7 +4,7 @@ import { useTagsPageStore } from "@/store/pages/tagsPage";
 import { Box, Span } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 
-import ConfirmationModal from "@/components/Generic/ConfirmationModal";
+import { ConfirmationModal } from "@/components/Generic/ConfirmationModal";
 
 interface DeleteTagModalProps {
   isOpen: boolean;
@@ -69,4 +69,4 @@ const DeleteTagModal = ({
   );
 };
 
-export default DeleteTagModal;
+export { DeleteTagModal };

@@ -3,15 +3,15 @@ import { memo, useEffect, useRef, useState, useTransition } from "react";
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { verseProps } from "quran-tools";
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import type {
   tagsProps,
   versesTagsProps,
 } from "@/components/Pages/Tags/consts";
-import VerseTagsModal from "@/components/Pages/Tags/VerseTagsModal";
+import { VerseTagsModal } from "@/components/Pages/Tags/VerseTagsModal";
 import { ListTitle } from "@/components/Pages/Tags/ListTitle";
 import { ButtonSidebar } from "@/components/Pages/Tags/ButtonSidebar";
 
@@ -20,7 +20,7 @@ import { SelectedVerseItem } from "@/components/Pages/Tags/VerseItem";
 
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 
-function TagsDisplay() {
+const TagsDisplay = () => {
   const selectedTags = useTagsPageStore((state) => state.selectedTags);
 
   const { open, onOpen, onClose } = useDisclosure();
@@ -50,7 +50,7 @@ function TagsDisplay() {
       <VerseTagsModal isOpen={open} onClose={onClose} />
     </Flex>
   );
-}
+};
 
 interface SelectedContainerProps {
   onOpenVerseModal: () => void;
@@ -177,12 +177,12 @@ interface SelectedVersesProps {
   onOpenVerseModal: () => void;
 }
 
-function SelectedVerses({
+const SelectedVerses = ({
   selectedTags,
   versesTags,
   tags,
   onOpenVerseModal,
-}: SelectedVersesProps) {
+}: SelectedVersesProps) => {
   const quranService = useQuran();
 
   const refVerses = useRef<HTMLDivElement>(null);
@@ -244,7 +244,7 @@ function SelectedVerses({
       )}
     </Box>
   );
-}
+};
 
 interface ListVersesProps {
   onOpenVerseModal: () => void;
@@ -323,4 +323,4 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
 
 ListVerses.displayName = "ListVerses";
 
-export default TagsDisplay;
+export { TagsDisplay };

@@ -2,8 +2,8 @@ import { memo, useCallback } from "react";
 
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
-import Display from "@/components/Pages/Letters/Display";
-import ChaptersList from "@/components/Custom/ChaptersList";
+import { Display } from "@/components/Pages/Letters/Display";
+import { ChaptersList } from "@/components/Custom/ChaptersList";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
 
@@ -75,4 +75,4 @@ const PanelQuran = memo(
 
 PanelQuran.displayName = "PanelQuran";
 
-export default PanelQuran;
+export { PanelQuran };

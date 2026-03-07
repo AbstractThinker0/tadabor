@@ -22,10 +22,10 @@ const PasswordReset = lazy(() => import("@/pages/PasswordReset"));
 const EnableBeta = lazy(() => import("@/pages/EnableBeta"));
 const Admin = lazy(() => import("@/pages/Admin"));
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
-import ProtectedRoute from "@/components/Custom/ProtectedRoute";
-import GuestRoute from "@/components/Custom/GuestRoute";
-import AdminRoute from "@/components/Custom/AdminRoute";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
+import { ProtectedRoute } from "@/components/Custom/ProtectedRoute";
+import { GuestRoute } from "@/components/Custom/GuestRoute";
+import { AdminRoute } from "@/components/Custom/AdminRoute";
 
 const App = () => {
   return (
@@ -84,4 +84,4 @@ const App = () => {
   );
 };
 
-export default App;
+export { App };

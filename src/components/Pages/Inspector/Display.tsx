@@ -4,7 +4,7 @@ import { useInspectorPageStore } from "@/store/pages/inspectorPage";
 
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
-import ListVerses from "@/components/Pages/Inspector/ListVerses";
+import { ListVerses } from "@/components/Pages/Inspector/ListVerses";
 import { Box, Flex } from "@chakra-ui/react";
 
 const ListTitle = () => {
@@ -73,4 +73,4 @@ const Display = ({ currentChapter }: DisplayProps) => {
   );
 };
 
-export default Display;
+export { Display };

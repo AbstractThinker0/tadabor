@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import type { rootProps, verseMatchResult } from "quran-tools";
 
 import { ButtonVerse } from "@/components/Generic/Buttons";
 
-import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { VerseHighlightMatches } from "@/components/Generic/VerseHighlightMatches";
 
 import { DerivationsComponent } from "@/components/Custom/DerivationsComponent";
 

@@ -44,4 +44,4 @@ const BackupForm = ({
   );
 };
 
-export default BackupForm;
+export { BackupForm };

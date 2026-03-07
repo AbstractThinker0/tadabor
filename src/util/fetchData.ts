@@ -17,41 +17,11 @@ async function fetchJsonPerm(url: string) {
   return response.json();
 }
 
-const fetchChapters = (): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    fetchJsonPerm("/chapters.json")
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
+const fetchChapters = () => fetchJsonPerm("/chapters.json");
 
-const fetchQuran = (): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    fetchJsonPerm("/quran_v2.json")
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
+const fetchQuran = () => fetchJsonPerm("/quran_v2.json");
 
-const fetchRoots = (): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    fetchJsonPerm("/quranRoots-0.0.18.json")
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
+const fetchRoots = () => fetchJsonPerm("/quranRoots-0.0.18.json");
 
 const fetchTranslations = async () => {
   interface transListProps {

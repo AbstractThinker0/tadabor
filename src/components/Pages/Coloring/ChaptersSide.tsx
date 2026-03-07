@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
-import AddColorModal from "@/components/Pages/Coloring/AddColorModal";
+import { AddColorModal } from "@/components/Pages/Coloring/AddColorModal";
 
-import EditColorsModal from "@/components/Pages/Coloring/EditColorsModal";
-import ColorsList from "@/components/Pages/Coloring/ColorsList";
+import { EditColorsModal } from "@/components/Pages/Coloring/EditColorsModal";
+import { ColorsList } from "@/components/Pages/Coloring/ColorsList";
 import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 
@@ -137,4 +137,4 @@ const VersesCount = () => {
   );
 };
 
-export default ChaptersSide;
+export { ChaptersSide };

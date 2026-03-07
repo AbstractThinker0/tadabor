@@ -37,7 +37,7 @@ import { LuShield } from "react-icons/lu";
 
 import { IoMdSettings } from "react-icons/io";
 
-import SettingsModal from "@/components/Layout/SettingsModal";
+import { SettingsModal } from "@/components/Layout/SettingsModal";
 import { NavbarUser } from "@/components/Layout/NavbarUser";
 
 import { useNavigationStore } from "@/store/global/navigationStore";
@@ -322,4 +322,4 @@ const MenuItem = ({ label, to, icon }: MenuItemProps) => {
   );
 };
 
-export default Navbar;
+export { Navbar };

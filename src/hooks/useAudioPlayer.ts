@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import type { verseProps } from "quran-tools";
 
-import useQuran from "@/context/useQuran";
-import useAudioPlayerContext from "@/context/useAudioPlayer";
+import { useQuran } from "@/context/useQuran";
+import { useAudioPlayerContext } from "@/context/useAudioPlayer";
 import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
 import { getVerseAudioURL } from "@/util/audioData";
 

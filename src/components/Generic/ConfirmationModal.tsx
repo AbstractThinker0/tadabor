@@ -61,4 +61,4 @@ const ConfirmationModal = ({
   );
 };
 
-export default ConfirmationModal;
+export { ConfirmationModal };

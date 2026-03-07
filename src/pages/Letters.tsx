@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
-import PanelDefinitions from "@/components/Pages/Letters/PanelDefinitions";
-import PanelQuran from "@/components/Pages/Letters/PanelQuran";
+import { PanelDefinitions } from "@/components/Pages/Letters/PanelDefinitions";
+import { PanelQuran } from "@/components/Pages/Letters/PanelQuran";
 
 import { Tabs } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";

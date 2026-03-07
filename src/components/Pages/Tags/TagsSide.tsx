@@ -2,14 +2,14 @@ import { useTranslation } from "react-i18next";
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
 import type { tagProps } from "@/components/Pages/Tags/consts";
-import AddTagModal from "@/components/Pages/Tags/AddTagModal";
-import DeleteTagModal from "@/components/Pages/Tags/DeleteTagModal";
+import { AddTagModal } from "@/components/Pages/Tags/AddTagModal";
+import { DeleteTagModal } from "@/components/Pages/Tags/DeleteTagModal";
 
 import { Box, Flex, Button, Text, useDisclosure } from "@chakra-ui/react";
 import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 import type { selectedChaptersType } from "@/types";
 
-function TagsSide() {
+const TagsSide = () => {
   const versesTags = useTagsPageStore((state) => state.versesTags);
   const selectTag = useTagsPageStore((state) => state.selectTag);
 
@@ -83,7 +83,7 @@ function TagsSide() {
       <VersesCount />
     </Flex>
   );
-}
+};
 
 interface SideListProps {
   onClickSelectTag(tag: tagProps): void;
@@ -221,4 +221,4 @@ const VersesCount = () => {
   );
 };
 
-export default TagsSide;
+export { TagsSide };

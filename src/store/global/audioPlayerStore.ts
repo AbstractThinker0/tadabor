@@ -5,12 +5,14 @@ import { immer } from "zustand/middleware/immer";
 import type { verseProps } from "quran-tools";
 import { DEFAULT_RECITER_ID } from "@/util/reciters";
 
-const defaultAutoPlay = localStorage.getItem("audioAutoPlay")
-  ? localStorage.getItem("audioAutoPlay") === "true"
+const keyAutoPlay = "audioAutoPlay";
+const keyReciter = "audioReciter";
+
+const defaultAutoPlay = localStorage.getItem(keyAutoPlay)
+  ? localStorage.getItem(keyAutoPlay) === "true"
   : true;
 
-const defaultReciter =
-  localStorage.getItem("audioReciter") || DEFAULT_RECITER_ID;
+const defaultReciter = localStorage.getItem(keyReciter) || DEFAULT_RECITER_ID;
 
 interface AudioPlayerState {
   currentVerse: verseProps | null;
@@ -46,7 +48,7 @@ export const useAudioPlayerStore = create(
         set((state) => {
           state.currentReciter = reciterId;
         });
-        localStorage.setItem("audioReciter", reciterId);
+        localStorage.setItem(keyReciter, reciterId);
       },
       setDuration: (duration: number) => {
         set((state) => {
@@ -67,7 +69,7 @@ export const useAudioPlayerStore = create(
         set((state) => {
           state.autoPlay = autoPlay;
         });
-        localStorage.setItem("audioAutoPlay", autoPlay ? "true" : "false");
+        localStorage.setItem(keyAutoPlay, autoPlay ? "true" : "false");
       },
       setPlayerVisible: (visible: boolean) => {
         set((state) => {

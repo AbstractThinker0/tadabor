@@ -3,7 +3,7 @@ import { Button, Flex, HStack, IconButton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { LuX } from "react-icons/lu";
 
-import ReciterSelect from "@/components/Pages/Audio/ReciterSelect";
+import { ReciterSelect } from "@/components/Pages/Audio/ReciterSelect";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
@@ -151,4 +151,4 @@ const AudioPlayer = () => {
   );
 };
 
-export default AudioPlayer;
+export { AudioPlayer };

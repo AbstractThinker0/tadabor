@@ -2,15 +2,14 @@ import { useState } from "react";
 
 import { Box, type BoxProps } from "@chakra-ui/react";
 
-import TextareaNote from "@/components/Note/TextareaNote";
-import NoteContainer from "@/components/Note/NoteContainer";
+import { TextareaNote } from "@/components/Note/TextareaNote";
+import { NoteContainer } from "@/components/Note/NoteContainer";
 
-import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { useNote } from "@/hooks/useNote";
 
 interface NoteFormProps {
-  isOpen: boolean;
   noteID?: string;
   noteType?: "verse" | "root" | "translation";
   noteKey?: string;
@@ -19,7 +18,6 @@ interface NoteFormProps {
 }
 
 const NoteForm = ({
-  isOpen,
   noteID,
   noteType,
   noteKey,
@@ -30,7 +28,6 @@ const NoteForm = ({
     noteID,
     noteType,
     noteKey,
-    isVisible: isOpen,
   });
 
   const [isEditable, setEditable] = useState(note.text ? false : true);

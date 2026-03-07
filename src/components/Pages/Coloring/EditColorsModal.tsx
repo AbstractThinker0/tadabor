@@ -130,4 +130,4 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
   );
 };
 
-export default EditColorsModal;
+export { EditColorsModal };

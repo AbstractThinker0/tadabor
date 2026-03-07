@@ -2,7 +2,9 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-const defaultChapter = localStorage.getItem("audioChapter") || "1";
+const keyAudioChapter = "audioChapter";
+
+const defaultChapter = localStorage.getItem(keyAudioChapter) || "1";
 
 interface AudioPageState {
   currentChapter: string;
@@ -23,7 +25,7 @@ export const useAudioPageStore = create(
         set((state) => {
           state.currentChapter = currentChapter;
         });
-        localStorage.setItem("audioChapter", currentChapter);
+        localStorage.setItem(keyAudioChapter, currentChapter);
       },
       setSearchPanel: (isOpen: boolean) => {
         set((state) => {

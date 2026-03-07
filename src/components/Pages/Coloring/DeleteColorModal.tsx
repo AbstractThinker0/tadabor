@@ -4,7 +4,7 @@ import { getTextColor } from "@/components/Pages/Coloring/util";
 
 import { Text, Span } from "@chakra-ui/react";
 
-import ConfirmationModal from "@/components/Generic/ConfirmationModal";
+import { ConfirmationModal } from "@/components/Generic/ConfirmationModal";
 
 interface DeleteColorModalProps {
   isOpen: boolean;
@@ -62,4 +62,4 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
   );
 };
 
-export default DeleteColorModal;
+export { DeleteColorModal };

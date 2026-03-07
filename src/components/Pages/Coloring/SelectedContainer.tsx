@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
-import useQuran from "@/context/useQuran";
+import { useQuran } from "@/context/useQuran";
 
 import { Box, Flex, Tag, Text } from "@chakra-ui/react";
 
@@ -138,11 +138,11 @@ interface SelectedVersesProps {
   openVerseModal: () => void;
 }
 
-function SelectedVerses({
+const SelectedVerses = ({
   coloredVerses,
   selectedColors,
   openVerseModal,
-}: SelectedVersesProps) {
+}: SelectedVersesProps) => {
   const quranService = useQuran();
 
   const scrollKey = useColoringPageStore((state) => state.scrollKey);
@@ -205,6 +205,6 @@ function SelectedVerses({
       )}
     </Box>
   );
-}
+};
 
 export { SelectedContainer };
