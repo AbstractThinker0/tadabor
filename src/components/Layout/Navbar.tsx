@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
@@ -153,8 +153,18 @@ const NavMenu = () => {
 
   const role = useUserStore((state) => state.role);
 
+  const [open, setOpen] = useState(false);
+
+  const closeMenu = () => {
+    setOpen(false);
+  };
+
   return (
-    <Drawer.Root placement={"start"}>
+    <Drawer.Root
+      placement={"start"}
+      open={open}
+      onOpenChange={(e) => setOpen(e.open)}
+    >
       <Drawer.Trigger asChild dir="inherit">
         <Button variant="ghost" px={2} gap={2} _hover={{ bg: "bg.emphasized" }}>
           <MdMenu size={24} />
@@ -216,59 +226,79 @@ const NavMenu = () => {
             </Drawer.Header>
             <Drawer.Body padding={2}>
               <Flex flexDirection={"column"} gap={1}>
-                <MenuItem label={t("nav.browser")} to="/" />
                 <MenuItem
+                  closeMenu={closeMenu}
+                  label={t("nav.browser")}
+                  to="/"
+                />
+                <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.roots")}
                   to="/roots"
                   icon={<LuGitFork />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.translation")}
                   to="/translation"
                   icon={<SiGoogletranslate />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.notes")}
                   to="/notes"
                   icon={<TfiWrite />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.coloring")}
                   to="/coloring"
                   icon={<LuPalette />}
                 />
-                <MenuItem label={t("nav.tags")} to="/tags" icon={<LuTag />} />
                 <MenuItem
+                  closeMenu={closeMenu}
+                  label={t("nav.tags")}
+                  to="/tags"
+                  icon={<LuTag />}
+                />
+                <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.inspector")}
                   to="/inspector"
                   icon={<VscInspect />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.comparator")}
                   to="/comparator"
                   icon={<FaBalanceScale />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.searcher")}
                   to="/searcher"
                   icon={<LuScanSearch />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.searcher2")}
                   to="/searcher2"
                   icon={<LuTextSearch />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.letters")}
                   to="/letters"
                   icon={<FaRegPenToSquare />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.audio")}
                   to="/audio"
                   icon={<LuFileVolume />}
                 />
                 <MenuItem
+                  closeMenu={closeMenu}
                   label={t("nav.about")}
                   to="/about"
                   icon={<LuFileQuestion />}
@@ -276,6 +306,7 @@ const NavMenu = () => {
 
                 {role === 1 && (
                   <MenuItem
+                    closeMenu={closeMenu}
                     label={t("nav.admin")}
                     to="/admin"
                     icon={<LuShield />}
@@ -297,9 +328,10 @@ interface MenuItemProps {
   label: string;
   to: string;
   icon?: React.ReactNode;
+  closeMenu: () => void;
 }
 
-const MenuItem = ({ label, to, icon }: MenuItemProps) => {
+const MenuItem = ({ label, to, icon, closeMenu }: MenuItemProps) => {
   const displayIcon = icon ? icon : <TbTableDashed />;
 
   return (
@@ -312,6 +344,7 @@ const MenuItem = ({ label, to, icon }: MenuItemProps) => {
       alignItems={"center"}
       padding={2}
       variant={"ghost"}
+      onClick={() => closeMenu()}
       asChild
     >
       <NavLink to={to}>
