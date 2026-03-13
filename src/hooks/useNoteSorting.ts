@@ -1,20 +1,30 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
-
-type SortOption = "rank" | "status" | "date";
+import {
+  useYourNotesPageStore,
+  type NoteSortOption,
+  type NoteType,
+} from "@/store/pages/yourNotesPage";
 
 interface UseNoteSortingParams {
+  noteType: NoteType;
   noteIDs: string[];
   userNotes: Record<string, CloudNoteProps | LocalNoteProps>;
   rankComparator: (a: string, b: string) => number;
 }
 
 export const useNoteSorting = ({
+  noteType,
   noteIDs,
   userNotes,
   rankComparator,
 }: UseNoteSortingParams) => {
-  const [sortBy, setSortBy] = useState<SortOption>("date");
+  const sortBy = useYourNotesPageStore((state) => state.sortBy[noteType]);
+  const setStoredSortBy = useYourNotesPageStore((state) => state.setSortBy);
+
+  const setSortBy = (value: NoteSortOption) => {
+    setStoredSortBy(noteType, value);
+  };
 
   const sortedNotesIDs = useMemo(() => {
     return [...noteIDs].sort((a, b) => {

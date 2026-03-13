@@ -32,6 +32,7 @@ const VerseNotes = () => {
   };
 
   const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+    noteType: "verse",
     noteIDs: verseNotesIDs,
     userNotes,
     rankComparator,

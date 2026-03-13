@@ -32,6 +32,7 @@ const NotesList = () => {
   };
 
   const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+    noteType: "root",
     noteIDs: rootNotesIDs,
     userNotes,
     rankComparator,

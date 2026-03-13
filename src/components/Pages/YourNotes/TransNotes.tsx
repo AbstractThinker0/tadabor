@@ -32,6 +32,7 @@ const TransNotes = () => {
   };
 
   const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+    noteType: "translation",
     noteIDs: translationNotesIDs,
     userNotes,
     rankComparator,
