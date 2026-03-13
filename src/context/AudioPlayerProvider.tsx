@@ -11,6 +11,51 @@ import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
 import { getVerseAudioURL } from "@/util/audioData";
 import { AudioPlayer } from "@/components/Pages/Audio/AudioPlayer";
 
+let sharedAudioElement: HTMLAudioElement | null = null;
+
+const getSharedAudioElement = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (!sharedAudioElement) {
+    sharedAudioElement = new Audio();
+    sharedAudioElement.preload = "auto";
+  }
+
+  return sharedAudioElement;
+};
+
+const setSharedVerseAudio = (verseRank: number, reciterId: string) => {
+  const audio = getSharedAudioElement();
+  if (!audio) return;
+
+  audio.pause();
+  audio.src = getVerseAudioURL(verseRank, reciterId);
+  audio.load();
+};
+
+const playSharedAudio = async () => {
+  const audio = getSharedAudioElement();
+  if (!audio) return;
+
+  await audio.play();
+};
+
+const pauseSharedAudio = () => {
+  const audio = getSharedAudioElement();
+  if (!audio) return;
+
+  audio.pause();
+};
+
+const seekSharedAudio = (time: number) => {
+  const audio = getSharedAudioElement();
+  if (!audio) return;
+
+  audio.currentTime = time;
+};
+
 /**
  * Custom hook to prefetch audio for upcoming verses
  */
@@ -57,17 +102,7 @@ const useAudioPrefetch = (
 
 export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
   const quranService = useQuran();
-
-  // Create and store the audio element in a ref
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Initialize audio element once
-  if (!audioRef.current && typeof window !== "undefined") {
-    audioRef.current = new Audio();
-    audioRef.current.preload = "auto";
-  }
-
-  const audio = audioRef.current!;
+  const audio = getSharedAudioElement();
 
   // Global store selectors
   const currentVerse = useAudioPlayerStore((state) => state.currentVerse);
@@ -86,6 +121,8 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
 
   // Setup audio event listeners
   useEffect(() => {
+    if (!audio) return;
+
     const handleLoadedMetadata = () => setDuration(audio.duration);
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleEnded = () => {
@@ -95,12 +132,9 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
           const nextRank = verseRank + 1;
           const nextVerse = quranService.absoluteQuran[nextRank];
           if (nextVerse) {
-            // Pause and reset to prevent "aborted fetch" errors
-            audio.pause();
-            audio.src = getVerseAudioURL(nextRank, currentReciter);
-            audio.load(); // Explicitly load the new source
+            setSharedVerseAudio(nextRank, currentReciter);
             setCurrentVerse(nextVerse);
-            audio.play();
+            playSharedAudio();
             setIsPlaying(true);
             return;
           }
@@ -131,16 +165,13 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
   ]);
 
   const onReciterChange = useEffectEvent(() => {
-    if (!currentVerse) return;
+    if (!currentVerse || !audio) return;
 
     const wasPlaying = isPlaying;
-    // Pause and reset to prevent "aborted fetch" errors
-    audio.pause();
-    audio.src = getVerseAudioURL(currentVerse.rank, currentReciter);
-    audio.load(); // Explicitly load the new source
+    setSharedVerseAudio(currentVerse.rank, currentReciter);
 
     if (wasPlaying) {
-      audio.play();
+      playSharedAudio();
     }
   });
 
@@ -150,7 +181,14 @@ export const AudioPlayerProvider = ({ children }: PropsWithChildren) => {
   }, [currentReciter]);
 
   return (
-    <AudioPlayerContext.Provider value={{ audioElement: audio }}>
+    <AudioPlayerContext.Provider
+      value={{
+        playAudio: playSharedAudio,
+        pauseAudio: pauseSharedAudio,
+        seekAudio: seekSharedAudio,
+        setVerseAudio: setSharedVerseAudio,
+      }}
+    >
       {children}
       <AudioPlayer />
     </AudioPlayerContext.Provider>

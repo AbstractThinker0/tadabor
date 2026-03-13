@@ -4,7 +4,6 @@ import type { verseProps } from "quran-tools";
 import { useQuran } from "@/context/useQuran";
 import { useAudioPlayerContext } from "@/context/useAudioPlayer";
 import { useAudioPlayerStore } from "@/store/global/audioPlayerStore";
-import { getVerseAudioURL } from "@/util/audioData";
 
 /**
  * Audio player hook that consumes the AudioPlayerProvider
@@ -12,7 +11,8 @@ import { getVerseAudioURL } from "@/util/audioData";
  */
 export const useAudioPlayer = () => {
   const quranService = useQuran();
-  const { audioElement: audio } = useAudioPlayerContext();
+  const { pauseAudio, playAudio, seekAudio, setVerseAudio } =
+    useAudioPlayerContext();
 
   // Global store selectors
   const currentVerse = useAudioPlayerStore((state) => state.currentVerse);
@@ -33,13 +33,20 @@ export const useAudioPlayer = () => {
   // Play a specific verse
   const playVerse = useCallback(
     (verse: verseProps) => {
-      audio.src = getVerseAudioURL(verse.rank, currentReciter);
+      setVerseAudio(verse.rank, currentReciter);
       setCurrentVerse(verse);
       setPlayerVisible(true);
-      audio.play();
+      playAudio();
       setIsPlaying(true);
     },
-    [audio, currentReciter, setCurrentVerse, setPlayerVisible, setIsPlaying]
+    [
+      currentReciter,
+      playAudio,
+      setCurrentVerse,
+      setIsPlaying,
+      setPlayerVisible,
+      setVerseAudio,
+    ]
   );
 
   // Play next or previous verse
@@ -52,9 +59,9 @@ export const useAudioPlayer = () => {
         const nextVerse = quranService.absoluteQuran[nextRank];
 
         if (nextVerse) {
-          audio.src = getVerseAudioURL(nextRank, currentReciter);
+          setVerseAudio(nextRank, currentReciter);
           setCurrentVerse(nextVerse);
-          audio.play();
+          playAudio();
           setIsPlaying(true);
           return true;
         }
@@ -63,34 +70,35 @@ export const useAudioPlayer = () => {
       return false;
     },
     [
-      audio,
       currentVerse,
       currentReciter,
+      playAudio,
       quranService.absoluteQuran,
       setCurrentVerse,
       setIsPlaying,
+      setVerseAudio,
     ]
   );
 
   // Toggle play/pause
   const togglePlayPause = useCallback(() => {
     if (isPlaying) {
-      audio.pause();
+      pauseAudio();
     } else {
-      audio.play();
+      void playAudio();
     }
 
     setIsPlaying(!isPlaying);
-  }, [audio, isPlaying, setIsPlaying]);
+  }, [isPlaying, pauseAudio, playAudio, setIsPlaying]);
 
   // Handle time slider change
   const handleSliderChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(e.target.value);
-      audio.currentTime = value;
+      seekAudio(value);
       setCurrentTime(value);
     },
-    [audio, setCurrentTime]
+    [seekAudio, setCurrentTime]
   );
 
   // Handle auto-play toggle
@@ -100,11 +108,11 @@ export const useAudioPlayer = () => {
 
   // Handle close button
   const handleClose = useCallback(() => {
-    audio.pause();
+    pauseAudio();
     setIsPlaying(false);
     setPlayerVisible(false);
     setCurrentVerse(null);
-  }, [audio, setIsPlaying, setPlayerVisible, setCurrentVerse]);
+  }, [pauseAudio, setCurrentVerse, setIsPlaying, setPlayerVisible]);
 
   // Handle minimize toggle
   const handleToggleMinimize = () => {
@@ -112,7 +120,6 @@ export const useAudioPlayer = () => {
   };
 
   return {
-    audioElement: audio,
     currentVerse,
     playVerse,
     playNextVerse: () => playNextVerse(false),
