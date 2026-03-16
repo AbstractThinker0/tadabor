@@ -31,7 +31,7 @@
     "@trpc/client": "^11.8.0",
     "@trpc/server": "^11.8.0",
     "@trpc/tanstack-react-query": "^11.8.0",
-    "dexie": "4.0.7",
+    "dexie": "4.3.0",
     "i18next": "23.0.1",
     "i18next-browser-languagedetector": "7.0.2",
     "immer": "^11.1.3",
