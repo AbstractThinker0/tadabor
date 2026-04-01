@@ -11,7 +11,7 @@ import { NoteText } from "@/components/Note/NoteText";
 
 import { NoteTitle } from "@/components/Note/NoteTitle";
 
-import { ButtonCopy } from "@/components/Custom/ButtonCopy";
+import { NoteTools } from "@/components/Note/NoteTools";
 
 interface NoteContainerProps {
   isSynced: boolean;
@@ -120,8 +120,7 @@ const NoteContainerHeader = ({
         isOutOfSync={isOutOfSync}
         isPendingSave={isPendingSave}
       />
-
-      <ButtonCopy copyText={inputValue} copyNotice="Copied note to clipboard" />
+      <NoteTools inputValue={inputValue} />
     </Flex>
   );
 };

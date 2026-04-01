@@ -5,7 +5,7 @@ import { useNavigationStore } from "@/store/global/navigationStore";
 import { NoteTitle } from "@/components/Note/NoteTitle";
 import { TextareaToolbar } from "@/components/Note/TextareaToolbar";
 
-import { ButtonCopy } from "@/components/Custom/ButtonCopy";
+import { NoteTools } from "@/components/Note/NoteTools";
 
 interface TextareaHeaderProps {
   handleSetDirection: (direction: string) => void;
@@ -52,10 +52,7 @@ const TextareaHeader = ({
       </Box>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
       <Box position="absolute" insetInlineEnd={0}>
-        <ButtonCopy
-          copyText={inputValue}
-          copyNotice="Copied note to clipboard"
-        />
+        <NoteTools inputValue={inputValue} />
       </Box>
     </Flex>
   );
