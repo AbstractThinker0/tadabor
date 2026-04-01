@@ -47,7 +47,7 @@ const AudioPlayer = () => {
       position="fixed"
       bottom="16px"
       insetEnd={isMinimized ? "16px" : "0%"}
-      zIndex="toast"
+      zIndex="overlay"
       width={isMinimized ? "auto" : "100%"}
     >
       <Flex
