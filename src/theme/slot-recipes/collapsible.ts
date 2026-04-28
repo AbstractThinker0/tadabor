@@ -8,6 +8,7 @@ export const collapsibleSlotRecipe = defineSlotRecipe({
       direction: "inherit",
     },
     content: {
+      direction: "inherit",
       overflow: "hidden",
       _open: {
         animationName: "expand-height, fade-in",
