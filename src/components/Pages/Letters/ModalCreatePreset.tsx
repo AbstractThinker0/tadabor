@@ -21,7 +21,7 @@ interface ModalCreatePresetProps {
 }
 
 const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [presetName, setPresetName] = useState("");
 
@@ -33,7 +33,7 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
 
   const onClickSave = async () => {
     if (presetName.trim().length === 0) {
-      alert("Preset name can't be empty.");
+      alert(t("letters.create_preset.empty"));
       return;
     }
 
@@ -74,17 +74,17 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
       onInteractOutside={onClose}
       placement={"center"}
     >
-      <DialogContent dir="ltr">
+      <DialogContent dir={i18n.dir()}>
         <Dialog.Header
           borderBottom="1px solid"
           borderColor={"border.emphasized"}
         >
-          Create a new preset
+          {t("letters.create_preset.title")}
         </Dialog.Header>
 
         <Dialog.Body>
           <div>
-            <span>Preset name:</span>
+            <span>{t("letters.create_preset.name")}</span>
             <Input
               dir="auto"
               id="presetName"
@@ -101,9 +101,9 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose}>{t("ui.actions.close")}</Button>
             <Button colorPalette="blue" onClick={onClickSave}>
-              Save changes
+              {t("ui.actions.save_changes")}
             </Button>
           </ButtonGroup>
         </Dialog.Footer>

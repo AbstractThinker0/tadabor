@@ -1,4 +1,6 @@
 import { useNavigationStore } from "@/store/global/navigationStore";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Box, Flex, Text } from "@chakra-ui/react";
 
@@ -182,7 +184,20 @@ const NoteContainerFooter = ({
   onClickEditButton,
   onClickCancelButton,
 }: NoteContainerFooterProps) => {
+  const { t, i18n } = useTranslation();
   const isMobile = useNavigationStore((state) => state.isSmallScreen);
+  const dateTimeFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.language, {
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
+    [i18n.language]
+  );
 
   // Show Cancel/Save only when there are unsaved changes AND not currently syncing
   const showCancelSave = !inputSaved && !isSyncing;
@@ -200,28 +215,16 @@ const NoteContainerFooter = ({
         >
           {dateCreated && (
             <Text>
-              Created:{" "}
-              {new Date(dateCreated).toLocaleString(undefined, {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              {t("notes.dates.created")}{" "}
+              {dateTimeFormatter.format(new Date(dateCreated))}
             </Text>
           )}
           {dateModified && (
             <Text>
-              {isMobile ? "Modified: " : "Last modified: "}
-              {new Date(dateModified).toLocaleString(undefined, {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              {isMobile
+                ? t("notes.dates.modified")
+                : t("notes.dates.last_modified")}{" "}
+              {dateTimeFormatter.format(new Date(dateModified))}
             </Text>
           )}
         </Flex>

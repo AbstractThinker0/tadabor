@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
@@ -21,6 +22,7 @@ interface EditColorModalProps {
 }
 
 const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
+  const { t, i18n } = useTranslation();
   const colorsList = useColoringPageStore((state) => state.colorsList);
   const saveColorsList = useColoringPageStore((state) => state.saveColorsList);
 
@@ -60,19 +62,19 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
       onInteractOutside={onClose}
       placement={"center"}
     >
-      <DialogContent dir="ltr">
+      <DialogContent dir={i18n.dir()}>
         <Dialog.Header
           borderBottom="1px solid"
           borderColor={"border.emphasized"}
         >
-          Edit colors
+          {t("settings.edit_colors.title")}
         </Dialog.Header>
 
         <Dialog.Body>
           {currentColor && listColors[currentColor] ? (
             <>
               <Flex gap={3} alignItems={"center"} pb={2}>
-                <div>Name:</div>
+                <div>{t("settings.edit_colors.name")}</div>
                 <NativeSelect.Root>
                   <NativeSelect.Field
                     onChange={onChangeColor}
@@ -98,7 +100,7 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
                 </NativeSelect.Root>
               </Flex>
               <Flex gap={3}>
-                <label>Color: </label>
+                <label>{t("settings.edit_colors.color")} </label>
                 <Input
                   onInput={onInputColor}
                   name={currentColor}
@@ -108,7 +110,7 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
               </Flex>
             </>
           ) : (
-            <>No colors to edit.</>
+            <>{t("settings.edit_colors.empty")}</>
           )}
         </Dialog.Body>
         <Dialog.Footer
@@ -118,9 +120,9 @@ const EditColorsModal = ({ isOpen, onClose }: EditColorModalProps) => {
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button onClick={onClose}>No, Cancel</Button>
+            <Button onClick={onClose}>{t("ui.actions.cancel")}</Button>
             <Button colorPalette="blue" onClick={onClickSave}>
-              Save changes
+              {t("ui.actions.save_changes")}
             </Button>
           </ButtonGroup>
         </Dialog.Footer>

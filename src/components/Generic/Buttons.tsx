@@ -53,10 +53,12 @@ const ButtonEdit = (props: ButtonProps) => {
 };
 
 const ButtonExpand = (props: IconButtonProps) => {
+  const { t } = useTranslation();
+
   return (
     <IconButton
       variant="ghost"
-      aria-label="Expand"
+      aria-label={t("ui.actions.expand")}
       width={"6px"}
       height={"36px"}
       {...props}

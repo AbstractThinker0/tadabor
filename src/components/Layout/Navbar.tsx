@@ -129,7 +129,7 @@ const Navbar = () => {
             {isBackendEnabled && <NavbarUser />}
 
             <IconButton
-              aria-label="Settings"
+              aria-label={t("settings.title")}
               onClick={onOpen}
               variant="ghost"
               size="md"

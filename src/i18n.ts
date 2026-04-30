@@ -176,6 +176,7 @@ i18n
               restore_default: "Restore default",
               random_avatar: "Random avatar",
               sign_out: "Sign out",
+              expand: "Expand",
             },
             state: {
               loading: "Loading...",
@@ -267,6 +268,27 @@ i18n
                 "This removes this revision from local note history.",
               revision_date: "Revision date:",
             },
+            dates: {
+              created: "Created:",
+              modified: "Modified:",
+              last_modified: "Last modified:",
+            },
+          },
+          settings: {
+            title: "Settings",
+            language: "Language:",
+            theme: "Theme:",
+            quran_font: "Quran font:",
+            quran_font_size: "Quran font size:",
+            notes_font: "Notes font:",
+            notes_font_size: "Notes font size:",
+            reset_defaults: "Reset to defaults",
+            edit_colors: {
+              title: "Edit colors",
+              name: "Name:",
+              color: "Color:",
+              empty: "No colors to edit.",
+            },
           },
           profile: {
             tabs: {
@@ -311,6 +333,8 @@ i18n
             },
           },
           coloring: {
+            add_button: "Add color",
+            edit_button: "Edit colors",
             add: {
               title: "Add a new color",
               display_name_label: "Display name:",
@@ -355,6 +379,11 @@ i18n
           },
           letters: {
             preset: "Preset:",
+            create_preset: {
+              title: "Create a new preset",
+              name: "Preset name:",
+              empty: "Preset name can't be empty.",
+            },
           },
           admin: {
             title: "Admin",
@@ -377,6 +406,10 @@ i18n
               delete_failed: "Failed to delete user",
               delete_success: "User deleted",
             },
+            analytics_user: "user: {{value}}",
+            analytics_details: "Details",
+            analytics_old: "Old",
+            analytics_new: "New",
           },
         },
       },
@@ -481,6 +514,7 @@ i18n
               restore_default: "استعادة الافتراضي",
               random_avatar: "صورة عشوائية",
               sign_out: "تسجيل الخروج",
+              expand: "توسيع",
             },
             state: {
               loading: "جاري التحميل...",
@@ -572,6 +606,27 @@ i18n
                 "سيؤدي هذا إلى حذف هذه النسخة من سجل التدوينة المحلي.",
               revision_date: "تاريخ النسخة:",
             },
+            dates: {
+              created: "أُنشئت:",
+              modified: "عُدلت:",
+              last_modified: "آخر تعديل:",
+            },
+          },
+          settings: {
+            title: "الإعدادات",
+            language: "اللغة:",
+            theme: "المظهر:",
+            quran_font: "خط القرآن:",
+            quran_font_size: "حجم خط القرآن:",
+            notes_font: "خط التدوينات:",
+            notes_font_size: "حجم خط التدوينات:",
+            reset_defaults: "إعادة الإعدادات الافتراضية",
+            edit_colors: {
+              title: "تعديل الألوان",
+              name: "الاسم:",
+              color: "اللون:",
+              empty: "لا توجد ألوان لتعديلها.",
+            },
           },
           profile: {
             tabs: {
@@ -615,6 +670,8 @@ i18n
             },
           },
           coloring: {
+            add_button: "إضافة لون",
+            edit_button: "تعديل الألوان",
             add: {
               title: "إضافة لون جديد",
               display_name_label: "اسم العرض:",
@@ -656,6 +713,11 @@ i18n
           },
           letters: {
             preset: "مجموعة:",
+            create_preset: {
+              title: "إنشاء مجموعة جديدة",
+              name: "اسم المجموعة:",
+              empty: "لا يمكن أن يكون اسم المجموعة فارغًا.",
+            },
           },
           about: {
             introTitle: "تقديم:",
@@ -736,6 +798,10 @@ i18n
               delete_failed: "تعذّر حذف المستخدم",
               delete_success: "تم حذف المستخدم",
             },
+            analytics_user: "المستخدم: {{value}}",
+            analytics_details: "التفاصيل",
+            analytics_old: "القديم",
+            analytics_new: "الجديد",
           },
         },
       },

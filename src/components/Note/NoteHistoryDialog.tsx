@@ -77,6 +77,18 @@ const NoteHistoryDialog = ({
     () => new Intl.RelativeTimeFormat(i18n.language, { numeric: "auto" }),
     [i18n.language]
   );
+  const dateTimeFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.language, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
+    [i18n.language]
+  );
 
   const { revisions, isLoading, deleteRevision, clearRevisions } =
     useNoteRevisions({
@@ -181,7 +193,10 @@ const NoteHistoryDialog = ({
                     <Flex justifyContent="space-between" gap={3}>
                       <Box flex="1">
                         <Text fontSize="sm" color="fg.muted" mb={1}>
-                          {new Date(revision.date_created).toLocaleString()} ({" "}
+                          {dateTimeFormatter.format(
+                            new Date(revision.date_created)
+                          )}{" "}
+                          ({" "}
                           {getRelativeTimestamp(
                             revision.date_created,
                             relativeTimeFormatter
@@ -268,7 +283,10 @@ const NoteHistoryDialog = ({
           {pendingDeleteRevision && (
             <Text color="fg.muted" fontSize="sm">
               {t("notes.history.revision_date")}{" "}
-              {new Date(pendingDeleteRevision.date_created).toLocaleString()} ({" "}
+              {dateTimeFormatter.format(
+                new Date(pendingDeleteRevision.date_created)
+              )}{" "}
+              ({" "}
               {getRelativeTimestamp(
                 pendingDeleteRevision.date_created,
                 relativeTimeFormatter

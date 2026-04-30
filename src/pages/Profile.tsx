@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Flex,
   Button,
@@ -484,9 +484,13 @@ const getDeviceIcon = (deviceType: string) => {
 };
 
 const ConnectedDevices = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, isLoading, error } = useConnectedDevices();
   const revokeDevice = useRevokeDevice();
+  const loginDateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(i18n.language),
+    [i18n.language]
+  );
 
   const onClickRevoke = async (tokenId: number) => {
     const { error } = await tryCatch(revokeDevice.mutateAsync({ tokenId }));
@@ -566,7 +570,9 @@ const ConnectedDevices = () => {
                 </Text>
                 <Text>
                   {t("profile.devices.login_time", {
-                    value: new Date(device.loginTime).toLocaleDateString(),
+                    value: loginDateFormatter.format(
+                      new Date(device.loginTime)
+                    ),
                   })}
                 </Text>
               </Flex>

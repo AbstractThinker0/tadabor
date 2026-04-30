@@ -42,7 +42,7 @@ interface SettingsModalProps {
 }
 
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const resolvedLang = i18n.resolvedLanguage;
 
   const quranFont = useSettingsStore((state) => state.quranFont);
@@ -127,20 +127,20 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
       onInteractOutside={onClose}
       placement={"center"}
     >
-      <DialogContent dir="ltr">
+      <DialogContent dir={i18n.dir()}>
         <Dialog.Header
           borderBottom="1px solid"
           borderColor={"border.emphasized"}
           fontSize={"2xl"}
         >
-          Settings
+          {t("settings.title")}
         </Dialog.Header>
 
         <Dialog.Body>
           <Stack gap={"0.8rem"} separator={<Separator />}>
             <Box colorPalette="blue" pt={1}>
               <Heading as="span" size="md">
-                Language:{" "}
+                {t("settings.language")}{" "}
               </Heading>
               <ButtonGroup attached>
                 <Button
@@ -159,12 +159,12 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
             </Box>
             <Box colorPalette="blue" pt={1}>
               <Heading as="span" size="md">
-                Theme:{" "}
+                {t("settings.theme")}{" "}
               </Heading>
               <ColorModeButton />
             </Box>
             <Flex gap={"0.25rem"} alignItems={"center"}>
-              <Heading size="md">Quran Font:</Heading>
+              <Heading size="md">{t("settings.quran_font")}</Heading>
               <Box>
                 <NativeSelect.Root>
                   <NativeSelect.Field
@@ -184,7 +184,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
             </Flex>
             <Box>
               <Box py={1}>
-                <Heading size="md">Quran Font Size:</Heading>
+                <Heading size="md">{t("settings.quran_font_size")}</Heading>
                 <Slider
                   value={[quranFS]}
                   min={0.8}
@@ -207,7 +207,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
               </Box>
             </Box>
             <Flex gap={"0.25rem"} alignItems={"center"}>
-              <Heading size="md">Notes Font:</Heading>
+              <Heading size="md">{t("settings.notes_font")}</Heading>
               <Box>
                 <NativeSelect.Root>
                   <NativeSelect.Field
@@ -227,7 +227,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
             </Flex>
             <Box>
               <Box py={1}>
-                <Heading size="md">Notes Font Size:</Heading>
+                <Heading size="md">{t("settings.notes_font_size")}</Heading>
                 <Slider
                   value={[notesFS]}
                   min={0.8}
@@ -259,14 +259,14 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
           <ButtonGroup>
             <Dialog.ActionTrigger asChild>
               <Button colorPalette="blue" onClick={onClose}>
-                Close
+                {t("ui.actions.close")}
               </Button>
             </Dialog.ActionTrigger>
             <Button colorPalette="green" onClick={onClickSave}>
-              Save
+              {t("ui.actions.save")}
             </Button>
             <Button colorPalette="yellow" onClick={onClickReset}>
-              Reset to defaults
+              {t("settings.reset_defaults")}
             </Button>
           </ButtonGroup>
         </Dialog.Footer>

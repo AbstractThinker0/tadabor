@@ -151,6 +151,7 @@ interface VerseItemProps {
 }
 
 const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
+  const { t } = useTranslation();
   const { value: isOpen, toggle } = useBoolean(true);
 
   const setScrollKey = useTranslationPageStore((state) => state.setScrollKey);
@@ -166,7 +167,7 @@ const VerseItem = ({ isSelected, verse }: VerseItemProps) => {
       rootProps={{ _selected: { bgColor: "yellow.subtle" } }}
       endElement={
         <IconButton
-          aria-label="Expand"
+          aria-label={t("ui.actions.expand")}
           onClick={toggle}
           variant={isOpen ? "solid" : "ghost"}
           colorPalette={isOpen ? "teal" : undefined}

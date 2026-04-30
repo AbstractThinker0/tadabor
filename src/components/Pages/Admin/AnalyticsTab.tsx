@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Input, Text, NativeSelect } from "@chakra-ui/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Paginator } from "@/components/Generic/Paginator";
@@ -15,7 +15,7 @@ interface AnalyticsTabProps {
 }
 
 export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [action, setAction] = useState("");
   const [userId, setUserId] = useState<string>("");
@@ -26,6 +26,15 @@ export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
   // Use query data directly, local pageData only for filtered searches
   const [pageData, setPageData] = useState<AnalyticsResponse | null>(null);
   const displayData = pageData ?? analyticsQuery.data ?? null;
+  const dateTimeFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.language, {
+        dateStyle: "medium",
+        timeStyle: "short",
+        hour12: false,
+      }),
+    [i18n.language]
+  );
 
   const fetchAnalytics = useFetchAnalytics();
 
@@ -127,16 +136,20 @@ export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
                 <Text fontWeight="medium" minW="100px">
                   {row.action}
                 </Text>
-                <Text color="fg.muted">user: {row.username ?? row.userId}</Text>
+                <Text color="fg.muted">
+                  {t("admin.analytics_user", {
+                    value: row.username ?? row.userId,
+                  })}
+                </Text>
                 <Text color="fg.muted" ml="auto">
-                  {new Date(row.timestamp).toLocaleString()}
+                  {dateTimeFormatter.format(new Date(row.timestamp))}
                 </Text>
               </Flex>
               {(row.oldData || row.newData) && (
                 <Box mt={1}>
                   <details>
                     <summary style={{ cursor: "pointer", color: "fg.muted" }}>
-                      Details
+                      {t("admin.analytics_details")}
                     </summary>
                     <Flex gap={2} mt={1}>
                       {row.oldData && (
@@ -147,7 +160,9 @@ export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
                           rounded="sm"
                           fontSize="xs"
                         >
-                          <Text fontWeight="bold">Old</Text>
+                          <Text fontWeight="bold">
+                            {t("admin.analytics_old")}
+                          </Text>
                           <Box as="pre" overflow="auto" maxH="100px">
                             {row.oldData}
                           </Box>
@@ -161,7 +176,9 @@ export const AnalyticsTab = ({ users, analyticsQuery }: AnalyticsTabProps) => {
                           rounded="sm"
                           fontSize="xs"
                         >
-                          <Text fontWeight="bold">New</Text>
+                          <Text fontWeight="bold">
+                            {t("admin.analytics_new")}
+                          </Text>
                           <Box as="pre" overflow="auto" maxH="100px">
                             {row.newData}
                           </Box>

@@ -11,6 +11,8 @@ import { ChaptersListAdvanced } from "@/components/Custom/ChaptersListAdvanced";
 import type { selectedChaptersType } from "@/types";
 
 const ChaptersSide = () => {
+  const { t } = useTranslation();
+
   const {
     open: isOpenAddColor,
     onOpen: onOpenAddColor,
@@ -91,10 +93,10 @@ const ChaptersSide = () => {
 
         <Flex gap={2} justify={"center"} dir="ltr">
           <Button colorPalette="green" onClick={onOpenAddColor}>
-            Add color
+            {t("coloring.add_button")}
           </Button>
           <Button colorPalette="cyan" onClick={onOpenEditColor}>
-            Edit colors
+            {t("coloring.edit_button")}
           </Button>
         </Flex>
       </Flex>
