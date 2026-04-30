@@ -11,7 +11,7 @@ import type {
   MarkSavedPayload,
   NotesStateProps,
 } from "@/types";
-import { fromZustandToDexie } from "@/util/notes";
+import { fromZustandToDexie, hasNoteChanged } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 
 export interface SyncDatePayload {
@@ -71,6 +71,8 @@ export const useCloudNotesStore = create(
             saved: true,
             isSynced: computeIsSynced(note),
             preSave: note.text,
+            preSaveDir: note.dir ?? "",
+            hasPersistedVersion: true,
           };
         });
 
@@ -132,6 +134,8 @@ export const useCloudNotesStore = create(
               saved: true,
               isSynced: computeIsSynced(note),
               preSave: note.text,
+              preSaveDir: note.dir ?? "",
+              hasPersistedVersion: true,
             };
 
             set((state) => {
@@ -162,10 +166,14 @@ export const useCloudNotesStore = create(
           if (isNew) {
             note.saved = false;
             note.isSynced = false;
+            note.preSaveDir = note.preSaveDir ?? note.dir ?? "";
+            note.hasPersistedVersion = false;
           } else {
             note.saved = true;
             note.isSynced = computeIsSynced(note);
             note.preSave = note.text;
+            note.preSaveDir = note.dir ?? "";
+            note.hasPersistedVersion = true;
           }
 
           state.data[note.id] = note;
@@ -215,7 +223,7 @@ export const useCloudNotesStore = create(
             note.isSynced = false;
           }
 
-          if (note.preSave === note.text && note.text) {
+          if (!hasNoteChanged(note) && note.text) {
             note.saved = true;
             note.isSynced = computeIsSynced(note);
           }
@@ -228,6 +236,8 @@ export const useCloudNotesStore = create(
           const note = state.data[id];
           if (!note) return;
           note.dir = value;
+          note.saved = !hasNoteChanged(note) && !!note.text;
+          note.isSynced = note.saved ? computeIsSynced(note) : false;
         });
       },
 
@@ -246,9 +256,11 @@ export const useCloudNotesStore = create(
           if (!note) return false;
 
           note.saved = true;
+          note.hasPersistedVersion = true;
 
-          if (note.text !== note.preSave) {
+          if (hasNoteChanged(note)) {
             note.preSave = note.text;
+            note.preSaveDir = note.dir ?? "";
             note.date_modified = saveData.date_modified;
           }
         });

@@ -3,6 +3,7 @@ import { db } from "./db";
 
 import type {
   ICloudNote,
+  INoteRevision,
   IColor,
   IVerseColor,
   ITag,
@@ -235,5 +236,51 @@ export const dbNotes = {
   },
   clearAllCloud: () => {
     return db.cloud_notes.clear();
+  },
+};
+
+const NOTE_REVISIONS_LIMIT = 50;
+
+export const dbNoteRevisions = {
+  loadByNote: async (noteId: string, noteUuid: string) => {
+    const revisions = await db.note_revisions
+      .where("[note_id+note_uuid]")
+      .equals([noteId, noteUuid])
+      .sortBy("date_created");
+
+    return revisions.reverse();
+  },
+  save: async (revision: INoteRevision) => {
+    await db.note_revisions.add(revision);
+
+    const revisions = await db.note_revisions
+          .where("[note_id+note_uuid]")
+          .equals([revision.note_id, revision.note_uuid])
+          .sortBy("date_created");
+
+    const excess = revisions.length - NOTE_REVISIONS_LIMIT;
+
+    if (excess > 0) {
+      await db.note_revisions.bulkDelete(
+        revisions.slice(0, excess).map((item) => item.id)
+      );
+    }
+
+    return true;
+  },
+  delete: (revisionId: string) => {
+    return db.note_revisions.delete(revisionId);
+  },
+  clearByNote: async (noteId: string, noteUuid: string) => {
+    const revisionIds = await db.note_revisions
+      .where("[note_id+note_uuid]")
+      .equals([noteId, noteUuid])
+      .primaryKeys();
+
+    if (revisionIds.length === 0) return 0;
+
+    await db.note_revisions.bulkDelete(revisionIds);
+
+    return revisionIds.length;
   },
 };

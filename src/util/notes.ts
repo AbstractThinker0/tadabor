@@ -1,6 +1,6 @@
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
-import type { ICloudNote } from "@/util/db";
+import type { ICloudNote, INoteRevision } from "@/util/db";
 import type { BackendNote } from "@/util/AppRouter";
 
 interface CreateNewNoteParams {
@@ -26,6 +26,8 @@ export const createNewNote = ({
     key,
     text,
     preSave: "",
+    preSaveDir: dir,
+    hasPersistedVersion: false,
     dir,
     saved: false,
     date_modified: now,
@@ -110,8 +112,36 @@ export const fromBackendToDexie = (note: BackendNote): ICloudNote => {
  * Returns the new dateModified to persist alongside.
  */
 export const computeDateModified = (note: LocalNoteProps) => {
-  const shouldUpdate = note.text !== note.preSave;
+  const shouldUpdate = hasNoteChanged(note);
   return shouldUpdate ? Date.now() : note.date_modified!;
+};
+
+export const hasNoteChanged = (note: LocalNoteProps | CloudNoteProps) => {
+  return (
+    (note.text !== (note.preSave ?? "")) ||
+    ((note.dir ?? "") !== (note.preSaveDir ?? ""))
+  );
+};
+
+export const createNoteRevision = (
+  note: LocalNoteProps | CloudNoteProps
+): INoteRevision | null => {
+  if (!note.hasPersistedVersion || !hasNoteChanged(note)) {
+    return null;
+  }
+
+  return {
+    id: `${note.id}:${Date.now()}:${uuidv4()}`,
+    uuid: uuidv4(),
+    note_id: note.id,
+    note_uuid: note.uuid,
+    note_type: note.type,
+    note_key: note.key,
+    text: note.preSave ?? "",
+    dir: note.preSaveDir ?? "",
+    date_created: Date.now(),
+    note_date_modified: note.date_modified,
+  };
 };
 
 export interface NoteSyncMeta {

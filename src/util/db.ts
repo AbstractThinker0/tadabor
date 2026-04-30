@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   ILocalNote,
   ICloudNote,
+  INoteRevision,
   IColor,
   IVerseColor,
   ITag,
@@ -17,6 +18,7 @@ import type {
 class tadaborDatabase extends Dexie {
   local_notes!: EntityTable<ILocalNote, "id">;
   cloud_notes!: EntityTable<ICloudNote, "id">;
+  note_revisions!: EntityTable<INoteRevision, "id">;
 
   colors!: EntityTable<IColor, "id">;
   verses_color!: EntityTable<IVerseColor, "verse_key">;
@@ -132,6 +134,16 @@ class tadaborDatabase extends Dexie {
     this.version(26).stores({
       cloud_notes:
         "id, uuid, authorId, key, type, text, dir, date_created, date_modified, date_synced, isDeleted, isPublished",
+    });
+
+    this.version(27).stores({
+      note_revisions:
+        "id, uuid, note_id, note_type, note_key, date_created, note_date_modified",
+    });
+
+    this.version(28).stores({
+      note_revisions:
+        "id, uuid, note_id, note_uuid, [note_id+note_uuid], note_type, note_key, date_created, note_date_modified",
     });
   }
 }

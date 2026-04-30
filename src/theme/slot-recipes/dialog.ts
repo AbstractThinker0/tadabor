@@ -44,6 +44,7 @@ export const dialogSlotRecipe = defineSlotRecipe({
       zIndex: "calc(var(--dialog-z-index) + var(--layer-index, 0))",
       justifyContent: "center",
       overscrollBehaviorY: "none",
+      direction: "inherit",
     },
     content: {
       display: "flex",
@@ -64,12 +65,17 @@ export const dialogSlotRecipe = defineSlotRecipe({
       _closed: {
         animationDuration: "faster",
       },
+      direction: "inherit",
+    },
+    closeTrigger: {
+      direction: "inherit",
     },
     header: {
       flex: 0,
       px: "6",
       pt: "4",
       pb: "4",
+      direction: "inherit",
     },
     body: {
       flex: "1",
@@ -89,6 +95,7 @@ export const dialogSlotRecipe = defineSlotRecipe({
     title: {
       textStyle: "lg",
       fontWeight: "semibold",
+      direction: "inherit",
     },
     description: {
       color: "fg.muted",

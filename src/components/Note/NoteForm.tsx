@@ -52,6 +52,7 @@ const NoteForm = ({
 
   const onClickCancelButton = () => {
     note.setText(note.preSaveText);
+    note.setDirection(note.preSaveDirection);
 
     if (note.preSaveText) {
       setEditable(false);
@@ -89,6 +90,7 @@ const NoteForm = ({
       )}
       {isEditable === false ? (
         <NoteContainer
+          noteId={note.id}
           isSynced={note.isSynced}
           isSyncing={note.isSyncing}
           isOutOfSync={note.isOutOfSync}
@@ -105,6 +107,7 @@ const NoteForm = ({
         />
       ) : (
         <TextareaNote
+          noteId={note.id}
           isSynced={note.isSynced}
           isSyncing={note.isSyncing}
           isOutOfSync={note.isOutOfSync}
@@ -114,6 +117,7 @@ const NoteForm = ({
           inputValue={note.text}
           inputDirection={note.direction}
           inputSaved={note.isSaved}
+          dateModified={note.dateModified}
           handleSetDirection={handleSetDirection}
           onChangeNote={onChangeNote}
           onSaveNote={onSaveNote}

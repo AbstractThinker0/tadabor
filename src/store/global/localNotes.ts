@@ -11,6 +11,7 @@ import type {
   MarkSavedPayload,
   NotesStateProps,
 } from "@/types";
+import { hasNoteChanged } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 
 const initialState: NotesStateProps<LocalNoteProps> = {
@@ -56,6 +57,8 @@ export const useLocalNotesStore = create(
             ...note,
             saved: true,
             preSave: note.text,
+            preSaveDir: note.dir ?? "",
+            hasPersistedVersion: true,
           };
         });
 
@@ -112,6 +115,8 @@ export const useLocalNotesStore = create(
               ...note,
               saved: true,
               preSave: note.text,
+              preSaveDir: note.dir ?? "",
+              hasPersistedVersion: true,
             };
 
             set((state) => {
@@ -138,6 +143,8 @@ export const useLocalNotesStore = create(
       cacheNote: (note: LocalNoteProps) => {
         set((state) => {
           note.saved = false;
+          note.preSaveDir = note.preSaveDir ?? note.dir ?? "";
+          note.hasPersistedVersion = note.hasPersistedVersion ?? false;
           state.data[note.id] = note;
           state.dataLoading[note.id] = false;
           state.dataComplete[note.id] = true;
@@ -160,7 +167,7 @@ export const useLocalNotesStore = create(
             note.saved = false;
           }
 
-          if (note.preSave === note.text && note.text) {
+          if (!hasNoteChanged(note) && note.text) {
             note.saved = true;
           }
         });
@@ -172,6 +179,7 @@ export const useLocalNotesStore = create(
           const note = state.data[id];
           if (!note) return;
           note.dir = value;
+          note.saved = !hasNoteChanged(note) && !!note.text;
         });
       },
 
@@ -190,9 +198,11 @@ export const useLocalNotesStore = create(
           if (!note) return false;
 
           note.saved = true;
+          note.hasPersistedVersion = true;
 
-          if (note.text !== note.preSave) {
+          if (hasNoteChanged(note)) {
             note.preSave = note.text;
+            note.preSaveDir = note.dir ?? "";
             note.date_modified = saveData.date_modified;
           }
         });

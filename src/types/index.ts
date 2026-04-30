@@ -14,6 +14,8 @@ export interface selectedChaptersType {
 interface NoteSaveProps {
   saved?: boolean;
   preSave?: string;
+  preSaveDir?: string;
+  hasPersistedVersion?: boolean;
 }
 
 // used for state

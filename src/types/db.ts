@@ -18,6 +18,19 @@ export interface ICloudProps {
   isPublished?: boolean;
 }
 
+export interface INoteRevision {
+  id: string;
+  uuid: string;
+  note_id: string;
+  note_uuid: string;
+  note_type: string;
+  note_key: string;
+  text: string;
+  dir?: string;
+  date_created: number;
+  note_date_modified?: number;
+}
+
 // Prefer a type alias with IBaseNote on the left so base fields show first in IntelliSense
 export type ICloudNote = IBaseNote & ICloudProps;
 

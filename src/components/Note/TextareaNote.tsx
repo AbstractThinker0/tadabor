@@ -7,6 +7,7 @@ import { ButtonCancel, ButtonSave } from "@/components/Generic/Buttons";
 import { TextareaHeader } from "@/components/Note/TextareaHeader";
 
 interface TextareaNoteProps {
+  noteId: string;
   isSynced: boolean;
   isSyncing: boolean;
   isOutOfSync: boolean;
@@ -16,6 +17,7 @@ interface TextareaNoteProps {
   inputValue: string;
   inputDirection: string;
   inputSaved?: boolean;
+  dateModified?: number;
   handleSetDirection: (dir: string) => void;
   onChangeNote: (text: string) => void;
   onSaveNote: () => void;
@@ -23,6 +25,7 @@ interface TextareaNoteProps {
 }
 
 const TextareaNote = ({
+  noteId,
   isSynced,
   isSyncing,
   isOutOfSync,
@@ -32,6 +35,7 @@ const TextareaNote = ({
   inputValue,
   inputDirection,
   inputSaved = true,
+  dateModified,
   handleSetDirection,
   onChangeNote,
   onSaveNote,
@@ -43,6 +47,7 @@ const TextareaNote = ({
     <TextareaNoteContainer onSaveNote={onSaveNote}>
       <TextareaHeader
         handleSetDirection={handleSetDirection}
+        noteId={noteId}
         noteKey={noteKey}
         noteType={noteType}
         isSynced={isSynced}
@@ -50,6 +55,7 @@ const TextareaNote = ({
         isOutOfSync={isOutOfSync}
         inputValue={inputValue}
         inputSaved={inputSaved}
+        dateModified={dateModified}
       />
       <TextareaNoteEditor
         inputValue={inputValue}

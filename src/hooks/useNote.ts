@@ -5,9 +5,11 @@ import { useUserStore } from "@/store/global/userStore";
 
 import { toaster } from "@/components/ui/toaster";
 import { type ICloudNote } from "@/util/db";
+import { dbNoteRevisions } from "@/util/dbFuncs";
 
 import {
   createNewNote,
+  createNoteRevision,
   computeDateModified,
   fromDexieToBackend,
 } from "@/util/notes";
@@ -47,6 +49,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
 
   const noteText = note?.text ?? "";
   const notePreSaveText = note?.preSave ?? "";
+  const notePreSaveDirection = note?.preSaveDir ?? "";
   const noteSaved = note?.saved ?? false;
   const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
   const noteValidType = note?.type ?? noteType ?? noteSplitType;
@@ -109,13 +112,27 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
 
     setIsDbSaving(true);
 
-    await performLocalSave(saveData);
+    try {
+      const revision = createNoteRevision(note);
 
-    if (isLogged) {
-      await performCloudSync(saveData);
+      if (revision) {
+        const { error: revisionError } = await tryCatch(
+          dbNoteRevisions.save(revision)
+        );
+
+        if (revisionError) {
+          console.error("Failed to save note revision:", revisionError);
+        }
+      }
+
+      await performLocalSave(saveData);
+
+      if (isLogged) {
+        await performCloudSync(saveData);
+      }
+    } finally {
+      setIsDbSaving(false);
     }
-
-    setIsDbSaving(false);
   };
 
   // Helper: Perform local DB save and update state
@@ -172,7 +189,9 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   */
 
   return {
+    id: noteIndex,
     preSaveText: notePreSaveText,
+    preSaveDirection: notePreSaveDirection,
     text: noteText,
     direction: noteDirection,
     isSaved: noteSaved,

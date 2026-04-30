@@ -9,6 +9,7 @@ import { NoteTools } from "@/components/Note/NoteTools";
 
 interface TextareaHeaderProps {
   handleSetDirection: (direction: string) => void;
+  noteId: string;
   noteType?: string;
   noteKey?: string;
   isSynced: boolean;
@@ -16,10 +17,12 @@ interface TextareaHeaderProps {
   isOutOfSync: boolean;
   inputValue: string;
   inputSaved: boolean;
+  dateModified?: number;
 }
 
 const TextareaHeader = ({
   handleSetDirection,
+  noteId,
   isSynced,
   isSyncing,
   isOutOfSync,
@@ -27,6 +30,7 @@ const TextareaHeader = ({
   noteKey,
   inputValue,
   inputSaved,
+  dateModified,
 }: TextareaHeaderProps) => {
   const isPendingSave = !inputSaved || !inputValue;
 
@@ -52,7 +56,11 @@ const TextareaHeader = ({
       </Box>
       <TextareaToolbar handleSetDirection={handleSetDirection} />
       <Box position="absolute" insetInlineEnd={0}>
-        <NoteTools inputValue={inputValue} />
+        <NoteTools
+          noteId={noteId}
+          dateModified={dateModified}
+          inputValue={inputValue}
+        />
       </Box>
     </Flex>
   );

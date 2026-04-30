@@ -14,6 +14,7 @@ import { NoteTitle } from "@/components/Note/NoteTitle";
 import { NoteTools } from "@/components/Note/NoteTools";
 
 interface NoteContainerProps {
+  noteId: string;
   isSynced: boolean;
   isSyncing: boolean;
   isOutOfSync: boolean;
@@ -30,6 +31,7 @@ interface NoteContainerProps {
 }
 
 const NoteContainer = ({
+  noteId,
   isSynced,
   isSyncing,
   isOutOfSync,
@@ -58,6 +60,7 @@ const NoteContainer = ({
       pt={"0.1rem"}
     >
       <NoteContainerHeader
+        noteId={noteId}
         noteKey={noteKey}
         noteType={noteType}
         isSynced={isSynced}
@@ -65,6 +68,7 @@ const NoteContainer = ({
         isOutOfSync={isOutOfSync}
         inputValue={inputValue}
         inputSaved={inputSaved}
+        dateModified={dateModified}
       />
       <NoteContainerBody
         inputSaved={inputSaved}
@@ -84,6 +88,7 @@ const NoteContainer = ({
 };
 
 interface NoteContainerHeaderProps {
+  noteId: string;
   noteType?: string;
   noteKey?: string;
   isSyncing: boolean;
@@ -91,9 +96,11 @@ interface NoteContainerHeaderProps {
   isOutOfSync: boolean;
   inputValue: string;
   inputSaved: boolean;
+  dateModified?: number;
 }
 
 const NoteContainerHeader = ({
+  noteId,
   noteType,
   noteKey,
   isSyncing,
@@ -101,6 +108,7 @@ const NoteContainerHeader = ({
   isOutOfSync,
   inputValue,
   inputSaved,
+  dateModified,
 }: NoteContainerHeaderProps) => {
   const pageDirection = useNavigationStore((state) => state.pageDirection);
 
@@ -120,7 +128,11 @@ const NoteContainerHeader = ({
         isOutOfSync={isOutOfSync}
         isPendingSave={isPendingSave}
       />
-      <NoteTools inputValue={inputValue} />
+      <NoteTools
+        noteId={noteId}
+        dateModified={dateModified}
+        inputValue={inputValue}
+      />
     </Flex>
   );
 };
