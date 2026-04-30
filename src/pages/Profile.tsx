@@ -46,6 +46,8 @@ import { useNavigationStore } from "@/store/global/navigationStore";
 const Profile = () => {
   usePageNav("auth.profile");
 
+  const { t } = useTranslation();
+
   const [currentTab, setCurrentTab] = useState("userBio");
   const isSmallScreen = useScreenSize();
 
@@ -68,30 +70,30 @@ const Profile = () => {
             fontSize={"small"}
             value="userBio"
             gap={2}
-            title="Your bio"
+            title={t("profile.tabs.bio")}
           >
             <FaRegUser />
-            {!isSmallScreen && "Your bio"}
+            {!isSmallScreen && t("profile.tabs.bio")}
           </Tabs.Trigger>
           <Tabs.Trigger
             padding={1}
             fontSize={"small"}
             value="updateProfile"
             gap={2}
-            title="Update Profile"
+            title={t("profile.tabs.update_profile")}
           >
             <LiaUserEditSolid />
-            {!isSmallScreen && "Update Profile"}
+            {!isSmallScreen && t("profile.tabs.update_profile")}
           </Tabs.Trigger>
           <Tabs.Trigger
             padding={1}
             fontSize={"small"}
             value="Connected"
             gap={2}
-            title="Connected devices"
+            title={t("profile.tabs.connected_devices")}
           >
             <PiDevicesLight />
-            {!isSmallScreen && "Connected devices"}
+            {!isSmallScreen && t("profile.tabs.connected_devices")}
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.ContentGroup>
@@ -192,7 +194,7 @@ const UserBio = () => {
             onClick={() => setAvatarSeed(userId.toString())}
             variant={"outline"}
           >
-            <MdOutlineRestore /> Restore default
+            <MdOutlineRestore /> {t("profile.avatar.restore_default")}
           </Button>
           <Button
             borderRadius={"xl"}
@@ -200,7 +202,7 @@ const UserBio = () => {
             colorPalette={"yellow"}
           >
             <MdOutlineAutoAwesome />
-            Random Avatar
+            {t("profile.avatar.random")}
           </Button>
         </Flex>
       </Flex>
@@ -211,7 +213,7 @@ const UserBio = () => {
         alignItems={"center"}
         paddingTop={8}
       >
-        <Heading size={"2xl"}>Bio</Heading>
+        <Heading size={"2xl"}>{t("profile.bio.title")}</Heading>
         <Flex flex={1} width={"100%"} px={5}>
           <TextareaAutosize
             dir="auto"
@@ -220,7 +222,7 @@ const UserBio = () => {
             resize={editMode ? "block" : "none"}
             width={"100%"}
             outline={"none"}
-            placeholder="Your about me.."
+            placeholder={t("profile.bio.placeholder")}
             textAlign={"center"}
             value={description}
             fontSize={"medium"}
@@ -230,11 +232,11 @@ const UserBio = () => {
         <Button variant={"ghost"} onClick={() => onClickBioButton(!editMode)}>
           {editMode ? (
             <>
-              <MdCancel /> Cancel edit
+              <MdCancel /> {t("profile.bio.cancel_edit")}
             </>
           ) : (
             <>
-              <MdEdit /> Edit Bio
+              <MdEdit /> {t("profile.bio.edit")}
             </>
           )}
         </Button>
@@ -246,7 +248,7 @@ const UserBio = () => {
           onClick={onClickSave}
           px={10}
         >
-          Save Changes
+          {t("ui.actions.save_changes")}
         </Button>
       </Box>
     </Flex>
@@ -291,7 +293,7 @@ const UpdateProfile = () => {
     setValidationError("");
 
     if (sameEmail && sameUsername) {
-      setValidationError("Identical to old email and username");
+      setValidationError(t("profile.validation.identical_email_username"));
       return;
     }
 
@@ -352,14 +354,12 @@ const UpdateProfile = () => {
     }
 
     if (oldPassword === newPassword) {
-      setValidationErrorPassword("Old and new password are identical");
+      setValidationErrorPassword(t("profile.validation.password_identical"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setValidationErrorPassword(
-        "new password and confirm password are different"
-      );
+      setValidationErrorPassword(t("profile.validation.password_mismatch"));
       return;
     }
 
@@ -388,7 +388,7 @@ const UpdateProfile = () => {
           direction={"ltr"}
           value={username}
           onChange={onChangeUsername}
-          placeholder="Enter your username"
+          placeholder={t("profile.placeholders.username")}
           bgColor={"bg"}
         />
         <Text>{t("auth.email")}</Text>
@@ -397,7 +397,7 @@ const UpdateProfile = () => {
           type="email"
           value={email}
           onChange={onChangeEmail}
-          placeholder="Enter your email"
+          placeholder={t("profile.placeholders.email")}
           bgColor={"bg"}
         />
         {validationError && (
@@ -433,7 +433,7 @@ const UpdateProfile = () => {
         <PasswordInput
           value={oldPassword}
           onChange={onChangeOldPassword}
-          placeholder="Enter your old password"
+          placeholder={t("profile.placeholders.old_password")}
           bgColor={"bg"}
         />
 
@@ -441,14 +441,14 @@ const UpdateProfile = () => {
         <PasswordInput
           value={newPassword}
           onChange={onChangeNewPassword}
-          placeholder="Enter your new password"
+          placeholder={t("profile.placeholders.new_password")}
           bgColor={"bg"}
         />
         <Text>{t("auth.confirmNewPassword")}</Text>
         <PasswordInput
           value={confirmPassword}
           onChange={onChangeConfirmPassword}
-          placeholder="Enter your new password"
+          placeholder={t("profile.placeholders.new_password")}
           bgColor={"bg"}
         />
         {validationErrorPassword && (
@@ -484,6 +484,7 @@ const getDeviceIcon = (deviceType: string) => {
 };
 
 const ConnectedDevices = () => {
+  const { t } = useTranslation();
   const { data, isLoading, error } = useConnectedDevices();
   const revokeDevice = useRevokeDevice();
 
@@ -492,23 +493,23 @@ const ConnectedDevices = () => {
 
     if (error) {
       toaster.create({
-        description: error.message || "Failed to sign out device",
+        description: error.message || t("profile.devices.sign_out_failed"),
         type: "error",
       });
     } else {
       toaster.create({
-        description: "Device signed out successfully",
+        description: t("profile.devices.sign_out_success"),
         type: "success",
       });
     }
   };
 
   if (isLoading) {
-    return <LoadingSpinner text="Loading devices..." />;
+    return <LoadingSpinner text={t("ui.state.loading_devices")} />;
   }
 
   if (error) {
-    return <ErrorRefresh message="Failed to load connected devices." />;
+    return <ErrorRefresh message={t("profile.devices.load_failed")} />;
   }
 
   const devices = data?.devices || [];
@@ -516,16 +517,16 @@ const ConnectedDevices = () => {
   if (devices.length === 0) {
     return (
       <Flex flex={1} justifyContent="center" alignItems="center" p={8}>
-        <Text>No connected devices found</Text>
+        <Text>{t("profile.devices.none")}</Text>
       </Flex>
     );
   }
 
   return (
     <Flex flexDirection="column" p={4} gap={4}>
-      <Heading size="lg">Connected Devices</Heading>
+      <Heading size="lg">{t("profile.devices.title")}</Heading>
       <Text fontSize="sm" color="fg.muted">
-        These are the devices currently logged into your account.
+        {t("profile.devices.description")}
       </Text>
       <Flex flexDirection="column" gap={3}>
         {devices.map((device) => (
@@ -550,7 +551,7 @@ const ConnectedDevices = () => {
                 <Text fontWeight="medium">{device.browser}</Text>
                 {device.isCurrent && (
                   <Badge colorPalette="green" size="sm">
-                    Current
+                    {t("profile.devices.current")}
                   </Badge>
                 )}
               </Flex>
@@ -558,9 +559,15 @@ const ConnectedDevices = () => {
                 {device.os}
               </Text>
               <Flex fontSize="xs" color="fg.muted" gap={4}>
-                <Text>IP: {device.ipAddress || "Unknown"}</Text>
                 <Text>
-                  Logged in: {new Date(device.loginTime).toLocaleDateString()}
+                  {t("profile.devices.ip", {
+                    value: device.ipAddress || t("profile.devices.ip_unknown"),
+                  })}
+                </Text>
+                <Text>
+                  {t("profile.devices.login_time", {
+                    value: new Date(device.loginTime).toLocaleDateString(),
+                  })}
                 </Text>
               </Flex>
             </Flex>
@@ -573,7 +580,7 @@ const ConnectedDevices = () => {
                 loading={revokeDevice.isPending}
               >
                 <IoLogOutOutline />
-                Sign out
+                {t("ui.actions.sign_out")}
               </Button>
             )}
           </Flex>

@@ -1,4 +1,5 @@
 import { useRef, useState, useTransition, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 
@@ -22,6 +23,7 @@ import { useBoolean } from "usehooks-ts";
 import { AiOutlineTranslation } from "react-icons/ai";
 
 const DisplayPanel = () => {
+  const { t } = useTranslation();
   const quranService = useQuran();
   const currentChapter = useTranslationPageStore(
     (state) => state.currentChapter
@@ -94,7 +96,7 @@ const DisplayPanel = () => {
           ref={handleVerseListRef}
         >
           {isPending ? (
-            <LoadingSpinner text="Loading verses.." />
+            <LoadingSpinner text={t("ui.state.loading_verses")} />
           ) : (
             stateVerses.map((verse) => {
               return (

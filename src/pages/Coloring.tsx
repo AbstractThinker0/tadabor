@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
@@ -14,6 +15,7 @@ import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 const Coloring = () => {
   usePageNav("nav.coloring");
+  const { t } = useTranslation();
 
   const complete = useColoringPageStore((state) => state.complete);
   const error = useColoringPageStore((state) => state.error);
@@ -39,9 +41,11 @@ const Coloring = () => {
     setSearchPanel(state);
   };
 
-  if (error) return <ErrorRefresh message="Failed to load coloring data." />;
+  if (error)
+    return <ErrorRefresh message={t("ui.state.failed_load_coloring_data")} />;
 
-  if (!complete) return <LoadingSpinner text="Loading colors data.." />;
+  if (!complete)
+    return <LoadingSpinner text={t("ui.state.loading_colors_data")} />;
 
   return (
     <Flex overflow={"hidden"} maxH={"100%"} h={"100%"} bgColor={"brand.bg"}>

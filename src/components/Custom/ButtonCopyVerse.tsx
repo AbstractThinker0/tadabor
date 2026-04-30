@@ -1,4 +1,5 @@
 import { useQuran } from "@/context/useQuran";
+import { useTranslation } from "react-i18next";
 
 import { ButtonCopy } from "@/components/Custom/ButtonCopy";
 
@@ -7,6 +8,7 @@ interface ButtonCopyVerseProps {
 }
 
 const ButtonCopyVerse = ({ verseKey }: ButtonCopyVerseProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
   const verseText = quranService.getVerseTextByKey(verseKey);
 
@@ -15,7 +17,7 @@ const ButtonCopyVerse = ({ verseKey }: ButtonCopyVerseProps) => {
   return (
     <ButtonCopy
       copyText={`${verseText} (${verseRef})`}
-      copyNotice="Copied verse to clipboard"
+      copyNotice={t("ui.messages.copied_verse")}
     />
   );
 };

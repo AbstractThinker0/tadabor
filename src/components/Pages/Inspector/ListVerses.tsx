@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 
@@ -17,6 +18,7 @@ interface ListVersesProps {
 }
 
 const ListVerses = ({ currentChapter }: ListVersesProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -59,7 +61,7 @@ const ListVerses = ({ currentChapter }: ListVersesProps) => {
       dir="rtl"
     >
       {isPending ? (
-        <LoadingSpinner text="Loading verses.." />
+        <LoadingSpinner text={t("ui.state.loading_verses")} />
       ) : (
         stateVerses.map((verse) => (
           <VerseItem

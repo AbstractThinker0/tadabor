@@ -1,4 +1,5 @@
 import { useEffect, useState, useTransition, type RefObject } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 import { useSettingsStore } from "@/store/global/settingsStore";
@@ -32,6 +33,7 @@ const Display = ({
   handleSelectVerse,
   refVerseList,
 }: DisplayProps) => {
+  const { t } = useTranslation();
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
   const quranService = useQuran();
   const [isPending, startTransition] = useTransition();
@@ -83,7 +85,7 @@ const Display = ({
       </Box>
       <Flex flexDirection={"column"} flex={1} ref={refVerseList}>
         {isPending ? (
-          <LoadingSpinner text="Loading verses.." />
+          <LoadingSpinner text={t("ui.state.loading_verses")} />
         ) : (
           stateVerses.map((verse) => (
             <VerseItem

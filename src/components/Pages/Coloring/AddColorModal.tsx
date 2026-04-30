@@ -32,7 +32,7 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
 
   async function onClickSave() {
     if (!colorName) {
-      alert("Please enter the color display name");
+      alert(t("coloring.add.display_name_required"));
       return;
     }
 
@@ -65,19 +65,19 @@ const AddColorModal = ({ isOpen, onClose }: AddColorModalProps) => {
       isOpen={isOpen}
       onClose={onClose}
       onSave={onClickSave}
-      title="Add a new color"
+      title={t("coloring.add.title")}
     >
       <Box pb={1}>
-        <span>Display name: </span>
+        <span>{t("coloring.add.display_name_label")} </span>
         <Input
           type="text"
-          placeholder="display name"
+          placeholder={t("coloring.add.display_name_placeholder")}
           value={colorName}
           onChange={onChangeName}
         />
       </Box>
       <div>
-        <span>Color:</span>
+        <span>{t("coloring.add.color_label")}</span>
         <Input onInput={onInputColor} type="color" value={colorCode} />
       </div>
     </FormModal>

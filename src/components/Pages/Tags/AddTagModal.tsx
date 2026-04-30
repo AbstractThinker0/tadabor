@@ -27,7 +27,7 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
 
   async function onClickSave() {
     if (!tagName) {
-      alert("Please enter the tag display name");
+      alert(t("tags.add.display_name_required"));
       return;
     }
 
@@ -60,14 +60,14 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
       isOpen={isOpen}
       onClose={onClose}
       onSave={onClickSave}
-      title="Add a new tag"
+      title={t("tags.add.title")}
       size="xl"
     >
       <Box pb={1}>
-        <span>Display name: </span>
+        <span>{t("tags.add.display_name_label")} </span>
         <Input
           type="text"
-          placeholder="display name"
+          placeholder={t("tags.add.display_name_placeholder")}
           value={tagName}
           onChange={onChangeName}
         />

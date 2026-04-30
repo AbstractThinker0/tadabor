@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 
@@ -54,6 +55,7 @@ const ListTitle = () => {
 };
 
 const ListBody = () => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -89,7 +91,7 @@ const ListBody = () => {
     }
   }, [scrollKey, isPending]);
 
-  if (isPending) return <LoadingSpinner text="Loading verses.." />;
+  if (isPending) return <LoadingSpinner text={t("ui.state.loading_verses")} />;
 
   return (
     <Box

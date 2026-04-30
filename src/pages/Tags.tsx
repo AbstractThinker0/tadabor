@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { Sidebar } from "@/components/Generic/Sidebar";
@@ -13,6 +14,7 @@ import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 const Tags = () => {
   usePageNav("nav.tags");
+  const { t } = useTranslation();
 
   const complete = useTagsPageStore((state) => state.complete);
   const error = useTagsPageStore((state) => state.error);
@@ -32,9 +34,10 @@ const Tags = () => {
     setSearchPanel(state);
   };
 
-  if (error) return <ErrorRefresh message="Failed to load tags data." />;
+  if (error)
+    return <ErrorRefresh message={t("ui.state.failed_load_tags_data")} />;
 
-  if (!complete) return <LoadingSpinner text="Loading tags.." />;
+  if (!complete) return <LoadingSpinner text={t("ui.state.loading_tags")} />;
 
   return (
     <Flex bgColor={"brand.bg"} overflow={"hidden"} maxH={"100%"} h={"100%"}>

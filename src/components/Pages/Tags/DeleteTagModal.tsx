@@ -49,11 +49,11 @@ const DeleteTagModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={onClickDelete}
-      title="Delete tag confirmation"
-      confirmText="Yes, delete"
+      title={t("tags.delete.title")}
+      confirmText={t("tags.delete.confirm")}
     >
       <Box>
-        Are you sure you want to delete{" "}
+        {t("tags.delete.body_prefix")}{" "}
         <Span
           padding={"3px"}
           bgColor={"yellow.emphasized"}
@@ -62,9 +62,9 @@ const DeleteTagModal = ({
         >
           {currentTag?.tagDisplay}
         </Span>{" "}
-        tag? All verses tagged with this tag will lose it.
+        {t("tags.delete.body_suffix")}
       </Box>
-      <p>Number of verses affected: {versesCount}</p>
+      <p>{t("tags.delete.affected_verses", { count: versesCount })}</p>
     </ConfirmationModal>
   );
 };

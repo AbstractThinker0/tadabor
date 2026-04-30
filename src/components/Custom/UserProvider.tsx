@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUserStore } from "@/store/global/userStore";
 
@@ -11,6 +12,7 @@ interface UserProviderProps {
 }
 
 const UserProvider = ({ children }: UserProviderProps) => {
+  const { t } = useTranslation();
   const { confirmLogin, logout, loginOffline } = useAuth();
 
   const isLoginPending = useUserStore((state) => state.isPending);
@@ -66,7 +68,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
   }, [userRefresh.isError]);
 
   if (isLoginPending) {
-    return <LoadingSpinner text="Pending login.." />;
+    return <LoadingSpinner text={t("ui.state.pending_login")} />;
   }
 
   return <>{children}</>;

@@ -1,4 +1,5 @@
 import { useState, useEffect, type PropsWithChildren, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 
@@ -12,6 +13,7 @@ import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 const MAX_RETRIES = 3;
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const quranInstance = useMemo(() => new quranClass(), []);
@@ -77,13 +79,13 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner text="Loading Quran data.." />;
+    return <LoadingSpinner text={t("ui.state.loading_quran_data")} />;
   }
 
   if (error) {
     return (
       <ErrorRefresh
-        message="Failed to load Quran data after multiple attempts."
+        message={t("ui.state.failed_load_quran_data")}
         handleRefresh={handleRefresh}
       />
     );

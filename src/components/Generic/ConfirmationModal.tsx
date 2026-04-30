@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Dialog, Button, ButtonGroup } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface ConfirmationModalProps {
@@ -20,11 +21,13 @@ const ConfirmationModal = ({
   onConfirm,
   title,
   children,
-  confirmText = "Yes, confirm",
-  cancelText = "No, Cancel",
+  confirmText,
+  cancelText,
   confirmColorPalette = "red",
   size = "xl",
 }: ConfirmationModalProps) => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Dialog.Root
       size={size}
@@ -32,7 +35,7 @@ const ConfirmationModal = ({
       onInteractOutside={onClose}
       placement={"center"}
     >
-      <DialogContent dir="ltr">
+      <DialogContent dir={i18n.dir()}>
         <Dialog.Header
           borderBottom="1px solid"
           borderColor={"border.emphasized"}
@@ -48,10 +51,10 @@ const ConfirmationModal = ({
         >
           <ButtonGroup>
             <Button colorPalette="gray" onClick={onClose}>
-              {cancelText}
+              {cancelText ?? t("ui.actions.cancel")}
             </Button>
             <Button colorPalette={confirmColorPalette} onClick={onConfirm}>
-              {confirmText}
+              {confirmText ?? t("ui.actions.confirm")}
             </Button>
           </ButtonGroup>
         </Dialog.Footer>

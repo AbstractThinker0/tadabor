@@ -97,7 +97,7 @@ const ListSearchResults = ({
             </>
           )}
           {isPending ? (
-            <LoadingSpinner text="Loading verses..." />
+            <LoadingSpinner text={t("ui.state.loading_verses")} />
           ) : (
             <Box dir="rtl" ref={refListVerses} p={1}>
               {stateVerses.map((verse, index) => (

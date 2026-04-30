@@ -19,18 +19,18 @@ import {
 } from "@/services/backend";
 import { tryCatch } from "@/util/trycatch";
 
-const ROLE_LABELS: Record<number, string> = {
-  0: "User",
-  1: "Moderator",
-  2: "Admin",
-};
-
-const getRoleLabel = (role: number | null | undefined): string => {
-  return ROLE_LABELS[role ?? 0] ?? "User";
-};
-
 export const UsersTab = () => {
   const { t } = useTranslation();
+
+  const roleLabels: Record<number, string> = {
+    0: t("admin.role_user"),
+    1: t("admin.role_moderator"),
+    2: t("admin.role_admin"),
+  };
+
+  const getRoleLabel = (role: number | null | undefined): string => {
+    return roleLabels[role ?? 0] ?? roleLabels[0];
+  };
 
   const [limit, setLimit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
@@ -84,12 +84,12 @@ export const UsersTab = () => {
       console.error("Failed to update user:", error);
       toasterBottomCenter.create({
         type: "error",
-        description: "Failed to update user",
+        description: t("admin.messages.update_failed"),
       });
     } else {
       toasterBottomCenter.create({
         type: "success",
-        description: "User updated",
+        description: t("admin.messages.update_success"),
       });
       cancelEdit(id);
     }
@@ -103,17 +103,17 @@ export const UsersTab = () => {
       console.error("Failed to delete user:", error);
       toasterBottomCenter.create({
         type: "error",
-        description: "Failed to delete user",
+        description: t("admin.messages.delete_failed"),
       });
     } else if (res.success) {
       toasterBottomCenter.create({
         type: "success",
-        description: "User deleted",
+        description: t("admin.messages.delete_success"),
       });
     } else {
       toasterBottomCenter.create({
         type: "error",
-        description: res.message || "Failed to delete user",
+        description: res.message || t("admin.messages.delete_failed"),
       });
     }
   };
@@ -134,11 +134,13 @@ export const UsersTab = () => {
         <Table.Root size="sm" variant="outline">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>ID</Table.ColumnHeader>
-              <Table.ColumnHeader>Username</Table.ColumnHeader>
-              <Table.ColumnHeader>Email</Table.ColumnHeader>
-              <Table.ColumnHeader>Role</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">Actions</Table.ColumnHeader>
+              <Table.ColumnHeader>{t("admin.id")}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t("admin.username")}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t("admin.email")}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t("admin.role")}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right">
+                {t("admin.actions")}
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>

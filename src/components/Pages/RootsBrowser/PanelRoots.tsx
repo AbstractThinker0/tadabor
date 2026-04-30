@@ -1,4 +1,5 @@
 import { useEffect, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useRootsBrowserPageStore } from "@/store/pages/rootsBrowserPage";
 
@@ -16,6 +17,7 @@ import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const PanelRoots = () => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
@@ -81,7 +83,7 @@ const PanelRoots = () => {
       />
 
       {!rootsLoaded ? (
-        <LoadingSpinner text="Loading roots data.." />
+        <LoadingSpinner text={t("ui.state.loading_roots_data")} />
       ) : (
         <Flex flex={1} flexDirection={"column"}>
           {stateRoots.slice(0, itemsCount).map((root) => (

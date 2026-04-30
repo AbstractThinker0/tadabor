@@ -74,7 +74,7 @@ const PanelDefinitions = () => {
   }, [initializeDefinitions, initializePresets]);
 
   if (definitionsLoading || presetsLoading)
-    return <LoadingSpinner text="Loading definitions" />;
+    return <LoadingSpinner text={t("ui.state.loading_definitions")} />;
 
   return (
     <Flex

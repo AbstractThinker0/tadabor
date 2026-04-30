@@ -13,8 +13,10 @@ import {
 } from "@/util/notes";
 
 import { useEffect, useEffectEvent, type PropsWithChildren } from "react";
+import { useTranslation } from "react-i18next";
 
 const CloudNotesProvider = ({ children }: PropsWithChildren) => {
+  const { t } = useTranslation();
   const isLogged = useUserStore((state) => state.isLogged);
   const isLoggedOffline = useUserStore((state) => state.isLoggedOffline);
   const userId = useUserStore((state) => state.id);
@@ -159,7 +161,7 @@ const CloudNotesProvider = ({ children }: PropsWithChildren) => {
   }, [isCloudNotesComplete]);
 
   if (isLogged && !isCloudNotesComplete) {
-    return <LoadingSpinner text="Loading cloud notes.." />;
+    return <LoadingSpinner text={t("ui.state.loading_cloud_notes")} />;
   }
 
   return <>{children}</>;

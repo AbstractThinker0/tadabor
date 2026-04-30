@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router";
 
 import { lazy, Suspense } from "react";
+import { useTranslation } from "react-i18next";
 
 const About = lazy(() => import("@/pages/About"));
 const Coloring = lazy(() => import("@/pages/Coloring"));
@@ -28,8 +29,10 @@ import { GuestRoute } from "@/components/Custom/GuestRoute";
 import { AdminRoute } from "@/components/Custom/AdminRoute";
 
 const App = () => {
+  const { t } = useTranslation();
+
   return (
-    <Suspense fallback={<LoadingSpinner text="Loading page.." />}>
+    <Suspense fallback={<LoadingSpinner text={t("ui.state.loading_page")} />}>
       <Routes>
         <Route path="/" element={<QuranBrowser />} />
         <Route path="/roots" element={<RootsBrowser />} />

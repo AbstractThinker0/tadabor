@@ -35,6 +35,7 @@ import { ButtonVerse } from "@/components/Generic/Buttons";
 import { useBoolean } from "usehooks-ts";
 
 const ListVerses = () => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const currentChapter = useLettersPageStore((state) => state.currentChapter);
@@ -58,7 +59,7 @@ const ListVerses = () => {
   return (
     <Flex flexDirection={"column"} flex={1} px={3} dir="rtl">
       {isPending || dataLoading ? (
-        <LoadingSpinner text="Loading verses.." />
+        <LoadingSpinner text={t("ui.state.loading_verses")} />
       ) : (
         stateVerses.map((verse) => <VerseItem key={verse.key} verse={verse} />)
       )}

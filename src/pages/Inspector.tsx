@@ -9,10 +9,12 @@ import { Display } from "@/components/Pages/Inspector/Display";
 
 import { Box, Flex } from "@chakra-ui/react";
 import { usePageNav } from "@/hooks/usePageNav";
+import { useTranslation } from "react-i18next";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const Inspector = () => {
   usePageNav("nav.inspector");
+  const { t } = useTranslation();
   const currentChapter = useInspectorPageStore((state) => state.currentChapter);
   const setCurrentChapter = useInspectorPageStore(
     (state) => state.setCurrentChapter
@@ -53,7 +55,7 @@ const Inspector = () => {
         </Box>
       </Sidebar>
       {!rootsLoaded ? (
-        <LoadingSpinner text="Loading data.." />
+        <LoadingSpinner text={t("ui.state.loading_data")} />
       ) : (
         <Display currentChapter={currentChapter} />
       )}

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Box,
@@ -25,11 +26,10 @@ interface NoteHistoryDialogProps {
   dateModified?: number;
 }
 
-const relativeTimeFormatter = new Intl.RelativeTimeFormat(undefined, {
-  numeric: "auto",
-});
-
-const getRelativeTimestamp = (timestamp: number) => {
+const getRelativeTimestamp = (
+  timestamp: number,
+  relativeTimeFormatter: Intl.RelativeTimeFormat
+) => {
   const diffMs = timestamp - Date.now();
   const absDiffMs = Math.abs(diffMs);
 
@@ -66,11 +66,17 @@ const NoteHistoryDialog = ({
   noteId,
   dateModified,
 }: NoteHistoryDialogProps) => {
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [pendingDeleteRevisionId, setPendingDeleteRevisionId] = useState<
     string | null
   >(null);
+
+  const relativeTimeFormatter = useMemo(
+    () => new Intl.RelativeTimeFormat(i18n.language, { numeric: "auto" }),
+    [i18n.language]
+  );
 
   const { revisions, isLoading, deleteRevision, clearRevisions } =
     useNoteRevisions({
@@ -100,14 +106,14 @@ const NoteHistoryDialog = ({
 
     if (!didDelete) {
       toaster.create({
-        description: "Failed to delete revision",
+        description: t("notes.history.delete_failed"),
         type: "error",
       });
       return;
     }
 
     toaster.create({
-      description: "Revision deleted",
+      description: t("notes.history.delete_success"),
       type: "success",
     });
   };
@@ -118,14 +124,14 @@ const NoteHistoryDialog = ({
 
     if (!didClear) {
       toaster.create({
-        description: "Failed to clear note history",
+        description: t("notes.history.clear_failed"),
         type: "error",
       });
       return;
     }
 
     toaster.create({
-      description: "Note history cleared",
+      description: t("notes.history.clear_success"),
       type: "success",
     });
   };
@@ -134,7 +140,7 @@ const NoteHistoryDialog = ({
     <>
       <IconButton
         variant="ghost"
-        aria-label="Note history"
+        aria-label={t("notes.history.aria_label")}
         marginEnd={"3px"}
         width={"6px"}
         height={"36px"}
@@ -151,12 +157,12 @@ const NoteHistoryDialog = ({
         onInteractOutside={onClose}
         placement={"center"}
       >
-        <DialogContent>
+        <DialogContent dir={i18n.dir()}>
           <Dialog.Header
             borderBottom="1px solid"
             borderColor={"border.emphasized"}
           >
-            Note history
+            {t("notes.history.title")}
           </Dialog.Header>
 
           <Dialog.Body>
@@ -166,7 +172,7 @@ const NoteHistoryDialog = ({
               </Flex>
             ) : revisions.length === 0 ? (
               <Box py={8} textAlign="center" color="fg.muted">
-                No note history yet.
+                {t("notes.history.empty")}
               </Box>
             ) : (
               <Stack gap={3} separator={<Separator />}>
@@ -176,7 +182,11 @@ const NoteHistoryDialog = ({
                       <Box flex="1">
                         <Text fontSize="sm" color="fg.muted" mb={1}>
                           {new Date(revision.date_created).toLocaleString()} ({" "}
-                          {getRelativeTimestamp(revision.date_created)})
+                          {getRelativeTimestamp(
+                            revision.date_created,
+                            relativeTimeFormatter
+                          )}
+                          )
                         </Text>
                         <Box
                           px={3}
@@ -191,12 +201,14 @@ const NoteHistoryDialog = ({
                           fontFamily={`${notesFont}, serif`}
                         >
                           {revision.text || (
-                            <Text color="fg.muted">Empty note</Text>
+                            <Text color="fg.muted">
+                              {t("notes.history.empty_note")}
+                            </Text>
                           )}
                         </Box>
                       </Box>
                       <IconButton
-                        aria-label="Delete revision"
+                        aria-label={t("notes.history.delete_aria_label")}
                         variant="ghost"
                         colorPalette="red"
                         onClick={() => setPendingDeleteRevisionId(revision.id)}
@@ -222,10 +234,10 @@ const NoteHistoryDialog = ({
               onClick={() => setConfirmClearOpen(true)}
               disabled={revisions.length === 0}
             >
-              Clear all
+              {t("notes.history.clear_all")}
             </Button>
             <Button colorPalette="blue" onClick={onClose}>
-              Close
+              {t("ui.actions.close")}
             </Button>
           </Dialog.Footer>
           <DialogCloseTrigger onClick={onClose} />
@@ -236,10 +248,10 @@ const NoteHistoryDialog = ({
         isOpen={confirmClearOpen}
         onClose={() => setConfirmClearOpen(false)}
         onConfirm={onClearRevisions}
-        title="Clear note history"
-        confirmText="Clear history"
+        title={t("notes.history.clear_title")}
+        confirmText={t("notes.history.clear_confirm")}
       >
-        <Text>This removes all saved revisions for this note.</Text>
+        <Text>{t("notes.history.clear_body")}</Text>
       </ConfirmationModal>
 
       <ConfirmationModal
@@ -248,16 +260,20 @@ const NoteHistoryDialog = ({
         onConfirm={() =>
           pendingDeleteRevision && onDeleteRevision(pendingDeleteRevision.id)
         }
-        title="Delete revision"
-        confirmText="Delete revision"
+        title={t("notes.history.delete_title")}
+        confirmText={t("notes.history.delete_confirm")}
       >
         <Stack gap={3}>
-          <Text>This removes this revision from local note history.</Text>
+          <Text>{t("notes.history.delete_body")}</Text>
           {pendingDeleteRevision && (
             <Text color="fg.muted" fontSize="sm">
-              Revision date:{" "}
+              {t("notes.history.revision_date")}{" "}
               {new Date(pendingDeleteRevision.date_created).toLocaleString()} ({" "}
-              {getRelativeTimestamp(pendingDeleteRevision.date_created)})
+              {getRelativeTimestamp(
+                pendingDeleteRevision.date_created,
+                relativeTimeFormatter
+              )}
+              )
             </Text>
           )}
         </Stack>

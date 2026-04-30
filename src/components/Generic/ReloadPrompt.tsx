@@ -1,5 +1,6 @@
 import { Box, Button } from "@chakra-ui/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { tryCatch } from "@/util/trycatch";
@@ -9,6 +10,7 @@ const SW_CHECK_INTERVAL_MS = 120 * 60000; // 2 hours
 const UPDATE_CHECK_INTERVAL_MS = 15 * 60000; // 15 minute
 
 const ReloadPrompt = () => {
+  const { t, i18n } = useTranslation();
   const [showPrompt, setShowPrompt] = useState(true);
   const [updatePending, setUpdatePending] = useState(false);
 
@@ -81,7 +83,7 @@ const ReloadPrompt = () => {
   };
 
   return (
-    <Box dir="ltr" p={0} m={0} w={0} h={0}>
+    <Box dir={i18n.dir()} p={0} m={0} w={0} h={0}>
       {needRefresh && showPrompt && (
         <Box
           position="fixed"
@@ -95,7 +97,7 @@ const ReloadPrompt = () => {
           borderColor={"border"}
           borderRadius="4px"
           zIndex="toast"
-          textAlign={"left"}
+          textAlign={i18n.dir() === "rtl" ? "right" : "left"}
           boxShadow="md"
           color={"fg"}
           backgroundColor="bg"
@@ -104,27 +106,25 @@ const ReloadPrompt = () => {
         >
           {updatePending ? (
             <Box marginBottom={"8px"}>
-              Reloading the page to apply updates..
+              {t("ui.state.update_reload_pending")}
             </Box>
           ) : (
             <Box>
-              <Box marginBottom={"8px"}>
-                New version available. Save your notes and reload.
-              </Box>
+              <Box marginBottom={"8px"}>{t("ui.state.update_available")}</Box>
 
               <Button
                 marginRight={"5px"}
                 colorPalette={"green"}
                 onClick={onClickReload}
               >
-                Reload
+                {t("ui.actions.reload")}
               </Button>
               <Button
                 bgColor={"gray.300"}
                 color={"black"}
                 onClick={onClickClose}
               >
-                Close
+                {t("ui.actions.close")}
               </Button>
             </Box>
           )}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { verseMatchResult } from "quran-tools";
 
@@ -84,6 +85,7 @@ const RootItem = ({ root_name, root_id, derCount }: RootItemProps) => {
 };
 
 const VersesList = () => {
+  const { t } = useTranslation();
   const refVerses = useRef<HTMLDivElement>(null);
 
   const search_roots = useSearcherPageStore((state) => state.search_roots);
@@ -126,7 +128,7 @@ const VersesList = () => {
     }
   }, [scrollKey]);
 
-  if (isPending) return <LoadingSpinner text="Loading verses.." />;
+  if (isPending) return <LoadingSpinner text={t("ui.state.loading_verses")} />;
 
   return (
     <Flex

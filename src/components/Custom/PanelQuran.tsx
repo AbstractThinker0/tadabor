@@ -1,4 +1,5 @@
 import { useEffect, useState, useTransition, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 
@@ -21,6 +22,7 @@ interface PanelQuranProps {
 }
 
 const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
   const suraID = verseKey.split("-")[0];
 
@@ -78,7 +80,7 @@ const PanelQuran = ({ verseKey, scrollKey, setScrollKey }: PanelQuranProps) => {
     >
       <ChapterHeader chapterID={Number(suraID)} />
       {isPending ? (
-        <LoadingSpinner text="Loading verses.." />
+        <LoadingSpinner text={t("ui.state.loading_verses")} />
       ) : (
         stateVerses.map((verse) => (
           <VerseItem

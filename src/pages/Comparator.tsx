@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 import { useTranslationsStore } from "@/store/global/translations";
@@ -14,6 +15,7 @@ import { ErrorRefresh } from "@/components/Generic/ErrorRefresh";
 
 const Comparator = () => {
   usePageNav("nav.comparator");
+  const { t } = useTranslation();
   const refVerseList = useRef<HTMLDivElement>(null);
   const quranService = useQuran();
 
@@ -75,9 +77,11 @@ const Comparator = () => {
     setCurrentChapter(chapterID);
   };
 
-  if (error) return <ErrorRefresh message="Failed to load translations." />;
+  if (error)
+    return <ErrorRefresh message={t("ui.state.failed_load_translations")} />;
 
-  if (!complete) return <LoadingSpinner text="Loading translations.." />;
+  if (!complete)
+    return <LoadingSpinner text={t("ui.state.loading_translations")} />;
 
   return (
     <Flex flexDirection={"column"} flex={1} bgColor={"brand.bg"}>

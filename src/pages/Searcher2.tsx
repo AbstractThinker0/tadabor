@@ -240,7 +240,7 @@ const Searcher2Tab = () => {
           ref={refVerses}
         >
           {isPendingLoad ? (
-            <LoadingSpinner text="Loading verses.." />
+            <LoadingSpinner text={t("ui.state.loading_verses")} />
           ) : (
             stateVerses
               .slice(0, itemsCount)

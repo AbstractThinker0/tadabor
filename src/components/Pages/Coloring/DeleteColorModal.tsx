@@ -1,4 +1,5 @@
 import { useColoringPageStore } from "@/store/pages/coloringPage";
+import { useTranslation } from "react-i18next";
 
 import { getTextColor } from "@/components/Pages/Coloring/util";
 
@@ -12,6 +13,7 @@ interface DeleteColorModalProps {
 }
 
 const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
+  const { t } = useTranslation();
   const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
   const currentColor = useColoringPageStore((state) => state.currentColor);
   const deleteColor = useColoringPageStore((state) => state.deleteColor);
@@ -36,11 +38,11 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={onClickDelete}
-      title="Delete color confirmation"
-      confirmText="Yes, delete"
+      title={t("coloring.delete.title")}
+      confirmText={t("coloring.delete.confirm")}
     >
       <Text>
-        Are you sure you want to delete{" "}
+        {t("coloring.delete.body_prefix")}{" "}
         <Span
           p={1}
           fontFamily={"initial"}
@@ -53,10 +55,12 @@ const DeleteColorModal = ({ isOpen, onClose }: DeleteColorModalProps) => {
         >
           {currentColor?.colorDisplay}
         </Span>{" "}
-        color? All verses colored with this color will be uncolored.
+        {t("coloring.delete.body_suffix")}
       </Text>
       <Text>
-        Number of verses affected: {getColoredVerses(currentColor?.colorID)}
+        {t("coloring.delete.affected_verses", {
+          count: getColoredVerses(currentColor?.colorID),
+        })}
       </Text>
     </ConfirmationModal>
   );

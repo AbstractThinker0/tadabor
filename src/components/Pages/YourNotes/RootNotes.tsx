@@ -12,9 +12,11 @@ import { useNotesStore } from "@/hooks/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
 
 const RootNotes = () => {
+  const { t } = useTranslation();
   const rootsLoaded = useRootsLoaded();
 
-  if (!rootsLoaded) return <LoadingSpinner text="Loading roots data.." />;
+  if (!rootsLoaded)
+    return <LoadingSpinner text={t("ui.state.loading_roots_data")} />;
 
   return <NotesList />;
 };

@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useTagsPageStore } from "@/store/pages/tagsPage";
 
@@ -57,6 +58,7 @@ interface SelectedContainerProps {
 }
 
 const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const selectedTags = useTagsPageStore((state) => state.selectedTags);
@@ -104,7 +106,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
         <Box flex={1} dir="ltr">
           <Flex alignItems={"center"} gap={"0.5rem"}>
             <Box lineHeight={"short"} fontWeight={"bold"}>
-              Selected tags:
+              {t("tags.selected_tags")}
             </Box>
             <Flex gap={"5px"} flexWrap={"wrap"}>
               {Object.keys(selectedTags).map((tagID) => (
@@ -126,12 +128,12 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
           </Flex>
           <Flex alignItems="center" flexWrap={"wrap"} gap={"5px"}>
             <Box lineHeight={"short"} fontWeight={"bold"}>
-              Selected chapters:
+              {t("tags.selected_chapters")}
             </Box>
             {chaptersScope.length === 114 ? (
               <Box fontWeight={"bold"}>All chapters.</Box>
             ) : chaptersScope.length === 0 ? (
-              <Box fontWeight={"bold"}>No chapters selected.</Box>
+              <Box fontWeight={"bold"}>{t("tags.no_chapters_selected")}</Box>
             ) : (
               chaptersScope.map((chapterID, index) => (
                 <Tag.Root
@@ -163,7 +165,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
         />
       ) : (
         <Box textAlign={"center"} dir="ltr">
-          You have to select at least one chapter.
+          {t("tags.select_at_least_one_chapter")}
         </Box>
       )}
     </>
@@ -183,6 +185,7 @@ const SelectedVerses = ({
   tags,
   onOpenVerseModal,
 }: SelectedVersesProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const refVerses = useRef<HTMLDivElement>(null);
@@ -239,7 +242,7 @@ const SelectedVerses = ({
         </>
       ) : (
         <Box textAlign={"center"} dir="ltr">
-          There are no verses matching the selected tags.
+          {t("tags.no_matching_verses")}
         </Box>
       )}
     </Box>
@@ -251,6 +254,7 @@ interface ListVersesProps {
 }
 
 const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
@@ -303,7 +307,7 @@ const ListVerses = memo(({ onOpenVerseModal }: ListVersesProps) => {
         dir="rtl"
       >
         {isPending ? (
-          <LoadingSpinner text="Loading verses.." />
+          <LoadingSpinner text={t("ui.state.loading_verses")} />
         ) : (
           stateVerses.map((verse) => (
             <VerseItem

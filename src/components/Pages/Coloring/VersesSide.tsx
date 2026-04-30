@@ -1,4 +1,5 @@
 import { useEffect, useTransition, useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
 import type { verseProps } from "quran-tools";
@@ -55,6 +56,7 @@ interface VersesListProps {
 }
 
 const VersesList = ({ openVerseModal }: VersesListProps) => {
+  const { t } = useTranslation();
   const scrollKey = useColoringPageStore((state) => state.scrollKey);
   const currentChapter = useColoringPageStore((state) => state.currentChapter);
   const coloredVerses = useColoringPageStore((state) => state.coloredVerses);
@@ -95,7 +97,7 @@ const VersesList = ({ openVerseModal }: VersesListProps) => {
     <>
       <ListTitle />
       {isPending ? (
-        <LoadingSpinner text="Loading verses.." />
+        <LoadingSpinner text={t("ui.state.loading_verses")} />
       ) : (
         <Box px={2} dir="rtl" ref={handleVerseListRef}>
           {stateVerses.map((verse) => (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Box, type BoxProps } from "@chakra-ui/react";
 
@@ -24,6 +25,7 @@ const NoteForm = ({
   renderHeader,
   rootProps,
 }: NoteFormProps) => {
+  const { t } = useTranslation();
   const note = useNote({
     noteID,
     noteType,
@@ -62,7 +64,7 @@ const NoteForm = ({
   };
 
   if (note.isLoading) {
-    return <LoadingSpinner text="Fetching note.." />;
+    return <LoadingSpinner text={t("ui.state.fetching_note")} />;
   }
 
   return (

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Dialog, Button, ButtonGroup } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 
 interface FormModalProps {
@@ -19,10 +20,12 @@ const FormModal = ({
   onSave,
   title,
   children,
-  saveText = "Save changes",
-  closeText = "Close",
+  saveText,
+  closeText,
   size = "lg",
 }: FormModalProps) => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Dialog.Root
       size={size}
@@ -30,7 +33,7 @@ const FormModal = ({
       onInteractOutside={onClose}
       placement={"center"}
     >
-      <DialogContent dir="ltr">
+      <DialogContent dir={i18n.dir()}>
         <Dialog.Header
           fontSize={"xl"}
           borderBottom="1px solid"
@@ -46,9 +49,11 @@ const FormModal = ({
           borderColor={"border.emphasized"}
         >
           <ButtonGroup>
-            <Button onClick={onClose}>{closeText}</Button>
+            <Button onClick={onClose}>
+              {closeText ?? t("ui.actions.close")}
+            </Button>
             <Button colorPalette="blue" onClick={onSave}>
-              {saveText}
+              {saveText ?? t("ui.actions.save_changes")}
             </Button>
           </ButtonGroup>
         </Dialog.Footer>

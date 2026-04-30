@@ -1,4 +1,5 @@
 import { memo, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuran } from "@/context/useQuran";
 
 import { useQuranBrowserPageStore } from "@/store/pages/quranBrowserPage";
@@ -17,6 +18,7 @@ interface SelectionListRootsProps {
 
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
+    const { t } = useTranslation();
     const rootsLoaded = useRootsLoaded();
 
     return (
@@ -36,7 +38,7 @@ const SelectionListRoots = memo(
         maxH="25vh"
       >
         {!rootsLoaded ? (
-          <LoadingSpinner text="Loading roots..." />
+          <LoadingSpinner text={t("ui.state.loading_roots")} />
         ) : (
           <RootsList isDisabled={isDisabled} searchString={searchString} />
         )}

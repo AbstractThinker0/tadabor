@@ -31,7 +31,7 @@ const Register = () => {
 
   const validateInputs = () => {
     if (password !== confirmPassword) {
-      setValidationError("Passwords do not match.");
+      setValidationError(t("auth.passwordMismatch"));
       return false;
     }
 
@@ -77,7 +77,7 @@ const Register = () => {
 
   const onClickRegister = async () => {
     if (!tokenCaptcha) {
-      setValidationError("Captcha required.");
+      setValidationError(t("auth.validation.captcha_required"));
       return;
     }
 
@@ -97,7 +97,7 @@ const Register = () => {
     }
 
     if (result === false) {
-      setValidationError("Captcha required.");
+      setValidationError(t("auth.validation.captcha_required"));
     }
   };
 

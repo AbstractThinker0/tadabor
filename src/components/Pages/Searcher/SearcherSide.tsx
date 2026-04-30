@@ -11,6 +11,7 @@ import { InputString } from "@/components/Generic/Input";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
 
 const SearcherSide = () => {
+  const { t } = useTranslation();
   const [searchToken, setSearchToken] = useState("");
 
   const rootsLoaded = useRootsLoaded();
@@ -26,7 +27,7 @@ const SearcherSide = () => {
   return (
     <Flex flexDir={"column"} pt={"8px"} paddingInlineStart={"8px"}>
       {!rootsLoaded ? (
-        <LoadingSpinner text="Loading roots.." />
+        <LoadingSpinner text={t("ui.state.loading_roots")} />
       ) : (
         <>
           <InputString
@@ -65,6 +66,7 @@ interface RootsListProps {
 }
 
 const RootsList = ({ searchString }: RootsListProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const [isPending, startTransition] = useTransition();
@@ -119,7 +121,7 @@ const RootsList = ({ searchString }: RootsListProps) => {
       cursor={"pointer"}
     >
       {isPendingLoad ? (
-        <LoadingSpinner text="Loading roots.." />
+        <LoadingSpinner text={t("ui.state.loading_roots")} />
       ) : (
         stateRoots
           .slice(0, itemsCount)
