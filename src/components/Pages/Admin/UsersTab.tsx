@@ -193,9 +193,9 @@ export const UsersTab = () => {
                             }))
                           }
                         >
-                          <option value="0">{ROLE_LABELS[0]}</option>
-                          <option value="1">{ROLE_LABELS[1]}</option>
-                          <option value="2">{ROLE_LABELS[2]}</option>
+                          <option value="0">{roleLabels[0]}</option>
+                          <option value="1">{roleLabels[1]}</option>
+                          <option value="2">{roleLabels[2]}</option>
                         </NativeSelect.Field>
                         <NativeSelect.Indicator />
                       </NativeSelect.Root>
