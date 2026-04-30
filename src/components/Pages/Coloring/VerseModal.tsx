@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import { useState } from "react";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
@@ -29,22 +29,23 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
   );
   const quranService = useQuran();
 
-  const [chosenColor, setChosenColor] = useState<colorProps | null>(null);
+  const [pendingColor, setPendingColor] = useState<{
+    verseKey: string;
+    color: colorProps | null;
+  } | null>(null);
 
-  const onVerseChange = useEffectEvent(() => {
-    if (currentVerse?.key && coloredVerses[currentVerse.key]) {
-      setChosenColor(coloredVerses[currentVerse.key]);
-    }
-  });
+  const currentVerseColor = currentVerse?.key
+    ? coloredVerses[currentVerse.key] ?? null
+    : null;
 
-  // Sync chosenColor with the current verse's color when modal opens
-  useEffect(() => {
-    onVerseChange();
-  }, [currentVerse]);
+  const chosenColor =
+    currentVerse?.key && pendingColor?.verseKey === currentVerse.key
+      ? pendingColor.color
+      : currentVerseColor;
 
   const onCloseModal = () => {
     onClose();
-    setChosenColor(null);
+    setPendingColor(null);
     setCurrentVerse(null);
   };
 
@@ -57,11 +58,15 @@ const VerseModal = ({ isOpen, onClose }: VerseModalProps) => {
 
   const onClickColor = (color: colorProps) => {
     if (color.colorID === chosenColor?.colorID) {
-      setChosenColor(null);
+      if (currentVerse?.key) {
+        setPendingColor({ verseKey: currentVerse.key, color: null });
+      }
       return;
     }
 
-    setChosenColor(color);
+    if (currentVerse?.key) {
+      setPendingColor({ verseKey: currentVerse.key, color });
+    }
   };
 
   return (
