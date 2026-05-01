@@ -2,12 +2,9 @@ import { useTranslation } from "react-i18next";
 import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Heading, Text, Link, List, Box, Span } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useNavigationStore } from "@/store/global/navigationStore";
 
 const AboutContent = () => {
   const { t, i18n } = useTranslation();
-
-  const pageDirection = useNavigationStore((state) => state.pageDirection);
 
   const buildDate = useMemo(() => {
     return new Intl.DateTimeFormat(i18n.language, {
@@ -15,7 +12,7 @@ const AboutContent = () => {
       timeStyle: "short",
       hour12: false,
     }).format(new Date(Number(APP_BUILD_DATE)));
-  }, [i18n.language, pageDirection]);
+  }, [i18n.language]);
 
   return (
     <Flex flexDir={"column"} flex={1} overflowY={"auto"}>
