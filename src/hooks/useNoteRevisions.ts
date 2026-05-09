@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useSingleNote } from "@/hooks/useSingleNote";
 import type { INoteRevision } from "@/types/db";
@@ -16,37 +17,37 @@ export const useNoteRevisions = ({
   refreshKey = 0,
   isEnabled = true,
 }: UseNoteRevisionsParams) => {
-  const [revisions, setRevisions] = useState<INoteRevision[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const { note } = useSingleNote(noteId);
   const noteUuid = note?.uuid;
+  const revisionsQueryKey = ["note-revisions", noteId, noteUuid, refreshKey];
 
-  const loadRevisions = useCallback(async () => {
-    if (!noteId || !noteUuid || !isEnabled) {
-      setRevisions([]);
+  const loadRevisions = useCallback(async (): Promise<INoteRevision[]> => {
+    if (!noteId || !noteUuid) {
       return [];
     }
-
-    setIsLoading(true);
 
     const { result, error } = await tryCatch(
       dbNoteRevisions.loadByNote(noteId, noteUuid)
     );
-
-    setIsLoading(false);
 
     if (error || !result) {
       console.error("Failed to load note revisions:", error);
       return [];
     }
 
-    setRevisions(result);
     return result;
-  }, [noteId, noteUuid, isEnabled]);
+  }, [noteId, noteUuid]);
 
-  useEffect(() => {
-    void loadRevisions();
-  }, [loadRevisions, refreshKey]);
+  const revisionsQuery = useQuery({
+    queryKey: revisionsQueryKey,
+    queryFn: loadRevisions,
+    enabled: Boolean(noteId && noteUuid && isEnabled),
+    placeholderData: [],
+  });
+
+  const revisions = noteId && noteUuid && isEnabled ? revisionsQuery.data : [];
+  const isLoading = isEnabled && revisionsQuery.isFetching;
 
   const deleteRevision = async (revisionId: string) => {
     const { error } = await tryCatch(dbNoteRevisions.delete(revisionId));
@@ -56,7 +57,10 @@ export const useNoteRevisions = ({
       return false;
     }
 
-    setRevisions((current) => current.filter((item) => item.id !== revisionId));
+    queryClient.setQueryData<INoteRevision[]>(
+      revisionsQueryKey,
+      (current = []) => current.filter((item) => item.id !== revisionId)
+    );
     return true;
   };
 
@@ -72,14 +76,14 @@ export const useNoteRevisions = ({
       return false;
     }
 
-    setRevisions([]);
+    queryClient.setQueryData<INoteRevision[]>(revisionsQueryKey, []);
     return true;
   };
 
   return {
     revisions,
     isLoading,
-    reload: loadRevisions,
+    reload: revisionsQuery.refetch,
     deleteRevision,
     clearRevisions,
   };
