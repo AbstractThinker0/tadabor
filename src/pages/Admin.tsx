@@ -1,6 +1,6 @@
 import { usePageNav } from "@/hooks/usePageNav";
 import { Flex, Tabs } from "@chakra-ui/react";
-import { useEffect, useState, useCallback, useEffectEvent } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AnalyticsTab } from "@/components/Pages/Admin/AnalyticsTab";
@@ -19,44 +19,37 @@ const Admin = () => {
   const { t } = useTranslation();
 
   const [activeTab, setActiveTab] = useState("analytics");
-  const [loadedTabs, setLoadedTabs] = useState<Set<string>>(new Set());
+  const [loadedTabs, setLoadedTabs] = useState<Set<string>>(
+    () => new Set(["analytics"])
+  );
 
   // Shared users query for dropdowns
   const { data: users } = useFetchUsers({ limit: 100, offset: 0 });
 
   // Shared queries - disabled by default, manually triggered
-  const analyticsQuery = useQueryAnalytics({ limit: 20, offset: 0 });
+  const analyticsQuery = useQueryAnalytics(
+    { limit: 20, offset: 0 },
+    { enabled: loadedTabs.has("analytics") }
+  );
 
-  const actionStatsQuery = useQueryActionStats();
+  const actionStatsQuery = useQueryActionStats({
+    enabled: loadedTabs.has("actions"),
+  });
 
-  const userStatsQuery = useQueryUserStats();
+  const userStatsQuery = useQueryUserStats({
+    enabled: loadedTabs.has("userstats"),
+  });
 
   const handleTabChange = useCallback((details: { value: string }) => {
     setActiveTab(details.value);
+    setLoadedTabs((prev) => {
+      if (prev.has(details.value)) {
+        return prev;
+      }
+
+      return new Set(prev).add(details.value);
+    });
   }, []);
-
-  const loadTabData = useEffectEvent(() => {
-    switch (activeTab) {
-      case "analytics":
-        analyticsQuery.refetch();
-        break;
-      case "actions":
-        actionStatsQuery.refetch();
-        break;
-      case "userstats":
-        userStatsQuery.refetch();
-        break;
-      // Users tab handles its own fetching via react-query
-    }
-    setLoadedTabs((prev) => new Set(prev).add(activeTab));
-  });
-
-  // Auto-fetch data when tab becomes active (only first time)
-  useEffect(() => {
-    if (loadedTabs.has(activeTab)) return;
-
-    loadTabData();
-  }, [activeTab, loadedTabs, analyticsQuery, actionStatsQuery, userStatsQuery]);
 
   return (
     <Flex direction="column" flex={1} overflowY="auto" p={4} gap={4}>

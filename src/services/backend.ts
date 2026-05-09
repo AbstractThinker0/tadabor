@@ -75,30 +75,37 @@ export const useFetchAnalytics = () => {
   };
 };
 
-export const useQueryAnalytics = (params: {
-  limit?: number;
-  offset?: number;
-}) => {
+export const useQueryAnalytics = (
+  params: {
+    limit?: number;
+    offset?: number;
+  },
+  options?: { enabled?: boolean }
+) => {
   const trpc = useTRPC();
   return useQuery(
     trpc.admin.getAnalytics.queryOptions(
       { limit: params.limit, offset: params.offset },
-      { enabled: false }
+      { enabled: options?.enabled ?? false }
     )
   );
 };
 
-export const useQueryActionStats = () => {
+export const useQueryActionStats = (options?: { enabled?: boolean }) => {
   const trpc = useTRPC();
   return useQuery(
-    trpc.admin.getActionStats.queryOptions(undefined, { enabled: false })
+    trpc.admin.getActionStats.queryOptions(undefined, {
+      enabled: options?.enabled ?? false,
+    })
   );
 };
 
-export const useQueryUserStats = () => {
+export const useQueryUserStats = (options?: { enabled?: boolean }) => {
   const trpc = useTRPC();
   return useQuery(
-    trpc.admin.getUserStats.queryOptions(undefined, { enabled: false })
+    trpc.admin.getUserStats.queryOptions(undefined, {
+      enabled: options?.enabled ?? false,
+    })
   );
 };
 
