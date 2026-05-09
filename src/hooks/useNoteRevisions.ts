@@ -46,7 +46,8 @@ export const useNoteRevisions = ({
     placeholderData: [],
   });
 
-  const revisions = noteId && noteUuid && isEnabled ? revisionsQuery.data : [];
+  const revisions =
+    noteId && noteUuid && isEnabled ? revisionsQuery.data || [] : [];
   const isLoading = isEnabled && revisionsQuery.isFetching;
 
   const deleteRevision = async (revisionId: string) => {
