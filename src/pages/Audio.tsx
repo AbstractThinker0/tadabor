@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 import { useQuran } from "@/context/useQuran";
 import { useAudioPageStore } from "@/store/pages/audioPage";
@@ -10,6 +10,7 @@ import { ChaptersList } from "@/components/Custom/ChaptersList";
 import { BaseVerseItem } from "@/components/Custom/BaseVerseItem";
 
 import { Sidebar } from "@/components/Generic/Sidebar";
+import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 import { ChapterHeader } from "@/components/Custom/ChapterHeader";
 
 import { Box, Flex, Button } from "@chakra-ui/react";
@@ -19,35 +20,20 @@ import { usePageNav } from "@/hooks/usePageNav";
 const Audio = () => {
   usePageNav("nav.audio");
 
-  const quranService = useQuran();
   const audioPlayer = useAudioPlayer();
-  
+
   const currentChapter = useAudioPageStore((state) => state.currentChapter);
   const setCurrentChapter = useAudioPageStore(
     (state) => state.setCurrentChapter
   );
 
-  const [displayVerses, setDisplayVerses] = useState(
-    quranService.getVerses(currentChapter)
-  );
-
   const handleChapterChange = (chapter: string) => {
     setCurrentChapter(chapter);
-    setDisplayVerses(quranService.getVerses(chapter));
   };
 
   const onClickAudio = (verse: verseProps) => {
     audioPlayer.playVerse(verse);
   };
-
-  const onChapterChange = useEffectEvent(() => {
-    const verses = quranService.getVerses(currentChapter);
-    setDisplayVerses(verses);
-  });
-
-  useEffect(() => {
-    onChapterChange();
-  }, [currentChapter]);
 
   const showSearchPanel = useAudioPageStore((state) => state.showSearchPanel);
 
@@ -84,8 +70,8 @@ const Audio = () => {
         overflowY="hidden"
       >
         <ChapterDisplay
+          currentChapter={currentChapter}
           verseKey={audioPlayer.currentVerse?.key}
-          displayVerses={displayVerses}
           onClickAudio={onClickAudio}
         />
       </Flex>
@@ -119,16 +105,27 @@ const ListTitle = () => {
 };
 
 interface ChapterDisplayProps {
-  displayVerses: verseProps[];
+  currentChapter: string;
   verseKey: string | undefined;
   onClickAudio: (verse: verseProps) => void;
 }
 
 const ChapterDisplay = ({
-  displayVerses,
+  currentChapter,
   verseKey,
   onClickAudio,
 }: ChapterDisplayProps) => {
+  const quranService = useQuran();
+
+  const [displayVerses, setDisplayVerses] = useState<verseProps[]>([]);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    startTransition(() => {
+      setDisplayVerses(quranService.getVerses(currentChapter));
+    });
+  }, [currentChapter, quranService]);
+
   return (
     <Flex
       flexDirection="column"
@@ -140,24 +137,28 @@ const ChapterDisplay = ({
       overflowY="hidden"
     >
       <ListTitle />
-      <Box
-        overflowY="scroll"
-        padding="0.5rem"
-        borderWidth="1px"
-        borderStyle="solid"
-        borderColor="gray.emphasized"
-        flexGrow={1}
-        dir="rtl"
-      >
-        {displayVerses.map((verse) => (
-          <VerseItem
-            isSelected={verse.key === verseKey}
-            key={verse.key}
-            onClickAudio={onClickAudio}
-            verse={verse}
-          />
-        ))}
-      </Box>
+      {isPending ? (
+        <LoadingSpinner />
+      ) : (
+        <Box
+          overflowY="scroll"
+          padding="0.5rem"
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="gray.emphasized"
+          flexGrow={1}
+          dir="rtl"
+        >
+          {displayVerses.map((verse) => (
+            <VerseItem
+              isSelected={verse.key === verseKey}
+              key={verse.key}
+              onClickAudio={onClickAudio}
+              verse={verse}
+            />
+          ))}
+        </Box>
+      )}
     </Flex>
   );
 };
