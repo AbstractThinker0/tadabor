@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useQuran } from "@/context/useQuran";
@@ -39,17 +39,14 @@ const Comparator = () => {
     (state) => state.setCurrentChapter
   );
 
-  const [chapterVerses, setChapterVerses] = useState(() => {
-    return quranService.getVerses(currentChapter);
-  });
+  const chapterVerses = useMemo(
+    () => quranService.getVerses(currentChapter),
+    [quranService, currentChapter]
+  );
 
   useEffect(() => {
     fetchTranslations();
   }, [fetchTranslations]);
-
-  useEffect(() => {
-    setChapterVerses(quranService.getVerses(currentChapter));
-  }, [quranService, currentChapter]);
 
   const selectVerse = (verseKey: string) => {
     setCurrentVerse(verseKey);
