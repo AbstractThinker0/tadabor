@@ -94,7 +94,7 @@ const NoteHistoryDialog = ({
     useNoteRevisions({
       noteId,
       refreshKey: dateModified ?? 0,
-      isEnabled: isOpen,
+      isEnabled: true, // previously was isOpen but we need to an indicator to disable the revision button
     });
 
   const notesFont = useSettingsStore((state) => state.notesFont);
@@ -157,7 +157,8 @@ const NoteHistoryDialog = ({
         width={"6px"}
         height={"36px"}
         onClick={onOpen}
-        disabled={!noteId}
+        disabled={!noteId || revisions.length === 0}
+        loading={isLoading}
       >
         <FiClock />
       </IconButton>
