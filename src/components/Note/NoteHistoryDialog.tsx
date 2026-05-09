@@ -21,6 +21,8 @@ import { toaster } from "@/components/ui/toaster";
 import { FiClock, FiTrash2 } from "react-icons/fi";
 import { useSettingsStore } from "@/store/global/settingsStore";
 
+import { Tooltip } from "@/components/ui/tooltip-mobile";
+
 interface NoteHistoryDialogProps {
   noteId?: string;
   dateModified?: number;
@@ -160,7 +162,13 @@ const NoteHistoryDialog = ({
         disabled={!noteId || revisions.length === 0}
         loading={isLoading}
       >
-        <FiClock />
+        {revisions.length === 0 ? (
+          <Tooltip content="No recorded revisions for this note yet.">
+            <FiClock />
+          </Tooltip>
+        ) : (
+          <FiClock />
+        )}
       </IconButton>
 
       <Dialog.Root
