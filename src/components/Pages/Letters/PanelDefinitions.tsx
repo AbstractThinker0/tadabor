@@ -9,6 +9,7 @@ import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { ModalEditLetter } from "@/components/Pages/Letters/ModalEditLetter";
 import { ModalCreatePreset } from "@/components/Pages/Letters/ModalCreatePreset";
+import { DeletePresetModal } from "@/components/Pages/Letters/DeletePresetModal";
 
 import {
   Box,
@@ -33,6 +34,12 @@ const PanelDefinitions = () => {
     open: isOpenEditLetter,
     onOpen: onOpenEditLetter,
     onClose: onCloseEditLetter,
+  } = useDisclosure();
+
+  const {
+    open: isOpenDeletePreset,
+    onOpen: onOpenDeletePreset,
+    onClose: onCloseDeletePreset,
   } = useDisclosure();
 
   const definitionsLoading = useLettersPageStore(
@@ -116,6 +123,14 @@ const PanelDefinitions = () => {
         <Button fontWeight={"normal"} onClick={onOpenCreatePreset}>
           Create
         </Button>
+        <Button
+          colorPalette="red"
+          fontWeight={"normal"}
+          onClick={onOpenDeletePreset}
+          disabled={currentPreset === "-1"}
+        >
+          {t("ui.actions.delete")}
+        </Button>
       </Flex>
       <Flex flexDir={"column"} flexWrap={"wrap"} gap={"1rem"}>
         {arabicAlphabetDefault.map((letter) => (
@@ -131,6 +146,10 @@ const PanelDefinitions = () => {
       <ModalCreatePreset
         isOpen={isOpenCreatePreset}
         onClose={onCloseCreatePreset}
+      />
+      <DeletePresetModal
+        isOpen={isOpenDeletePreset}
+        onClose={onCloseDeletePreset}
       />
       <ModalEditLetter
         isOpen={isOpenEditLetter}

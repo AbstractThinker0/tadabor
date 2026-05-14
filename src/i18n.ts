@@ -384,6 +384,16 @@ i18n
               name: "Preset name:",
               empty: "Preset name can't be empty.",
             },
+            delete: {
+              title: "Delete preset confirmation",
+              confirm: "Yes, delete",
+              body_prefix: "Are you sure you want to delete preset",
+              body_suffix:
+                "? Its custom definitions will be removed and affected words will lose this preset assignment.",
+              affected_words: "Number of words affected: {{count}}",
+              affected_definitions: "Number of definitions deleted: {{count}}",
+              loading_impact: "Loading affected words...",
+            },
           },
           admin: {
             title: "Admin",
@@ -717,6 +727,16 @@ i18n
               title: "إنشاء مجموعة جديدة",
               name: "اسم المجموعة:",
               empty: "لا يمكن أن يكون اسم المجموعة فارغًا.",
+            },
+            delete: {
+              title: "تأكيد حذف المجموعة",
+              confirm: "نعم، احذف",
+              body_prefix: "هل أنت متأكد من حذف المجموعة",
+              body_suffix:
+                "؟ سيتم حذف تعريفاتها الخاصة، وستفقد الكلمات المتأثرة هذا الإسناد.",
+              affected_words: "عدد الكلمات المتأثرة: {{count}}",
+              affected_definitions: "عدد التعريفات المحذوفة: {{count}}",
+              loading_impact: "جارٍ احتساب الكلمات المتأثرة...",
             },
           },
           about: {

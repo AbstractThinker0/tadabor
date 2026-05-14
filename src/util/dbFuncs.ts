@@ -87,7 +87,62 @@ export const dbLetters = {
   loadPresets: () => {
     return db.letters_presets.toArray();
   },
+  getPresetDeleteSummary: async (presetID: string) => {
+    const [presetDefinitions, assignedLetters] = await Promise.all([
+      db.letters_def.where("preset_id").equals(presetID).toArray(),
+      db.letters_data.toArray(),
+    ]);
+
+    const affectedWords = new Set<string>();
+
+    assignedLetters.forEach((letterData) => {
+      if (!isPresetDefinitionReference(letterData.def_id, presetID)) return;
+
+      const separatorIndex = letterData.letter_key.lastIndexOf(":");
+      if (separatorIndex === -1) return;
+
+      const verseKey = letterData.letter_key.slice(0, separatorIndex);
+      const letterKey = letterData.letter_key.slice(separatorIndex + 1);
+      const wordIndex = letterKey.split("-")[0];
+
+      affectedWords.add(`${verseKey}:${wordIndex}`);
+    });
+
+    return {
+      affectedDefinitions: presetDefinitions.length,
+      affectedWords: affectedWords.size,
+    };
+  },
+  deletePreset: async (presetID: string) => {
+    return db.transaction(
+      "rw",
+      db.letters_presets,
+      db.letters_def,
+      db.letters_data,
+      async () => {
+        const assignedLetters = await db.letters_data.toArray();
+        const affectedLetters = assignedLetters.filter((letterData) =>
+          isPresetDefinitionReference(letterData.def_id, presetID)
+        );
+
+        await db.letters_presets.delete(presetID);
+        await db.letters_def.where("preset_id").equals(presetID).delete();
+        await Promise.all(
+          affectedLetters.map((letterData) =>
+            db.letters_data.update(letterData.letter_key, { def_id: "" })
+          )
+        );
+
+        return true;
+      }
+    );
+  },
 };
+
+export const isPresetDefinitionReference = (
+  definitionID: string,
+  presetID: string
+) => definitionID === presetID || definitionID.endsWith(`:${presetID}`);
 
 export const dbTags = {
   save: async (data: ITag) => {
@@ -254,9 +309,9 @@ export const dbNoteRevisions = {
     await db.note_revisions.add(revision);
 
     const revisions = await db.note_revisions
-          .where("[note_id+note_uuid]")
-          .equals([revision.note_id, revision.note_uuid])
-          .sortBy("date_created");
+      .where("[note_id+note_uuid]")
+      .equals([revision.note_id, revision.note_uuid])
+      .sortBy("date_created");
 
     const excess = revisions.length - NOTE_REVISIONS_LIMIT;
 
