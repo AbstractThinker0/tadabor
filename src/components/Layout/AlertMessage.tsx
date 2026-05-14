@@ -28,7 +28,7 @@ const AlertMessage = () => {
     >
       <Alert.Indicator />
       <Alert.Content>
-        <Alert.Title>{t("alert_message")}</Alert.Title>
+        <Alert.Title>{t("ui.messages.beta_warning")}</Alert.Title>
       </Alert.Content>
 
       <CloseButton onClick={onClickClose} />

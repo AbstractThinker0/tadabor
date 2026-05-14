@@ -77,7 +77,7 @@ const SearchOptions = () => {
           onCheckedChange={(e) => onChangeDiacritics(!!e.checked)}
           disabled={isRootSearch}
         >
-          {t("search_diacritics")}
+          {t("search.diacritics")}
         </Checkbox>
         <Wrap pt={"6px"}>
           <Checkbox
@@ -87,7 +87,7 @@ const SearchOptions = () => {
             onCheckedChange={(e) => onChangeIdentical(!!e.checked)}
             disabled={isRootSearch}
           >
-            {t("search_identical")}
+            {t("search.identical")}
           </Checkbox>
           <Checkbox
             colorPalette={"blue"}
@@ -96,7 +96,7 @@ const SearchOptions = () => {
             onCheckedChange={(e) => onChangeStart(!!e.checked)}
             disabled={isRootSearch}
           >
-            {t("search_start")}
+            {t("search.start")}
           </Checkbox>
         </Wrap>
       </Box>
@@ -124,7 +124,7 @@ const RadioSearchMethod = ({
   return (
     <Flex flexWrap="wrap" py={1}>
       <Box fontWeight="bold" paddingInlineEnd="5px">
-        {t("search_method")}
+        {t("search.method")}
       </Box>
       <RadioGroup
         colorPalette={"blue"}
@@ -134,8 +134,8 @@ const RadioSearchMethod = ({
         variant={"subtle"}
       >
         <HStack>
-          <Radio value={SEARCH_METHOD.ROOT}>{t("search_root")}</Radio>
-          <Radio value={SEARCH_METHOD.WORD}>{t("search_word")}</Radio>
+          <Radio value={SEARCH_METHOD.ROOT}>{t("search.root")}</Radio>
+          <Radio value={SEARCH_METHOD.WORD}>{t("search.word")}</Radio>
         </HStack>
       </RadioGroup>
     </Flex>
@@ -187,7 +187,7 @@ const FormWordSearch = ({
           type="submit"
           fontSize={"md"}
         >
-          <MdSearch /> {t("search_button")}
+          <MdSearch /> {t("search.button")}
         </Button>
       </VStack>
     </Box>
@@ -201,7 +201,7 @@ const SearchSuccessComponent = () => {
   if (searchResult.length === 0) return null;
 
   return (
-    <Text fontWeight="bold" color="green">{`${t("search_count")} ${
+    <Text fontWeight="bold" color="green">{`${t("search.count")} ${
       searchResult.length
     }`}</Text>
   );

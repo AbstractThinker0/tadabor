@@ -360,7 +360,7 @@ const ChaptersListFooter = ({
           disabled={onlyCurrentSelected}
           onClick={onClickDeselectAll}
         >
-          {t("current_chapter")}
+          {t("search.current_chapter")}
         </Button>
       </Flex>
     </Flex>

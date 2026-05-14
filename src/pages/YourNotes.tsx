@@ -33,11 +33,11 @@ const YourNotes = () => {
       lazyMount
     >
       <Tabs.List justifyContent={"center"}>
-        <Tabs.Trigger value="versesTab">{t("notes_verses")}</Tabs.Trigger>
+        <Tabs.Trigger value="versesTab">{t("notes.notes_verses")}</Tabs.Trigger>
 
-        <Tabs.Trigger value="rootsTab">{t("notes_roots")}</Tabs.Trigger>
+        <Tabs.Trigger value="rootsTab">{t("notes.notes_roots")}</Tabs.Trigger>
 
-        <Tabs.Trigger value="transTab">{t("notes_trans")}</Tabs.Trigger>
+        <Tabs.Trigger value="transTab">{t("notes.notes_trans")}</Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content

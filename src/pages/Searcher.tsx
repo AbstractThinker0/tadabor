@@ -42,7 +42,7 @@ const Searcher = () => {
       unmountOnExit
     >
       <Tabs.List>
-        <Tabs.Trigger value="searcherTab">{t("searcher_search")}</Tabs.Trigger>
+        <Tabs.Trigger value="searcherTab">{t("search.button")}</Tabs.Trigger>
 
         <Tabs.Trigger value="verseTab" hidden={!verseTab}>
           {verseTab}

@@ -55,12 +55,12 @@ const ModalEditLetter = ({
 
     if (success) {
       toaster.create({
-        description: t("save_success"),
+        description: t("ui.messages.save_success"),
         type: "success",
       });
     } else {
       toaster.create({
-        description: t("save_failed"),
+        description: t("ui.messages.save_failed"),
         type: "error",
       });
     }

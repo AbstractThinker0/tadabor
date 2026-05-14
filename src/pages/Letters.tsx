@@ -34,8 +34,8 @@ const Letters = memo(() => {
       lazyMount
     >
       <Tabs.List>
-        <Tabs.Trigger value="defTab">{t("panel_definitions")}</Tabs.Trigger>
-        <Tabs.Trigger value="verseTab">{t("panel_display")}</Tabs.Trigger>
+        <Tabs.Trigger value="defTab">{t("panels.definitions")}</Tabs.Trigger>
+        <Tabs.Trigger value="verseTab">{t("panels.display")}</Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content

@@ -33,7 +33,7 @@ const RootsBrowser = () => {
       unmountOnExit
     >
       <Tabs.List>
-        <Tabs.Trigger value="rootsTab">{t("searcher_search")}</Tabs.Trigger>
+        <Tabs.Trigger value="rootsTab">{t("search.button")}</Tabs.Trigger>
 
         <Tabs.Trigger value="verseTab" hidden={!verseTab}>
           {verseTab}

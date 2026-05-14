@@ -36,7 +36,7 @@ const RootComponent = memo(({ root, handleVerseTab }: RootComponentProps) => {
             variant={isOccurencesOpen ? "solid" : "outline"}
             onClick={setOccurencesOpen}
           >
-            {t("derivations")} ({root.count})
+            {t("search.derivations")} ({root.count})
           </Button>
         </Flex>
       </Flex>

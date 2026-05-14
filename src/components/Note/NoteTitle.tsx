@@ -41,11 +41,11 @@ const NoteTitle = ({
 
   const getNoteTitle = () => {
     if (noteType === "verse") {
-      return `${t("noteVerse")} (${quranService.convertKeyToSuffix(noteKey!)})`;
+      return `${t("notes.noteVerse")} (${quranService.convertKeyToSuffix(noteKey!)})`;
     } else if (noteType === "root") {
-      return `${t("noteRoot")} (${quranService.getRootNameByID(noteKey!)})`;
+      return `${t("notes.noteRoot")} (${quranService.getRootNameByID(noteKey!)})`;
     } else if (noteType === "translation") {
-      return `${t("translationVerse")} (${quranService.convertKeyToSuffix(
+      return `${t("notes.translationVerse")} (${quranService.convertKeyToSuffix(
         noteKey!
       )})`;
     }

@@ -135,16 +135,14 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
   const { t } = useTranslation();
 
   const searchType =
-    searchMethod === SEARCH_METHOD.ROOT ? t("root") : t("word");
+    searchMethod === SEARCH_METHOD.ROOT ? t("search.root") : t("search.word");
 
   const searchScopeText =
     searchChapters.length === 114
-      ? t("search_chapters_all")
-      : t("search_chapters");
+      ? t("search.chapters_all")
+      : t("search.chapters");
 
-  const searchText = `${t(
-    "search_result"
-  )} ${searchType} "${searchingString}" ${searchScopeText}`;
+  const searchText = `${t("search.result")} ${searchType} "${searchingString}" ${searchScopeText}`;
 
   return (
     <Box>
@@ -222,8 +220,8 @@ const SearchErrorsComponent = ({
   return (
     <Text p={3} dir="auto" color="red.solid">
       {searchMethod === SEARCH_METHOD.WORD
-        ? t("search_fail")
-        : t("search_root_error")}
+        ? t("search.fail")
+        : t("search.root_error")}
     </Text>
   );
 };

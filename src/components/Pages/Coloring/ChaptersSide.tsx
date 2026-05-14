@@ -135,7 +135,7 @@ const VersesCount = () => {
   if (!Object.keys(selectedColors).length) return null;
 
   return (
-    <Text color={"green.fg"}>{`${t("search_count")} ${selectedCount}`}</Text>
+    <Text color={"green.fg"}>{`${t("search.count")} ${selectedCount}`}</Text>
   );
 };
 

@@ -19,7 +19,7 @@ const ButtonCancel = (props: ButtonProps) => {
 
   return (
     <Button colorPalette="yellow" size="sm" fontWeight={"normal"} {...props}>
-      {t("text_cancel")}
+      {t("ui.actions.cancel")}
     </Button>
   );
 };
@@ -36,7 +36,7 @@ const ButtonSave = (props: ButtonProps) => {
       fontWeight={"normal"}
       {...rest}
     >
-      {t("text_save")}
+      {t("ui.actions.save")}
     </Button>
   );
 };
@@ -47,7 +47,7 @@ const ButtonEdit = (props: ButtonProps) => {
 
   return (
     <Button colorPalette="blue" size="sm" fontWeight={"normal"} {...rest}>
-      {t("text_edit")}
+      {t("ui.actions.edit")}
     </Button>
   );
 };
