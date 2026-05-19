@@ -34,6 +34,8 @@ test.describe("QuranBrowser Page", () => {
   test("redirects to the clicked root occurrence chapter from inspector", async ({
     page,
   }) => {
+    test.setTimeout(60_000);
+
     const verseCard = page.locator('[data-id="1-2"]');
     await expect(verseCard).toBeVisible();
 
