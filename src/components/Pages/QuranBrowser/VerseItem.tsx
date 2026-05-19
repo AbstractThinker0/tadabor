@@ -64,9 +64,9 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
     setScrollKey(verse.key);
   };
 
-  const onClickVerseChapter = () => {
-    gotoChapter(verse.key.split("-")[0]);
-    setScrollKey(verse.key);
+  const onClickVerseChapter = (targetVerseKey = verse.key) => {
+    gotoChapter(targetVerseKey.split("-")[0]);
+    setScrollKey(targetVerseKey);
   };
 
   const onClickAudio = () => {
@@ -117,7 +117,9 @@ const VerseItem = ({ verse, isSelected, index }: VerseItemProps) => {
       <VerseRef
         suraid={verse.suraid}
         verseid={verse.verseid}
-        onClickChapter={isSearchResult ? onClickVerseChapter : undefined}
+        onClickChapter={
+          isSearchResult ? () => onClickVerseChapter() : undefined
+        }
         onClickVerse={onClickVerse}
       />
     </BaseVerseItem>

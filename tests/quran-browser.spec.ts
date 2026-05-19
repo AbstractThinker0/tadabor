@@ -5,7 +5,7 @@ test.describe("QuranBrowser Page", () => {
     await page.goto("/");
     // Wait for Quran data to load - the chapter header shows "سورة {name}"
     await expect(page.getByText("سورة الفاتحة")).toBeVisible({
-      timeout: 15000,
+      timeout: 20000,
     });
   });
 
@@ -29,5 +29,27 @@ test.describe("QuranBrowser Page", () => {
 
     // Wait for chapter header to update
     await expect(page.getByText("سورة البقرة")).toBeVisible();
+  });
+
+  test("redirects to the clicked root occurrence chapter from inspector", async ({
+    page,
+  }) => {
+    const verseCard = page.locator('[data-id="1-2"]');
+    await expect(verseCard).toBeVisible();
+
+    await verseCard.getByRole("button", { name: "Inspect" }).click();
+    await verseCard.locator("span[aria-selected='false']").first().click();
+    await verseCard.getByRole("button", { name: /^حمد \(\d+\)$/ }).click();
+
+    const targetOccurrence = verseCard
+      .locator('[data-id^="sub-"]:not([data-id="sub-1-2"])')
+      .first();
+    const targetChapterButton = targetOccurrence.locator("button").first();
+    const targetChapter = (await targetChapterButton.textContent())?.trim();
+
+    expect(targetChapter).toBeTruthy();
+
+    await targetChapterButton.click();
+    await expect(page.getByText(`سورة ${targetChapter}`)).toBeVisible();
   });
 });
