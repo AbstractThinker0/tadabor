@@ -1,11 +1,12 @@
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 import { NoteForm } from "@/components/Note/NoteForm";
+import type { NoteType } from "@/util/noteIdentity";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;
   noteID?: string;
-  noteType?: "verse" | "root" | "translation";
+  noteType?: NoteType;
   noteKey?: string;
 }
 

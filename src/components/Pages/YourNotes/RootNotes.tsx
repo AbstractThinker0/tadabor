@@ -28,7 +28,7 @@ const NotesList = () => {
   const rootNotesIDs = getNotesIDsbyType("root");
 
   const rankComparator = (a: string, b: string) => {
-    // Note ID format: root:rootString
+    // Note ID format: root:{numericRootId}
     // Simple string comparison for roots
     return a.localeCompare(b);
   };

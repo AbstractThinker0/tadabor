@@ -9,10 +9,11 @@ import { NoteContainer } from "@/components/Note/NoteContainer";
 import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { useNote } from "@/hooks/useNote";
+import type { NoteType } from "@/util/noteIdentity";
 
 interface NoteFormProps {
   noteID?: string;
-  noteType?: "verse" | "root" | "translation";
+  noteType?: NoteType;
   noteKey?: string;
   renderHeader?: React.ReactNode;
   rootProps?: BoxProps;

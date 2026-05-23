@@ -13,6 +13,12 @@ import {
   computeDateModified,
   fromDexieToBackend,
 } from "@/util/notes";
+import {
+  getDefaultNoteDirection,
+  isNoteType,
+  resolveNoteIdentity,
+  type NoteType,
+} from "@/util/noteIdentity";
 import type { CloudNoteProps } from "@/types";
 import { useState } from "react";
 import { useUploadNote } from "@/services/backend";
@@ -20,14 +26,15 @@ import { tryCatch } from "@/util/trycatch";
 
 interface useNoteParams {
   noteID?: string;
-  noteType?: "verse" | "root" | "translation";
+  noteType?: NoteType;
   noteKey?: string;
 }
 
 export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   const isLogged = useUserStore((state) => state.isLogged);
   const userId = useUserStore((state) => state.id);
-  const noteIndex = noteID || `${noteType}:${noteKey}`;
+  const identity = resolveNoteIdentity({ noteID, noteType, noteKey });
+  const noteIndex = identity.id;
 
   const {
     note,
@@ -45,16 +52,14 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
   // Track local save state (dbSave is async and not tracked by uploadNote.isPending)
   const [isDbSaving, setIsDbSaving] = useState(false);
 
-  const [noteSplitType, noteSplitKey] = noteIndex.split(":");
-
   const noteText = note?.text ?? "";
   const notePreSaveText = note?.preSave ?? "";
   const notePreSaveDirection = note?.preSaveDir ?? "";
   const noteSaved = note?.saved ?? false;
-  const noteValidKey = note?.key ?? noteKey ?? noteSplitKey;
-  const noteValidType = note?.type ?? noteType ?? noteSplitType;
-  const noteDirection =
-    note?.dir ?? (noteValidType === "translation" ? "ltr" : "");
+  const noteValidKey = note?.key ?? identity.key;
+  const noteValidType =
+    note?.type && isNoteType(note.type) ? note.type : identity.type;
+  const noteDirection = note?.dir ?? getDefaultNoteDirection(noteValidType);
   const noteIsSynced = (note as CloudNoteProps)?.isSynced || false;
   // isSyncing is true if either cloud upload OR local db save is in progress
   const noteIsSyncing = uploadNote.isPending || isDbSaving;
@@ -102,7 +107,7 @@ export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
       id: noteIndex,
       key: noteValidKey,
       text: noteText,
-      type: note.type,
+      type: noteValidType,
       uuid: note.uuid,
       dir: noteDirection,
       date_created: note.date_created,
