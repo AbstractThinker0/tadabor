@@ -7,6 +7,7 @@ import { NoteSortSelect } from "@/components/Pages/YourNotes/NoteSortSelect";
 import { Box, VStack } from "@chakra-ui/react";
 import { useNotesStore } from "@/hooks/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
+import { parseNoteId, parseVerseAddressKey } from "@/util/noteIdentity";
 
 const TransNotes = () => {
   const { t } = useTranslation();
@@ -15,18 +16,12 @@ const TransNotes = () => {
   const translationNotesIDs = getNotesIDsbyType("translation");
 
   const rankComparator = (a: string, b: string) => {
-    // Note ID format: translation:chapter:verse
-    const keyA = a.split(":")[1];
-    const keyB = b.split(":")[1];
+    // Note ID format: translation:chapter-verse
+    const { key: keyA } = parseNoteId(a);
+    const { key: keyB } = parseNoteId(b);
+    const { chapter: chapterA, verse: verseA } = parseVerseAddressKey(keyA);
+    const { chapter: chapterB, verse: verseB } = parseVerseAddressKey(keyB);
 
-    const partsA = keyA.split("-");
-    const partsB = keyB.split("-");
-
-    const chapterA = parseInt(partsA[0] || "0");
-    const verseA = parseInt(partsA[1] || "0");
-
-    const chapterB = parseInt(partsB[0] || "0");
-    const verseB = parseInt(partsB[1] || "0");
     if (chapterA !== chapterB) return chapterA - chapterB;
     return verseA - verseB;
   };

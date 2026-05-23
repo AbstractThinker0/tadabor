@@ -2,6 +2,7 @@ import type { CloudNoteProps, LocalNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import type { ICloudNote, INoteRevision } from "@/util/db";
 import type { BackendNote } from "@/util/AppRouter";
+import { parseNoteId } from "@/util/noteIdentity";
 
 interface CreateNewNoteParams {
   id: string;
@@ -16,7 +17,7 @@ export const createNewNote = ({
   dir = "",
   authorId,
 }: CreateNewNoteParams) => {
-  const [type, key] = id.split(":");
+  const { type, key } = parseNoteId(id);
   const now = Date.now();
   return {
     uuid: uuidv4(),

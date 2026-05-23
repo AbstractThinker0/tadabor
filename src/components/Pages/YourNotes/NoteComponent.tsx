@@ -3,6 +3,7 @@ import { useQuran } from "@/context/useQuran";
 import { VerseContainer } from "@/components/Custom/VerseContainer";
 
 import { NoteForm } from "@/components/Note/NoteForm";
+import { parseNoteId } from "@/util/noteIdentity";
 
 interface NoteComponentProps {
   noteID: string;
@@ -11,7 +12,7 @@ interface NoteComponentProps {
 const NoteComponent = ({ noteID }: NoteComponentProps) => {
   const quranService = useQuran();
 
-  const [noteType, noteKey] = noteID.split(":");
+  const { type: noteType, key: noteKey } = parseNoteId(noteID);
 
   const renderNoteHeader = () => {
     if (noteType === "root") {

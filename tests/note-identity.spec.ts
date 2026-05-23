@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  parseVerseAddressKey,
   getDefaultNoteDirection,
   resolveNoteIdentity,
 } from "../src/util/noteIdentity";
@@ -40,5 +41,21 @@ test.describe("note identity helpers", () => {
       key: "1-2",
     });
     expect(getDefaultNoteDirection(identity.type)).toBe("");
+  });
+
+  test("parses verse address keys used by verse and translation notes", () => {
+    expect(parseVerseAddressKey("2-255")).toEqual({
+      chapter: 2,
+      verse: 255,
+    });
+
+    const translationIdentity = resolveNoteIdentity({
+      noteID: "translation:36-58",
+    });
+
+    expect(parseVerseAddressKey(translationIdentity.key)).toEqual({
+      chapter: 36,
+      verse: 58,
+    });
   });
 });
