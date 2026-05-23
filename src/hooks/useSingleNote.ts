@@ -5,7 +5,6 @@ import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
-import type { ICloudNote, ILocalNote } from "@/util/db";
 
 /**
  * Hook for single note operations.
@@ -86,17 +85,6 @@ export const useSingleNote = (noteId?: string) => {
     [isLogged]
   );
 
-  const markSaved = useCallback(
-    (payload: { saveData: ICloudNote | ILocalNote }) => {
-      if (isLogged) {
-        return useCloudNotesStore.getState().markSaved(payload);
-      } else {
-        return useLocalNotesStore.getState().markSaved(payload);
-      }
-    },
-    [isLogged]
-  );
-
   return {
     note,
     isNoteLoading,
@@ -104,6 +92,5 @@ export const useSingleNote = (noteId?: string) => {
     cacheNote,
     changeNote,
     changeNoteDir,
-    markSaved,
   };
 };

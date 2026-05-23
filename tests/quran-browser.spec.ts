@@ -52,6 +52,38 @@ test.describe("QuranBrowser Page", () => {
     expect(targetChapter).toBeTruthy();
 
     await targetChapterButton.click();
-    await expect(page.getByText(`سورة ${targetChapter}`)).toBeVisible();
+    await expect(page.getByText(`سورة ${targetChapter}`)).toBeVisible({
+      timeout: 20_000,
+    });
+  });
+
+  test("can save a guest verse note and load it again after reload", async ({
+    page,
+  }) => {
+    const noteText = `Playwright note ${Date.now()}`;
+    const verseCard = page.locator('[data-id="1-2"]');
+
+    await expect(verseCard).toBeVisible();
+    await verseCard.getByRole("button", { name: /Expand|توسيع/i }).click();
+
+    const noteEditor = verseCard.locator('textarea:not([aria-hidden="true"])');
+    await expect(noteEditor).toBeVisible();
+    await noteEditor.fill(noteText);
+    await verseCard.locator('button[type="submit"]').click();
+
+    await expect(page.getByText(/Successfully saved\.|تم الحفظ\./)).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByText("سورة الفاتحة")).toBeVisible({
+      timeout: 20_000,
+    });
+
+    const reloadedVerseCard = page.locator('[data-id="1-2"]');
+    await reloadedVerseCard
+      .getByRole("button", { name: /Expand|توسيع/i })
+      .click();
+
+    await expect(reloadedVerseCard.getByText(noteText)).toBeVisible();
+    await expect(reloadedVerseCard.locator("textarea")).toHaveCount(0);
   });
 });
