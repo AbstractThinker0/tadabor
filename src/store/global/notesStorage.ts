@@ -64,3 +64,14 @@ export const useActiveNoteState = (noteId?: string) => {
 
 export const getNotesIDsByType = (dataKeys: string[], noteType: NoteType) =>
   dataKeys.filter((noteID) => hasNoteType(noteID, noteType));
+
+export const hasUnsavedNotes = () => {
+  const isLogged = useUserStore.getState().isLogged;
+  const localNotes = useLocalNotesStore.getState().data;
+  const cloudNotes = useCloudNotesStore.getState().data;
+  const activeNotes = selectActiveValue(isLogged, localNotes, cloudNotes);
+
+  return Object.values(activeNotes).some(
+    (note) => note.saved === false && (note.preSave || note.text)
+  );
+};

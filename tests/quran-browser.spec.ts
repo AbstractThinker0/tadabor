@@ -160,4 +160,29 @@ test.describe("QuranBrowser Page", () => {
       )
       .toBe(true);
   });
+
+  test("warns before reload when a guest note has unsaved changes", async ({
+    page,
+  }) => {
+    const verseCard = page.locator('[data-id="1-2"]');
+
+    await expect(verseCard).toBeVisible();
+    await verseCard.getByRole("button", { name: /Expand|توسيع/i }).click();
+
+    const noteEditor = verseCard.locator('textarea:not([aria-hidden="true"])');
+    await expect(noteEditor).toBeVisible();
+    await noteEditor.fill(`Unsaved note ${Date.now()}`);
+
+    const dialogPromise = page.waitForEvent("dialog");
+    const reloadPromise = page.reload({ waitUntil: "domcontentloaded" });
+
+    const dialog = await dialogPromise;
+    expect(dialog.type()).toBe("beforeunload");
+    await dialog.accept();
+    await reloadPromise;
+
+    await expect(page.getByText("سورة الفاتحة")).toBeVisible({
+      timeout: 20_000,
+    });
+  });
 });

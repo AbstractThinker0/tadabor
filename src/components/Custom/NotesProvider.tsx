@@ -1,9 +1,6 @@
 import { useCallback } from "react";
 
-import { useUserStore } from "@/store/global/userStore";
-
-import { useCloudNotesStore } from "@/store/global/cloudNotes";
-import { useLocalNotesStore } from "@/store/global/localNotes";
+import { hasUnsavedNotes } from "@/store/global/notesStorage";
 
 import { useBeforeUnload } from "react-router";
 
@@ -12,32 +9,10 @@ interface NotesProviderProps {
 }
 
 const NotesProvider = ({ children }: NotesProviderProps) => {
-  const hasUnsavedNotes = useCallback(() => {
-    const userStore = useUserStore;
-    const localNotesStore = useLocalNotesStore;
-    const cloudNotesStore = useCloudNotesStore;
-
-    const isLogged = userStore.getState().isLogged;
-    const localNotes = localNotesStore.getState().data;
-    const cloudNotes = cloudNotesStore.getState().data;
-
-    let hasUnsaved = false;
-
-    if (isLogged && cloudNotes) {
-      hasUnsaved = Object.values(cloudNotes).some(
-        (note) => note.saved === false && (note.preSave || note.text)
-      );
-    } else if (localNotes) {
-      hasUnsaved = Object.values(localNotes).some(
-        (note) => note.saved === false && (note.preSave || note.text)
-      );
-    }
-
-    return hasUnsaved;
-  }, []); // No dependencies needed
+  const shouldWarnOnUnload = useCallback(() => hasUnsavedNotes(), []);
 
   useBeforeUnload((e) => {
-    if (hasUnsavedNotes()) {
+    if (shouldWarnOnUnload()) {
       e.preventDefault();
       e.returnValue = "You have unsaved notes..";
     }
