@@ -1,6 +1,5 @@
-import { useUserStore } from "@/store/global/userStore";
-import { useCloudNotesStore } from "@/store/global/cloudNotes";
-import { useLocalNotesStore } from "@/store/global/localNotes";
+import { getNotesIDsByType, useNotesStorageState } from "@/store/global/notesStorage";
+import type { NoteType } from "@/util/noteIdentity";
 
 /**
  * Hook for global notes list and metadata.
@@ -10,31 +9,9 @@ import { useLocalNotesStore } from "@/store/global/localNotes";
  * so it does not violate React's rules of hooks when login state changes.
  */
 export const useNotesStore = () => {
-  const isLogged = useUserStore((state) => state.isLogged);
+  const { data, dataKeys, loading, complete, error } = useNotesStorageState();
 
-  const localData = useLocalNotesStore((state) => state.data);
-  const cloudData = useCloudNotesStore((state) => state.data);
-
-  const localKeys = useLocalNotesStore((state) => state.dataKeys);
-  const cloudKeys = useCloudNotesStore((state) => state.dataKeys);
-
-  const localLoading = useLocalNotesStore((state) => state.loading);
-  const cloudLoading = useCloudNotesStore((state) => state.loading);
-
-  const localComplete = useLocalNotesStore((state) => state.complete);
-  const cloudComplete = useCloudNotesStore((state) => state.complete);
-
-  const localError = useLocalNotesStore((state) => state.error);
-  const cloudError = useCloudNotesStore((state) => state.error);
-
-  const data = isLogged ? cloudData : localData;
-  const dataKeys = isLogged ? cloudKeys : localKeys;
-  const loading = isLogged ? cloudLoading : localLoading;
-  const complete = isLogged ? cloudComplete : localComplete;
-  const error = isLogged ? cloudError : localError;
-
-  const getNotesIDsbyType = (type: "verse" | "root" | "translation") =>
-    dataKeys.filter((id) => id.startsWith(type));
+  const getNotesIDsbyType = (type: NoteType) => getNotesIDsByType(dataKeys, type);
 
   return {
     data,

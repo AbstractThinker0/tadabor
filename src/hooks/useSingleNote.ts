@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
-import { useUserStore } from "@/store/global/userStore";
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
+import { useActiveNoteState } from "@/store/global/notesStorage";
 
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
 
@@ -14,30 +14,7 @@ import type { CloudNoteProps, LocalNoteProps } from "@/types";
  * so it does not violate React's rules of hooks when login state changes.
  */
 export const useSingleNote = (noteId?: string) => {
-  const isLogged = useUserStore((state) => state.isLogged);
-  const userId = useUserStore((state) => state.id);
-
-  const localNote = useLocalNotesStore((state) =>
-    noteId ? state.data[noteId] : undefined
-  );
-  const cloudNote = useCloudNotesStore((state) =>
-    noteId ? state.data[noteId] : undefined
-  );
-
-  const localNoteLoading = useLocalNotesStore((state) =>
-    noteId ? state.dataLoading[noteId] : undefined
-  );
-  const cloudNoteLoading = useCloudNotesStore((state) =>
-    noteId ? state.dataLoading[noteId] : undefined
-  );
-
-  const note = isLogged ? cloudNote : localNote;
-
-  const isNoteLoading = useMemo(() => {
-    if (!noteId) return undefined;
-
-    return isLogged ? cloudNoteLoading : localNoteLoading;
-  }, [noteId, isLogged, cloudNoteLoading, localNoteLoading]);
+  const { isLogged, userId, note, isNoteLoading } = useActiveNoteState(noteId);
 
   const fetchSingleNoteIfNeeded = useCallback(() => {
     if (!noteId) return null;

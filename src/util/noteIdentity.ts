@@ -9,6 +9,7 @@ export interface NoteIdentity {
 }
 
 const NOTE_ID_SEPARATOR = ":";
+const reportedInvalidNoteIds = new Set<string>();
 
 export const isNoteType = (value: string): value is NoteType =>
   NOTE_TYPES.includes(value as NoteType);
@@ -61,8 +62,19 @@ export const resolveNoteIdentity = ({
   };
 };
 
-export const hasNoteType = (noteID: string, noteType: NoteType) =>
-  parseNoteId(noteID).type === noteType;
+export const hasNoteType = (noteID: string, noteType: NoteType) => {
+  try {
+    return parseNoteId(noteID).type === noteType;
+  } catch (error) {
+    if (typeof window !== "undefined" && !reportedInvalidNoteIds.has(noteID)) {
+      reportedInvalidNoteIds.add(noteID);
+      const message = error instanceof Error ? error.message : "Unknown note ID parsing error";
+      console.warn(`Ignoring malformed note ID while filtering notes: ${noteID}. ${message}`);
+    }
+
+    return false;
+  }
+};
 
 export const getDefaultNoteDirection = (noteType: NoteType) =>
   noteType === "translation" ? "ltr" : "";

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  hasNoteType,
   parseVerseAddressKey,
   getDefaultNoteDirection,
   resolveNoteIdentity,
@@ -57,5 +58,11 @@ test.describe("note identity helpers", () => {
       chapter: 36,
       verse: 58,
     });
+  });
+
+  test("treats malformed note IDs as non-matching when filtering by type", () => {
+    expect(hasNoteType("verse:2-255", "verse")).toBe(true);
+    expect(hasNoteType("legacy-id", "verse")).toBe(false);
+    expect(hasNoteType("unknown:2-255", "verse")).toBe(false);
   });
 });

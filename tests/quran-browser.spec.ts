@@ -86,4 +86,78 @@ test.describe("QuranBrowser Page", () => {
     await expect(reloadedVerseCard.getByText(noteText)).toBeVisible();
     await expect(reloadedVerseCard.locator("textarea")).toHaveCount(0);
   });
+
+  test("keeps the notes list usable when Dexie contains malformed note IDs", async ({
+    page,
+  }) => {
+    const validNoteText = `Valid notes list note ${Date.now()}`;
+    const malformedNoteText = `Malformed note ${Date.now()}`;
+    const warningMessages: string[] = [];
+
+    page.on("console", (message) => {
+      if (message.type() === "warning") {
+        warningMessages.push(message.text());
+      }
+    });
+
+    const verseCard = page.locator('[data-id="1-2"]');
+
+    await expect(verseCard).toBeVisible();
+    await verseCard.getByRole("button", { name: /Expand|توسيع/i }).click();
+
+    const noteEditor = verseCard.locator('textarea:not([aria-hidden="true"])');
+    await expect(noteEditor).toBeVisible();
+    await noteEditor.fill(validNoteText);
+    await verseCard.locator('button[type="submit"]').click();
+
+    await expect(page.getByText(/Successfully saved\.|تم الحفظ\./)).toBeVisible();
+
+    await page.evaluate(async ({ malformedNoteText }) => {
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.open("tadaborDatabase");
+
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const database = request.result;
+          const transaction = database.transaction("local_notes", "readwrite");
+          const store = transaction.objectStore("local_notes");
+
+          transaction.oncomplete = () => {
+            database.close();
+            resolve();
+          };
+          transaction.onerror = () => {
+            reject(transaction.error ?? new Error("Failed to seed malformed note"));
+          };
+
+          store.put({
+            id: "legacy-id",
+            uuid: "00000000-0000-4000-8000-000000000001",
+            key: "1-3",
+            type: "verse",
+            text: malformedNoteText,
+            dir: "",
+            date_created: Date.now(),
+            date_modified: Date.now(),
+          });
+        };
+      });
+    }, { malformedNoteText });
+
+    await page.goto("/notes");
+
+    await expect(page.getByRole("button", { name: "Download notes" })).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByText(validNoteText)).toBeVisible();
+    await expect(page.getByText(malformedNoteText)).toHaveCount(0);
+    await expect
+      .poll(() =>
+        warningMessages.some((message) =>
+          message.includes("Ignoring malformed note ID while filtering notes:") &&
+          message.includes("legacy-id")
+        )
+      )
+      .toBe(true);
+  });
 });
