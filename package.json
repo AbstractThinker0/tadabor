@@ -44,8 +44,8 @@
     "react-icons": "5.6.0",
     "react-router": "^7.12.0",
     "usehooks-ts": "3.1.1",
-    "uuid": "14.0.0",
-    "zod": "4.1.13",
+    "uuid": "^14.0.0",
+    "zod": "^4.4.3",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "17.6.0",
-    "typescript": "5.7.2",
+    "typescript": "^5.7.2",
     "typescript-eslint": "8.49.0",
     "vite": "7.3.2",
     "vite-plugin-pwa": "1.2.0",
