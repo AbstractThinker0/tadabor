@@ -120,10 +120,12 @@ export const useAuth = () => {
     message = "auth.loggedOut",
     clearOldNotes = false,
   }: { message?: string; clearOldNotes?: boolean } = {}) => {
-    // Best-effort server-side token revocation (fire-and-forget)
-    userLogout.mutateAsync(undefined).catch(() => {
-      // Silently ignore errors - logout locally regardless
-    });
+    if (useUserStore.getState().token) {
+      // Best-effort server-side token revocation (fire-and-forget)
+      userLogout.mutateAsync(undefined).catch(() => {
+        // Silently ignore errors - logout locally regardless
+      });
+    }
 
     useUserStore.getState().logout();
     resetCloudNotes();

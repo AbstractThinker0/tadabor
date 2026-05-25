@@ -1,12 +1,28 @@
 import { keyToken } from "@/store/global/userStore";
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
+import type { ContractRouterClient } from "@orpc/contract";
 import {
   createTanstackQueryUtils,
   type RouterUtils,
 } from "@orpc/tanstack-query";
 import { QueryClient } from "@tanstack/react-query";
-import type { TadaborContractClient } from "tadabor-shared";
+import type { TadaborContract } from "tadabor-shared";
+
+const rpcUrl =
+  import.meta.env?.VITE_API ??
+  (globalThis as { __TADABOR_RPC_URL__?: string }).__TADABOR_RPC_URL__ ??
+  "";
+const appVersion = typeof APP_VERSION === "undefined" ? "dev" : APP_VERSION;
+
+type RpcClientContext = {
+  authToken?: string;
+};
+
+export type TadaborContextClient = ContractRouterClient<
+  TadaborContract,
+  RpcClientContext
+>;
 
 function makeQueryClient() {
   return new QueryClient({
@@ -31,28 +47,33 @@ export function getQueryClient() {
   return browserQueryClient;
 }
 
-let browserRpcClient: TadaborContractClient | undefined;
+let browserRpcClient: TadaborContextClient | undefined;
 
 export function getRpcClient() {
   if (!browserRpcClient) {
-    browserRpcClient = createORPCClient(
-      new RPCLink({
-        url: import.meta.env.VITE_API || "",
-        headers() {
-          const headers: Record<string, string> = {};
-          const token = localStorage.getItem(keyToken);
-          if (token) headers.Authorization = `Bearer ${token}`;
-          headers["X-App-Version"] = APP_VERSION;
+    browserRpcClient = createORPCClient<TadaborContextClient>(
+      new RPCLink<RpcClientContext>({
+        url: rpcUrl,
+        headers(options) {
+          const headers: Record<string, string> = {
+            "X-App-Version": appVersion,
+          };
+          const token = options.context.authToken ?? localStorage.getItem(keyToken);
+
+          if (token) {
+            headers.Authorization = `Bearer ${token}`;
+          }
+
           return headers;
         },
       })
-    ) as TadaborContractClient;
+    );
   }
 
   return browserRpcClient;
 }
 
-type TadaborTanstackQueryUtils = RouterUtils<TadaborContractClient>;
+type TadaborTanstackQueryUtils = RouterUtils<TadaborContextClient>;
 
 let browserRpcQueryUtils: TadaborTanstackQueryUtils | undefined;
 

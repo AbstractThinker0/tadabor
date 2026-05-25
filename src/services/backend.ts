@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getRpcQueryUtils } from "@/components/Custom/queryClient";
+import {
+  getRpcQueryUtils,
+} from "@/components/Custom/queryClient";
 import { useUserStore } from "@/store/global/userStore";
 import type { BackendNote, TadaborContractOutputs } from "tadabor-shared";
 
@@ -23,6 +25,11 @@ type ConnectedDevicesResponse =
   TadaborContractOutputs["user"]["getConnectedDevices"];
 
 const orpc = getRpcQueryUtils();
+
+export const getUserLogoutMutationOptions = (authToken?: string) =>
+  authToken
+    ? orpc.auth.logout.mutationOptions({ context: { authToken } })
+    : orpc.auth.logout.mutationOptions();
 
 export const useUserRefresh = () => {
   const {
@@ -49,7 +56,9 @@ export const useUserSignup = () => {
 };
 
 export const useUserLogout = () => {
-  return useMutation(orpc.auth.logout.mutationOptions());
+  const authToken = useUserStore((state) => state.token);
+
+  return useMutation(getUserLogoutMutationOptions(authToken));
 };
 
 export const useUserUpdateProfile = () => {
