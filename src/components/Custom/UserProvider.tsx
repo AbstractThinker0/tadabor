@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { toORPCError } from "@orpc/client";
 
 import { useUserStore } from "@/store/global/userStore";
 
@@ -51,7 +52,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
   const onUserError = useEffectEvent(() => {
     if (userRefresh.isError) {
-      const isUnauthorized = userRefresh.error.data?.code === "UNAUTHORIZED";
+      const isUnauthorized =
+        toORPCError(userRefresh.error).code === "UNAUTHORIZED";
 
       if (isUnauthorized) {
         logout({ message: "auth.sessionExpired" });

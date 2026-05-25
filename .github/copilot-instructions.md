@@ -8,7 +8,7 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 
 - **Frontend**: React 19, TypeScript, Vite (dev server), React Router 7
 - **State Management**: Zustand for global and page-specific UI state + TanStack Query for async operations
-- **Backend**: tRPC (type-safe RPC framework) with authentication
+- **Backend**: oRPC (contract-first RPC framework) with authentication
 - **UI**: Chakra UI v3 (theming, components)
 - **Data**: Dexie (IndexedDB), quran-tools (Quran data manipulation)
 - **i18n**: react-i18next (Arabic/English, RTL support)
@@ -22,13 +22,13 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 2. Toaster providers
 3. ReloadPrompt (PWA)
 4. Error boundaries
-5. QueryProvider (TanStack Query + tRPC)
+5. QueryProvider (TanStack Query)
 6. Browser Router (routing)
 
 **Core Data Providers**:
 
 - **QuranProvider** (`src/context/QuranProvider.tsx`): Loads and caches Quran text, chapters, and roots via `quran-tools` class. Fetches from `/res/quran_v2.json`, `/res/chapters.json`, `/res/quranRoots-0.0.18.json` with retry logic (3 attempts, exponential backoff).
-- **UserProvider** (`src/components/Custom/UserProvider.tsx`): Manages authentication, token refresh via tRPC auth mutations.
+- **UserProvider** (`src/components/Custom/UserProvider.tsx`): Manages authentication and token refresh via the centralized oRPC service hooks.
 - **NotesProvider** (`src/components/Custom/NotesProvider.tsx`): Syncs local/cloud notes using Zustand stores.
 
 ### Zustand Store Structure
@@ -42,7 +42,7 @@ Tadabor is a React 19 + TypeScript web application for browsing and annotating t
 Two separate note stores with identical structure:
 
 - **localNotes** (`src/store/global/localNotes.ts`): Browser-only, uses `dbNotes.saveLocal()` (IndexedDB)
-- **cloudNotes** (`src/store/global/cloudNotes.ts`): Synced to backend, uses `dbNotes.saveCloud()` + tRPC `uploadNote` mutation
+- **cloudNotes** (`src/store/global/cloudNotes.ts`): Synced to backend, uses `dbNotes.saveCloud()` + oRPC `uploadNote` mutation
 
 Both follow pattern:
 
@@ -60,7 +60,7 @@ loading: boolean  // Initial load state
 
 - Central hook for note CRUD. Returns: `{ text, setText, direction, setDirection, save, isSaved, isSynced, isOutOfSync, ... }`
 - Automatically routes to local OR cloud store based on `useUserStore(state => state.isLogged)`
-- Handles dual-sync: IndexedDB save + optional tRPC upload for cloud notes
+- Handles dual-sync: IndexedDB save + optional oRPC upload for cloud notes
 - Computes `isOutOfSync` by comparing `date_synced < date_modified`
 
 **`useQuran()`** (`src/context/useQuran.tsx`): Access to `quranClass` instance for searching, getting verses/chapters/roots.
@@ -126,7 +126,7 @@ npm run theme  # Regenerate Chakra theme types
 - `src/store/global/`: Zustand stores for global state (settings, navigation, user, translations, notes)
 - `src/store/pages/`: Zustand stores for page-specific UI state
 - `src/hooks/`: Custom React hooks (auth, notes, page nav, screen size)
-- `src/util/`: Utilities (db.ts for Dexie, trpc.ts client, fetchData.ts for static data)
+- `src/util/`: Utilities (db.ts for Dexie, fetchData.ts for static data)
 - `src/context/`: React Context providers (Quran, User)
 
 ### Component Patterns
@@ -143,11 +143,11 @@ npm run theme  # Regenerate Chakra theme types
 - **Lazy Loading Notes**: `useNote()` uses `useEffect()` with `isVisible` dependency; fetches on mount if not cached
 - **Pagination**: Page-specific stores track `currentChapter`, `scrollKey`. Use `usePageNav()` to restore scroll on page re-entry
 
-### tRPC Integration
+### oRPC Integration
 
-- Client: `useTRPC()` hook from `src/util/trpc.ts` returns typed router proxy
-- Mutations wrapped in `useMutation()` from TanStack Query (e.g., `uploadNote.mutateAsync()`)
-- Error handling: Watch for Zod validation errors in `AppRouter` error shape
+- Client creation is centralized in `src/components/Custom/queryClient.ts`
+- Backend hooks live in `src/services/backend.ts` and wrap oRPC calls with TanStack Query
+- Error handling uses oRPC error codes and shared contract types from `tadabor-shared`
 
 ### Database (Dexie)
 
@@ -163,7 +163,7 @@ npm run theme  # Regenerate Chakra theme types
 
 ## Integration Points & External Dependencies
 
-### tRPC Backend
+### oRPC Backend
 
 - Endpoints: `auth.{login, signUp, refresh, updateEmailOrUsername}`, `notes.{uploadNote, fetchNote, syncNotes, getNotesIndexes}`, `user.{getUser, getProfile}`, `admin.*`
 - Auth: JWT token stored in localStorage, auto-refreshed via `auth.refresh` query
@@ -188,7 +188,7 @@ npm run theme  # Regenerate Chakra theme types
 - **Core Hooks**: `src/hooks/useNote.ts`, `src/hooks/useAuth.ts`
 - **Quran Data**: `src/context/QuranProvider.tsx`, `src/util/fetchData.ts`
 - **UI Components**: `src/components/Custom/BaseVerseItem.tsx`, `src/components/Note/NoteForm.tsx`
-- **Database**: `src/util/db.ts`, `src/util/dbFuncs.ts`, `src/util/trpc.ts`
+- **Database**: `src/util/db.ts`, `src/util/dbFuncs.ts`
 - **Config**: `vite.config.ts` (build setup), `tsconfig.json` (strict mode), `eslint.config.js`
 
 ## Common Pitfalls to Avoid

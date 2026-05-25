@@ -1,143 +1,129 @@
-import { useTRPC, useTRPCClient } from "@/util/trpc";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { getRpcQueryUtils } from "@/components/Custom/queryClient";
 import { useUserStore } from "@/store/global/userStore";
+import type { BackendNote, TadaborContractOutputs } from "tadabor-shared";
+
+type AnalyticsParams = {
+  userId?: number;
+  action?: string;
+  limit?: number;
+  offset?: number;
+  startDate?: number;
+  endDate?: number;
+};
+
+type ListUsersParams = {
+  limit?: number;
+  offset?: number;
+};
+
+type FetchNoteResponse = TadaborContractOutputs["notes"]["fetchNote"];
+type ConnectedDevicesResponse =
+  TadaborContractOutputs["user"]["getConnectedDevices"];
+
+const orpc = getRpcQueryUtils();
 
 export const useUserRefresh = () => {
-  const trpc = useTRPC();
   const {
     isLogged,
     isLoggedOffline,
     token: userToken,
   } = useUserStore((state) => state);
 
-  return useQuery({
-    ...trpc.auth.refresh.queryOptions(),
-    enabled: (!isLogged || isLoggedOffline) && userToken.length > 0, // Only fetch if needed
-    retry: false,
-    refetchInterval: isLoggedOffline ? 60000 : false, // Retry every 60 seconds when offline
-  });
+  return useQuery(
+    orpc.auth.refresh.queryOptions({
+      enabled: (!isLogged || isLoggedOffline) && userToken.length > 0, // Only fetch if needed
+      retry: false,
+      refetchInterval: isLoggedOffline ? 60000 : false, // Retry every 60 seconds when offline
+    })
+  );
 };
 
 export const useUserLogin = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.auth.login.mutationOptions());
+  return useMutation(orpc.auth.login.mutationOptions());
 };
 
 export const useUserSignup = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.auth.signUp.mutationOptions());
+  return useMutation(orpc.auth.signUp.mutationOptions());
 };
 
 export const useUserLogout = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.auth.logout.mutationOptions());
+  return useMutation(orpc.auth.logout.mutationOptions());
 };
 
 export const useUserUpdateProfile = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.auth.updateEmailOrUsername.mutationOptions());
+  return useMutation(orpc.auth.updateEmailOrUsername.mutationOptions());
 };
 
 export const useUserUpdateBio = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.user.updateProfileMeta.mutationOptions());
+  return useMutation(orpc.user.updateProfileMeta.mutationOptions());
 };
 
 export const usePasswordRequestReset = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.password.requestPasswordReset.mutationOptions());
+  return useMutation(orpc.password.requestPasswordReset.mutationOptions());
 };
 
 export const usePasswordReset = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.password.resetPassword.mutationOptions());
+  return useMutation(orpc.password.resetPassword.mutationOptions());
 };
 
 export const usePasswordUpdate = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.password.updatePassword.mutationOptions());
+  return useMutation(orpc.password.updatePassword.mutationOptions());
 };
 
 export const useFetchAnalytics = () => {
-  const trpcClient = useTRPCClient();
-  return (params: {
-    userId?: number;
-    action?: string;
-    limit?: number;
-    offset?: number;
-  }) => {
-    return trpcClient.admin.getAnalytics.query({
-      userId: params.userId,
-      action: params.action,
-      limit: params.limit,
-      offset: params.offset,
-    });
-  };
+  return (params: AnalyticsParams) => orpc.admin.getAnalytics.call(params);
 };
 
 export const useQueryAnalytics = (
-  params: {
-    limit?: number;
-    offset?: number;
-  },
+  params: AnalyticsParams,
   options?: { enabled?: boolean }
 ) => {
-  const trpc = useTRPC();
   return useQuery(
-    trpc.admin.getAnalytics.queryOptions(
-      { limit: params.limit, offset: params.offset },
-      { enabled: options?.enabled ?? false }
-    )
+    orpc.admin.getAnalytics.queryOptions({
+      input: params,
+      enabled: options?.enabled ?? false,
+    })
   );
 };
 
 export const useQueryActionStats = (options?: { enabled?: boolean }) => {
-  const trpc = useTRPC();
   return useQuery(
-    trpc.admin.getActionStats.queryOptions(undefined, {
+    orpc.admin.getActionStats.queryOptions({
       enabled: options?.enabled ?? false,
     })
   );
 };
 
 export const useQueryUserStats = (options?: { enabled?: boolean }) => {
-  const trpc = useTRPC();
   return useQuery(
-    trpc.admin.getUserStats.queryOptions(undefined, {
+    orpc.admin.getUserStats.queryOptions({
       enabled: options?.enabled ?? false,
     })
   );
 };
 
-export const useFetchUsers = (params: { limit?: number; offset?: number }) => {
-  const trpc = useTRPC();
-
+export const useFetchUsers = (params: ListUsersParams) => {
   return useQuery(
-    trpc.admin.listUsers.queryOptions(
-      {
-        limit: params.limit,
-        offset: params.offset,
+    orpc.admin.listUsers.queryOptions({
+      input: params,
+      placeholderData: {
+        data: [],
+        meta: { total: 0, limit: 100, offset: 0 },
       },
-      {
-        placeholderData: {
-          data: [],
-          meta: { total: 0, limit: 100, offset: 0 },
-        },
-      }
-    )
+    })
   );
 };
 
 export const useUpdateUser = () => {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const listUsersQueryOptions = trpc.admin.listUsers.queryOptions({});
 
   return useMutation(
-    trpc.admin.updateUser.mutationOptions({
+    orpc.admin.updateUser.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: listUsersQueryOptions.queryKey,
+          queryKey: orpc.admin.listUsers.key(),
         });
       },
     })
@@ -145,14 +131,13 @@ export const useUpdateUser = () => {
 };
 
 export const useDeleteUser = () => {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const listUsersQueryOptions = trpc.admin.listUsers.queryOptions({});
+
   return useMutation(
-    trpc.admin.deleteUser.mutationOptions({
+    orpc.admin.deleteUser.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: listUsersQueryOptions.queryKey,
+          queryKey: orpc.admin.listUsers.key(),
         });
       },
     })
@@ -161,45 +146,46 @@ export const useDeleteUser = () => {
 
 export const useFetchNote = () => {
   const queryClient = useQueryClient();
-  const trpc = useTRPC();
 
-  return (noteID: string) => {
-    return queryClient.fetchQuery(
-      trpc.notes.fetchNote.queryOptions({ id: noteID })
+  return (noteID: string) =>
+    queryClient.fetchQuery(
+      orpc.notes.fetchNote.queryOptions({
+        input: { id: noteID },
+      })
     );
-  };
 };
 
 export const useSyncNotes = () => {
-  const trpc = useTRPC();
-  return useMutation(trpc.notes.syncNotes.mutationOptions());
+  return useMutation(orpc.notes.syncNotes.mutationOptions());
 };
 
 export const useUploadNote = () => {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation(
-    trpc.notes.uploadNote.mutationOptions({
+    orpc.notes.uploadNote.mutationOptions({
       onSuccess(data, variables) {
         const noteId = `${variables.type}:${variables.key}`;
-
-        const queryKey = trpc.notes.fetchNote.queryOptions({
-          id: noteId,
-        }).queryKey;
+        const queryKey = orpc.notes.fetchNote.queryKey({
+          input: { id: noteId },
+        });
 
         // Check if the note is already cached; skip update if not
-        const oldData = queryClient.getQueryData(queryKey);
+        const oldData = queryClient.getQueryData<FetchNoteResponse>(queryKey);
         if (!oldData) return;
 
         // Update the cache by merging
-        queryClient.setQueryData(queryKey, {
+        const note: BackendNote = {
+          ...oldData.note,
+          ...variables,
+          ...data.note,
+          content: variables.content ?? null,
+          direction: variables.direction ?? null,
+        };
+
+        queryClient.setQueryData<FetchNoteResponse>(queryKey, {
           success: true,
-          note: {
-            ...oldData.note,
-            ...variables,
-            ...data.note,
-          },
+          note,
         });
       },
     })
@@ -207,28 +193,28 @@ export const useUploadNote = () => {
 };
 
 export const useConnectedDevices = () => {
-  const trpc = useTRPC();
-  return useQuery(trpc.user.getConnectedDevices.queryOptions());
+  return useQuery(orpc.user.getConnectedDevices.queryOptions());
 };
 
 export const useRevokeDevice = () => {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const devicesQueryOptions = trpc.user.getConnectedDevices.queryOptions();
 
   return useMutation(
-    trpc.user.revokeDevice.mutationOptions({
+    orpc.user.revokeDevice.mutationOptions({
       onSuccess: (_, variables) => {
-        queryClient.setQueryData(devicesQueryOptions.queryKey, (oldData) => {
-          if (!oldData) return oldData;
+        queryClient.setQueryData<ConnectedDevicesResponse>(
+          orpc.user.getConnectedDevices.queryKey(),
+          (oldData) => {
+            if (!oldData) return oldData;
 
-          return {
-            ...oldData,
-            devices: oldData.devices.filter(
-              (device) => device.id !== variables.tokenId
-            ),
-          };
-        });
+            return {
+              ...oldData,
+              devices: oldData.devices.filter(
+                (device) => device.id !== variables.tokenId
+              ),
+            };
+          }
+        );
       },
     })
   );

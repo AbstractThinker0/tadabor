@@ -1,7 +1,12 @@
 import { keyToken } from "@/store/global/userStore";
-import type { AppRouter } from "@/util/AppRouter";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { createORPCClient } from "@orpc/client";
+import { RPCLink } from "@orpc/client/fetch";
+import {
+  createTanstackQueryUtils,
+  type RouterUtils,
+} from "@orpc/tanstack-query";
 import { QueryClient } from "@tanstack/react-query";
+import type { TadaborContractClient } from "tadabor-shared";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -26,26 +31,35 @@ export function getQueryClient() {
   return browserQueryClient;
 }
 
-let browserTrpcClient:
-  | ReturnType<typeof createTRPCClient<AppRouter>>
-  | undefined;
+let browserRpcClient: TadaborContractClient | undefined;
 
-export function getTrpcClient() {
-  if (!browserTrpcClient) {
-    browserTrpcClient = createTRPCClient<AppRouter>({
-      links: [
-        httpBatchLink({
-          url: import.meta.env.VITE_API || "",
-          headers() {
-            const headers: Record<string, string> = {};
-            const token = localStorage.getItem(keyToken);
-            if (token) headers.Authorization = `Bearer ${token}`;
-            headers["X-App-Version"] = APP_VERSION;
-            return headers;
-          },
-        }),
-      ],
-    });
+export function getRpcClient() {
+  if (!browserRpcClient) {
+    browserRpcClient = createORPCClient(
+      new RPCLink({
+        url: import.meta.env.VITE_API || "",
+        headers() {
+          const headers: Record<string, string> = {};
+          const token = localStorage.getItem(keyToken);
+          if (token) headers.Authorization = `Bearer ${token}`;
+          headers["X-App-Version"] = APP_VERSION;
+          return headers;
+        },
+      })
+    ) as TadaborContractClient;
   }
-  return browserTrpcClient;
+
+  return browserRpcClient;
+}
+
+type TadaborTanstackQueryUtils = RouterUtils<TadaborContractClient>;
+
+let browserRpcQueryUtils: TadaborTanstackQueryUtils | undefined;
+
+export function getRpcQueryUtils() {
+  if (!browserRpcQueryUtils) {
+    browserRpcQueryUtils = createTanstackQueryUtils(getRpcClient());
+  }
+
+  return browserRpcQueryUtils;
 }

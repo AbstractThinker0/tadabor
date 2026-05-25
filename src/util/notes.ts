@@ -1,8 +1,8 @@
 import type { CloudNoteProps, LocalNoteProps } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import type { ICloudNote, INoteRevision } from "@/util/db";
-import type { BackendNote } from "@/util/AppRouter";
 import { parseNoteId } from "@/util/noteIdentity";
+import type { BackendNote } from "tadabor-shared";
 
 interface CreateNewNoteParams {
   id: string;

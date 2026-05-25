@@ -76,7 +76,7 @@ export interface LettersPresetsType {
 }
 
 // Context types
-export interface TRPCContext {
+export interface RpcContext {
   user: User | null;
   clientVersion: string | undefined;
   userAgent: string;
