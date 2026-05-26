@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import {
-  getRpcQueryUtils,
-} from "@/components/Custom/queryClient";
+import { getRpcQueryUtils } from "@/components/Custom/queryClient";
 import { useUserStore } from "@/store/global/userStore";
 import type {
   BackendNote,
@@ -35,7 +33,7 @@ export const useUserRefresh = () => {
     orpc.auth.refresh.queryOptions({
       enabled: (!isLogged || isLoggedOffline) && userToken.length > 0, // Only fetch if needed
       retry: false,
-      refetchInterval: isLoggedOffline ? 60000 : false, // Retry every 60 seconds when offline
+      refetchInterval: isLoggedOffline ? 15000 : false, // Retry every 60 seconds when offline
     })
   );
 };

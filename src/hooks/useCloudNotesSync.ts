@@ -151,7 +151,7 @@ export const useCloudNotesSync = () => {
     if (isCloudNotesComplete) {
       syncLoadedCloudNotes();
     }
-  }, [isCloudNotesComplete]);
+  }, [isCloudNotesComplete, isLogged, isLoggedOffline]);
 
   return {
     isLogged,
