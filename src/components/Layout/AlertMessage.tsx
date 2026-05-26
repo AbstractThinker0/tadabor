@@ -24,7 +24,7 @@ const AlertMessage = () => {
       dir="auto"
       status="warning"
       alignItems={"center"}
-      fontSize={"xl"}
+      fontSize={"md"}
     >
       <Alert.Indicator />
       <Alert.Content>

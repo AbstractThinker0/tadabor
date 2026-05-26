@@ -70,7 +70,12 @@ const BaseVerseItem = ({
       borderBottom="1px solid"
       borderColor={"border.emphasized"}
       aria-selected={isSelected}
-      _selected={{ bgColor: "orange.muted" }}
+      _hover={{ bgColor: "bg.subtle" }}
+      _selected={{
+        bgColor: "orange.muted",
+        _hover: { bgColor: "orange.muted" },
+      }}
+      transition="background-color 0.15s ease"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       lineHeight={"normal"}

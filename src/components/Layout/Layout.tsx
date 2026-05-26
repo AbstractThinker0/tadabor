@@ -47,7 +47,7 @@ const Layout = ({ children }: PropsWithChildren) => {
       height="100vh"
       fontFamily={`Cairo, serif`}
       fontSize="larger"
-      lineHeight="normal"
+      lineHeight="moderate"
       color={"brand.text"}
     >
       <Navbar />
