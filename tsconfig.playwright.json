@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.playwright.tsbuildinfo",
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": [
+    "src/vite-env.d.ts",
+    "playwright.config.ts",
+    "playwright.integration.config.ts",
+    "playwright.shared.ts",
+    "tests/**/*.ts"
+  ]
+}

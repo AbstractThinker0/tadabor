@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import type { ILocalNote, INoteRevision } from "../src/types/db";
 import {
   buildCloudNoteSaveData,
   buildLocalNoteSaveData,
@@ -76,11 +77,11 @@ test.describe("note save helpers", () => {
   });
 
   test("persists a revision when a saved note changes", async () => {
-    const revisions: Array<Record<string, unknown>> = [];
+    const revisions: INoteRevision[] = [];
     const originalSave = dbNoteRevisions.save;
 
     dbNoteRevisions.save = async (revision) => {
-      revisions.push(revision as Record<string, unknown>);
+      revisions.push(revision);
       return true;
     };
 
@@ -115,7 +116,7 @@ test.describe("note save helpers", () => {
   });
 
   test("saves local notes through the shared service", async () => {
-    const savedPayloads: Array<Record<string, unknown>> = [];
+    const savedPayloads: ILocalNote[] = [];
     const originalSave = dbNoteRevisions.save;
 
     dbNoteRevisions.save = async () => true;
@@ -141,7 +142,7 @@ test.describe("note save helpers", () => {
         noteType: "verse",
         noteDirection: "",
         markSaved: async (saveData) => {
-          savedPayloads.push(saveData as Record<string, unknown>);
+          savedPayloads.push(saveData);
           return true;
         },
       });
