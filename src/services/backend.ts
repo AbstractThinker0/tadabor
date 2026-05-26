@@ -210,7 +210,7 @@ export const useRevokeDevice = () => {
             return {
               ...oldData,
               devices: oldData.devices.filter(
-                (device) => device.id !== variables.tokenId
+                (device) => device.id !== variables.id
               ),
             };
           }

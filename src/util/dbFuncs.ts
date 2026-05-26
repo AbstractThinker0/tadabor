@@ -262,17 +262,17 @@ export const dbNotes = {
   loadAllLocal: () => {
     return db.local_notes.toArray();
   },
-  loadAllCloud: (userid: number) => {
-    return db.cloud_notes.where("authorId").equals(userid).toArray();
+  loadAllCloud: (userId: number) => {
+    return db.cloud_notes.where("authorId").equals(userId).toArray();
   },
   loadLocal: (id: string) => {
     return db.local_notes.get(id);
   },
-  loadCloud: (id: string, userid: number) => {
+  loadCloud: (id: string, userId: number) => {
     return db.cloud_notes
       .where("id")
       .equals(id)
-      .and((note) => note.authorId === userid)
+      .and((note) => note.authorId === userId)
       .first();
   },
   saveCloud: async (note: ICloudNote) => {

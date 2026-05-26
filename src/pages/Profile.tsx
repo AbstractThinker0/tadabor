@@ -492,8 +492,8 @@ const ConnectedDevices = () => {
     [i18n.language]
   );
 
-  const onClickRevoke = async (tokenId: number) => {
-    const { error } = await tryCatch(revokeDevice.mutateAsync({ tokenId }));
+  const onClickRevoke = async (id: number) => {
+    const { error } = await tryCatch(revokeDevice.mutateAsync({ id }));
 
     if (error) {
       toaster.create({
