@@ -45,6 +45,8 @@ const Layout = ({ children }: PropsWithChildren) => {
       ref={refMain}
       flexDirection="column"
       height="100vh"
+      minHeight={"125vh"}
+      style={{ zoom: 0.8 }}
       fontFamily={`Cairo, serif`}
       fontSize="larger"
       lineHeight="moderate"
