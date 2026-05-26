@@ -12,7 +12,7 @@ import { useNote } from "@/hooks/useNote";
 import type { NoteType } from "@/util/noteIdentity";
 
 interface NoteFormProps {
-  noteID?: string;
+  noteId?: string;
   noteType?: NoteType;
   noteKey?: string;
   renderHeader?: React.ReactNode;
@@ -20,7 +20,7 @@ interface NoteFormProps {
 }
 
 const NoteForm = ({
-  noteID,
+  noteId,
   noteType,
   noteKey,
   renderHeader,
@@ -28,7 +28,7 @@ const NoteForm = ({
 }: NoteFormProps) => {
   const { t } = useTranslation();
   const note = useNote({
-    noteID,
+    noteId,
     noteType,
     noteKey,
   });

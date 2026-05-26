@@ -12,8 +12,8 @@ import { parseNoteId, parseVerseAddressKey } from "@/util/noteIdentity";
 const TransNotes = () => {
   const { t } = useTranslation();
 
-  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
-  const translationNotesIDs = getNotesIDsbyType("translation");
+  const { getNotesIdsByType, data: userNotes } = useNotesStore();
+  const translationNoteIds = getNotesIdsByType("translation");
 
   const rankComparator = (a: string, b: string) => {
     // Note ID format: translation:chapter-verse
@@ -26,24 +26,24 @@ const TransNotes = () => {
     return verseA - verseB;
   };
 
-  const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+  const { sortBy, setSortBy, sortedNoteIds } = useNoteSorting({
     noteType: "translation",
-    noteIDs: translationNotesIDs,
+    noteIds: translationNoteIds,
     userNotes,
     rankComparator,
   });
 
   return (
     <>
-      {translationNotesIDs.length ? (
+      {translationNoteIds.length ? (
         <>
           <BackupComponent noteType="translation" />
 
           <NoteSortSelect sortBy={sortBy} onSortChange={setSortBy} />
 
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
-            {sortedNotesIDs.map((noteID) => (
-              <NoteComponent noteID={noteID} key={noteID} />
+            {sortedNoteIds.map((noteId) => (
+              <NoteComponent noteId={noteId} key={noteId} />
             ))}
           </VStack>
         </>

@@ -39,20 +39,20 @@ export const parseNoteId = (id: string): NoteIdentity => {
 };
 
 export const resolveNoteIdentity = ({
-  noteID,
+  noteId,
   noteType,
   noteKey,
 }: {
-  noteID?: string;
+  noteId?: string;
   noteType?: NoteType;
   noteKey?: string;
 }) => {
-  if (noteID) {
-    return parseNoteId(noteID);
+  if (noteId) {
+    return parseNoteId(noteId);
   }
 
   if (!noteType || !noteKey) {
-    throw new Error("A note requires either noteID or both noteType and noteKey");
+    throw new Error("A note requires either noteId or both noteType and noteKey");
   }
 
   return {
@@ -62,14 +62,14 @@ export const resolveNoteIdentity = ({
   };
 };
 
-export const hasNoteType = (noteID: string, noteType: NoteType) => {
+export const hasNoteType = (noteId: string, noteType: NoteType) => {
   try {
-    return parseNoteId(noteID).type === noteType;
+    return parseNoteId(noteId).type === noteType;
   } catch (error) {
-    if (typeof window !== "undefined" && !reportedInvalidNoteIds.has(noteID)) {
-      reportedInvalidNoteIds.add(noteID);
+    if (typeof window !== "undefined" && !reportedInvalidNoteIds.has(noteId)) {
+      reportedInvalidNoteIds.add(noteId);
       const message = error instanceof Error ? error.message : "Unknown note ID parsing error";
-      console.warn(`Ignoring malformed note ID while filtering notes: ${noteID}. ${message}`);
+      console.warn(`Ignoring malformed note ID while filtering notes: ${noteId}. ${message}`);
     }
 
     return false;

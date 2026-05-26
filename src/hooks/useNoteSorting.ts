@@ -8,14 +8,14 @@ import {
 
 interface UseNoteSortingParams {
   noteType: NoteType;
-  noteIDs: string[];
+  noteIds: string[];
   userNotes: Record<string, CloudNoteProps | LocalNoteProps>;
   rankComparator: (a: string, b: string) => number;
 }
 
 export const useNoteSorting = ({
   noteType,
-  noteIDs,
+  noteIds,
   userNotes,
   rankComparator,
 }: UseNoteSortingParams) => {
@@ -26,8 +26,8 @@ export const useNoteSorting = ({
     setStoredSortBy(noteType, value);
   };
 
-  const sortedNotesIDs = useMemo(() => {
-    return [...noteIDs].sort((a, b) => {
+  const sortedNoteIds = useMemo(() => {
+    return [...noteIds].sort((a, b) => {
       const noteA = userNotes[a];
       const noteB = userNotes[b];
 
@@ -48,11 +48,11 @@ export const useNoteSorting = ({
       }
       return 0;
     });
-  }, [userNotes, sortBy, rankComparator, noteIDs]);
+  }, [userNotes, sortBy, rankComparator, noteIds]);
 
   return {
     sortBy,
     setSortBy,
-    sortedNotesIDs,
+    sortedNoteIds,
   };
 };

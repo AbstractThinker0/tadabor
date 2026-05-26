@@ -62,8 +62,8 @@ export const useActiveNoteState = (noteId?: string) => {
   };
 };
 
-export const getNotesIDsByType = (dataKeys: string[], noteType: NoteType) =>
-  dataKeys.filter((noteID) => hasNoteType(noteID, noteType));
+export const getNotesIdsByType = (dataKeys: string[], noteType: NoteType) =>
+  dataKeys.filter((noteId) => hasNoteType(noteId, noteType));
 
 export const hasUnsavedNotes = () => {
   const isLogged = useUserStore.getState().isLogged;

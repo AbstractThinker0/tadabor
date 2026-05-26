@@ -24,8 +24,8 @@ const RootNotes = () => {
 const NotesList = () => {
   const { t } = useTranslation();
 
-  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
-  const rootNotesIDs = getNotesIDsbyType("root");
+  const { getNotesIdsByType, data: userNotes } = useNotesStore();
+  const rootNoteIds = getNotesIdsByType("root");
 
   const rankComparator = (a: string, b: string) => {
     // Note ID format: root:{numericRootId}
@@ -33,24 +33,24 @@ const NotesList = () => {
     return a.localeCompare(b);
   };
 
-  const { sortBy, setSortBy, sortedNotesIDs } = useNoteSorting({
+  const { sortBy, setSortBy, sortedNoteIds } = useNoteSorting({
     noteType: "root",
-    noteIDs: rootNotesIDs,
+    noteIds: rootNoteIds,
     userNotes,
     rankComparator,
   });
 
   return (
     <>
-      {rootNotesIDs.length ? (
+      {rootNoteIds.length ? (
         <>
           <BackupComponent noteType="root" />
 
           <NoteSortSelect sortBy={sortBy} onSortChange={setSortBy} />
 
           <VStack gap={"2rem"} px={"1rem"} mdDown={{ px: "0.2rem" }}>
-            {sortedNotesIDs.map((noteID) => (
-              <NoteComponent noteID={noteID} key={noteID} />
+            {sortedNoteIds.map((noteId) => (
+              <NoteComponent noteId={noteId} key={noteId} />
             ))}
           </VStack>
         </>

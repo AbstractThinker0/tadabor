@@ -17,8 +17,8 @@ const BackupComponent: React.FC<BackupComponentProps> = ({ noteType }) => {
   const [currentFormat, setFormat] = useState("1");
 
   const quranService = useQuran();
-  const { getNotesIDsbyType, data: userNotes } = useNotesStore();
-  const noteIDs = getNotesIDsbyType(noteType);
+  const { getNotesIdsByType, data: userNotes } = useNotesStore();
+  const noteIds = getNotesIdsByType(noteType);
 
   const notesBackup = () => {
     if (loadingNotes) return;
@@ -27,8 +27,8 @@ const BackupComponent: React.FC<BackupComponentProps> = ({ noteType }) => {
     if (currentFormat === "1") {
       let backupHTML = ``;
 
-      noteIDs.forEach((noteID) => {
-        const note = userNotes[noteID];
+      noteIds.forEach((noteId) => {
+        const note = userNotes[noteId];
 
         if (noteType === "verse" || noteType === "translation") {
           const noteVerse = quranService.getVerseByKey(note.key);
@@ -57,8 +57,8 @@ const BackupComponent: React.FC<BackupComponentProps> = ({ noteType }) => {
     } else {
       const backupData: any[] = [];
 
-      noteIDs.forEach((noteID) => {
-        const note = userNotes[noteID];
+      noteIds.forEach((noteId) => {
+        const note = userNotes[noteId];
 
         if (noteType === "verse" || noteType === "translation") {
           const noteVerse = quranService.getVerseByKey(note.key);

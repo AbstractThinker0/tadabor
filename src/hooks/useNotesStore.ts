@@ -1,4 +1,7 @@
-import { getNotesIDsByType, useNotesStorageState } from "@/store/global/notesStorage";
+import {
+  getNotesIdsByType,
+  useNotesStorageState,
+} from "@/store/global/notesStorage";
 import type { NoteType } from "@/util/noteIdentity";
 
 /**
@@ -11,7 +14,7 @@ import type { NoteType } from "@/util/noteIdentity";
 export const useNotesStore = () => {
   const { data, dataKeys, loading, complete, error } = useNotesStorageState();
 
-  const getNotesIDsbyType = (type: NoteType) => getNotesIDsByType(dataKeys, type);
+  const getNotesByType = (type: NoteType) => getNotesIdsByType(dataKeys, type);
 
   return {
     data,
@@ -19,6 +22,6 @@ export const useNotesStore = () => {
     loading,
     complete,
     error,
-    getNotesIDsbyType,
+    getNotesIdsByType: getNotesByType,
   };
 };

@@ -147,10 +147,10 @@ export const useDeleteUser = () => {
 export const useFetchNote = () => {
   const queryClient = useQueryClient();
 
-  return (noteID: string) =>
+  return (noteId: string) =>
     queryClient.fetchQuery(
       orpc.notes.fetchNote.queryOptions({
-        input: { id: noteID },
+        input: { id: noteId },
       })
     );
 };

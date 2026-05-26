@@ -12,14 +12,14 @@ import {
 import type { CloudNoteProps } from "@/types/notes";
 
 interface useNoteParams {
-  noteID?: string;
+  noteId?: string;
   noteType?: NoteType;
   noteKey?: string;
 }
 
-export const useNote = ({ noteID, noteType, noteKey }: useNoteParams) => {
+export const useNote = ({ noteId, noteType, noteKey }: useNoteParams) => {
   const userId = useUserStore((state) => state.id);
-  const identity = resolveNoteIdentity({ noteID, noteType, noteKey });
+  const identity = resolveNoteIdentity({ noteId, noteType, noteKey });
   const noteIndex = identity.id;
 
   const {

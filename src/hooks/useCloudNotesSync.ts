@@ -28,15 +28,15 @@ export const useCloudNotesSync = () => {
   const uploadNoteMutation = useUploadNote();
   const fetchNoteById = useFetchNote();
 
-  const fetchNotes = async (noteIDs: string[]) => {
-    for (const noteID of noteIDs) {
-      fetchNoteById(noteID)
+  const fetchNotes = async (noteIds: string[]) => {
+    for (const noteId of noteIds) {
+      fetchNoteById(noteId)
         .then((result) => {
           const cloudNote = fromBackendToDexie(result.note);
           cacheCloudNote({ ...cloudNote, isNew: false });
         })
         .catch((error) => {
-          console.error("Failed to fetch note:", noteID, error);
+          console.error("Failed to fetch note:", noteId, error);
         });
     }
   };
@@ -45,11 +45,11 @@ export const useCloudNotesSync = () => {
     const localNotes = useLocalNotesStore.getState().data;
     const cloudNotes = useCloudNotesStore.getState().data;
 
-    for (const noteID of notesKeys) {
-      const note = isGuest ? localNotes[noteID] : cloudNotes[noteID];
+    for (const noteId of notesKeys) {
+      const note = isGuest ? localNotes[noteId] : cloudNotes[noteId];
 
       if (!note) {
-        console.error(`Note with ID ${noteID} not found.`);
+        console.error(`Note with ID ${noteId} not found.`);
         continue;
       }
 
@@ -82,7 +82,7 @@ export const useCloudNotesSync = () => {
           });
         })
         .catch((error) => {
-          console.error("Upload mutation failed for note ID:", noteID, error);
+          console.error("Upload mutation failed for note ID:", noteId, error);
         });
     }
   };

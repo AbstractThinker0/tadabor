@@ -5,20 +5,20 @@ import type { NoteType } from "@/util/noteIdentity";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;
-  noteID?: string;
+  noteId?: string;
   noteType?: NoteType;
   noteKey?: string;
 }
 
 const CollapsibleNote = ({
   isOpen,
-  noteID,
+  noteId,
   noteType,
   noteKey,
 }: CollapsibleNoteProps) => {
   return (
     <CollapsibleGeneric isOpen={isOpen}>
-      <NoteForm noteID={noteID} noteKey={noteKey} noteType={noteType} />
+      <NoteForm noteId={noteId} noteKey={noteKey} noteType={noteType} />
     </CollapsibleGeneric>
   );
 };
