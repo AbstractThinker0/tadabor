@@ -40,6 +40,7 @@ const NavbarUser = () => {
   if (isPending)
     return (
       <Button
+        aria-label={t("auth.profile")}
         colorPalette={"gray"}
         marginEnd={"0.5rem"}
         smDown={{ marginInline: "0" }}
@@ -58,6 +59,7 @@ const NavbarUser = () => {
         <Menu.Root>
           <Menu.Trigger asChild>
             <Button
+              aria-label={t("auth.profile")}
               colorPalette={isLoggedOffline ? "orange" : "green"}
               marginEnd={"0.5rem"}
               smDown={{ marginInline: "0" }}
