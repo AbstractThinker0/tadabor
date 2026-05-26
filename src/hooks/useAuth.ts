@@ -16,6 +16,7 @@ import {
 } from "@/services/backend";
 import { tryCatch } from "@/util/trycatch";
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
+import type { AuthSession } from "tadabor-shared";
 
 export const useAuth = () => {
   const { t } = useTranslation();
@@ -37,6 +38,10 @@ export const useAuth = () => {
 
   const userLogout = useUserLogout();
 
+  type ConfirmLoginPayload = Omit<AuthSession, "message"> & {
+    message?: string;
+  };
+
   const login = async ({
     email,
     password,
@@ -53,49 +58,16 @@ export const useAuth = () => {
       throw error;
     }
 
-    const avatarSeed = result.user.avatarSeed || result.user.id.toString();
-
-    confirmLogin({
-      id: result.user.id,
-      email,
-      token: result.token,
-      username: result.user.username,
-      role: result.user.role,
-      avatarSeed,
-      description: result.user.description || "",
-    });
+    confirmLogin(result);
 
     navigate("/");
   };
 
   const confirmLogin = ({
-    id,
-    email,
-    token,
-    username,
-    role,
-    avatarSeed,
-    description,
     message = "auth.loggedIn",
-  }: {
-    id: number;
-    email: string;
-    token: string;
-    username: string;
-    role: number;
-    avatarSeed: string;
-    description: string;
-    message?: string;
-  }) => {
-    useUserStore.getState().login({
-      id,
-      email,
-      token,
-      username,
-      role,
-      avatarSeed,
-      description,
-    });
+    ...session
+  }: ConfirmLoginPayload) => {
+    useUserStore.getState().login(session);
 
     queueMicrotask(() =>
       toasterBottomCenter.create({
@@ -166,23 +138,11 @@ export const useAuth = () => {
       throw error;
     }
 
-    if (result.success !== true || !("userid" in result)) {
-      return false;
-    }
-
-    const avatarSeed = result.userid.toString();
-
-    confirmLogin({
-      id: result.userid,
-      email,
-      token: result.token,
-      username,
-      role: 0,
-      avatarSeed,
-      description: "",
-    });
+    confirmLogin(result);
 
     navigate("/");
+
+    return result;
   };
 
   const requestResetPassword = async ({ email }: { email: string }) => {
@@ -222,13 +182,7 @@ export const useAuth = () => {
 
     if (result.success) {
       confirmLogin({
-        id: result.user.id,
-        token: result.token,
-        email: result.user.email,
-        username: result.user.username,
-        role: result.user.role,
-        avatarSeed: result.user.avatarSeed || result.user.id.toString(),
-        description: result.user.description || "",
+        ...result,
         message: "auth.passwordUpdated",
       });
 
@@ -288,13 +242,7 @@ export const useAuth = () => {
 
     if (result.success) {
       confirmLogin({
-        id: result.user.id,
-        token: result.token,
-        email: result.user.email,
-        username: result.user.username,
-        role: result.user.role,
-        avatarSeed: result.user.avatarSeed || result.user.id.toString(),
-        description: result.user.description || "",
+        ...result,
         message: "auth.passwordUpdated",
       });
 

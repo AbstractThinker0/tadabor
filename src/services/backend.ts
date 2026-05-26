@@ -4,21 +4,14 @@ import {
   getRpcQueryUtils,
 } from "@/components/Custom/queryClient";
 import { useUserStore } from "@/store/global/userStore";
-import type { BackendNote, TadaborContractOutputs } from "tadabor-shared";
+import type {
+  BackendNote,
+  TadaborContractInputs,
+  TadaborContractOutputs,
+} from "tadabor-shared";
 
-type AnalyticsParams = {
-  userId?: number;
-  action?: string;
-  limit?: number;
-  offset?: number;
-  startDate?: number;
-  endDate?: number;
-};
-
-type ListUsersParams = {
-  limit?: number;
-  offset?: number;
-};
+type AnalyticsParams = TadaborContractInputs["admin"]["getAnalytics"];
+type ListUsersParams = TadaborContractInputs["admin"]["listUsers"];
 
 type FetchNoteResponse = TadaborContractOutputs["notes"]["fetchNote"];
 type ConnectedDevicesResponse =

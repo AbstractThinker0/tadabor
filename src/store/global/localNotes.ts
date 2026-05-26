@@ -10,7 +10,7 @@ import type {
   LocalNoteProps,
   MarkSavedPayload,
   NotesStateProps,
-} from "@/types";
+} from "@/types/notes";
 import { hasNoteChanged } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 

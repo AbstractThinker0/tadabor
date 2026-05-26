@@ -5,9 +5,9 @@ import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { NavLink } from "react-router";
 
-import { validator } from "@/util/validators";
 import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
+import { validator } from "tadabor-shared";
 
 import { useAuth } from "@/hooks/useAuth";
 import { tryCatch } from "@/util/trycatch";

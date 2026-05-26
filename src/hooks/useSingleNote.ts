@@ -4,7 +4,7 @@ import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useActiveNoteState } from "@/store/global/notesStorage";
 
-import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 
 /**
  * Hook for single note operations.

@@ -6,7 +6,7 @@ import type {
   LettersDefinitionType,
   LettersDataByVerseType,
   LettersPresetsType,
-} from "@/types";
+} from "@/types/letters";
 import type { LetterRoleType } from "@/util/consts";
 import type { ILetterData } from "@/types/db";
 

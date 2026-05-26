@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import {
   useYourNotesPageStore,
   type NoteSortOption,

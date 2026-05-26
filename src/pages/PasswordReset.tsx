@@ -5,12 +5,12 @@ import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { Navigate, NavLink } from "react-router";
 
-import { validator } from "@/util/validators";
 import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useAuth } from "@/hooks/useAuth";
 import { useBackend } from "@/hooks/useBackend";
 import { tryCatch } from "@/util/trycatch";
+import { validator } from "tadabor-shared";
 
 const PasswordReset = () => {
   usePageNav("auth.resetPassword");

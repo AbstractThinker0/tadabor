@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import type { AuthSession, BasicUser } from "tadabor-shared";
 
 export const keyId = "userId";
 export const keyToken = "userToken";
@@ -10,7 +11,7 @@ const keyRole = "userRole";
 const keyAvatarSeed = "userAvatarSeed";
 const keyDescription = "userDescription";
 
-interface UserStateProps {
+interface UserStateProps extends Omit<BasicUser, "avatarSeed" | "description"> {
   id: number;
   token: string;
   email: string;
@@ -41,15 +42,13 @@ const initialState: UserStateProps = {
   isLoggedOffline: false,
 };
 
-interface LoginPayload {
-  id: number;
-  token: string;
-  email: string;
-  username: string;
-  role: number;
-  avatarSeed: string;
-  description: string;
-}
+const getAvatarSeed = (user: Pick<BasicUser, "id" | "avatarSeed">) =>
+  user.avatarSeed ?? user.id.toString();
+
+const getDescription = (user: Pick<BasicUser, "description">) =>
+  user.description ?? "";
+
+type LoginPayload = Pick<AuthSession, "token" | "user">;
 
 interface UpdatePayload {
   email: string;
@@ -61,32 +60,33 @@ export const useUserStore = create(
   immer(
     combine(initialState, (set, get) => ({
       login: (payload: LoginPayload) => {
-        const { id, token, email, username, role, avatarSeed, description } =
-          payload;
+        const { token, user } = payload;
+        const avatarSeed = getAvatarSeed(user);
+        const description = getDescription(user);
 
         set((state) => {
-          state.id = id;
+          state.id = user.id;
           state.token = token;
-          state.email = email;
-          state.username = username;
-          state.role = role ?? 0;
-          state.avatarSeed = avatarSeed ?? id.toString();
-          state.description = description ?? "";
+          state.email = user.email;
+          state.username = user.username;
+          state.role = user.role;
+          state.avatarSeed = avatarSeed;
+          state.description = description;
 
           state.isLogged = true;
           state.isLoggedOffline = false;
           state.isPending = false;
         });
 
-        localStorage.setItem(keyId, id.toString());
+        localStorage.setItem(keyId, user.id.toString());
         localStorage.setItem(keyToken, token);
-        localStorage.setItem(keyEmail, email);
-        localStorage.setItem(keyUsername, username);
+        localStorage.setItem(keyEmail, user.email);
+        localStorage.setItem(keyUsername, user.username);
 
-        if (isNaN(role)) {
+        if (isNaN(user.role)) {
           localStorage.setItem(keyRole, "0");
         } else {
-          localStorage.setItem(keyRole, String(role));
+          localStorage.setItem(keyRole, String(user.role));
         }
 
         localStorage.setItem(keyAvatarSeed, avatarSeed);

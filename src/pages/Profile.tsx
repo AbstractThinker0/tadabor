@@ -15,10 +15,10 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { usePageNav } from "@/hooks/usePageNav";
 import { useScreenSize } from "@/hooks/useScreenSize";
 import { NavLink } from "react-router";
-import { validator } from "@/util/validators";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { tryCatch } from "@/util/trycatch";
+import { validator } from "tadabor-shared";
 
 import { TextareaAutosize } from "@/components/Note/TextareaAutosize";
 import {

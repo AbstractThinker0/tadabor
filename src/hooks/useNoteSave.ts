@@ -7,7 +7,7 @@ import { saveCloudNote, saveLocalNote } from "@/services/noteSave";
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
-import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import type { NoteType } from "@/util/noteIdentity";
 import { fromDexieToBackend } from "@/util/notes";
 

@@ -6,7 +6,7 @@ import { useQuran } from "@/context/useQuran";
 import { useSettingsStore } from "@/store/global/settingsStore";
 import { useLettersPageStore } from "@/store/pages/lettersPage";
 
-import type { LetterDataType } from "@/types";
+import type { LetterDataType } from "@/types/letters";
 import { LetterRole, type LetterRoleType } from "@/util/consts";
 import {
   removeDiacritics,

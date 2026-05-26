@@ -10,7 +10,7 @@ import type {
   CloudNoteProps,
   MarkSavedPayload,
   NotesStateProps,
-} from "@/types";
+} from "@/types/notes";
 import { fromZustandToDexie, hasNoteChanged } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 

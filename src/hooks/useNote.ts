@@ -9,7 +9,7 @@ import {
   resolveNoteIdentity,
   type NoteType,
 } from "@/util/noteIdentity";
-import type { CloudNoteProps } from "@/types";
+import type { CloudNoteProps } from "@/types/notes";
 
 interface useNoteParams {
   noteID?: string;

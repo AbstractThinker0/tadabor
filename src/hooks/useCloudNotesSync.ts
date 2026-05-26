@@ -4,7 +4,7 @@ import { useFetchNote, useSyncNotes, useUploadNote } from "@/services/backend";
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
-import type { CloudNoteProps } from "@/types";
+import type { CloudNoteProps } from "@/types/notes";
 import {
   buildNoteSyncPayload,
   fromBackendToDexie,

@@ -1,4 +1,4 @@
-import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import type { ICloudNote, ILocalNote } from "@/util/db";
 import { dbNoteRevisions } from "@/util/dbFuncs";
 import type { NoteType } from "@/util/noteIdentity";

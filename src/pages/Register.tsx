@@ -5,9 +5,9 @@ import { Box, Button, Flex, Input, Text, Link, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { NavLink } from "react-router";
 
-import { validator } from "@/util/validators";
 import { useTranslation } from "react-i18next";
 import { PasswordInput } from "@/components/ui/password-input";
+import { validator } from "tadabor-shared";
 
 import { useAuth } from "@/hooks/useAuth";
 
@@ -83,7 +83,7 @@ const Register = () => {
 
     if (!validateInputs()) return;
 
-    const { result, error } = await tryCatch(
+    const { error } = await tryCatch(
       signup.execute({
         username,
         email,
@@ -94,10 +94,6 @@ const Register = () => {
 
     if (error) {
       setValidationError(error?.message ?? "Error");
-    }
-
-    if (result === false) {
-      setValidationError(t("auth.validation.captcha_required"));
     }
   };
 

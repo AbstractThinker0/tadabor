@@ -1,4 +1,4 @@
-import type { CloudNoteProps, LocalNoteProps } from "@/types";
+import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import { v4 as uuidv4 } from "uuid";
 import type { ICloudNote, INoteRevision } from "@/util/db";
 import { parseNoteId } from "@/util/noteIdentity";
