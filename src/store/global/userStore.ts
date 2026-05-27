@@ -5,6 +5,7 @@ import type { AuthSession, BasicUser } from "tadabor-shared";
 
 export const keyId = "userId";
 export const keyToken = "userToken";
+const keyTokenRotatedAt = "userTokenRotatedAt";
 const keyEmail = "userEmail";
 const keyUsername = "userUsername";
 const keyRole = "userRole";
@@ -14,6 +15,7 @@ const keyDescription = "userDescription";
 interface UserStateProps extends Omit<BasicUser, "avatarSeed" | "description"> {
   id: number;
   token: string;
+  tokenRotatedAt: number;
   email: string;
   username: string;
   role: number;
@@ -28,6 +30,7 @@ interface UserStateProps extends Omit<BasicUser, "avatarSeed" | "description"> {
 const initialState: UserStateProps = {
   id: Number(localStorage.getItem(keyId)) || 0,
   token: localStorage.getItem(keyToken) || "",
+  tokenRotatedAt: Number(localStorage.getItem(keyTokenRotatedAt)) || 0,
   email: localStorage.getItem(keyEmail) || "",
   username: localStorage.getItem(keyUsername) || "",
   role: localStorage.getItem(keyRole)
@@ -48,7 +51,7 @@ const getAvatarSeed = (user: Pick<BasicUser, "id" | "avatarSeed">) =>
 const getDescription = (user: Pick<BasicUser, "description">) =>
   user.description ?? "";
 
-type LoginPayload = Pick<AuthSession, "token" | "user">;
+type LoginPayload = Pick<AuthSession, "token" | "tokenRotatedAt" | "user">;
 
 interface UpdatePayload {
   email: string;
@@ -60,13 +63,14 @@ export const useUserStore = create(
   immer(
     combine(initialState, (set, get) => ({
       login: (payload: LoginPayload) => {
-        const { token, user } = payload;
+        const { token, tokenRotatedAt, user } = payload;
         const avatarSeed = getAvatarSeed(user);
         const description = getDescription(user);
 
         set((state) => {
           state.id = user.id;
           state.token = token;
+          state.tokenRotatedAt = tokenRotatedAt;
           state.email = user.email;
           state.username = user.username;
           state.role = user.role;
@@ -80,6 +84,7 @@ export const useUserStore = create(
 
         localStorage.setItem(keyId, user.id.toString());
         localStorage.setItem(keyToken, token);
+        localStorage.setItem(keyTokenRotatedAt, String(tokenRotatedAt));
         localStorage.setItem(keyEmail, user.email);
         localStorage.setItem(keyUsername, user.username);
 
@@ -111,6 +116,8 @@ export const useUserStore = create(
           set((state) => {
             state.id = id;
             state.token = token;
+            state.tokenRotatedAt =
+              Number(localStorage.getItem(keyTokenRotatedAt)) || 0;
             state.email = email;
             state.username = username;
             state.role = role;
@@ -124,10 +131,29 @@ export const useUserStore = create(
         }
       },
 
+      setToken: (token: string, tokenRotatedAt = Date.now()) => {
+        set((state) => {
+          state.token = token;
+          state.tokenRotatedAt = tokenRotatedAt;
+        });
+
+        localStorage.setItem(keyToken, token);
+        localStorage.setItem(keyTokenRotatedAt, String(tokenRotatedAt));
+      },
+
+      syncTokenRotatedAt: (tokenRotatedAt: number) => {
+        set((state) => {
+          state.tokenRotatedAt = tokenRotatedAt;
+        });
+
+        localStorage.setItem(keyTokenRotatedAt, String(tokenRotatedAt));
+      },
+
       logout: () => {
         set((state) => {
           state.id = -1;
           state.token = "";
+          state.tokenRotatedAt = 0;
           state.email = "";
           state.username = "";
           state.role = 0;
@@ -141,6 +167,7 @@ export const useUserStore = create(
 
         localStorage.removeItem(keyId);
         localStorage.removeItem(keyToken);
+        localStorage.removeItem(keyTokenRotatedAt);
         localStorage.removeItem(keyEmail);
         localStorage.removeItem(keyUsername);
         localStorage.removeItem(keyRole);

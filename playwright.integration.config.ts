@@ -41,6 +41,8 @@ export default defineConfig({
       env: {
         ...process.env,
         VITE_API: PLAYWRIGHT_BACKEND_RPC_URL,
+        VITE_AUTH_REFRESH_INTERVAL_MS:
+          process.env.VITE_AUTH_REFRESH_INTERVAL_MS ?? "1500",
       },
     }),
   ],
