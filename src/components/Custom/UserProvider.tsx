@@ -49,9 +49,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
       }
 
       if (session.token) {
-        useUserStore
-          .getState()
-          .setToken(session.token, session.tokenRotatedAt);
+        useUserStore.getState().setToken(session.token, session.tokenRotatedAt);
       } else {
         useUserStore.getState().syncTokenRotatedAt(session.tokenRotatedAt);
       }
@@ -109,7 +107,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [isLogged, isLoggedOffline, onScheduledRefresh, tokenRotatedAt, userToken]);
+  }, [isLogged, isLoggedOffline, tokenRotatedAt, userToken]);
 
   if (isLoginPending) {
     return <LoadingSpinner text={t("ui.state.pending_login")} />;
