@@ -38,7 +38,7 @@ const getDefaultToolNote = () => localStorage.getItem(keyToolNote) !== "false";
 const getDefaultToolInspect = () =>
   localStorage.getItem(keyToolInspect) !== "false";
 const getDefaultVerseDisplay = () =>
-  (localStorage.getItem(keyVerseDisplay) || "line") as VerseDisplay;
+  (localStorage.getItem(keyVerseDisplay) || "panel") as VerseDisplay;
 const getDefaultToolAudio = () =>
   localStorage.getItem(keyToolAudio) !== "false";
 
