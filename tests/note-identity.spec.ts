@@ -8,8 +8,8 @@ import {
 } from "../src/util/noteIdentity";
 
 test.describe("note identity helpers", () => {
-  test("resolves noteID inputs without changing translation defaults", () => {
-    const identity = resolveNoteIdentity({ noteID: "translation:1-2" });
+  test("resolves noteId inputs without changing translation defaults", () => {
+    const identity = resolveNoteIdentity({ noteId: "translation:1-2" });
 
     expect(identity).toEqual({
       id: "translation:1-2",
@@ -20,7 +20,7 @@ test.describe("note identity helpers", () => {
   });
 
   test("resolves root note IDs from numeric root keys", () => {
-    const identity = resolveNoteIdentity({ noteID: "root:42" });
+    const identity = resolveNoteIdentity({ noteId: "root:42" });
 
     expect(identity).toEqual({
       id: "root:42",
@@ -51,7 +51,7 @@ test.describe("note identity helpers", () => {
     });
 
     const translationIdentity = resolveNoteIdentity({
-      noteID: "translation:36-58",
+      noteId: "translation:36-58",
     });
 
     expect(parseVerseAddressKey(translationIdentity.key)).toEqual({
