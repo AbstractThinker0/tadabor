@@ -12,6 +12,7 @@
   "author": "AbstractThinker0",
   "license": "MIT",
   "scripts": {
+    "preinstall": "npm install tadabor-shared@latest --min-release-age=0",
     "start": "vite",
     "dev": "vite",
     "build": "tsc && vite build",
