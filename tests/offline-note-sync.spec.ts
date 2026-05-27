@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { createOfflineUserSessionFixture } from "./helpers/testFixtures";
+
 interface NoteSyncPayload {
   clientNotes: Array<{
     id: string;
@@ -65,10 +67,8 @@ test.describe("cloud note reconnect sync", () => {
     page,
   }) => {
     const noteId = "verse:1-2";
-    const userId = 7;
-    const authToken = "offline-cloud-token";
-    const email = "offline-sync@example.com";
-    const username = "offline-sync-user";
+    const { userId, authToken, email, username } =
+      createOfflineUserSessionFixture();
     const editedText = `Offline cloud edit ${Date.now()}`;
     const initialCloudNote = {
       id: noteId,
@@ -218,10 +218,8 @@ test.describe("cloud note reconnect sync", () => {
     page,
   }) => {
     const noteId = "verse:1-2";
-    const userId = 7;
-    const authToken = "offline-cloud-token";
-    const email = "offline-sync@example.com";
-    const username = "offline-sync-user";
+    const { userId, authToken, email, username } =
+      createOfflineUserSessionFixture();
     const editedText = `Offline cloud reconnect edit ${Date.now()}`;
     const initialCloudNote = {
       id: noteId,

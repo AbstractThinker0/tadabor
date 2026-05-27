@@ -9,6 +9,7 @@ import {
   PLAYWRIGHT_BACKEND_RPC_URL,
   PLAYWRIGHT_CAPTCHA_BYPASS_CODE,
 } from "./backendConfig";
+import { createBackendSeedPassword } from "./testFixtures";
 
 type BackendClientContext = {
   authToken?: string;
@@ -46,7 +47,7 @@ export const createBackendSeedCredentials = (): BackendSeedCredentials => {
   return {
     email: `playwright.${suffix}@example.com`,
     username: `playwright${suffix}`,
-    password: "Password123!",
+    password: createBackendSeedPassword(),
   };
 };
 
