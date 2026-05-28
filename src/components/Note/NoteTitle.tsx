@@ -32,18 +32,23 @@ const NoteTitle = ({
   const isLogged = useUserStore((state) => state.isLogged);
 
   const getSyncTooltip = (): string => {
+    if (isPendingSave) return "Note pending save.";
     if (isSyncing) return "Syncing note...";
     if (isOutOfSync) return "Note out of sync.";
     if (isSynced) return "Note synced to the cloud.";
-    if (isPendingSave) return "Note pending save.";
+
     return "Saved locally. Log in to enable cloud sync.";
   };
 
   const getNoteTitle = () => {
     if (noteType === "verse") {
-      return `${t("notes.noteVerse")} (${quranService.convertKeyToSuffix(noteKey!)})`;
+      return `${t("notes.noteVerse")} (${quranService.convertKeyToSuffix(
+        noteKey!
+      )})`;
     } else if (noteType === "root") {
-      return `${t("notes.noteRoot")} (${quranService.getRootNameByID(noteKey!)})`;
+      return `${t("notes.noteRoot")} (${quranService.getRootNameByID(
+        noteKey!
+      )})`;
     } else if (noteType === "translation") {
       return `${t("notes.translationVerse")} (${quranService.convertKeyToSuffix(
         noteKey!
@@ -64,7 +69,13 @@ const NoteTitle = ({
             <Icon
               as={MdOutlineCheckCircle}
               color={
-                isOutOfSync ? "orange.500" : isSynced ? "green.500" : "gray.500"
+                isPendingSave
+                  ? "gray.500"
+                  : isOutOfSync
+                  ? "orange.500"
+                  : isSynced
+                  ? "green.500"
+                  : "gray.500"
               }
               boxSize={4}
             />
