@@ -2,14 +2,21 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Paginator } from "@/components/Generic/Paginator";
+import { useQueryUserStats } from "@/services/backend";
+
+type UserStatsQuery = Pick<
+  ReturnType<typeof useQueryUserStats>,
+  "data" | "isFetching"
+>;
+
+type UserStatsRow = {
+  userId: number;
+  username: string | null;
+  count: number;
+};
 
 interface UserStatsTabProps {
-  userStatsQuery: {
-    data:
-      | { userId: number; username: string | null; count?: unknown }[]
-      | undefined;
-    isFetching: boolean;
-  };
+  userStatsQuery: UserStatsQuery;
 }
 
 export const UserStatsTab = ({ userStatsQuery }: UserStatsTabProps) => {
@@ -18,11 +25,15 @@ export const UserStatsTab = ({ userStatsQuery }: UserStatsTabProps) => {
   const [offset, setOffset] = useState<number>(0);
 
   const { data, total, pageSlice, max } = useMemo(() => {
-    const safeData = userStatsQuery.data ?? [];
+    const safeData: UserStatsRow[] = (userStatsQuery.data ?? []).map((row) => ({
+      userId: row.userId,
+      username: row.username,
+      count: typeof row.count === "number" ? row.count : Number(row.count) || 0,
+    }));
     const safeTotal = safeData.length;
 
     const safeMax = safeData.reduce(
-      (m: number, r) => Math.max(m, Number(r.count) || 0),
+      (m: number, r) => Math.max(m, r.count),
       0
     );
 
@@ -79,14 +90,14 @@ export const UserStatsTab = ({ userStatsQuery }: UserStatsTabProps) => {
                     h="100%"
                     w={
                       max
-                        ? `${Math.round((Number(row.count) / max) * 100)}%`
+                        ? `${Math.round((row.count / max) * 100)}%`
                         : "0%"
                     }
                     bg="fg.emphasized"
                   />
                 </Box>
                 <Box w="50px" textAlign="right" fontWeight="bold">
-                  {String(row.count)}
+                  {row.count}
                 </Box>
               </Flex>
             ))}

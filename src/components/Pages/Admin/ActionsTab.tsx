@@ -2,12 +2,20 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Paginator } from "@/components/Generic/Paginator";
+import { useQueryActionStats } from "@/services/backend";
+
+type ActionStatsQuery = Pick<
+  ReturnType<typeof useQueryActionStats>,
+  "data" | "isFetching"
+>;
+
+type ActionStatsRow = {
+  action: string;
+  count: number;
+};
 
 interface ActionsTabProps {
-  actionStatsQuery: {
-    data: { action: string; count?: unknown }[] | undefined;
-    isFetching: boolean;
-  };
+  actionStatsQuery: ActionStatsQuery;
 }
 
 export const ActionsTab = ({ actionStatsQuery }: ActionsTabProps) => {
@@ -16,7 +24,12 @@ export const ActionsTab = ({ actionStatsQuery }: ActionsTabProps) => {
   const [offset, setOffset] = useState<number>(0);
 
   const { data, total, pageSlice } = useMemo(() => {
-    const safeData = actionStatsQuery.data ?? [];
+    const safeData: ActionStatsRow[] = (actionStatsQuery.data ?? []).map(
+      (row) => ({
+        action: row.action,
+        count: typeof row.count === "number" ? row.count : Number(row.count) || 0,
+      })
+    );
     const safeTotal = safeData.length;
     const safePageSlice = safeData.slice(
       offset,
@@ -58,12 +71,12 @@ export const ActionsTab = ({ actionStatsQuery }: ActionsTabProps) => {
                 >
                   <Box
                     h="100%"
-                    w={`${Number(row.count)}%`}
+                    w={`${row.count}%`}
                     bg="fg.emphasized"
                   />
                 </Box>
                 <Box w="50px" textAlign="right" fontWeight="bold">
-                  {String(row.count)}
+                  {row.count}
                 </Box>
               </Flex>
             ))}
