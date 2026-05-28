@@ -46,10 +46,10 @@ const Layout = ({ children }: PropsWithChildren) => {
       flexDirection="column"
       height="100vh"
       minHeight={"125vh"}
-      style={{ zoom: 0.8 }}
+      zoom={"0.8"}
       fontFamily={`Cairo, serif`}
       fontSize="larger"
-      lineHeight="moderate"
+      lineHeight="normal"
       color={"brand.text"}
     >
       <Navbar />

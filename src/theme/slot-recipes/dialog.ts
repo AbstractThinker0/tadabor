@@ -47,6 +47,7 @@ export const dialogSlotRecipe = defineSlotRecipe({
       direction: "inherit",
     },
     content: {
+      zoom: "0.8",
       display: "flex",
       flexDirection: "column",
       position: "relative",

@@ -46,6 +46,8 @@ export const drawerSlotRecipe = defineSlotRecipe({
       direction: "inherit",
     },
     content: {
+      minHeight: "125vh",
+      zoom: "0.8",
       direction: "inherit",
       display: "flex",
       flexDirection: "column",
