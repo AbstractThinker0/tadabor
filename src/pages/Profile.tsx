@@ -52,7 +52,7 @@ const Profile = () => {
   const isSmallScreen = useScreenSize();
 
   return (
-    <Flex flex={1} overflow={"hidden"} dir="ltr">
+    <Flex flex={1} overflow={"hidden"}>
       <Tabs.Root
         value={currentTab}
         onValueChange={(e) => setCurrentTab(e.value)}

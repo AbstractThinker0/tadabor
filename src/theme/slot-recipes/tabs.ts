@@ -31,6 +31,7 @@ export const tabsSlotRecipe = defineSlotRecipe({
       },
     },
     trigger: {
+      direction: "inherit",
       outline: "0",
       minW: "var(--tabs-height)",
       height: "var(--tabs-height)",
