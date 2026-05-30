@@ -147,15 +147,9 @@ const UserBio = () => {
 
     if (error) {
       console.error("Failed to update bio:", error);
-      toaster.create({
-        description: t("ui.messages.save_failed"),
-        type: "error",
-      });
+      toaster.error(t("ui.messages.save_failed"));
     } else {
-      toaster.create({
-        description: t("ui.messages.save_success"),
-        type: "success",
-      });
+      toaster.success(t("ui.messages.save_success"));
 
       updateMetaProfile(avatarSeed, description);
       setEditMode(false);
@@ -496,15 +490,9 @@ const ConnectedDevices = () => {
     const { error } = await tryCatch(revokeDevice.mutateAsync({ id }));
 
     if (error) {
-      toaster.create({
-        description: error.message || t("profile.devices.sign_out_failed"),
-        type: "error",
-      });
+      toaster.error(error.message || t("profile.devices.sign_out_failed"));
     } else {
-      toaster.create({
-        description: t("profile.devices.sign_out_success"),
-        type: "success",
-      });
+      toaster.success(t("profile.devices.sign_out_success"));
     }
   };
 

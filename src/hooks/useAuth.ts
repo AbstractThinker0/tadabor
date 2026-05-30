@@ -69,23 +69,13 @@ export const useAuth = () => {
   }: ConfirmLoginPayload) => {
     useUserStore.getState().login(session);
 
-    queueMicrotask(() =>
-      toasterBottomCenter.create({
-        description: t(message),
-        type: "success",
-      })
-    );
+    queueMicrotask(() => toasterBottomCenter.success(t(message)));
   };
 
   const loginOffline = () => {
     useUserStore.getState().loginOffline();
 
-    queueMicrotask(() =>
-      toasterBottomCenter.create({
-        description: t("auth.loggedOffline"),
-        type: "info",
-      })
-    );
+    queueMicrotask(() => toasterBottomCenter.info(t("auth.loggedOffline")));
   };
 
   const logout = ({
@@ -105,12 +95,7 @@ export const useAuth = () => {
       dbNotes.clearAllCloud();
     }
 
-    queueMicrotask(() =>
-      toasterBottomCenter.create({
-        description: t(message),
-        type: "error",
-      })
-    );
+    queueMicrotask(() => toasterBottomCenter.error(t(message)));
   };
 
   const signup = async ({
@@ -153,10 +138,7 @@ export const useAuth = () => {
       throw error;
     }
 
-    toasterBottomCenter.create({
-      description: t("auth.sendTokenDone"),
-      type: "success",
-    });
+    toasterBottomCenter.success(t("auth.sendTokenDone"));
 
     return result;
   };
@@ -213,10 +195,7 @@ export const useAuth = () => {
 
     if (result) {
       useUserStore.getState().update({ email, username });
-      toasterBottomCenter.create({
-        description: t("auth.profileUpdate"),
-        type: "success",
-      });
+      toasterBottomCenter.success(t("auth.profileUpdate"));
       return true;
     }
   };

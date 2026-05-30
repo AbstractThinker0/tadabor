@@ -119,17 +119,11 @@ const NoteHistoryDialog = ({
     setPendingDeleteRevisionId(null);
 
     if (!didDelete) {
-      toaster.create({
-        description: t("notes.history.delete_failed"),
-        type: "error",
-      });
+      toaster.error(t("notes.history.delete_failed"));
       return;
     }
 
-    toaster.create({
-      description: t("notes.history.delete_success"),
-      type: "success",
-    });
+    toaster.success(t("notes.history.delete_success"));
   };
 
   const onClearRevisions = async () => {
@@ -137,17 +131,11 @@ const NoteHistoryDialog = ({
     setConfirmClearOpen(false);
 
     if (!didClear) {
-      toaster.create({
-        description: t("notes.history.clear_failed"),
-        type: "error",
-      });
+      toaster.error(t("notes.history.clear_failed"));
       return;
     }
 
-    toaster.create({
-      description: t("notes.history.clear_success"),
-      type: "success",
-    });
+    toaster.success(t("notes.history.clear_success"));
   };
 
   return (

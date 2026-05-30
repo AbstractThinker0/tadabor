@@ -42,15 +42,9 @@ const ModalCreatePreset = ({ isOpen, onClose }: ModalCreatePresetProps) => {
     const success = await savePreset(presetID, presetName);
 
     if (success) {
-      toaster.create({
-        description: t("ui.messages.save_success"),
-        type: "success",
-      });
+      toaster.success(t("ui.messages.save_success"));
     } else {
-      toaster.create({
-        description: t("ui.messages.save_failed"),
-        type: "error",
-      });
+      toaster.error(t("ui.messages.save_failed"));
     }
 
     onClose();

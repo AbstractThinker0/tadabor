@@ -82,15 +82,9 @@ export const UsersTab = () => {
     );
     if (error) {
       console.error("Failed to update user:", error);
-      toasterBottomCenter.create({
-        type: "error",
-        description: t("admin.messages.update_failed"),
-      });
+      toasterBottomCenter.error(t("admin.messages.update_failed"));
     } else {
-      toasterBottomCenter.create({
-        type: "success",
-        description: t("admin.messages.update_success"),
-      });
+      toasterBottomCenter.success(t("admin.messages.update_success"));
       cancelEdit(id);
     }
   };
@@ -101,20 +95,13 @@ export const UsersTab = () => {
     );
     if (error) {
       console.error("Failed to delete user:", error);
-      toasterBottomCenter.create({
-        type: "error",
-        description: t("admin.messages.delete_failed"),
-      });
+      toasterBottomCenter.error(t("admin.messages.delete_failed"));
     } else if (res.success) {
-      toasterBottomCenter.create({
-        type: "success",
-        description: t("admin.messages.delete_success"),
-      });
+      toasterBottomCenter.success(t("admin.messages.delete_success"));
     } else {
-      toasterBottomCenter.create({
-        type: "error",
-        description: res.message || t("admin.messages.delete_failed"),
-      });
+      toasterBottomCenter.error(
+        res.message || t("admin.messages.delete_failed")
+      );
     }
   };
 

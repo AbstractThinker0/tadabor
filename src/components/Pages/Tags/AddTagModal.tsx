@@ -40,15 +40,9 @@ const AddTagModal = ({ isOpen, onClose }: AddTagModalProps) => {
     const success = await addTag(newTag);
 
     if (success) {
-      toaster.create({
-        description: t("ui.messages.save_success"),
-        type: "success",
-      });
+      toaster.success(t("ui.messages.save_success"));
     } else {
-      toaster.create({
-        description: t("ui.messages.save_failed"),
-        type: "error",
-      });
+      toaster.error(t("ui.messages.save_failed"));
     }
 
     setTagName("");

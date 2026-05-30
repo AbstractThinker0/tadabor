@@ -62,18 +62,12 @@ export const useNoteSave = ({
           });
 
       if (!result.saved) {
-        toaster.create({
-          description: t("ui.messages.save_failed"),
-          type: "error",
-        });
+        toaster.error(t("ui.messages.save_failed"));
 
         return false;
       }
 
-      toaster.create({
-        description: t("ui.messages.save_success"),
-        type: "success",
-      });
+      toaster.success(t("ui.messages.save_success"));
 
       return true;
     } finally {
