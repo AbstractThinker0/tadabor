@@ -1,11 +1,14 @@
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 import { hasNoteType } from "@/util/noteIdentity";
 
-const selectActiveValue = <T>(isLogged: boolean, localValue: T, cloudValue: T) =>
-  isLogged ? cloudValue : localValue;
+const selectActiveValue = <T>(
+  isLogged: boolean,
+  localValue: T,
+  cloudValue: T
+) => (isLogged ? cloudValue : localValue);
 
 export const useNotesStorageState = () => {
   const isLogged = useUserStore((state) => state.isLogged);

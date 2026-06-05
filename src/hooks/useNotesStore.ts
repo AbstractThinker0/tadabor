@@ -2,7 +2,7 @@ import {
   getNotesIdsByType,
   useNotesStorageState,
 } from "@/store/global/notesStorage";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 
 /**
  * Hook for global notes list and metadata.

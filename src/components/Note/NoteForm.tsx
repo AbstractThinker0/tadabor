@@ -9,7 +9,7 @@ import { NoteContainer } from "@/components/Note/NoteContainer";
 import { LoadingSpinner } from "@/components/Generic/LoadingSpinner";
 
 import { useNote } from "@/hooks/useNote";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 
 interface NoteFormProps {
   noteId?: string;

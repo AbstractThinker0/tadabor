@@ -7,7 +7,7 @@ import { NoteSortSelect } from "@/components/Pages/YourNotes/NoteSortSelect";
 import { Box, VStack } from "@chakra-ui/react";
 import { useNotesStore } from "@/hooks/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
-import { parseNoteId, parseVerseAddressKey } from "@/util/noteIdentity";
+import { parseNoteId, parseVerseAddressKey } from "tadabor-shared";
 
 const TransNotes = () => {
   const { t } = useTranslation();

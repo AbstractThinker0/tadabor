@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import type { NoteType } from "tadabor-shared";
 
-export type NoteType = "verse" | "translation" | "root";
 export type NoteSortOption = "rank" | "status" | "date";
 
 const keyYourNotesSortBy: Record<NoteType, string> = {

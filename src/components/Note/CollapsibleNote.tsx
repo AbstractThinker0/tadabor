@@ -1,7 +1,7 @@
 import { CollapsibleGeneric } from "@/components/Generic/CollapsibleGeneric";
 
 import { NoteForm } from "@/components/Note/NoteForm";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 
 interface CollapsibleNoteProps {
   isOpen: boolean;

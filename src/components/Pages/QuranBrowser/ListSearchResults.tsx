@@ -30,6 +30,8 @@ const ListSearchResults = ({
   versesArray,
   searchError,
 }: ListSearchResultsProps) => {
+  const { t } = useTranslation();
+
   const [isPending, startTransition] = useTransition();
 
   const [stateVerses, setStateVerse] = useState<verseMatchResult[]>([]);
@@ -142,7 +144,9 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
       ? t("search.chapters_all")
       : t("search.chapters");
 
-  const searchText = `${t("search.result")} ${searchType} "${searchingString}" ${searchScopeText}`;
+  const searchText = `${t(
+    "search.result"
+  )} ${searchType} "${searchingString}" ${searchScopeText}`;
 
   return (
     <Box>

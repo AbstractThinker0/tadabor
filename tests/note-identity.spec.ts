@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
 
 import {
-  hasNoteType,
-  parseVerseAddressKey,
   getDefaultNoteDirection,
   resolveNoteIdentity,
-} from "../src/util/noteIdentity";
+  parseVerseAddressKey,
+} from "tadabor-shared";
+
+import { hasNoteType } from "../src/util/noteIdentity";
 
 test.describe("note identity helpers", () => {
   test("resolves noteId inputs without changing translation defaults", () => {

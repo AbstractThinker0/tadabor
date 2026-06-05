@@ -8,7 +8,7 @@ import {
   isNoteType,
   resolveNoteIdentity,
   type NoteType,
-} from "@/util/noteIdentity";
+} from "tadabor-shared";
 import type { CloudNoteProps } from "@/types/notes";
 
 interface useNoteParams {
@@ -22,13 +22,8 @@ export const useNote = ({ noteId, noteType, noteKey }: useNoteParams) => {
   const identity = resolveNoteIdentity({ noteId, noteType, noteKey });
   const noteIndex = identity.id;
 
-  const {
-    note,
-    isNoteLoading,
-    cacheNote,
-    changeNote,
-    changeNoteDir,
-  } = useSingleNote(noteIndex);
+  const { note, isNoteLoading, cacheNote, changeNote, changeNoteDir } =
+    useSingleNote(noteIndex);
 
   const noteText = note?.text ?? "";
   const notePreSaveText = note?.preSave ?? "";

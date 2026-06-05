@@ -8,7 +8,7 @@ import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
 import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 import { fromDexieToBackend } from "@/util/notes";
 
 interface UseNoteSaveParams {

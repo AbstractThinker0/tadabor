@@ -3,8 +3,9 @@ import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import {
   useYourNotesPageStore,
   type NoteSortOption,
-  type NoteType,
 } from "@/store/pages/yourNotesPage";
+
+import type { NoteType } from "tadabor-shared";
 
 interface UseNoteSortingParams {
   noteType: NoteType;

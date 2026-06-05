@@ -1,7 +1,7 @@
 import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import type { ICloudNote, ILocalNote } from "@/util/db";
 import { dbNoteRevisions } from "@/util/dbFuncs";
-import type { NoteType } from "@/util/noteIdentity";
+import type { NoteType } from "tadabor-shared";
 import { computeDateModified, createNoteRevision } from "@/util/notes";
 import { tryCatch } from "@/util/trycatch";
 
@@ -59,14 +59,18 @@ export const buildCloudNoteSaveData = ({
   date_synced: 0,
 });
 
-export const saveNoteRevision = async (note: LocalNoteProps | CloudNoteProps) => {
+export const saveNoteRevision = async (
+  note: LocalNoteProps | CloudNoteProps
+) => {
   const revision = createNoteRevision(note);
 
   if (!revision) {
     return;
   }
 
-  const { error: revisionError } = await tryCatch(dbNoteRevisions.save(revision));
+  const { error: revisionError } = await tryCatch(
+    dbNoteRevisions.save(revision)
+  );
 
   if (revisionError) {
     console.error("Failed to save note revision:", revisionError);

@@ -10,6 +10,7 @@ import type {
   IVerseTags,
 } from "@/types/db";
 import { LetterRole, type LetterRoleType } from "@/util/consts";
+import type { NoteType } from "tadabor-shared";
 
 export const dbLetters = {
   saveDefinition: async (
@@ -229,7 +230,7 @@ export const dbNotes = {
     date_created,
     date_modified,
   }: {
-    type: "verse" | "root" | "translation" | string;
+    type: NoteType;
     uuid: string;
     id: string;
     key: string;

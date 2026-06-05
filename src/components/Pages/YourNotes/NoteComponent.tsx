@@ -3,7 +3,7 @@ import { useQuran } from "@/context/useQuran";
 import { VerseContainer } from "@/components/Custom/VerseContainer";
 
 import { NoteForm } from "@/components/Note/NoteForm";
-import { parseNoteId } from "@/util/noteIdentity";
+import { parseNoteId } from "tadabor-shared";
 
 interface NoteComponentProps {
   noteId: string;

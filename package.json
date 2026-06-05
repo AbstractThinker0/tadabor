@@ -18,6 +18,7 @@
     "build": "tsc && vite build",
     "theme": "npx @chakra-ui/cli typegen ./src/theme/index.ts",
     "lint": "eslint src --ext ts,tsx --config eslint.config.js --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "test": "playwright test",
     "test:integration": "playwright test -c playwright.integration.config.ts",
     "test:ui": "playwright test --ui",

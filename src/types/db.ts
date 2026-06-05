@@ -1,11 +1,12 @@
 import type { LetterRoleType } from "@/util/consts";
+import type { NoteType } from "tadabor-shared";
 
 export interface IBaseNote {
   id: string;
   uuid: string;
   authorId?: number;
   key: string;
-  type: string;
+  type: NoteType;
   text: string;
   dir?: string;
   date_created?: number;

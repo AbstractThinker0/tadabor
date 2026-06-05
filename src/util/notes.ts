@@ -1,8 +1,7 @@
 import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import { v4 as uuidv4 } from "uuid";
 import type { ICloudNote, INoteRevision } from "@/util/db";
-import { parseNoteId } from "@/util/noteIdentity";
-import type { BackendNote } from "tadabor-shared";
+import { parseNoteId, type BackendNote, type NoteType } from "tadabor-shared";
 
 interface CreateNewNoteParams {
   id: string;
@@ -119,8 +118,8 @@ export const computeDateModified = (note: LocalNoteProps) => {
 
 export const hasNoteChanged = (note: LocalNoteProps | CloudNoteProps) => {
   return (
-    (note.text !== (note.preSave ?? "")) ||
-    ((note.dir ?? "") !== (note.preSaveDir ?? ""))
+    note.text !== (note.preSave ?? "") ||
+    (note.dir ?? "") !== (note.preSaveDir ?? "")
   );
 };
 
@@ -149,7 +148,7 @@ export interface NoteSyncMeta {
   id: string;
   uuid: string;
   key: string;
-  type: string;
+  type: NoteType;
   dateModified: number;
   dateLastSynced: number;
 }
