@@ -38,10 +38,6 @@ export const useAuth = () => {
 
   const userLogout = useUserLogout();
 
-  type ConfirmLoginPayload = Omit<AuthSession, "message"> & {
-    message?: string;
-  };
-
   const login = async ({
     email,
     password,
@@ -63,13 +59,13 @@ export const useAuth = () => {
     navigate("/");
   };
 
-  const confirmLogin = ({
-    message = "auth.loggedIn",
-    ...session
-  }: ConfirmLoginPayload) => {
+  const confirmLogin = (
+    session: AuthSession,
+    ui_message: string = "auth.loggedIn"
+  ) => {
     useUserStore.getState().login(session);
 
-    queueMicrotask(() => toasterBottomCenter.success(t(message)));
+    queueMicrotask(() => toasterBottomCenter.success(t(ui_message)));
   };
 
   const loginOffline = () => {
@@ -163,10 +159,7 @@ export const useAuth = () => {
     }
 
     if (result.success) {
-      confirmLogin({
-        ...result,
-        message: "auth.passwordUpdated",
-      });
+      confirmLogin(result, "auth.passwordUpdated");
 
       navigate("/");
 
@@ -220,10 +213,7 @@ export const useAuth = () => {
     }
 
     if (result.success) {
-      confirmLogin({
-        ...result,
-        message: "auth.passwordUpdated",
-      });
+      confirmLogin(result, "auth.passwordUpdated");
 
       return result;
     }
