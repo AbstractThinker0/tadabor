@@ -46,7 +46,9 @@ const NoteForm = ({
   const onSaveNote = () => {
     note.save();
 
-    setEditable(false);
+    if (note.text) {
+      setEditable(false);
+    }
   };
 
   const onClickEditButton = () => {

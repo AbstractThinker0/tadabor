@@ -117,7 +117,6 @@ const TextareaNoteEditor = ({
       onChange={onChangeTextarea}
       placeholder={t("notes.text_form")}
       _placeholder={{ textAlign: "center" }}
-      required
       borderRadius={"2xl"}
       colorPalette={"blue"}
       data-incomplete={inputSaved === false ? true : undefined}
