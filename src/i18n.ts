@@ -191,7 +191,7 @@ i18n
             sort_by_rank: "Sort by Rank",
             sort_by_status: "Sort by Modified Date",
             history: {
-              title: "Note history",
+              title: "History",
               aria_label: "Note history",
               delete_aria_label: "Delete revision",
               empty: "No note history yet.",
@@ -482,7 +482,7 @@ i18n
             sort_by_rank: "ترتيب حسب الرتبة",
             sort_by_status: "ترتيب حسب تاريخ التحديث",
             history: {
-              title: "سجل التدوينة",
+              title: "سجل",
               aria_label: "سجل التدوينة",
               delete_aria_label: "حذف النسخة",
               empty: "لا يوجد سجل بعد.",

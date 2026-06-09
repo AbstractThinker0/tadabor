@@ -5,8 +5,7 @@ import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip-mobile";
 
 import { MdOutlineCheckCircle } from "react-icons/md";
-import { useQuran } from "@/context/useQuran";
-import { useTranslation } from "react-i18next";
+import { useNoteTitle } from "@/util/noteTitle";
 
 interface NoteTitleProps {
   noteType?: string;
@@ -25,9 +24,7 @@ const NoteTitle = ({
   isOutOfSync,
   isPendingSave,
 }: NoteTitleProps) => {
-  const { t } = useTranslation();
-
-  const quranService = useQuran();
+  const title = useNoteTitle(noteType, noteKey);
 
   const isLogged = useUserStore((state) => state.isLogged);
 
@@ -40,26 +37,10 @@ const NoteTitle = ({
     return "Saved locally. Log in to enable cloud sync.";
   };
 
-  const getNoteTitle = () => {
-    if (noteType === "verse") {
-      return `${t("notes.noteVerse")} (${quranService.convertKeyToSuffix(
-        noteKey!
-      )})`;
-    } else if (noteType === "root") {
-      return `${t("notes.noteRoot")} (${quranService.getRootNameByID(
-        noteKey!
-      )})`;
-    } else if (noteType === "translation") {
-      return `${t("notes.translationVerse")} (${quranService.convertKeyToSuffix(
-        noteKey!
-      )})`;
-    }
-  };
-
   return (
     <Flex dir="auto" alignItems={"center"} gap={"0.2rem"}>
       <Text fontSize="sm" color={"gray.600"} py={"6px"}>
-        {getNoteTitle()}{" "}
+        {title}{" "}
       </Text>
       {isLogged && (
         <Tooltip content={getSyncTooltip()}>

@@ -17,9 +17,11 @@ import { ConfirmationModal } from "@/components/Generic/ConfirmationModal";
 import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { useNoteRevisions } from "@/hooks/useNoteRevisions";
 import { toaster } from "@/components/ui/toaster";
+import { useNoteTitle } from "@/util/noteTitle";
 
 import { FiClock, FiTrash2 } from "react-icons/fi";
 import { useSettingsStore } from "@/store/global/settingsStore";
+import { parseNoteId } from "tadabor-shared";
 
 import { Tooltip } from "@/components/ui/tooltip-mobile";
 
@@ -74,6 +76,21 @@ const NoteHistoryDialog = ({
   const [pendingDeleteRevisionId, setPendingDeleteRevisionId] = useState<
     string | null
   >(null);
+
+  const parsedNoteIdentity = useMemo(() => {
+    if (!noteId) return null;
+
+    try {
+      return parseNoteId(noteId);
+    } catch {
+      return null;
+    }
+  }, [noteId]);
+
+  const noteTitle = useNoteTitle(
+    parsedNoteIdentity?.type,
+    parsedNoteIdentity?.key
+  );
 
   const relativeTimeFormatter = useMemo(
     () => new Intl.RelativeTimeFormat(i18n.language, { numeric: "auto" }),
@@ -171,7 +188,7 @@ const NoteHistoryDialog = ({
             borderBottom="1px solid"
             borderColor={"border.emphasized"}
           >
-            {t("notes.history.title")}
+            {`${t("notes.history.title")}: ${noteTitle}`}
           </Dialog.Header>
 
           <Dialog.Body>
