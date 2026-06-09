@@ -115,6 +115,66 @@ test.describe("note save helpers", () => {
     });
   });
 
+  test("does not persist revision when previous saved note is empty", async () => {
+    const revisions: INoteRevision[] = [];
+    const originalSave = dbNoteRevisions.save;
+
+    dbNoteRevisions.save = async (revision) => {
+      revisions.push(revision);
+      return true;
+    };
+
+    try {
+      await saveNoteRevision({
+        id: "verse:1-1",
+        uuid: "note-uuid",
+        key: "1-1",
+        type: "verse",
+        text: "First meaningful content",
+        preSave: "",
+        preSaveDir: "",
+        dir: "",
+        hasPersistedVersion: true,
+        date_created: 10,
+        date_modified: 20,
+      });
+    } finally {
+      dbNoteRevisions.save = originalSave;
+    }
+
+    expect(revisions).toHaveLength(0);
+  });
+
+  test("does not persist revision for whitespace-only text edits", async () => {
+    const revisions: INoteRevision[] = [];
+    const originalSave = dbNoteRevisions.save;
+
+    dbNoteRevisions.save = async (revision) => {
+      revisions.push(revision);
+      return true;
+    };
+
+    try {
+      await saveNoteRevision({
+        id: "verse:1-1",
+        uuid: "note-uuid",
+        key: "1-1",
+        type: "verse",
+        text: "  Original note text  ",
+        preSave: "Original note text",
+        preSaveDir: "",
+        dir: "",
+        hasPersistedVersion: true,
+        date_created: 10,
+        date_modified: 20,
+      });
+    } finally {
+      dbNoteRevisions.save = originalSave;
+    }
+
+    expect(revisions).toHaveLength(0);
+  });
+
   test("saves local notes through the shared service", async () => {
     const savedPayloads: ILocalNote[] = [];
     const originalSave = dbNoteRevisions.save;

@@ -123,10 +123,34 @@ export const hasNoteChanged = (note: LocalNoteProps | CloudNoteProps) => {
   );
 };
 
+const isSignificantRevisionTextChange = (
+  previousText: string,
+  currentText: string
+) => {
+  // Do not keep revisions for empty previous notes.
+  if (previousText.trim().length === 0) {
+    return false;
+  }
+
+  // Ignore whitespace-only edits.
+  return previousText.trim() !== currentText.trim();
+};
+
 export const createNoteRevision = (
   note: LocalNoteProps | CloudNoteProps
 ): INoteRevision | null => {
   if (!note.hasPersistedVersion || !hasNoteChanged(note)) {
+    return null;
+  }
+
+  const previousText = note.preSave ?? "";
+  const currentText = note.text ?? "";
+  const isTextChangeSignificant = isSignificantRevisionTextChange(
+    previousText,
+    currentText
+  );
+
+  if (!isTextChangeSignificant) {
     return null;
   }
 
