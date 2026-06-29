@@ -164,9 +164,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
           onOpenVerseModal={onOpenVerseModal}
         />
       ) : (
-        <Box textAlign={"center"} dir="ltr">
-          {t("tags.select_at_least_one_chapter")}
-        </Box>
+        <Box textAlign={"center"}>{t("tags.select_at_least_one_chapter")}</Box>
       )}
     </>
   );
@@ -241,9 +239,7 @@ const SelectedVerses = ({
           })}
         </>
       ) : (
-        <Box textAlign={"center"} dir="ltr">
-          {t("tags.no_matching_verses")}
-        </Box>
+        <Box textAlign={"center"}>{t("tags.no_matching_verses")}</Box>
       )}
     </Box>
   );

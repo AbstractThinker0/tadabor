@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useColoringPageStore } from "@/store/pages/coloringPage";
 
@@ -16,6 +17,7 @@ interface SelectedContainerProps {
 }
 
 const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
+  const { t } = useTranslation();
   const selectedChapters = useColoringPageStore(
     (state) => state.selectedChapters
   );
@@ -57,10 +59,10 @@ const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
         <Box pt={1} paddingEnd={1}>
           <ButtonSidebar />
         </Box>
-        <Box flex={1} dir="ltr">
+        <Box flex={1}>
           <Flex flexWrap={"wrap"} gap={"5px"} alignItems="center">
             <Box lineHeight={"short"} fontWeight={"bold"}>
-              Selected colors:
+              {t("coloring.selected_colors")}
             </Box>
             {Object.keys(selectedColors).map((colorID) => (
               <Tag.Root
@@ -89,12 +91,12 @@ const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
           </Flex>
           <Flex pt={"2px"} gap={"5px"} flexWrap={"wrap"} alignItems="center">
             <Box lineHeight={"short"} fontWeight={"bold"}>
-              Selected chapters:
+              {t("tags.selected_chapters")}
             </Box>
             {chaptersScope.length === 114 ? (
-              <Box fontWeight={"bold"}>All chapters.</Box>
+              <Box fontWeight={"bold"}>{t("search.all_quran")}.</Box>
             ) : chaptersScope.length === 0 ? (
-              <Box fontWeight={"bold"}>No chapters selected.</Box>
+              <Box fontWeight={"bold"}>{t("tags.no_chapters_selected")}</Box>
             ) : (
               chaptersScope.map((chapterID, index) => (
                 <Tag.Root
@@ -124,9 +126,7 @@ const SelectedContainer = ({ openVerseModal }: SelectedContainerProps) => {
           openVerseModal={openVerseModal}
         />
       ) : (
-        <Box textAlign={"center"} dir="ltr">
-          You have to select at least one chapter.
-        </Box>
+        <Box textAlign={"center"}>{t("tags.select_at_least_one_chapter")}</Box>
       )}
     </>
   );
@@ -143,6 +143,7 @@ const SelectedVerses = ({
   selectedColors,
   openVerseModal,
 }: SelectedVersesProps) => {
+  const { t } = useTranslation();
   const quranService = useQuran();
 
   const scrollKey = useColoringPageStore((state) => state.scrollKey);
@@ -199,9 +200,7 @@ const SelectedVerses = ({
           );
         })
       ) : (
-        <Text textAlign="center" dir="ltr">
-          There are no verses matching the selected colors.
-        </Text>
+        <Text textAlign="center">{t("coloring.no_matching_verses")}</Text>
       )}
     </Box>
   );

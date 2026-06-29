@@ -277,6 +277,9 @@ i18n
           coloring: {
             add_button: "Add color",
             edit_button: "Edit colors",
+            selected_colors: "Selected colors:",
+            no_matching_verses:
+              "There are no verses matching the selected colors.",
             add: {
               title: "Add a new color",
               display_name_label: "Display name:",
@@ -567,6 +570,8 @@ i18n
           coloring: {
             add_button: "إضافة لون",
             edit_button: "تعديل الألوان",
+            selected_colors: "الألوان المحددة:",
+            no_matching_verses: "لا توجد آيات تطابق الألوان المحددة.",
             add: {
               title: "إضافة لون جديد",
               display_name_label: "اسم العرض:",
