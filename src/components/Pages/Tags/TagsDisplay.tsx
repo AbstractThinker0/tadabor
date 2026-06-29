@@ -103,7 +103,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
         <Box pt={1} paddingEnd={1}>
           <ButtonSidebar />
         </Box>
-        <Box flex={1} dir="ltr">
+        <Box flex={1}>
           <Flex alignItems={"center"} gap={"0.5rem"}>
             <Box lineHeight={"short"} fontWeight={"bold"}>
               {t("tags.selected_tags")}
@@ -131,7 +131,7 @@ const SelectedContainer = ({ onOpenVerseModal }: SelectedContainerProps) => {
               {t("tags.selected_chapters")}
             </Box>
             {chaptersScope.length === 114 ? (
-              <Box fontWeight={"bold"}>All chapters.</Box>
+              <Box fontWeight={"bold"}>{t("search.all_quran")}.</Box>
             ) : chaptersScope.length === 0 ? (
               <Box fontWeight={"bold"}>{t("tags.no_chapters_selected")}</Box>
             ) : (
