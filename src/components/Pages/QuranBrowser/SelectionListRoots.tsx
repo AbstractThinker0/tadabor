@@ -36,6 +36,7 @@ const SelectionListRoots = memo(
         minH="15vh"
         height={"25vh"}
         maxH="25vh"
+        textAlign={"center"}
       >
         {!rootsLoaded ? (
           <LoadingSpinner text={t("ui.state.loading_roots")} />
