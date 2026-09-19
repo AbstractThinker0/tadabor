@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { RadioGroup as ChakraRadioGroup } from "@chakra-ui/react";
 import * as React from "react";
 
@@ -19,7 +18,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
         )}
       </ChakraRadioGroup.Item>
     );
-  }
+  },
 );
 
 export const RadioGroup = ChakraRadioGroup.Root;
