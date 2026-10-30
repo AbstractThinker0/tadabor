@@ -289,6 +289,16 @@ test.describe("cloud note reconnect sync", () => {
       timeout: 20_000,
     });
 
+    await page.evaluate(async () => {
+      const modulePaths = [
+        "/src/util/db.ts",
+        "/src/store/global/userStore.ts",
+        "/src/store/global/cloudNotes.ts",
+        "/src/services/noteSave.ts",
+      ];
+      await Promise.all(modulePaths.map((modulePath) => import(modulePath)));
+    });
+
     await page.context().setOffline(true);
 
     await page.evaluate(
