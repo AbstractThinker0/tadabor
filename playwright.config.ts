@@ -4,6 +4,6 @@ import { basePlaywrightConfig, createFrontendWebServer } from "./playwright.shar
 
 export default defineConfig({
   ...basePlaywrightConfig,
-  testIgnore: "**/auth-backend.spec.ts",
+  testIgnore: "**/*-backend.spec.ts",
   webServer: createFrontendWebServer({ port: 4173 }),
 });

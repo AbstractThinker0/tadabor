@@ -31,15 +31,11 @@ test.describe("cloudNotes markSaved date_synced regression", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(page.locator("body")).toBeVisible({ timeout: 20_000 });
 
-    const result = await page.evaluate(async () => {
+    await page.evaluate(async () => {
       const cloudNotesModulePath = "/src/store/global/cloudNotes.ts" as string;
-      const noteSaveModulePath = "/src/services/noteSave.ts" as string;
-      const notesUtilPath = "/src/util/notes.ts" as string;
       const dbModulePath = "/src/util/db.ts" as string;
 
       const { useCloudNotesStore } = await import(cloudNotesModulePath);
-      const { buildCloudNoteSaveData } = await import(noteSaveModulePath);
-      const { buildNoteSyncPayload } = await import(notesUtilPath);
       const { db } = await import(dbModulePath);
 
       const noteId = "verse:9-99";
@@ -61,6 +57,24 @@ test.describe("cloudNotes markSaved date_synced regression", () => {
         date_synced: 100,
         isNew: false,
       });
+    });
+
+    await expect.poll(() => page.evaluate(async () => {
+      const dbModulePath = "/src/util/db.ts" as string;
+      const { db } = await import(dbModulePath);
+      return (await db.cloud_notes.get("verse:9-99"))?.date_synced;
+    })).toBe(100);
+
+    const result = await page.evaluate(async () => {
+      const cloudNotesModulePath = "/src/store/global/cloudNotes.ts" as string;
+      const noteSaveModulePath = "/src/services/noteSave.ts" as string;
+      const notesUtilPath = "/src/util/notes.ts" as string;
+      const dbModulePath = "/src/util/db.ts" as string;
+      const { useCloudNotesStore } = await import(cloudNotesModulePath);
+      const { buildCloudNoteSaveData } = await import(noteSaveModulePath);
+      const { buildNoteSyncPayload } = await import(notesUtilPath);
+      const { db } = await import(dbModulePath);
+      const noteId = "verse:9-99";
 
       // Simulate an offline edit.
       useCloudNotesStore.getState().changeNote({
@@ -103,9 +117,8 @@ test.describe("cloudNotes markSaved date_synced regression", () => {
     expect(result.persistedSynced).toBe(0);
     expect(result.stateModified).toBeGreaterThan(100);
 
-    // Bug: zustand state keeps the stale date_synced (100) instead of 0,
-    // so the reconnect sync payload reports the note as already synced.
     expect(result.stateSynced).toBe(0);
+    expect(result.stateIsSynced).toBe(false);
     expect(result.syncPayloadLastSynced).toBe(0);
   });
 });

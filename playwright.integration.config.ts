@@ -17,14 +17,14 @@ import {
 
 export default defineConfig({
   ...basePlaywrightConfig,
-  testMatch: "**/auth-backend.spec.ts",
+  testMatch: "**/*-backend.spec.ts",
   use: {
     ...basePlaywrightConfig.use,
     baseURL: PLAYWRIGHT_FRONTEND_ORIGIN,
   },
   webServer: [
     {
-      command: "npm run predev && npx tsx src/index.ts",
+      command: "npx tsx src/index.ts",
       cwd: backendRoot,
       url: `${PLAYWRIGHT_BACKEND_ORIGIN}/health`,
       reuseExistingServer: false,
