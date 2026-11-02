@@ -56,7 +56,7 @@ loading: boolean  // Initial load state
 
 ### Critical Custom Hooks
 
-**`useNote({ noteID, noteType, noteKey, isVisible })`** (`src/hooks/useNote.ts`):
+**`useNote({ noteId, noteType, noteKey })`** (`src/features/notes/useNote.ts`):
 
 - Central hook for note CRUD. Returns: `{ text, setText, direction, setDirection, save, isSaved, isSynced, isOutOfSync, ... }`
 - Automatically routes to local OR cloud store based on `useUserStore(state => state.isLogged)`
@@ -123,6 +123,7 @@ npm run theme  # Regenerate Chakra theme types
 
 - `src/pages/`: Page components (lazy-loaded via React Router)
 - `src/components/`: Organized by responsibility (Custom, Generic, Layout, Note, Pages, ui)
+- `src/features/notes/`: Note editing, storage selection, and save hooks and logic
 - `src/store/global/`: Zustand stores for global state (settings, navigation, user, translations, notes)
 - `src/store/pages/`: Zustand stores for page-specific UI state
 - `src/hooks/`: Custom React hooks (auth, notes, page nav, screen size)
@@ -133,14 +134,14 @@ npm run theme  # Regenerate Chakra theme types
 
 - **Verse Display**: Use `<BaseVerseItem>` (`src/components/Custom/BaseVerseItem.tsx`) as wrapper for all verse lists. Handles selection, highlighting, key events.
 - **Modals/Forms**: Chakra `useDisclosure()` for open/close state. Notes use `<NoteForm>` component.
-- **Note Rendering**: Each page needing notes uses `useNote()` hook. Pass `isVisible={isElementVisible}` to lazy-load.
+- **Note Rendering**: Use the `useNote()` hook for note editing and saving.
 - **Searching**: Pages use `quranService.search*()` methods from quran-tools (e.g., `searchRoots()`, `searchVerses()`).
 
 ### State Management Patterns
 
 - **Dual-Mode App**: Check `state.user.isLogged` to decide local vs. cloud operations
 - **Optimistic UI**: Don't wait for backend; update Zustand immediately, handle sync errors gracefully
-- **Lazy Loading Notes**: `useNote()` uses `useEffect()` with `isVisible` dependency; fetches on mount if not cached
+- **Loading Notes**: `LocalNotesProvider` loads local notes; `CloudNotesProvider` loads cloud notes for logged-in users.
 - **Pagination**: Page-specific stores track `currentChapter`, `scrollKey`. Use `usePageNav()` to restore scroll on page re-entry
 
 ### oRPC Integration
@@ -185,7 +186,7 @@ npm run theme  # Regenerate Chakra theme types
 
 - **App Entry**: `src/index.tsx`, `src/App.tsx` (route definitions)
 - **State**: `src/store/global/` (Zustand stores), `src/store/global/localNotes.ts` (notes pattern)
-- **Core Hooks**: `src/hooks/useNote.ts`, `src/hooks/useAuth.ts`
+- **Core Hooks**: `src/features/notes/useNote.ts`, `src/hooks/useAuth.ts`
 - **Quran Data**: `src/context/QuranProvider.tsx`, `src/util/fetchData.ts`
 - **UI Components**: `src/components/Custom/BaseVerseItem.tsx`, `src/components/Note/NoteForm.tsx`
 - **Database**: `src/util/db.ts`, `src/util/dbFuncs.ts`
@@ -194,7 +195,7 @@ npm run theme  # Regenerate Chakra theme types
 ## Common Pitfalls to Avoid
 
 1. **Don't mutate Zustand state directly** — use immer updates (handled by middleware)
-2. **Don't fetch notes without `isVisible` check** — wastes bandwidth; use lazy loading
+2. **Don't bypass note loading providers** — they hydrate local and cloud notes before rendering their children
 3. **Don't assume user is logged in** — always check `state.user.isLogged` before accessing cloud note
 4. **Don't forget to set `date_modified`** — needed for sync conflict detection
 5. **Don't hardcode URLs** — use relative paths (e.g., `/res/file.json`)

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { toaster } from "@/components/ui/toaster";
 import { useUploadNote } from "@/services/backend";
-import { saveActiveNote } from "@/store/global/notesStorage";
+import { saveActiveNote } from "@/features/notes/notesStorage";
 import { useUserStore } from "@/store/global/userStore";
 import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import type { NoteType } from "tadabor-shared";

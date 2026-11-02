@@ -1,7 +1,7 @@
 import {
   getNotesIdsByType,
   useNotesStorageState,
-} from "@/store/global/notesStorage";
+} from "@/features/notes/notesStorage";
 import type { NoteType } from "tadabor-shared";
 
 /**

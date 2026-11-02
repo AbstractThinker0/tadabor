@@ -7,7 +7,7 @@ import {
   saveCloudNote,
   saveLocalNote,
   saveNoteRevision,
-} from "../src/services/noteSave";
+} from "../src/features/notes/noteSave";
 import { dbNoteRevisions } from "../src/util/dbFuncs";
 
 test.describe("note save helpers", () => {
@@ -16,7 +16,7 @@ test.describe("note save helpers", () => {
     await expect(page.getByText("سورة الفاتحة")).toBeVisible({ timeout: 20_000 });
 
     const result = await page.evaluate(async () => {
-      const storagePath = "/src/store/global/notesStorage.ts" as string;
+      const storagePath = "/src/features/notes/notesStorage.ts" as string;
       const localStorePath = "/src/store/global/localNotes.ts" as string;
       const cloudStorePath = "/src/store/global/cloudNotes.ts" as string;
       const dbPath = "/src/util/db.ts" as string;

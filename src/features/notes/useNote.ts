@@ -1,5 +1,5 @@
-import { useSingleNote } from "@/hooks/useSingleNote";
-import { useNoteSave } from "@/hooks/useNoteSave";
+import { useSingleNote } from "@/features/notes/useSingleNote";
+import { useNoteSave } from "@/features/notes/useNoteSave";
 import { useUserStore } from "@/store/global/userStore";
 
 import { createNewNote } from "@/util/notes";

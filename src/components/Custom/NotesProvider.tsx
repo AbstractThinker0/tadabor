@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { hasUnsavedNotes } from "@/store/global/notesStorage";
+import { hasUnsavedNotes } from "@/features/notes/notesStorage";
 
 import { useBeforeUnload } from "react-router";
 

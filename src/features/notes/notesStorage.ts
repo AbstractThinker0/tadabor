@@ -1,7 +1,7 @@
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
-import { saveCloudNote, saveLocalNote } from "@/services/noteSave";
+import { saveCloudNote, saveLocalNote } from "@/features/notes/noteSave";
 import type { NoteType } from "tadabor-shared";
 import { hasNoteType } from "@/util/noteIdentity";
 

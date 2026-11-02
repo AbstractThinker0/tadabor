@@ -67,7 +67,7 @@ test.describe("cloudNotes markSaved date_synced regression", () => {
 
     const result = await page.evaluate(async () => {
       const cloudNotesModulePath = "/src/store/global/cloudNotes.ts" as string;
-      const noteSaveModulePath = "/src/services/noteSave.ts" as string;
+      const noteSaveModulePath = "/src/features/notes/noteSave.ts" as string;
       const notesUtilPath = "/src/util/notes.ts" as string;
       const dbModulePath = "/src/util/db.ts" as string;
       const { useCloudNotesStore } = await import(cloudNotesModulePath);

@@ -8,7 +8,7 @@ import { NoteSortSelect } from "@/components/Pages/YourNotes/NoteSortSelect";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useRootsLoaded } from "@/hooks/useRootsLoaded";
-import { useNotesStore } from "@/hooks/useNotesStore";
+import { useNotesStore } from "@/features/notes/useNotesStore";
 import { useNoteSorting } from "@/hooks/useNoteSorting";
 
 const RootNotes = () => {

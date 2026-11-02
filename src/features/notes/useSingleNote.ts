@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { getNoteActions, useActiveNoteState } from "@/store/global/notesStorage";
+import { getNoteActions, useActiveNoteState } from "@/features/notes/notesStorage";
 
 /**
  * Hook for single note operations.

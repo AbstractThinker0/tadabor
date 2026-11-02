@@ -156,7 +156,7 @@ test.describe("cloud note reconnect sync", () => {
 
     const offlineSave = await page.evaluate(
       async ({ noteId, editedText, userId }) => {
-        const noteSaveModulePath = "/src/services/noteSave.ts" as string;
+        const noteSaveModulePath = "/src/features/notes/noteSave.ts" as string;
         const dbModulePath = "/src/util/db.ts" as string;
         const cloudNotesModulePath =
           "/src/store/global/cloudNotes.ts" as string;
@@ -294,7 +294,7 @@ test.describe("cloud note reconnect sync", () => {
         "/src/util/db.ts",
         "/src/store/global/userStore.ts",
         "/src/store/global/cloudNotes.ts",
-        "/src/services/noteSave.ts",
+        "/src/features/notes/noteSave.ts",
       ];
       await Promise.all(modulePaths.map((modulePath) => import(modulePath)));
     });
@@ -343,7 +343,7 @@ test.describe("cloud note reconnect sync", () => {
 
     await page.evaluate(
       async ({ noteId, editedText, userId }) => {
-        const noteSaveModulePath = "/src/services/noteSave.ts" as string;
+        const noteSaveModulePath = "/src/features/notes/noteSave.ts" as string;
         const cloudNotesModulePath =
           "/src/store/global/cloudNotes.ts" as string;
         const { saveCloudNote } = await import(noteSaveModulePath);

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { useSingleNote } from "@/hooks/useSingleNote";
+import { useSingleNote } from "@/features/notes/useSingleNote";
 import type { INoteRevision } from "@/types/db";
 import { dbNoteRevisions } from "@/util/dbFuncs";
 import { tryCatch } from "@/util/trycatch";
