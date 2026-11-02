@@ -257,12 +257,14 @@ export const useCloudNotesStore = create(
 
           note.saved = true;
           note.hasPersistedVersion = true;
+          note.date_synced = saveData.date_synced;
 
           if (hasNoteChanged(note)) {
             note.preSave = note.text;
             note.preSaveDir = note.dir ?? "";
             note.date_modified = saveData.date_modified;
           }
+          note.isSynced = computeIsSynced(note);
         });
 
         return true;
