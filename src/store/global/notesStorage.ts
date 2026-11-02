@@ -1,6 +1,7 @@
 import { useCloudNotesStore } from "@/store/global/cloudNotes";
 import { useLocalNotesStore } from "@/store/global/localNotes";
 import { useUserStore } from "@/store/global/userStore";
+import { saveCloudNote, saveLocalNote } from "@/services/noteSave";
 import type { NoteType } from "tadabor-shared";
 import { hasNoteType } from "@/util/noteIdentity";
 
@@ -9,6 +10,56 @@ const selectActiveValue = <T>(
   localValue: T,
   cloudValue: T
 ) => (isLogged ? cloudValue : localValue);
+
+export const getNoteActions = (isLogged: boolean, userId?: number) => {
+  const store = isLogged
+    ? useCloudNotesStore.getState()
+    : useLocalNotesStore.getState();
+
+  return {
+    cacheNote: store.cacheNote,
+    changeNote: store.changeNote,
+    changeNoteDir: store.changeNoteDir,
+    fetchSingleNoteIfNeeded: (noteId?: string) => {
+      if (!noteId) return null;
+      if (isLogged) {
+        if (!userId) return null;
+        return useCloudNotesStore
+          .getState()
+          .fetchSingleCloudNote({ noteId, userId });
+      }
+      return useLocalNotesStore.getState().fetchSingleLocalNote(noteId);
+    },
+  };
+};
+
+export const saveActiveNote = ({
+  isLogged,
+  userId,
+  uploadNote,
+  ...noteParams
+}: Omit<Parameters<typeof saveLocalNote>[0], "markSaved"> & {
+  isLogged: boolean;
+  userId?: number;
+  uploadNote: Parameters<typeof saveCloudNote>[0]["uploadNote"];
+}) => {
+  if (isLogged) {
+    return saveCloudNote({
+      ...noteParams,
+      authorId: userId,
+      markSaved: (saveData) =>
+        useCloudNotesStore.getState().markSaved({ saveData }),
+      uploadNote,
+      updateSyncDate: useCloudNotesStore.getState().updateSyncDate,
+    });
+  }
+
+  return saveLocalNote({
+    ...noteParams,
+    markSaved: (saveData) =>
+      useLocalNotesStore.getState().markSaved({ saveData }),
+  });
+};
 
 export const useNotesStorageState = () => {
   const isLogged = useUserStore((state) => state.isLogged);

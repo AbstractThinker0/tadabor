@@ -11,6 +11,94 @@ import {
 import { dbNoteRevisions } from "../src/util/dbFuncs";
 
 test.describe("note save helpers", () => {
+  test("routes note edits and saves to the selected storage", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("سورة الفاتحة")).toBeVisible({ timeout: 20_000 });
+
+    const result = await page.evaluate(async () => {
+      const storagePath = "/src/store/global/notesStorage.ts" as string;
+      const localStorePath = "/src/store/global/localNotes.ts" as string;
+      const cloudStorePath = "/src/store/global/cloudNotes.ts" as string;
+      const dbPath = "/src/util/db.ts" as string;
+      const { getNoteActions, saveActiveNote } = await import(storagePath);
+      const { useLocalNotesStore } = await import(localStorePath);
+      const { useCloudNotesStore } = await import(cloudStorePath);
+      const { db } = await import(dbPath);
+      const noteId = "verse:9-99";
+      const note = {
+        id: noteId,
+        uuid: "note-storage-routing",
+        key: "9-99",
+        type: "verse" as const,
+        text: "Initial note",
+        dir: "",
+        date_created: 100,
+        date_modified: 100,
+      };
+      let uploadCount = 0;
+      const uploadNote = async () => {
+        uploadCount += 1;
+        return { success: true, note: { dateLastSynced: Date.now() } };
+      };
+
+      const localActions = getNoteActions(false);
+      localActions.cacheNote({ ...note });
+      localActions.changeNote({ name: noteId, value: "Guest edit" });
+      localActions.changeNoteDir({ name: noteId, value: "ltr" });
+      const localResult = await saveActiveNote({
+        isLogged: false,
+        noteId,
+        note: useLocalNotesStore.getState().data[noteId],
+        noteType: "verse",
+        noteDirection: "ltr",
+        uploadNote,
+      });
+      const uploadsAfterLocalSave = uploadCount;
+
+      const cloudActions = getNoteActions(true, 7);
+      cloudActions.cacheNote({ ...note, authorId: 7 });
+      cloudActions.changeNote({ name: noteId, value: "Cloud edit" });
+      cloudActions.changeNoteDir({ name: noteId, value: "rtl" });
+      const cloudResult = await saveActiveNote({
+        isLogged: true,
+        userId: 7,
+        noteId,
+        note: useCloudNotesStore.getState().data[noteId],
+        noteType: "verse",
+        noteDirection: "rtl",
+        uploadNote,
+      });
+
+      return {
+        localSaved: localResult.saved,
+        cloudSaved: cloudResult.saved,
+        localText: (await db.local_notes.get(noteId))?.text,
+        localDirection: (await db.local_notes.get(noteId))?.dir,
+        cloudText: (await db.cloud_notes.get(noteId))?.text,
+        cloudDirection: (await db.cloud_notes.get(noteId))?.dir,
+        cloudAuthor: (await db.cloud_notes.get(noteId))?.authorId,
+        localStoreText: useLocalNotesStore.getState().data[noteId]?.text,
+        cloudStoreText: useCloudNotesStore.getState().data[noteId]?.text,
+        uploadsAfterLocalSave,
+        uploadCount,
+      };
+    });
+
+    expect(result).toEqual({
+      localSaved: true,
+      cloudSaved: true,
+      localText: "Guest edit",
+      localDirection: "ltr",
+      cloudText: "Cloud edit",
+      cloudDirection: "rtl",
+      cloudAuthor: 7,
+      localStoreText: "Guest edit",
+      cloudStoreText: "Cloud edit",
+      uploadsAfterLocalSave: 0,
+      uploadCount: 1,
+    });
+  });
+
   test("builds cloud save data with sync metadata for changed translation notes", () => {
     const saveData = buildCloudNoteSaveData({
       noteId: "translation:2-255",

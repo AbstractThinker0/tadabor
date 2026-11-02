@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { toaster } from "@/components/ui/toaster";
 import { useUploadNote } from "@/services/backend";
-import { saveCloudNote, saveLocalNote } from "@/services/noteSave";
-import { useCloudNotesStore } from "@/store/global/cloudNotes";
-import { useLocalNotesStore } from "@/store/global/localNotes";
+import { saveActiveNote } from "@/store/global/notesStorage";
 import { useUserStore } from "@/store/global/userStore";
 import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
 import type { NoteType } from "tadabor-shared";
@@ -28,7 +26,6 @@ export const useNoteSave = ({
   const isLogged = useUserStore((state) => state.isLogged);
   const userId = useUserStore((state) => state.id);
   const uploadNote = useUploadNote();
-  const updateSyncDate = useCloudNotesStore((state) => state.updateSyncDate);
   const [isDbSaving, setIsDbSaving] = useState(false);
 
   const save = async () => {
@@ -39,27 +36,16 @@ export const useNoteSave = ({
     setIsDbSaving(true);
 
     try {
-      const result = isLogged
-        ? await saveCloudNote({
-            noteId,
-            note,
-            noteType,
-            noteDirection,
-            authorId: userId,
-            markSaved: (saveData) =>
-              useCloudNotesStore.getState().markSaved({ saveData }),
-            uploadNote: (saveData) =>
-              uploadNote.mutateAsync(fromDexieToBackend(saveData)),
-            updateSyncDate,
-          })
-        : await saveLocalNote({
-            noteId,
-            note,
-            noteType,
-            noteDirection,
-            markSaved: (saveData) =>
-              useLocalNotesStore.getState().markSaved({ saveData }),
-          });
+      const result = await saveActiveNote({
+        isLogged,
+        userId,
+        noteId,
+        note,
+        noteType,
+        noteDirection,
+        uploadNote: (saveData) =>
+          uploadNote.mutateAsync(fromDexieToBackend(saveData)),
+      });
 
       if (!result.saved) {
         toaster.error(t("ui.messages.save_failed"));

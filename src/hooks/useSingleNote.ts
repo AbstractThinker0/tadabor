@@ -1,10 +1,6 @@
 import { useCallback } from "react";
 
-import { useCloudNotesStore } from "@/store/global/cloudNotes";
-import { useLocalNotesStore } from "@/store/global/localNotes";
-import { useActiveNoteState } from "@/store/global/notesStorage";
-
-import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
+import { getNoteActions, useActiveNoteState } from "@/store/global/notesStorage";
 
 /**
  * Hook for single note operations.
@@ -15,51 +11,11 @@ import type { CloudNoteProps, LocalNoteProps } from "@/types/notes";
  */
 export const useSingleNote = (noteId?: string) => {
   const { isLogged, userId, note, isNoteLoading } = useActiveNoteState(noteId);
+  const { cacheNote, changeNote, changeNoteDir } = getNoteActions(isLogged, userId);
 
-  const fetchSingleNoteIfNeeded = useCallback(() => {
-    if (!noteId) return null;
-
-    if (isLogged) {
-      if (!userId) return null;
-      return useCloudNotesStore
-        .getState()
-        .fetchSingleCloudNote({ noteId, userId });
-    }
-
-    return useLocalNotesStore.getState().fetchSingleLocalNote(noteId);
-  }, [noteId, isLogged, userId]);
-
-  const cacheNote = useCallback(
-    (noteToCache: LocalNoteProps | CloudNoteProps) => {
-      if (isLogged) {
-        useCloudNotesStore.getState().cacheNote(noteToCache);
-      } else {
-        useLocalNotesStore.getState().cacheNote(noteToCache);
-      }
-    },
-    [isLogged]
-  );
-
-  const changeNote = useCallback(
-    (payload: { name: string; value: string }) => {
-      if (isLogged) {
-        useCloudNotesStore.getState().changeNote(payload);
-      } else {
-        useLocalNotesStore.getState().changeNote(payload);
-      }
-    },
-    [isLogged]
-  );
-
-  const changeNoteDir = useCallback(
-    (payload: { name: string; value: string }) => {
-      if (isLogged) {
-        useCloudNotesStore.getState().changeNoteDir(payload);
-      } else {
-        useLocalNotesStore.getState().changeNoteDir(payload);
-      }
-    },
-    [isLogged]
+  const fetchSingleNoteIfNeeded = useCallback(
+    () => getNoteActions(isLogged, userId).fetchSingleNoteIfNeeded(noteId),
+    [noteId, isLogged, userId]
   );
 
   return {
