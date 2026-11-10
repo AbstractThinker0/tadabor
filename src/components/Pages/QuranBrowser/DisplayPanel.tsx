@@ -25,8 +25,8 @@ const DisplayPanel = () => {
       flex={1}
       overflowY="scroll"
       flexDirection={"column"}
-      px={"0.5rem"}
-      py={"0.5rem"}
+      px={{ base: 2, md: 4 }}
+      py={{ base: 2, md: 4 }}
       ref={refListVerses}
     >
       <Flex
@@ -34,7 +34,7 @@ const DisplayPanel = () => {
         bgColor={"brand.contrast"}
         borderRadius={5}
         border={"1px solid"}
-        borderColor={"border.emphasized"}
+        borderColor={"border"}
         flex={1}
       >
         {searchResult.length || searchError ? (

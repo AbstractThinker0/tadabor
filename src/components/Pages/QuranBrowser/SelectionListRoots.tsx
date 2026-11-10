@@ -27,10 +27,9 @@ const SelectionListRoots = memo(
         flexDirection="column"
         overflow="hidden"
         border="1px solid"
-        borderColor={"border.emphasized"}
+        borderColor={"border"}
         borderRadius="md"
         bgColor={"brand.bg"}
-        boxShadow="sm"
         mt="8px"
         mb="2px"
         minH="15vh"
@@ -54,7 +53,7 @@ const SelectionListRoots = memo(
       return true;
     }
     return false;
-  }
+  },
 );
 
 SelectionListRoots.displayName = "SelectionListRoots";
@@ -68,7 +67,7 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
   const quranService = useQuran();
   const [itemsCount, setItemsCount] = useState(50);
   const setSearchString = useQuranBrowserPageStore(
-    (state) => state.setSearchString
+    (state) => state.setSearchString,
   );
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -86,7 +85,7 @@ const RootsList = ({ isDisabled, searchString }: RootsListProps) => {
         normalizeToken: true,
         searchInclusive: false,
       }),
-    [searchString, quranService]
+    [searchString, quranService],
   );
 
   const handleRootSelect = (rootName: string) => {

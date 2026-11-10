@@ -24,28 +24,28 @@ const SelectionListChapters = ({
   const quranService = useQuran();
 
   const currentChapter = useQuranBrowserPageStore(
-    (state) => state.selectChapter
+    (state) => state.selectChapter,
   );
 
   const selectedChapters = useQuranBrowserPageStore(
-    (state) => state.selectedChapters
+    (state) => state.selectedChapters,
   );
 
   const searchingString = useQuranBrowserPageStore(
-    (state) => state.searchingString
+    (state) => state.searchingString,
   );
 
   const selectedVerse = useQuranBrowserPageStore(
-    (state) => state.selectedVerse
+    (state) => state.selectedVerse,
   );
   const setSelectedVerse = useQuranBrowserPageStore(
-    (state) => state.setSelectedVerse
+    (state) => state.setSelectedVerse,
   );
   const setSelectedChapters = useQuranBrowserPageStore(
-    (state) => state.setSelectedChapters
+    (state) => state.setSelectedChapters,
   );
   const toggleSelectChapter = useQuranBrowserPageStore(
-    (state) => state.toggleSelectChapter
+    (state) => state.toggleSelectChapter,
   );
 
   const [chapterSearch, setChapterSearch] = useState("");
@@ -94,7 +94,7 @@ const SelectionListChapters = ({
   };
 
   const currentSelectedChapters = Object.keys(selectedChapters).filter(
-    (chapterID) => selectedChapters[chapterID] === true
+    (chapterID) => selectedChapters[chapterID] === true,
   );
 
   const getSelectedCount = currentSelectedChapters.length;
@@ -108,11 +108,10 @@ const SelectionListChapters = ({
       flexDirection="column"
       h="38vh"
       border="1px solid"
-      borderColor={"border.emphasized"}
+      borderColor={"border"}
       borderRadius="md"
       overflow="hidden"
       bgColor={"brand.bg"}
-      boxShadow="sm"
       mb={4}
     >
       <ChaptersListHeader

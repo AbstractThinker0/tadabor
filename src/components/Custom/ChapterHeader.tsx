@@ -23,12 +23,13 @@ const ChapterHeader = ({
   return (
     <Flex
       bgColor="bg.muted"
-      px={"0.25rem"}
-      border="1px solid"
-      borderColor="border.emphasized"
+      px={{ base: 2, md: 4 }}
+      py={2}
+      borderBottom="1px solid"
+      borderColor="border"
       align="center"
       justifyContent={"space-between"}
-      borderTopRadius={"l2"}
+      gap={2}
     >
       {onTogglePanel ? (
         <ButtonSidebar

@@ -64,11 +64,10 @@ const BaseVerseItem = ({
   return (
     <Box
       data-id={dataKey ? dataKey : verseKey}
-      py={"0.5rem"}
-      px={"1rem"}
-      smDown={{ px: "0.2rem" }}
+      py={{ base: "0.875rem", md: "1rem" }}
+      px={{ base: "0.75rem", md: "1.5rem" }}
       borderBottom="1px solid"
-      borderColor={"border.emphasized"}
+      borderColor={"border"}
       aria-selected={isSelected}
       _hover={{ bgColor: "bg.subtle" }}
       _selected={{

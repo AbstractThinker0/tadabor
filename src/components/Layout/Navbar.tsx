@@ -71,7 +71,7 @@ const Navbar = () => {
           console.log("✅ Storage is now persistent.");
         } else {
           console.log(
-            "❌ Storage persistence was denied, try installing as PWA or bookmarking the website."
+            "❌ Storage persistence was denied, try installing as PWA or bookmarking the website.",
           );
         }
       }
@@ -87,9 +87,8 @@ const Navbar = () => {
         role="navigation"
         _light={{ bgColor: "#f2f3f5" }}
         _dark={{ bgColor: "#151a23" }}
-        px={2}
-        smDown={{ px: "4px" }}
-        py={1}
+        px={{ base: 2, md: 4 }}
+        py={2}
         borderBottom="1px solid"
         borderColor="border.emphasized"
       >
@@ -107,18 +106,14 @@ const Navbar = () => {
           {/* Centered currentPage */}
           <Flex flex={1} justifyContent="center" alignItems="center">
             <Flex
-              minW={"8rem"}
-              bgColor="bg"
+              minW={0}
               justifyContent={"center"}
               alignItems="center"
-              borderRadius="sm"
-              border="1px solid"
-              borderColor="border.emphasized"
-              py="5px"
-              px={4}
+              px={2}
               fontSize={"lg"}
-              shadow={"sm"}
+              fontWeight="semibold"
               lineHeight="short"
+              textAlign="center"
             >
               {t(currentPage)}
             </Flex>

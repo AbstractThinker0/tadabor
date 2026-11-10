@@ -23,10 +23,10 @@ const SearchPanel = () => {
   const searchString = useQuranBrowserPageStore((state) => state.searchString);
 
   const submitRootSearch = useQuranBrowserPageStore(
-    (state) => state.submitRootSearch
+    (state) => state.submitRootSearch,
   );
   const submitWordSearch = useQuranBrowserPageStore(
-    (state) => state.submitWordSearch
+    (state) => state.submitWordSearch,
   );
   const gotoChapter = useQuranBrowserPageStore((state) => state.gotoChapter);
 
@@ -48,8 +48,8 @@ const SearchPanel = () => {
     <Flex
       flexDirection="column"
       fontSize="medium"
-      pt={2}
-      paddingStart="min(0.5vw, 10px)"
+      pt={{ base: 2, md: 4 }}
+      paddingStart={{ base: 2, md: 4 }}
     >
       <SelectionListChapters handleCurrentChapter={handleCurrentChapter} />
 
@@ -58,8 +58,8 @@ const SearchPanel = () => {
         borderStyle={"solid"}
         borderWidth={"1px"}
         borderRadius={"md"}
-        boxShadow={"sm"}
-        padding={"5px"}
+        borderColor={"border"}
+        padding={3}
         marginBottom={"8px"}
       >
         <SearchOptions />
