@@ -3,13 +3,17 @@ import type { searchIndexProps } from "quran-tools";
 import {
   Box,
   Button,
+  Collapsible,
   HStack,
+  IconButton,
   Spinner,
   StackSeparator,
   Switch,
   Text,
   VStack,
 } from "@chakra-ui/react";
+
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 import { Tooltip } from "@/components/ui/tooltip";
 import { useMemo, useState, useTransition } from "react";
@@ -37,6 +41,7 @@ const DerivationsComponent = ({
   const [itemsCount, setItemsCount] = useState(200);
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [isMinimized, setIsMinimized] = useState(false);
 
   const [isPending, startTransition] = useTransition();
   const { t } = useTranslation();
@@ -106,40 +111,56 @@ const DerivationsComponent = ({
 
   return (
     <Box border={"1px solid"} borderRadius={"md"} margin={3} overflow="hidden">
-      <HStack justifyContent="space-between" px={2} pt={1}>
-        <Text fontSize="xs" color="fg.muted">
-          {t("ui.count_with_unique", {
-            total: searchIndexes.length,
-            unique: uniqueCount,
-          })}
-        </Text>
-        <Switch.Root
-          size="sm"
-          checked={hideDuplicates}
-          onCheckedChange={(e) => setHideDuplicates(e.checked)}
-        >
-          <Switch.HiddenInput />
-          <Switch.Control>
-            <Switch.Thumb />
-          </Switch.Control>
-          <Switch.Label>
-            <Text fontSize="xs">{t("ui.hide_duplicates")}</Text>
-          </Switch.Label>
-        </Switch.Root>
+      <HStack justifyContent="space-between" px={2} py={1}>
+        <HStack gap={1}>
+          <IconButton
+            size="xs"
+            variant="ghost"
+            aria-label={`${
+              isMinimized ? t("ui.actions.expand") : t("ui.actions.minimize")
+            } ${t("search.derivations")}`}
+            onClick={() => setIsMinimized((state) => !state)}
+          >
+            {isMinimized ? <LuChevronDown /> : <LuChevronUp />}
+          </IconButton>
+          <Text fontSize="xs" color="fg.muted">
+            {t("ui.count_with_unique", {
+              total: searchIndexes.length,
+              unique: uniqueCount,
+            })}
+          </Text>
+        </HStack>
+        {!isMinimized && (
+          <Switch.Root
+            size="sm"
+            checked={hideDuplicates}
+            onCheckedChange={(e) => setHideDuplicates(e.checked)}
+          >
+            <Switch.HiddenInput />
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Switch.Label>
+              <Text fontSize="xs">{t("ui.hide_duplicates")}</Text>
+            </Switch.Label>
+          </Switch.Root>
+        )}
       </HStack>
-      <HStack
-        dir="rtl"
-        wrap="wrap"
-        padding={2.5}
-        maxH={"400px"}
-        overflowY={"scroll"}
-        onScroll={onScrollOccs}
-        separator={
-          hideDuplicates ? undefined : (
-            <StackSeparator border={"none"}>-</StackSeparator>
-          )
-        }
-      >
+      <Collapsible.Root open={!isMinimized}>
+        <Collapsible.Content>
+          <HStack
+            dir="rtl"
+            wrap="wrap"
+            padding={2.5}
+            maxH={"400px"}
+            overflowY={"scroll"}
+            onScroll={onScrollOccs}
+            separator={
+              hideDuplicates ? undefined : (
+                <StackSeparator border={"none"}>-</StackSeparator>
+              )
+            }
+          >
         {hideDuplicates
           ? groupedItems.slice(0, itemsCount).map((group, groupIndex) => {
               const isExpanded = expandedGroups.has(group.name);
@@ -245,7 +266,9 @@ const DerivationsComponent = ({
             />
           </Box>
         )}
-      </HStack>
+          </HStack>
+        </Collapsible.Content>
+      </Collapsible.Root>
     </Box>
   );
 };

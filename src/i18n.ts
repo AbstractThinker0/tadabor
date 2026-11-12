@@ -116,6 +116,7 @@ i18n
               random_avatar: "Random avatar",
               sign_out: "Sign out",
               expand: "Expand",
+              minimize: "Minimize",
             },
             state: {
               loading: "Loading...",
@@ -410,6 +411,7 @@ i18n
               random_avatar: "صورة عشوائية",
               sign_out: "تسجيل الخروج",
               expand: "توسيع",
+              minimize: "تصغير",
             },
             state: {
               loading: "جاري التحميل...",
