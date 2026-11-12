@@ -26,8 +26,10 @@ export const nativeSelectSlotRecipe = defineSlotRecipe({
       },
       focusVisibleRing: "inside",
       lineHeight: "normal",
+      textAlign: "center",
       "& > option, & > optgroup": {
         bg: "bg",
+        textAlign: "center",
       },
     },
     indicator: {
