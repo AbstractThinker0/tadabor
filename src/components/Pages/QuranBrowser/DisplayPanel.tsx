@@ -32,7 +32,7 @@ const DisplayPanel = () => {
       <Flex
         flexDir="column"
         bgColor={"brand.contrast"}
-        borderRadius={5}
+        borderRadius={"l3"}
         border={"1px solid"}
         borderColor={"border"}
         flex={1}

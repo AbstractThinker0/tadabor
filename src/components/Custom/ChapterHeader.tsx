@@ -27,6 +27,7 @@ const ChapterHeader = ({
       py={2}
       borderBottom="1px solid"
       borderColor="border"
+      borderTopRadius={"l3"}
       align="center"
       justifyContent={"space-between"}
       gap={2}
