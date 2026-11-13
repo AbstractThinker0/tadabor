@@ -103,7 +103,7 @@ const NavbarUser = () => {
               size={"sm"}
               borderRadius={"l3"}
               boxShadow={"md"}
-              _hover={{ bg: "bg.emphasized" }}
+              _hover={{ bg: { base: "bg.emphasized", _dark: "bg.muted" } }}
               _expanded={{ bg: "bg.emphasized" }}
             >
               <TbUserX />

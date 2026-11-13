@@ -21,6 +21,37 @@ test.describe("QuranBrowser Page", () => {
     await expect(page.getByRole("button", { name: "(7)" })).toBeVisible();
   });
 
+  test("uses subdued dark backgrounds for verse and word interactions", async ({ page }) => {
+    await page.evaluate(() => localStorage.setItem("theme", "dark"));
+    await page.reload();
+    await expect(page.getByText("سورة الفاتحة")).toBeVisible({ timeout: 20000 });
+
+    const verse = page.locator('[data-id="1-2"]');
+    await verse.hover();
+    await expect(verse).toHaveCSS("background-color", "rgb(39, 39, 42)");
+
+    await verse.getByRole("button", { name: "(2)" }).click();
+    await expect(verse).toHaveAttribute("aria-selected", "true");
+    await expect(verse).toHaveCSS("background-color", "rgb(48, 73, 87)");
+    await page.mouse.move(0, 0);
+    await expect(verse).toHaveCSS("background-color", "rgb(38, 60, 74)");
+
+    await verse.getByRole("button", { name: "Inspect" }).click();
+    const word = verse.locator("span[aria-selected]").first();
+    await word.hover();
+    await expect(word).toHaveCSS("background-color", "rgb(67, 53, 45)");
+    await word.click();
+    await expect(word).toHaveAttribute("aria-selected", "true");
+    await expect(word).toHaveCSS("background-color", "rgb(85, 67, 56)");
+  });
+
+  test("keeps the light selected verse color", async ({ page }) => {
+    const verse = page.locator('[data-id="1-2"]');
+    await verse.getByRole("button", { name: "(2)" }).click();
+    await expect(verse).toHaveAttribute("aria-selected", "true");
+    await expect(verse).toHaveCSS("background-color", "rgb(254, 215, 170)");
+  });
+
   test("can navigate to a different chapter", async ({ page }) => {
     // Click on Al-Baqarah (chapter 2) in the chapter list
     // Chapters are listed as "2. البقرة"

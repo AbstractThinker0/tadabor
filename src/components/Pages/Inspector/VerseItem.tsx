@@ -74,10 +74,11 @@ const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
             cursor={"pointer"}
             py={"2px"}
             borderRadius={"0.3rem"}
-            _hover={{ bgColor: "orange.emphasized" }}
+            _hover={{ bgColor: { base: "orange.emphasized", _dark: "#43352d" } }}
             aria-selected={selectedWord === index + 1}
             _selected={{
-              bgColor: "orange.emphasized",
+              bgColor: { base: "orange.emphasized", _dark: "#554338" },
+              _hover: { bgColor: { base: "orange.emphasized", _dark: "#554338" } },
             }}
             onClick={() => onClickWord(index + 1)}
           >

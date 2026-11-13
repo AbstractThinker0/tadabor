@@ -126,6 +126,7 @@ export const buttonRecipe = defineRecipe({
         color: "colorPalette.fg",
         _hover: {
           bg: "colorPalette.muted",
+          _dark: { bg: "colorPalette.muted/75" },
         },
         _expanded: {
           bg: "colorPalette.muted",
@@ -138,6 +139,7 @@ export const buttonRecipe = defineRecipe({
         shadowColor: "colorPalette.muted",
         _hover: {
           bg: "colorPalette.muted",
+          _dark: { bg: "colorPalette.muted/75" },
         },
         _expanded: {
           bg: "colorPalette.muted",
@@ -149,6 +151,7 @@ export const buttonRecipe = defineRecipe({
         color: "colorPalette.fg",
         _hover: {
           bg: "colorPalette.subtle",
+          _dark: { bg: "colorPalette.muted/60" },
         },
         _expanded: {
           bg: "colorPalette.subtle",
@@ -158,6 +161,7 @@ export const buttonRecipe = defineRecipe({
         color: "colorPalette.fg",
         _hover: {
           bg: "colorPalette.subtle",
+          _dark: { bg: "colorPalette.muted/60" },
         },
         _expanded: {
           bg: "colorPalette.subtle",

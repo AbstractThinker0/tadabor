@@ -69,10 +69,10 @@ const BaseVerseItem = ({
       borderBottom="1px solid"
       borderColor={"border"}
       aria-selected={isSelected}
-      _hover={{ bgColor: "bg.subtle" }}
+      _hover={{ bgColor: { base: "bg.subtle", _dark: "gray.800" } }}
       _selected={{
-        bgColor: "orange.muted",
-        _hover: { bgColor: "orange.muted" },
+        bgColor: { base: "orange.muted", _dark: "#263c4a" },
+        _hover: { bgColor: { base: "orange.muted", _dark: "#304957" } },
       }}
       transition="background-color 0.15s ease"
       onMouseEnter={onMouseEnter}

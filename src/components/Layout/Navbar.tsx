@@ -161,7 +161,7 @@ const NavMenu = () => {
       onOpenChange={(e) => setOpen(e.open)}
     >
       <Drawer.Trigger asChild dir="inherit">
-        <Button variant="ghost" px={2} gap={2} _hover={{ bg: "bg.emphasized" }}>
+        <Button variant="ghost" px={2} gap={2} _hover={{ bg: { base: "bg.emphasized", _dark: "bg.muted" } }}>
           <MdMenu size={24} />
           <Box>
             <Image borderRadius="2xl" boxSize="34px" src="/pwa-192x192.png" />

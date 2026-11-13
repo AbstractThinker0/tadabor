@@ -152,8 +152,11 @@ const VerseWords = ({ verse }: VerseWordsProps) => {
                 borderRadius={"5px"}
                 cursor={"pointer"}
                 aria-selected={wordIndex === selectedWord}
-                _selected={{ bgColor: "purple.emphasized" }}
-                _hover={{ bgColor: "purple.emphasized" }}
+                _selected={{
+                  bgColor: { base: "purple.emphasized", _dark: "purple.800" },
+                  _hover: { bgColor: { base: "purple.emphasized", _dark: "purple.800" } },
+                }}
+                _hover={{ bgColor: { base: "purple.emphasized", _dark: "purple.900" } }}
                 onClick={() => handleClickWord(wordIndex)}
               >
                 {splitArabicLetters(word).map((letter, letterIndex) => (
@@ -217,8 +220,11 @@ const SingleLetter = ({
   return (
     <Span
       aria-selected={letterKey === selectedLetter}
-      _selected={{ bgColor: "blue.emphasized" }}
-      _hover={{ bgColor: "blue.emphasized" }}
+      _selected={{
+        bgColor: { base: "blue.emphasized", _dark: "blue.800" },
+        _hover: { bgColor: { base: "blue.emphasized", _dark: "blue.800" } },
+      }}
+      _hover={{ bgColor: { base: "blue.emphasized", _dark: "blue.900" } }}
       onClick={onClickLetter}
     >
       {letter}
