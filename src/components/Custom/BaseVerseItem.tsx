@@ -95,6 +95,7 @@ const BaseVerseItem = ({
             display={verseDisplay === "panel" ? "inline-flex" : undefined}
             flexDir={verseDisplay === "panel" ? "column" : undefined}
             gap={"3px"}
+            ms={"2px"}
           >
             {toolNote && (
               <ButtonExpand
